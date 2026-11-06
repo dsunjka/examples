@@ -459,7 +459,13 @@ const SONGS = [
     notes: 'E4 E4 E4:2 E4 E4 E4:2 E4 G4 C4 D4 E4:3 F4 F4 F4 F4 F4 E4 E4 E4 E4 D4 D4 E4 D4:2 G4:2 E4 E4 E4:2 E4 E4 E4:2 E4 G4 C4 D4 E4:3 F4 F4 F4 F4 F4 E4 E4 E4 G4 G4 F4 D4 C4:3' },
   { id: 'freude', title: 'Ode an die Freude', level: 2,
     notes: 'E4 E4 F4 G4 G4 F4 E4 D4 C4 C4 D4 E4 E4 D4 D4:2 E4 E4 F4 G4 G4 F4 E4 D4 C4 C4 D4 E4 D4 C4 C4:2 D4 D4 E4 C4 D4 E4 F4 E4 C4 D4 E4 F4 E4 D4 C4 D4 G3:2 E4 E4 F4 G4 G4 F4 E4 D4 C4 C4 D4 E4 D4 C4 C4:3' },
-  { id: 'affendisco', title: 'Affen-Disco', level: 2,
+  { id: 'glitzer', title: 'Glitzer-Rakete', level: 1, beat: true, bass: 'C3 G2 A2 F2',
+    notes: 'E4 G4 C5:2 B4 D5 G4:2 A4 C5 E5:2 F5 E5 C5:2 E4 G4 C5 E5 D5 B4 G4:2 A4 C5 B4 A4 F4 A4 C5:2 G5:2 E5 C5 D5:2 B4 G4 C5:2 A4 E5 F5 E5 D5 C5 G5:2 E5 G5 D5 G5 D5 B4 C5 E5 A4 C5 D5 B4 C5:2' },
+  { id: 'neon', title: 'Neon-Nacht', level: 2, beat: true, bass: 'A2 F2 C3 G2',
+    notes: 'E5 E5 D5 C5 C5 A4 C5:2 G4 C5 E5 G5 F5 E5 D5:2 E5 E5 D5 C5 A4 C5 F5:2 E5 D5 C5 E5 D5:3 B4 A5 A5 G5 E5 F5 E5 C5 A4 C5 E5 G5 E5 D5 B4 G4 B4 A5 A5 G5 E5 F5 A5 F5 C5 E5 G5 E5 C5 B4 D5 A4:2' },
+  { id: 'drache', title: 'Drachen-Drop', level: 3, beat: true, bass: 'E2 C2 G2 D2',
+    notes: 'B4 E5 G5 E5 C5 E5 G5 E5 D5 G5 B5 G5 F#5 E5 D5 A4 B4 B4 E5 B4 C5 C5 E5 G5 B5 A5 G5 D5 F#5:2 A5:2 G5 F#5 E5 B4 E5 D5 C5 G4 B4 D5 G5 B5 A5 F#5 D5 F#5 G5 E5 B4 E5 G5 E5 C5 E5 D5 G5 B5 A5 F#5 D5 E5:2' },
+  { id: 'affendisco', title: 'Affen-Disco', level: 2, beat: true,
     notes: 'A4 A4 C5 A4 G4 E4:2 A4 A4 C5 D5 C5 A4:2 G4 G4 A4 G4 E4 D4:2 E4 G4 A4:3 C5 C5 D5 E5:2 D5 C5 A4:2 C5 C5 D5 E5 G5 E5:2 D5 C5 A4 G4 A4:2 C5 A4:3 E5 D5 C5 D5 E5 G5 E5:2 D5 C5 D5 C5 A4:3' },
   { id: 'elise', title: 'Für Elise', level: 3,
     notes: 'E5 D#5 E5 D#5 E5 B4 D5 C5 A4:2 C4 E4 A4 B4:2 E4 G#4 B4 C5:2 E4 E5 D#5 E5 D#5 E5 B4 D5 C5 A4:2 C4 E4 A4 B4:2 E4 C5 B4 A4:3' },
@@ -496,7 +502,10 @@ function parseSong(str) {
     return { midi: 12 * (+m[2] + 1) + NOTE_IDX[m[1]], dur: d ? +d : 1 };
   });
 }
-SONGS.forEach(s => { s.parsed = parseSong(s.notes); });
+SONGS.forEach(s => {
+  s.parsed = parseSong(s.notes);
+  s.bassMidi = s.bass ? parseSong(s.bass).map(n => n.midi) : null;
+});
 
 /* ---------- Speichern ---------- */
 const SAVE_KEY = 'sternentasten-v1';
@@ -584,6 +593,60 @@ function blip(freqs, type, dur, gap, vol) {
     o.start(t); o.stop(t + dur + 0.05);
   });
 }
+/* Beat: Bassdrum, Snare, Hi-Hat und Bass, im Takt der fallenden Tasten */
+let noiseBuf = null;
+function noise(ac) {
+  if (!noiseBuf) {
+    noiseBuf = ac.createBuffer(1, ac.sampleRate * 0.3, ac.sampleRate);
+    const d = noiseBuf.getChannelData(0);
+    for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+  }
+  const src = ac.createBufferSource(); src.buffer = noiseBuf; return src;
+}
+const drum = {
+  kick(ac, t) {
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(42, t + 0.12);
+    g.gain.setValueAtTime(0.55, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
+    o.connect(g); g.connect(master); o.start(t); o.stop(t + 0.3);
+  },
+  snare(ac, t) {
+    const n = noise(ac), f = ac.createBiquadFilter(), g = ac.createGain();
+    f.type = 'highpass'; f.frequency.value = 1400;
+    g.gain.setValueAtTime(0.22, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
+    n.connect(f); f.connect(g); g.connect(master); n.start(t); n.stop(t + 0.2);
+    const o = ac.createOscillator(), og = ac.createGain();
+    o.frequency.value = 190; og.gain.setValueAtTime(0.12, t); og.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
+    o.connect(og); og.connect(master); o.start(t); o.stop(t + 0.1);
+  },
+  hat(ac, t, vol) {
+    const n = noise(ac), f = ac.createBiquadFilter(), g = ac.createGain();
+    f.type = 'highpass'; f.frequency.value = 7000;
+    g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+    n.connect(f); f.connect(g); g.connect(master); n.start(t); n.stop(t + 0.06);
+  },
+  bass(ac, t, midi) {
+    const o = ac.createOscillator(), f = ac.createBiquadFilter(), g = ac.createGain();
+    o.type = 'sawtooth'; o.frequency.value = mtof(midi);
+    f.type = 'lowpass'; f.frequency.setValueAtTime(900, t); f.frequency.exponentialRampToValueAtTime(220, t + 0.2);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.2, t + 0.01); g.gain.exponentialRampToValueAtTime(0.001, t + 0.24);
+    o.connect(f); f.connect(g); g.connect(master); o.start(t); o.stop(t + 0.26);
+  },
+};
+function groove(half) {
+  if (!save.settings.sound || !G) return;
+  const ac = audio(); if (!ac) return;
+  const t = ac.currentTime + 0.005;
+  const row = half >> 1, off = half & 1;
+  if (!off) { drum.kick(ac, t); if (row % 2 === 1) drum.snare(ac, t); }
+  drum.hat(ac, t, off ? 0.07 : 0.035);
+  const b = G.song.bassMidi;
+  if (b) {
+    const root = b[Math.floor((row % G.loopLen) / 4) % b.length];
+    drum.bass(ac, t, off ? root + 12 : root);
+  }
+}
+
 const sfx = {
   gold: () => blip([1568, 2093, 2637], 'sine', 0.25, 0.05, 0.12),
   star: () => blip([1047, 1319, 1568, 2093], 'triangle', 0.35, 0.08, 0.16),
@@ -667,7 +730,7 @@ function startGame(song) {
     started: false, paused: false, ended: false,
     hearts: diff.hearts, score: 0, combo: 0, maxCombo: 0, perfect: 0, gold: 0,
     resolved: new Array(LOOPS).fill(0), stars: 0, crowns: 0,
-    rainbow: false, freeze: 0, missTile: null, firstPending: 0, holding: [], comboPulse: 0,
+    rainbow: false, freeze: 0, missTile: null, lastHalf: -1, firstPending: 0, holding: [], comboPulse: 0,
   };
   particles = []; popups = []; lastProg = -1;
   $('#menu').hidden = true; $('#result').hidden = true; $('#pause').hidden = true;
@@ -839,6 +902,11 @@ function update(dt, time) {
   if (lvl > G.speedLevel) { G.speedLevel = lvl; }
   G.speed = G.base * Math.pow(1.15, G.speedLevel);
   G.scroll += G.speed * dt;
+  if (G.song.beat) {
+    const h = Math.floor(G.scroll * 2);
+    if (h - G.lastHalf > 3) G.lastHalf = h - 1;
+    while (G.lastHalf < h) groove(++G.lastHalf);
+  }
 
   G.holding.slice().forEach(t => {
     const end = t.start + t.len - 1;
@@ -1158,7 +1226,7 @@ function renderMenu() {
       <span class="disc" style="background:${col}">${initial}</span>
       <span class="info">
         <span class="title">${s.title}</span>
-        <span class="meta"><span>${LEVEL_NAMES[s.level]} · ${s.parsed.length} Töne</span>
+        <span class="meta"><span>${LEVEL_NAMES[s.level]} · ${s.parsed.length} Töne${s.beat ? ' · mit Beat' : ''}</span>
           <span class="stars" aria-label="${b.stars} von 3 Sternen, ${b.crowns || 0} Kronen">${stars}${crowns}</span>
           ${b.score ? `<span>Rekord ${b.score}</span>` : ''}</span>
       </span>
