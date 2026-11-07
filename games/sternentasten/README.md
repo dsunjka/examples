@@ -10,12 +10,13 @@ Einfach `index.html` im Browser öffnen – funktioniert auf Handy, Tablet und C
   kurze Töne sind kürzere Tasten, ab einer halben Note wird eine schwarze Halte-Taste daraus.
 - Tempo-Schieberegler in Prozent vom Originaltempo (50 % „Schnecke" bis 150 % „Rakete"); die Schwierigkeit legt die
   Herzen fest (Leicht 5, Mittel 3, Profi 1) und setzt ein passendes Starttempo.
-- Tasten-Form wählbar: Vierecke, Pfoten oder Herzen.
-- Alle Tasten sind schlichte schwarze Streifen ohne Beschriftung; Bonus-Tasten tragen einen goldenen Stern.
+- Tasten-Form wählbar: schwarze Vierecke (schlichte Streifen ohne Beschriftung) oder Pfoten bzw. Herzen, die selbst die
+  Taste sind und die Farben der gewählten Farbwelt tragen. Lange Tasten erscheinen dann als Spur aus kleinen Pfoten/Herzen.
 - Regenbogen-Power ab 20er-Kombo (doppelte Punkte); Notennamen (C D E … H) lassen sich optional einschalten.
 - 15 Farbwelten (Hintergrund und Glitzer-Effekte), die mit gesammelten Sternen freigeschaltet werden; Fortschritt wird lokal gespeichert.
-- 32 Lieder in sechs Genres: Kinderlieder, Weihnachten und Klassik (gemeinfrei) sowie Pop, Party & EDM und
-  Chillen & Träumen (eigene Kompositionen mit Beat und Basslinie).
+- 49 Lieder in sechs Genres: Kinderlieder (10), Weihnachten (16: gemeinfreie Klassiker und eigene Songs), Klassik (11),
+  Pop (5), Party & EDM (5) und Chillen & Träumen (2). Pop, Party, Chill und die eigenen Weihnachtssongs sind eigene
+  Kompositionen mit Beat und Basslinie.
 - Töne, Beat und Bass werden live mit der Web Audio API erzeugt.
 - Lange Tasten sind fertig, sobald ihr oberes Ende beim Finger ankommt, und dürfen noch getroffen werden,
   solange ihre obere Hälfte zu sehen ist.

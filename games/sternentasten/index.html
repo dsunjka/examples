@@ -495,7 +495,7 @@ kbd { font-family: inherit; font-weight: 700; background: rgba(255,255,255,.15);
    ========================================================= */
 const GENRES = [
   { id: 'kinder', name: 'Kinderlieder', color: '#ffb347' },
-  { id: 'weihnacht', name: 'Weihnachten', color: '#ff6b7f' },
+  { id: 'weihnacht', name: 'Weihnachten', sub: 'Klassiker und eigene Songs', color: '#ff6b7f' },
   { id: 'klassik', name: 'Klassik', color: '#c9a7ff' },
   { id: 'pop', name: 'Pop', sub: 'Eigene Songs mit Beat', color: '#ff7ac8' },
   { id: 'party', name: 'Party & EDM', sub: 'Eigene Songs mit Beat', color: '#5ff0c4' },
@@ -523,6 +523,8 @@ const SONGS = [
     notes: 'G4 G4 G4 D4 E4 E4 D4:2 B4 B4 A4 A4 G4:3 D4 G4 G4 G4 D4 E4 E4 D4:2 B4 B4 A4 A4 G4:4' },
   { id: 'haenschen', genre: 'kinder', title: 'Hänschen klein', level: 2, bpm: 115,
     notes: 'G4 E4 E4:2 F4 D4 D4:2 C4 D4 E4 F4 G4 G4 G4:2 G4 E4 E4:2 F4 D4 D4:2 C4 E4 G4 G4 C4:4 D4 D4 D4 D4 D4 E4 F4:2 E4 E4 E4 E4 E4 F4 G4:2 G4 E4 E4:2 F4 D4 D4:2 C4 E4 G4 G4 C4:4' },
+  { id: 'yankee', genre: 'kinder', title: 'Yankee Doodle', level: 2, bpm: 120,
+    notes: 'C4 C4 D4 E4 C4 E4 D4 G3 C4 C4 D4 E4 C4:2 B3:2 C4 C4 D4 E4 F4 E4 D4 C4 B3 G3 A3 B3 C4:2 C4:2' },
   { id: 'geburtstag', genre: 'kinder', title: 'Zum Geburtstag viel Glück', level: 2, bpm: 100,
     notes: 'G4:0.75 G4:0.25 A4 G4 C5 B4:2 G4:0.75 G4:0.25 A4 G4 D5 C5:2 G4:0.75 G4:0.25 G5 E5 C5 B4 A4:2 F5:0.75 F5:0.25 E5 C5 D5 C5:3' },
 
@@ -538,11 +540,40 @@ const SONGS = [
   { id: 'halls', genre: 'weihnacht', title: 'Deck the Halls', level: 3, bpm: 110,
     notes: 'G4:1.5 F4:0.5 E4 D4 C4 D4 E4 C4 D4:0.5 E4:0.5 F4:0.5 D4:0.5 E4:1.5 D4:0.5 C4 B3 C4:2 G4:1.5 F4:0.5 E4 D4 C4 D4 E4 C4 D4:0.5 E4:0.5 F4:0.5 D4:0.5 E4:1.5 D4:0.5 C4 B3 C4:2 D4:1.5 E4:0.5 F4 D4 E4:1.5 F4:0.5 G4 D4 E4:0.5 F#4:0.5 G4 A4:0.5 B4:0.5 C5 B4 A4 G4:2 G4:1.5 F4:0.5 E4 D4 C4 D4 E4 C4 A4:0.5 A4:0.5 A4:0.5 A4:0.5 G4:1.5 F4:0.5 E4 D4 C4:2' },
 
+  { id: 'weihnachtsmann', genre: 'weihnacht', title: 'Morgen kommt der Weihnachtsmann', level: 1, bpm: 104, beat: 'soft',
+    notes: 'G4 G4 D5 D5 E5 E5 D5:2 C5 C5 B4 B4 A4 A4 G4:2 D5 D5 C5 C5 B4 B4 A4:2 D5 D5 C5 C5 B4 B4 A4:2 G4 G4 D5 D5 E5 E5 D5:2 C5 C5 B4 B4 A4 A4 G4:2' },
+  { id: 'freuedichwelt', genre: 'weihnacht', title: 'Freue dich, Welt (Joy to the World)', level: 2, bpm: 100,
+    notes: 'C5 B4:0.75 A4:0.25 G4:1.5 F4:0.5 E4 D4 C4:1.5 G4:0.5 A4:1.5 A4:0.5 B4:1.5 B4:0.5 C5:3 C5:0.5 C5:0.5 B4:0.5 A4:0.5 G4:0.5 G4:0.75 F4:0.25 E4:0.5 C5:0.5 C5:0.5 B4:0.5 A4:0.5 G4:0.5 G4:0.75 F4:0.25 E4:0.5 E4:0.5 E4:0.5 E4:0.5 E4:0.25 F4:0.25 G4:1.5 F4:0.25 E4:0.25 D4:0.5 D4:0.5 D4:0.5 D4:0.25 E4:0.25 F4:1.5 E4:0.25 D4:0.25 C4:0.5 C5 A4:0.5 G4:0.75 F4:0.25 E4:0.5 F4:0.5 E4 D4 C4:2' },
+  { id: 'engel', genre: 'weihnacht', title: 'Hört der Engel helle Lieder', level: 2, bpm: 104,
+    notes: 'G4 C5 C5:1.5 B4:0.5 C5 E5 E5 D5 G5 G5 G5:1.5 F5:0.5 E5 D5 E5:2 G4 C5 C5:1.5 B4:0.5 C5 E5 E5 D5 G5 D5 D5:1.5 B4:0.5 A4 G4 G4:2' },
+  { id: 'herbei', genre: 'weihnacht', title: 'Herbei, o ihr Gläub’gen', level: 2, bpm: 96,
+    notes: 'G4 G4:2 D4 G4 A4:2 D4:2 B4 A4 B4 C5 B4:2 A4 G4 G4:2 F#4 E4 F#4 G4 A4 B4 F#4:1.5 E4:0.5 D4:3' },
+  { id: 'wenzel', genre: 'weihnacht', title: 'Good King Wenceslas', level: 1, bpm: 110,
+    notes: 'G4 G4 G4 A4 G4 G4 D4:2 E4 D4 E4 F#4 G4:2 G4:2 G4 G4 G4 A4 G4 G4 D4:2 E4 D4 E4 F#4 G4:2 G4:2 D5 C5 B4 A4 B4 A4 G4:2 E4 D4 E4 F#4 G4:2 G4:2 D4 D4 E4 F#4 G4 G4 A4:2 D5 C5 B4 A4 G4:2 C5:2 G4:4' },
+  { id: 'noel', genre: 'weihnacht', title: 'The First Noel', level: 2, bpm: 100,
+    notes: 'E4:0.5 D4:0.5 C4:1.5 D4:0.5 E4 F4 G4:2 A4:0.5 B4:0.5 C5 B4 A4 G4:2 A4:0.5 B4:0.5 C5 B4 A4 G4 A4 B4 C5 G4 F4 E4:2 E4:0.5 D4:0.5 C4:1.5 D4:0.5 E4 F4 G4:2 A4:0.5 B4:0.5 C5 B4 A4 G4:2 A4:0.5 B4:0.5 C5 B4 A4 G4 A4 B4 C5 G4 F4 E4:2 E4:0.5 D4:0.5 C4:1.5 D4:0.5 E4 F4 G4:2 C5:0.5 B4:0.5 A4:2 A4 G4:3 C5 B4 A4 G4 A4 B4 C5 G4 F4 E4:2' },
+  { id: 'glocken', genre: 'weihnacht', title: 'Carol of the Bells', level: 2, bpm: 140,
+    notes: 'A#4 A4:0.5 A#4:0.5 G4 A#4 A4:0.5 A#4:0.5 G4 A#4 A4:0.5 A#4:0.5 G4 A#4 A4:0.5 A#4:0.5 G4 D5 C5:0.5 D5:0.5 A#4 D5 C5:0.5 D5:0.5 A#4 D5 C5:0.5 D5:0.5 A#4 D5 C5:0.5 D5:0.5 A#4 G5 G5:0.5 G5:0.5 F5:0.5 D#5:0.5 D5 D5:0.5 D5:0.5 C5:0.5 A#4:0.5 C5 C5:0.5 C5:0.5 D5:0.5 C5:0.5 G4:3 A#4 A4:0.5 A#4:0.5 G4 A#4 A4:0.5 A#4:0.5 G4:2' },
+  { id: 'plaetzchen', genre: 'weihnacht', title: 'Plätzchen-Party', level: 1, bpm: 112, beat: 'pop', bass: 'C3 A2 F2 G2', own: true,
+    notes: 'E5 C5 E5 G5 A5 G5 E5:2 F5 A5 F5 C5 D5 E5 D5 B4 C5 E5 G5 C6 A5 E5 C5:2 F5 E5 D5 C5 D5:2 G4:2 E5 E5 G5:2 A5 A5 E5:2 F5 F5 A5 F5 G5 F5 E5 D5 E5 E5 G5 E5 C6 B5 A5 E5 F5 A5 G5 F5 D5 B4 C5:2' },
+  { id: 'rentier', genre: 'weihnacht', title: 'Rentier-Galopp', level: 2, bpm: 126, beat: 'pop', bass: 'G2 E2 C3 D3', own: true,
+    notes: 'D5 B4 G4 B4 E5 B4 G4 B4 E5 C5 G4 C5 F#5 D5 A4 D5 G5 F#5 G5 D5 E5 D5 E5 B4 C5 E5 G5 E5 D5:2 A4:2 B5 A5 G5 D5 G5 F#5 E5 B4 C5 E5 G5 C6 A5 F#5 D5 F#5 G5 D5 B4 D5 E5 B4 G4 B4 C5 E5 A5 G5 F#5 A5 G5:2' },
+  { id: 'schneeflocken', genre: 'weihnacht', title: 'Schneeflocken-Disco', level: 3, bpm: 124, beat: 'edm', bass: 'D3 A#2 C3 A2', own: true,
+    notes: 'D5 F5 A5 F5 D5 F5 A#5 F5 E5 G5 C6 G5 C#5 E5 A5 E5 A5 G5 F5 D5 F5 D5 A#4 D5 G5 E5 C5 E5 E5:2 C#5:2 A5 A5 F5 D5 A#5 A#5 F5 D5 C6 C6 G5 E5 A5 E5 C#5 E5 D6 A5 F5 A5 D6 A#5 F5 A#5 C6 G5 E5 G5 E5 C#5 D5:2' },
+  { id: 'kerzen', genre: 'weihnacht', title: 'Kerzenschein', level: 1, bpm: 78, beat: 'soft', bass: 'F2 D3 A#2 C3', own: true,
+    notes: 'C5:2 A4 C5 D5:2 F5:2 F5 D5 A#4:2 C5:3 E5 F5:2 A5 F5 D5 F5 A5:2 G5 F5 D5 A#4 C5:2 G4:2 A4 C5 F5:2 A5 F5 D5:2 A#5:2 F5 D5 E5:2 G5:2 A5 G5 F5 C5 D5 F5 A5 F5 D5 F5 E5 D5 E5 G5 F5:2' },
+
   /* ---- Klassik (gemeinfrei) ---- */
   { id: 'freude', genre: 'klassik', title: 'Ode an die Freude', level: 1, bpm: 110,
     notes: 'E4 E4 F4 G4 G4 F4 E4 D4 C4 C4 D4 E4 E4:1.5 D4:0.5 D4:2 E4 E4 F4 G4 G4 F4 E4 D4 C4 C4 D4 E4 D4:1.5 C4:0.5 C4:2 D4 D4 E4 C4 D4 E4:0.5 F4:0.5 E4 C4 D4 E4:0.5 F4:0.5 E4 D4 C4 D4 G3:2 E4 E4 F4 G4 G4 F4 E4 D4 C4 C4 D4 E4 D4:1.5 C4:0.5 C4:2' },
   { id: 'wiegenlied', genre: 'klassik', title: 'Brahms’ Wiegenlied', level: 1, bpm: 80,
     notes: 'E4:0.5 E4:0.5 G4:2 E4:0.5 E4:0.5 G4:2 E4:0.5 G4:0.5 C5 B4:1.5 A4:0.5 A4 G4:2 D4:0.5 E4:0.5 F4 D4 D4:0.5 E4:0.5 F4:2 D4:0.5 F4:0.5 B4:0.5 A4:0.5 G4 B4 C5:3' },
+  { id: 'kanon', genre: 'klassik', title: 'Kanon (Pachelbel)', level: 1, bpm: 70,
+    notes: 'F#5:2 E5:2 D5:2 C#5:2 B4:2 A4:2 B4:2 C#5:2 D5:2 C#5:2 B4:2 A4:2 G4:2 F#4:2 G4:2 E4:2' },
+  { id: 'menuett', genre: 'klassik', title: 'Menuett in G (Bach)', level: 2, bpm: 120,
+    notes: 'D5 G4:0.5 A4:0.5 B4:0.5 C5:0.5 D5 G4 G4 E5 C5:0.5 D5:0.5 E5:0.5 F#5:0.5 G5 G4 G4 C5 D5:0.5 C5:0.5 B4:0.5 A4:0.5 B4 C5:0.5 B4:0.5 A4:0.5 G4:0.5 F#4 G4:0.5 A4:0.5 B4:0.5 G4:0.5 A4:3' },
+  { id: 'morgenstimmung', genre: 'klassik', title: 'Morgenstimmung (Grieg)', level: 1, bpm: 96,
+    notes: 'G4 E4 D4 C4 D4 E4 G4 E4 D4 C4 D4:0.5 E4:0.5 D4:0.5 E4:0.5 G4 E4 G4 A4 E4 A4 G4 E4 D4 C4:3' },
   { id: 'nachtmusik', genre: 'klassik', title: 'Eine kleine Nachtmusik', level: 2, bpm: 120,
     notes: 'G4 -:0.5 D4:0.5 G4 -:0.5 D4:0.5 G4:0.5 D4:0.5 G4:0.5 B4:0.5 D5:2 C5 -:0.5 A4:0.5 C5 -:0.5 A4:0.5 C5:0.5 A4:0.5 F#4:0.5 A4:0.5 D4:2 G4:0.5 G4:0.5 B4:0.5 A4:0.5 G4:0.5 G4:0.5 B4:0.5 A4:0.5 G4:0.5 B4:0.5 D5:0.5 F#5:0.5 A5:2' },
   { id: 'cancan', genre: 'klassik', title: 'Can-Can', level: 3, bpm: 120,
@@ -566,6 +597,9 @@ const SONGS = [
   { id: 'sommer', genre: 'pop', title: 'Sommer-Konfetti', level: 2, bpm: 100, beat: 'pop', bass: 'D3 A#2 F2 C3',
     notes: 'A4 D5 A4:2 F5 D5 A#4:2 C5 F5 A5:2 G5 E5 C5:2 D5 F5 A5 F5 D5 F5 A#5 F5 A5 G5 F5 C5 E5:2 G5:2 A5 A5 G5 F5 D5:2 F5 D5 C5 C5 A4 C5 E5:2 G5 E5 A5 A5 G5 F5 A#5 A5 G5 F5 A5 G5 F5 C5 E5 C5 D5:2' },
 
+  { id: 'pyjama', genre: 'pop', title: 'Pyjama-Party', level: 1, bpm: 110, beat: 'pop', bass: 'F2 C3 D3 A#2',
+    notes: 'A4 C5 F5 C5 G4 C5 E5:2 F5 E5 D5 A4 A#4 D5 F5:2 C5 A4 C5 F5 E5 G5 E5 C5 D5 F5 A5 F5 D5:2 F5:2 A5 A5 G5 F5 G5 E5 C5:2 F5 F5 E5 D5 F5 D5 A#4:2 A5 A5 G5 F5 G5 A5 G5 E5 F5 D5 A4 D5 C5 E5 F5:2' },
+
   /* ---- Party & EDM (eigene Kompositionen) ---- */
   { id: 'neon', genre: 'party', title: 'Neon-Nacht', level: 2, bpm: 122, beat: 'edm', bass: 'A2 F2 C3 G2',
     notes: 'E5 E5 D5 C5 C5 A4 C5:2 G4 C5 E5 G5 F5 E5 D5:2 E5 E5 D5 C5 A4 C5 F5:2 E5 D5 C5 E5 D5:3 B4 A5 A5 G5 E5 F5 E5 C5 A4 C5 E5 G5 E5 D5 B4 G4 B4 A5 A5 G5 E5 F5 A5 F5 C5 E5 G5 E5 C5 B4 D5 A4:2' },
@@ -575,6 +609,9 @@ const SONGS = [
     notes: 'B4 E5 G5 E5 C5 E5 G5 E5 D5 G5 B5 G5 F#5 E5 D5 A4 B4 B4 E5 B4 C5 C5 E5 G5 B5 A5 G5 D5 F#5:2 A5:2 G5 F#5 E5 B4 E5 D5 C5 G4 B4 D5 G5 B5 A5 F#5 D5 F#5 G5 E5 B4 E5 G5 E5 C5 E5 D5 G5 B5 A5 F#5 D5 E5:2' },
   { id: 'turbo', genre: 'party', title: 'Turbo-Hüpfburg', level: 3, bpm: 132, beat: 'edm', bass: 'A2 G2 F2 E2',
     notes: 'A4 C5 E5 A5 G5 D5 B4 D5 C5 F5 A5 F5 G#5 E5 B4 E5 A5 E5 C5 E5 B4 D5 G5 D5 A5 G5 F5 C5 B4 G#4 E4 G#4 C6 B5 A5 E5 D6 B5 G5 D5 C6 A5 F5 C5 B5 G#5 E5 B4 A5 C6 A5 E5 G5 B5 G5 D5 F5 A5 C6 A5 G#5 B5 A5:2' },
+
+  { id: 'delfin', genre: 'party', title: 'Disco-Delfin', level: 2, bpm: 124, beat: 'edm', bass: 'G2 D#2 A#2 F2',
+    notes: 'G5 D5 A#4 D5 D#5 G5 D#5 A#4 D5 F5 A#5 F5 C5 F5 A5 F5 G5 A#5 G5 D5 G5 D#5 A#4 G4 A#4 D5 F5 A#5 A5:2 F5:2 A#5 A5 G5 D5 D#5 D5 C5 A#4 D5 F5 D5 A#4 C5 A4 C5 F5 G5 D5 G5 A#5 G5 D#5 G5 A#5 A#5 F5 D5 F5 A5 F5 G5:2' },
 
   /* ---- Chillen & Träumen (eigene Kompositionen) ---- */
   { id: 'wolken', genre: 'chill', title: 'Wolkenbett', level: 1, bpm: 84, beat: 'soft', bass: 'C3 E2 F2 G2',
@@ -1181,40 +1218,32 @@ function drawCuteTile(t, shape, x, y, w, hh, color, time, noText) {
   const pad = 4, isHold = t.hold;
   const headH = isHold ? rowH - pad * 2 : hh;
   const cx = x + w / 2, cy = y + hh - headH / 2;
-  const s = Math.min(w * 0.36, headH * 0.4);
-  // Untergrund: eine zarte Fläche, damit man die Taste gut sieht
-  ctx.globalAlpha = isHold ? 0.62 : 0.35; ctx.fillStyle = color; rr(x, y, w, hh, 18); ctx.fill();
-  ctx.globalAlpha = isHold ? 0.9 : 0.55; ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2;
-  rr(x + 1, y + 1, w - 2, hh - 2, 17); ctx.stroke(); ctx.globalAlpha = 1;
+  const s = Math.min(w * 0.47, headH * 0.5);
+  const outline = 'rgba(255,255,255,.95)';
   if (isHold) {
-    if (t.state === 'holding') {
-      const top = Math.max(y, Math.min(y + hh, t.touchY));
-      ctx.save(); rr(x, y, w, hh, 18); ctx.clip();
-      ctx.fillStyle = 'rgba(255,255,255,.45)'; ctx.fillRect(x, top, w, y + hh - top);
-      ctx.restore();
-      ctx.shadowColor = '#ffffff'; ctx.shadowBlur = 22;
-      ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 3; rr(x, y, w, hh, 18); ctx.stroke();
-      ctx.shadowBlur = 0;
-    }
-    // kleine Spuren nach oben
-    ctx.globalAlpha = 0.55;
-    let i = 0;
-    for (let py = cy - headH * 0.85; py > y + s * 0.5; py -= rowH * 0.5, i++) {
-      cuteIcon(shape, cx + (i % 2 ? 1 : -1) * w * 0.17, py, s * 0.4, '#ffffff', 'rgba(255,255,255,0)');
-    }
+    // lange Taste: eine Spur aus kleinen Pfoten/Herzen bis zum Ende, verbunden durch ein zartes Band
+    const top = y + s * 0.3;
+    ctx.globalAlpha = 0.35; ctx.fillStyle = color;
+    rr(cx - w * 0.1, top, w * 0.2, Math.max(0, cy - top), w * 0.1); ctx.fill();
     ctx.globalAlpha = 1;
+    let i = 0;
+    for (let py = cy - headH * 0.72; py > y + s * 0.4; py -= rowH * 0.42, i++) {
+      const lit = t.state === 'holding' && py >= t.touchY;
+      cuteIcon(shape, cx + (i % 2 ? 1 : -1) * w * 0.14, py, s * 0.5, lit ? '#ffffff' : color, outline);
+    }
+    if (t.state === 'holding') { ctx.shadowColor = color; ctx.shadowBlur = 26; }
   }
   const bounce = t.state === 'holding' ? 1 + Math.sin(time * 12) * 0.06 : 1 + Math.sin(time * 4 + t.lane) * 0.03;
-  cuteIcon(shape, cx, cy, s * bounce, color, '#ffffff');
+  cuteIcon(shape, cx, cy, s * bounce, color, outline);
+  ctx.shadowBlur = 0;
   if (t.state === 'holding') {
     ctx.fillStyle = '#ffffff';
     ctx.beginPath(); ctx.arc(cx, t.touchY, 9 + Math.sin(time * 12) * 2, 0, 6.283); ctx.fill();
   }
   if (noText) return;
   if (t.golden && t.state === 'pending') {
-    ctx.fillStyle = '#ffd34d';
-    starPath(x + w - 15, y + 15, 10, time * 2); ctx.fill();
-    ctx.strokeStyle = '#c9781a'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = '#ffffff';
+    starPath(cx + s * 0.95, cy - s * 0.85, 9, time * 2); ctx.fill();
   }
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   const ty = cuteTextY(shape, cy, s);
@@ -1223,10 +1252,11 @@ function drawCuteTile(t, shape, x, y, w, hh, color, time, noText) {
     ctx.lineWidth = 5; ctx.strokeStyle = '#22164d'; ctx.strokeText('START', cx, ty);
     ctx.fillStyle = '#ffffff'; ctx.fillText('START', cx, ty);
     const pulse = 0.5 + 0.5 * Math.sin(time * 6);
-    ctx.globalAlpha = 0.4 + 0.6 * pulse; ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 4;
-    rr(x - 4, y - 4, w + 8, hh + 8, 20); ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.globalAlpha = 0.3 + 0.7 * pulse;
+    cuteIcon(shape, cx, cy, s * 1.25, 'rgba(255,255,255,0)', '#ffffff');
+    ctx.globalAlpha = 1;
   } else if (save.settings.names && t.state !== 'missed') {
-    ctx.fillStyle = isHold ? '#ffffff' : 'rgba(34,22,77,.85)';
+    ctx.fillStyle = 'rgba(34,22,77,.85)';
     ctx.font = `900 ${Math.round(Math.max(12, s * 0.55))}px Grandstander, system-ui, sans-serif`;
     ctx.fillText(DE_NAMES[t.midi % 12], cx, ty);
   }
@@ -1260,7 +1290,8 @@ function drawTile(t, time) {
     return;
   }
 
-  let color = HOLD_COLOR;   // alle Tasten sind schwarz
+  // Vierecke sind schwarz; Pfoten und Herzen tragen die Farben der Farbwelt
+  let color = shape === 'eckig' ? HOLD_COLOR : t.golden ? '#ffd34d' : laneColor(t.lane, time, t);
   if (t.state === 'missed') color = (Math.floor(time * 8) % 2) ? '#ff5d73' : '#ffffff';
   if (shape !== 'eckig') { drawCuteTile(t, shape, x, y, w, hh, color, time); return; }
 
@@ -1359,7 +1390,7 @@ function drawDemo(time) {
     const pad = 4, h = d.len * rowH, shape = save.settings.shape || 'eckig';
     if (shape !== 'eckig') {
       drawCuteTile({ hold: d.len > 1, state: 'pending', lane: d.lane, midi: 60 }, shape, d.lane * laneW + pad, d.y - h + pad, laneW - pad * 2, h - pad * 2,
-        HOLD_COLOR, time, true);
+        laneColor(d.lane, time, null), time, true);
       continue;
     }
     tileBody(d.lane * laneW + pad, d.y - h + pad, laneW - pad * 2, h - pad * 2, HOLD_COLOR, 0.9);
