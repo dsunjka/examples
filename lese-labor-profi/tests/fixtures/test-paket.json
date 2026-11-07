@@ -1,0 +1,12 @@
+{"modul":"rechtschreibung","themen":[{"id":"rs-test","titel":"Testthema","kurz":"Alle Typen","kompetenz":"nachdenken","wissen":{"merksatz":"Ein <b>Merksatz</b>.","punkte":["Punkt eins","Punkt zwei"],"beispiele":["Hund → Hunde","Wald → Wälder"]},
+"items":[
+{"id":"rs-test-01","typ":"single","stufe":1,"frage":"Welches Wort ist richtig?","tipp":"Verlängere.","erklaerung":"Hunde → Hund.","optionen":[{"text":"Hund","richtig":true},{"text":"Hunt","richtig":false},{"text":"Hundt","richtig":false},{"text":"Hunnd","richtig":false}]},
+{"id":"rs-test-02","typ":"multi","stufe":2,"frage":"Welche Wörter enden mit d?","tipp":"Verlängere.","erklaerung":"Wälder, Hunde.","optionen":[{"text":"Wal_","richtig":true},{"text":"Hun_","richtig":true},{"text":"Bro_","richtig":false},{"text":"Zel_","richtig":false},{"text":"Bil_","richtig":true}]},
+{"id":"rs-test-03","typ":"matrix","stufe":2,"frage":"Richtig geschrieben?","tipp":"Verlängere.","erklaerung":"…","spalten":["richtig","falsch"],"aussagen":[{"text":"Zwerg","richtig":true},{"text":"Zwerk","richtig":false},{"text":"Berg","richtig":true}]},
+{"id":"rs-test-04","typ":"luecke","stufe":1,"frage":"Fülle die Lücken.","tipp":"Verlängere.","erklaerung":"…","teile":[{"t":"Der "},{"wahl":["Hund","Hunt"],"loesung":0},{"t":" läuft in den "},{"wahl":["Walt","Wald"],"loesung":1},{"t":"."}]},
+{"id":"rs-test-05","typ":"markieren","stufe":2,"frage":"Tippe die falschen Wörter an.","tipp":"Verlängere.","erklaerung":"…","teile":[{"t":"Der"},{"t":"Hunt","ziel":true},{"t":"läuft"},{"t":"zum"},{"t":"Walt","ziel":true},{"t":".","fix":true}]},
+{"id":"rs-test-06","typ":"zuordnen","stufe":2,"frage":"Sortiere.","tipp":"Verlängere.","erklaerung":"…","gruppen":["d","t"],"elemente":[{"t":"Han_","g":0},{"t":"Bro_","g":1},{"t":"Gel_","g":0},{"t":"Lich_","g":1}]},
+{"id":"rs-test-07","typ":"reihenfolge","stufe":1,"frage":"Ordne.","tipp":"…","erklaerung":"…","reihe":["Erstens","Zweitens","Drittens","Viertens"]},
+{"id":"rs-test-08","typ":"eingabe","stufe":3,"frage":"Schreibe richtig.","vorgabe":"der Zwer_","tipp":"Verlängere.","erklaerung":"Zwerge.","loesungen":["Zwerg"]}
+]}],
+"diktate":[{"id":"dk-test","titel":"Testdiktat","woerter":[{"wort":"Hund","satz":"Der Hund bellt."},{"wort":"Wald","satz":"Wir gehen in den Wald."}]}]}

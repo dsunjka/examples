@@ -1,0 +1,195 @@
+{
+ "modul": "digital",
+ "fall": {
+  "id": "fall1",
+  "nummer": 1,
+  "titel": "Ein Igel am helllichten Tag",
+  "quellenart": "Suchmaschine",
+  "einleitung": "Heute ist Mittwoch, der 4. November 2026. Am Nachmittag entdeckt Elif (9) im Garten einen kleinen Igel, der im Hellen herumläuft. Mit Handschuhen setzt sie ihn vorsichtig auf die Küchenwaage: Er wiegt 380 g. Mit der Kindersuchmaschine „Suchfuchs“ sucht sie heraus, was sie jetzt tun soll.",
+  "rahmen": "browser",
+  "app": {
+   "name": "Suchfuchs",
+   "symbol": "🦊",
+   "farbe": "orange"
+  },
+  "startseite": "start",
+  "seiten": [
+   {
+    "id": "start",
+    "titel": "Igel tagsüber im Garten – Suchfuchs",
+    "adresse": "www.suchfuchs.de/suche?q=igel+tagsueber+im+garten",
+    "farbe": "orange",
+    "html": "<div class=\"w-kopf\"><div class=\"w-logo\">🦊 Suchfuchs</div></div><div class=\"s-suchfeld\">Igel tagsüber im Garten</div><div class=\"s-filter\"><a class=\"aktiv\" data-ziel=\"start\">Alle</a><a data-extern>Bilder</a><a data-extern>Videos</a><a data-extern>Lexikon</a><a data-extern>Karten</a></div><p class=\"s-anzahl\">Ungefähr 18.400 Ergebnisse</p><div class=\"s-treffer s-anzeige\"><span class=\"s-anzeige-label\">Anzeige</span><div class=\"s-url\">www.stachelglueck-shop.de</div><a class=\"s-titel\" data-extern>Stachelglück Igel-Müsli – rettet jeden schwachen Igel!</a><p class=\"s-text\">Mit Apfel, Rosinen und Nüssen! Macht jeden Igel in nur 3 Tagen kugelrund. Tierärzte sind begeistert! Jetzt 3 Dosen kaufen, 1 Dose gratis!</p></div><div class=\"s-treffer s-anzeige\"><span class=\"s-anzeige-label\">Anzeige</span><div class=\"s-url\">www.igelparadies-shop.de</div><a class=\"s-titel\" data-extern>Igelparadies: Igelhaus „Stachelburg“ – nur heute 50 % billiger!</a><p class=\"s-text\">Ohne ein gutes Igelhaus übersteht kein Igel den Winter! Jetzt bestellen und Igel retten. Gratis-Futterschale dazu!</p></div><div class=\"s-treffer\"><div class=\"s-url\">www.gartenplausch-forum.de › tiere › igel</div><a class=\"s-titel\" data-ziel=\"forum\">Igel im Garten – was füttern??? | Gartenplausch-Forum</a><p class=\"s-text\">Hallo Leute, bei mir läuft seit gestern ein kleiner Igel herum. Ich habe ihm ein Schälchen Milch hingestellt …</p><div class=\"s-info\">Forum · 14.09.2011 · 3 Antworten</div></div><div class=\"s-treffer\"><div class=\"s-url\">www.igelhilfe-holunderau.de › igel-gefunden</div><a class=\"s-titel\" data-ziel=\"hilfe\">Igel gefunden – was tun? | Igelhilfe Holunderau e. V.</a><p class=\"s-text\">Läuft ein Igel im Spätherbst am Tag herum, ist er oft krank oder zu leicht. Wir pflegen solche Igel in unserer Station und erklären, was du tun kannst …</p><div class=\"s-info\">Igelstation · aktualisiert am 15.10.2026</div></div><div class=\"s-treffer\"><div class=\"s-url\">www.zappelfilm.de › tiertimo</div><a class=\"s-titel\" data-extern>IGEL GERETTET!!! 😱 Was dann passiert, glaubt ihr nie …</a><p class=\"s-text\">▶ 6:12 · Kanal „TierTimo“ · 1,2 Mio. Aufrufe</p><div class=\"s-info\">Video · vor 3 Jahren</div></div><div class=\"s-treffer\"><div class=\"s-url\">www.wissensbaum-lexikon.de › tiere › igel</div><a class=\"s-titel\" data-ziel=\"lexikon\">Igel – Wissensbaum, das Kinderlexikon</a><p class=\"s-text\">Igel sind kleine Säugetiere mit Tausenden von Stacheln. Sie sind nachtaktiv und halten einen langen Winterschlaf …</p><div class=\"s-info\">Kinderlexikon · 2025</div></div>"
+   },
+   {
+    "id": "hilfe",
+    "titel": "Igel gefunden – was tun? | Igelhilfe Holunderau",
+    "adresse": "www.igelhilfe-holunderau.de/igel-gefunden",
+    "farbe": "gruen",
+    "html": "<div class=\"w-kopf\"><div class=\"w-logo\">🦔 Igelhilfe Holunderau e. V.</div><div class=\"w-menue\"><a data-ziel=\"station\">Start</a><a class=\"aktiv\" data-ziel=\"hilfe\">Igel gefunden?</a><a data-extern>Über uns</a><a data-ziel=\"kontakt\">Kontakt</a></div></div><div class=\"w-inhalt\"><h1>Igel gefunden – was tun?</h1><p class=\"w-datum\">Aktualisiert am 15. Oktober 2026</p><p>Die meisten Igel brauchen keine Hilfe. Igel sind nachtaktiv: Tagsüber schlafen sie in einem Nest aus Laub. Von etwa November bis März halten sie Winterschlaf. Vorher müssen sie sich ein dickes Fettpolster anfressen.</p><h2>Braucht der Igel Hilfe?</h2><table class=\"w-tabelle\"><thead><tr><th>Das beobachtest du</th><th>Das tust du</th></tr></thead><tbody><tr><td>Der Igel ist verletzt, blutet oder humpelt.</td><td>Notfall! Sofort anrufen.</td></tr><tr><td>Der Igel läuft im Spätherbst oder Winter am Tag herum oder torkelt.</td><td>Er ist wahrscheinlich krank. Sichern und anrufen.</td></tr><tr><td>Ein junger Igel wiegt im November weniger als 500 g.</td><td>Er ist zu leicht für den Winterschlaf. Sichern und anrufen.</td></tr><tr><td>Der Igel wiegt im November mehr als 500 g, ist munter und nur nachts unterwegs.</td><td>Er ist gesund. Lass ihn in Ruhe!</td></tr></tbody></table><h2>Erste Hilfe – so hilfst du richtig</h2><ol><li>Zieh dicke Handschuhe an.</li><li>Setz den Igel in einen hohen Karton mit Zeitungspapier und einem alten Handtuch.</li><li>Stell den Karton in einen ruhigen, warmen Raum.</li><li>Biete ihm ein flaches Schälchen Wasser und etwas Katzenfutter an.</li><li>Ruf uns an! Wir sagen dir, wie es weitergeht.</li></ol><div class=\"w-kasten w-kasten--warnung\"><strong>Bitte niemals füttern:</strong><ul><li>Milch – davon bekommen Igel schlimmen Durchfall</li><li>Obst und Rosinen</li><li>Nüsse und Brot</li></ul><p>Igel fressen vor allem Käfer, Raupen und Regenwürmer.</p></div></div><div class=\"w-fuss\"><a data-extern>Impressum</a> · <a data-extern>Datenschutz</a> · © 2026 Igelhilfe Holunderau e. V.</div>"
+   },
+   {
+    "id": "station",
+    "titel": "Igelhilfe Holunderau e. V.",
+    "adresse": "www.igelhilfe-holunderau.de",
+    "farbe": "gruen",
+    "html": "<div class=\"w-kopf\"><div class=\"w-logo\">🦔 Igelhilfe Holunderau e. V.</div><div class=\"w-menue\"><a class=\"aktiv\" data-ziel=\"station\">Start</a><a data-ziel=\"hilfe\">Igel gefunden?</a><a data-extern>Über uns</a><a data-ziel=\"kontakt\">Kontakt</a></div></div><div class=\"w-inhalt\"><h1>Willkommen bei der Igelhilfe!</h1><div class=\"w-bild\"><span>🦔</span><small>Foto: Igel „Krümel“ in unserer Station</small></div><p>Wir sind ein Verein von Igelfreunden aus Holunderau. Seit 2009 kümmern wir uns um kranke, verletzte und zu leichte Igel. Im Frühling lassen wir sie wieder frei.</p><div class=\"w-kasten w-kasten--warnung\"><strong>Herbst 2026: Unsere Station ist fast voll!</strong> Bitte bring keinen Igel vorbei, ohne vorher anzurufen.<br>Igel-Notruf: 0123 456789</div><div class=\"w-karte\"><h3>Termin</h3><p>Igel-Nachmittag für Kinder: Samstag, 14. November 2026, 14 bis 16 Uhr</p></div><a class=\"w-knopf\" data-ziel=\"hilfe\">Igel gefunden? Hier erfährst du, was zu tun ist.</a></div><div class=\"w-fuss\"><a data-extern>Impressum</a> · <a data-extern>Datenschutz</a> · © 2026 Igelhilfe Holunderau e. V.</div>"
+   },
+   {
+    "id": "kontakt",
+    "titel": "Kontakt | Igelhilfe Holunderau",
+    "adresse": "www.igelhilfe-holunderau.de/kontakt",
+    "farbe": "gruen",
+    "html": "<div class=\"w-kopf\"><div class=\"w-logo\">🦔 Igelhilfe Holunderau e. V.</div><div class=\"w-menue\"><a data-ziel=\"station\">Start</a><a data-ziel=\"hilfe\">Igel gefunden?</a><a data-extern>Über uns</a><a class=\"aktiv\" data-ziel=\"kontakt\">Kontakt</a></div></div><div class=\"w-inhalt\"><h1>Kontakt</h1><div class=\"w-kasten w-kasten--info\"><strong>Igel-Notruf: 0123 456789</strong></div><h2>Telefonzeiten</h2><table class=\"w-tabelle\"><thead><tr><th>Tag</th><th>Uhrzeit</th></tr></thead><tbody><tr><td>Montag bis Freitag</td><td>9 bis 12 Uhr und 15 bis 18 Uhr</td></tr><tr><td>Samstag und Sonntag</td><td>10 bis 12 Uhr</td></tr></tbody></table><p>Außerhalb dieser Zeiten hilft dir die Tierarztpraxis Dr. Lehner weiter: 0123 654321.</p><p><strong>Bitte bring keinen Igel vorbei, ohne vorher anzurufen!</strong></p><h2>Adresse</h2><p>Igelstation Holunderau<br>Am Mühlbach 7<br>E-Mail: info@igelhilfe-holunderau.de</p></div><div class=\"w-fuss\"><a data-extern>Impressum</a> · <a data-extern>Datenschutz</a> · © 2026 Igelhilfe Holunderau e. V.</div>"
+   },
+   {
+    "id": "forum",
+    "titel": "Igel im Garten – was füttern??? | Gartenplausch-Forum",
+    "adresse": "www.gartenplausch-forum.de/tiere/igel-im-garten",
+    "farbe": "grau",
+    "html": "<div class=\"w-kopf\"><div class=\"w-logo\">🌻 Gartenplausch-Forum</div><div class=\"w-menue\"><a class=\"aktiv\" data-ziel=\"forum\">Forum</a><a data-extern>Gartentipps</a><a data-extern>Anmelden</a></div></div><div class=\"w-inhalt\"><p class=\"w-klein\">Forum › Tiere im Garten › Igel</p><h1>Igel im Garten – was füttern???</h1><div class=\"w-karte\"><p><span class=\"w-autor\">Gartenzwerg_Rudi</span> · <span class=\"w-datum\">14.09.2011, 21:47 Uhr</span></p><p>Hallo Leute, bei mir läuft seit gestern ein kleiner Igel herum, sogar mittags. Ich habe ihm ein Schälchen Milch und ein paar Apfelstücke hingestellt. Die Milch hat er sofort ausgeschlabbert!!! 😊 Mein Tipp an alle: Stellt Igeln Milch und Obst hin, das lieben sie!</p></div><div class=\"w-karte\"><p><span class=\"w-autor\">Wiesenfee</span> · <span class=\"w-datum\">15.09.2011, 8:12 Uhr</span></p><p>Bitte keine Milch! Davon bekommen Igel Durchfall. Gib ihm lieber ein flaches Schälchen Wasser und etwas Katzenfutter.</p></div><details><summary>2 weitere Antworten anzeigen</summary><div class=\"w-karte\"><p><span class=\"w-autor\">Sonnenblume_88</span> · <span class=\"w-datum\">15.09.2011, 19:30 Uhr</span></p><p>Ach was, Igel sind Wildtiere. Die kommen immer allein klar. Lass ihn einfach laufen!</p></div><div class=\"w-karte\"><p><span class=\"w-autor\">Kaktus_Karl</span> · <span class=\"w-datum\">16.09.2011, 10:05 Uhr</span></p><p>Ein Igel, der am Tag herumläuft, ist oft krank. Setz ihn in einen hohen Karton mit Zeitungspapier und ruf eine Igelstation an.</p></div></details></div><div class=\"w-fuss\"><a data-extern>Forenregeln</a> · <a data-extern>Datenschutz</a></div>"
+   },
+   {
+    "id": "lexikon",
+    "titel": "Igel – Wissensbaum",
+    "adresse": "www.wissensbaum-lexikon.de/tiere/igel",
+    "farbe": "blau",
+    "html": "<div class=\"w-kopf\"><div class=\"w-logo\">🌳 Wissensbaum – das Kinderlexikon</div><div class=\"w-menue\"><a class=\"aktiv\" data-ziel=\"lexikon\">Tiere</a><a data-extern>Pflanzen</a><a data-extern>Technik</a><a data-extern>Geschichte</a></div></div><div class=\"w-inhalt\"><h1>Igel</h1><p class=\"w-datum\">Zuletzt bearbeitet: 3. März 2025</p><div class=\"w-bild\"><span>🦔</span><small>Foto: Igel im Herbstlaub</small></div><p>Igel sind kleine Säugetiere. Auf dem Rücken tragen sie 6000 bis 8000 Stacheln. Bei Gefahr rollen sie sich zu einer Stachelkugel zusammen.</p><p>Igel sind nachtaktiv. Erst in der Dämmerung gehen sie auf Futtersuche. Sie fressen vor allem Käfer, Raupen, Regenwürmer und Schnecken. Dabei schmatzen und schnaufen sie oft laut.</p><p>Im Herbst fressen sich Igel ein Fettpolster an. Von etwa November bis März halten sie Winterschlaf in einem Nest aus Laub. Ihr Körper kühlt dann stark ab, und ihr Herz schlägt ganz langsam.</p><h2>Steckbrief</h2><table class=\"w-tabelle\"><tbody><tr><th>Länge</th><td>20 bis 30 cm</td></tr><tr><th>Gewicht (erwachsen)</th><td>800 bis 1500 g</td></tr><tr><th>Lebensraum</th><td>Gärten, Parks, Hecken, Waldränder</td></tr><tr><th>Feinde</th><td>Uhu, Dachs, Fuchs</td></tr></tbody></table></div><div class=\"w-fuss\"><a data-extern>Impressum</a> · <a data-extern>Datenschutz</a> · Wissensbaum – Wissen für Kinder</div>"
+   }
+  ],
+  "items": [
+   {
+    "id": "d1-1",
+    "typ": "multi",
+    "stufe": 2,
+    "kompetenz": "bewerten",
+    "frage": "Elif sieht sich die Trefferliste genau an. Welche Aussagen über die Treffer stimmen?",
+    "optionen": [
+     {
+      "text": "„Stachelglück“ und „Igelparadies“ haben bezahlt, damit ihre Treffer ganz oben stehen.",
+      "richtig": true
+     },
+     {
+      "text": "Der Forumsbeitrag ist schon 15 Jahre alt. Sein Rat könnte veraltet oder falsch sein.",
+      "richtig": true
+     },
+     {
+      "text": "Die Seite der Igelhilfe ist aktuell und kommt von Leuten, die selbst Igel pflegen.",
+      "richtig": true
+     },
+     {
+      "text": "„Stachelglück“ ist glaubwürdig, denn in der Anzeige steht, dass Tierärzte begeistert sind.",
+      "richtig": false
+     },
+     {
+      "text": "Das Video wurde über eine Million Mal angeschaut. Darum kann Elif ihm sicher vertrauen.",
+      "richtig": false
+     },
+     {
+      "text": "Das Kinderlexikon ist von 2025. Darum ist es zu alt, um ihm noch zu vertrauen.",
+      "richtig": false
+     }
+    ],
+    "tipp": "Achte auf das Wort „Anzeige“ und auf die Datumsangaben. Frag dich bei jedem Treffer: Wer hat das geschrieben – und warum?",
+    "tippSeite": "start",
+    "erklaerung": "„Anzeige“ bedeutet: Die Firmen haben für den Platz bezahlt und wollen etwas verkaufen. Der Forumsbeitrag ist von 2011, die Seite der Igelhilfe dagegen vom Oktober 2026 und von Fachleuten. Viele Aufrufe oder Werbesprüche beweisen nichts, und ein Lexikon von 2025 ist nicht veraltet."
+   },
+   {
+    "id": "d1-2",
+    "typ": "multi",
+    "stufe": 2,
+    "kompetenz": "finden",
+    "frage": "Woran erkennst du laut der Igelhilfe, dass ein Igel Hilfe braucht?",
+    "optionen": [
+     {
+      "text": "Er ist im Spätherbst mitten am Tag unterwegs.",
+      "richtig": true
+     },
+     {
+      "text": "Er wiegt im November weniger als 500 g.",
+      "richtig": true
+     },
+     {
+      "text": "Er blutet oder humpelt beim Laufen.",
+      "richtig": true
+     },
+     {
+      "text": "Er ist nur nachts im Garten unterwegs.",
+      "richtig": false
+     },
+     {
+      "text": "Er rollt sich zu einer Stachelkugel zusammen.",
+      "richtig": false
+     },
+     {
+      "text": "Er schmatzt und schnauft laut beim Fressen.",
+      "richtig": false
+     }
+    ],
+    "tipp": "Öffne den Treffer der Igelhilfe. Lies in der Tabelle genau die Zeilen, in denen steht, dass du anrufen sollst.",
+    "tippSeite": "hilfe",
+    "erklaerung": "Laut Tabelle sollst du anrufen, wenn ein Igel verletzt ist, im Spätherbst am Tag herumläuft oder im November weniger als 500 g wiegt. Wenn ein Igel nachts unterwegs ist, sich einrollt oder laut schmatzt, ist das ganz normal."
+   },
+   {
+    "id": "d1-3",
+    "typ": "single",
+    "stufe": 2,
+    "kompetenz": "navigieren",
+    "frage": "Elif will die Igelhilfe anrufen. Vorher möchte sie wissen, zu welchen Zeiten dort jemand ans Telefon geht. Welchen Menüpunkt auf der Website der Igelhilfe muss sie dafür antippen?",
+    "optionen": [
+     {
+      "text": "„Start“",
+      "richtig": false
+     },
+     {
+      "text": "„Igel gefunden?“",
+      "richtig": false
+     },
+     {
+      "text": "„Über uns“",
+      "richtig": false
+     },
+     {
+      "text": "„Kontakt“",
+      "richtig": true
+     }
+    ],
+    "tipp": "Tippe die Menüpunkte der Igelhilfe der Reihe nach an. Achte darauf, wo wirklich Uhrzeiten stehen – eine Telefonnummer allein reicht nicht.",
+    "tippSeite": "station",
+    "erklaerung": "Die Telefonzeiten stehen unter „Kontakt“: montags bis freitags von 9 bis 12 Uhr und von 15 bis 18 Uhr, am Wochenende von 10 bis 12 Uhr. Auf der Startseite der Igelhilfe steht nur die Notrufnummer, aber keine Zeiten."
+   },
+   {
+    "id": "d1-4",
+    "typ": "matrix",
+    "stufe": 3,
+    "kompetenz": "verknuepfen",
+    "frage": "Im Gartenplausch-Forum geben vier Leute einen Rat. Vergleiche jeden Rat mit den Tipps der Igelhilfe. Ist der Rat gut oder schlecht für Elifs Igel?",
+    "spalten": [
+     "gut für Elifs Igel",
+     "schlecht für Elifs Igel"
+    ],
+    "aussagen": [
+     {
+      "text": "Der Rat von „Gartenzwerg_Rudi“",
+      "richtig": false
+     },
+     {
+      "text": "Der Rat von „Wiesenfee“",
+      "richtig": true
+     },
+     {
+      "text": "Der Rat von „Sonnenblume_88“",
+      "richtig": false
+     },
+     {
+      "text": "Der Rat von „Kaktus_Karl“",
+      "richtig": true
+     }
+    ],
+    "tipp": "Öffne den Forumsbeitrag und tippe auf „2 weitere Antworten anzeigen“. Vergleiche jeden Rat mit den Tipps auf der Seite der Igelhilfe. Denk an das Gewicht von Elifs Igel und an die Tageszeit.",
+    "tippSeite": "forum",
+    "erklaerung": "Die Igelhilfe empfiehlt Wasser, Katzenfutter, einen Karton und einen Anruf – genau wie Wiesenfee und Kaktus_Karl. Milch und Obst (Gartenzwerg_Rudi) schaden Igeln. Elifs Igel läuft am Tag herum und wiegt nur 380 g, darum wäre „einfach laufen lassen“ (Sonnenblume_88) falsch."
+   }
+  ]
+ }
+}

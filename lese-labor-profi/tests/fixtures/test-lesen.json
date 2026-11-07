@@ -1,0 +1,2 @@
+{"modul":"lesen","texte":[{"id":"l-test","titel":"Testtext","textsorte":"Sachtext","einleitung":"Ein Test.","text":{"titel":"Testtext","untertitel":"Unter","absaetze":["Erster Absatz.","## Zwischen","Zweiter Absatz."],"tabelle":{"titel":"Tab","kopf":["A","B"],"zeilen":[["1","2"]]}},
+"items":[{"id":"l-test-1","typ":"single","kompetenz":"entnehmen","stufe":1,"frage":"Was steht im ersten Absatz?","tipp":"Absatz 1","erklaerung":"…","optionen":[{"text":"Erster","richtig":true},{"text":"Zweiter","richtig":false},{"text":"Dritter","richtig":false}]}]}]}

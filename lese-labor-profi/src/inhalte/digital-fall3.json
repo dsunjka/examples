@@ -1,0 +1,195 @@
+{
+ "modul": "digital",
+ "fall": {
+  "id": "fall3",
+  "nummer": 3,
+  "titel": "Aufregung im Klassenchat",
+  "quellenart": "Messenger und soziales Netzwerk",
+  "einleitung": "Heute ist Mittwoch, der 20. Januar 2027. Du gehst in die Klasse 4c der Grundschule Hollerbach am Moos. Am Nachmittag schaust du in den Klassenchat in der App „Plapperpost“ – dort ist viel los. Finde heraus, welche Nachrichten stimmen und welche riskant sind.",
+  "rahmen": "app",
+  "app": {
+   "name": "Plapperpost",
+   "symbol": "💬",
+   "farbe": "tuerkis"
+  },
+  "startseite": "chat",
+  "seiten": [
+   {
+    "id": "chat",
+    "titel": "Klasse 4c 🦊",
+    "html": "<div class=\"c-gruppe\"><a data-ziel=\"info\"><strong>Klasse 4c 🦊</strong></a><small>24 Mitglieder · Tippe auf den Namen für die Gruppeninfo</small></div><div class=\"c-verlauf\"><div class=\"c-hinweis\">Gestern</div><div class=\"c-nachricht\"><span class=\"c-absender\">Elif</span><span class=\"c-text\">Alles Gute zum Geburtstag, Luca! 🎂🎉</span><span class=\"c-zeit\">16:10</span></div><div class=\"c-nachricht\"><span class=\"c-absender\">Hannah</span><span class=\"c-text\">Von mir auch!!! 🥳</span><span class=\"c-zeit\">16:12</span></div><div class=\"c-nachricht\"><span class=\"c-absender\">Luca</span><span class=\"c-text\">Danke euch! 😊 Morgen bringe ich Muffins für alle mit.</span><span class=\"c-zeit\">16:31</span></div><div class=\"c-nachricht\"><span class=\"c-absender\">Mia</span><small>↪ Weitergeleitet</small><span class=\"c-text\">‼️ Schick diese Nachricht an 10 Leute, sonst hast du eine Woche lang nur Pech! 😱 Wer sie weiterschickt, hat morgen Glück. 🍀 NICHT ignorieren!!! ‼️</span><span class=\"c-zeit\">19:41</span></div><div class=\"c-hinweis\">Heute</div><div class=\"c-nachricht\"><span class=\"c-absender\">Aylin</span><span class=\"c-text\">Hausaufgaben für morgen: Mathe Buch Seite 54, Nummer 3 und 4 ✏️ Und morgen haben wir Schwimmen – denkt an die Schwimmsachen! 🏊</span><span class=\"c-zeit\">13:20</span></div><div class=\"c-nachricht\"><span class=\"c-absender\">Jonas</span><span class=\"c-text\">Danke! Muss man Nummer 5 auch machen?</span><span class=\"c-zeit\">13:22</span></div><div class=\"c-nachricht\"><span class=\"c-absender\">Aylin</span><span class=\"c-text\">Nein, Nummer 5 ist freiwillig.</span><span class=\"c-zeit\">13:23</span></div><div class=\"c-nachricht c-ich\"><span class=\"c-text\">Danke, Aylin! 👍</span><span class=\"c-zeit\">13:25</span></div><div class=\"c-hinweis\">15:47 · „Gratis-Juwelen 💎“ ist über den Einladungslink beigetreten</div><div class=\"c-nachricht\"><span class=\"c-absender\"><a data-ziel=\"profil\">Gratis-Juwelen 💎</a></span><small>~ nicht in deinen Kontakten</small><span class=\"c-text\">Hallo, Burgenzauber-Fans! 🎁 Nur heute gibt es 5.000 Juwelen GRATIS! Tippe auf den Link, gib deinen Spielernamen und dein Passwort ein – fertig! 👉 <a data-extern>JUWELEN JETZT HOLEN</a></span><span class=\"c-zeit\">15:48</span></div><div class=\"c-nachricht\"><span class=\"c-absender\">Paul</span><span class=\"c-text\">Wer kommt heute um 17 Uhr mit zum Schlittenberg? ☃️ Holt mich ab: Birkenstraße 12, Klingel „Huber“. Oder ruft mich an: 0123 4567890</span><span class=\"c-zeit\">16:02</span></div><div class=\"c-nachricht\"><span class=\"c-absender\">Ben</span><span class=\"c-text\">LEUTE!!! ❄️ Morgen fällt die Schule wegen Glatteis aus!!! Hat mein Cousin gesagt. Der hat es auf Flitzclip gesehen 👉 <a data-ziel=\"clip\">Video ansehen</a></span><span class=\"c-zeit\">16:20</span></div><div class=\"c-nachricht\"><span class=\"c-absender\">Sofia</span><span class=\"c-text\">Echt jetzt?? 😮 Und was ist mit Schwimmen?</span><span class=\"c-zeit\">16:22</span></div><div class=\"c-nachricht\"><span class=\"c-absender\">Ben</span><span class=\"c-text\">Fällt alles aus! Ganz sicher!!! 🎉</span><span class=\"c-zeit\">16:23</span></div><div class=\"c-nachricht\"><span class=\"c-absender\">Emir</span><span class=\"c-text\">Woher weiß dein Cousin das? Der geht doch gar nicht auf unsere Schule. 🤔</span><span class=\"c-zeit\">16:25</span></div><div class=\"c-nachricht\"><span class=\"c-absender\">Mia</span><span class=\"c-text\">Juhu, dann schlafe ich morgen aus! 😴</span><span class=\"c-zeit\">16:27</span></div></div>"
+   },
+   {
+    "id": "info",
+    "titel": "Gruppeninfo",
+    "html": "<div class=\"c-gruppe\"><strong>Klasse 4c 🦊</strong><small>Gruppe · 24 Mitglieder</small></div><h3>Beschreibung</h3><p>Unser Klassenchat für Hausaufgaben, Termine und Fragen. Gruppe erstellt von Lena am 21.09.2026.</p><p>🔗 Schul-Website: <a data-ziel=\"schule\">www.gs-hollerbach-moos.de/aktuelles</a></p><h3>Unsere Chat-Regeln</h3><p class=\"w-klein\">Beschlossen im Klassenrat am 25.09.2026</p><ol><li>Wir schreiben freundlich und beleidigen niemanden.</li><li>Adressen, Telefonnummern und Passwörter schreiben wir nie in die Gruppe.</li><li>Kettenbriefe leiten wir nicht weiter.</li><li>Wichtige Schul-Infos prüfen wir auf der Schul-Website.</li><li>Von 20:00 bis 7:00 Uhr ist Chat-Pause.</li><li>Den Einladungslink geben wir nicht weiter. Neue Mitglieder fügen nur Lena oder Emir hinzu.</li></ol><h3>Einstellungen</h3><div class=\"a-zeile\"><span>Beitritt über Einladungslink</span><strong>aktiv</strong></div><div class=\"a-zeile\"><span>Mitglieder hinzufügen</span><strong>nur Admins</strong></div><h3>24 Mitglieder</h3><ul><li>Du</li><li>Lena <small>· Gruppen-Admin</small></li><li>Emir <small>· Gruppen-Admin</small></li><li>Aylin</li><li>Ben</li><li>Elif</li><li>Felix</li><li>Hannah</li><li>Jonas</li><li>Luca</li><li>Mia</li><li>Paul</li><li>Sofia</li><li>Gratis-Juwelen 💎 <small>· heute über Einladungslink beigetreten</small></li></ul><details><summary>Alle anzeigen (10 weitere)</summary><p>Leyla, Noah, Amira, Mateo, Ida, Leon, Lina, Tim, Clara, Jakob</p></details>"
+   },
+   {
+    "id": "profil",
+    "titel": "Kontaktinfo",
+    "html": "<div class=\"c-gruppe\"><strong>Kontaktinfo</strong><small>Plapperpost</small></div><div class=\"w-kasten w-kasten--warnung\">⚠️ Dieser Kontakt ist nicht in deinem Adressbuch.</div><div class=\"w-bild\"><span>💎</span><small>Profilbild</small></div><h2>Gratis-Juwelen 💎</h2><p class=\"w-klein\">Status: „Gratis-Juwelen für ALLE Burgenzauber-Fans!!! 🎁🎁🎁“</p><div class=\"a-zeile\"><span>Bei Plapperpost seit</span><strong>19. Januar 2027</strong></div><div class=\"a-zeile\"><span>Telefonnummer</span><strong>verborgen</strong></div><div class=\"a-zeile\"><span>Gemeinsame Gruppen</span><strong>Klasse 4c 🦊</strong></div><p><span class=\"w-knopf\">🚫 Blockieren</span> <span class=\"w-knopf\">⚠️ Melden</span></p>"
+   },
+   {
+    "id": "clip",
+    "titel": "Beitrag von @eisprinz_max",
+    "rahmen": "app",
+    "app": {
+     "name": "Flitzclip",
+     "symbol": "🎬",
+     "farbe": "rot"
+    },
+    "farbe": "rot",
+    "html": "<div class=\"p-beitrag\"><div class=\"p-kopf\"><span class=\"p-avatar\">🧊</span><span class=\"p-name\">Eis-Prinz Max</span><span><span class=\"p-konto\">@eisprinz_max</span><span class=\"p-zeit\">13. Januar 2026</span></span></div><p class=\"p-text\">❗❗ ACHTUNG: MORGEN SCHULFREI wegen Glatteis!!! ❄️🧊 Alle Schulen bleiben zu! Teilt das, damit es jeder erfährt!!! #schulfrei #glatteis</p><div class=\"p-bild\"><span>❄️</span><small>Video (0:14): Schneeflocken vor einem Fenster</small></div><div class=\"p-leiste\"><span>❤️ 48.300</span><span>💬 2.140</span><span>↪ 9.870-mal geteilt</span></div><details><summary>Kommentare anzeigen</summary><div class=\"p-kommentar\"><span class=\"p-name\">lilly.lacht</span><p class=\"p-text\">Juhu, endlich ausschlafen!!! 😴</p></div><div class=\"p-kommentar\"><span class=\"p-name\">tom_kickt</span><p class=\"p-text\">Welche Schulen denn? Woher weißt du das?</p></div><div class=\"p-kommentar\"><span class=\"p-name\">papa_von_zwei</span><p class=\"p-text\">Bei uns war ganz normal Schule. Bitte so etwas nicht ohne Quelle teilen!</p></div><div class=\"p-kommentar\"><span class=\"p-name\">snowboard_sam</span><p class=\"p-text\">Ob die Schule ausfällt, steht immer auf der Website eurer Schule. 👍</p></div></details></div>"
+   },
+   {
+    "id": "schule",
+    "titel": "Aktuelles – Grundschule Hollerbach am Moos",
+    "rahmen": "browser",
+    "adresse": "www.gs-hollerbach-moos.de/aktuelles",
+    "farbe": "gruen",
+    "html": "<div class=\"w-kopf\"><div class=\"w-logo\">🌳 Grundschule Hollerbach am Moos</div><div class=\"w-menue\"><a class=\"aktiv\" data-ziel=\"schule\">Aktuelles</a><a data-ziel=\"termine\">Termine</a><a data-extern>Unsere Schule</a><a data-extern>Kontakt</a></div></div><div class=\"w-inhalt\"><h1>Aktuelles</h1><div class=\"w-karte\"><p class=\"w-datum\"><time datetime=\"2027-01-20\">Mittwoch, 20. Januar 2027, 14:30 Uhr</time></p><h3>Winterwetter: Unterricht am Donnerstag findet statt</h3><p>Liebe Eltern, liebe Schülerinnen und Schüler,</p><p>für die Nacht ist Glätte angekündigt. Der Unterricht findet am <b>Donnerstag, 21. Januar 2027</b>, trotzdem ganz normal nach Stundenplan statt. Bitte planen Sie für den Schulweg mehr Zeit ein. Die Kinder sollten feste Winterschuhe tragen.</p><p><b>Ausnahme:</b> Der Schwimmunterricht der 4. Klassen fällt am Donnerstag aus, weil der Bus zum Hallenbad wegen der Glätte nicht fährt. Die Klassen 4a, 4b und 4c haben stattdessen Unterricht im Klassenzimmer. Die Schwimmsachen bleiben bitte zu Hause. Das Schwimmen wird am Donnerstag, 28. Januar 2027, nachgeholt.</p><p>Fällt der Unterricht wegen Glatteis wirklich einmal aus, entscheidet darüber das Landratsamt. Wir informieren Sie dann sofort hier unter „Aktuelles“ und über die Eltern-App „Schulbote“.</p><p class=\"w-autor\">Barbara Lindner, Rektorin</p></div><div class=\"w-kasten w-kasten--info\">ℹ️ Infos zu Unterrichtsausfall gibt es nur hier und in der Eltern-App „Schulbote“ – nicht in Klassenchats oder sozialen Netzwerken.</div><div class=\"w-karte\"><p class=\"w-datum\"><time datetime=\"2027-01-15\">Freitag, 15. Januar 2027</time></p><h3>Vorlesewettbewerb der 4. Klassen</h3><p>Am Montag, 25. Januar, lesen die besten Vorleserinnen und Vorleser der 4. Klassen in der Aula vor. Beginn ist um 8:15 Uhr. Wir drücken allen die Daumen!</p></div><div class=\"w-karte\"><p class=\"w-datum\"><time datetime=\"2027-01-12\">Dienstag, 12. Januar 2027</time></p><h3>Neue Schach-AG</h3><p>Ab sofort gibt es eine Schach-AG für die 3. und 4. Klassen: jeden Dienstag von 13:15 bis 14:00 Uhr in Raum 12. Anmeldung im Sekretariat.</p></div></div><div class=\"w-fuss\"><span>Grundschule Hollerbach am Moos · Schulweg 3</span><span>Sekretariat: Mo–Fr 7:30–12:30 Uhr</span><a data-extern>Impressum</a><a data-extern>Datenschutz</a></div>"
+   },
+   {
+    "id": "termine",
+    "titel": "Termine – Grundschule Hollerbach am Moos",
+    "rahmen": "browser",
+    "adresse": "www.gs-hollerbach-moos.de/termine",
+    "farbe": "gruen",
+    "html": "<div class=\"w-kopf\"><div class=\"w-logo\">🌳 Grundschule Hollerbach am Moos</div><div class=\"w-menue\"><a data-ziel=\"schule\">Aktuelles</a><a class=\"aktiv\" data-ziel=\"termine\">Termine</a><a data-extern>Unsere Schule</a><a data-extern>Kontakt</a></div></div><div class=\"w-inhalt\"><h1>Termine</h1><p class=\"w-klein\">Stand: 20. Januar 2027</p><table class=\"w-tabelle\"><thead><tr><th>Datum</th><th>Termin</th><th>Für wen?</th></tr></thead><tbody><tr><td>Mo., 25.01.2027</td><td>Vorlesewettbewerb, Aula, 8:15 Uhr</td><td>4. Klassen</td></tr><tr><td>Do., 28.01.2027</td><td>Schwimmen (Nachholtermin)</td><td>4a, 4b, 4c</td></tr><tr><td>Fr., 05.02.2027</td><td>Faschingsfeier, Unterrichtsende 11:20 Uhr</td><td>alle Klassen</td></tr><tr><td>08.02.–12.02.2027</td><td>Faschingsferien</td><td>alle Klassen</td></tr></tbody></table></div><div class=\"w-fuss\"><span>Grundschule Hollerbach am Moos · Schulweg 3</span><span>Sekretariat: Mo–Fr 7:30–12:30 Uhr</span><a data-extern>Impressum</a><a data-extern>Datenschutz</a></div>"
+   }
+  ],
+  "items": [
+   {
+    "id": "d3-1",
+    "typ": "matrix",
+    "stufe": 2,
+    "kompetenz": "finden",
+    "frage": "Lies den Klassenchat und die Gruppeninfo. Stimmen die Aussagen?",
+    "spalten": [
+     "richtig",
+     "falsch"
+    ],
+    "aussagen": [
+     {
+      "text": "Die Chat-Regeln hat die Klasse im Klassenrat beschlossen.",
+      "richtig": true
+     },
+     {
+      "text": "Neue Mitglieder dürfen nur Lena und Aylin hinzufügen.",
+      "richtig": false
+     },
+     {
+      "text": "„Gratis-Juwelen“ wurde von Lena zur Gruppe hinzugefügt.",
+      "richtig": false
+     },
+     {
+      "text": "In Mathe ist Nummer 5 auf Seite 54 freiwillig.",
+      "richtig": true
+     }
+    ],
+    "tipp": "Die Chat-Regeln und die Mitgliederliste stehen in der Gruppeninfo. Lies dort und im Verlauf genau nach. Achte auf die Namen und darauf, wie jemand in die Gruppe gekommen ist.",
+    "tippSeite": "info",
+    "erklaerung": "In der Gruppeninfo steht: Die Regeln wurden im Klassenrat beschlossen, und neue Mitglieder fügen nur Lena oder Emir hinzu. „Gratis-Juwelen“ ist selbst über den Einladungslink beigetreten. Laut Aylin ist Nummer 5 freiwillig."
+   },
+   {
+    "id": "d3-2",
+    "typ": "single",
+    "stufe": 2,
+    "kompetenz": "navigieren",
+    "frage": "Du willst Bens Nachricht mit der Website deiner Schule vergleichen. Wo findest du einen Link, der dich zur Schul-Website führt?",
+    "optionen": [
+     {
+      "text": "in der Gruppeninfo – sie öffnet sich über den Namen „Klasse 4c“",
+      "richtig": true
+     },
+     {
+      "text": "in Bens Glatteis-Nachricht – hinter dem Link „Video ansehen“",
+      "richtig": false
+     },
+     {
+      "text": "im Profil von „Gratis-Juwelen“ – es öffnet sich über den Namen",
+      "richtig": false
+     },
+     {
+      "text": "in den Kommentaren unter dem Glatteis-Video auf Flitzclip",
+      "richtig": false
+     }
+    ],
+    "tipp": "Probiere die Möglichkeiten aus und schau, wohin du wirklich kommst. Achte darauf, ob oben eine Adresse der Schule erscheint.",
+    "erklaerung": "Tippst du oben auf „Klasse 4c“, öffnet sich die Gruppeninfo. In der Beschreibung steht der Link zur Schul-Website. Bens Link führt nur zu einem Video auf Flitzclip."
+   },
+   {
+    "id": "d3-3",
+    "typ": "multi",
+    "stufe": 3,
+    "kompetenz": "verknuepfen",
+    "frage": "Vergleiche die Nachrichten von Ben und Aylin mit der Schul-Website. Welche Aussagen stimmen?",
+    "optionen": [
+     {
+      "text": "Die Kinder der 4c müssen morgen in die Schule kommen.",
+      "richtig": true
+     },
+     {
+      "text": "Das Schwimmen, an das Aylin erinnert, fällt morgen aus.",
+      "richtig": true
+     },
+     {
+      "text": "Morgen fällt die Schule aus, weil der Bus zum Hallenbad nicht fährt.",
+      "richtig": false
+     },
+     {
+      "text": "Das Schwimmen wird am Freitag, 22. Januar, nachgeholt.",
+      "richtig": false
+     },
+     {
+      "text": "Einen Unterrichtsausfall gibt die Schule im Klassenchat bekannt.",
+      "richtig": false
+     },
+     {
+      "text": "Bens Nachricht stimmt, denn auch die Schule warnt vor Glätte.",
+      "richtig": false
+     }
+    ],
+    "tipp": "Lies auf der Schul-Website die neueste Nachricht unter „Aktuelles“ genau. Unterscheide: Was gilt für alle Kinder, und was gilt nur für die 4. Klassen?",
+    "tippSeite": "schule",
+    "erklaerung": "Laut Schul-Website findet der Unterricht morgen nach Stundenplan statt – Ben irrt sich. Nur das Schwimmen der 4. Klassen fällt aus, weil der Bus zum Hallenbad nicht fährt. Es wird am Donnerstag, 28. Januar, nachgeholt."
+   },
+   {
+    "id": "d3-4",
+    "typ": "multi",
+    "stufe": 3,
+    "kompetenz": "bewerten",
+    "frage": "Nicht jede Nachricht im Chat ist harmlos. Welche Aussagen stimmen?",
+    "optionen": [
+     {
+      "text": "Paul sollte seine Adresse löschen – auch der Fremde in der Gruppe kann sie lesen.",
+      "richtig": true
+     },
+     {
+      "text": "„Gratis-Juwelen“ ist seit gestern bei Plapperpost und will Passwörter – verdächtig!",
+      "richtig": true
+     },
+     {
+      "text": "Das Flitzclip-Video sagt nichts über morgen, denn es ist vom Januar 2026.",
+      "richtig": true
+     },
+     {
+      "text": "Das Flitzclip-Video ist glaubwürdig, weil es über 48.000 Menschen gefällt.",
+      "richtig": false
+     },
+     {
+      "text": "Mias Nachricht kann man ruhig weiterleiten, weil sie aus der eigenen Klasse kommt.",
+      "richtig": false
+     },
+     {
+      "text": "Die Juwelen-Nachricht ist echt, weil darin der Name des Spiels „Burgenzauber“ steht.",
+      "richtig": false
+     }
+    ],
+    "tipp": "Prüfe Absender, Datum und Quelle: Öffne das Profil des unbekannten Kontakts und vergleiche das Datum des Videos mit dem heutigen Datum. Denk auch an eure Chat-Regeln.",
+    "tippSeite": "profil",
+    "erklaerung": "Pauls Adresse sieht jetzt jeder in der Gruppe, auch der Fremde. Ein neues Konto, das nach Passwörtern fragt, will Daten stehlen, und das Video ist ein Jahr alt. Viele Likes oder ein bekannter Spielname beweisen nichts, und Kettenbriefe leitet man nie weiter – auch nicht aus der eigenen Klasse."
+   }
+  ]
+ }
+}

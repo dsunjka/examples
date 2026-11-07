@@ -1,0 +1,239 @@
+/* ===== Ereignisse, Einstellungen und Start ===== */
+let themaGesetzt = false;
+function wendeEinstellungenAn() {
+  const e = E(), root = document.documentElement;
+  root.style.setProperty('--gross', { normal: 1, gross: 1.12, sehrgross: 1.25 }[e.schrift] || 1);
+  root.style.setProperty('--zeilen', e.weit ? 1.95 : 1.55);
+  root.classList.toggle('ruhig', !!e.ruhig);
+  if (e.thema === 'light' || e.thema === 'dark') { root.setAttribute('data-theme', e.thema); themaGesetzt = true; }
+  else if (themaGesetzt) { root.removeAttribute('data-theme'); themaGesetzt = false; }
+}
+function gruppeSortiert(ids) {
+  const reihenfolge = Object.keys(REG.gruppen);
+  return ids.slice().sort((a, b) => {
+    const ga = reihenfolge.indexOf(REG.items[a].gruppe), gb = reihenfolge.indexOf(REG.items[b].gruppe);
+    if (ga !== gb) return ga - gb;
+    return REG.gruppen[REG.items[a].gruppe].items.indexOf(a) - REG.gruppen[REG.items[b].gruppe].items.indexOf(b);
+  });
+}
+function starteTraining(ids, titel, art = 'training', zurueck) {
+  starteSitzung({ art, titel, ids, zurueck: zurueck || { name: ANSICHT.name === 'sitzung' ? 'start' : ANSICHT.name, param: ANSICHT.param } });
+}
+
+document.addEventListener('click', async (ev) => {
+  const ziel = ev.target;
+  if (!(ziel instanceof Element)) return;
+  if (ziel.closest('[data-dlg]')) return;
+
+  /* Quelle: Textmarker und Links im simulierten Browser */
+  const quelle = ziel.closest('.quelle-flaeche');
+  if (quelle && SITZ) {
+    if (SITZ.markerAn) {
+      const tm = ziel.closest('[data-tm]');
+      if (tm) { ev.preventDefault(); markerUmschalten(tm); return; }
+      if (ziel.closest('a, button[data-ziel]')) { ev.preventDefault(); toast('Der Textmarker ist an. Schalte ihn aus, um Links zu öffnen.'); return; }
+    }
+    const link = ziel.closest('[data-ziel]');
+    if (link) { ev.preventDefault(); const g = gruppeVon(aktId()); if (g && g.art === 'fall') fallNavigiere(g.id, link.getAttribute('data-ziel')); return; }
+    if (ziel.closest('[data-extern]')) { ev.preventDefault(); toast('Dieser Link führt in der Übung nirgendwohin.'); return; }
+    if (ziel.closest('a')) { ev.preventDefault(); return; }
+  }
+
+  const nav = ziel.closest('[data-nav]');
+  if (nav && !nav.disabled) {
+    const n = nav.getAttribute('data-nav');
+    if (n === 'profile') neuProfilAvatar = AVATARE[Math.floor(Math.random() * AVATARE.length)];
+    zeige(n); return;
+  }
+  const el = ziel.closest('[data-act]');
+  if (!el || el.disabled) return;
+  const act = el.getAttribute('data-act'), ds = el.dataset;
+
+  switch (act) {
+    /* Antworten */
+    case 'opt': case 'mx': case 'tok': case 'chip': case 'gruppe': case 'pool': case 'hoch': case 'runter':
+      antwortAktion(act, ds); return;
+    /* Sitzung */
+    case 's-beenden': sitzungBeenden(); return;
+    case 's-gehe': gehe(Number(ds.i)); return;
+    case 's-zurueck': gehe(SITZ.index - 1); return;
+    case 's-weiter': weiter(); return;
+    case 's-abgeben': abgebenFragen(); return;
+    case 's-markieren': { const id = aktId(); SITZ.markiert[id] = !SITZ.markiert[id]; zeichneKopf(); zeichneAufgabe(); sitzungMerken(); return; }
+    case 's-tipp': tippZeigen(); return;
+    case 's-pruefen': pruefen(); return;
+    case 's-loesung': loesungZeigen(); return;
+    case 's-nochmal': SITZ.phase[aktId()] = 'edit'; zeichneAufgabe(); return;
+    case 's-springen': {
+      const z = el.dataset.ziel === 'quelle' ? $('.quelle-spalte') : $('#aufgabe-spalte');
+      if (z) z.scrollIntoView({ block: 'start', behavior: E().ruhig ? 'auto' : 'smooth' });
+      setTimeout(springenAktualisieren, 400); return;
+    }
+    case 's-uhr': SITZ.zeitVerborgen = !SITZ.zeitVerborgen; zeichneKopf(); return;
+    case 'q-marker': SITZ.markerAn = !SITZ.markerAn; el.setAttribute('aria-pressed', String(SITZ.markerAn)); $('#quelle').classList.toggle('marker-an', SITZ.markerAn); if (SITZ.markerAn) toast('Textmarker an: Tippe auf Sätze, um sie gelb zu markieren.'); return;
+    case 'q-loeschen': markerLoeschen(); return;
+    case 'q-gross': SITZ.quelleGross = !SITZ.quelleGross; renderSitzung(); return;
+    case 'b-zurueck': case 'b-vor': case 'b-start': { const g = gruppeVon(aktId()); if (g && g.art === 'fall') fallNavigiere(g.id, act.slice(2)); return; }
+
+    /* Profile */
+    case 'profil-wahl': DB.aktivesProfil = ds.id; speichern(true); zeige('start'); return;
+    case 'ava': neuProfilAvatar = ds.ava; $$('.ava-wahl button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.ava === neuProfilAvatar))); return;
+    case 'profil-loeschen': {
+      const p = DB.profile[ds.id]; if (!p) return;
+      const ok = await dialog({ titel: `Profil „${p.name}“ löschen?`, text: 'Der ganze Fortschritt dieses Profils wird von diesem Gerät gelöscht. Das kann man nicht rückgängig machen.', knoepfe: [{ label: 'Abbrechen', wert: false, stil: 'knopf-zweit' }, { label: 'Löschen', wert: true, stil: 'knopf-gefahr' }] });
+      if (ok) { profilLoeschen(ds.id); zeige(P() ? 'erwachsene' : 'profile'); }
+      return;
+    }
+
+    /* Start & Labore */
+    case 'laufend-weiter': sitzungFortsetzen(); return;
+    case 'laufend-verwerfen': {
+      const ok = await dialog({ titel: 'Angefangene Prüfung verwerfen?', text: 'Die Antworten dieser Prüfung werden gelöscht.', knoepfe: [{ label: 'Behalten', wert: false, stil: 'knopf-zweit' }, { label: 'Verwerfen', wert: true, stil: 'knopf-gefahr' }] });
+      if (ok) { sitzungVerwerfen(); render(); }
+      return;
+    }
+    case 'mission': { const m = tagesMission(); if (!m) return; const offen = m.ids.filter((id) => !m.erledigt.includes(id)); starteSitzung({ art: 'mission', titel: 'Tagesmission', ids: offen.length ? offen : m.ids, zurueck: { name: 'start' } }); return; }
+    case 'fehler-kiste': starteTraining(gruppeSortiert(fehlerKiste().slice(0, 12)), 'Fehler-Kiste', 'fehler', { name: 'start' }); return;
+    case 'training-gruppe': { const g = REG.gruppen[ds.g]; starteTraining(g.items.slice(), g.art === 'fall' ? `Fall ${g.daten.nummer}: ${g.titel}` : g.titel, 'training', { name: g.modul }); return; }
+    case 'training-modul': {
+      const alle = REG.module[ds.m].items, offen = alle.filter((id) => itemStatus(id) !== 'r');
+      const ids = gruppeSortiert(mische(offen.length >= 6 ? offen : alle).slice(0, 10));
+      starteTraining(ids, `${MODUL[ds.m].titel}: gemischt`, 'training', { name: ds.m }); return;
+    }
+    case 'training-ids': starteTraining(gruppeSortiert(String(ds.ids).split(',').filter((id) => REG.items[id])), ds.titel || 'Training', 'training', { name: 'start' }); return;
+    case 'pruef-intro': { const cfg = pruefConfig(ds.art); if (cfg && cfg.ids.length) zeige('pruefung-start', cfg); else toast('Für diese Prüfung fehlen noch Aufgaben.'); return; }
+    case 'pruef-los': {
+      const cfg = ANSICHT.param; if (!cfg) return;
+      const box = $('#uhr-zeigen'); if (box) { E().timerZeigen = box.checked; speichern(); }
+      starteSitzung({ art: 'pruefung', titel: cfg.titel, ids: cfg.ids, pruefArt: cfg.art, zeitMin: cfg.zeitMin, zurueck: { name: cfg.modul || 'start' } });
+      return;
+    }
+    case 'zurueck-modul': zeige(ds.m && MODUL[ds.m] ? ds.m : 'start'); return;
+    case 'pruefung-ansehen': { const e = P().pruefungen[Number(ds.i)]; if (e) zeige('ergebnis', { eintrag: e }); return; }
+
+    /* Tempo */
+    case 'tempo-start': tempoStart(); return;
+    case 'tempo-antwort': tempoAntwort(Number(ds.r)); return;
+    case 'tempo-los': tempoLos(); return;
+    case 'tempo-abbruch': tempoStopp(); TEMPO = null; zeige('tempo'); return;
+
+    /* Diktat */
+    case 'diktat': diktatStart(ds.id); return;
+    case 'diktat-modus': DIKTAT.modus = ds.modus; DIKTAT.phase = ds.modus === 'hoer' ? 'hoer' : 'bereit'; zeige('diktat'); if (ds.modus === 'hoer') diktatVorlesen(); return;
+    case 'diktat-hoeren': diktatVorlesen(); return;
+    case 'diktat-satz': diktatVorlesen(true); return;
+    case 'diktat-weiter': diktatWeiter(); return;
+    case 'diktat-blitz': diktatBlitz(); return;
+
+    /* Schreiben */
+    case 'schreibauftrag': zeige('schreibauftrag', ds.id); return;
+    case 'wort-einfuegen': {
+      const f = $('#schreibfeld'); if (!f) return;
+      const s = f.selectionStart != null ? f.selectionStart : f.value.length, e2 = f.selectionEnd != null ? f.selectionEnd : s;
+      const vor = f.value.slice(0, s), nach = f.value.slice(e2);
+      const einfueg = (vor && !/\s$/.test(vor) ? ' ' : '') + ds.wort + (nach && !/^[\s.,!?]/.test(nach) ? ' ' : '');
+      f.value = vor + einfueg + nach;
+      const pos = (vor + einfueg).length; f.focus(); try { f.setSelectionRange(pos, pos); } catch (x) { /* egal */ }
+      f.dispatchEvent(new Event('input')); return;
+    }
+    case 'schreib-check': schreibCheck(); return;
+    case 'text-kopieren': { const f = $('#schreibfeld'); if (f) { textKopieren(f.value); } return; }
+    case 'schreib-fertig': schreibFertig(); return;
+
+    /* Erwachsene */
+    case 'stimme-test': if (!sprich(['Hallo! So klingt die Vorlesestimme im Lese-Labor.'])) toast('Auf diesem Gerät gibt es keine Sprachausgabe.'); return;
+    case 'export-zeigen': { const f = $('#export-feld'), t = $('#export-code'); t.value = exportCode(); f.hidden = false; t.focus(); t.select(); return; }
+    case 'export-kopieren': { const t = $('#export-code'); try { await navigator.clipboard.writeText(t.value); toast('Code kopiert. Bewahren Sie ihn gut auf.'); } catch (x) { t.focus(); t.select(); toast('Bitte den markierten Code selbst kopieren.'); } return; }
+    case 'export-datei': sicherungAlsDatei(); return;
+    case 'import': {
+      try { const n = importCode($('#import-code').value); wendeEinstellungenAn(); toast(`${plural(n, 'Profil', 'Profile')} wiederhergestellt.`); zeige('erwachsene'); }
+      catch (x) { toast(x.message || 'Der Code konnte nicht gelesen werden.', 3600); }
+      return;
+    }
+    case 'alles-loeschen': {
+      const ok = await dialog({ titel: 'Wirklich alles löschen?', text: 'Alle Profile, Ergebnisse, Texte und Einstellungen werden von diesem Gerät gelöscht.', knoepfe: [{ label: 'Abbrechen', wert: false, stil: 'knopf-zweit' }, { label: 'Alles löschen', wert: true, stil: 'knopf-gefahr' }] });
+      if (ok) { DB = leererSpeicher(); speichern(true); erwachseneOffen = false; wendeEinstellungenAn(); zeige('profile'); }
+      return;
+    }
+    default: return;
+  }
+});
+
+document.addEventListener('change', (ev) => {
+  const el = ev.target;
+  if (!(el instanceof Element)) return;
+  if (el.matches('select[data-act="lk"]')) { antwortAktion('lk', { g: el.dataset.g, wert: el.value }); return; }
+  if (el.matches('[data-einst]')) {
+    const k = el.getAttribute('data-einst');
+    let v = el.type === 'checkbox' ? el.checked : el.value;
+    if (['zeitDigital', 'zeitLesen', 'zeitTest', 'zeitGross', 'tempoDauer', 'blitzSek', 'sprechTempo'].includes(k)) v = Number(v);
+    E()[k] = v; speichern(); wendeEinstellungenAn();
+    return;
+  }
+  if (el.id === 'import-datei' && el.files && el.files[0]) {
+    const r = new FileReader();
+    r.onload = () => { $('#import-code').value = String(r.result || '').trim(); toast('Datei geladen. Tippe auf „Wiederherstellen“.'); };
+    r.readAsText(el.files[0]);
+  }
+});
+let nameTimer = null;
+document.addEventListener('input', (ev) => {
+  const el = ev.target;
+  if (!(el instanceof Element)) return;
+  if (el.matches('input[data-act="eingabe"]')) { antwortAktion('eingabe', { wert: el.value }); return; }
+  if (el.matches('[data-act="profil-name"]')) {
+    clearTimeout(nameTimer);
+    nameTimer = setTimeout(() => { const p = DB.profile[el.dataset.id]; if (p) { p.name = el.value.trim().slice(0, 24) || p.name; speichern(); } }, 300);
+  }
+});
+document.addEventListener('submit', (ev) => {
+  const f = ev.target;
+  ev.preventDefault();
+  if (f.id === 'profil-form') { neuesProfil($('#profil-name').value, neuProfilAvatar); zeige('start'); return; }
+  if (f.id === 'gate-form') {
+    const v = Number($('#gate-antwort').value);
+    if (gateAufgabe && v === gateAufgabe.a * gateAufgabe.b) { erwachseneOffen = true; gateAufgabe = null; zeige('erwachsene'); }
+    else { toast('Das stimmt leider nicht.'); gateAufgabe = null; zeige('erwachsene'); }
+    return;
+  }
+  if (f.id === 'diktat-form') { diktatPruefen($('#diktat-eingabe').value); }
+});
+document.addEventListener('keydown', (ev) => {
+  if (dialogAufloeser) { if (ev.key === 'Escape') dialogAufloeser('Escape'); return; }
+  const el = ev.target;
+  if (ev.key === 'Enter' && el instanceof Element && el.matches('input[data-act="eingabe"]')) {
+    ev.preventDefault();
+    if (!SITZ) return;
+    if (istPruefung()) weiter(); else if (SITZ.phase[aktId()] === 'edit') pruefen(); else weiter();
+    return;
+  }
+  if (ev.key === 'Enter' && el instanceof Element && el.matches('.zu-gruppe')) { ev.preventDefault(); antwortAktion('gruppe', el.dataset); return; }
+  if ((ev.key === 'Enter' || ev.key === ' ') && el instanceof Element && el.matches('a[data-ziel], a[data-extern]')) { ev.preventDefault(); el.click(); return; }
+  if (ANSICHT.name === 'tempo-lauf' && TEMPO && TEMPO.phase !== 'start') {
+    if (ev.key === 'ArrowLeft' || ev.key === 'j') tempoAntwort(1);
+    if (ev.key === 'ArrowRight' || ev.key === 'n') tempoAntwort(0);
+  }
+});
+document.addEventListener('click', (ev) => {
+  const sum = ev.target instanceof Element ? ev.target.closest('details.auftrag[data-gruppe] > summary') : null;
+  if (!sum || !SITZ) return;
+  const d = sum.parentElement;
+  setTimeout(() => { if (SITZ) SITZ.offen[d.getAttribute('data-gruppe')] = d.open; }, 0);
+});
+window.addEventListener('hashchange', () => {
+  const h = location.hash.slice(1);
+  if (!HASH_ANSICHTEN.has(h) || h === ANSICHT.name) return;
+  if (ANSICHT.name === 'sitzung' || ANSICHT.name === 'tempo-lauf') return;
+  zeige(h);
+});
+
+function starteApp() {
+  try { document.documentElement.lang = 'de'; } catch (e) { /* egal */ }
+  baueRegister();
+  wendeEinstellungenAn();
+  if (DB.aktivesProfil && !DB.profile[DB.aktivesProfil]) DB.aktivesProfil = Object.keys(DB.profile)[0] || null;
+  const h = location.hash.slice(1);
+  zeige(P() ? (HASH_ANSICHTEN.has(h) && h !== 'profile' ? h : 'start') : 'profile');
+}
+if (window.claude && window.claude.hot && typeof window.claude.hot.ready === 'function') window.claude.hot.ready(starteApp);
+else starteApp();
