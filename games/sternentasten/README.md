@@ -6,9 +6,13 @@ Einfach `index.html` im Browser öffnen – funktioniert auf Handy, Tablet und C
 - Bunte Tasten fallen in vier Spuren herunter; jede getippte Taste spielt den nächsten Ton des Lieds.
 - Lange Tasten gedrückt halten, goldene Sterntasten bringen Extrapunkte.
 - 3 Sterne pro Lied, danach schnellere Runden für bis zu 3 Kronen.
-- Herzen statt sofortigem Spielende (Leicht 5, Mittel 3, Profi 1).
+- Schwierigkeit steuert Tempo und Herzen: Leicht (langsam, 5 Herzen), Mittel (flott, 3), Profi (schnell, 1).
 - Regenbogen-Power ab 20er-Kombo (doppelte Punkte), Notennamen (C D E … H) zum Mitlernen.
 - Neue Tasten-Looks werden mit gesammelten Sternen freigeschaltet; Fortschritt wird lokal gespeichert.
-- 9 gemeinfreie Lieder, Töne werden live mit der Web Audio API erzeugt.
+- 32 Lieder in sechs Genres: Kinderlieder, Weihnachten und Klassik (gemeinfrei) sowie Pop, Party & EDM und
+  Chillen & Träumen (eigene Kompositionen mit Beat und Basslinie).
+- Töne, Beat und Bass werden live mit der Web Audio API erzeugt.
+- Lange Tasten sind fertig, sobald ihr oberes Ende beim Finger ankommt, und dürfen noch getroffen werden,
+  solange ihre obere Hälfte zu sehen ist.
 
 Steuerung am Computer: `D` `F` `J` `K`, Pause mit der Leertaste.

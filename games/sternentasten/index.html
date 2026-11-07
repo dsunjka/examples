@@ -66,7 +66,7 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
   width: min(100%, 520px);
   box-shadow: 0 0 60px rgba(0,0,0,.45);
 }
-#cv { display: block; width: 100%; height: 100%; touch-action: none; }
+#cv { display: block; width: 100%; height: 100%; touch-action: none; -webkit-touch-callout: none; }
 
 /* ---------- HUD ---------- */
 #hud {
@@ -226,6 +226,21 @@ button:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 @keyframes shake { 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 
 .list-h { margin: 6px 0 -6px; font-family: var(--f-display); font-weight: 900; font-size: 28px; }
+.genre-bar { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 6px; scrollbar-width: none; margin-bottom: -4px; }
+.genre-bar::-webkit-scrollbar { display: none; }
+.gchip {
+  flex: none; white-space: nowrap; cursor: pointer;
+  border: 1px solid var(--panel-line); background: rgba(0,0,0,.25);
+  border-radius: 99px; padding: 9px 15px; font-weight: 700; font-size: 15px;
+  display: inline-flex; align-items: center; gap: 7px;
+}
+.gchip i { width: 10px; height: 10px; border-radius: 50%; }
+.gchip[aria-selected="true"] { background: var(--ink); color: var(--ink-dark); border-color: var(--ink); }
+.song-groups { display: grid; gap: 26px; }
+.genre { display: grid; gap: 12px; }
+.genre-h { margin: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; font-family: var(--f-display); font-weight: 900; font-size: 24px; }
+.genre-h small { font-family: var(--f-body); font-weight: 500; font-size: 14px; color: var(--muted); }
+.genre-h b { font-family: var(--f-body); font-weight: 700; font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; margin-left: auto; }
 .songs { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 12px; }
 .song {
   text-align: left;
@@ -356,9 +371,9 @@ kbd { font-family: inherit; font-weight: 700; background: rgba(255,255,255,.15);
         <div>
           <span class="label" id="lblDiff">Schwierigkeit</span>
           <div class="seg" role="radiogroup" aria-labelledby="lblDiff">
-            <button id="diff-leicht" role="radio" data-diff="leicht">Leicht<small><svg><use href="#i-heart"/></svg>5 Herzen</small></button>
-            <button id="diff-mittel" role="radio" data-diff="mittel">Mittel<small><svg><use href="#i-heart"/></svg>3 Herzen</small></button>
-            <button id="diff-profi" role="radio" data-diff="profi">Profi<small><svg><use href="#i-heart"/></svg>1 Herz</small></button>
+            <button id="diff-leicht" role="radio" data-diff="leicht">Leicht<small><svg><use href="#i-heart"/></svg>5 · langsam</small></button>
+            <button id="diff-mittel" role="radio" data-diff="mittel">Mittel<small><svg><use href="#i-heart"/></svg>3 · flott</small></button>
+            <button id="diff-profi" role="radio" data-diff="profi">Profi<small><svg><use href="#i-heart"/></svg>1 · schnell</small></button>
           </div>
         </div>
         <div class="toggles">
@@ -376,7 +391,8 @@ kbd { font-family: inherit; font-weight: 700; background: rgba(255,255,255,.15);
       </div>
 
       <h2 class="list-h">Lieder</h2>
-      <div class="songs" id="songs"></div>
+      <div class="genre-bar" id="genres" role="tablist" aria-label="Genre auswählen"></div>
+      <div class="song-groups" id="songs"></div>
 
       <details class="howto">
         <summary>So geht's</summary>
@@ -444,33 +460,91 @@ kbd { font-family: inherit; font-weight: 700; background: rgba(255,255,255,.15);
    Lieder (alle gemeinfrei). Format: Note+Oktave[:Länge]
    Länge 1 = eine Taste, 2 oder 3 = lange Halte-Taste.
    ========================================================= */
+const GENRES = [
+  { id: 'kinder', name: 'Kinderlieder', color: '#ffb347' },
+  { id: 'weihnacht', name: 'Weihnachten', color: '#ff6b7f' },
+  { id: 'klassik', name: 'Klassik', color: '#c9a7ff' },
+  { id: 'pop', name: 'Pop', sub: 'Eigene Songs mit Beat', color: '#ff7ac8' },
+  { id: 'party', name: 'Party & EDM', sub: 'Eigene Songs mit Beat', color: '#5ff0c4' },
+  { id: 'chill', name: 'Chillen & Träumen', sub: 'Eigene Songs, ganz entspannt', color: '#6cc8ff' },
+];
+/* beat: 'pop' | 'edm' | 'soft'  ·  bass: Grundton pro Takt (4 Tasten) */
 const SONGS = [
-  { id: 'entchen', title: 'Alle meine Entchen', level: 1,
+  /* ---- Kinderlieder (gemeinfrei) ---- */
+  { id: 'entchen', genre: 'kinder', title: 'Alle meine Entchen', level: 1,
     notes: 'C4 D4 E4 F4 G4:2 G4:2 A4 A4 A4 A4 G4:3 A4 A4 A4 A4 G4:3 F4 F4 F4 F4 E4:2 E4:2 D4 D4 D4 D4 C4:3' },
-  { id: 'stern', title: 'Funkel, funkel, kleiner Stern', level: 1,
+  { id: 'stern', genre: 'kinder', title: 'Funkel, funkel, kleiner Stern', level: 1,
     notes: 'C4 C4 G4 G4 A4 A4 G4:2 F4 F4 E4 E4 D4 D4 C4:2 G4 G4 F4 F4 E4 E4 D4:2 G4 G4 F4 F4 E4 E4 D4:2 C4 C4 G4 G4 A4 A4 G4:2 F4 F4 E4 E4 D4 D4 C4:3' },
-  { id: 'jakob', title: 'Bruder Jakob', level: 1,
+  { id: 'mary', genre: 'kinder', title: 'Mary hat ein kleines Lamm', level: 1,
+    notes: 'E4 D4 C4 D4 E4 E4 E4:2 D4 D4 D4:2 E4 G4 G4:2 E4 D4 C4 D4 E4 E4 E4 E4 D4 D4 E4 D4 C4:3' },
+  { id: 'jakob', genre: 'kinder', title: 'Bruder Jakob', level: 1,
     notes: 'C4 D4 E4 C4 C4 D4 E4 C4 E4 F4 G4:2 E4 F4 G4:2 G4 A4 G4 F4 E4 C4 G4 A4 G4 F4 E4 C4 C4 G3 C4:2 C4 G3 C4:3' },
-  { id: 'haenschen', title: 'Hänschen klein', level: 2,
+  { id: 'rudern', genre: 'kinder', title: 'Ruder, ruder, ruder', level: 1,
+    notes: 'C4 C4 C4 D4 E4:2 E4 D4 E4 F4 G4:3 C5 C5 C5 G4 G4 G4 E4 E4 E4 C4 C4 C4 G4 F4 E4 D4 C4:3' },
+  { id: 'london', genre: 'kinder', title: 'London Bridge', level: 1,
+    notes: 'G4 A4 G4 F4 E4 F4 G4:2 D4 E4 F4:2 E4 F4 G4:2 G4 A4 G4 F4 E4 F4 G4:2 D4:2 G4 E4 C4:3' },
+  { id: 'farm', genre: 'kinder', title: 'Old MacDonald hat ’ne Farm', level: 2,
+    notes: 'G4 G4 G4 D4 E4 E4 D4:2 B4 B4 A4 A4 G4:3 D4 G4 G4 G4 D4 E4 E4 D4:2 B4 B4 A4 A4 G4:3' },
+  { id: 'haenschen', genre: 'kinder', title: 'Hänschen klein', level: 2,
     notes: 'G4 E4 E4:2 F4 D4 D4:2 C4 D4 E4 F4 G4 G4 G4:2 G4 E4 E4:2 F4 D4 D4:2 C4 E4 G4 G4 C4:3 D4 D4 D4 D4 D4 E4 F4:2 E4 E4 E4 E4 E4 F4 G4:2 G4 E4 E4:2 F4 D4 D4:2 C4 E4 G4 G4 C4:3' },
-  { id: 'geburtstag', title: 'Zum Geburtstag viel Glück', level: 2,
+  { id: 'geburtstag', genre: 'kinder', title: 'Zum Geburtstag viel Glück', level: 2,
     notes: 'G4 G4 A4:2 G4:2 C5:2 B4:3 G4 G4 A4:2 G4:2 D5:2 C5:3 G4 G4 G5:2 E5:2 C5:2 B4:2 A4:3 F5 F5 E5:2 C5:2 D5:2 C5:3' },
-  { id: 'jingle', title: 'Jingle Bells', level: 2,
+
+  /* ---- Weihnachten (gemeinfrei) ---- */
+  { id: 'stillenacht', genre: 'weihnacht', title: 'Stille Nacht', level: 1,
+    notes: 'G4 A4 G4 E4:3 G4 A4 G4 E4:3 D5:2 D5 B4:3 C5:2 C5 G4:3 A4:2 A4 C5 B4 A4 G4 A4 G4 E4:3 A4:2 A4 C5 B4 A4 G4 A4 G4 E4:3 D5:2 D5 F5 D5 B4 C5:3 E5:3 C5 G4 E4 G4 F4 D4 C4:3' },
+  { id: 'tannenbaum', genre: 'weihnacht', title: 'O Tannenbaum', level: 2,
+    notes: 'D4 G4 G4 G4 A4 B4 B4:2 B4 A4 B4 C5 F#4 A4 G4:2 D5 D5 B4 E5 D5 D5 C5 C5:2 C5 C5 A4 D5 C5 C5 B4 B4:2 D4 G4 G4 G4 A4 B4 B4:2 B4 A4 B4 C5 F#4 A4 G4:3' },
+  { id: 'jingle', genre: 'weihnacht', title: 'Jingle Bells', level: 2, beat: 'soft',
     notes: 'E4 E4 E4:2 E4 E4 E4:2 E4 G4 C4 D4 E4:3 F4 F4 F4 F4 F4 E4 E4 E4 E4 D4 D4 E4 D4:2 G4:2 E4 E4 E4:2 E4 E4 E4:2 E4 G4 C4 D4 E4:3 F4 F4 F4 F4 F4 E4 E4 E4 G4 G4 F4 D4 C4:3' },
-  { id: 'freude', title: 'Ode an die Freude', level: 2,
+  { id: 'merry', genre: 'weihnacht', title: 'We Wish You a Merry Christmas', level: 2,
+    notes: 'D4 G4 G4 A4 G4 F#4 E4 E4 E4 A4 A4 B4 A4 G4 F#4 D4 D4 B4 B4 C5 B4 A4 G4 E4 D4 D4 E4 A4 F#4 G4:3' },
+  { id: 'halls', genre: 'weihnacht', title: 'Deck the Halls', level: 3,
+    notes: 'G4 F4 E4 D4 C4 D4 E4 C4 D4 E4 F4 D4 E4:2 D4 C4 B3 C4:3 G4 F4 E4 D4 C4 D4 E4 C4 D4 E4 F4 D4 E4:2 D4 C4 B3 C4:3 D4 E4 F4 D4 E4 F4 G4 D4 E4 F#4 G4 A4 B4 C5 B4 A4 G4:3 G4 F4 E4 D4 C4 D4 E4 C4 A4 A4 A4 A4 G4:2 F4 E4 D4 C4:3' },
+
+  /* ---- Klassik (gemeinfrei) ---- */
+  { id: 'freude', genre: 'klassik', title: 'Ode an die Freude', level: 1,
     notes: 'E4 E4 F4 G4 G4 F4 E4 D4 C4 C4 D4 E4 E4 D4 D4:2 E4 E4 F4 G4 G4 F4 E4 D4 C4 C4 D4 E4 D4 C4 C4:2 D4 D4 E4 C4 D4 E4 F4 E4 C4 D4 E4 F4 E4 D4 C4 D4 G3:2 E4 E4 F4 G4 G4 F4 E4 D4 C4 C4 D4 E4 D4 C4 C4:3' },
-  { id: 'glitzer', title: 'Glitzer-Rakete', level: 1, beat: true, bass: 'C3 G2 A2 F2',
-    notes: 'E4 G4 C5:2 B4 D5 G4:2 A4 C5 E5:2 F5 E5 C5:2 E4 G4 C5 E5 D5 B4 G4:2 A4 C5 B4 A4 F4 A4 C5:2 G5:2 E5 C5 D5:2 B4 G4 C5:2 A4 E5 F5 E5 D5 C5 G5:2 E5 G5 D5 G5 D5 B4 C5 E5 A4 C5 D5 B4 C5:2' },
-  { id: 'neon', title: 'Neon-Nacht', level: 2, beat: true, bass: 'A2 F2 C3 G2',
-    notes: 'E5 E5 D5 C5 C5 A4 C5:2 G4 C5 E5 G5 F5 E5 D5:2 E5 E5 D5 C5 A4 C5 F5:2 E5 D5 C5 E5 D5:3 B4 A5 A5 G5 E5 F5 E5 C5 A4 C5 E5 G5 E5 D5 B4 G4 B4 A5 A5 G5 E5 F5 A5 F5 C5 E5 G5 E5 C5 B4 D5 A4:2' },
-  { id: 'drache', title: 'Drachen-Drop', level: 3, beat: true, bass: 'E2 C2 G2 D2',
-    notes: 'B4 E5 G5 E5 C5 E5 G5 E5 D5 G5 B5 G5 F#5 E5 D5 A4 B4 B4 E5 B4 C5 C5 E5 G5 B5 A5 G5 D5 F#5:2 A5:2 G5 F#5 E5 B4 E5 D5 C5 G4 B4 D5 G5 B5 A5 F#5 D5 F#5 G5 E5 B4 E5 G5 E5 C5 E5 D5 G5 B5 A5 F#5 D5 E5:2' },
-  { id: 'affendisco', title: 'Affen-Disco', level: 2, beat: true,
-    notes: 'A4 A4 C5 A4 G4 E4:2 A4 A4 C5 D5 C5 A4:2 G4 G4 A4 G4 E4 D4:2 E4 G4 A4:3 C5 C5 D5 E5:2 D5 C5 A4:2 C5 C5 D5 E5 G5 E5:2 D5 C5 A4 G4 A4:2 C5 A4:3 E5 D5 C5 D5 E5 G5 E5:2 D5 C5 D5 C5 A4:3' },
-  { id: 'elise', title: 'Für Elise', level: 3,
+  { id: 'wiegenlied', genre: 'klassik', title: 'Brahms’ Wiegenlied', level: 1,
+    notes: 'E4 E4 G4:2 E4 E4 G4:2 E4 G4 C5 B4:2 A4 A4 G4:2 D4 E4 F4 D4 D4 E4 F4:2 D4 F4 B4 A4 G4 B4 C5:3' },
+  { id: 'nachtmusik', genre: 'klassik', title: 'Eine kleine Nachtmusik', level: 2,
+    notes: 'G4:2 D4 G4:2 D4 G4 D4 G4 B4 D5:3 C5:2 A4 C5:2 A4 C5 A4 F#4 A4 D4:3 G4 G4 B4 A4 G4 G4 B4 A4 G4 B4 D5 F#5 A5:3' },
+  { id: 'cancan', genre: 'klassik', title: 'Can-Can', level: 2,
+    notes: 'C4:2 D4 F4 E4 D4 G4:2 G4:2 G4 A4 E4 F4 D4:2 D4:2 D4 F4 E4 D4 C4 C5 B4 A4 G4 F4 E4 D4 C4:2 D4 F4 E4 D4 G4:2 G4:2 G4 A4 E4 F4 D4:2 D4:2 D4 F4 E4 D4 C4 G4 D4 E4 C4:3' },
+  { id: 'fruehling', genre: 'klassik', title: 'Der Frühling (Vivaldi)', level: 2,
+    notes: 'E4 G#4 G#4 G#4 F#4 E4 B4:3 B4 A4 G#4 G#4 G#4 F#4 E4 B4:3 B4 A4 G#4 A4 B4 A4 G#4 F#4 D#4 B3:3 E4 G#4 G#4 G#4 F#4 E4 B4:3 B4 A4 G#4 A4 B4 A4 G#4 F#4 E4:3' },
+  { id: 'turca', genre: 'klassik', title: 'Türkischer Marsch', level: 3,
+    notes: 'B4 A4 G#4 A4 C5:2 D5 C5 B4 C5 E5:2 F5 E5 D#5 E5 B5 A5 G#5 A5 B5 A5 G#5 A5 C6:3 A5 C6 B5 A5 G5 A5 B5 A5 G5 A5 B5 A5 G5 F#5 E5:3' },
+  { id: 'elise', genre: 'klassik', title: 'Für Elise', level: 3,
     notes: 'E5 D#5 E5 D#5 E5 B4 D5 C5 A4:2 C4 E4 A4 B4:2 E4 G#4 B4 C5:2 E4 E5 D#5 E5 D#5 E5 B4 D5 C5 A4:2 C4 E4 A4 B4:2 E4 C5 B4 A4:3' },
-  { id: 'bergkoenig', title: 'In der Halle des Bergkönigs', level: 3,
+  { id: 'bergkoenig', genre: 'klassik', title: 'In der Halle des Bergkönigs', level: 3,
     notes: 'A3 B3 C4 D4 E4 C4 E4:2 D#4 B3 D#4:2 D4 A#3 D4:2 A3 B3 C4 D4 E4 C4 E4 A4 G4 E4 C4 E4 G4:2 E4 F#4 G#4 A4 B4 G#4 B4:2 C5 G#4 C5:2 B4 G#4 B4:2 E4 F#4 G#4 A4 B4 G#4 B4 E5 D5 B4 G#4 B4 E5:3' },
+
+  /* ---- Pop (eigene Kompositionen) ---- */
+  { id: 'glitzer', genre: 'pop', title: 'Glitzer-Rakete', level: 1, beat: 'pop', bass: 'C3 G2 A2 F2',
+    notes: 'E4 G4 C5:2 B4 D5 G4:2 A4 C5 E5:2 F5 E5 C5:2 E4 G4 C5 E5 D5 B4 G4:2 A4 C5 B4 A4 F4 A4 C5:2 G5:2 E5 C5 D5:2 B4 G4 C5:2 A4 E5 F5 E5 D5 C5 G5:2 E5 G5 D5 G5 D5 B4 C5 E5 A4 C5 D5 B4 C5:2' },
+  { id: 'einhorn', genre: 'pop', title: 'Einhorn-Party', level: 1, beat: 'pop', bass: 'G2 D3 E2 C3',
+    notes: 'B4 D5 G5:2 F#5 E5 D5:2 E5 G5 B4:2 C5 E5 G5:2 D5 B4 D5 G5 A5 F#5 D5:2 G5 E5 B4 E5 C5 E5 D5:2 G5 G5 B5 G5 A5 A5 F#5 D5 E5 G5 E5 B4 C5 E5 G5 E5 G5 G5 B5 G5 A5 F#5 D5 F#5 E5 B4 E5 G5 E5 D5 G5:2' },
+  { id: 'affendisco', genre: 'pop', title: 'Affen-Disco', level: 2, beat: 'edm',
+    notes: 'A4 A4 C5 A4 G4 E4:2 A4 A4 C5 D5 C5 A4:2 G4 G4 A4 G4 E4 D4:2 E4 G4 A4:3 C5 C5 D5 E5:2 D5 C5 A4:2 C5 C5 D5 E5 G5 E5:2 D5 C5 A4 G4 A4:2 C5 A4:3 E5 D5 C5 D5 E5 G5 E5:2 D5 C5 D5 C5 A4:3' },
+  { id: 'sommer', genre: 'pop', title: 'Sommer-Konfetti', level: 2, beat: 'pop', bass: 'D3 A#2 F2 C3',
+    notes: 'A4 D5 A4:2 F5 D5 A#4:2 C5 F5 A5:2 G5 E5 C5:2 D5 F5 A5 F5 D5 F5 A#5 F5 A5 G5 F5 C5 E5:2 G5:2 A5 A5 G5 F5 D5:2 F5 D5 C5 C5 A4 C5 E5:2 G5 E5 A5 A5 G5 F5 A#5 A5 G5 F5 A5 G5 F5 C5 E5 C5 D5:2' },
+
+  /* ---- Party & EDM (eigene Kompositionen) ---- */
+  { id: 'neon', genre: 'party', title: 'Neon-Nacht', level: 2, beat: 'edm', bass: 'A2 F2 C3 G2',
+    notes: 'E5 E5 D5 C5 C5 A4 C5:2 G4 C5 E5 G5 F5 E5 D5:2 E5 E5 D5 C5 A4 C5 F5:2 E5 D5 C5 E5 D5:3 B4 A5 A5 G5 E5 F5 E5 C5 A4 C5 E5 G5 E5 D5 B4 G4 B4 A5 A5 G5 E5 F5 A5 F5 C5 E5 G5 E5 C5 B4 D5 A4:2' },
+  { id: 'laser', genre: 'party', title: 'Laser-Lollipop', level: 2, beat: 'edm', bass: 'B2 G2 D3 A2',
+    notes: 'F#5 F#5 D5 B4 G5 G5 D5 B4 A5 F#5 D5 F#5 E5 C#5 A4 C#5 B4 D5 F#5 B5 B5 G5 D5 G5 F#5 A5 F#5 D5 E5:2 C#5:2 B5 F#5 B5 F#5 G5 D5 G5 D5 F#5 D5 A5 D5 E5 A4 C#5 E5 B5 F#5 D5 F#5 B5 G5 D5 G5 A5 F#5 D5 A4 C#5 E5 B4:2' },
+  { id: 'drache', genre: 'party', title: 'Drachen-Drop', level: 3, beat: 'edm', bass: 'E2 C2 G2 D2',
+    notes: 'B4 E5 G5 E5 C5 E5 G5 E5 D5 G5 B5 G5 F#5 E5 D5 A4 B4 B4 E5 B4 C5 C5 E5 G5 B5 A5 G5 D5 F#5:2 A5:2 G5 F#5 E5 B4 E5 D5 C5 G4 B4 D5 G5 B5 A5 F#5 D5 F#5 G5 E5 B4 E5 G5 E5 C5 E5 D5 G5 B5 A5 F#5 D5 E5:2' },
+  { id: 'turbo', genre: 'party', title: 'Turbo-Hüpfburg', level: 3, beat: 'edm', bass: 'A2 G2 F2 E2',
+    notes: 'A4 C5 E5 A5 G5 D5 B4 D5 C5 F5 A5 F5 G#5 E5 B4 E5 A5 E5 C5 E5 B4 D5 G5 D5 A5 G5 F5 C5 B4 G#4 E4 G#4 C6 B5 A5 E5 D6 B5 G5 D5 C6 A5 F5 C5 B5 G#5 E5 B4 A5 C6 A5 E5 G5 B5 G5 D5 F5 A5 C6 A5 G#5 B5 A5:2' },
+
+  /* ---- Chillen & Träumen (eigene Kompositionen) ---- */
+  { id: 'wolken', genre: 'chill', title: 'Wolkenbett', level: 1, beat: 'soft', bass: 'C3 E2 F2 G2',
+    notes: 'E5:2 G5 E5 D5:2 B4:2 C5 A4 C5 F5 D5:3 B4 C5 E5 G5:2 B5 G5 E5:2 A5 F5 C5 A4 B4:2 D5:2 G5:2 E5 C5 B4 E5 G5:2 A5:2 F5 C5 D5 G5 B4:2 E5 G5 C6:2 B5 G5 E5:2 F5 A5 G5 F5 D5 B4 C5:2' },
+  { id: 'mond', genre: 'chill', title: 'Mondschaukel', level: 1, beat: 'soft', bass: 'F2 A2 A#2 C3',
+    notes: 'A4 C5 F5:2 E5 C5 A4:2 D5:2 F5 D5 C5:2 G4:2 A4 C5 F5 A5 G5:2 E5:2 F5 D5 A#4 D5 E5:3 C5 F5:2 A5 F5 E5:2 C5 E5 D5 F5 A#5 F5 E5:2 G5:2 A5 F5 C5 F5 E5 C5 A4 C5 D5 F5 G5:2 E5 G5 F5:2' },
 ];
 const LEVEL_NAMES = { 1: 'Leicht', 2: 'Mittel', 3: 'Knifflig' };
 
@@ -637,13 +711,22 @@ function groove(half) {
   if (!save.settings.sound || !G) return;
   const ac = audio(); if (!ac) return;
   const t = ac.currentTime + 0.005;
-  const row = half >> 1, off = half & 1;
-  if (!off) { drum.kick(ac, t); if (row % 2 === 1) drum.snare(ac, t); }
-  drum.hat(ac, t, off ? 0.07 : 0.035);
+  const row = half >> 1, off = half & 1, style = G.song.beat;
   const b = G.song.bassMidi;
-  if (b) {
-    const root = b[Math.floor((row % G.loopLen) / 4) % b.length];
-    drum.bass(ac, t, off ? root + 12 : root);
+  const root = b ? b[Math.floor((row % G.loopLen) / 4) % b.length] : 0;
+  if (style === 'soft') {
+    if (!off && row % 4 === 0) drum.kick(ac, t);
+    if (off) drum.hat(ac, t, 0.03);
+    if (b && !off && row % 2 === 0) drum.bass(ac, t, root);
+  } else if (style === 'pop') {
+    if (!off && row % 2 === 0) drum.kick(ac, t);
+    if (!off && row % 2 === 1) drum.snare(ac, t);
+    drum.hat(ac, t, off ? 0.06 : 0.03);
+    if (b && !off) drum.bass(ac, t, row % 2 ? root + 12 : root);
+  } else {
+    if (!off) { drum.kick(ac, t); if (row % 2 === 1) drum.snare(ac, t); }
+    drum.hat(ac, t, off ? 0.07 : 0.035);
+    if (b) drum.bass(ac, t, off ? root + 12 : root);
   }
 }
 
@@ -748,7 +831,7 @@ function laneColor(lane, time, t) {
   return sk.lanes[lane];
 }
 
-function laneDown(lane, pid) {
+function laneDown(lane, pid, touchY) {
   if (!G || G.paused || G.ended) return;
   if (G.freeze > 0) return;
   let best = null;
@@ -761,13 +844,14 @@ function laneDown(lane, pid) {
     const first = G.tiles[0];
     if (best === first) { G.started = true; } else { return; }
   }
-  if (best) hit(best, pid); else wrongTap(lane);
+  if (best) hit(best, pid, touchY); else wrongTap(lane);
 }
 
-function hit(t, pid) {
+function hit(t, pid, touchY) {
   const rel = t.start - G.scroll;
   let rating, pts;
-  if (rel < 1.25) { rating = 'Perfekt!'; pts = 3; G.perfect++; }
+  if (rel < 0) { rating = 'Klasse!'; pts = 2; }
+  else if (rel < 1.25) { rating = 'Perfekt!'; pts = 3; G.perfect++; }
   else if (rel < 2.4) { rating = 'Klasse!'; pts = 2; }
   else { rating = 'Super!'; pts = 1; }
   G.combo++; G.maxCombo = Math.max(G.maxCombo, G.combo); G.comboPulse = 1;
@@ -790,6 +874,7 @@ function hit(t, pid) {
 
   if (t.len > 1) {
     t.state = 'holding'; t.pid = pid; t.holdFrom = G.scroll;
+    t.touchY = Math.min(H - rowH * 0.4, Math.max(rowH * 0.5, touchY == null ? H - rowH * 0.6 : touchY));
     t.voice = playNote(t.midi, true);
     G.holding.push(t);
   } else {
@@ -821,7 +906,7 @@ function finishHold(t, full) {
 
 function releasePointer(pid) {
   if (!G) return;
-  G.holding.slice().forEach(t => { if (t.pid === pid) finishHold(t, t.fill >= 0.98); });
+  G.holding.slice().forEach(t => { if (t.pid === pid) finishHold(t, t.fill >= 0.6); });
 }
 
 function wrongTap(lane) {
@@ -909,7 +994,8 @@ function update(dt, time) {
   }
 
   G.holding.slice().forEach(t => {
-    const end = t.start + t.len - 1;
+    // fertig, sobald das obere Ende der Taste beim Finger angekommen ist
+    const end = Math.max(t.holdFrom, t.start + t.len - (H - t.touchY) / rowH - 0.25);
     const span = Math.max(0.001, end - t.holdFrom);
     t.fill = Math.min(1, Math.max(0, (G.scroll - t.holdFrom) / span));
     if (G.scroll >= end) finishHold(t, true);
@@ -919,7 +1005,9 @@ function update(dt, time) {
   for (let i = G.firstPending; i < G.tiles.length; i++) {
     const t = G.tiles[i];
     if (t.start > G.scroll) break;
-    if (t.state === 'pending' && t.start < G.scroll - 0.08) { miss(t); break; }
+    // lange Tasten darf man noch treffen, solange ihre obere Hälfte zu sehen ist
+    const grace = t.len > 1 ? t.len * 0.5 : 0.12;
+    if (t.state === 'pending' && t.start < G.scroll - grace) { miss(t); break; }
   }
   updateProgress();
 }
@@ -1028,12 +1116,15 @@ function drawTile(t, time) {
     rr(x + w / 2 - 3, y + 14, 6, Math.max(0, hh - rowH), 3); ctx.fill();
     tileBody(x, y + hh - (rowH - pad * 2), w, rowH - pad * 2, color, 1);
     if (t.state === 'holding') {
-      const fh = hh * t.fill;
+      const top = Math.max(y, Math.min(y + hh, t.touchY));
+      const fh = y + hh - top;
       ctx.save(); rr(x, y, w, hh, 16); ctx.clip();
-      const fg = ctx.createLinearGradient(0, y + hh - fh, 0, y + hh);
+      const fg = ctx.createLinearGradient(0, top, 0, y + hh);
       fg.addColorStop(0, 'rgba(255,255,255,.95)'); fg.addColorStop(1, 'rgba(255,255,255,.55)');
-      ctx.fillStyle = fg; ctx.fillRect(x, y + hh - fh, w, fh);
+      ctx.fillStyle = fg; ctx.fillRect(x, top, w, fh);
       ctx.restore();
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath(); ctx.arc(x + w / 2, t.touchY, 9 + Math.sin(time * 12) * 2, 0, 6.283); ctx.fill();
       ctx.shadowColor = color; ctx.shadowBlur = 24;
       ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 3; rr(x, y, w, hh, 16); ctx.stroke();
       ctx.shadowBlur = 0;
@@ -1215,13 +1306,16 @@ function renderMenu() {
     </button>`;
   }).join('');
 
-  $('#songs').innerHTML = SONGS.map((s, i) => {
+  const sel = GENRES.some(g => g.id === save.settings.genre) ? save.settings.genre : 'alle';
+  $('#genres').innerHTML = [{ id: 'alle', name: 'Alle', color: '#ffffff' }].concat(GENRES).map(g =>
+    `<button class="gchip" role="tab" id="genre-${g.id}" data-genre="${g.id}" aria-selected="${g.id === sel}"><i style="background:${g.color}"></i>${g.name}</button>`
+  ).join('');
+  const card = s => {
     const b = save.best[s.id] || { stars: 0, crowns: 0, score: 0 };
     const stars = [0, 1, 2].map(k => svgUse('i-star', k < b.stars ? 'on' : '')).join('');
     const crowns = Array.from({ length: b.crowns || 0 }, () => svgUse('i-crown', 'crown')).join('');
-    const sk = currentSkin();
-    const col = sk.lanes === 'rainbow' ? `hsl(${i * 40} 90% 66%)` : sk.lanes[i % 4];
-    const initial = s.title.replace(/^(Zum |In der |Ode an die |Für )/, '').charAt(0);
+    const col = GENRES.find(g => g.id === s.genre).color;
+    const initial = s.title.replace(/^(Zum |In der |Ode an die |Für |Der |Eine kleine |O |We Wish You a |Deck the |Old )/, '').charAt(0);
     return `<button class="song" id="song-${s.id}" data-song="${s.id}">
       <span class="disc" style="background:${col}">${initial}</span>
       <span class="info">
@@ -1232,6 +1326,14 @@ function renderMenu() {
       </span>
       <span class="play">${svgUse('i-play')}</span>
     </button>`;
+  };
+  $('#songs').innerHTML = GENRES.filter(g => sel === 'alle' || g.id === sel).map(g => {
+    const list = SONGS.filter(s => s.genre === g.id).sort((a, b) => a.level - b.level);
+    const got = list.reduce((a, s) => a + ((save.best[s.id] || {}).stars || 0), 0);
+    return `<section class="genre" aria-label="${g.name}">
+      <h3 class="genre-h">${g.name}${g.sub ? `<small>${g.sub}</small>` : ''}<b>${got} / ${list.length * 3} ★</b></h3>
+      <div class="songs">${list.map(card).join('')}</div>
+    </section>`;
   }).join('');
 }
 
@@ -1265,7 +1367,7 @@ cv.addEventListener('pointerdown', e => {
   const r = cv.getBoundingClientRect();
   const lane = Math.max(0, Math.min(3, Math.floor((e.clientX - r.left) / (r.width / 4))));
   activePointers.set(e.pointerId, lane);
-  laneDown(lane, 'p' + e.pointerId);
+  laneDown(lane, 'p' + e.pointerId, e.clientY - r.top);
 });
 const up = e => { activePointers.delete(e.pointerId); releasePointer('p' + e.pointerId); };
 cv.addEventListener('pointerup', up);
@@ -1319,6 +1421,11 @@ $('#skins').addEventListener('click', e => {
   }
   save.settings.skin = s.id; persist(); renderMenu();
   const nb = document.getElementById('skin-' + s.id); if (nb) nb.focus({ preventScroll: true });
+});
+$('#genres').addEventListener('click', e => {
+  const b = e.target.closest('[data-genre]'); if (!b) return;
+  save.settings.genre = b.dataset.genre; persist(); renderMenu();
+  const nb = document.getElementById('genre-' + b.dataset.genre); if (nb) nb.focus({ preventScroll: true });
 });
 $('#songs').addEventListener('click', e => {
   const b = e.target.closest('[data-song]'); if (!b) return;
