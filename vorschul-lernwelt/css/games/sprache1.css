@@ -1,1 +1,356 @@
-/* Styles der Spielgruppe 'sprache1'. */
+/* ==========================================================================
+   Styles der Spielgruppe 'sprache1' (Reime-Spaß, Silben klatschen,
+   Roboter-Sprache, Anlaute hören). Präfix: .s1-
+   Große Touch-Ziele, alles skaliert mit vmin, damit es auf Tablet (quer und
+   hoch) und Handy ohne Scrollen in die Spielfläche passt.
+   ========================================================================== */
+
+/* ---------- Bildkarte (gefragtes Wort) ---------- */
+.s1-card {
+  position: relative;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: clamp(2px, 0.8vmin, 8px);
+  min-height: 0;
+  padding: clamp(10px, 2.2vmin, 22px) clamp(24px, 5vmin, 52px);
+  flex: 0 0 auto;
+}
+.s1-card-pic { font-size: clamp(60px, 13vmin, 124px); }
+.s1-card-word {
+  font-size: clamp(26px, 5vmin, 46px);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+}
+.s1-card-say {
+  position: absolute;
+  top: -12px;
+  right: -12px;
+  width: 52px;
+  height: 52px;
+  font-size: 24px;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15), 0 0 0 3px var(--area-soft);
+}
+
+/* ---------- Wort in Sprechsilben mit Silbenbögen ---------- */
+.s1-syl {
+  display: inline-flex;
+  align-items: flex-start;
+  font-size: clamp(26px, 5vmin, 46px);
+  font-weight: 700;
+  line-height: 1.15;
+  animation: s1-pop 0.35s cubic-bezier(0.2, 1.6, 0.4, 1);
+}
+.s1-syl-part {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 0 0.04em;
+  margin: 0 0.035em;
+  border-radius: 12px;
+  transition: transform 0.15s, background 0.15s;
+}
+.s1-syl-part.c1 .s1-syl-txt { color: #1f5fd6; }
+.s1-syl-part.c2 .s1-syl-txt { color: #d9343b; }
+.s1-arc { display: block; height: 0.48em; margin-top: 0.02em; }
+.s1-arc svg, .s1-tarc svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.s1-arc path, .s1-tarc path {
+  fill: none;
+  stroke: var(--area);
+  stroke-width: 4;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+  transition: stroke 0.15s, stroke-width 0.15s;
+}
+.s1-syl-part.on { background: var(--area-soft); transform: translateY(-4px) scale(1.06); }
+.s1-syl-part.on path { stroke: #f2a900; stroke-width: 7; }
+
+/* ---------- Silbenbögen als Symbol ---------- */
+.s1-tarc {
+  display: inline-block;
+  width: clamp(44px, 8.5vmin, 78px);
+  height: clamp(18px, 3.2vmin, 30px);
+}
+.s1-tarc.pop { animation: s1-pop 0.35s cubic-bezier(0.2, 1.6, 0.4, 1); }
+.s1-tarc.ghost path { stroke: var(--ink-faint); stroke-dasharray: 2 9; }
+.s1-tarc.on path { stroke: #f2a900; stroke-width: 7; }
+.s1-arcrow { display: inline-flex; gap: 2px; justify-content: center; }
+.s1-arcrow.mini { gap: 1px; }
+.s1-arcrow.mini .s1-tarc { width: calc(var(--tile) * 0.15); height: calc(var(--tile) * 0.09); }
+.s1-arcrow.mini path { stroke-width: 3; }
+.s1-arcrow.big { gap: clamp(4px, 1vmin, 10px); }
+.s1-arcrow.big .s1-tarc { width: clamp(40px, 8vmin, 76px); height: clamp(16px, 3vmin, 28px); }
+.s1-arcrow.big path { stroke-width: 6; }
+
+/* ---------- Klatsch-Ablage ---------- */
+.s1-tray {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(6px, 1.4vmin, 14px);
+  min-height: clamp(54px, 9vmin, 80px);
+  min-width: min(100%, clamp(220px, 46vmin, 440px));
+  max-width: 100%;
+  padding: 6px 18px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 3px dashed rgba(142, 108, 239, 0.4);
+  border-radius: 999px;
+  flex: 0 0 auto;
+}
+.s1-tray.small { min-height: clamp(44px, 7vmin, 62px); min-width: 0; flex: 1 1 auto; padding: 4px 12px; gap: 4px; }
+.s1-tray.small .s1-tarc { width: clamp(30px, 6vmin, 56px); height: clamp(13px, 2.4vmin, 22px); }
+
+/* ---------- Klatsch-Knopf & Bedienleiste ---------- */
+.s1-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 3.2vmin, 36px);
+  flex: 0 0 auto;
+}
+.s1-clap {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  width: clamp(112px, 21vmin, 184px);
+  height: clamp(112px, 21vmin, 184px);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #b9a4ff 0%, var(--area) 62%);
+  box-shadow: 0 8px 0 #6547cf, 0 14px 26px rgba(43, 45, 66, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(56px, 11vmin, 98px);
+  transition: transform 0.08s, box-shadow 0.08s;
+  touch-action: manipulation;
+  flex: 0 0 auto;
+}
+.s1-clap:active { transform: translateY(6px); box-shadow: 0 2px 0 #6547cf, 0 6px 12px rgba(43, 45, 66, 0.2); }
+.s1-clap.s1-off { filter: saturate(0.45); opacity: 0.75; }
+.s1-clap.s1-clapped .emoji { animation: s1-clapanim 0.25s ease-out; }
+.s1-clap.small { width: clamp(80px, 14vmin, 124px); height: clamp(80px, 14vmin, 124px); font-size: clamp(40px, 7.5vmin, 66px); box-shadow: 0 6px 0 #6547cf, 0 10px 18px rgba(43, 45, 66, 0.18); }
+.s1-reset { width: clamp(56px, 8.5vmin, 72px); height: clamp(56px, 8.5vmin, 72px); }
+.s1-reset[disabled] { opacity: 0.4; }
+.s1-done {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  width: clamp(80px, 13vmin, 116px);
+  height: clamp(80px, 13vmin, 116px);
+  border-radius: 50%;
+  background: var(--ok);
+  box-shadow: 0 7px 0 #168a51, 0 12px 22px rgba(43, 45, 66, 0.18);
+  font-size: clamp(40px, 7vmin, 62px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.08s, box-shadow 0.08s, opacity 0.2s, filter 0.2s;
+  flex: 0 0 auto;
+}
+.s1-done:active { transform: translateY(5px); box-shadow: 0 2px 0 #168a51; }
+.s1-done[disabled] { opacity: 0.35; filter: grayscale(0.7); cursor: default; }
+.s1-done.s1-pulse { animation: s1-pulse 1.2s ease-in-out infinite; }
+.s1-toolrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 2vmin, 20px);
+  width: min(100%, 720px);
+  flex: 0 0 auto;
+}
+
+/* ---------- Zahl-Kacheln (Stufe 4 Silben) ---------- */
+.s1-num { display: flex; flex-direction: column; align-items: center; gap: 6%; }
+.s1-num b { font-size: calc(var(--tile) * 0.44); line-height: 1; color: var(--ink); }
+.s1-target { gap: clamp(12px, 2.4vmin, 26px); min-height: 0; padding: clamp(12px, 2.4vmin, 24px) clamp(22px, 4vmin, 40px); }
+.s1-target b { font-size: clamp(48px, 10vmin, 96px); line-height: 1; color: var(--area); }
+
+/* ---------- Kopfzeile mit Symbol ---------- */
+.s1-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--card);
+  border-radius: 999px;
+  padding: 8px 22px 8px 14px;
+  box-shadow: var(--shadow);
+  font-size: clamp(17px, 3vmin, 26px);
+  font-weight: 700;
+  color: var(--ink-soft);
+  flex: 0 0 auto;
+}
+.s1-head .emoji { font-size: 1.6em; }
+
+/* ---------- Auswahl-Raster ---------- */
+.choices.s1-grid4 { display: grid; grid-template-columns: repeat(4, auto); justify-content: center; }
+@media (max-width: 600px) {
+  .choices.s1-grid4 { grid-template-columns: repeat(2, auto); }
+}
+.s1-wait .tile { cursor: default; }
+
+/* ---------- Reimpaare ---------- */
+.s1-pairs {
+  display: grid;
+  grid-template-columns: repeat(3, var(--tile));
+  gap: var(--gap);
+  justify-content: center;
+}
+.s1-pairs .tile.s1-sel { box-shadow: 0 0 0 6px var(--area), var(--shadow); transform: translateY(-6px) scale(1.05); }
+.s1-pairs .tile.s1-matched { pointer-events: none; }
+.s1-pairs .tile.s1-matched.s1-pc0 { background: #d4f6e3; box-shadow: 0 0 0 6px #22b26b, var(--shadow); }
+.s1-pairs .tile.s1-matched.s1-pc1 { background: #fff0c7; box-shadow: 0 0 0 6px #f2a900, var(--shadow); }
+.s1-pairs .tile.s1-matched.s1-pc2 { background: #d3f4f8; box-shadow: 0 0 0 6px #1fb5c9, var(--shadow); }
+
+/* ---------- Buchstaben-Kacheln ---------- */
+.s1-letter-tile { display: flex; flex-direction: column; align-items: center; gap: 4%; }
+.s1-letter { font-family: var(--font); font-weight: 700; line-height: 1; color: var(--ink); }
+.s1-letter.short { font-size: calc(var(--tile) * 0.46); }
+.s1-letter.long { font-size: calc(var(--tile) * 0.34); }
+.s1-letter.big.short { font-size: calc(var(--tile) * 0.58); }
+.s1-letter.big.long { font-size: calc(var(--tile) * 0.4); }
+.s1-letter-key { font-size: calc(var(--tile) * 0.27); }
+
+/* ---------- Robo ---------- */
+.s1-robo-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 2.4vmin, 26px);
+  max-width: 100%;
+  flex: 0 0 auto;
+}
+.s1-robo {
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+  width: clamp(112px, 24vmin, 210px);
+  aspect-ratio: 200 / 232;
+  flex: 0 0 auto;
+}
+.s1-robo svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.s1-robo:focus-visible { outline: 4px solid #2b7bff; outline-offset: 4px; border-radius: 20px; }
+.s1-robo-badge {
+  position: absolute;
+  right: -4px;
+  top: 12%;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--card);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
+  font-family: var(--emoji);
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.s1-robo-ant { animation: s1-ant 1.6s ease-in-out infinite; }
+.s1-robo-eyes { transform-box: fill-box; transform-origin: center; animation: s1-roboblink 4.5s infinite; }
+.s1-robo-happy { display: none; }
+.s1-robo.happy .s1-robo-happy { display: inline; }
+.s1-robo.happy .s1-robo-eyes { display: none; }
+.s1-robo-mouth rect { transform-box: fill-box; transform-origin: center; transform: scaleY(0.35); }
+.s1-robo.talking .s1-robo-mouth rect { animation: s1-bar 0.2s ease-in-out infinite alternate; }
+.s1-robo.talking .s1-robo-mouth rect:nth-child(2) { animation-delay: 0.06s; }
+.s1-robo.talking .s1-robo-mouth rect:nth-child(3) { animation-delay: 0.12s; }
+.s1-robo.talking .s1-robo-mouth rect:nth-child(4) { animation-delay: 0.04s; }
+.s1-robo.talking .s1-robo-mouth rect:nth-child(5) { animation-delay: 0.1s; }
+.s1-robo-light { transition: fill 0.2s; }
+.s1-robo.talking .s1-robo-light { fill: #5ef0ff; }
+.s1-robo.happy .s1-robo-light { fill: #3dbe6b; }
+.s1-robo.s1-beat svg { animation: s1-bob 0.32s ease-out; }
+.s1-robo.happy svg { animation: s1-hop 0.6s ease-out 2; }
+.s1-robo.confused svg { animation: s1-tilt 0.9s ease-in-out; }
+.s1-robo-arm { transform-box: view-box; }
+.s1-robo-arm-r { transform-origin: 146px 172px; }
+.s1-robo-arm-l { transform-origin: 54px 172px; }
+.s1-robo.happy .s1-robo-arm-r { animation: s1-wave-r 0.35s ease-in-out 4 alternate; }
+.s1-robo.happy .s1-robo-arm-l { animation: s1-wave-l 0.35s ease-in-out 4 alternate; }
+
+.s1-balloon {
+  position: relative;
+  background: var(--card);
+  border-radius: 28px;
+  box-shadow: var(--shadow);
+  padding: clamp(10px, 2vmin, 18px) clamp(14px, 2.6vmin, 24px);
+  min-width: clamp(130px, 26vmin, 260px);
+  max-width: min(58vw, 520px);
+  min-height: clamp(62px, 11vmin, 100px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(6px, 1.2vmin, 12px);
+  align-items: center;
+  justify-content: center;
+}
+.s1-balloon::before {
+  content: "";
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  margin-top: -12px;
+  border: 12px solid transparent;
+  border-right: 18px solid var(--card);
+  border-left: 0;
+}
+.s1-chip {
+  font-size: clamp(20px, 4.2vmin, 40px);
+  font-weight: 700;
+  color: #fff;
+  background: var(--area);
+  border-radius: 16px;
+  padding: 4px 14px 6px;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
+  animation: s1-pop 0.3s cubic-bezier(0.2, 1.6, 0.4, 1);
+  white-space: nowrap;
+}
+.s1-dots { display: inline-flex; gap: 8px; padding: 6px 4px; }
+.s1-dots i { width: 14px; height: 14px; border-radius: 50%; background: var(--area); opacity: 0.35; animation: s1-dot 1.2s ease-in-out infinite; }
+.s1-dots i:nth-child(2) { animation-delay: 0.2s; }
+.s1-dots i:nth-child(3) { animation-delay: 0.4s; }
+@keyframes s1-dot { 0%, 100% { opacity: 0.25; transform: translateY(0); } 40% { opacity: 0.9; transform: translateY(-5px); } }
+/* Während Robo spricht, zeigt Flo keine Sprechblase und bewegt den Mund nicht */
+body.s1-robo-voice .bubble { opacity: 0 !important; }
+body.s1-robo-voice .mascot.talking .mouth-open { animation: none; }
+
+/* ---------- Animationen ---------- */
+@keyframes s1-pop { 0% { transform: scale(0.3); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+@keyframes s1-clapanim { 0% { transform: scale(1); } 40% { transform: scale(0.8) rotate(-8deg); } 100% { transform: scale(1); } }
+@keyframes s1-pulse { 0%, 100% { transform: scale(1); box-shadow: 0 7px 0 #168a51, 0 0 0 0 rgba(34, 178, 107, 0.6); } 50% { transform: scale(1.08); box-shadow: 0 7px 0 #168a51, 0 0 0 16px rgba(34, 178, 107, 0); } }
+@keyframes s1-bar { from { transform: scaleY(0.3); } to { transform: scaleY(1.15); } }
+@keyframes s1-ant { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+@keyframes s1-roboblink { 0%, 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(0.1); } }
+@keyframes s1-bob { 0% { transform: translateY(0); } 40% { transform: translateY(-8px) rotate(-2deg); } 100% { transform: translateY(0); } }
+@keyframes s1-hop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-18px); } }
+@keyframes s1-tilt { 0%, 100% { transform: rotate(0); } 30% { transform: rotate(-9deg); } 70% { transform: rotate(7deg); } }
+@keyframes s1-wave-r { from { transform: rotate(0); } to { transform: rotate(-70deg); } }
+@keyframes s1-wave-l { from { transform: rotate(0); } to { transform: rotate(70deg); } }
+
+/* ---------- Schmale / niedrige Bildschirme ---------- */
+@media (max-width: 520px) {
+  .s1-card { padding: 10px 26px; }
+  .s1-balloon { max-width: calc(100vw - 170px); padding: 10px 12px; }
+  .s1-chip { padding: 3px 10px 5px; }
+}
+@media (max-height: 560px) and (orientation: landscape) {
+  .s1-card-pic { font-size: clamp(44px, 11vmin, 90px); }
+  .s1-clap { width: clamp(84px, 18vmin, 140px); height: clamp(84px, 18vmin, 140px); }
+  .s1-choices .tile.large { --tile: clamp(70px, 24vmin, 130px); }
+}
+/* Hochformat (Tablet hoch, Handy): die Höhe ist reichlich – Elemente wachsen
+   mit der Breite, begrenzt durch die Höhe. */
+@media (orientation: portrait) {
+  .s1-card-pic { font-size: clamp(64px, min(19vw, 10vh), 130px); }
+  .s1-card-word, .s1-syl { font-size: clamp(28px, min(8vw, 4.4vh), 52px); }
+  .s1-clap { width: clamp(112px, min(32vw, 17vh), 200px); height: clamp(112px, min(32vw, 17vh), 200px); font-size: clamp(56px, min(16vw, 8.5vh), 104px); }
+  .s1-done { width: clamp(80px, min(21vw, 11vh), 124px); height: clamp(80px, min(21vw, 11vh), 124px); }
+  .s1-tarc { width: clamp(44px, min(12vw, 6.5vh), 82px); height: clamp(18px, min(4.6vw, 2.5vh), 32px); }
+  .s1-tray { min-height: clamp(56px, min(14vw, 7.5vh), 88px); }
+  .s1-robo { width: clamp(112px, min(34vw, 21vh), 230px); }
+  .s1-choices:not(.s1-numbox) .tile,
+  .s1-pairs { --tile: clamp(92px, min(28vw, 14.5vh), 190px); }
+  .s1-numbox .tile.small { --tile: clamp(70px, min(20vw, 11vh), 130px); }
+}

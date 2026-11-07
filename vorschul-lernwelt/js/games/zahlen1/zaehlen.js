@@ -36,12 +36,18 @@
     }
     .zaehlen-item.pointing { transform: scale(1.25); }
     .zaehlen-row { display: flex; gap: clamp(4px, 1.2vmin, 12px); justify-content: center; }
+    .zaehlen-field.blocks { display: flex; flex-wrap: wrap; gap: clamp(10px, 2.6vmin, 28px); }
+    .zaehlen-block { display: flex; flex-direction: column; gap: clamp(4px, 1.2vmin, 12px); padding: clamp(4px, 1vmin, 8px); border-radius: 18px; background: var(--area-soft); }
+    .zaehlen-block .zaehlen-row { justify-content: flex-start; }
     .zaehlen-tip { font-size: clamp(15px, 2.4vmin, 20px); color: var(--ink-soft); font-weight: 700; text-align: center; }
   `);
 
-  /** Zählbare Bilder: haben einen Plural und sind gut erkennbar. */
+  /** Zählbare Bilder: haben einen Plural, sind gut erkennbar und eindeutig EIN Ding
+      (nicht 🍒 = zwei Kirschen, 🥞 = Stapel …). Die geprüfte Liste liegt in _shared.js. */
+  const AMBIGUOUS = ['kirsche', 'traube', 'kiwi', 'kokosnuss', 'melone', 'pizza', 'pfannkuchen', 'saft', 'brokkoli', 'salat', 'feuer', 'sonne', 'mond', 'regenbogen', 'blitz', 'welle', 'berg'];
   function countables() {
-    return LT.lexikon.words.filter((w) => w.p && ['obst', 'tiere', 'spielzeug', 'natur', 'fahrzeuge', 'essen', 'gemuese'].includes(w.c));
+    if (LT.z1 && LT.z1.countables) return LT.z1.countables();
+    return LT.lexikon.words.filter((w) => w.p && !AMBIGUOUS.includes(w.id) && ['obst', 'tiere', 'spielzeug', 'natur', 'fahrzeuge', 'essen', 'gemuese'].includes(w.c));
   }
 
   const LEVELS = {
@@ -72,7 +78,7 @@
     parent: {
       skill: 'Zählen & Anzahl bestimmen',
       goal: 'Ihr Kind zählt Dinge eins nach dem anderen ab (Eins-zu-eins-Zuordnung), erkennt, dass die zuletzt genannte Zahl die Anzahl angibt (Kardinalprinzip), und ordnet der Menge die passende Ziffer zu.',
-      levels: ['1 bis 5 Dinge in einer Reihe', '3 bis 10 Dinge in Fünferreihen (strukturiert)', '4 bis 10 Dinge durcheinander', '11 bis 20 Dinge in Zehnerreihen'],
+      levels: ['1 bis 5 Dinge in einer Reihe', '3 bis 10 Dinge in Fünferreihen (strukturiert)', '4 bis 10 Dinge durcheinander', '11 bis 20 Dinge in Zehnerblöcken (2 × 5) – erst die volle Zehn, dann weiterzählen'],
       tip: 'Zählen Sie im Alltag: Treppenstufen, Löffel beim Tischdecken, Autos an der Ampel. Lassen Sie Ihr Kind dabei auf jedes Ding zeigen.',
     },
 
@@ -83,7 +89,7 @@
       const plural = item.p;
 
       // --- Spielfeld aufbauen ---
-      const cellSize = n > 10 ? 'clamp(34px, 6.4vmin, 60px)' : 'clamp(46px, 9vmin, 84px)';
+      const cellSize = n > 10 ? 'clamp(34px, 6.8vmin, 62px)' : 'clamp(46px, 9vmin, 84px)';
       const field = el('div.zaehlen-field', { style: { '--cell': cellSize } });
       const items = [];
       const makeItem = () => {
@@ -95,13 +101,26 @@
       if (cfg.layout === 'row') {
         field.style.gridTemplateColumns = `repeat(${n}, auto)`;
         for (let i = 0; i < n; i++) field.appendChild(makeItem());
-      } else if (cfg.layout === 'five' || cfg.layout === 'ten') {
-        const per = cfg.layout === 'five' ? 5 : 10;
+      } else if (cfg.layout === 'five') {
         field.style.gridTemplateColumns = '1fr';
-        for (let r = 0; r < Math.ceil(n / per); r++) {
+        for (let r = 0; r < Math.ceil(n / 5); r++) {
           const row = el('div.zaehlen-row');
-          for (let i = r * per; i < Math.min(n, (r + 1) * per); i++) row.appendChild(makeItem());
+          for (let i = r * 5; i < Math.min(n, (r + 1) * 5); i++) row.appendChild(makeItem());
           field.appendChild(row);
+        }
+      } else if (cfg.layout === 'ten') {
+        // Zehnerblöcke wie im Zehnerfeld: je 2 Reihen à 5 (passt auch hochkant aufs Handy)
+        field.classList.add('blocks');
+        for (let b = 0; b < Math.ceil(n / 10); b++) {
+          const block = el('div.zaehlen-block');
+          for (let r = 0; r < 2; r++) {
+            const start = b * 10 + r * 5;
+            if (start >= n) break;
+            const row = el('div.zaehlen-row');
+            for (let i = start; i < Math.min(n, start + 5); i++) row.appendChild(makeItem());
+            block.appendChild(row);
+          }
+          field.appendChild(block);
         }
       } else {
         // ungeordnet: zufällige Zellen in einem Raster
