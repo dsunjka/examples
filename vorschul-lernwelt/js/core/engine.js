@@ -36,7 +36,7 @@
      ctx.instruct(text)  – vorlesen UND als „Nochmal hören“-Text merken (🔊-Knopf / Flo antippen)
      ctx.setInstruction(text) – nur merken
      ctx.correct(node?, {say, praise:false}) – positives Feedback (Ton, Animation, Lob). Promise.
-     ctx.wrong(node?, {say})                 – sanftes Feedback, zählt Fehlversuch. Promise<Anzahl Fehler>.
+     ctx.wrong(node?, {say, keep})           – sanftes Feedback (keep: Kachel bleibt bedienbar), zählt Fehlversuch. Promise<Anzahl Fehler>.
      ctx.hint(node)      – Element pulsierend hervorheben (Hilfestellung)
      ctx.choices(items, opts) – Auswahl-Kacheln (siehe unten). Promise<gewähltes richtiges Item>.
      ctx.sleep(ms)       – warten (im Testmodus verkürzt)
@@ -217,7 +217,7 @@
         LT.sfx.play('wrong');
         LT.ui.think();
         if (node && node.classList) {
-          if (node.classList.contains('tile')) node.classList.add('is-wrong');
+          if (!o.keep && node.classList.contains('tile')) node.classList.add('is-wrong');
           else LT.ui.animate(node, 'shake');
         }
         const text = o.say === undefined ? LT.ui.encourage() : o.say;
