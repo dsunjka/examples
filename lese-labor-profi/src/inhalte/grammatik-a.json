@@ -324,7 +324,7 @@
       }
      ],
      "tipp": "Mach die Nomen-Probe: Kannst du <i>der</i>, <i>die</i> oder <i>das</i> davorsetzen? Probiere auch, ob das Wort in den Satz <i>Ich bin sehr …</i> passt.",
-     "erklaerung": "Nomen sind <i>die Freude</i>, <i>der Mut</i> und <i>die Idee</i>. Man kann sie nicht anfassen, aber sie haben einen Artikel. <i>Fröhlich</i>, <i>mutig</i> und <i>wütend</i> sind Adjektive: Sie sagen, wie jemand ist."
+     "erklaerung": "Nomen sind <i>die Freude</i>, <i>der Mut</i> und <i>die Idee</i>. Man kann sie nicht anfassen, aber sie haben einen Artikel. Die Wörter <i>fröhlich</i>, <i>mutig</i> und <i>wütend</i> sind Adjektive: Sie sagen, wie jemand ist."
     },
     {
      "id": "gr-nomen-08",
@@ -846,7 +846,7 @@
        "t": "."
       }
      ],
-     "tipp": "Achte auf die Wörter nach der Lücke: Steht dort <i>als</i>? Oder werden alle drei Sachen miteinander verglichen?",
+     "tipp": "Achte auf die Wörter rund um die Lücke: Steht danach <i>als</i>? Oder werden alle drei Sachen miteinander verglichen?",
      "erklaerung": "Mit <i>als</i> vergleicht man zwei Dinge: <i>länger als</i> ist die Vergleichsstufe. Ist etwas von allen am längsten, braucht man die Höchststufe: <i>am längsten</i>."
     },
     {
@@ -1341,7 +1341,7 @@
       }
      ],
      "tipp": "Lies den ganzen Satz mit jeder Vorsilbe. Welches Wort gibt es wirklich, und welches passt zum Sinn?",
-     "erklaerung": "Die Katze ist <i>entlaufen</i>: Sie ist weggelaufen. Amira und ihr Bruder hätten sich fast <i>verlaufen</i>: Sie hätten beinahe den Weg nicht mehr gefunden. <i>Ungeduldig</i> bedeutet „nicht geduldig“ – die Vorsilbe verändert die Bedeutung."
+     "erklaerung": "Die Katze ist <i>entlaufen</i>: Sie ist weggelaufen. Amira und ihr Bruder hätten sich fast <i>verlaufen</i>: Sie hätten beinahe den Weg nicht mehr gefunden. Das Wort <i>ungeduldig</i> bedeutet „nicht geduldig“ – die Vorsilbe verändert die Bedeutung."
     },
     {
      "id": "gr-wortbildung-07",
@@ -1368,7 +1368,7 @@
       }
      ],
      "tipp": "Bei einer Wortfamilie steckt in allen Wörtern derselbe Wortstamm. Bei einem Wortfeld haben die Wörter nur eine ähnliche Bedeutung. Und: Wo steht das Grundwort?",
-     "erklaerung": "Das Grundwort steht immer hinten: bei <i>Apfelsaftflasche</i> ist es <i>Flasche</i>, bei <i>Haustür</i> ist es <i>Tür</i>. <i>murmeln, schreien, fragen</i> sind ein Wortfeld, weil sie Ähnliches bedeuten. In <i>backen, Bäcker, Gebäck</i> steckt derselbe Wortstamm <i>back</i>, manchmal mit <i>ä</i>."
+     "erklaerung": "Das Grundwort steht immer hinten: Bei <i>Apfelsaftflasche</i> ist es <i>Flasche</i>, bei <i>Haustür</i> ist es <i>Tür</i>. <i>murmeln, schreien, fragen</i> sind ein Wortfeld, weil sie Ähnliches bedeuten. In <i>backen, Bäcker, Gebäck</i> steckt derselbe Wortstamm <i>back</i>, manchmal mit <i>ä</i>."
     },
     {
      "id": "gr-wortbildung-08",

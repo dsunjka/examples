@@ -105,7 +105,7 @@
        "g": 1
       }
      ],
-     "tipp": "Denk an die Merkwörter mit v und an die Bausteine ver- und vor-. Vorsicht: Nicht jedes Wort, das mit „fer“ beginnt, hat den Baustein ver-.",
+     "tipp": "Denk an die Merkwörter mit v und an die Bausteine ver- und vor-. Vorsicht: Nicht jedes Wort, das am Anfang wie „fer“ klingt, hat den Baustein ver-.",
      "erklaerung": "Vogel und vier sind Merkwörter mit v, verstecken und vorlesen haben die Bausteine ver- und vor-. Fertig, Freund, fernsehen (von „fern“) und Fahrrad schreibt man mit f."
     },
     {
@@ -232,7 +232,7 @@
       }
      ],
      "tipp": "Vergleiche die Sätze Wort für Wort. Prüfe das lange i, das v und den doppelten Selbstlaut.",
-     "erklaerung": "Nur im ersten Satz stimmen <b>liegt</b> mit ie, <b>viel</b> mit v und <b>Schnee</b> mit ee. „fiel“ gibt es auch, es kommt aber von „fallen“."
+     "erklaerung": "Nur in einem Satz stimmen alle drei Wörter: <b>liegt</b> mit ie, <b>viel</b> mit v und <b>Schnee</b> mit ee. „fiel“ gibt es auch, es kommt aber von „fallen“."
     },
     {
      "id": "rs-merk-07",
@@ -733,7 +733,7 @@
       }
      ],
      "tipp": "Sprich jedes Wort deutlich. Was steht vor dem s-Laut: ein kurzer Selbstlaut, ein langer oder au?",
-     "erklaerung": "Nach au schreibt man ß: <b>draußen</b>. In <b>Fluss</b> und <b>Wasser</b> ist der Selbstlaut kurz, deshalb ss."
+     "erklaerung": "In <b>draußen</b> zischt das s nach au, deshalb schreibt man ß. In <b>Fluss</b> und <b>Wasser</b> ist der Selbstlaut kurz, deshalb ss."
     },
     {
      "id": "rs-s-02",
@@ -999,7 +999,7 @@
       }
      ],
      "tipp": "Verlängere die kurzen Wörter. Ist der Laut vor dem s lang, kurz oder ein ei? Summt oder zischt das s?",
-     "erklaerung": "ß gehört in <b>fleißig</b> und <b>beißen</b> (nach ei) und in <b>süß</b> (süße: langes ü, zischendes s). <b>Nase</b> hat ein summendes s, <b>nass</b> und <b>Schloss</b> haben einen kurzen Selbstlaut."
+     "erklaerung": "ß gehört in <b>fleißig</b> und <b>beißen</b> (nach ei, zischendes s) und in <b>süß</b> (süße: langes ü, zischendes s). <b>Nase</b> hat ein summendes s, <b>nass</b> und <b>Schloss</b> haben einen kurzen Selbstlaut."
     }
    ]
   },
@@ -1132,7 +1132,7 @@
        "fix": true
       }
      ],
-     "tipp": "Der Begleitsatz steht nicht in den Anführungszeichen. Er verrät, wer spricht und manchmal auch, wie jemand spricht.",
+     "tipp": "Der Begleitsatz steht nicht in den Anführungszeichen. Er verrät, wer spricht, und manchmal auch, wie jemand spricht.",
      "erklaerung": "„fragt Oma freundlich“ ist der Begleitsatz: Er sagt, wer spricht und wie. Weil er hinten steht, folgt nach der wörtlichen Rede ein Komma."
     },
     {

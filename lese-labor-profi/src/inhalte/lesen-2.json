@@ -84,7 +84,7 @@
       }
      ],
      "tipp": "Für manche Aussagen brauchst du die Tabelle, für andere den Text. Bei einer Aussage musst du Text und Tabelle verbinden und rechnen.",
-     "erklaerung": "Mit dem Tretroller kommen 14 Kinder, mit dem Bus 20. Fahrradkinder brauchen ungefähr 9 Minuten, Rollerkinder ungefähr 8. Herr Kofler hat 15 Autos gezählt, nicht 18. Und 18 : 2 = 9, also sollen mindestens 9 Auto-Kinder mit dem Laufbus kommen."
+     "erklaerung": "Mit dem Tretroller kommen 14 Kinder, mit dem Bus 20. Fahrradkinder brauchen ungefähr 9 Minuten, Rollerkinder ungefähr 8. Herr Kofler hat 15 Autos gezählt, nicht 18 – und weil 18 : 2 = 9 ist, sollen mindestens 9 Auto-Kinder mit dem Laufbus kommen."
     },
     {
      "id": "l-schulweg-2",
@@ -183,7 +183,7 @@
       }
      ],
      "tipp": "Schau dir die Spalten der Tabelle an. Welche Angaben stehen dort – und welche findest du dort gar nicht?",
-     "erklaerung": "In der Tabelle stehen nur Zahlen: die Anzahl der Kinder und die ungefähre Dauer des Schulwegs. So findest du sie schnell und kannst sie vergleichen. Gründe, Entfernungen oder Gefahren stehen nicht darin."
+     "erklaerung": "In der Tabelle stehen zu jedem Verkehrsmittel nur zwei Zahlen: die Anzahl der Kinder und die ungefähre Dauer des Schulwegs. So findest du sie schnell und kannst sie vergleichen. Gründe, Entfernungen oder Gefahren stehen nicht darin."
     }
    ]
   },
@@ -232,7 +232,7 @@
       "Leitungswasser langsam über den Löffel gießen"
      ],
      "tipp": "Lies die Schritte 1 bis 6 noch einmal. Achte darauf, wann das Ei im Glas liegt und wann nicht.",
-     "erklaerung": "Zuerst kommt Leitungswasser ins Glas. Dann wird das Ei getestet und wieder herausgeholt. Erst danach wird das Salz eingerührt und das Ei zurückgelegt. Zum Schluss wird vorsichtig Leitungswasser darübergegossen."
+     "erklaerung": "Zuerst kommt Leitungswasser ins Glas, dann wird das Ei getestet und wieder herausgeholt. Erst danach wird das Salz eingerührt und das Ei zurückgelegt. Zum Schluss wird vorsichtig Leitungswasser darübergegossen."
     },
     {
      "id": "l-experiment-2",
@@ -347,8 +347,8 @@
        "richtig": false
       }
      ],
-     "tipp": "Lies Schritt 1 noch einmal. Wem sagt dieser Satz etwas, und was soll diese Person damit machen?",
-     "erklaerung": "Der Text ist eine Anleitung. Die Sätze in den Schritten sagen dir, was du tun sollst. So kannst du das Experiment selbst Schritt für Schritt durchführen. Warum das Ei schwimmt und worauf du achten musst, steht in anderen Abschnitten."
+     "tipp": "Lies Schritt 1 noch einmal. Wem sagen die Sätze dort etwas, und was soll diese Person damit machen?",
+     "erklaerung": "Der Text ist eine Anleitung: Die Sätze in den Schritten sagen dir, was du tun sollst. So kannst du das Experiment selbst Schritt für Schritt durchführen. Warum das Ei schwimmt und worauf du achten musst, steht in anderen Abschnitten."
     }
    ]
   },
@@ -399,7 +399,7 @@
       }
      ],
      "tipp": "Die Antwort steht im ersten Absatz. Suche das Wort „Freitag“.",
-     "erklaerung": "Im ersten Absatz steht: Am Freitag stimmen die Klassensprecherinnen und Klassensprecher aller zwölf Klassen ab."
+     "erklaerung": "Im ersten Absatz steht: „Am Freitag stimmen die Klassensprecherinnen und Klassensprecher aller zwölf Klassen darüber ab.“"
     },
     {
      "id": "l-meinung-2",

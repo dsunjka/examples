@@ -99,7 +99,7 @@
       }
      ],
      "tipp": "Frage dich bei jedem Wort: Ist das schon vorbei, passiert es gerade oder kommt es erst noch?",
-     "erklaerung": "<i>Gestern</i>, <i>letzte Woche</i> und <i>vor zwei Tagen</i> sind vorbei. <i>Jetzt</i> und <i>im Moment</i> bedeuten, dass etwas gerade passiert. <i>Morgen</i>, <i>übermorgen</i> und <i>nächsten Sommer</i> liegen in der Zukunft."
+     "erklaerung": "Die Signalwörter <i>gestern</i>, <i>letzte Woche</i> und <i>vor zwei Tagen</i> zeigen, dass etwas vorbei ist. Bei <i>jetzt</i> und <i>im Moment</i> passiert etwas gerade. Bei <i>morgen</i>, <i>übermorgen</i> und <i>nächsten Sommer</i> geht es um die Zukunft."
     },
     {
      "id": "gr-zeiten-03",
@@ -1212,7 +1212,7 @@
       "des Fuchses"
      ],
      "tipp": "Frage: <i>Wessen Schwanz?</i> Im Genitiv ändert sich der Artikel, und das Nomen bekommt eine Endung.",
-     "erklaerung": "Genitiv (Wessen?): <i>des Fuchses</i>. Weil <i>Fuchs</i> auf <i>s</i> endet, bekommt es im Genitiv die Endung <i>-es</i>."
+     "erklaerung": "Genitiv (Wessen?): <i>des Fuchses</i>. Weil <i>Fuchs</i> auf <i>s</i> endet, bekommt das Nomen im Genitiv die Endung <i>-es</i>."
     },
     {
      "id": "gr-faelle-07",
