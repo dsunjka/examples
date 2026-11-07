@@ -184,7 +184,12 @@
       get active() { return !session.aborted && E.current === session; },
       get wrongCount() { return wrongCount; },
       get correctCount() { return correctCount; },
-      sleep: (ms) => U.sleep(ms),
+      // Wartet; wird das Spiel verlassen, löst die Wartezeit nie mehr auf (nachfolgender Code läuft nicht weiter)
+      sleep: (ms) => new Promise((res) => {
+        if (session.aborted) return;
+        const t = setTimeout(res, Math.max(0, ms * LT.config.speed));
+        session.cleanups.push(() => clearTimeout(t));
+      }),
       say(text, opts) {
         if (session.aborted) return Promise.resolve();
         return guard(LT.speech.say(text, opts));
@@ -276,6 +281,7 @@
       const hintAfter = opts.hintAfter == null ? 2 : opts.hintAfter;
       let busy = !!opts.nameFirst;
       let finished = false;
+      let localWrong = 0; // Fehler nur dieser Auswahl (für hintAfter)
       const tiles = list.map((item) => {
         const t = LT.ui.tile(item.content, {
           size: item.size || opts.size,
@@ -305,11 +311,12 @@
               try { await opts.onWrong(item, t, n); } catch (e) { console.error(e); }
             }
             busy = false;
-            if (n >= hintAfter) {
+            localWrong++;
+            if (localWrong >= hintAfter) {
               const right = tiles.find((x) => x._item.correct);
               if (right) {
                 ctx.hint(right);
-                if (n === hintAfter && opts.hintSay) ctx.say(typeof opts.hintSay === 'function' ? opts.hintSay(right._item) : opts.hintSay);
+                if (localWrong === hintAfter && opts.hintSay) ctx.say(typeof opts.hintSay === 'function' ? opts.hintSay(right._item) : opts.hintSay);
               }
             }
           }
@@ -406,7 +413,8 @@
     LT.ui.confetti(result.stars === 3 ? 110 : 60);
     LT.ui.cheer();
 
-    const starsRow = el('div.round-stars', [1, 2, 3].map(() => U.emoji('⭐')));
+    // Freies Malen wird nicht bewertet: statt Sternen ein Malpinsel-Symbol
+    const starsRow = def.type === 'free' ? el('div.round-stars.free', U.emoji('🎨'), U.emoji('🖼️'), U.emoji('✨')) : el('div.round-stars', [1, 2, 3].map(() => U.emoji('⭐')));
     let headline;
     if (def.type === 'free') headline = 'Fertig! Wunderschön!';
     else if (result.stars === 3) headline = name ? `Super, ${name}!` : 'Super gemacht!';
@@ -430,7 +438,8 @@
     const ov = LT.ui.overlay(panel, { className: 'round-end' });
     ov.dataset.test = 'round-end';
     const stars = starsRow.querySelectorAll('.emoji');
-    for (let i = 0; i < result.stars; i++) {
+    if (def.type === 'free') starsRow.querySelectorAll('.emoji').forEach((s) => s.classList.add('on'));
+    else for (let i = 0; i < result.stars; i++) {
       await U.sleep(350);
       stars[i].classList.add('on');
       LT.sfx.play('star');

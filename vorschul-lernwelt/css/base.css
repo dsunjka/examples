@@ -146,6 +146,7 @@ input, select, textarea { font-family: inherit; }
   text-shadow: 0 2px 0 rgba(0, 0, 0, 0.12);
 }
 .topbar .title .emoji { font-size: 1.2em; }
+.topbar .title > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 
 .content {
   flex: 1;
@@ -187,8 +188,8 @@ input, select, textarea { font-family: inherit; }
   appearance: none;
   border: 0;
   cursor: pointer;
-  width: clamp(48px, 7.4vmin, 64px);
-  height: clamp(48px, 7.4vmin, 64px);
+  width: clamp(56px, 7.4vmin, 64px);
+  height: clamp(56px, 7.4vmin, 64px);
   flex: 0 0 auto;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.95);
@@ -203,9 +204,9 @@ input, select, textarea { font-family: inherit; }
 .btn-round:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0, 0, 0, 0.15); }
 .btn-round.pulse { animation: pulse-ring 1.6s infinite; }
 @keyframes pulse-ring {
-  0% { box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15), 0 0 0 0 rgba(255, 255, 255, 0.9); }
-  70% { box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15), 0 0 0 14px rgba(255, 255, 255, 0); }
-  100% { box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15), 0 0 0 0 rgba(255, 255, 255, 0); }
+  0% { box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15), 0 0 0 0 rgba(255, 196, 0, 0.95); }
+  70% { box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15), 0 0 0 14px rgba(255, 196, 0, 0); }
+  100% { box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15), 0 0 0 0 rgba(255, 196, 0, 0); }
 }
 
 .star-counter {
@@ -262,7 +263,7 @@ input, select, textarea { font-family: inherit; }
   align-items: center;
   justify-content: center;
   gap: clamp(14px, 3vmin, 30px);
-  padding: var(--gap) max(var(--gap), env(safe-area-inset-right)) calc(var(--gap) + 70px) max(var(--gap), env(safe-area-inset-left));
+  padding: var(--gap) max(var(--gap), env(safe-area-inset-right)) calc(var(--gap) + var(--bubble-safe, clamp(80px, 11vh, 112px))) max(var(--gap), env(safe-area-inset-left));
   overflow: hidden;
 }
 .stage.scroll { overflow-y: auto; justify-content: flex-start; }
@@ -440,6 +441,8 @@ input, select, textarea { font-family: inherit; }
 .bubble.show { opacity: 1; transform: none; }
 .mascot.big ~ .bubble { left: calc(max(10px, env(safe-area-inset-left)) + clamp(118px, 23vmin, 200px)); bottom: calc(max(10px, env(safe-area-inset-bottom)) + clamp(60px, 12vmin, 110px)); }
 body.no-bubble .bubble { display: none; }
+/* Im Spiel: breitere, etwas kleinere Sprechblase → weniger Zeilen, verdeckt weniger Spielfläche */
+body:not(.mascot-big) .bubble { max-width: min(80vw, 780px); font-size: clamp(16px, 2.4vmin, 21px); padding: 10px 16px; }
 body.mascot-big .content { padding-bottom: calc(var(--gap) + clamp(130px, 25vmin, 210px)); }
 
 /* ---------- Overlays ---------- */
@@ -686,6 +689,14 @@ body.mascot-big .content { padding-bottom: calc(var(--gap) + clamp(130px, 25vmin
   .dots { gap: 4px; }
   .game-screen { --dot-size: 12px; }
   .bubble { max-width: calc(100vw - 110px); font-size: 16px; }
+}
+@media (max-width: 420px) {
+  .topbar { gap: 6px; padding-left: 8px; padding-right: 8px; }
+  .topbar .title { font-size: 17px; gap: 6px; }
+  .topbar .title .emoji { display: none; }
+  .game-screen { --dot-size: 10px; }
+  .dots { gap: 3px; }
+  .dot { border-width: 2px; }
 }
 @media (max-height: 520px) and (orientation: landscape) {
   :root { --tile: clamp(70px, 22vmin, 130px); }

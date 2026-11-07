@@ -100,7 +100,7 @@
     'Klasse, du lernst richtig viel!',
     'Prima mitgedacht!',
   ];
-  const ENCOURAGE = ['Fast! Probier es noch einmal.', 'Hmm, schau noch mal genau hin.', 'Noch nicht ganz. Du schaffst das!', 'Versuch es nochmal!', 'Nicht schlimm. Probier ein anderes!'];
+  const ENCOURAGE = ['Fast! Probier es noch einmal.', 'Hmm, schau noch mal genau hin.', 'Noch nicht ganz. Du schaffst das!', 'Versuch es nochmal!', 'Nicht schlimm. Probier es nochmal!'];
   const HINT = ['Ich helfe dir ein bisschen.', 'Schau mal, ich zeige es dir.', 'Hier ist ein Tipp für dich.'];
   let praiseCount = 0;
 
@@ -218,6 +218,12 @@
       ov.remove();
       if (onClose) onClose();
     };
+    // Farbe der aktuellen Welt übernehmen (Overlays liegen außerhalb des Bildschirms)
+    const scr = document.querySelector('.screen');
+    if (scr) {
+      const cs = getComputedStyle(scr);
+      ['--area', '--area-soft'].forEach((v) => { const val = cs.getPropertyValue(v); if (val) ov.style.setProperty(v, val.trim()); });
+    }
     document.body.appendChild(ov);
     return ov;
   };

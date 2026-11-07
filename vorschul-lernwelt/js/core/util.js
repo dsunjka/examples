@@ -60,7 +60,8 @@
   const recent = {};
   U.pickFresh = (key, arr, k = 3, idFn = (x) => x) => {
     const mem = (recent[key] = recent[key] || []);
-    const k2 = Math.min(k, Math.max(0, arr.length - 1));
+    // höchstens die Hälfte sperren – sonst entsteht bei kleinen Mengen eine feste Reihenfolge
+    const k2 = Math.min(k, Math.floor(arr.length / 2));
     let pool = arr.filter((x) => !mem.includes(idFn(x)));
     if (!pool.length) pool = arr;
     const v = U.pick(pool);
