@@ -51,11 +51,12 @@ function bereinigeProfil(p, { mitLaufend = false } = {}) {
     const ids = (Array.isArray(x.ids) ? x.ids : []).filter((id) => typeof id === 'string' && ID_OK.test(id)).slice(0, 60);
     const details = {};
     if (istObj(x.details)) for (const id of ids) details[id] = STATUS.includes(x.details[id]) ? x.details[id] : 'leer';
-    return { art: typeof x.art === 'string' && ID_OK.test(x.art) ? x.art : 'test', titel: kurztext(x.titel, 80), datum: zahl(x.datum), punkte: zahl(x.punkte, 1000), max: zahl(x.max, 1000), dauer: zahl(x.dauer, 1e6), zeitLimit: zahl(x.zeitLimit, 1e6), ids, details, antworten: istObj(x.antworten) ? x.antworten : {}, perms: istObj(x.perms) ? x.perms : {} };
+    return { sid: typeof x.sid === 'string' && /^[a-z0-9]{1,24}$/.test(x.sid) ? x.sid : undefined, art: typeof x.art === 'string' && ID_OK.test(x.art) ? x.art : 'test', titel: kurztext(x.titel, 80), datum: zahl(x.datum), punkte: zahl(x.punkte, 1000), max: zahl(x.max, 1000), dauer: zahl(x.dauer, 1e6), zeitLimit: zahl(x.zeitLimit, 1e6), ids, details, antworten: istObj(x.antworten) ? x.antworten : {}, perms: istObj(x.perms) ? x.perms : {} };
   });
   const alleTempo = (Array.isArray(p.tempo) ? p.tempo : []).filter(istObj).map((t) => ({ datum: zahl(t.datum), richtig: zahl(t.richtig, 1000), falsch: zahl(t.falsch, 1000), dauer: zahl(t.dauer, 1e4) || 180, gelesen: zahl(t.gelesen, 1000) }));
   n.tempoRekord = Math.max(zahl(p.tempoRekord, 1000), 0, ...alleTempo.map((t) => Math.max(0, t.richtig - t.falsch)));
   n.tempo = alleTempo.slice(-60);
+  n.grossZaehler = Number.isFinite(Number(p.grossZaehler)) && p.grossZaehler != null ? zahl(p.grossZaehler, 1e6) : n.pruefungen.filter((x) => x.art === 'gross').length;
   n.diktate = {};
   if (istObj(p.diktate)) for (const [id, d] of Object.entries(p.diktate)) if (ID_OK.test(id) && istObj(d)) n.diktate[id] = { best: zahl(d.best, 100), letzte: zahl(d.letzte, 100), datum: zahl(d.datum) };
   n.texte = {};
@@ -112,7 +113,24 @@ window.addEventListener('pagehide', allesSichern);
 document.addEventListener('visibilitychange', () => { if (document.hidden) allesSichern(); });
 // Ein anderer Tab hat gespeichert: frischen Stand übernehmen, wenn hier nichts aussteht.
 window.addEventListener('storage', (ev) => {
-  if (ev.key !== SPEICHER_KEY || ungespeichert || !ev.newValue) return;
+  if (ev.key !== SPEICHER_KEY || !ev.newValue) return;
+  // Läuft hier eine Prüfung, die ein anderes Fenster gerade bearbeitet, abgegeben oder verworfen hat: hier beenden.
+  if (typeof SITZ !== 'undefined' && SITZ && SITZ.art === 'pruefung' && !SITZ.abgegeben) {
+    // Neueren Stand übernehmen, die eigene laufende Prüfung aber behalten – außer sie wurde dort schon abgegeben.
+    clearTimeout(speicherTimer);
+    const neu = ladeSpeicher(), aktiv = DB.aktivesProfil;
+    DB = neu; if (DB.profile[aktiv]) DB.aktivesProfil = aktiv;
+    const p = P();
+    if (p && p.pruefungen.some((x) => x.sid === SITZ.id)) {
+      stoppeUhr(); SITZ = null;
+      toast('Diese Prüfung wurde in einem anderen Fenster abgegeben.', 4200);
+      zeige('start');
+      return;
+    }
+    if (p) { p.laufend = SITZ; speichern(); }
+    return;
+  }
+  if (ungespeichert) return;
   const neu = ladeSpeicher();
   if (!neu || !Object.keys(neu.profile).length) return;
   const aktiv = DB && DB.aktivesProfil;

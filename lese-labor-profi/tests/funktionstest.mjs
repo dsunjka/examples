@@ -142,7 +142,7 @@ try {
   /* ---------- 4. Simulierter Browser und Textmarker ---------- */
   schritt('Simulierter Browser: Links, Zurück, Textmarker, Groß-Ansicht');
   const vorher = await page.getAttribute('.web', 'data-seite');
-  const link = await page.$('.quelle-flaeche [data-ziel]');
+  const link = await page.$(`.quelle-flaeche [data-ziel]:not([data-ziel="${vorher}"])`);
   check(!!link, 'kein Link in der Quelle');
   if (link) {
     const ziel = await link.getAttribute('data-ziel');

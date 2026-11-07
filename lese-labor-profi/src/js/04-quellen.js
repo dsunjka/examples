@@ -1,5 +1,5 @@
 /* ===== Quellen: simulierter Browser, Lesetexte, Merkkasten, Textmarker ===== */
-const SITE_FARBEN = { gruen: '#2f8a3f', blau: '#2f68d8', orange: '#d9671c', lila: '#7a4cc2', rot: '#c7364a', grau: '#4b5568', tuerkis: '#0c8b8b', gelb: '#b88a00' };
+const SITE_FARBEN = { gruen: '#277335', blau: '#2f68d8', orange: '#b4510f', lila: '#7a4cc2', rot: '#c7364a', grau: '#4b5568', tuerkis: '#087373', gelb: '#8a6700' };
 const ERLAUBTE_TAGS = new Set('h1 h2 h3 h4 p ul ol li strong em b i small span div a button br hr table thead tbody tr th td dl dt dd details summary time caption'.split(' '));
 const GEFAEHRLICH = new Set('script style iframe object embed img video audio link meta form input textarea select svg math template noscript'.split(' '));
 const ERLAUBTE_ATTR = new Set(['class', 'data-ziel', 'data-extern', 'open', 'colspan', 'rowspan', 'datetime', 'title', 'aria-label']);
@@ -69,9 +69,9 @@ function renderGeraet(fallId) {
 }
 function fallNavigiere(fallId, wohin) {
   const f = REG.gruppen[fallId].daten, z = fallZustand(fallId);
+  if (wohin === 'start') wohin = f.startseite;
   if (wohin === 'zurueck') z.pos = Math.max(0, z.pos - 1);
   else if (wohin === 'vor') z.pos = Math.min(z.verlauf.length - 1, z.pos + 1);
-  else if (wohin === 'start') { z.verlauf = z.verlauf.slice(0, z.pos + 1).concat(f.startseite); z.pos = z.verlauf.length - 1; }
   else if ((f.seiten || []).some((s) => s.id === wohin)) {
     if (z.verlauf[z.pos] !== wohin) { z.verlauf = z.verlauf.slice(0, z.pos + 1).concat(wohin); z.pos = z.verlauf.length - 1; }
   }
@@ -112,6 +112,15 @@ function markerVorbereiten(wurzel) {
   if (!box) return;
   const key = box.getAttribute('data-marker-key');
   const ziele = Array.from(box.querySelectorAll(MARKER_ZIELE)).filter((el) => !el.querySelector(MARKER_ZIELE));
+  // Lose Texte (z. B. in div, strong, small, time, Kästen) einhüllen, damit auch sie markiert werden können.
+  const imZiel = (n) => ziele.some((b) => b.contains(n));
+  const lose = [];
+  const w = document.createTreeWalker(box, NodeFilter.SHOW_TEXT);
+  for (let n = w.nextNode(); n; n = w.nextNode()) {
+    if (/\S/.test(n.nodeValue) && !imZiel(n) && !n.parentElement.closest('a[data-ziel]:not(.m-eintrag), a[data-extern], button, .w-menue, .a-reiter, .abs-nr, .vers-nr, .strophe-nr')) lose.push(n);
+  }
+  for (const n of lose) { const s = document.createElement('span'); n.parentNode.insertBefore(s, n); s.appendChild(n); ziele.push(s); }
+  ziele.sort((a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
   ziele.forEach((el, i) => el.setAttribute('data-tm', String(i)));
   const gesetzt = ((SITZ && SITZ.marker) || {})[key] || [];
   for (const i of gesetzt) { const el = box.querySelector(`[data-tm="${i}"]`); if (el) el.classList.add('tm'); }

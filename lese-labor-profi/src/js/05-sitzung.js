@@ -36,6 +36,7 @@ function sitzungFortsetzen() {
     SITZ.antworten[id] = sichereAntwort(it, SITZ.antworten[id], SITZ.perms[id]);
   }
   SITZ.ui = { chip: null };
+  if (SITZ.art === 'pruefung' && SITZ.zeitLimit && SITZ.verbraucht >= SITZ.zeitLimit) { SITZ.verbraucht = SITZ.zeitLimit; auswerten(); return; }
   SITZ.index = clamp(SITZ.index || 0, 0, SITZ.ids.length - 1);
   zeige('sitzung');
 }
@@ -89,7 +90,7 @@ function zeichneKopf() {
   kopf.innerHTML = `
     <button type="button" class="rund-knopf" data-act="s-beenden" aria-label="${istPruefung() ? 'Prüfung unterbrechen' : 'Training beenden'}">${icon('zurueck')}</button>
     <div class="sitzung-titel"><b>${esc(SITZ.titel)}</b><span>${esc(unter)}</span></div>
-    ${istPruefung() && SITZ.zeitLimit ? `<button type="button" class="uhr" id="uhr" data-act="s-uhr" aria-label="Restzeit">${icon('uhr')}<span>${SITZ.zeitVerborgen ? 'Zeit' : zeitLesbar(SITZ.zeitLimit - SITZ.verbraucht)}</span></button>` : ''}
+    ${istPruefung() && SITZ.zeitLimit ? `<button type="button" class="uhr${SITZ.zeitLimit - SITZ.verbraucht <= 300 ? ' knapp' : ''}" id="uhr" data-act="s-uhr" aria-label="Restzeit">${icon('uhr')}<span>${SITZ.zeitVerborgen ? 'Zeit' : zeitLesbar(SITZ.zeitLimit - SITZ.verbraucht)}</span></button>` : ''}
     <div class="navi-punkte" role="navigation" aria-label="Aufgaben">${punkte}</div>
     ${istPruefung() ? `<button type="button" class="knopf knopf-klein knopf-signal" data-act="s-abgeben">Abgeben</button>` : `<span class="punkte-chip" title="In diesem Training gesammelt">${icon('kolben')}+${SITZ.punkte}</span>`}`;
   kopf.style.setProperty('--farbe', mod.farbe);
@@ -274,11 +275,18 @@ function tippZeigen() {
   const id = aktId(), it = aktIt();
   SITZ.tipp[id] = true;
   const g = gruppeVon(id);
-  if (it.tippSeite && g && g.art === 'fall') {
+  const mitSeite = !!(it.tippSeite && g && g.art === 'fall');
+  if (mitSeite) {
     fallNavigiere(g.id, it.tippSeite);
     const q = $('#quelle .geraet'); if (q) { q.classList.remove('ziel-blitz'); void q.offsetWidth; q.classList.add('ziel-blitz'); }
   }
   zeichneAufgabe();
+  // Im Hochformat liegt die Quelle oberhalb: dorthin scrollen, damit der Seitenwechsel zu sehen ist.
+  const qs = $('.quelle-spalte');
+  if (mitSeite && qs && window.innerWidth <= 900 && qs.getBoundingClientRect().top < 0) {
+    qs.scrollIntoView({ block: 'start', behavior: sanft() });
+    setTimeout(springenAktualisieren, 400);
+  }
 }
 function weiter() {
   if (SITZ.index < SITZ.ids.length - 1) { gehe(SITZ.index + 1); return; }
@@ -323,6 +331,8 @@ async function bildschirmWach(an) {
 document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && wachGewuenscht && !wakeLock) bildschirmWach(true); });
 async function zeitAbgelaufen() {
   stoppeUhr();
+  SITZ.verbraucht = SITZ.zeitLimit; // Ablauf festhalten, falls neu geladen wird, bevor der Dialog bestätigt ist
+  sitzungMerken(true);
   await dialog({ titel: 'Die Zeit ist um!', text: 'Deine Prüfung wird jetzt ausgewertet. Alle Antworten, die du gegeben hast, zählen.', knoepfe: [{ label: 'Zur Auswertung', wert: true }] });
   auswerten();
 }
@@ -361,10 +371,11 @@ function auswerten() {
   }
   const p = P();
   const eintrag = {
-    art: SITZ.pruefArt || 'test', titel: SITZ.titel, datum: Date.now(), punkte, max: SITZ.ids.length,
-    dauer: SITZ.verbraucht, zeitLimit: SITZ.zeitLimit, ids: SITZ.ids, details, antworten: SITZ.antworten, perms: SITZ.perms,
+    sid: SITZ.id, art: SITZ.pruefArt || 'test', titel: SITZ.titel, datum: Date.now(), punkte, max: SITZ.ids.length,
+    dauer: SITZ.zeitLimit ? Math.min(SITZ.verbraucht, SITZ.zeitLimit) : SITZ.verbraucht, zeitLimit: SITZ.zeitLimit, ids: SITZ.ids, details, antworten: SITZ.antworten, perms: SITZ.perms,
   };
   if (p) {
+    if (eintrag.art === 'gross') p.grossZaehler = (p.grossZaehler != null ? p.grossZaehler : p.pruefungen.filter((x) => x.art === 'gross').length) + 1;
     p.pruefungen.push(eintrag);
     if (p.pruefungen.length > 40) p.pruefungen = p.pruefungen.slice(-40);
     punkteDazu(punkte * 3);

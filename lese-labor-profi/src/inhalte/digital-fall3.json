@@ -27,7 +27,7 @@
    {
     "id": "profil",
     "titel": "Kontaktinfo",
-    "html": "<div class=\"c-gruppe\"><strong>Kontaktinfo</strong><small>Plapperpost</small></div><div class=\"w-kasten w-kasten--warnung\">⚠️ Dieser Kontakt ist nicht in deinem Adressbuch.</div><div class=\"w-bild\"><span>💎</span><small>Profilbild</small></div><h2>Gratis-Juwelen 💎</h2><p class=\"w-klein\">Status: „Gratis-Juwelen für ALLE Funkelfestung-Fans!!! 🎁🎁🎁“</p><div class=\"a-zeile\"><span>Bei Plapperpost seit</span><strong>19. Januar 2027</strong></div><div class=\"a-zeile\"><span>Telefonnummer</span><strong>verborgen</strong></div><div class=\"a-zeile\"><span>Gemeinsame Gruppen</span><strong>Klasse 4c 🦊</strong></div><p><span class=\"w-knopf\">🚫 Blockieren</span> <span class=\"w-knopf\">⚠️ Melden</span></p>"
+    "html": "<div class=\"c-gruppe\"><strong>Kontaktinfo</strong><small>Plapperpost</small></div><div class=\"w-kasten w-kasten--warnung\">⚠️ Dieser Kontakt ist nicht in deinem Adressbuch.</div><div class=\"w-bild\"><span>💎</span><small>Profilbild</small></div><h2>Gratis-Juwelen 💎</h2><p class=\"w-klein\">Status: „Gratis-Juwelen für ALLE Funkelfestung-Fans!!! 🎁🎁🎁“</p><div class=\"a-zeile\"><span>Bei Plapperpost seit</span><strong>19. Januar 2027</strong></div><div class=\"a-zeile\"><span>Telefonnummer</span><strong>verborgen</strong></div><div class=\"a-zeile\"><span>Gemeinsame Gruppen</span><strong>Klasse 4c 🦊</strong></div><p><a class=\"w-knopf\" data-extern>🚫 Blockieren</a> <a class=\"w-knopf\" data-extern>⚠️ Melden</a></p>"
    },
    {
     "id": "clip",

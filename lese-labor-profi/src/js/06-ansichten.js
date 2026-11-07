@@ -243,7 +243,7 @@ function grosserCheckAnzahl() {
   return erste('digital') + erste('lesen') + n('rechtschreibung', 4) + n('grammatik', 4) + n('schreiben', 3);
 }
 function grosserCheck() {
-  const p = P(), anz = p.pruefungen.filter((x) => x.art === 'gross').length;
+  const p = P(), anz = p.grossZaehler != null ? p.grossZaehler : p.pruefungen.filter((x) => x.art === 'gross').length;
   const ids = [];
   const fg = REG.module.digital.gruppen; if (fg.length) ids.push(...REG.gruppen[fg[anz % fg.length]].items);
   const tg = REG.module.lesen.gruppen; if (tg.length) ids.push(...REG.gruppen[tg[anz % tg.length]].items);
