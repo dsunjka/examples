@@ -58,12 +58,19 @@
   z-index: 3;
   box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
 }
+/* Vorstellung beim ersten Mal: gut sichtbarer, goldener Leuchtring (der weiße Standard-Puls geht auf hellem Grund unter) */
+.btn-round.s2-abc-btn.pulse { animation: s2-abc-glow 1.2s ease-in-out infinite; }
+@keyframes s2-abc-glow {
+  0%, 100% { box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2), 0 0 0 0 rgba(255, 197, 51, 0.95); transform: scale(1); }
+  50% { box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2), 0 0 0 12px rgba(255, 197, 51, 0.35); transform: scale(1.1); }
+}
 .s2-abc-btn-txt { font: 700 21px/1 var(--font); letter-spacing: 0.02em; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15); }
 @media (max-width: 600px) {
   .btn-round.s2-abc-btn { position: static; order: 99; width: 64px; height: 64px; flex: 0 0 auto; }
 }
 
-/* Anlauttabelle (Overlay) */
+/* Anlauttabelle (Overlay) – liegt außerhalb des Spielbildschirms, daher die Bereichsfarbe hier setzen */
+.s2-abc-ov { --area: var(--c-sprache); }
 .s2-abc-ov .panel { max-width: min(1020px, 100%); width: 100%; padding: clamp(12px, 2.4vmin, 28px); }
 .s2-abc-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; }
 .s2-abc-head h2 { margin: 0; display: flex; align-items: center; gap: 8px; color: var(--area); }

@@ -109,10 +109,11 @@
   W.dayScene = function (id) {
     const g = 'w2g' + ++uid;
     const house = (win) => `<rect x="70" y="56" width="30" height="22" fill="#f7e3c4"/><path d="M66 58 L85 42 L104 58 Z" fill="#d9534f"/><rect x="77" y="62" width="8" height="8" fill="${win}" stroke="#8a5a3b" stroke-width="1.2"/><rect x="88" y="64" width="7" height="14" fill="#8a5a3b"/>`;
-    const rays = (cx, cy, r1, r2, n, col) => {
+    const rays = (cx, cy, r1, r2, n, col, upperOnly) => {
       let s = `<g stroke="${col}" stroke-width="2.4" stroke-linecap="round">`;
       for (let i = 0; i < n; i++) {
         const a = (i * 2 * Math.PI) / n;
+        if (upperOnly && Math.sin(a) > -0.2) continue; // aufgehende Sonne: keine Strahlen unter dem Horizont
         s += `<line x1="${(cx + Math.cos(a) * r1).toFixed(1)}" y1="${(cy + Math.sin(a) * r1).toFixed(1)}" x2="${(cx + Math.cos(a) * r2).toFixed(1)}" y2="${(cy + Math.sin(a) * r2).toFixed(1)}"/>`;
       }
       return s + '</g>';
@@ -121,7 +122,7 @@
     if (id === 'morgen') {
       m += `<defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9fd8ff"/><stop offset="1" stop-color="#ffd8a8"/></linearGradient></defs>`;
       m += `<rect width="120" height="90" fill="url(#${g})"/>`;
-      m += rays(30, 74, 15, 21, 12, '#ffb000');
+      m += rays(30, 74, 15, 21, 12, '#ffb000', true);
       m += '<circle cx="30" cy="74" r="12" fill="#ffc531"/>';
       m += '<rect y="74" width="120" height="16" fill="#86cf62"/>' + house('#e9f2ff');
     } else if (id === 'mittag') {
@@ -132,7 +133,8 @@
     } else if (id === 'abend') {
       m += `<defs><linearGradient id="${g}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6b4fa3"/><stop offset=".55" stop-color="#e46f7e"/><stop offset="1" stop-color="#ffb05c"/></linearGradient></defs>`;
       m += `<rect width="120" height="90" fill="url(#${g})"/>`;
-      m += '<circle cx="34" cy="76" r="13" fill="#ff7b3a"/>';
+      // Abendsonne weiter rechts als die Morgensonne (Osten ↔ Westen), aber gut sichtbar vor dem Haus
+      m += '<circle cx="50" cy="76" r="14" fill="#ff7b3a"/>';
       m += '<rect y="74" width="120" height="16" fill="#4f8f4a"/>' + house('#ffe27a');
     } else {
       m += '<rect width="120" height="90" fill="#1c2756"/>';
@@ -148,12 +150,12 @@
      Lebensräume als Szenen (ohne Tiere – die Szene darf nichts verraten)
      ------------------------------------------------------------------ */
   W.HABITATS = [
-    { id: 'hof', name: 'Bauernhof', dat: 'auf dem Bauernhof', icons: ['🏡', '🚜', '🌾'] },
-    { id: 'wald', name: 'Wald', dat: 'im Wald', icons: ['🌲', '🌳', '🍄'] },
-    { id: 'meer', name: 'Meer', dat: 'im Meer', icons: ['⛵', '🌊', '🌊'] },
-    { id: 'dschungel', name: 'Dschungel', dat: 'im Dschungel', icons: ['🌴', '🌿', '🌺'] },
-    { id: 'wueste', name: 'Wüste', dat: 'in der Wüste', icons: ['☀️', '🌵', '🏜️'] },
-    { id: 'eis', name: 'Eis und Schnee', label: 'Eis & Schnee', dat: 'im Eis und Schnee', icons: ['❄️', '🏔️', '🧊'] },
+    { id: 'hof', nom: 'der Bauernhof', name: 'Bauernhof', dat: 'auf dem Bauernhof', icons: ['🏡', '🚜', '🌾'] },
+    { id: 'wald', nom: 'der Wald', name: 'Wald', dat: 'im Wald', icons: ['🌲', '🌳', '🍄'] },
+    { id: 'meer', nom: 'das Meer', name: 'Meer', dat: 'im Meer', icons: ['⛵', '🌊', '🌊'] },
+    { id: 'dschungel', nom: 'der Dschungel', name: 'Dschungel', dat: 'im Dschungel', icons: ['🌴', '🌿', '🌺'] },
+    { id: 'wueste', nom: 'die Wüste', name: 'Wüste', dat: 'in der Wüste', icons: ['☀️', '🌵', '🏜️'] },
+    { id: 'eis', nom: 'Eis und Schnee', name: 'Eis und Schnee', label: 'Eis & Schnee', dat: 'in Eis und Schnee', icons: ['❄️', '🏔️', '🧊'] },
   ];
   W.habitat = (id) => W.HABITATS.find((h) => h.id === id);
   W.habitatScene = function (id) {

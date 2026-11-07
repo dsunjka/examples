@@ -135,7 +135,7 @@
     { id: 'schleifen', grp: 2, strokes: [loops()], walker: '🦋', goal: '🌸',
       say: 'Der Schmetterling fliegt Schleifen. Fahr die Schleifen nach.', done: 'Wunderbar! Schöne Schleifen!' },
     { id: 'kreis', grp: 2, strokes: [A(50, 50, 32, 32, 270, -90)], walker: '🚗', goal: null,
-      say: 'Das Auto fährt im Kreisverkehr. Fahr einmal rund herum.', done: 'Super! Ein runder Kreis!' },
+      say: 'Das Auto fährt im Kreisverkehr. Fahr einmal rundherum.', done: 'Super! Ein runder Kreis!' },
     { id: 'spirale', grp: 2, strokes: [spiral()], walker: '🐌', goal: null,
       say: 'Die Schnecke kriecht in ihr Haus. Fahr die Spirale nach, bis in die Mitte.', done: 'Toll! Eine Schnecken-Spirale!' },
   ];
@@ -230,7 +230,7 @@
      damit die Sprachausgabe sie richtig ausspricht) und Anlautwörter */
   const LETTER_NAME = {
     A: 'A', B: 'Beh', C: 'Zeh', D: 'Deh', E: 'E', F: 'Ef', G: 'Geh', H: 'Ha', I: 'I', J: 'Jott', K: 'Ka', L: 'El', M: 'Em',
-    N: 'En', O: 'O', P: 'Peh', Q: 'Ku', R: 'Er', S: 'Es', T: 'Teh', U: 'U', V: 'Vau', W: 'Weh', X: 'Ix', Y: 'Ypsilon', Z: 'Zett',
+    N: 'En', O: 'O', P: 'Peh', Q: 'Ku', R: 'Err', S: 'Es', T: 'Teh', U: 'U', V: 'Vau', W: 'Weh', X: 'Ix', Y: 'Ypsilon', Z: 'Zett',
     'Ä': 'Ä', 'Ö': 'Ö', 'Ü': 'Ü',
   };
   // pos: Position des Buchstabens im Wort (für die Hervorhebung), meist 0 = Anlaut
@@ -436,7 +436,11 @@
       }
       updateMarkers();
       if (opts.announceStrokes !== false && strokes[si].pts.length > 1) ctx.say(`Und jetzt der ${ORD_NOM[si] || 'nächste'} Strich.`);
-      else if (strokes[si].pts.length === 1) ctx.say('Jetzt noch den Punkt antippen.');
+      else if (strokes[si].pts.length === 1) {
+        const prevDot = strokes[si - 1].pts.length === 1;
+        const nextDot = strokes[si + 1] && strokes[si + 1].pts.length === 1;
+        ctx.say(prevDot ? 'Und jetzt den zweiten Punkt.' : nextDot ? 'Jetzt noch die zwei Punkte antippen.' : 'Jetzt noch den Punkt antippen.');
+      }
     }
 
     /** Einen Messpunkt verarbeiten; true, wenn Fortschritt. */
@@ -721,7 +725,7 @@
     const strip = el('span.spur-strip', letters.map((c) => el('span.spur-letter', c)));
     ui.head.append(U.emoji(item.e, 'spur-anchor'), strip);
     const cells = Array.from(strip.children);
-    await ctx.instruct(item.isName ? `Wir schreiben deinen Namen: ${item.s}! Zuerst das ${LETTER_NAME[letters[0]]}.` : `Wir schreiben ${item.s}. Zuerst das ${LETTER_NAME[letters[0]]}.`);
+    ctx.instruct(item.isName ? `Wir schreiben deinen Namen: ${item.s}! Zuerst das ${LETTER_NAME[letters[0]]}.` : `Wir schreiben das Wort ${item.s}. Zuerst das ${LETTER_NAME[letters[0]]}.`);
     for (let i = 0; i < letters.length; i++) {
       if (!ctx.active) return;
       cells.forEach((c, k) => c.classList.toggle('current', k === i));

@@ -130,7 +130,17 @@
       text: !withDots,
       correct: k === ans,
       say: Z.word(k),
+      value: k,
     }));
+  }
+
+  /** Informative Fehler-Rückmeldung: Was ergibt die gewählte Zahl mit dem bekannten Teil? */
+  function wrongSay(known, N, box = false) {
+    return (item) => {
+      const k = item.value;
+      const goal = box ? `In der Schüttelbox sind aber ${N}.` : `Im Dach wohnt aber die ${Z.Word(N)}.`;
+      return `${Z.oops()} ${known} und ${k} sind zusammen ${known + k}. ${goal}`;
+    };
   }
 
   /** Raum nach richtiger Antwort füllen (mit kleiner Animation). */
@@ -164,6 +174,7 @@
     await ctx.choices(numberItems(b, 3, 1, 6, [a, N], true), {
       container: box, shuffle: false, size: 'small', hintAfter: 3,
       correctSay: `Richtig! ${a} und ${b} sind zusammen ${N}.`,
+      wrongSay: wrongSay(a, N),
       onCorrect: () => {
         Z.clearBadges(H.house);
         empties.forEach((t) => { t.classList.remove('z2-hl'); Z.setTok(t, 'b'); });
@@ -239,6 +250,7 @@
 
     await ctx.choices(numberItems(b, 4, 1, 7, [a, N]), {
       container: box, shuffle: false, size: 'small', hintAfter: 3,
+      wrongSay: wrongSay(a, N, true),
       correctSay: `Richtig! Unter dem Deckel ${Z.verb(b, 'war', 'waren')} ${Z.nom(b, it)}. ${a} und ${b} sind zusammen ${N}.`,
       onCorrect: () => {
         Z.clearBadges(boxEl);
@@ -274,6 +286,7 @@
     await ctx.choices(numberItems(b, 4, 1, 10, [a, b + 1, b - 1]), {
       container: box, shuffle: false, size: 'small', hintAfter: 3,
       correctSay: `Richtig! ${a} und ${b} sind zusammen 10. ${U.pick(cheers)}`,
+      wrongSay: wrongSay(a, 10),
       onCorrect: () => {
         Z.clearBadges(tf.node);
         empties.forEach((t) => { t.classList.remove('z2-hl'); Z.setTok(t, 'b'); });
@@ -310,6 +323,7 @@
     await ctx.choices(numberItems(ans, 4, 0, 10, [known, N]), {
       container: box, shuffle: false, size: 'small', hintAfter: 3,
       correctSay: `Richtig! ${a} und ${b} sind zusammen ${N}.`,
+      wrongSay: wrongSay(known, N),
       onCorrect: () => {
         if (empties) empties.forEach((t) => Z.setTok(t, 'b'));
         Z.clearBadges(ctx.stage);
@@ -359,7 +373,8 @@
       let empties = null;
       await ctx.choices(numberItems(ans, 4, 0, 10, [known, N]), {
         container: box, shuffle: false, size: 'small', hintAfter: base + 3,
-        correctSay: `Richtig! ${f.a} und ${f.b} sind ${N}.`,
+        correctSay: `Richtig! ${f.a} und ${f.b} sind zusammen ${N}.`,
+        wrongSay: wrongSay(known, N),
         onCorrect: () => {
           if (empties) empties.forEach((t) => Z.setTok(t, 'b'));
           reveal(f.miss === 'r' ? rowEls.r : rowEls.l, ans, 'digit');

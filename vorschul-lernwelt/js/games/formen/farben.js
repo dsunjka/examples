@@ -78,7 +78,7 @@
     { e: '🦏', w: 'Nashorn', a: 'das', c: 'grau', also: ['weiss', 'blau'] },
     { e: '🐨', w: 'Koala', a: 'der', c: 'grau', also: ['weiss', 'schwarz', 'rosa'] },
     { e: '🐺', w: 'Wolf', a: 'der', c: 'grau', also: ['weiss', 'schwarz', 'braun'] },
-    { e: '🐭', w: 'Maus', a: 'die', c: 'grau', also: ['rosa', 'weiss'] },
+    { e: '🐭', w: 'Maus', a: 'die', c: 'grau', also: ['rosa', 'weiss', 'braun'] },
   ];
 
   /* ------------------------------------------------------------------
@@ -234,9 +234,9 @@
     await ctx.choices(items, {
       sayButton: true,
       className: 'farben-choices',
-      columns: ctx.stage.clientHeight > ctx.stage.clientWidth && ctx.stage.clientWidth < 520 ? 2 : undefined,
+      columns: ctx.stage.clientHeight > ctx.stage.clientWidth ? 2 : undefined,
       correctSay: `Richtig! ${Def} ${t.pl ? 'sind' : 'ist'} ${adj(t.c)}.`,
-      wrongSay: (it) => `Das ist ${name(it.kind)}. Schau ${t.pl ? 'sie' : t.a === 'der' ? 'ihn' : t.a === 'die' ? 'sie' : 'es'} dir noch mal genau an.`,
+      wrongSay: (it) => `Das ist ${name(it.kind)}. Schau dir ${t.a === 'der' && !t.pl ? 'den' : t.a} ${t.w} noch mal genau an.`,
       onWrong: async (it, tile, n) => {
         if (n === 2) {
           // Hilfe: ein anderes Ding mit derselben Farbe zum Vergleich zeigen

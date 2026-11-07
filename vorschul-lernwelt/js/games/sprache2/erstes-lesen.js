@@ -121,7 +121,9 @@
 
     const first = ctx.index === 0 && level === 1;
     await ctx.instruct(first
-      ? 'Hier steht ein Wort. Lies es! Erst die blaue Silbe, dann die rote. Welches Bild passt?'
+      ? (target.t.includes('-')
+        ? 'Hier steht ein Wort. Lies es! Erst die blaue Silbe, dann die rote. Welches Bild passt?'
+        : 'Hier steht ein Wort. Lies es! Welches Bild passt?')
       : U.pick(['Lies das Wort. Welches Bild passt dazu?', 'Was steht hier? Lies und tippe auf das passende Bild.', 'Lies genau! Welches Bild gehört zu dem Wort?']));
     if (!ctx.active) return;
 

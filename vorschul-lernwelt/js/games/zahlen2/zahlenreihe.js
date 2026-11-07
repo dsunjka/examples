@@ -127,6 +127,24 @@
     return t;
   }
 
+  /**
+   * Informative Rückmeldung zu einer falschen Zahl k (statt nur „falsch“):
+   * nennt die gewählte Zahl und sagt, in welche Richtung es weitergeht.
+   */
+  function wrongFeedback(t, k) {
+    const W = Z.Word;
+    if (t.kind === 'neighbor') {
+      const want = t.dir === 'vor' ? 'davor' : 'danach';
+      if (k === t.n) return `${Z.oops()} Das ist die ${W(k)} selbst. Wir suchen die Zahl ${want}.`;
+      if (Math.abs(k - t.n) === 1) return `${Z.oops()} Die ${W(k)} kommt ${t.dir === 'vor' ? 'nach' : 'vor'} der ${W(t.n)}. Wir suchen die Zahl ${want}.`;
+      return `${Z.oops()} Die ${W(k)} ist kein Nachbar der ${W(t.n)}.`;
+    }
+    if (t.kind === 'countdown') {
+      return `${Z.oops()} Die ${W(k)} passt hier nicht. Beim Rückwärtszählen wird es immer eins weniger.`;
+    }
+    return `${Z.oops()} Die ${W(k)} ist zu ${k > t.ans ? 'groß' : 'klein'}.`;
+  }
+
   /** Frage, Bestätigung und typische Fehler (Ablenker) je Aufgabentyp. */
   function describe(t, level) {
     const last = t.seq.length - 1;
@@ -278,7 +296,7 @@
 
       /* --- Hilfe 1: gemeinsam bis zur Lücke zählen (Zug / Countdown) --- */
       async function countToGap() {
-        await ctx.say(t.kind === 'countdown' ? 'Komm, wir zählen zusammen rückwärts!' : 'Komm, wir zählen zusammen!');
+        await ctx.say(t.kind === 'countdown' ? 'Komm, wir zählen gemeinsam rückwärts!' : 'Komm, wir zählen zusammen!');
         const before = view.cars.slice(0, t.gap);
         await Z.countAlong(ctx, before, { badge: false, words: t.seq.slice(0, t.gap).map(Z.Word) });
         if (!ctx.active) return;
@@ -330,6 +348,7 @@
         sayButton: !!cfg.sayButton,
         hintAfter: 3,
         correctSay: d.ok,
+        wrongSay: (item) => wrongFeedback(t, item.value),
         onCorrect: (item, tile) => {
           ctx.unhint(view.gapEl);
           if (line) ctx.unhint(line.cells[t.ans]);

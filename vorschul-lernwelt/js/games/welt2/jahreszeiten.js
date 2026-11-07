@@ -30,23 +30,25 @@
      ------------------------------------------------------------------ */
   const SEASON_ITEMS = [
     { s: 'fruehling', e: '🌷', say: 'Tulpen', q: 'Wann blühen die ersten Tulpen?', a: 'Im Frühling blühen die Tulpen.' },
-    { s: 'fruehling', e: '🐣', say: 'Küken', q: 'Zu Ostern schlüpfen kleine Küken. In welcher Jahreszeit ist Ostern?', a: 'Ostern ist im Frühling.' },
+    { s: 'fruehling', e: '🐣', say: 'Osterküken', q: 'Zu Ostern sieht man überall kleine Küken und bunte Eier. In welcher Jahreszeit ist Ostern?', a: 'Ostern ist im Frühling.' },
     { s: 'fruehling', e: '🌸', say: 'Blüten', q: 'Wann sind die Obstbäume voller Blüten?', a: 'Im Frühling blühen die Bäume.' },
-    { s: 'sommer', e: '🍦', say: 'Eis', q: 'Wann ist es so heiß, dass ein Eis besonders gut schmeckt?', a: 'Im Sommer ist es heiß. Da schmeckt ein Eis!' },
+    { s: 'sommer', e: '🍦', rev: false, say: 'Eis', q: 'Wann ist es so heiß, dass ein Eis besonders gut schmeckt?', a: 'Im Sommer ist es heiß. Da schmeckt ein Eis!' },
     { s: 'sommer', e: '🏖️', say: 'Strand', q: 'Wann gehst du am Strand baden?', a: 'Im Sommer gehen wir baden.' },
     { s: 'sommer', e: '🌻', say: 'Sonnenblume', q: 'Wann blühen die großen Sonnenblumen?', a: 'Im Sommer blühen die Sonnenblumen.' },
     { s: 'sommer', e: '⛱️', say: 'Sonnenschirm', q: 'Wann brauchst du einen Sonnenschirm gegen die heiße Sonne?', a: 'Im Sommer scheint die Sonne ganz heiß.' },
     { s: 'herbst', e: '🍂', say: 'bunte Blätter', q: 'Wann werden die Blätter bunt und fallen von den Bäumen?', a: 'Im Herbst fallen die bunten Blätter.' },
     { s: 'herbst', e: '🌰', say: 'Kastanie', q: 'Wann kannst du Kastanien sammeln?', a: 'Im Herbst fallen die Kastanien von den Bäumen.' },
     { s: 'herbst', e: '🎃', say: 'Kürbis', q: 'Wann werden die Kürbisse geerntet?', a: 'Im Herbst ist Kürbis-Zeit.' },
-    { s: 'herbst', e: '🪁', say: 'Drachen', q: 'Wann ist es oft so windig, dass du einen Drachen steigen lassen kannst?', a: 'Im Herbst ist es windig. Drachen-Zeit!' },
-    { s: 'herbst', e: '🍄', say: 'Pilze', q: 'Wann wachsen im Wald besonders viele Pilze?', a: 'Im Herbst wachsen viele Pilze.' },
+    { s: 'herbst', e: '🪁', rev: false, say: 'Drachen', q: 'Wann ist es oft so windig, dass du einen Drachen steigen lassen kannst?', a: 'Im Herbst ist es windig. Drachen-Zeit!' },
+    { s: 'herbst', e: '🍄', rev: false, say: 'Pilze', q: 'Wann wachsen im Wald besonders viele Pilze?', a: 'Im Herbst wachsen viele Pilze.' },
     { s: 'winter', e: '⛄', say: 'Schneemann', q: 'Wann baust du einen Schneemann?', a: 'Im Winter, wenn Schnee liegt, baust du einen Schneemann.' },
     { s: 'winter', e: '🛷', say: 'Schlitten', q: 'Wann fährst du Schlitten?', a: 'Im Winter fährst du Schlitten im Schnee.' },
-    { s: 'winter', e: '🧤', say: 'Handschuhe', q: 'Wann brauchst du dicke Handschuhe, weil es draußen so kalt ist?', a: 'Im Winter ist es kalt.' },
+    { s: 'winter', e: '🧤', rev: false, say: 'Handschuhe', q: 'Wann brauchst du dicke Handschuhe, weil es draußen so kalt ist?', a: 'Im Winter ist es kalt.' },
     { s: 'winter', e: '🎄', say: 'Weihnachtsbaum', q: 'Wann steht ein Weihnachtsbaum im Zimmer?', a: 'Weihnachten ist im Winter.' },
     { s: 'winter', e: '❄️', say: 'Schneeflocken', q: 'Wann fallen Schneeflocken vom Himmel?', a: 'Im Winter schneit es.' },
   ];
+  /** Bilder für die Rückrichtung „Was passt zum …?“ – nur solche, die zu KEINER anderen Jahreszeit passen. */
+  const SEASON_REV = SEASON_ITEMS.filter((x) => x.rev !== false);
   /** Kurzer Satz, den Flo beim Kreislauf ergänzt. */
   const SEASON_FACT = {
     fruehling: 'Dann blühen die ersten Blumen.',
@@ -66,13 +68,21 @@
     { d: 'mittag', e: '🍝', say: 'Mittagessen', act: true, q: 'Wann gibt es Nudeln zum Mittagessen?', a: 'Am Mittag gibt es Mittagessen.' },
     { d: 'mittag', e: '☀️', say: 'Sonne', q: 'Wann steht die Sonne ganz hoch oben am Himmel?', a: 'Am Mittag steht die Sonne am höchsten.' },
     { d: 'abend', e: '🥪', say: 'Abendbrot', act: true, q: 'Wann isst du Abendbrot?', a: 'Am Abend gibt es Abendbrot.' },
-    { d: 'abend', e: '📖', say: 'Gute-Nacht-Geschichte', act: true, q: 'Wann liest dir jemand eine Gute-Nacht-Geschichte vor?', a: 'Am Abend, vor dem Einschlafen, gibt es eine Geschichte.' },
+    { d: 'abend', e: '📖', fwd: false /* „Gute-Nacht“ verleitet zu „Nacht“ */, say: 'Gute-Nacht-Geschichte', act: true, q: 'Wann liest dir jemand eine Gute-Nacht-Geschichte vor?', a: 'Am Abend, vor dem Einschlafen, gibt es eine Geschichte.' },
     { d: 'abend', e: '🌇', say: 'Sonnenuntergang', q: 'Wann geht die Sonne unter?', a: 'Am Abend geht die Sonne unter.' },
     { d: 'nacht', e: '😴', say: 'Schlafen', act: true, q: 'Wann schläfst du tief und fest in deinem Bett?', a: 'In der Nacht schläfst du.' },
     { d: 'nacht', e: '🦉', say: 'Eule', q: 'Wann ist die Eule wach und geht auf die Jagd?', a: 'In der Nacht ist die Eule wach. Am Tag schläft sie.' },
     { d: 'nacht', e: '🌟', say: 'Sterne', q: 'Wann leuchten die Sterne am dunklen Himmel?', a: 'In der Nacht leuchten die Sterne.' },
-    { d: 'nacht', e: '🦇', say: 'Fledermaus', q: 'Wann fliegt die Fledermaus herum?', a: 'In der Nacht fliegt die Fledermaus.' },
+    { d: 'nacht', e: '🦇', say: 'Fledermaus', q: 'Wann ist es ganz dunkel, und die Fledermaus fliegt herum?', a: 'In der Nacht fliegt die Fledermaus.' },
   ];
+
+  /** Woran man die Tageszeit auf dem Bild erkennt (Hilfe nach Fehlern). */
+  const DAY_FACT = {
+    morgen: 'Da geht die Sonne gerade auf.',
+    mittag: 'Da steht die Sonne ganz hoch am Himmel.',
+    abend: 'Da geht die Sonne unter.',
+    nacht: 'Da ist es dunkel, und der Mond scheint.',
+  };
 
   /* ------------------------------------------------------------------
      Daten: Wochentage
@@ -112,12 +122,13 @@
         sayButton: true,
         nameFirst: ctx.index === 0,
         correctSay: `Richtig! ${it.a}`,
+        wrongSay: (c) => `Das ist der ${W.season(c.value).name}. ${SEASON_FACT[c.value]} Hör noch mal: ${it.q}`,
         hintSay: `${it.a} Schau, hier!`,
       });
     } else {
-      const s = U.pick(W.SEASONS);
-      const right = U.pick(SEASON_ITEMS.filter((x) => x.s === s.id));
-      const others = W.SEASONS.filter((x) => x.id !== s.id).map((o) => U.pick(SEASON_ITEMS.filter((x) => x.s === o.id)));
+      const s = U.pickFresh('w2-jz-rev', W.SEASONS, 2, (x) => x.id);
+      const right = U.pick(SEASON_REV.filter((x) => x.s === s.id));
+      const others = W.SEASONS.filter((x) => x.id !== s.id).map((o) => U.pick(SEASON_REV.filter((x) => x.s === o.id)));
       const wrong = U.sample(others, 2);
       ctx.stage.appendChild(el('div.prompt-box.w2-prompt.w2-prompt-scene', W.sceneTile(W.seasonScene(s.id), s.name)));
       ctx.instruct(`Es ist ${s.name}. Was passt zum ${s.name}?`);
@@ -130,6 +141,7 @@
           const x = SEASON_ITEMS.find((y) => y.e === it.content);
           return x ? `Hmm. ${x.a} Probier es noch einmal!` : undefined;
         },
+        hintSay: `${right.a} Schau, hier!`,
       });
     }
   }
@@ -138,7 +150,7 @@
   async function taskDay(ctx) {
     const reverse = ctx.index % 2 === 1;
     if (!reverse) {
-      const it = U.pickFresh('w2-jz-tag', DAY_ITEMS, 6, (x) => x.e);
+      const it = U.pickFresh('w2-jz-tag', DAY_ITEMS.filter((x) => x.fwd !== false), 6, (x) => x.e);
       ctx.stage.appendChild(el('div.prompt-box.w2-prompt.w2-prompt-sm', U.emoji(it.e, 'big-emoji')));
       ctx.instruct(it.q);
       await ctx.choices(W.DAYTIMES.map((d) => dayItem(d.id, d.id === it.d)), {
@@ -147,6 +159,7 @@
         sayButton: true,
         nameFirst: ctx.index === 0,
         correctSay: `Richtig! ${it.a}`,
+        wrongSay: (c) => `Das ist ${c.value === 'nacht' ? 'die' : 'der'} ${W.daytime(c.value).name}. ${DAY_FACT[c.value]} Hör noch mal: ${it.q}`,
         hintSay: `${it.a} Schau, hier!`,
       });
     } else {
@@ -162,6 +175,7 @@
         sayButton: true,
         correctSay: `Richtig! ${right.a}`,
         wrongSay: (it) => `Hmm. ${it.value.a} Probier es noch einmal!`,
+        hintSay: `${right.a} Schau, hier!`,
       });
     }
   }
@@ -169,8 +183,8 @@
   /* ---------------- Stufe 3: Kreislauf der Jahreszeiten ---------------- */
   async function taskCycle(ctx) {
     const ids = W.SEASONS.map((s) => s.id);
-    const i = U.rand(4);
     const before = ctx.index === 3 || (ctx.index > 1 && U.chance(0.3));
+    const i = U.pickFresh('w2-jz-cyc', [0, 1, 2, 3], 2);
     const given = W.SEASONS[i];
     const ans = W.SEASONS[before ? (i + 3) % 4 : (i + 1) % 4];
     const q = el('div.w2-q-scene', U.emoji('❓', 'big-emoji'));
@@ -187,6 +201,7 @@
       correctSay: before
         ? `Richtig! Vor dem ${given.name} kommt der ${ans.name}.`
         : `Richtig! Nach dem ${given.name} kommt der ${ans.name}. ${SEASON_FACT[ans.id]}`,
+      wrongSay: (it) => `Der ${W.season(it.value).name} kommt nicht direkt ${before ? 'vor' : 'nach'} dem ${given.name}.`,
       onWrong: async (item, tile, n) => {
         if (n === 2) await ctx.say('Hör gut zu: Frühling, Sommer, Herbst, Winter. Und dann fängt es wieder von vorne an mit dem Frühling.');
       },
@@ -239,16 +254,17 @@
         nameFirst: true,
         sayButton: true,
         correctSay: `Richtig! ${DAYS[ans]} gehört zum Wochenende. Das Wochenende sind Samstag und Sonntag.`,
+        wrongSay: (it) => `Am ${DAYS[it.value]} gehen viele Kinder in den Kindergarten. ${DAYS[it.value]} gehört nicht zum Wochenende.`,
         hintSay: 'Das Wochenende sind die beiden letzten Tage der Woche: Samstag und Sonntag.',
       });
       return;
     }
     // Ausgangstag wählen (Stufe 4: kein Wochenwechsel, damit der Zug passt)
     if (mode === 'nach' || mode === 'morgen') {
-      d = ctx.level >= 5 ? U.rand(7) : U.rand(6);
+      d = U.pickFresh('w2-jz-wd', ctx.level >= 5 ? U.range(0, 6) : U.range(0, 5), 3);
       ans = mod7(d + 1);
     } else {
-      d = ctx.level >= 5 ? U.rand(7) : U.randInt(1, 6);
+      d = U.pickFresh('w2-jz-wd', U.range(0, 6), 3);
       ans = mod7(d - 1);
     }
     if (mode === 'nach') { text = `Welcher Tag kommt nach ${DAYS[d]}?`; say = `Richtig! Nach ${DAYS[d]} kommt ${DAYS[ans]}.`; }
@@ -268,6 +284,9 @@
       nameFirst: true,
       sayButton: true,
       correctSay: say,
+      wrongSay: (it) => (mode === 'nach' || mode === 'morgen'
+        ? `${DAYS[it.value]} kommt nach ${DAYS[mod7(it.value - 1)]}. Wir suchen den Tag nach ${DAYS[d]}.`
+        : `${DAYS[it.value]} kommt vor ${DAYS[mod7(it.value + 1)]}. Wir suchen den Tag vor ${DAYS[d]}.`),
       onCorrect: () => {
         const car = train._cars[ans];
         car.classList.remove('is-q');

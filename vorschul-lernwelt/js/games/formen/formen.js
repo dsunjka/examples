@@ -273,7 +273,7 @@
       const hit = shape.cloneNode(true);
       hit.setAttribute('fill', 'rgba(0,0,0,0)');
       hit.setAttribute('stroke', 'rgba(0,0,0,0)');
-      hit.setAttribute('stroke-width', '14');
+      hit.setAttribute('stroke-width', '24');
       hit.setAttribute('vector-effect', 'non-scaling-stroke');
       hit.setAttribute('stroke-linejoin', 'round');
       hit.setAttribute('class', 'formen-hit');

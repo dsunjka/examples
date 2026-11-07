@@ -37,7 +37,7 @@
     { h: 8, e: '🎒', t: 'Um acht Uhr geht Emil in den Kindergarten.' },
     { h: 10, e: '🍎', t: 'Um zehn Uhr ist Obstpause.' },
     { h: 12, e: '🍝', t: 'Um zwölf Uhr gibt es Mittagessen.' },
-    { h: 3, e: '⚽', t: 'Um drei Uhr spielt Ayşe Fußball.' },
+    { h: 3, e: '⚽', t: 'Um drei Uhr spielt Aylin Fußball.' },
     { h: 4, e: '🍰', t: 'Um vier Uhr gibt es Kuchen bei Oma.' },
     { h: 6, e: '🥪', t: 'Um sechs Uhr isst Jonas Abendbrot.' },
     { h: 2, e: '🏊', t: 'Um zwei Uhr geht Mila schwimmen.' },
@@ -47,8 +47,23 @@
   const EXPLAIN_FULL = 'Der kleine Zeiger zeigt die Stunde, der große Zeiger die Minuten. Bei einer vollen Stunde zeigt der große Zeiger immer nach oben auf die Zwölf.';
   const EXPLAIN_HALF = 'Bei halb zeigt der große Zeiger nach unten auf die Sechs. Der kleine Zeiger steht dann zwischen zwei Zahlen. Halb vier heißt: Es ist schon halb auf dem Weg zu vier Uhr.';
 
-  function hourTime(exclude) {
-    return U.pickFresh('w2-uhr-h', U.range(1, 12).filter((h) => !(exclude || []).includes(h)), 5);
+  /** Zuletzt gefragte Stunden (gemeinsam für Zufallsstunden UND Tagesbezug → keine direkten Wiederholungen). */
+  const recentHours = [];
+  function remember(h) {
+    recentHours.push(h);
+    while (recentHours.length > 4) recentHours.shift();
+    return h;
+  }
+  function hourTime() {
+    return remember(U.pick(U.range(1, 12).filter((h) => !recentHours.includes(h))));
+  }
+  /** Tagesbezug, dessen Stunde nicht gerade erst dran war (oder null). */
+  function freshDaily() {
+    const pool = DAILY.filter((x) => !recentHours.includes(x.h));
+    if (!pool.length) return null;
+    const d = U.pick(pool);
+    remember(d.h);
+    return d;
   }
 
   /** Hinweis zum Ablesen einer Uhrzeit. */
@@ -82,7 +97,8 @@
       others = U.sample(pool, 2).map((x) => [x, 0]);
     }
     const words = tw(h, m);
-    const prompt = el('div.prompt-box.w2-prompt.w2-prompt-sm', U.emoji('🕐', 'mid-emoji'), el('span.prompt-text', words.text));
+    // kein 🕐-Emoji: es zeigt selbst eine (andere) Uhrzeit und würde verwirren
+    const prompt = el('div.prompt-box.w2-prompt.w2-prompt-sm', U.emoji('🔍', 'mid-emoji'), el('span.prompt-text', words.text));
     ctx.stage.appendChild(prompt);
     await explainOnce(ctx, half);
     if (!ctx.active) return;
@@ -106,12 +122,8 @@
   async function taskRead(ctx) {
     const level4 = ctx.level >= 4;
     const half = level4 && ctx.index % 2 === 0 ? true : level4 ? U.chance(0.3) : false;
-    let h = hourTime();
-    let daily = null;
-    if (!half && U.chance(0.45)) {
-      daily = U.pickFresh('w2-uhr-daily', DAILY, 4, (x) => x.h);
-      h = daily.h;
-    }
+    const daily = !half && U.chance(0.45) ? freshDaily() : null;
+    const h = daily ? daily.h : hourTime();
     const m = half ? 30 : 0;
     const right = tw(h, m);
     const cand = half
@@ -133,6 +145,8 @@
       nameFirst: true,
       sayButton: true,
       hintAfter: 3,
+      // 1. Fehler: Blick lenken · 2. Fehler: ausführliche Hilfe (onWrong) statt Standard-Spruch
+      wrongSay: () => (ctx.wrongCount === 0 ? 'Das ist es noch nicht. Schau zuerst auf den kleinen, dicken Zeiger.' : ctx.wrongCount === 1 ? '' : undefined),
       correctSay: `Richtig! Es ist ${right.say}.${daily ? ' ' + daily.t : ''}`,
       onWrong: async (item, tile, n) => {
         if (n === 2) {
@@ -145,16 +159,12 @@
 
   /* ---------------- Stufe 5: Uhr stellen ---------------- */
   async function taskSet(ctx) {
-    let daily = null;
-    let target = hourTime();
-    if (U.chance(0.5)) {
-      daily = U.pickFresh('w2-uhr-daily', DAILY, 4, (x) => x.h);
-      target = daily.h;
-    }
+    const daily = U.chance(0.5) ? freshDaily() : null;
+    const target = daily ? daily.h : hourTime();
     const start = U.pick(U.range(1, 11).filter((x) => x !== target));
     const words = tw(target, 0);
     ctx.stage.appendChild(el('div.prompt-box.w2-prompt.w2-prompt-sm',
-      daily ? U.emoji(daily.e, 'mid-emoji') : U.emoji('🕐', 'mid-emoji'), el('span.prompt-text', words.text)));
+      daily ? U.emoji(daily.e, 'mid-emoji') : U.emoji('👆', 'mid-emoji'), el('span.prompt-text', words.text)));
     const clock = W.clock(start, 0, { targets: true, cls: 'w2-clock-set' });
     const wrap = el('div.w2-set-wrap', clock);
     ctx.stage.appendChild(wrap);

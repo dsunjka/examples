@@ -116,7 +116,7 @@
       avoid: ['suess', 'froh', 'schnell', 'voll'],
     },
     {
-      id: 'froh',
+      id: 'froh', who: true,
       a: { w: 'fröhlich', say: 'Dieses Kind ist fröhlich.', pic: () => emo('😄') },
       b: { w: 'traurig', say: 'Dieses Kind ist traurig.', pic: () => emo('😢') },
       avoid: ['wach', 'alt', 'offen'],
@@ -140,13 +140,13 @@
       avoid: ['lang', 'alt'],
     },
     {
-      id: 'alt',
+      id: 'alt', who: true,
       a: { w: 'alt', say: 'Die Oma ist alt.', pic: () => emo('👵') },
       b: { w: 'jung', say: 'Das Baby ist jung.', pic: () => emo('👶') },
       avoid: ['wach'],
     },
     {
-      id: 'wach',
+      id: 'wach', who: true,
       a: { w: 'wach', say: 'Dieses Kind ist wach.', pic: () => emo('😃') },
       b: { w: 'müde', say: 'Dieses Kind ist müde.', pic: () => emo('🥱') },
       avoid: [],
@@ -238,8 +238,15 @@
     const nDist = level === 1 ? 1 : level === 2 ? 2 : 1;
     const dists = distractorPoles(pair, nDist);
     const items = [{ content: el('div.gg-tilepic', target.pic(v)), correct: true, say: target.w, aria: target.w }];
-    if (level === 3) items.push({ content: el('div.gg-tilepic', given.pic(v)), correct: false, say: given.w, aria: given.w });
-    dists.forEach((d) => items.push({ content: el('div.gg-tilepic', d.pole.pic(d.v)), correct: false, say: d.pole.w, aria: d.pole.w }));
+    if (level === 3) items.push({ content: el('div.gg-tilepic', given.pic(v)), correct: false, say: given.w, aria: given.w, sentence: sayOf(given, v), trap: true });
+    dists.forEach((d) => items.push({ content: el('div.gg-tilepic', d.pole.pic(d.v)), correct: false, say: d.pole.w, aria: d.pole.w, sentence: sayOf(d.pole, d.v) }));
+    // Hilfe nach einem Fehler: Flo sagt, was das gewählte Bild zeigt, und wiederholt die Frage
+    const wrongSay = (item) => {
+      if (item.trap) return `${item.sentence} Das ist ja genau ${given.w}! Wir suchen das Gegenteil.`;
+      if (level === 1) return `${item.sentence} Aber ${pair.who ? 'wer' : 'was'} ist ${target.w}?`;
+      if (level === 2) return `${item.sentence} Was ist das Gegenteil von ${given.w}?`;
+      return item.sentence;
+    };
 
     let card = null;
     if (level === 3) {
@@ -251,7 +258,7 @@
       ctx.instruct(`Hör gut zu! Was ist das Gegenteil von ${given.w}?`);
     } else {
       card = givenCard(ctx, given, v);
-      if (level === 1) ctx.instruct(`${sayOf(given, v)} Was ist ${target.w}?`);
+      if (level === 1) ctx.instruct(`${sayOf(given, v)} ${pair.who ? 'Wer' : 'Was'} ist ${target.w}?`);
       else ctx.instruct(`${sayOf(given, v)} Was ist das Gegenteil von ${given.w}?`);
     }
 
@@ -259,12 +266,13 @@
       sayButton: level === 2,
       size: 'large',
       hintAfter: 2,
+      wrongSay,
       hintSay: `Das Gegenteil von ${given.w} ist ${target.w}. ${sayOf(target, v)}`,
       correctSay: level === 1
         ? `Richtig! ${Cap(given.w)} und ${target.w} sind Gegenteile.`
         : `Richtig! Das Gegenteil von ${given.w} ist ${target.w}.`,
       onWrong: async (item, tile, n) => {
-        if (n === 1 && level === 3) await ctx.say(`Überleg mal: Was ist ganz anders als ${given.w}?`);
+        if (n === 1 && level === 3 && !item.trap) await ctx.say(`Überleg mal: Was ist ganz anders als ${given.w}?`);
       },
       onCorrect: () => { if (level !== 3) completeCard(card, target, v); },
     });
@@ -301,6 +309,9 @@
       nameFirst: true,
       sayButton: true,
       hintAfter: 2,
+      wrongSay: (item) => (item.say === first.w
+        ? `${Cap(first.w)} steht schon vorne im Satz. Wir suchen das Gegenteil von ${first.w}.`
+        : `${Cap(item.say)} passt hier nicht. Wir suchen das Gegenteil von ${first.w}.`),
       hintSay: `Das Gegenteil von ${first.w} ist ${second.w}.`,
       correctSay: `Richtig! ${full}`,
       onCorrect: () => {

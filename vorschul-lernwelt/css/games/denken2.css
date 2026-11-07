@@ -13,7 +13,7 @@
 /* ==========================================================================
    Reihenfolge – „Was passiert zuerst?“
    ========================================================================== */
-.game-reihenfolge .stage { gap: clamp(10px, 2.4vmin, 24px); }
+.game-reihenfolge .stage { gap: clamp(10px, 2.4vmin, 24px); --rf-cell: var(--rf-cell-base); }
 .rf-slots {
   display: flex; justify-content: center; align-items: center;
   gap: clamp(16px, 3vmin, 30px);
@@ -169,3 +169,21 @@
 }
 .sud-pick:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(43, 45, 66, .14); }
 .sud-pick.speaking { box-shadow: 0 0 0 5px var(--area); transform: scale(1.08); }
+
+/* ==========================================================================
+   Querformat: Flos Sprechblase (bis zu 3 Zeilen) sitzt unten links über der
+   Spielfläche. Damit nichts darunter verschwindet, wird der Inhalt im Bereich
+   OBERHALB der Sprechblase zentriert und die Felder werden passend begrenzt.
+   ========================================================================== */
+@media (min-aspect-ratio: 5/4) {
+  .game-reihenfolge .stage,
+  .game-toene-merken .stage,
+  .game-bilder-sudoku .stage {
+    padding-bottom: max(calc(var(--gap) + 70px), 24vh);
+  }
+  /* Feldreihe + Pfeil + Karten ≈ 2 × Karte + 120px müssen über die Blase passen */
+  .game-reihenfolge .stage { --rf-cell: min(var(--rf-cell-base), calc(38vh - 105px)); }
+  .tm-board { --tm-pad: clamp(96px, min(30vw, 24vh), 240px); }
+  .sud-board { --sud-cell: clamp(72px, min(26vw, 18.3vh), 150px); }
+  .sud-board.sud-4 { --sud-cell: clamp(60px, min(20vw, 13.5vh), 124px); }
+}

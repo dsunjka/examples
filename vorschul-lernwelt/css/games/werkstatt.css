@@ -12,6 +12,18 @@
   display: block;
 }
 
+/* Mehr Platz unten: Flo und seine (oft zwei- bis dreizeilige) Sprechblase
+   sollen die Zeichenflächen nicht verdecken. */
+.stage.spur-stage, .stage.pv-stage, .stage.mal-stage {
+  padding-bottom: calc(var(--gap) + clamp(128px, 16vmin, 150px));
+}
+/* runde Knöpfe (💡, 🖼️, 🔄) groß genug für Kinderfinger */
+.spur-help.btn-round, .mal-back.btn-round, .mal-reset.btn-round {
+  width: clamp(56px, 8vmin, 68px);
+  height: clamp(56px, 8vmin, 68px);
+  font-size: clamp(26px, 4vmin, 32px);
+}
+
 /* ==========================================================================
    NACHSPUREN
    ========================================================================== */

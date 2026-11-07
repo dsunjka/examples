@@ -227,10 +227,12 @@
       }
 
       async function evaluate(a, b, spoken) {
+        clearHint(); // Hilfe-Leuchten nie über den Zug hinaus stehen lassen
         if (a.key === b.key) {
           // ---- Paar gefunden ----
-          clearHint();
           missStreak = 0;
+          await spoken; // Name der zweiten Karte nicht vom Lob abschneiden
+          if (!ctx.active) return;
           await ctx.sleep(250);
           if (!ctx.active) return;
           a.matched = b.matched = true;

@@ -222,7 +222,7 @@
     });
 
     if (ctx.index === 0) {
-      await ctx.say('Wir klatschen Silben! Sprich das Wort langsam und klatsche bei jeder Silbe einmal auf die Hände. Dann tippe auf den grünen Haken.');
+      await ctx.say('Wir klatschen Silben! Sprich das Wort langsam. Bei jeder Silbe tippst du einmal auf die klatschenden Hände. Zum Schluss tippst du auf den grünen Haken.');
     }
     await ctx.instruct(`Das ist ${S.withArticle(word)}. Klatsch mal: ${word.w}!`);
     setBusy(false);
@@ -256,7 +256,8 @@
       size: 'small',
       hintAfter: 2,
       correctSay: () => `Richtig! ${word.w} hat ${S.silben(n)}.`,
-      wrongSay: (it) => S.vary('silben-wrong', [`Nicht ${U.numberWord(it.k)}. Klatsch noch mal mit!`, 'Hmm, noch nicht. Sprich langsam mit und klatsche!']),
+      // informativ: zu wenig oder zu viel?
+      wrongSay: (it) => `${word.w} hat ${it.k < n ? 'mehr' : 'weniger'} als ${S.silben(it.k)}. ` + S.vary('silben-wrong', ['Klatsch noch mal mit!', 'Sprich langsam mit und klatsche!']),
       onWrong: async (it, tile, k) => {
         if (k === 2) {
           await ctx.say('Hör mal, ich klatsche es dir vor:');

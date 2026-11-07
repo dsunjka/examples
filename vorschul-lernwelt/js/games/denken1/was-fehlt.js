@@ -219,8 +219,9 @@
       ready.remove();
 
       /* ---------- 2. Zaubern hinter dem Vorhang ---------- */
-      ctx.say(U.pick(['Augen zu! Hokuspokus …', 'Hokuspokus, Fidibus …', 'Simsalabim …']));
+      const magic = ctx.say(U.pick(['Vorhang zu! Hokuspokus …', 'Hokuspokus, Fidibus …', 'Abrakadabra …']));
       await closeCurtain();
+      await magic; // Zauberspruch ausreden lassen, nicht vom nächsten Satz abschneiden
       if (!ctx.active) return;
 
       let missing = null;
@@ -236,7 +237,9 @@
         render(grid, current);
       } else {
         const used = new Set(table.map((x) => x.id));
-        added = U.pick(ALL.filter((x) => !used.has(x.id)));
+        // aus einer Kategorie, die noch nicht auf dem Tisch liegt → Kategorie-Tipp ist eindeutig
+        const usedCats = new Set(table.map((x) => x.cat));
+        added = U.pick(ALL.filter((x) => !used.has(x.id) && !usedCats.has(x.cat)));
         current = U.shuffle(table.concat([added]));
         U.clear(grid); // die Dinge werden unten als antippbare Kacheln auf den Tisch gelegt
       }
@@ -276,8 +279,9 @@
           content: x.word.e, say: D.art(x.word), correct: x === missing, thing: x,
         }));
 
-        ctx.say(U.pick(['Simsalabim!', 'Fertig gezaubert!', 'Und – schau!']));
+        const done = ctx.say(U.pick(['Simsalabim!', 'Fertig gezaubert!', 'Und jetzt schau!']));
         await openCurtain();
+        await done;
         if (!ctx.active) return;
         const q = 'Was fehlt? Tippe auf das Ding, das nicht mehr auf dem Tisch liegt.';
         ctx.setInstruction(q);
@@ -292,6 +296,10 @@
             if (ctx.wrongCount >= 1) return '';
             const tip = TIPS[missing.cat] ? ` Tipp: Es ist ${TIPS[missing.cat]}.` : '';
             if (it.thing === visible) return `${D.Art(it.thing.word)} liegt noch auf dem Tisch. Schau mal genau hin!${tip}`;
+            // Verwechsler aus derselben Kategorie: Der Tipp „Es ist …“ würde hier nur verwirren
+            if (it.thing.cat === missing.cat && TIPS[missing.cat]) {
+              return `${D.Art(it.thing.word)} war gar nicht auf dem Tisch. Aber du bist nah dran: Was fehlt, ist auch ${TIPS[missing.cat]}.`;
+            }
             return `${D.Art(it.thing.word)} war gar nicht auf dem Tisch.${tip}`;
           },
           onWrong: async (it, tile, wrongs) => {
@@ -308,7 +316,7 @@
           correctSay: () => `Richtig! ${D.Art(missing.word)} hat gefehlt.`,
         });
       } else {
-        ctx.say('Simsalabim!');
+        const done = ctx.say('Simsalabim!');
         const items = current.map((x) => ({
           content: x.word.e, say: D.art(x.word), correct: x === added, className: 'wf-thing', thing: x,
         }));
@@ -328,6 +336,7 @@
           correctSay: () => `Richtig! ${D.Art(added.word)} ist neu dazugekommen.`,
         });
         await openCurtain();
+        await done;
         if (!ctx.active) return;
         const q = 'Was ist neu dazugekommen? Tippe es auf dem Tisch an!';
         ctx.setInstruction(q);

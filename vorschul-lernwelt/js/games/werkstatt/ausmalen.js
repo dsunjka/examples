@@ -253,7 +253,7 @@
         ...[92, 80, 68, 56, 44, 32].map((R) => path(`M${100 - R} 172 A${R} ${R} 0 0 1 ${100 + R} 172 L${100 + R - 12} 172 A${R - 12} ${R - 12} 0 0 0 ${100 - R + 12} 172 Z`)),
         path('M0 172 H200 V200 H0 Z'),
         cloud(30, 162, 1),
-        cloud(176, 162, 1),
+        cloud(168, 162, 1),
       ],
       deco: '',
     },
@@ -320,7 +320,8 @@
           finished = true;
           if (current) saveFills(current.pic, current.fills);
           LT.sfx.play('win');
-          ctx.say('Wunderschön! Dein Bild ist gespeichert.').then(() => resolve({}));
+          const painted = current && Object.keys(current.fills).length > 0;
+          ctx.say(painted ? 'Wunderschön! Dein Bild ist gespeichert.' : 'Bis bald! Deine Bilder warten hier auf dich.').then(() => resolve({}));
         }
 
         /* ---------- Galerie ---------- */

@@ -28,46 +28,46 @@
   /* ---------------- Kategorien ---------------- */
   const CATS = {
     tiere: {
-      name: 'Tiere', icon: '🐾', q: 'Was davon ist ein Tier?', one: 'ist ein Tier', all: 'sind Tiere',
+      name: 'Tiere', icon: '🐾', q: 'Was davon ist ein Tier?', one: 'ist ein Tier', no: 'ist kein Tier', all: 'sind Tiere',
       into: 'In diesen Korb kommen die Tiere.', tip: 'Tiere leben und können sich bewegen.', ids: null,
     },
     obst: {
-      name: 'Obst', icon: '🍏', q: 'Was davon ist Obst?', one: 'ist Obst', all: 'sind Obst',
-      into: 'In diesen Korb kommt das Obst.', tip: 'Obst sind Früchte. Sie schmecken oft süß.',
+      name: 'Obst', icon: '🍏', q: 'Was davon ist Obst?', one: 'ist Obst', no: 'ist kein Obst', all: 'sind Obst',
+      into: 'In diesen Korb kommt das Obst.', tip: 'Obst, das sind Früchte. Sie schmecken oft süß und saftig.',
       ids: ['apfel', 'birne', 'banane', 'erdbeere', 'kirsche', 'traube', 'orange', 'zitrone', 'melone', 'ananas', 'pfirsich', 'kiwi'],
     },
     gemuese: {
-      name: 'Gemüse', icon: '🥗', q: 'Was davon ist Gemüse?', one: 'ist Gemüse', all: 'sind Gemüse',
-      into: 'In diesen Korb kommt das Gemüse.', tip: 'Gemüse wächst im Garten oder auf dem Feld.',
+      name: 'Gemüse', icon: '🥗', q: 'Was davon ist Gemüse?', one: 'ist Gemüse', no: 'ist kein Gemüse', all: 'sind Gemüse',
+      into: 'In diesen Korb kommt das Gemüse.', tip: 'Gemüse ist nicht so süß wie Obst. Oft kocht man es, zum Beispiel für eine Suppe.',
       ids: ['karotte', 'gurke', 'tomate', 'mais', 'kartoffel', 'brokkoli', 'zwiebel', 'salat'],
     },
     essen: {
-      name: 'Essen und Trinken', icon: '🍽️', q: 'Was davon kann man essen oder trinken?', one: null, all: 'gehören zu Essen und Trinken',
+      name: 'Essen und Trinken', icon: '🍽️', q: 'Was davon kann man essen oder trinken?', one: null, no: 'kann man nicht essen', all: null,
       into: 'In diesen Korb kommt alles zum Essen und Trinken.', tip: 'Das kann man essen oder trinken.',
       ids: ['brot', 'kaese', 'ei', 'milch', 'pizza', 'eis', 'torte', 'keks', 'honig', 'brezel', 'lutscher', 'schokolade', 'wuerstchen', 'muffin', 'donut', 'saft', 'popcorn', 'hamburger'],
     },
     fahrzeuge: {
-      name: 'Fahrzeuge', icon: '🚦', q: 'Was davon ist ein Fahrzeug?', one: 'ist ein Fahrzeug', all: 'sind Fahrzeuge',
+      name: 'Fahrzeuge', icon: '🚦', q: 'Was davon ist ein Fahrzeug?', one: 'ist ein Fahrzeug', no: 'ist kein Fahrzeug', all: 'sind Fahrzeuge',
       into: 'In diesen Korb kommen die Fahrzeuge.', tip: 'Mit Fahrzeugen kommt man von einem Ort zum anderen.',
       ids: ['auto', 'bus', 'zug', 'fahrrad', 'flugzeug', 'hubschrauber', 'rakete', 'traktor', 'feuerwehrauto', 'polizeiauto', 'krankenwagen', 'schiff', 'segelboot', 'taxi', 'lastwagen', 'motorrad', 'kanu'],
     },
     kleidung: {
-      name: 'Kleidung', icon: '👕', q: 'Was davon ist Kleidung?', one: 'gehört zur Kleidung', all: 'gehören zur Kleidung',
+      name: 'Kleidung', icon: '👕', q: 'Was davon ist Kleidung?', one: 'gehört zur Kleidung', no: 'gehört nicht zur Kleidung', all: 'gehören zur Kleidung',
       into: 'In diesen Korb kommt die Kleidung.', tip: 'Kleidung trägt man am Körper.',
       ids: ['hemd', 'hose', 'kleid', 'socke', 'handschuh', 'schal', 'hut', 'kappe', 'schuh', 'stiefel', 'jacke'],
     },
     spielzeug: {
-      name: 'Spielzeug', icon: '🧸', q: 'Was davon ist ein Spielzeug?', one: 'ist ein Spielzeug', all: 'sind Spielzeug',
+      name: 'Spielzeug', icon: '🧸', q: 'Was davon ist ein Spielzeug?', one: 'ist ein Spielzeug', no: 'ist kein Spielzeug', all: 'sind Spielzeug',
       into: 'In diesen Korb kommt das Spielzeug.', tip: 'Mit Spielzeug kann man spielen.',
       ids: ['ball', 'drachen', 'luftballon', 'puzzle', 'wuerfel', 'roboter'], // Teddy ist das Korb-Symbol
     },
     musik: {
-      name: 'Musikinstrumente', label: 'Musik\u00ADinstrumente', icon: '🎵', q: 'Was davon ist ein Musikinstrument?', one: 'ist ein Musikinstrument', all: 'sind Musikinstrumente',
+      name: 'Musikinstrumente', label: 'Musik\u00ADinstrumente', icon: '🎵', q: 'Was davon ist ein Musikinstrument?', one: 'ist ein Musikinstrument', no: 'ist kein Musikinstrument', all: 'sind Musikinstrumente',
       into: 'In diesen Korb kommen die Musikinstrumente.', tip: 'Mit Musikinstrumenten macht man Musik.',
       ids: ['trommel', 'gitarre', 'trompete', 'klavier', 'geige', 'saxofon'],
     },
     pflanzen: {
-      name: 'Pflanzen', icon: '🌱', q: 'Was davon ist eine Pflanze?', one: 'ist eine Pflanze', all: 'sind Pflanzen',
+      name: 'Pflanzen', icon: '🌱', q: 'Was davon ist eine Pflanze?', one: 'ist eine Pflanze', no: 'ist keine Pflanze', all: 'sind Pflanzen',
       into: 'In diesen Korb kommen die Pflanzen.', tip: 'Pflanzen wachsen aus der Erde.',
       ids: ['baum', 'tanne', 'tulpe', 'sonnenblume', 'rose', 'kaktus', 'kleeblatt'],
     },
@@ -78,7 +78,7 @@
   /** Einzelne Dinge, die neben einer bestimmten Kategorie missverständlich wären. */
   const EXCLUDE_NEXT_TO = {
     tiere: ['drachen'], // „Drachen“ (auch Fabeltier) nicht neben Tieren
-    essen: ['fisch', 'krabbe', 'huhn', 'kuh', 'schwein'], // Tiere, die man auch als Essen kennt
+    essen: ['fisch', 'krabbe', 'krake', 'huhn', 'hahn', 'ente', 'kuh', 'schwein', 'wildschwein', 'schaf', 'ziege', 'hirsch'], // Tiere, die man auch als Essen kennt
   };
   const conflicts = (a, b) => a === b || CONFLICT.some(([x, y]) => (x === a && y === b) || (x === b && y === a));
 
@@ -107,10 +107,26 @@
 
   const Art = (w) => U.cap(w.a) + ' ' + w.w;
   const art = (w) => w.a + ' ' + w.w;
-  /** „Die Kuh ist ein Tier.“ / „Die Milch kann man trinken.“ */
+  /** Akkusativ für „… kann man essen“: „Den Käse kann man essen.“ */
+  const ACC = { der: 'den', die: 'die', das: 'das' };
+  const ArtAcc = (w) => U.cap(ACC[w.a] || w.a) + ' ' + w.w;
+  const isDrink = (w) => ['milch', 'saft'].includes(w.id);
+  /** „Die Kuh ist ein Tier.“ / „Den Saft kann man trinken.“ */
   function because(w, cat) {
-    if (cat === 'essen') return `${Art(w)} kann man ${['milch', 'saft'].includes(w.id) ? 'trinken' : 'essen'}.`;
+    if (cat === 'essen') return `${ArtAcc(w)} kann man ${isDrink(w) ? 'trinken' : 'essen'}.`;
     return `${Art(w)} ${CATS[cat].one}.`;
+  }
+  /** „Der Apfel ist kein Tier.“ / „Den Ball kann man nicht essen.“ */
+  function notIn(w, cat, midSentence = false) {
+    const t = cat === 'essen' ? `${ArtAcc(w)} kann man nicht essen.` : `${Art(w)} ${CATS[cat].no}.`;
+    return midSentence ? t.charAt(0).toLowerCase() + t.slice(1) : t;
+  }
+  /** „Apfel, Birne und Banane sind Obst.“ / „… kann man essen (und trinken).“ */
+  function allText(words, cat) {
+    if (cat !== 'essen') return `${listText(words)} ${CATS[cat].all}.`;
+    const drinks = words.filter(isDrink).length;
+    const verb = drinks === 0 ? 'essen' : drinks === words.length ? 'trinken' : 'essen oder trinken';
+    return `${listText(words)} – das alles kann man ${verb}.`;
   }
   function listText(words) {
     const names = words.map((w) => w.w);
@@ -132,12 +148,13 @@
     ctx.stage.appendChild(card);
     await ctx.instruct(CATS[cat].q);
     if (!ctx.active) return;
-    const items = [target, d1, d2].map((w) => ({ content: w.e, correct: w === target, say: art(w) }));
+    const items = [target, d1, d2].map((w) => ({ content: w.e, correct: w === target, say: art(w), w }));
     await ctx.choices(items, {
       nameFirst: true,
       sayButton: true,
       size: 'large',
       hintAfter: 2,
+      wrongSay: (item) => `Hmm, ${notIn(item.w, cat, true)}`,
       hintSay: CATS[cat].tip,
       correctSay: `Richtig! ${because(target, cat)}`,
     });
@@ -151,13 +168,14 @@
     ctx.stage.appendChild(el('div.prompt-box.sort-trio-card', row));
     await ctx.instruct(`${words.map((w) => w.w).join(', ')}. Das sind alles …?`);
     if (!ctx.active) return;
-    const items = [cat, o1, o2].map((c) => ({ content: catBadge(c, 'in-tile'), correct: c === cat, say: CATS[c].name, className: 'sort-termtile', aria: CATS[c].name }));
+    const items = [cat, o1, o2].map((c) => ({ content: catBadge(c, 'in-tile'), correct: c === cat, say: CATS[c].name, className: 'sort-termtile', aria: CATS[c].name, value: c }));
     await ctx.choices(items, {
       nameFirst: true,
       sayButton: true,
       hintAfter: 2,
+      wrongSay: (item) => `Hmm, ${CATS[item.value].name}? Das passt nicht zu allen drei.`,
       hintSay: `${CATS[cat].tip}`,
-      correctSay: `Richtig! ${listText(words)} ${CATS[cat].all}.`,
+      correctSay: `Richtig! ${allText(words, cat)}`,
     });
   }
 
@@ -264,7 +282,7 @@
           busy = true;
           t.wrong++;
           LT.ui.animate(bin, 'shake');
-          await ctx.wrong(t.node, { say: `Hmm, ${art(t.w)} passt nicht in diesen Korb. Probier einen anderen!` });
+          await ctx.wrong(t.node, { say: `Hmm, ${notIn(t.w, bin._cat, true)} Probier einen anderen Korb!` });
           t.node.classList.remove('is-wrong');
           if (t.wrong >= 2 && ctx.active) {
             const right = bins.find((b) => b._cat === t.cat);

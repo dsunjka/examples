@@ -37,7 +37,9 @@
     tiere: { sg: 'ist ein Tier', pl: 'sind Tiere', ids: ['hund', 'katze', 'kuh', 'schwein', 'pferd', 'elefant', 'giraffe', 'loewe', 'affe', 'hase', 'maus', 'ente', 'fisch', 'frosch', 'baer', 'igel', 'schaf', 'zebra', 'pinguin', 'schnecke', 'schmetterling'] },
     fahrzeuge: { sg: 'ist ein Fahrzeug', pl: 'sind Fahrzeuge', ids: ['auto', 'bus', 'zug', 'fahrrad', 'flugzeug', 'hubschrauber', 'traktor', 'feuerwehrauto', 'krankenwagen', 'schiff', 'segelboot', 'lastwagen', 'motorrad'] },
     obst: { sg: 'ist Obst', pl: 'sind Obst', ids: ['apfel', 'birne', 'banane', 'erdbeere', 'kirsche', 'traube', 'orange', 'zitrone', 'melone', 'ananas', 'pfirsich', 'kiwi'] },
-    kleidung: { sg: 'ist zum Anziehen', pl: 'sind zum Anziehen', ids: ['hemd', 'hose', 'kleid', 'socke', 'handschuh', 'schal', 'hut', 'kappe', 'schuh', 'stiefel', 'jacke'] },
+    // für Obst/Gemüse-Aufgaben ohne Melone (botanisch ein Kürbisgewächs wie die Gurke, oft „Fruchtgemüse“)
+    obst2: { sg: 'ist Obst', pl: 'sind Obst', ids: ['apfel', 'birne', 'banane', 'erdbeere', 'kirsche', 'traube', 'orange', 'zitrone', 'ananas', 'pfirsich', 'kiwi'] },
+    kleidung: { sg: 'ist etwas zum Anziehen', pl: 'sind Sachen zum Anziehen', ids: ['hemd', 'hose', 'kleid', 'socke', 'handschuh', 'schal', 'hut', 'kappe', 'schuh', 'stiefel', 'jacke'] },
     musik: { sg: 'ist ein Musikinstrument', pl: 'sind Musikinstrumente', ids: ['trommel', 'gitarre', 'trompete', 'klavier', 'geige', 'saxofon'] },
     // nur eindeutige Gemüse (keine Tomate, Kartoffel, Pilz, Mais, Salat-Bild)
     gemuese: { sg: 'ist Gemüse', pl: 'sind Gemüse', ids: ['karotte', 'gurke', 'brokkoli', 'zwiebel'] },
@@ -64,9 +66,9 @@
 
   /* ---------- Stufe 2: nahe Oberbegriffe ---------- */
   const SETS2 = [
-    catSet('obst', 'gemuese'),
-    catSet('gemuese', 'obst'),
-    catSet('obst', 'gemuese'), // doppelt gewichtet: das Kernbeispiel
+    catSet('obst2', 'gemuese'),
+    catSet('gemuese', 'obst2'),
+    catSet('obst2', 'gemuese'), // doppelt gewichtet: das Kernbeispiel
     catSet('hof', 'wild'),
     catSet('wild', 'hof'),
     catSet('spielzeug', 'instrumente'),
@@ -132,8 +134,8 @@
   const SETS3 = [F.fliegenTiere, F.fliegenFahrzeuge, F.wasser, F.raeder, F.heiss, F.kalt, F.wald, F.bauernhof, F.licht, F.fuesse, F.kopf, F.rot, F.streifen];
   const SETS4 = [
     F.pinguin, F.fledermaus, F.beine, F.baumobst, F.kopf, F.fliegenTiere, F.wasser, F.raeder,
-    Object.assign(catSet('obst', 'gemuese'), { id: 'obst-gemuese-5' }),
-    Object.assign(catSet('gemuese', 'obst'), { id: 'gemuese-obst-5' }),
+    Object.assign(catSet('obst2', 'gemuese'), { id: 'obst-gemuese-5' }),
+    Object.assign(catSet('gemuese', 'obst2'), { id: 'gemuese-obst-5' }),
     Object.assign(catSet('hof', 'wild'), { id: 'hof-wild-5' }),
     Object.assign(catSet('wild', 'hof'), { id: 'wild-hof-5' }),
   ];
@@ -246,32 +248,51 @@
       );
 
       const howMany = D.Num(k);
-      const question = ctx.index === 0
-        ? `Was passt nicht? ${howMany} Bilder gehören zusammen. Eins passt nicht dazu. Tippe es an!`
+      const first = ctx.index === 0;
+      const question = first
+        ? `Was passt nicht? ${howMany} Bilder gehören zusammen. Eins passt nicht dazu.`
         : U.pick(['Was passt nicht?', 'Welches Bild passt nicht dazu?', 'Was passt hier nicht?']);
       ctx.setInstruction(`Was passt nicht? ${howMany} Bilder gehören zusammen. Eins passt nicht dazu.`);
-      ctx.say(question);
 
       const reason = `${D.Art(oddWord)} ${outlier.pred}. Die anderen ${set.aPl}.` + (outlier.extra ? ' ' + outlier.extra : '');
       let groupTiles = [];
 
-      await ctx.choices(items, {
+      // Eigener Kachel-Container: Die Bilder sind sofort zu sehen, bleiben aber gesperrt,
+      // bis Frage und Benennung fertig sind (sonst würde das Benennen die Frage abschneiden).
+      const box = el('div.choices.locked');
+      ctx.stage.appendChild(box);
+      const choosing = ctx.choices(items, {
+        container: box,
         size: 'large',
         className: 'pn-choices n' + cfg.n,
-        // Bilder benennen: auf Stufe 1 nur bei der ersten Aufgabe, danach immer (Wortschatz!)
-        nameFirst: ctx.level > 1 || ctx.index === 0,
         sayButton: true,
         hintAfter: 2,
         // Fehler erklären: Das angetippte Bild gehört doch zur Gruppe
         wrongSay: (it) => `${D.Art(it.word)} ${D.auch(set.aSg)}. Probier ein anderes!`,
         hintSay: () => `Ich helfe dir: ${howMany} davon ${set.aPl}. Welches nicht?`,
         onCorrect: (it, tile) => {
-          const box = tile.parentNode;
-          groupTiles = box && box._tiles ? box._tiles.filter((t) => t !== tile) : [];
+          groupTiles = (box._tiles || []).filter((t) => t !== tile);
           groupTiles.forEach((t) => t.classList.add('pn-same'));
         },
         correctSay: () => `Richtig! ${reason}`,
       });
+
+      await ctx.say(question);
+      // Bilder benennen: auf Stufe 1 nur bei der ersten Aufgabe, danach immer (Wortschatz!)
+      if (ctx.level > 1 || first) {
+        for (const t of box._tiles || []) {
+          if (!ctx.active) return;
+          t.classList.add('speaking');
+          await ctx.say(t._item.say);
+          t.classList.remove('speaking');
+          await ctx.sleep(120);
+        }
+      }
+      if (!ctx.active) return;
+      box.classList.remove('locked');
+      if (first) ctx.say('Welches passt nicht? Tippe es an!');
+
+      await choosing;
       await ctx.sleep(400);
     },
   });

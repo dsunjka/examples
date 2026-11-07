@@ -14,6 +14,7 @@
   const LT = window.LT;
   const U = LT.util;
   const el = U.el;
+  const Z = LT.z1;
 
   U.css('game-zaehlen', `
     .zaehlen-field {
@@ -59,12 +60,16 @@
 
   function numberChoices(n, count, min, max) {
     const set = new Set([n]);
-    const near = U.shuffle([n - 1, n + 1, n - 2, n + 2, n + 3, n - 3]).filter((x) => x >= Math.max(1, min - 2) && x <= max + 2);
+    // Zahlenraum des Kindes nicht verlassen: nie über 20 (21, 22 kennt es noch nicht), nie unter 1
+    const lo = Math.max(1, min - 2);
+    const hi = Math.min(20, max + 2);
+    const near = U.shuffle([n - 1, n + 1, n - 2, n + 2, n + 3, n - 3]).filter((x) => x >= lo && x <= hi);
     for (const x of near) {
       if (set.size >= count) break;
       set.add(x);
     }
-    while (set.size < count) set.add(U.randInt(1, max + 2));
+    let guard = 0;
+    while (set.size < count && guard++ < 100) set.add(U.randInt(lo, hi));
     return Array.from(set).sort((a, b) => a - b);
   }
 
@@ -84,12 +89,17 @@
 
     async task(ctx) {
       const cfg = LEVELS[ctx.level] || LEVELS[1];
-      const n = U.randInt(cfg.min, cfg.max);
+      // keine direkte Wiederholung derselben Anzahl
+      const n = U.pickFresh('zaehlen-n-' + ctx.level, U.range(cfg.min, cfg.max), 2);
       const item = U.pickFresh('zaehlen-item', countables(), 6, (w) => w.id);
       const plural = item.p;
 
       // --- Spielfeld aufbauen ---
-      const cellSize = n > 10 ? 'clamp(34px, 6.8vmin, 62px)' : 'clamp(46px, 9vmin, 84px)';
+      // Dinge sind antippbar (Mitzählen) → mindestens 56 px; bei 11–20 brechen die
+      // Zehnerblöcke auf schmalen Bildschirmen untereinander um.
+      const cellSize = n > 10 ? 'clamp(56px, min(8vmin, 7.4vw), 72px)'
+        : cfg.layout === 'scatter' ? 'clamp(56px, min(8.6vmin, 15vw), 84px)' // 4 Rasterzeilen
+          : 'clamp(56px, min(11vmin, 15vw), 96px)';
       const field = el('div.zaehlen-field', { style: { '--cell': cellSize } });
       const items = [];
       const makeItem = () => {
@@ -153,7 +163,8 @@
       });
 
       const question = `Wie viele ${plural} siehst du?`;
-      ctx.instruct(question);
+      ctx.setInstruction(question);
+      ctx.say(ctx.index === 0 ? `${question} Tippe jedes Ding an und zähle mit!` : question);
 
       // Hilfe: Flo zählt vor
       async function countAloud() {
@@ -167,6 +178,9 @@
           await ctx.say(U.numberWord(i + 1));
           items[i].classList.remove('pointing');
         }
+        if (!ctx.active) return;
+        // Kardinalprinzip benennen: Die letzte Zahl sagt, wie viele es sind.
+        await ctx.say(n === 1 ? `Es ist nur ${Z.count(1, item)}.` : `Die letzte Zahl sagt uns, wie viele es sind: ${Z.count(n, item)}.`);
       }
 
       const options = numberChoices(n, cfg.choices, cfg.min, cfg.max).map((k) => ({
@@ -178,10 +192,10 @@
       await ctx.choices(options, {
         shuffle: false,
         size: 'small',
-        hintAfter: 3,
-        correctSay: () => `Richtig! ${LT.lexikon.count(n, item)}.`,
+        hintAfter: 2,
+        correctSay: () => `Richtig! ${U.cap(Z.count(n, item))}.`,
         // nach dem 2. Fehlversuch zählt Flo gemeinsam mit dem Kind (Eingabe ist solange gesperrt)
-        onWrong: async (item, tile, wrongs) => {
+        onWrong: async (choice, tile, wrongs) => {
           if (wrongs === 2) {
             await ctx.say('Komm, wir zählen zusammen!');
             await countAloud();

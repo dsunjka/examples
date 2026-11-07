@@ -24,9 +24,17 @@
   Z.word = (n) => U.numberWord(n);
   /** 'Sieben' – als Nomen („die Sieben“, „vor der Sieben“) */
   Z.Word = (n) => U.cap(U.numberWord(n));
-  /** Liste von Zahlen als gesprochene Reihe: „Drei, vier, fünf“. gap → „…“ */
+  /**
+   * Liste von Zahlen als gesprochene Reihe: „Drei, vier, fünf“.
+   * Die Lücke wird als hörbares „hmm“ gesprochen – ein „…“ würde die
+   * Sprachausgabe einfach verschlucken („Eins, drei, vier“ klingt dann wie
+   * eine vollständige Reihe).
+   */
   Z.sayList = (nums, gapIndex = -1) =>
-    U.cap(nums.map((n, i) => (i === gapIndex ? '…' : Z.word(n))).join(', '));
+    U.cap(nums.map((n, i) => (i === gapIndex ? 'hmm' : Z.word(n))).join(', '));
+
+  /** Kurzer, sanfter Satzanfang für informative Fehler-Rückmeldungen. */
+  Z.oops = () => U.pickFresh('z2-oops', ['Hmm, noch nicht.', 'Nicht ganz.', 'Oh, noch nicht ganz.'], 2);
 
   /* ---------------- Grammatik-Helfer (unbestimmter Artikel) ---------------- */
   // g: 'm' | 'f' | 'n'

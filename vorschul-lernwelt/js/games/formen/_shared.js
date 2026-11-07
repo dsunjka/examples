@@ -44,7 +44,7 @@
     orange: { name: 'Orange', adj: 'orange', hex: '#ff8a1f', dark: '#c25b00', ex: [['🥕', 'eine Karotte'], ['🍊', 'eine Orange']] },
     lila: { name: 'Lila', adj: 'lila', hex: '#8e44c4', dark: '#5c2585', ex: [['🍇', 'Weintrauben'], ['🍆', 'eine Aubergine']] },
     rosa: { name: 'Rosa', adj: 'rosa', hex: '#ffa6cf', dark: '#d8679d', ex: [['🐷', 'ein Schweinchen'], ['🦩', 'ein Flamingo']] },
-    braun: { name: 'Braun', adj: 'braun', hex: '#8d5a2b', dark: '#5a3512', ex: [['🍫', 'Schokolade'], ['🐻', 'ein Bär']] },
+    braun: { name: 'Braun', adj: 'braun', hex: '#8d5a2b', dark: '#5a3512', ex: [['🌰', 'eine Kastanie'], ['🐻', 'ein Bär']] },
     schwarz: { name: 'Schwarz', adj: 'schwarz', hex: '#262626', dark: '#000000', ex: [['🎩', 'ein Zauberhut'], ['🕷️', 'eine Spinne']] },
     weiss: { name: 'Weiß', adj: 'weiß', hex: '#ffffff', dark: '#a9b0bf', ex: [['⛄', 'ein Schneemann'], ['👻', 'ein Gespenst']] },
     grau: { name: 'Grau', adj: 'grau', hex: '#9b9fa8', dark: '#62666e', ex: [['🐘', 'ein Elefant'], ['🐭', 'eine Maus']] },

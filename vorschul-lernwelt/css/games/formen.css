@@ -8,6 +8,11 @@
 .tile .fm-shape, .tile .fm-blob, .tile .fm-pot, .tile .fm-bead { width: 80%; height: 80%; pointer-events: none; }
 .fm-icon { width: 100%; height: 100%; }
 
+/* Mehr Platz unten: Flos Sprechblase (oft zweizeilig) soll keine Kacheln/Bilder verdecken */
+.game-formen .stage, .game-farben .stage, .game-muster .stage, .game-groessen .stage {
+  padding-bottom: calc(var(--gap) + clamp(84px, 14vmin, 120px));
+}
+
 /* kompakte Aufgabenzeile (Text nur ergänzend – alles wird vorgelesen) */
 .fm-line {
   background: var(--card);
@@ -171,7 +176,7 @@
 }
 
 .farben-mix {
-  --mw: min(440px, 82vw, calc((100vh - 430px) * 1.33));
+  --mw: min(440px, 82vw, calc((100vh - 520px) * 1.4));
   position: relative;
   width: var(--mw);
   height: calc(var(--mw) * 0.75);
@@ -341,7 +346,7 @@
 
 /* Stufe 5: wachsende Muster */
 .muster-grow {
-  --blk: min(34px, 5vh, calc((100vw - 120px) / (var(--g) * 1.75)));
+  --blk: min(34px, 3.8vh, calc((100vw - 120px) / (var(--g) * 1.75)));
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -377,7 +382,7 @@
   animation: tile-hint 1.2s ease-in-out infinite;
 }
 .muster-gq { font-size: calc(var(--blk) * 1.2); font-weight: 700; color: var(--ink-soft); }
-.muster-gopts { --blk: min(30px, 3.6vh); }
+.muster-gopts { --blk: min(30px, 3vh); }
 .muster-gopts .tile { width: auto; height: auto; min-width: calc(var(--blk) * 3); min-height: calc(var(--blk) * 3); padding: 12px 18px; justify-content: flex-end; }
 .muster-gopts .tile .muster-stack { pointer-events: none; }
 
@@ -391,7 +396,7 @@
   .groessen-choices .tile.large { --tile: clamp(104px, min(28vw, 22vh), 230px); }
 }
 
-.stage.groessen-stage { gap: clamp(10px, 2.2vmin, 22px); }
+.stage.groessen-stage { gap: clamp(8px, 1.6vmin, 16px); }
 .groessen-dir {
   display: flex;
   align-items: flex-end;
@@ -461,8 +466,12 @@
 .groessen-emoji { font-size: calc(var(--box) * 0.84 * var(--s)); line-height: 1; display: block; }
 
 /* Höhe (Türme) */
-.groessen-field.mode-hoehe, .groessen-shelf.mode-hoehe { --blk: min(30px, 3.4vh, calc((100vw - 70px) / (var(--n) * 1.75))); }
+.groessen-field.mode-hoehe, .groessen-shelf.mode-hoehe { --blk: min(30px, 3vh, calc((100vw - 70px) / (var(--n) * 1.75))); }
 .mode-hoehe .groessen-item, .mode-hoehe .groessen-slot { width: calc(var(--blk) * 1.5); height: calc(var(--maxk) * (var(--blk) + 3px) + 6px); }
+/* Türme: Tippfläche mind. 56px breit (der Turm selbst bleibt schmal) */
+.groessen-field.mode-hoehe { gap: 4px; }
+.groessen-field.mode-hoehe .groessen-item { width: max(56px, calc(var(--blk) * 1.5)); }
+.groessen-shelf .groessen-item { width: 100%; height: 100%; }
 .groessen-tower { display: flex; flex-direction: column; align-items: center; gap: 3px; }
 .groessen-blk {
   display: block;
@@ -477,7 +486,7 @@
 /* Länge (Stifte) */
 .groessen-field.mode-laenge, .groessen-shelf.mode-laenge {
   --plen: min(520px, calc(100vw - 110px));
-  --ph: clamp(22px, 3.4vh, 34px);
+  --ph: clamp(20px, 3vh, 34px);
   flex-direction: column;
   align-items: flex-start;
   gap: 8px;
@@ -485,6 +494,10 @@
 .groessen-shelf.mode-laenge { box-shadow: var(--shadow), inset 5px 0 0 #2b2d42; padding-left: 14px; }
 .mode-laenge .groessen-item, .mode-laenge .groessen-slot { width: calc(var(--plen) + 8px); height: calc(var(--ph) + 8px); align-items: center; justify-content: flex-start; padding: 0 4px; }
 .mode-laenge .groessen-slot { border-width: 2px; padding: 0; }
+/* Stifte im Feld: Tippfläche mind. 56px hoch (dafür ohne Lücke dazwischen) */
+.groessen-field.mode-laenge { gap: 0; padding-top: 4px; padding-bottom: 4px; }
+.groessen-field.mode-laenge .groessen-item { height: max(56px, calc(var(--ph) + 8px)); }
+.groessen-shelf.mode-laenge { gap: 5px; }
 .groessen-shelf .groessen-pencil { margin-left: 0 !important; } /* am Regal: gemeinsame Startlinie */
 .groessen-pencil { display: flex; height: var(--ph); align-items: stretch; filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.15)); flex: 0 0 auto; }
 .gp-end { width: calc(var(--ph) * 0.45); flex: 0 0 auto; background: #ff9fb8; border-radius: 6px 0 0 6px; box-shadow: inset -4px 0 0 #c9ced8; }

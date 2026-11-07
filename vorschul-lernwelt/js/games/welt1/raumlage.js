@@ -38,6 +38,12 @@
     { id: 'schmetterling', nom: 'der Schmetterling', e: '🦋', f: '🦋', fly: true },
     { id: 'biene', nom: 'die Biene', e: '🐝', f: '🐝', fly: true },
   ];
+  // Am Baum nur Tiere, die wirklich auf einen Baum klettern/fliegen (kein Hund/Hase „auf dem Baum“)
+  const TREE = [
+    GROUND[0],
+    { id: 'eichhoernchen', nom: 'das Eichhörnchen', e: '🐿️', f: '🐿️' },
+    FLYING[0],
+  ];
 
   /* ---------------- Gegenstände ----------------
      Lokale Koordinaten: (0,0) = Mitte unten, y nach oben negativ.
@@ -309,7 +315,7 @@
     }
     const options = [target].concat(picked);
     const flying = options.includes('ueber');
-    const animal = U.pickFresh('raum-animal', flying ? FLYING : GROUND, 2, (a) => a.id);
+    const animal = U.pickFresh('raum-animal', objId === 'baum' ? TREE : flying ? FLYING : GROUND, 2, (a) => a.id);
     return { target, options, objId, pair, animal };
   }
 
@@ -394,7 +400,7 @@
       zones = OBJ[objId].zones.slice();
     }
     const target = U.pickFresh('raum-p4', zones, 2);
-    const animal = U.pickFresh('raum-animal', GROUND, 2, (a) => a.id);
+    const animal = U.pickFresh('raum-animal', objId === 'baum' ? TREE : GROUND, 2, (a) => a.id);
     const A = U.cap(animal.nom);
     const open = objId === 'kiste' && zones.includes('in');
 

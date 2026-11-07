@@ -450,8 +450,8 @@
 .mv-digit-tile.with-dots .z1-tf { display: grid; animation: z1-pop .3s ease-out; }
 .mv-nl { margin-top: 4px; }
 
-/* Handy hochkant: Teller untereinander (größer), Waage daneben */
-@media (max-width: 640px) {
+/* Hochformat (Handy und Tablet): Teller untereinander (größer), Waage daneben */
+@media (max-width: 640px), (max-aspect-ratio: 4/5) {
   .mv-board { grid-template-columns: auto auto; grid-template-areas: "l m" "r m"; row-gap: 24px; column-gap: 14px; }
   .mv-board.no-eq { grid-template-columns: auto; grid-template-areas: "l" "r"; }
   .tile.mv-plate-tile { --plate: min(60vw, 29vh); }

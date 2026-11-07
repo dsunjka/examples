@@ -114,7 +114,7 @@
     await ask(ctx, items, `Welches Bild fängt so an wie ${prompt.w}?`, {
       correctSay: (it) => `Richtig! ${prompt.w} und ${it.x.w} fangen beide mit ${T} an.`,
       wrongSay: (it) => (lv === 4
-        ? `${prompt.w} – ${it.x.w}. Hör genau: ${it.x.w} fängt mit ${S.letterOf(it.x)} an.`
+        ? `Hör genau: ${prompt.w} fängt mit ${T} an, ${it.x.w} mit ${S.letterOf(it.x)}.`
         : `${prompt.w} – ${it.x.w}. Das klingt am Anfang anders. Hör noch mal genau hin!`),
       hintSay: () => `Hör mal: ${prompt.w} – ${match.w}. Das klingt am Anfang gleich!`,
       onCorrect: () => LT.ui.animate(card, 'joy'),
@@ -139,7 +139,9 @@
     const key = {};
     [T].concat(others).forEach((L) => { key[L] = wordOf(L, [prompt]); });
 
-    const card = S.card(prompt);
+    // Ohne geschriebenes Wort: Sonst könnte das Kind den ersten Buchstaben
+    // einfach optisch vergleichen, statt auf den Anlaut zu hören.
+    const card = S.card(prompt, { label: false });
     ctx.stage.appendChild(card);
     const items = [T].concat(others).map((L) => ({
       content: lv === 3

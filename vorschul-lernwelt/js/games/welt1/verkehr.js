@@ -196,7 +196,7 @@
       id: 'zebra', q: 'Welches Kind geht richtig über die Straße?',
       learn: 'Richtig! Am Zebrastreifen gehst du über die Straße. Warte, bis die Autos angehalten haben.',
       bad: 'Oh! Das Kind geht nicht über den Zebrastreifen. Das ist gefährlich.',
-      draw: (safe) => street({ zebra: 160 }) + car(110, 108, '#4a90e2', 1) + (safe ? kid(182, 100) : kid(56, 96, { run: true })),
+      draw: (safe) => street({ zebra: 160 }) + car(70, 108, '#4a90e2', 1) + (safe ? kid(182, 100) : kid(118, 96, { run: true })),
     },
     {
       id: 'parken', q: 'Welches Kind geht sicher über die Straße?',
@@ -217,7 +217,7 @@
       learn: 'Richtig! Helle Kleidung und Leuchtstreifen sieht man im Dunkeln schon von weitem.',
       bad: 'Hm, das Kind in dunkler Kleidung sieht man im Dunkeln kaum.',
       draw: (safe) => street({ night: true }) + car(46, 106, '#4a90e2', 1, { beam: true }) +
-        kid(166, 140, safe ? { vest: true, night: true } : { dark: true, hair: '#1f1a17', skin: '#7d5a40' }),
+        kid(166, 140, safe ? { vest: true, night: true } : { dark: true }),
     },
     {
       id: 'gehweg', q: 'Welches Kind geht an der richtigen Stelle?',
@@ -265,7 +265,7 @@
   const blueCircle = '<circle cx="50" cy="50" r="46" fill="#1f5fbf"/><circle cx="50" cy="50" r="42.5" fill="none" stroke="#fff" stroke-width="3"/>';
   const SIGNS = {
     zebra: {
-      name: 'den Zebrastreifen', title: 'Fußgängerüberweg',
+      name: 'das Schild für den Zebrastreifen', title: 'Fußgängerüberweg',
       q1: 'Tippe auf das Schild für den Zebrastreifen.',
       q2: 'Hier dürfen Fußgänger über die Straße, und die Autos müssen anhalten. Welches Schild passt?',
       learn: 'Das Schild zeigt einen Zebrastreifen. Hier dürfen Fußgänger über die Straße gehen. Die Autos müssen anhalten und warten.',
@@ -275,7 +275,7 @@
         <g transform="translate(50 56) scale(1.05)">${manWalk('#111')}</g>`,
     },
     gehweg: {
-      name: 'den Gehweg', title: 'Gehweg',
+      name: 'das Schild für den Gehweg', title: 'Gehweg',
       q1: 'Tippe auf das Schild für den Gehweg.',
       q2: 'Hier gehen Fußgänger. Autos dürfen hier nicht fahren. Welches Schild passt?',
       learn: 'Das ist das Schild für den Gehweg. Hier gehen die Fußgänger.',
@@ -290,7 +290,7 @@
         <line x1="66" y1="54" x2="70" y2="61" stroke-width="3.5"/></g>`,
     },
     radweg: {
-      name: 'den Radweg', title: 'Radweg',
+      name: 'das Schild für den Radweg', title: 'Radweg',
       q1: 'Tippe auf das Schild für den Radweg.',
       q2: 'Hier fahren Fahrräder. Welches Schild passt?',
       learn: 'Das ist das Schild für den Radweg. Hier fahren die Fahrräder.',
@@ -309,7 +309,7 @@
         <text x="50" y="60" text-anchor="middle" font-size="27" font-weight="700" fill="#fff" font-family="Arial, Helvetica, sans-serif" letter-spacing="1">STOP</text>`,
     },
     kinder: {
-      name: 'das Schild Achtung Kinder', title: 'Achtung, Kinder',
+      name: 'das Schild: Achtung, Kinder!', title: 'Achtung, Kinder',
       q1: 'Tippe auf das Schild: Achtung, Kinder!',
       q2: 'Dieses Schild sagt den Autofahrern: Vorsicht, hier sind oft Kinder! Welches Schild ist das?',
       learn: 'Das Schild warnt die Autofahrer: Achtung, Kinder! Hier müssen sie besonders vorsichtig fahren.',
@@ -325,7 +325,7 @@
         </g><circle cx="43" cy="42" r="4" fill="#111"/><circle cx="60" cy="50.5" r="3.4" fill="#111"/>`,
     },
     haltestelle: {
-      name: 'die Haltestelle', title: 'Haltestelle',
+      name: 'das Schild für die Bushaltestelle', title: 'Haltestelle',
       q1: 'Tippe auf das Schild für die Bushaltestelle.',
       q2: 'Hier hält der Bus. Welches Schild passt?',
       learn: 'Das ist das Schild für die Haltestelle. Hier hält der Bus.',
@@ -410,7 +410,9 @@
       correctSay: () => kind === 'nocar'
         ? 'Richtig! Bei Rot wartest du immer – auch wenn kein Auto kommt. Andere Kinder machen es dir nach.'
         : green ? 'Richtig! Das grüne Männchen geht – du darfst gehen. Schau trotzdem nach Autos.' : 'Richtig! Das rote Männchen steht – du bleibst stehen und wartest.',
-      wrongSay: () => green ? 'Schau genau: Das grüne Männchen leuchtet. Es geht los.' : 'Schau genau: Das rote Männchen leuchtet. Es steht still.',
+      wrongSay: () => kind === 'nocar'
+        ? 'Schau genau: Das rote Männchen leuchtet. Bei Rot wartest du – auch wenn kein Auto kommt.'
+        : green ? 'Schau genau: Das grüne Männchen leuchtet. Es geht los.' : 'Schau genau: Das rote Männchen leuchtet. Es steht still.',
     });
   }
 
@@ -442,7 +444,7 @@
     const S = SIGNS[target];
     const q = U.chance(0.5) ? S.q1 : S.q2;
     const others = U.sample(ids.filter((i) => i !== target), 2);
-    ctx.stage.appendChild(el('div.w1-prompt', U.emoji('🚸'), el('span.w1-q', q)));
+    ctx.stage.appendChild(el('div.w1-prompt', U.emoji('👀'), el('span.w1-q', q)));
     const items = [target].concat(others).map((id) => ({
       content: signNode(id),
       correct: id === target,
@@ -454,8 +456,8 @@
     await ctx.choices(items, {
       size: 'large',
       correctSay: () => `Richtig! ${S.learn}`,
-      wrongSay: (it) => `Das ist ${SIGNS[it.value].name}. Probier es nochmal.`,
-      hintSay: `Hier ist ${S.name}.`,
+      wrongSay: (it) => `Das ist ${SIGNS[it.value].name.replace(/!$/, '')}. Probier es nochmal.`,
+      hintSay: `Schau mal, hier ist ${S.name.replace(/!$/, '')}.`,
     });
   }
 
@@ -519,6 +521,7 @@
       carEl.style.transition = 'transform ' + (1.2 * LT.config.speed + 0.01) + 's ease-out';
       carEl.style.transform = carSide === 'l' ? 'translate(30px, 0)' : 'translate(205px, 0)';
       await ctx.sleep(900);
+      if (!ctx.active) return;
     }
     async function decide(carNow) {
       U.clear(bar);
@@ -543,7 +546,7 @@
       carEl.style.transition = 'transform ' + (1.4 * LT.config.speed + 0.01) + 's ease-in';
       carEl.style.transform = carSide === 'l' ? 'translate(320px, 0)' : 'translate(-80px, 0)';
       await ctx.sleep(1500);
-      look(null);
+      if (!ctx.active) return;
     }
     look(null);
     await decide(false);

@@ -51,6 +51,8 @@
   const accSup = (art, stem) => (art === 'der' ? `den ${stem}en` : `${art} ${stem}e`);
   /** „einen kleineren“ / „eine kleinere“ / „ein kleineres“ */
   const accCmp = (art, cmp) => (art === 'der' ? `einen ${cmp}en` : art === 'die' ? `eine ${cmp}e` : `ein ${cmp}es`);
+  /** Dativ Plural: „den Bären“, „den Stiften“, „den Türmen“ (+n außer nach -n/-s) */
+  const datPl = (p) => (/[ns]$/.test(p) ? p : p + 'n');
   /** „vom kleinsten bis zum größten“ */
   const fromTo = (first, last) => `vom ${first}en bis zum ${last}en`;
 
@@ -126,7 +128,7 @@
     let asc = true;
     if (lv === 3) n = U.pick([4, 4, 5]);
     if (lv === 4) { mode = U.pickFresh('groessen-mode4', ['groesse', 'laenge', 'hoehe'], 2); n = 4; }
-    if (lv === 5) { mode = U.pickFresh('groessen-mode5', ['groesse', 'laenge', 'hoehe'], 2); n = 5; asc = U.chance(0.3); }
+    if (lv === 5) { mode = U.pickFresh('groessen-mode5', ['groesse', 'laenge', 'hoehe'], 2); n = 5; asc = U.chance(0.5); }
     const d = DIM[mode];
     const thing = mode === 'laenge' ? STIFT : mode === 'hoehe' ? TURM : U.pickFresh('groessen-thing', things(), 8, (x) => x.id);
     const art = thing.a;
@@ -146,7 +148,7 @@
       if (mode === 'groesse') content = emojiThing(thing, v);
       else if (mode === 'laenge') content = pencil(v, colors[i % colors.length], lv === 5 ? U.pick([0, 0.35, 0.7, 1]) * (1 - v) * 0.9 : 0);
       else content = tower(v, colors[i % colors.length]);
-      const label = mode === 'hoehe' ? `Turm aus ${v} Steinen` : thing.w;
+      const label = mode === 'hoehe' ? `Turm aus ${U.numberWord(v)} ${v === 1 ? 'Stein' : 'Steinen'}` : thing.w;
       const node = el('button.groessen-item', { type: 'button', 'aria-label': label }, content);
       return { v, node, rank: i };
     });
@@ -230,7 +232,11 @@
             await ctx.wrong(it.node, { say: `Hmm, gibt es noch ${accCmp(art, asc ? d.cmpS : d.cmpB)}?` });
             if (stepErrors >= 2) {
               ctx.hint(order[step].node);
-              if (stepErrors === 2) await ctx.say(step === 0 ? `Schau, das ist ${nomSup(art, firstStem)}.` : `Tipp: Such ${accSup(art, firstStem)} von den übrigen.`);
+              if (stepErrors === 2) {
+                await ctx.say(step === 0
+                  ? `Schau, das ist ${nomSup(art, firstStem)} ${thing.w}.`
+                  : `Schau: Von den übrigen ${datPl(pl)} ist das hier ${nomSup(art, firstStem)}.`);
+              }
             }
             busy = false;
           }

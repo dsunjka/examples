@@ -179,7 +179,8 @@
      Stufen 1–3: zwei Teller
      ================================================================== */
   async function platesTask(ctx, cfg) {
-    const thing = Z.pickThing('mv-thing');
+    // Auf Teller gehört Essen – keine Bäume, Tiere oder Autos
+    const thing = Z.pickFood('mv-food');
     let a;
     let b;
     if (cfg.equal && U.chance(0.34)) {
@@ -348,7 +349,7 @@
   /** Erkenntnis für Stufe 4 benennen */
   function rowsExplain(type, ask, top, bot, thingVis) {
     if (top.n === bot.n) {
-      if (type === 'size') return `Richtig! Oben ${top.n}, unten ${bot.n} – das sind gleich viele, auch wenn die ${thingVis.p} viel größer sind.`;
+      if (type === 'size') return `Richtig! Oben ${nw(top.n)}, unten ${nw(bot.n)} – das sind gleich viele, auch wenn die ${thingVis.p} viel größer sind.`;
       return `Richtig! Oben und unten sind es ${nw(top.n)} – gleich viele. Eine Reihe ist nur weiter auseinandergezogen.`;
     }
     const more = top.n > bot.n ? top : bot;
@@ -360,7 +361,7 @@
     if (visIsLess) {
       sentence += type === 'size'
         ? ` – auch wenn die ${thingVis.p} viel größer sind.`
-        : ' – auch wenn die Reihe mit weniger länger aussieht.';
+        : ` – auch wenn die ${less === top ? 'obere' : 'untere'} Reihe länger ist.`;
     } else {
       sentence += '.';
     }
@@ -414,10 +415,11 @@
         tile.classList.remove('is-wrong');
         tile.classList.add('mv-was-wrong');
         colorize();
-        await ctx.say(`Schau auf den Zahlenstrahl: Die ${NW(small)} kommt zuerst, die ${NW(big)} kommt später. Je weiter hinten eine Zahl steht, desto größer ist sie.`);
+        await ctx.say(`Schau auf den Zahlenstrahl: Die ${NW(small)} kommt zuerst, die ${NW(big)} kommt später. Je weiter rechts eine Zahl steht, desto größer ist sie.`);
         if (!ctx.active) return;
         box.querySelectorAll('.mv-digit-tile').forEach((t) => t.classList.add('with-dots'));
-        await ctx.say(`Und so viele sind das: ${nw(a)} und ${nw(b)}. ${NW(big)} ${big === 1 ? 'ist' : 'sind'} mehr als ${nw(small)}.`);
+        const tail = ask === 'more' ? `Also ist die ${NW(big)} größer.` : `Also ist die ${NW(small)} kleiner.`;
+        await ctx.say(`Und so viele sind das: ${nw(a)} und ${nw(b)}. ${NW(big)} ${big === 1 ? 'ist' : 'sind'} mehr als ${nw(small)}. ${tail}`);
       },
       onCorrect: () => colorize(),
       correctSay: () => (ask === 'more' ? `Richtig! ${NW(big)} ist größer als ${nw(small)}.` : `Richtig! ${NW(small)} ist kleiner als ${nw(big)}.`),

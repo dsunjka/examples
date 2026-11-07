@@ -54,7 +54,7 @@
 
 .raum-choices { --rw: min(30vw, calc((100vh - 330px) * 1.4), 360px); gap: clamp(10px, 2vmin, 22px); }
 @media (orientation: portrait) {
-  .raum-choices { --rw: min(86vw, calc((100vh - 420px) / 3 * 1.4), 400px); flex-direction: column; flex-wrap: nowrap; }
+  .raum-choices { --rw: min(86vw, calc((100vh - 470px) / 3 * 1.4), 400px); flex-direction: column; flex-wrap: nowrap; }
 }
 @media (orientation: portrait) and (max-width: 520px) {
   .raum-choices { --rw: min(88vw, calc((100vh - 330px) / 3 * 1.4)); gap: 10px; }
@@ -70,7 +70,7 @@
 
 .raum-big {
   position: relative;
-  width: min(92vw, calc((100vh - 360px) * 1.395), 760px);
+  width: min(92vw, calc((100vh - 420px) * 1.395), 760px); /* Platz für Flo + Sprechblase */
   aspect-ratio: 240 / 172;
   background: var(--card);
   border-radius: var(--radius);
@@ -166,6 +166,21 @@
 
 .stage.verk-cross-stage { gap: clamp(8px, 1.8vmin, 18px); }
 .verk-cross-wrap { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 6px; }
-.verk-cross { display: block; width: min(90vw, calc((100vh - 470px) * 1.5), 720px); height: auto; border-radius: 18px; }
+.verk-cross { display: block; width: min(90vw, calc((100vh - 530px) * 1.5), 720px); height: auto; border-radius: 18px; }
 .verk-look { transition: opacity .3s; }
 .verk-bar { min-height: clamp(110px, 19vmin, 170px); display: flex; align-items: center; justify-content: center; }
+/* Querformat: Pfeile/Antworten rechts neben der Straße (nichts unter Flos Sprechblase) */
+@media (orientation: landscape) and (min-width: 700px) {
+  .stage.verk-cross-stage {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    column-gap: clamp(16px, 3vw, 40px);
+  }
+  .stage.verk-cross-stage > .w1-prompt { grid-column: 1 / span 2; justify-self: center; }
+  .verk-cross-stage .verk-cross { width: min(calc(100vw - 420px), calc((100vh - 430px) * 1.5), 720px); }
+  .verk-cross-stage .verk-bar { min-height: 0; }
+}

@@ -313,7 +313,8 @@
 
 /* =================== Rechengeschichten (rc-) =================== */
 .rc-scene {
-  --rc-s: clamp(44px, min(7.2vw, 8.4vh), 70px);
+  /* Handy: größere Dinge (gut antippbar zum Mitzählen); die Gruppen brechen dann untereinander um */
+  --rc-s: clamp(44px, min(14vw, 8.4vh), 70px);
   position: relative; width: min(100%, 900px); flex: 0 0 auto; border-radius: var(--radius-l); box-shadow: var(--shadow);
   overflow: hidden; display: flex; flex-direction: column; background: linear-gradient(#cfefff, #eaf8ff);
 }
@@ -412,3 +413,8 @@
 .rc-eq-op { color: var(--area); }
 .rc-eq-q { border-radius: 14px; box-shadow: inset 0 0 0 3px var(--area); color: var(--area); padding: 0 0.25em; animation: z2-pulse 1.4s ease-in-out infinite; }
 .rc-eq-q.rc-eq-done { box-shadow: none; color: #1d5fd1; background: var(--ok-soft); animation: z2-pop 0.5s ease-out; }
+
+/* Langer Spieltitel passt auf schmalen Handys sonst nicht neben Punkte und 🔊 */
+@media (max-width: 480px) {
+  .game-rechnen .topbar .title { font-size: 15px; gap: 6px; }
+}

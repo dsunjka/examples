@@ -24,15 +24,16 @@
   const el = U.el;
   const W = LT.w1;
 
-  /* ---------------- Gefühle ---------------- */
+  /* ---------------- Gefühle ----------------
+     cue: Merkmal (nach „Dieses Kind ist …“), cuePl: für zwei Kinder, hint: eigenständiger Tipp-Satz */
   const FEEL = {
-    froehlich: { adj: 'fröhlich', attr: 'fröhliche', cue: 'Es lacht über das ganze Gesicht.' },
-    traurig: { adj: 'traurig', attr: 'traurige', cue: 'Die Mundwinkel zeigen nach unten, und eine Träne kullert.', ok: 'Jeder ist manchmal traurig. Das ist okay.' },
-    wuetend: { adj: 'wütend', attr: 'wütende', cue: 'Die Augenbrauen sind nach unten gezogen, und es beißt die Zähne zusammen.', ok: 'Wütend sein ist okay. Aber wir tun niemandem weh.' },
-    aengstlich: { adj: 'ängstlich', attr: 'ängstliche', cue: 'Die Augen sind weit aufgerissen, und der Mund zittert.', ok: 'Jeder hat mal Angst. Das ist okay.' },
-    ueberrascht: { adj: 'überrascht', attr: 'überraschte', cue: 'Die Augenbrauen gehen hoch, und der Mund ist rund wie ein O.' },
-    muede: { adj: 'müde', attr: 'müde', cue: 'Die Augen fallen ihm fast zu.' },
-    verliebt: { adj: 'verliebt', attr: 'verliebte', cue: 'Es hat Herzchen in den Augen.' },
+    froehlich: { adj: 'fröhlich', attr: 'fröhliche', cuePl: 'Beide lachen über das ganze Gesicht.', hint: 'Das fröhliche Kind lacht über das ganze Gesicht.', cue: 'Es lacht über das ganze Gesicht.' },
+    traurig: { adj: 'traurig', attr: 'traurige', cuePl: 'Bei beiden zeigen die Mundwinkel nach unten, und eine Träne kullert.', hint: 'Beim traurigen Kind zeigen die Mundwinkel nach unten, und eine Träne kullert.', cue: 'Die Mundwinkel zeigen nach unten, und eine Träne kullert.', ok: 'Jeder ist manchmal traurig. Das ist okay.' },
+    wuetend: { adj: 'wütend', attr: 'wütende', cuePl: 'Bei beiden sind die Augenbrauen nach unten gezogen, und sie beißen die Zähne zusammen.', hint: 'Das wütende Kind zieht die Augenbrauen nach unten und beißt die Zähne zusammen.', cue: 'Die Augenbrauen sind nach unten gezogen, und es beißt die Zähne zusammen.', ok: 'Wütend sein ist okay. Aber wir tun niemandem weh.' },
+    aengstlich: { adj: 'ängstlich', attr: 'ängstliche', cuePl: 'Bei beiden sind die Augen weit aufgerissen, und der Mund zittert.', hint: 'Das ängstliche Kind hat weit aufgerissene Augen, und sein Mund zittert.', cue: 'Die Augen sind weit aufgerissen, und der Mund zittert.', ok: 'Jeder hat mal Angst. Das ist okay.' },
+    ueberrascht: { adj: 'überrascht', attr: 'überraschte', cuePl: 'Bei beiden gehen die Augenbrauen hoch, und der Mund ist rund wie ein O.', hint: 'Beim überraschten Kind gehen die Augenbrauen hoch, und der Mund ist rund wie ein O.', cue: 'Die Augenbrauen gehen hoch, und der Mund ist rund wie ein O.' },
+    muede: { adj: 'müde', attr: 'müde', cuePl: 'Beiden fallen die Augen fast zu.', hint: 'Dem müden Kind fallen die Augen fast zu.', cue: 'Die Augen fallen ihm fast zu.' },
+    verliebt: { adj: 'verliebt', attr: 'verliebte', cuePl: 'Beide haben Herzchen in den Augen.', hint: 'Das verliebte Kind hat Herzchen in den Augen.', cue: 'Es hat Herzchen in den Augen.' },
   };
   const BASIC = ['froehlich', 'traurig', 'wuetend', 'aengstlich'];
   const MORE = ['ueberrascht', 'muede', 'verliebt'];
@@ -113,13 +114,13 @@
     { g: 'm', t: '{N} hat seinen Teddy verloren.', e: '🧸', f: 'traurig', why: '{er} den Teddy vermisst', ex: ['aengstlich', 'wuetend'] },
     { g: 'm', t: 'Jemand macht die Sandburg von {N} kaputt. Mit Absicht!', e: '🏰', f: 'wuetend', why: 'jemand die Sandburg kaputt gemacht hat', ex: ['traurig', 'ueberrascht'] },
     { g: 'w', t: 'Es donnert und blitzt ganz laut. {N} ist allein in ihrem Zimmer.', e: '⛈️', f: 'aengstlich', why: 'das Gewitter so laut ist', ex: ['ueberrascht', 'traurig'] },
-    { g: 'm', t: '{N} war den ganzen Tag im Schwimmbad. Jetzt ist es Abend, und er gähnt.', e: '🌙', f: 'muede', why: 'er den ganzen Tag geschwommen ist', ex: ['traurig'] },
+    { g: 'm', t: '{N} war den ganzen Tag im Schwimmbad. Jetzt ist es Abend, und er gähnt.', e: '🌙', f: 'muede', why: 'er den ganzen Tag geschwommen ist', ex: ['traurig', 'froehlich'] },
     { g: 'w', t: '{N} darf mit Oma ein Eis essen.', e: '🍦', f: 'froehlich', why: '{er} mit Oma Eis isst', ex: ['verliebt', 'ueberrascht'] },
     { g: 'm', t: 'Der Luftballon von {N} fliegt weg, hoch in den Himmel.', e: '🎈', f: 'traurig', why: 'der Luftballon weg ist', ex: ['ueberrascht', 'wuetend'] },
     { g: 'w', t: 'Ein anderes Kind nimmt {N} einfach die Schaufel weg.', e: '⛏️', f: 'wuetend', why: 'ihr jemand die Schaufel weggenommen hat', ex: ['traurig', 'ueberrascht'], noEmoji: true },
     { g: 'm', t: 'Ein großer Hund bellt {N} ganz laut an.', e: '🐕', f: 'aengstlich', why: 'der große Hund laut bellt', ex: ['ueberrascht', 'wuetend'] },
     { g: 'w', t: 'Plötzlich springt Opa hinter dem Sofa hervor und ruft: Kuckuck! Damit hat {N} nicht gerechnet.', e: '👴', f: 'ueberrascht', why: '{er} damit nicht gerechnet hat', ex: ['aengstlich', 'froehlich'] },
-    { g: 'm', t: '{N} hat den ganzen Tag getobt. Jetzt fallen ihm die Augen zu.', e: '🛏️', f: 'muede', why: 'er so viel getobt hat', ex: ['traurig'] },
+    { g: 'm', t: '{N} hat den ganzen Tag getobt. Jetzt fallen ihm die Augen zu.', e: '🛏️', f: 'muede', why: 'er so viel getobt hat', ex: ['traurig', 'froehlich'] },
     { g: 'w', t: 'Die beste Freundin von {N} zieht in eine andere Stadt.', e: '🚚', f: 'traurig', why: 'die Freundin wegzieht', ex: ['wuetend', 'aengstlich'] },
     { g: 'm', t: '{N} hat ganz allein einen hohen Turm gebaut.', e: '🧱', f: 'froehlich', why: 'der Turm so toll geworden ist', ex: ['ueberrascht', 'verliebt'] },
     { g: 'w', t: '{N} hat Geburtstag, und alle singen für sie.', e: '🎂', f: 'froehlich', why: 'alle für sie singen', ex: ['ueberrascht', 'verliebt'] },
@@ -138,7 +139,7 @@
     { f: 'wuetend', t: 'Du bist ganz wütend. Was hilft dir?',
       ok: { e: '🌬️', say: 'Tief durchatmen' }, no: [{ e: '👊', say: 'Jemanden hauen' }, { e: '💥', say: 'Sachen kaputt machen' }],
       learn: 'Genau! Tief durchatmen hilft, wenn du wütend bist. Danach kannst du sagen, was dich ärgert.' },
-    { f: 'wuetend', t: 'Ein Kind nimmt dir einfach dein Auto weg. Du bist wütend. Was kannst du tun?',
+    { f: 'wuetend', t: 'Ein Kind nimmt dir einfach dein Spielzeugauto weg. Du bist wütend. Was kannst du tun?',
       ok: { e: '🗣️', say: 'Laut sagen: Stopp, das will ich nicht!' }, no: [{ e: '👊', say: 'Zurückhauen' }, { e: '🦷', say: 'Beißen' }],
       learn: 'Genau! Mit Worten sagen, was dich stört. Das hilft.' },
     { f: 'aengstlich', t: 'Du wachst nachts auf und hast Angst im Dunkeln. Was hilft dir?',
@@ -212,7 +213,7 @@
       size: 'large',
       correctSay: () => `Richtig! Dieses Kind ist ${F.adj}. ${F.cue}${extra}`,
       wrongSay: (it) => `Dieses Kind ist ${FEEL[it.value].adj}. Wir suchen das ${F.attr} Kind.`,
-      hintSay: `Ein Tipp: ${F.cue}`,
+      hintSay: `Ein Tipp: ${F.hint}`,
     });
   }
 
@@ -234,9 +235,9 @@
     ctx.instruct(`Dieses Kind ist ${F.adj}. Welches andere Kind ist auch ${F.adj}?`);
     await ctx.choices(items, {
       size: 'large',
-      correctSay: () => `Richtig! Beide Kinder sind ${F.adj}. ${F.cue}`,
+      correctSay: () => `Richtig! Beide Kinder sind ${F.adj}. ${F.cuePl}`,
       wrongSay: (it) => `Dieses Kind ist ${FEEL[it.value].adj}. Schau nochmal genau hin.`,
-      hintSay: `Ein Tipp: ${F.cue}`,
+      hintSay: `Ein Tipp: ${F.hint}`,
     });
   }
 
@@ -289,8 +290,9 @@
       nameFirst: true,
       sayButton: true,
       correctSay: () => h.learn,
-      wrongSay: () => 'Hm, hilft das wirklich? Überleg nochmal.',
-      hintSay: `Was meinst du hierzu: ${h.ok.say}?`,
+      // informativ: Flo wiederholt die gewählte Idee und sagt, dass sie nicht hilft
+      wrongSay: (it) => `${it.say.replace(/[.!?]$/, '')}? Nein, das hilft nicht. Hör dir die anderen Ideen nochmal an.`,
+      hintSay: `Ich glaube, das hilft: ${h.ok.say.replace(/[.!?]$/, '')}.`,
     });
   }
 })();

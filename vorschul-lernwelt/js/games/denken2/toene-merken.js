@@ -29,7 +29,7 @@
     { id: 'wal', e: '🐳', name: 'der Wal', short: 'Wal', note: 'C4', color: '#3b8beb', light: '#a9d1ff' },
     { id: 'frosch', e: '🐸', name: 'der Frosch', short: 'Frosch', note: 'E4', color: '#35b85a', light: '#a8f0bb' },
     { id: 'kaefer', e: '🐞', name: 'der Marienkäfer', short: 'Marienkäfer', note: 'G4', color: '#ec4b4b', light: '#ffb4b4' },
-    { id: 'kueken', e: '🐥', name: 'das Küken', short: 'Küken', note: 'C5', color: '#f5c30f', light: '#fff1a6' },
+    { id: 'kueken', e: '🐥', name: 'das Küken', short: 'Küken', note: 'C5', color: '#8e5bd6', light: '#dcc8ff' }, // lila: gelbes Küken auf Gelb war kaum zu sehen
   ];
 
   const LEVELS = { 1: 2, 2: 3, 3: 4, 4: 5, 5: 6 };
@@ -137,7 +137,6 @@
 
       // --- Tiere vorstellen (einmal) ---
       if (!introduced) {
-        introduced = true;
         await ctx.say('Das sind meine Musik-Tiere. Jedes Tier hat seinen eigenen Ton.');
         for (let k = 0; k < PADS.length; k++) {
           if (!ctx.active) return;
@@ -147,6 +146,8 @@
           pads[k].classList.remove('lit');
           await ctx.sleep(120);
         }
+        // erst nach vollständiger Vorstellung merken (Abbruch mittendrin → beim nächsten Mal nochmal)
+        if (ctx.active) introduced = true;
       }
       if (!ctx.active) return;
       await ctx.instruct(len === 2

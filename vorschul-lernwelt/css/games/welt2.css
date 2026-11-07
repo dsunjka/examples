@@ -18,7 +18,7 @@
 }
 .w2-scene { width: 100%; height: 100%; display: flex; flex-direction: column; gap: 4px; align-items: stretch; }
 .w2-scene > svg, .w2-scene > .w2-habitat { flex: 1; min-height: 0; width: 100%; border-radius: calc(var(--radius) - 8px); display: block; }
-.w2-scene-svg { width: 100%; height: 100%; }
+.w2-scene-svg { width: 100%; height: 100%; overflow: hidden; } /* Sonnenstrahlen nicht über den Bildrand */
 .w2-scene > svg { object-fit: cover; }
 .w2-scene-label {
   font-size: clamp(14px, 2.4vmin, 21px); font-weight: 700; color: var(--ink);

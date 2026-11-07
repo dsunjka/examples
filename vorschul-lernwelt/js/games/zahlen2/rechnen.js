@@ -386,14 +386,25 @@
       ctx.say(question);
 
       const options = Z.options(t.c, level === 1 || level === 3 ? 3 : 4, 0, 10, plus ? [t.a, t.c + 1] : [t.a, t.b]).map((k) => ({
-        content: String(k), text: true, correct: k === t.c, say: Z.word(k),
+        content: String(k), text: true, correct: k === t.c, say: Z.word(k), value: k,
       }));
+      // Informative Rückmeldung: typische Verwechslungen benennen, sonst „mehr/weniger“
+      const wrongSay = (item) => {
+        const k = item.value;
+        const what = plus ? 'Wie viele sind es jetzt zusammen?' : 'Wie viele sind jetzt noch da?';
+        const moved = plus ? 'dazugekommen' : 'weg';
+        if (k === t.a && k === t.b) return `${Z.oops()} So viele waren es am Anfang, und so viele sind ${moved}. ${what}`;
+        if (k === t.a) return `${Z.oops()} So viele waren es am Anfang. Dann sind welche ${moved}. ${what}`;
+        if (k === t.b) return `${Z.oops()} So viele sind ${moved}. ${what}`;
+        return `${Z.oops()} Es sind ${k > t.c ? 'weniger' : 'mehr'} als ${Z.word(k)}.`;
+      };
       await ctx.choices(options, {
         container: choicesBox,
         shuffle: false,
         size: 'small',
         hintAfter: 3,
         correctSay: okText,
+        wrongSay,
         onCorrect: () => {
           resetCount();
           if (showEqFirst && eqQ) {

@@ -168,7 +168,7 @@
     ctx.stage.appendChild(el('div.s1-head', U.emoji('👂'), el('span', 'Was reimt sich nicht?')));
     const names = rhymers.map((x) => x.w);
     await askChoices(ctx, items, 'Hör gut zu! Welches Wort reimt sich nicht?', {
-      correctSay: () => `Richtig! ${odd.w} reimt sich nicht. ${join(names)} reimen sich.`,
+      correctSay: () => `Richtig! ${join(names)} reimen sich – ${odd.w} nicht.`,
       wrongSay: (it) => {
         const other = rhymers.find((x) => x !== it.x);
         return `${it.x.w} – ${other.w}. Die reimen sich doch! Welches Wort klingt am Ende anders?`;

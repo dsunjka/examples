@@ -24,31 +24,31 @@
   const W = LT.w1;
 
   /* ---------------- Körperteile ----------------
-     is: „ist der Kopf“, fact: kurzer Sachsatz, show: Einladung, es am eigenen Körper zu zeigen */
+     is: „Das ist ein Arm“ (Rückmeldung), def: bestimmter Artikel für die Frage („Wo ist der Arm?“), fact: kurzer Sachsatz, show: Einladung, es am eigenen Körper zu zeigen */
   const PARTS = {
     // Stufe 1: große Körperteile
     kopf: { is: 'der Kopf', fact: 'Mit dem Kopf kannst du nicken.', show: 'Leg mal deine Hand auf deinen Kopf!' },
     bauch: { is: 'der Bauch', fact: 'In den Bauch kommt dein Essen.', show: 'Streichel mal deinen Bauch!' },
-    arm: { is: 'ein Arm', fact: 'Du hast zwei Arme.', show: 'Streck mal deine Arme in die Luft!' },
-    bein: { is: 'ein Bein', fact: 'Mit den Beinen kannst du laufen und springen.', show: 'Kannst du auf einem Bein stehen?' },
-    hand: { is: 'eine Hand', fact: 'Du hast zwei Hände.', show: 'Klatsch mal in die Hände!' },
-    fuss: { is: 'ein Fuß', fact: 'Mit den Füßen stehst du auf dem Boden.', show: 'Stampf mal mit den Füßen!' },
+    arm: { is: 'ein Arm', def: 'der Arm', fact: 'Du hast zwei Arme.', show: 'Streck mal deine Arme in die Luft!' },
+    bein: { is: 'ein Bein', def: 'das Bein', fact: 'Mit den Beinen kannst du laufen und springen.', show: 'Kannst du auf einem Bein stehen?' },
+    hand: { is: 'eine Hand', def: 'die Hand', fact: 'Du hast zwei Hände.', show: 'Klatsch mal in die Hände!' },
+    fuss: { is: 'ein Fuß', def: 'der Fuß', fact: 'Mit den Füßen stehst du auf dem Boden.', show: 'Stampf mal mit den Füßen!' },
     // Stufe 2: Gesicht
-    auge: { is: 'ein Auge', fact: 'Mit den Augen siehst du.', show: 'Blinzel mal mit deinen Augen!' },
+    auge: { is: 'ein Auge', def: 'das Auge', fact: 'Mit den Augen siehst du.', show: 'Blinzel mal mit deinen Augen!' },
     nase: { is: 'die Nase', fact: 'Mit der Nase riechst du.', show: 'Tipp mal auf deine Nase!' },
     mund: { is: 'der Mund', fact: 'Mit dem Mund kannst du essen und sprechen.', show: 'Mach mal deinen Mund ganz weit auf!' },
-    ohr: { is: 'ein Ohr', fact: 'Mit den Ohren hörst du.', show: 'Fass mal an deine Ohren!' },
+    ohr: { is: 'ein Ohr', def: 'das Ohr', fact: 'Mit den Ohren hörst du.', show: 'Fass mal an deine Ohren!' },
     haare: { is: 'die Haare', plural: true, fact: 'Haare wachsen immer weiter.', show: 'Wuschel mal durch deine Haare!' },
     kinn: { is: 'das Kinn', fact: 'Das Kinn ist ganz unten im Gesicht.', show: 'Tipp mal auf dein Kinn!' },
-    wange: { is: 'eine Wange', fact: 'Du hast zwei Wangen.', show: 'Blas mal deine Wangen ganz dick auf!' },
-    braue: { is: 'eine Augenbraue', fact: 'Die Augenbrauen sind über den Augen.', show: 'Kannst du deine Augenbrauen hochziehen?' },
+    wange: { is: 'eine Wange', def: 'die Wange', fact: 'Du hast zwei Wangen.', show: 'Blas mal deine Wangen ganz dick auf!' },
+    braue: { is: 'eine Augenbraue', def: 'die Augenbraue', fact: 'Die Augenbrauen sind über den Augen.', show: 'Kannst du deine Augenbrauen hochziehen?' },
     // Stufe 3: Details
     hals: { is: 'der Hals', fact: 'Der Hals verbindet den Kopf mit dem Körper.', show: 'Dreh mal deinen Kopf hin und her!' },
-    schulter: { is: 'eine Schulter', fact: 'Du hast zwei Schultern.', show: 'Zieh mal deine Schultern hoch!' },
-    ellenbogen: { is: 'ein Ellenbogen', fact: 'Mit dem Ellenbogen kannst du den Arm beugen.', show: 'Beug mal deinen Arm!' },
-    knie: { is: 'ein Knie', fact: 'Mit dem Knie kannst du das Bein beugen.', show: 'Mach mal eine Kniebeuge!' },
-    finger: { is: 'ein Finger', fact: 'An jeder Hand hast du fünf Finger.', show: 'Wackel mal mit deinen Fingern!' },
-    zeh: { is: 'ein Zeh', fact: 'An jedem Fuß hast du fünf Zehen.', show: 'Wackel mal mit deinen Zehen!' },
+    schulter: { is: 'eine Schulter', def: 'die Schulter', fact: 'Du hast zwei Schultern.', show: 'Zieh mal deine Schultern hoch!' },
+    ellenbogen: { is: 'ein Ellenbogen', def: 'der Ellenbogen', fact: 'Mit dem Ellenbogen kannst du den Arm beugen.', show: 'Beug mal deinen Arm!' },
+    knie: { is: 'ein Knie', def: 'das Knie', fact: 'Mit dem Knie kannst du das Bein beugen.', show: 'Mach mal eine Kniebeuge!' },
+    finger: { is: 'ein Finger', def: 'der Finger', fact: 'An jeder Hand hast du fünf Finger.', show: 'Wackel mal mit deinen Fingern!' },
+    zeh: { is: 'ein Zeh', def: 'der Zeh', fact: 'An jedem Fuß hast du fünf Zehen.', show: 'Wackel mal mit deinen Zehen!' },
   };
   const LEVEL_PARTS = {
     1: ['kopf', 'bauch', 'arm', 'bein', 'hand', 'fuss'],
@@ -152,7 +152,8 @@
       <path d="M250 150 Q260 164 250 178" stroke="${SD}" stroke-width="3" fill="none"/>
       <ellipse cx="150" cy="162" rx="98" ry="108" fill="${S}"/>
       <path d="M53 142 Q50 48 150 46 Q250 48 247 142 Q236 94 150 94 Q66 94 53 142 Z" fill="${H}"/>
-      <path d="M100 121 Q118 110 136 120 M164 120 Q182 110 200 121" stroke="${H}" stroke-width="7" fill="none" stroke-linecap="round"/>
+      <path d="M100 129 Q118 119 136 128 M164 128 Q182 119 200 129" stroke="rgba(0,0,0,.35)" stroke-width="10" fill="none" stroke-linecap="round"/>
+      <path d="M100 129 Q118 119 136 128 M164 128 Q182 119 200 129" stroke="${H}" stroke-width="7" fill="none" stroke-linecap="round"/>
       ${eye(118)}${eye(182)}
       <path d="M150 162 L139 192 Q150 201 161 192 Z" fill="rgba(0,0,0,.12)"/>
       <circle cx="94" cy="200" r="15" fill="#ff8a8a" opacity=".35"/><circle cx="206" cy="200" r="15" fill="#ff8a8a" opacity=".35"/>
@@ -167,7 +168,7 @@
     const ell = (cx, cy, rx, ry) => `<ellipse class="kz" cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="transparent"/>`;
     return g('haare', `<path class="kz" d="M48 142 Q44 36 150 34 Q256 36 252 142 Q238 100 150 100 Q62 100 48 142 Z" fill="transparent"/>`) +
       g('ohr', ell(46, 164, 21, 32) + ell(254, 164, 21, 32)) +
-      g('braue', `<rect class="kz" x="94" y="102" width="48" height="30" rx="10" fill="transparent"/><rect class="kz" x="158" y="102" width="48" height="30" rx="10" fill="transparent"/>`) +
+      g('braue', `<rect class="kz" x="94" y="108" width="48" height="27" rx="10" fill="transparent"/><rect class="kz" x="158" y="108" width="48" height="27" rx="10" fill="transparent"/>`) +
       g('auge', circ(118, 151, 19) + circ(182, 151, 19)) +
       g('nase', ell(150, 182, 18, 22)) +
       g('wange', circ(92, 202, 23) + circ(208, 202, 23)) +
@@ -197,9 +198,9 @@
     { s: 'schmecken', e: '🍋', t: 'Die Zitrone ist sauer.' },
     { s: 'schmecken', e: '🍬', t: 'Das Bonbon ist süß.' },
     { s: 'schmecken', e: '🥨', t: 'Die Brezel ist salzig.' },
-    { s: 'fuehlen', e: '🧸', t: 'Der Teddy ist ganz weich.' },
-    { s: 'fuehlen', e: '🌵', t: 'Der Kaktus ist stachelig.' },
-    { s: 'fuehlen', e: '🧊', t: 'Der Eiswürfel ist kalt.' },
+    { s: 'fuehlen', e: '🧸', t: 'Du streichelst deinen Teddy. Er ist ganz weich.' },
+    { s: 'fuehlen', e: '🌵', t: 'Du fasst den Kaktus an. Autsch, der piekst!' },
+    { s: 'fuehlen', e: '🧊', t: 'Du hältst einen Eiswürfel in der Hand. Brr, ist der kalt!' },
   ];
 
   LT.registerGame({
@@ -236,7 +237,7 @@
     const verb = part.plural ? 'sind' : 'ist';
 
     ctx.stage.classList.add('koerper-stage');
-    const q = `Wo ${verb} ${part.is}?`;
+    const q = `Wo ${verb} ${part.def || part.is}?`;
     const prompt = el('div.w1-prompt.koerper-prompt', U.emoji('👆'), el('span.w1-q', q));
     ctx.stage.appendChild(prompt);
     const svg = level === 2
@@ -262,7 +263,7 @@
         const p = nameOf(z);
         return `Das ${p.plural ? 'sind' : 'ist'} ${p.is}. ${q}`;
       },
-      hintSay: `Schau mal, hier leuchtet es. Da ${verb} ${part.is}.`,
+      hintSay: `Schau mal, hier leuchtet es. Da ${verb} ${part.def || part.is}.`,
     });
     if (showMe && ctx.active) await ctx.sleep(1200);
   }
@@ -302,8 +303,9 @@
       nameFirst: ctx.index === 0,
       className: 'koerper-senses',
       correctSay: () => correctText,
-      wrongSay: (it) => `Das ${['sehen', 'hoeren', 'fuehlen'].includes(it.value) ? 'sind' : 'ist'} ${it.say}. Probier es nochmal!`,
-      hintSay: `Ich helfe dir: ${SENSES[senseId].say}!`,
+      // informativ: Was macht man mit dem gewählten Sinnesorgan?
+      wrongSay: (it) => `${U.cap(SENSES[it.value].mit)} ${SENSES[it.value].verb} du. Probier es nochmal!`,
+      hintSay: `Ich helfe dir: ${U.cap(SENSES[senseId].mit)} ${SENSES[senseId].verb} du.`,
     });
   }
 })();

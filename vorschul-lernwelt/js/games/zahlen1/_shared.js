@@ -57,8 +57,21 @@
   };
   /** Zufälliges zählbares Ding ohne direkte Wiederholung. */
   Z.pickThing = (key) => U.pickFresh(key || 'z1-thing', Z.countables(), 8, (w) => w.id);
-  /** „7 Äpfel“ / „ein Apfel“ – für die Sprachausgabe. */
-  Z.count = (n, w) => (n === 0 ? `kein${w.a === 'die' ? 'e' : ''} ${w.w}` : LT.lexikon.count(n, w));
+  /** Nur Essbares – für Aufgaben „auf dem Teller“ (keine Bäume oder Traktoren auf dem Teller). */
+  const FOOD_IDS = [
+    'apfel', 'birne', 'banane', 'erdbeere', 'orange', 'zitrone', 'pfirsich',
+    'karotte', 'tomate', 'kartoffel', 'pilz', 'ei', 'keks', 'brezel', 'muffin', 'donut', 'bonbon',
+  ];
+  Z.foods = function () {
+    return FOOD_IDS.map((id) => LT.lexikon.get(id)).filter((w) => w && w.p);
+  };
+  Z.pickFood = (key) => U.pickFresh(key || 'z1-food', Z.foods(), 6, (w) => w.id);
+  /** „sieben Äpfel“ / „ein Apfel“ / „keine Äpfel“ – mit Zahlwort (einheitlich für die Sprachausgabe). */
+  Z.count = (n, w) => {
+    if (n === 0) return `keine ${w.p || w.w}`;
+    if (n === 1) return `${w.a === 'die' ? 'eine' : 'ein'} ${w.w}`;
+    return `${U.numberWord(n)} ${w.p || w.w}`;
+  };
 
   /* ------------------------------------------------------------------
      Antwortzahlen: richtige Zahl + nahe Nachbarn (typische Fehler), sortiert

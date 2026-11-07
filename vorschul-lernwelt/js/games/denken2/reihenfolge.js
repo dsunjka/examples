@@ -31,79 +31,90 @@
      Geschichten. Je Schritt:  e = Emoji (oder svg), n = kurzer Name zum
      Benennen der Karte, t = Erzählsatz für das Nacherzählen.
      tag = Themenfeld (Distraktoren in Stufe 4 nur aus ANDEREN Themen),
-     nd = als falsche Antwort ungeeignet (würde fast überall passen).
+     avoid = weitere Themen, deren Bilder als „falsche“ Antwort in Stufe 4
+             auch passen könnten (z. B. nach dem Frühstück Schuhe anziehen),
+     nd = als falsche Antwort ungeeignet (würde fast überall passen); solche
+          Bilder werden in Stufe 1 auch nicht als Bildpaar verwendet,
+          weil ihre Position ohne die Nachbarbilder nicht eindeutig ist,
+     t1 = Erzählsatz, wenn der direkte Vorgänger-Schritt NICHT gezeigt wurde
+          (Stufe 1 mit zwei Bildern, Stufe 2 mit Auswahl pick3),
+     pick3 = welche 3 Schritte Stufe 2 aus einer 4er-Geschichte nimmt
+             (Standard: die ersten drei).
      ------------------------------------------------------------------ */
   const STORIES = [
     { id: 'huhn', tag: 'tier', steps: [
       { e: '🥚', n: 'Ein Ei', t: 'Im Nest liegt ein Ei.' },
       { e: '🐣', n: 'Ein Küken schlüpft', t: 'Knack! Ein Küken schlüpft aus dem Ei.' },
-      { e: '🐥', n: 'Ein kleines Küken', t: 'Das kleine Küken piept und wächst.' },
-      { e: '🐔', n: 'Ein Huhn', t: 'Aus dem Küken wird ein großes Huhn.' },
+      { e: '🐥', n: 'Ein kleines Küken', t: 'Das kleine Küken piept und wächst.', t1: 'Aus dem Ei ist ein kleines Küken geschlüpft.' },
+      { e: '🐔', n: 'Ein Huhn', t: 'Aus dem Küken wird ein großes Huhn.', t1: 'Viel später ist daraus ein großes Huhn geworden.' },
     ] },
     { id: 'schmetterling', tag: 'tier', steps: [
       { e: '🐛', n: 'Eine Raupe', t: 'Eine kleine Raupe frisst viele Blätter.' },
       { svg: 'puppe', n: 'Eine Puppe', t: 'Die Raupe spinnt sich ein und wird zu einer Puppe.' },
-      { e: '🦋', n: 'Ein Schmetterling', t: 'Aus der Puppe schlüpft ein Schmetterling.' },
+      { e: '🦋', n: 'Ein Schmetterling', t: 'Aus der Puppe schlüpft ein Schmetterling.', t1: 'Aus der Raupe wird ein bunter Schmetterling.' },
     ] },
     { id: 'blume', tag: 'pflanze', steps: [
       { e: '🌱', n: 'Ein kleiner Keim', t: 'Aus der Erde wächst ein kleiner Keim.' },
       { e: '🌿', n: 'Eine größere Pflanze', t: 'Die Pflanze bekommt viele Blätter und wird größer.' },
       { e: '🌻', n: 'Eine Sonnenblume', t: 'Jetzt blüht eine große Sonnenblume.' },
     ] },
-    { id: 'apfel', tag: 'pflanze', steps: [
+    { id: 'apfel', tag: 'pflanze', avoid: ['essen'], steps: [
       { e: '🌸', n: 'Eine Blüte', t: 'Im Frühling blüht der Apfelbaum.' },
       { e: '🍏', n: 'Ein kleiner grüner Apfel', t: 'Ein kleiner, grüner Apfel wächst.' },
       { e: '🍎', n: 'Ein reifer roter Apfel', t: 'Im Herbst ist der Apfel rot und reif.' },
-      { e: '🧺', n: 'Ein Korb', t: 'Wir pflücken die Äpfel und legen sie in den Korb.' },
+      { e: '🧺', n: 'Ein Korb', t: 'Wir pflücken die Äpfel und legen sie in den Korb.', nd: true },
     ] },
-    { id: 'schneemann', tag: 'wetter', steps: [
+    { id: 'schneemann', tag: 'wetter', avoid: ['pflanze'], pick3: [0, 1, 3], steps: [
       { e: '❄️', n: 'Es schneit', t: 'Es schneit und schneit.' },
       { e: '⛄', n: 'Ein Schneemann', t: 'Die Kinder bauen einen Schneemann.' },
       { e: '☀️', n: 'Die warme Sonne', t: 'Die Sonne scheint und es wird warm.', nd: true },
-      { svg: 'pfuetze', n: 'Der Schneemann ist geschmolzen', t: 'Der Schneemann schmilzt. Übrig bleiben nur Hut, Karotte und eine Pfütze.' },
+      { svg: 'pfuetze', n: 'Der Schneemann ist geschmolzen', t: 'Der Schneemann schmilzt. Übrig bleiben nur Hut, Karotte und eine Pfütze.', t1: 'Die Sonne scheint und der Schnee schmilzt. Vom Schneemann bleiben nur Hut, Karotte und eine Pfütze.' },
     ] },
-    { id: 'regen', tag: 'wetter', steps: [
+    { id: 'regen', tag: 'wetter', avoid: ['pflanze'], steps: [
       { e: '☁️', n: 'Dicke Wolken', t: 'Dicke Wolken ziehen auf.' },
       { e: '🌧️', n: 'Es regnet', t: 'Es regnet.' },
       { e: '🌈', n: 'Ein Regenbogen', t: 'Dann kommt die Sonne heraus und ein Regenbogen leuchtet.' },
     ] },
     { id: 'mensch', tag: 'mensch', steps: [
       { e: '👶', n: 'Ein Baby', t: 'Das ist ein Baby.' },
-      { e: '🧒', n: 'Ein Kind', t: 'Das Baby wächst und wird ein Kind.' },
-      { e: '🧑', n: 'Ein Erwachsener', t: 'Das Kind wird groß und ist erwachsen.' },
-      { e: '🧓', n: 'Ein alter Mensch', t: 'Viele Jahre später ist es alt und hat graue Haare.' },
+      { e: '👦', n: 'Ein Junge', t: 'Das Baby wächst und wird ein Junge.' },
+      // 🧔 (mit Bart) statt 👨 – 👦 und 👨 sehen auf vielen Geräten fast gleich aus
+      { e: '🧔', n: 'Ein Mann mit Bart', t: 'Der Junge wird groß. Jetzt ist er ein Mann mit Bart.', t1: 'Viele Jahre später ist aus dem Baby ein Mann geworden.' },
+      { e: '👴', n: 'Ein alter Mann', t: 'Noch viel später ist er alt und hat graue Haare.' },
     ] },
-    { id: 'kuchen', tag: 'essen', steps: [
+    { id: 'kuchen', tag: 'essen', avoid: ['alltag', 'hygiene'], steps: [
       { e: '🥚🥛', n: 'Eier und Milch', t: 'Wir holen Eier, Milch und Mehl.' },
       { e: '🥣', n: 'Teig in der Schüssel', t: 'Wir rühren alles zu einem Teig.' },
       { svg: 'ofen', svgArg: 'kuchen', n: 'Der Ofen', t: 'Der Kuchen backt im heißen Ofen.' },
       { e: '🎂', n: 'Ein fertiger Kuchen', t: 'Fertig ist der leckere Kuchen!' },
     ] },
-    { id: 'pizza', tag: 'essen', steps: [
+    { id: 'pizza', tag: 'essen', avoid: ['alltag', 'hygiene'], steps: [
       { e: '🍅🧀', n: 'Tomaten und Käse', t: 'Wir legen Tomaten und Käse auf den Teig.' },
       { svg: 'ofen', svgArg: 'pizza', n: 'Der Ofen', t: 'Die Pizza backt im heißen Ofen.' },
       { e: '🍕', n: 'Eine fertige Pizza', t: 'Die Pizza ist fertig. Mmh, lecker!' },
     ] },
-    { id: 'suppe', tag: 'essen', steps: [
+    { id: 'suppe', tag: 'essen', avoid: ['alltag', 'hygiene'], steps: [
       { e: '🥕🥔', n: 'Karotten und Kartoffeln', t: 'Papa schneidet Karotten und Kartoffeln.' },
       { e: '🍲', n: 'Eine Suppe im Topf', t: 'Im Topf kocht eine leckere Suppe.' },
-      { e: '😋', n: 'Lecker', t: 'Alle essen. Mmh, lecker!', nd: true },
+      { e: '😋', n: 'Mmh, lecker!', t: 'Alle essen. Mmh, lecker!', nd: true },
     ] },
-    { id: 'geburtstag', tag: 'essen', steps: [
+    { id: 'geburtstag', tag: 'essen', avoid: ['alltag', 'hygiene', 'spiel'], steps: [
       { e: '🎂', n: 'Ein Kuchen mit Kerzen', t: 'Auf dem Geburtstagskuchen brennen Kerzen.' },
-      { e: '🌬️', n: 'Pusten', t: 'Ali pustet alle Kerzen aus.', nd: true },
+      { e: '🌬️', n: 'Kräftig pusten', t: 'Ali pustet alle Kerzen aus.', nd: true },
       { e: '🍰', n: 'Ein Stück Kuchen', t: 'Jetzt bekommt jeder ein Stück Kuchen.' },
     ] },
-    { id: 'tag', tag: 'alltag', steps: [
-      { e: '⏰', n: 'Der Wecker', t: 'Der Wecker klingelt. Guten Morgen!' },
-      { e: '🍳', n: 'Das Frühstück', t: 'Wir frühstücken zusammen.' },
-      { e: '🎒', n: 'Der Rucksack', t: 'Mit dem Rucksack geht es in den Kindergarten.' },
-      { e: '🛌', n: 'Schlafen im Bett', t: 'Am Abend schlafen wir im Bett.', nd: true },
+    // Schlafen steht am ANFANG (nachts schlafen → Wecker), sonst wäre der
+    // Tagesablauf ein Kreislauf (Bett vor oder nach dem Frühstück?).
+    { id: 'tag', tag: 'alltag', avoid: ['kleidung', 'hygiene'], steps: [
+      { e: '🛌', n: 'Schlafen im Bett', t: 'Ben schläft tief und fest in seinem Bett.', nd: true },
+      { e: '⏰', n: 'Der Wecker', t: 'Der Wecker klingelt. Guten Morgen, Ben!' },
+      { e: '🍳', n: 'Das Frühstück', t: 'Ben frühstückt mit Mama und Papa.' },
+      { e: '🎒', n: 'Der Rucksack', t: 'Dann geht Ben mit dem Rucksack in den Kindergarten.' },
     ] },
     { id: 'ballon', tag: 'spiel', steps: [
       { e: '🎈', n: 'Ein Luftballon', t: 'Tim hat einen roten Luftballon.' },
-      { e: '💥', n: 'Peng', t: 'Peng! Der Luftballon platzt.', nd: true },
-      { e: '😢', n: 'Traurig', t: 'Oh nein, Tim ist traurig.', nd: true },
+      { e: '💥', n: 'Peng, geplatzt!', t: 'Peng! Der Luftballon platzt.', nd: true },
+      { e: '😢', n: 'Ein trauriges Gesicht', t: 'Oh nein, Tim ist traurig.', nd: true },
     ] },
     { id: 'haus', tag: 'bau', steps: [
       { e: '🧱', n: 'Viele Steine', t: 'Hier liegen viele Steine.' },
@@ -111,7 +122,7 @@
       { e: '🏠', n: 'Ein fertiges Haus', t: 'Das Haus ist fertig!' },
     ] },
     { id: 'malen', tag: 'basteln', steps: [
-      { e: '📄', n: 'Ein leeres Blatt', t: 'Hier ist ein leeres Blatt Papier.' },
+      { e: '📄', n: 'Ein Blatt Papier', t: 'Mia holt sich ein Blatt Papier.' },
       { e: '🖍️', n: 'Wachsmalstifte', t: 'Mia malt ein buntes Bild.' },
       { e: '🖼️', n: 'Ein Bild im Rahmen', t: 'Das fertige Bild hängt an der Wand.' },
     ] },
@@ -175,21 +186,41 @@
   /* ------------------------------------------------------------------
      Stufen 1–3: Bilder der Reihe nach antippen
      ------------------------------------------------------------------ */
-  async function orderTask(ctx, cfg) {
-    const pool = STORIES.filter((s) => s.steps.length >= cfg.n);
-    const story = U.pickFresh('rf-story-' + cfg.n, pool, Math.min(5, pool.length - 1), (s) => s.id);
-    let steps;
-    if (cfg.n === 2 && story.steps.length > 2) {
-      // Stufe 1: zwei deutlich auseinanderliegende Schritte (z. B. Ei und Huhn)
-      const L = story.steps.length;
-      const i = U.randInt(0, L - 3);
-      const j = U.randInt(i + 2, L - 1);
-      steps = [story.steps[i], story.steps[j]];
-    } else {
-      steps = story.steps.slice(0, cfg.n);
+  /** Stufe 1: mögliche Bildpaare – deutlich auseinanderliegend (Abstand ≥ 2,
+      z. B. Ei und Huhn) und ohne „nd“-Bilder, deren Platz allein nicht
+      eindeutig wäre (☀️ kann vor oder nach dem Schnee kommen). */
+  function pairsOf(story) {
+    const st = story.steps;
+    const out = [];
+    if (st.length === 2) {
+      if (!st[0].nd && !st[1].nd) out.push([0, 1]);
+      return out;
     }
+    for (let i = 0; i < st.length; i++) {
+      for (let j = i + 2; j < st.length; j++) if (!st[i].nd && !st[j].nd) out.push([i, j]);
+    }
+    return out;
+  }
+
+  /** Auswahl der Schritt-Indizes für Stufe 1–3 */
+  function chooseIdx(story, n) {
+    if (n === 2) return U.pick(pairsOf(story));
+    if (story.steps.length > n && n === 3 && story.pick3) return story.pick3.slice();
+    return U.range(0, n - 1);
+  }
+
+  async function orderTask(ctx, cfg) {
+    const pool = STORIES.filter((s) => (cfg.n === 2 ? pairsOf(s).length > 0 : s.steps.length >= cfg.n));
+    const story = U.pickFresh('rf-story-' + cfg.n, pool, Math.min(5, pool.length - 1), (s) => s.id);
+    const idx = chooseIdx(story, cfg.n);
+    // Erzählsatz: t1, wenn der direkte Vorgänger fehlt (sonst fehlt der Zusammenhang)
+    const steps = idx.map((i, k) => {
+      const s = story.steps[i];
+      const gap = k > 0 && idx[k - 1] !== i - 1;
+      return gap && s.t1 ? Object.assign({}, s, { t: s.t1 }) : s;
+    });
     const n = steps.length;
-    ctx.stage.style.setProperty('--rf-cell', CELL[n]);
+    ctx.stage.style.setProperty('--rf-cell-base', CELL[n]);
 
     const { row, slots } = buildSlots(n);
     const cards = el('div.rf-cards' + (n === 4 ? '.rf-n4' : ''));
@@ -272,7 +303,7 @@
           if (slotWrong >= 2 && ctx.active) {
             const right = tiles.find((x) => x._idx === next);
             ctx.hint(right);
-            await ctx.say(`${next === 0 ? 'Schau mal, dieses Bild kommt zuerst' : 'Schau mal, dieses Bild kommt als Nächstes'}: ${steps[next].n}.`);
+            await ctx.say(`Schau mal! ${next === 0 ? 'Dieses Bild kommt zuerst' : 'Dieses Bild kommt als Nächstes'}. ${steps[next].n.replace(/[.!]$/, '')}.`);
           }
           busy = false;
         }
@@ -290,7 +321,7 @@
     const steps = story.steps;
     const n = steps.length;
     const answer = steps[n - 1];
-    ctx.stage.style.setProperty('--rf-cell', CELL[n === 3 ? 3 : 4]);
+    ctx.stage.style.setProperty('--rf-cell-base', CELL[n === 3 ? 3 : 4]);
 
     const { row, slots } = buildSlots(n);
     ctx.stage.appendChild(row);
@@ -300,7 +331,8 @@
     // Falsche Antworten: Bilder aus anderen Themen, nicht doppelt
     const own = new Set(steps.map(key));
     const cand = [];
-    STORIES.filter((s) => s.tag !== story.tag).forEach((s) => s.steps.forEach((st) => {
+    const avoid = new Set([story.tag, ...(story.avoid || [])]);
+    STORIES.filter((s) => !avoid.has(s.tag)).forEach((s) => s.steps.forEach((st) => {
       if (!st.nd && !own.has(key(st)) && !cand.find((c) => key(c) === key(st))) cand.push(st);
     }));
     const wrongs = U.sample(cand, 2);
@@ -331,7 +363,7 @@
       hintAfter: 2,
       hintSay: 'Schau mal, das hier passt zur Geschichte.',
       correctSay: 'Genau, das passiert als Nächstes! Hör mal die ganze Geschichte:',
-      wrongSay: 'Passt das zur Geschichte? Überleg nochmal.',
+      wrongSay: 'Hmm, das gehört zu einer anderen Geschichte. Was passiert hier als Nächstes?',
       onCorrect: () => {
         slots[n - 1].classList.remove('rf-missing');
         fillSlot(slots[n - 1], answer);

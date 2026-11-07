@@ -51,8 +51,15 @@
       const base = (TYPE_PLAN[ctx.level] || TYPE_PLAN[1]).slice();
       // sanfter Einstieg: zuerst „hören → Ziffer“, der Rest gemischt
       const first = base.shift();
-      plan = [first].concat(U.shuffle(base));
-      while (plan.length < ctx.total) plan.push(U.pick(base));
+      // Rest so mischen, dass dieselbe Aufgabenart nicht direkt zweimal hintereinander kommt
+      let rest = U.shuffle(base);
+      for (let tries = 0; tries < 30; tries++) {
+        const seq = [first].concat(rest);
+        if (seq.every((t, i) => i === 0 || t !== seq[i - 1])) break;
+        rest = U.shuffle(base);
+      }
+      plan = [first].concat(rest);
+      while (plan.length < ctx.total) plan.push(U.pick(base.filter((t) => t !== plan[plan.length - 1])) || U.pick(base));
     }
     return plan[ctx.index];
   }
@@ -248,7 +255,8 @@
     async task(ctx) {
       const cfg = LEVELS[ctx.level] || LEVELS[1];
       const type = typeFor(ctx);
-      const n = U.pickFresh('zd-n-' + ctx.level, cfg.pool, 4);
+      // ohne direkte Wiederholung, aber nicht vorhersagbar (bei 1–5 nur die letzten 2 sperren)
+      const n = U.pickFresh('zd-n-' + ctx.level, cfg.pool, Math.min(4, Math.floor(new Set(cfg.pool).size / 2)));
       const env = { thing: Z.pickThing('zd-thing'), skin: U.pick(Z.SKINS) };
       const prompt = el('div.prompt-box.zd-prompt');
       const helpBox = el('div.zd-help');
@@ -283,7 +291,7 @@
             prompt.appendChild(el('div.zd-link', link));
           },
           correctSay: () => {
-            const note = ctx.level >= 3 ? ' ' + writeNote(n) : '';
+            const note = ctx.level >= 3 && writeNote(n) ? ' ' + writeNote(n) : '';
             return `Richtig, das ist die ${NW(n)}!${note}`;
           },
         });
@@ -321,7 +329,7 @@
             if (wrongs === 1) {
               if (type === 'digit-qty') {
                 const belly = (n === 6 && item.value === 9) || (n === 9 && item.value === 6) ? ' ' + BELLY : '';
-                await ctx.say(n === 0 ? 'Das ist die Null. Null heißt: gar nichts.' : `Das ist die ${NW(n)}.${belly} Such das Bild mit ${nw(n)}.`);
+                await ctx.say(n === 0 ? 'Das ist die Null. Null heißt: gar nichts.' : `Das ist die ${NW(n)}.${belly} Such das Bild, auf dem genau ${n === 1 ? 'eins ist' : nw(n) + ' sind'}.`);
               } else {
                 await ctx.say(n === 0 ? 'Wir suchen null – gar nichts.' : `Wir suchen ${nw(n)}.`);
               }

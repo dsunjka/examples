@@ -195,10 +195,12 @@
       /* ---------- Ansage ---------- */
       let q;
       if (showShadow) {
-        ctx.setInstruction('Wem gehört dieser Schatten? Tippe auf das passende Bild.');
+        // „Wem?“ nur bei Tieren – bei Dingen fragt man „Was ist das für ein Schatten?“
+        const ask = target.kind === 'tier' ? 'Wem gehört dieser Schatten?' : 'Was ist das für ein Schatten?';
+        ctx.setInstruction(`${ask} Tippe auf das passende Bild.`);
         q = ctx.index === 0
-          ? 'Schau dir den Schatten genau an. Wem gehört dieser Schatten? Tippe auf das passende Bild.'
-          : U.pick(['Wem gehört dieser Schatten?', 'Wem gehört dieser Schatten? Schau genau hin!', 'Zu welchem Bild passt der Schatten?']);
+          ? `Schau dir den Schatten genau an. ${ask} Tippe auf das passende Bild.`
+          : U.pick([ask, `${ask} Schau genau hin!`, 'Zu welchem Bild passt der Schatten?']);
       } else if (!mirrorMode) {
         q = `Das ist ${D.ein(w)}. Welcher Schatten gehört ${target.zu}?`;
         ctx.setInstruction(q);
@@ -220,7 +222,9 @@
         wrongSay: (it) => {
           if (ctx.wrongCount >= 1) return ''; // beim 2. Fehler übernimmt die Hilfe (hintSay)
           if (it.flipped) return 'Fast! Dieser Schatten ist wie im Spiegel verdreht. Schau genau, in welche Richtung das Bild zeigt.';
-          return `Hmm, schau genau: ${question(target)}`;
+          // informativ: sagen, was das Angetippte ist, und das Merkmal des Ziels nennen
+          if (showShadow) return `Hmm, das ist ${D.ein(it.motif.word)}. Schau genau: ${question(target)}`;
+          return `Hmm, dieser Schatten gehört ${it.motif.zu}. ${D.Art(w)} ${target.f}.`;
         },
         hintSay: () => {
           if (showShadow) return `Schau, hier! Das ist ${D.art(w)}. ${insight(target)}`;
@@ -233,7 +237,13 @@
           else tile.classList.add('sch-reveal');
         },
         correctSay: () => {
-          if (mirrorMode) return 'Richtig! Dieser Schatten passt genau – sogar die Richtung stimmt!';
+          if (mirrorMode) {
+            return U.pick([
+              'Richtig! Dieser Schatten passt genau, sogar die Richtung stimmt!',
+              `Super! Form und Richtung stimmen. ${insight(target)}`,
+              'Genau! Der Schatten zeigt in dieselbe Richtung wie das Bild.',
+            ]);
+          }
           return `Richtig! ${showShadow ? 'Der' : 'Dieser'} Schatten gehört ${target.zu}. ${insight(target)}`;
         },
       });

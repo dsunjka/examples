@@ -217,13 +217,16 @@
         aria: chantName(e),
       }));
       if (s > 0) ctx.instruct('Und was kommt danach?');
+      // Fehler zählen je Platz (ctx.wrongCount zählt über die ganze Aufgabe)
+      const base = ctx.wrongCount;
       await ctx.choices(items, {
         container: choiceBox,
         className: 'muster-opts',
         praise: true,
+        hintAfter: base + 2,
         wrongSay: (it) => `Hmm, ${defName(it.e)} passt hier nicht. Schau noch mal!`,
         onWrong: async (it, tile, n) => {
-          if (n >= 2 && !hinted) {
+          if (n - base >= 2 && !hinted) {
             hinted = true;
             await showUnits(ctx, cells, seq, unit.length, holes.slice(s), gapMode, q);
           }
@@ -279,9 +282,9 @@
     ctx.stage.appendChild(choiceBox);
 
     const thing = kind === 'tower' ? 'Türme' : 'Perlenstäbe';
-    ctx.instruct(grow
-      ? `Schau dir die ${thing} an. Sie werden immer größer. Welcher kommt als Nächstes?`
-      : `Schau dir die ${thing} an. Sie werden immer kleiner. Welcher kommt als Nächstes?`);
+    // Türme werden höher/niedriger, Perlenstäbe länger/kürzer
+    const how = kind === 'tower' ? (grow ? 'höher' : 'niedriger') : (grow ? 'länger' : 'kürzer');
+    ctx.instruct(`Schau dir die ${thing} an. Sie werden immer ${how}. Welcher kommt als Nächstes?`);
 
     const optsN = U.uniqueBy([answer - 1, answer, answer + 1].filter((n) => n >= 1), (n) => n);
     if (optsN.length < 3) optsN.push(answer + 2);

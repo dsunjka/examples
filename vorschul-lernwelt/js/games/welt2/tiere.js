@@ -71,10 +71,10 @@
     { id: 'maus', s: 'Piep piep', key: 'piep' },
     { id: 'kueken', s: 'Piep piep', key: 'piep' },
     { id: 'elefant', s: 'Törööö', key: 'toeroe' },
-    { id: 'schlange', s: 'Zischhh', key: 'zisch' },
+    { id: 'schlange', s: 'Zisch zisch', key: 'zisch' },
     { id: 'taube', s: 'Gurr gurr', key: 'gurr' },
-    { id: 'wolf', s: 'Auuuuh', key: 'auuh' },
-    { id: 'loewe', s: 'Roaaar', key: 'roar' },
+    { id: 'wolf', s: 'Auuu', key: 'auuh' },
+    { id: 'loewe', s: 'Roar', key: 'roar' },
   ];
 
   async function taskSounds(ctx) {
@@ -130,7 +130,7 @@
     let q;
     let right;
     if (b.change) {
-      q = `${indef(b)} ${b.w} wird später zu einem Tier. Zu welchem Tier?`;
+      q = `${indef(b)} ${b.w} verwandelt sich, wenn sie groß wird. Welches Tier wird aus ihr?`;
       right = `Richtig! Aus der ${b.w} wird ${b.adult === 'frosch' ? 'ein Frosch' : 'ein Schmetterling'}.`;
     } else {
       q = `${indef(b)} ${b.w} ist ein Tierkind. Zu welchem Tier gehört es?`;
@@ -143,7 +143,7 @@
       correctSay: right,
       wrongSay: (it) => {
         const kid = babyOf(it.value);
-        if (!kid) return `Das ist ${nom(it.value)}. Probier ein anderes Tier!`;
+        if (!kid) return `Nein, ${b.a} ${b.w} ist nicht das Kind ${ADULTS[it.value]}. Probier ein anderes Tier!`;
         if (kid.change) return `Nein, ${nom(it.value)} war vorher eine ${kid.w}.`;
         return `Nein, das Kind ${ADULTS[it.value]} heißt ${kid.w}.`;
       },
@@ -157,27 +157,28 @@
   const HOMES = [
     { id: 'kuh', h: 'hof' }, { id: 'schwein', h: 'hof' }, { id: 'schaf', h: 'hof' }, { id: 'huhn', h: 'hof' },
     { id: 'pferd', h: 'hof' }, { id: 'hahn', h: 'hof' },
-    { id: 'fuchs', h: 'wald' }, { id: 'igel', h: 'wald' }, { id: 'eichhoernchen', h: 'wald' }, { id: 'hirsch', h: 'wald' },
-    { id: 'wildschwein', h: 'wald' }, { id: 'eule', h: 'wald' },
-    { id: 'wal', h: 'meer', fact: 'Er ist aber kein Fisch – er kommt nach oben und atmet Luft, so wie wir.' },
+    { id: 'fuchs', h: 'wald' }, { id: 'igel', h: 'wald', not: ['hof'] /* Igel leben auch in Gärten */ }, { id: 'eichhoernchen', h: 'wald' }, { id: 'hirsch', h: 'wald' },
+    { id: 'wildschwein', h: 'wald' }, { id: 'eule', h: 'wald', not: ['hof'] /* Schleiereulen brüten in Scheunen */ },
+    { id: 'wal', h: 'meer', not: ['eis'], fact: 'Er ist aber kein Fisch – er kommt nach oben und atmet Luft, so wie wir.' },
     { id: 'delfin', h: 'meer', fact: 'Delfine atmen Luft und spielen gern in den Wellen.' },
     { id: 'hai', h: 'meer' }, { id: 'krake', h: 'meer', fact: 'Er hat acht Arme.' }, { id: 'tropenfisch', h: 'meer' },
     { id: 'affe', h: 'dschungel' }, { id: 'papagei', h: 'dschungel' },
     { id: 'gorilla', h: 'dschungel' }, { id: 'orang', h: 'dschungel' },
     { id: 'faultier', h: 'dschungel', fact: 'Es hängt fast den ganzen Tag gemütlich im Baum.' },
     { id: 'kamel', h: 'wueste', fact: 'Es kann lange ohne Wasser auskommen.' },
-    { id: 'pinguin', h: 'eis', fact: 'Pinguine können nicht fliegen, aber super schwimmen.' },
+    { id: 'pinguin', h: 'eis', not: ['meer'] /* Pinguine jagen im Meer */, fact: 'Pinguine können nicht fliegen, aber super schwimmen.' },
   ];
 
   async function taskHomes(ctx) {
     const t = U.pickFresh('w2-tiere-heim', HOMES, 8, (x) => x.id);
     const home = W.habitat(t.h);
-    const others = U.sample(W.HABITATS.filter((h) => h.id !== t.h), ctx.level >= 4 ? 3 : 2);
+    const others = U.sample(W.HABITATS.filter((h) => h.id !== t.h && !(t.not || []).includes(h.id)), ctx.level >= 4 ? 3 : 2);
     ctx.stage.appendChild(el('div.prompt-box.w2-prompt', U.emoji(emo(t.id), 'big-emoji')));
     ctx.instruct(`Wo lebt ${nom(t.id)}?`);
     const items = [home, ...others].map((h) => ({
       content: W.sceneTile(W.habitatScene(h.id), h.label || h.name),
       say: h.name,
+      value: h,
       correct: h.id === t.h,
       className: 'w2-scene-tile',
     }));
@@ -185,6 +186,7 @@
       sayButton: true,
       nameFirst: ctx.index === 0,
       correctSay: `Richtig! ${Nom(t.id)} lebt ${home.dat}.${t.fact ? ' ' + t.fact : ''}`,
+      wrongSay: (it) => `Das ist ${it.value.nom}. Da lebt ${nom(t.id)} nicht.`,
       hintSay: `${Nom(t.id)} lebt ${home.dat}. Schau, hier!`,
     });
   }
@@ -199,7 +201,7 @@
       yes: ['eule', 'papagei', 'taube', 'adler', 'biene', 'schmetterling', 'marienkaefer', 'fledermaus'],
       no: ['hund', 'katze', 'kuh', 'schwein', 'pinguin', 'elefant', 'igel', 'pferd', 'giraffe', 'schildkroete', 'hase'],
       explain: { pinguin: 'Der Pinguin ist ein Vogel, aber fliegen kann er nicht. Dafür schwimmt er super!' },
-      facts: { fledermaus: 'Die Fledermaus ist kein Vogel, aber sie kann fliegen.' },
+      facts: { fledermaus: 'Sie ist aber kein Vogel – sie hat ein Fell.' },
     },
     {
       id: 'eier', phrase: 'legt Eier', neg: 'legt keine Eier',
@@ -284,7 +286,7 @@
     });
   }
   /** Symbol für die Eigenschaft im Aufgabenkasten (zeigt die Frage, nicht die Antwort). */
-  const PROP_ICON = { fliegen: '✈️', eier: '🥚', panzer: '🛡️', wasser: '🌊', stacheln: '🌵', ruessel: '👃', hals: '📏', achtbeine: '8️⃣', federn: null };
+  const PROP_ICON = { fliegen: '✈️', eier: '🥚', panzer: '🛡️', wasser: '🌊', stacheln: '🌵', ruessel: '👃', hals: '📏', achtbeine: '8️⃣', federn: '🪶' };
 
   LT.registerGame({
     id: 'tiere',

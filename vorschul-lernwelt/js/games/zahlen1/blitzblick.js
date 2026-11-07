@@ -51,7 +51,7 @@
     3: 'Drei Punkte in einer schrägen Reihe.',
     4: 'In jeder Ecke ein Punkt – vier Ecken, vier Punkte.',
     5: 'Vier Ecken und einer in der Mitte. Vier und eins sind fünf.',
-    6: 'Zwei Reihen mit je drei Punkten. Drei und drei sind sechs.',
+    6: 'Zweimal drei Punkte. Drei und drei sind sechs.',
   };
   function frameSay(n) {
     if (n === 1) return 'Ein Punkt in der oberen Reihe.';
@@ -117,7 +117,9 @@
       const cfg = LEVELS[ctx.level] || LEVELS[1];
       const kind = cfg.kinds.length > 1 ? U.pickFresh('bb-kind', cfg.kinds, 1) : cfg.kinds[0];
       const [lo, hi] = rangeFor(kind, ctx.level);
-      const n = U.pickFresh(`bb-n-${ctx.level}-${kind}`, U.range(lo, hi), Math.min(3, hi - lo));
+      // keine direkte Wiederholung, aber auch keine vorhersagbare Reihenfolge:
+      // nur etwa die Hälfte der möglichen Zahlen sperren (bei 1–4 also 2, nicht 3).
+      const n = U.pickFresh(`bb-n-${ctx.level}-${kind}`, U.range(lo, hi), Math.min(3, Math.floor((hi - lo + 1) / 2)));
       const pat = buildPattern(kind, n);
       const showMs = cfg.show;
 

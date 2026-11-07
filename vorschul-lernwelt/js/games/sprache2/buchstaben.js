@@ -98,21 +98,21 @@
     F: 'Das F hat zwei Arme: oben und in der Mitte.',
     H: 'Das H sieht aus wie eine Leiter mit einer Sprosse.',
     L: 'Das L hat einen Strich und unten einen Fuß.',
-    O: 'Das O ist ein runder Kreis, ganz geschlossen.',
+    O: 'Das O ist rund und ganz geschlossen.',
     Q: 'Das Q ist ein Kreis mit einem kleinen Strich unten.',
     C: 'Das C ist ein Kreis, der rechts offen ist.',
     G: 'Das G sieht aus wie ein C mit einem kleinen Strich.',
-    n: 'Das kleine N hat oben einen Bogen.',
+    n: 'Das kleine N hat oben nur einen Bogen.',
     u: 'Das kleine U hat unten einen Bogen.',
     m: 'Das kleine M hat zwei Bögen.',
-    h: 'Das kleine H hat einen langen Strich nach oben.',
+    h: 'Das kleine H hat einen langen Strich und daneben einen Bogen.',
     P: 'Das P hat oben einen Bauch.',
     R: 'Das R hat oben einen Bauch und unten ein Bein.',
     B: 'Das B hat zwei Bäuche.',
     D: 'Das D hat einen großen Bauch.',
-    i: 'Das kleine I hat einen Punkt.',
+    i: 'Das kleine I ist ein kurzer Strich mit einem Punkt.',
     j: 'Das kleine J hat einen Punkt und unten einen Haken.',
-    l: 'Das kleine L ist ein langer Strich.',
+    l: 'Das kleine L ist ein langer Strich ohne Punkt.',
     t: 'Das kleine T hat einen Querstrich, wie ein Kreuz.',
   };
 
@@ -162,6 +162,8 @@
     ctx.instruct(`Wo ist das ${L} wie ${entry.w}?`);
     await ctx.choices([letterItem(L, true), ...others.map((x) => letterItem(x, false))], {
       hintAfter: 2,
+      // informativ: den gewählten Buchstaben benennen und das Ziel wiederholen
+      wrongSay: (item) => `Das ist das ${item.value} wie ${S2.abc(item.value).w}. Wir suchen das ${L} wie ${entry.w}.`,
       hintSay: `Hier ist das ${L}. ${L} wie ${entry.w}.`,
       correctSay: `Richtig! ${L} wie ${entry.w}.`,
       onCorrect: () => fillSlot(slot, L),
@@ -189,6 +191,7 @@
     ctx.instruct(`Das ist das ${shownWord} ${L} wie ${entry.w}. Wo ist das ${sizeWord} ${L}?`);
     await ctx.choices([letterItem(target, true), ...others.map((x) => letterItem(x, false))], {
       hintAfter: 2,
+      wrongSay: (item) => `Das ist das ${S2.isLower(item.value) ? 'kleine' : 'große'} ${S2.upper(item.value)}. Wir suchen das ${sizeWord} ${L}.`,
       hintSay: `Hier ist das ${sizeWord} ${L}.`,
       correctSay: `Richtig! Das große ${L} und das kleine ${L} gehören zusammen.`,
       onCorrect: () => {
@@ -211,6 +214,7 @@
     ctx.instruct(`Hör gut zu: ${word.w}. Mit welchem Buchstaben fängt ${word.w} an?`);
     await ctx.choices([letterItem(L, true), ...others.map((x) => letterItem(x, false))], {
       hintAfter: 2,
+      wrongSay: (item) => `Das ist das ${item.value} wie ${S2.abc(item.value).w}.`,
       correctSay: `Richtig! ${word.w} fängt mit ${L} an.`,
       onWrong: async (item, tile, n) => {
         if (n === 1) {
@@ -290,6 +294,7 @@
     ctx.instruct(`Wo ist ${label} wie ${entry.w}?`);
     await ctx.choices(set.letters.map((x) => letterItem(x, x === target)), {
       hintAfter: 2,
+      wrongSay: (item) => `Das ist ${S2.isLower(item.value) ? 'das kleine' : 'das'} ${S2.upper(item.value)}.`,
       hintSay: `Hier ist ${label}.`,
       correctSay: `Richtig! ${U.cap(label)} wie ${entry.w}.`,
       onWrong: async (item, tile, n) => {
@@ -330,7 +335,7 @@
         abcIntroDone = true;
         abcBtn.classList.add('pulse');
         ctx.timeout(() => abcBtn.classList.remove('pulse'), 6000);
-        await ctx.say('Unten rechts ist dein ABC. Da kannst du alle Buchstaben entdecken.');
+        await ctx.say('Schau mal, der Knopf, der jetzt leuchtet, ist dein ABC. Da kannst du alle Buchstaben entdecken.');
         if (!ctx.active) return;
       }
       const lv = ctx.level;

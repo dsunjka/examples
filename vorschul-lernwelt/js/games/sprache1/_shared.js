@@ -19,6 +19,7 @@
      S.arcRow(n)          n Silbenbögen (Symbol)
      S.speakSyllables()   Silben einzeln und deutlich getrennt vorsprechen
      S.joinSyl(silben)    „ba – na – ne“ (Text für die Sprachausgabe)
+     S.spokenSyls(silben) Sprechform der Silben (inkl. Lehnwort-Ausnahmen)
      S.silben(n)          „eine Silbe“ / „drei Silben“
      S.clap()             synthetischer Klatsch-Ton (Web Audio)
      S.robotSVG()         Robo, der Roboter (eigenes SVG)
@@ -302,14 +303,28 @@
     if (i > 0 && t.endsWith('y')) t = t.slice(0, -1) + 'i';
     return t;
   };
+  /* Lehnwörter, deren Silben die Vorlesestimme nach deutschen Regeln falsch
+     liest (Muffin = „Maffin“, Handy = „Händi“ …): Aussprache je Silbe. */
+  const SPOKEN = {
+    'Han-dy': ['hän', 'di'],
+    'Muf-fin': ['maf', 'fin'],
+    'Do-nut': ['do', 'nat'],
+    'Ham-bur-ger': ['häm', 'bör', 'ger'],
+    'Bon-bon': ['bong', 'bong'],
+    'Sa-xo-fon': ['sa', 'kso', 'fon'],
+  };
+  /** Sprechform aller Silben eines Wortes (Ausnahmeliste, sonst sylSpeak). */
+  S.spokenSyls = (syls) => SPOKEN[syls.join('-')] || syls.map((s, i) => S.sylSpeak(s, i));
   /** „ba – na – ne“ (Gedankenstrich = hörbare Pause in der Vorlesestimme) */
-  S.joinSyl = (syls, sep = ' – ') => syls.map((s, i) => S.sylSpeak(s, i)).join(sep);
+  S.joinSyl = (syls, sep = ' – ') => S.spokenSyls(syls).join(sep);
   /** „eine Silbe“, „drei Silben“ */
   S.silben = (n) => (n === 1 ? 'eine Silbe' : `${U.numberWord(n)} Silben`);
   /** „mit einer Silbe“, „mit drei Silben“ */
   S.mitSilben = (n) => (n === 1 ? 'mit einer Silbe' : `mit ${U.numberWord(n)} Silben`);
   /** „die Banane“ */
   S.withArticle = (x) => `${x.a} ${x.w}`;
+  /** Akkusativ: „den Schlüssel“, „die Banane“, „das Auto“ */
+  S.withArticleAcc = (x) => `${x.a === 'der' ? 'den' : x.a} ${x.w}`;
   /** Robo-Stimme: tiefer und etwas langsamer */
   S.robotVoice = () => ({ pitch: 0.55, rate: Math.max(0.55, (LT.speech.rate || 0.9) * 0.82) });
 
@@ -319,11 +334,12 @@
    */
   S.speakSyllables = async function (ctx, syls, opts = {}) {
     const rate = opts.rate || Math.max(0.6, (LT.speech.rate || 0.9) * 0.85);
+    const spoken = S.spokenSyls(syls);
     for (let i = 0; i < syls.length; i++) {
       if (!ctx.active) return;
       if (opts.onEach) opts.onEach(i);
       if (opts.clap !== false) S.clap();
-      await ctx.say(S.sylSpeak(syls[i], i), { rate, pitch: opts.pitch });
+      await ctx.say(spoken[i], { rate, pitch: opts.pitch });
       await ctx.sleep(opts.gap == null ? 260 : opts.gap);
     }
     if (opts.onEach) opts.onEach(-1);
@@ -338,7 +354,7 @@
   S.card = function (word, { label = true, speak = true, cls = '' } = {}) {
     const pic = U.emoji(word.e, 'big-emoji s1-card-pic');
     const lab = label ? el('div.s1-card-word', word.w) : null;
-    const card = el('div.prompt-box.s1-card' + (cls ? '.' + cls.split(' ').join('.') : ''), pic, lab);
+    const card = el('div.prompt-box.s1-card' + (label ? '' : '.s1-nolabel') + (cls ? '.' + cls.split(' ').join('.') : ''), pic, lab);
     if (speak) {
       const b = LT.ui.speakButton(() => word.w, { cls: 's1-card-say' });
       b.setAttribute('aria-label', word.w + ' anhören');

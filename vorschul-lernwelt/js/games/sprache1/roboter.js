@@ -144,7 +144,8 @@
       const { t, dis, mode } = buildTask(ctx.level);
       const syls = mode === 'start' ? [t.s[0]] : t.s;
       const shown = mode === 'start' ? `${t.s[0]} …` : syls.join(' … '); // Anzeige
-      const spoken = mode === 'start' ? `${S.sylSpeak(t.s[0], 0)} …` : S.joinSyl(syls, ' … '); // Sprachausgabe
+      const voiced = S.spokenSyls(t.s); // Sprechform aller Silben
+      const spoken = mode === 'start' ? `${voiced[0]} …` : S.joinSyl(syls, ' … '); // Sprachausgabe
 
       /* --- Bühne: Robo + Sprechblase, darunter die Bilder --- */
       const robo = el('button.s1-robo', { type: 'button', 'aria-label': 'Robo – nochmal hören', title: 'Robo – nochmal hören', html: S.robotSVG() });
@@ -178,7 +179,7 @@
           if (i === 0) U.clear(balloon);
           balloon.appendChild(el('span.s1-chip', mode === 'start' ? shown : syls[i]));
           LT.ui.animate(robo, 's1-beat');
-          await ctx.say(S.sylSpeak(syls[i], i), S.robotVoice());
+          await ctx.say(voiced[i], S.robotVoice());
           await ctx.sleep(mode === 'start' ? 150 : 380);
         }
         robo.classList.remove('talking');
@@ -187,7 +188,7 @@
       }
       ctx.listen(robo, 'click', () => roboSpeak());
 
-      const startOf = (x) => S.sylSpeak(x.s[0], 0);
+      const startOf = (x) => S.spokenSyls(x.s)[0];
       const items = [t].concat(dis).map((x) => ({ content: x.e, say: x.w, correct: x === t, x }));
       const lock = S.lock(ctx, box);
       const p = ctx.choices(items, {
@@ -197,7 +198,7 @@
         className: items.length === 4 ? 's1-grid4' : '',
         correctSay: mode === 'start'
           ? () => `Richtig! ${t.w} fängt mit ${startOf(t)} an.`
-          : () => S.vary('robo-ok', [`Richtig! ${S.joinSyl(t.s)}: ${t.w}!`, `Genau! Robo meint ${S.withArticle(t)}.`]),
+          : () => S.vary('robo-ok', [`Richtig! ${S.joinSyl(t.s)}: ${t.w}!`, `Genau! Robo meint ${S.withArticleAcc(t)}.`]),
         wrongSay: mode === 'start'
           ? (it) => `${it.x.w} fängt mit ${startOf(it.x)} an. Hör noch mal, was Robo sagt.`
           : (it) => `Das ist ${S.withArticle(it.x)}. Hör noch mal, was Robo sagt.`,

@@ -230,8 +230,9 @@
       const question = holes === 1
         ? `${rule} ${kind.which} fehlt? Tippe unten das richtige Bild an.`
         : `${rule} Fülle die leeren Felder! Tippe unten das passende Bild an.`;
-      // Bilder benennen (Palette leuchtet nacheinander)
-      if (ctx.index === 0 || ctx.level <= 2) {
+      // Bilder benennen (Palette leuchtet nacheinander) – jede Aufgabe hat einen
+      // neuen Bildersatz, deshalb immer (das Kind braucht die Wörter für Flos Erklärungen)
+      {
         for (const b of palBtns) {
           if (!ctx.active) return;
           b.classList.add('speaking');
@@ -277,7 +278,9 @@
             sel = null;
             const left = empties().length;
             if (!left) {
-              await ctx.correct(board, { say: `Super! Jetzt kommt in jeder Reihe und jeder Spalte ${kind.every} genau einmal vor.` });
+              await ctx.correct(board, { say: n === 4
+                ? `Super! Jetzt kommt in jeder Reihe, jeder Spalte und jedem Kästchen ${kind.every} genau einmal vor.`
+                : `Super! Jetzt kommt in jeder Reihe und jeder Spalte ${kind.every} genau einmal vor.` });
               done();
               return;
             }

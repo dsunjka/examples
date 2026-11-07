@@ -11,7 +11,7 @@
   .game-passt-nicht .stage,
   .game-schatten .stage,
   .game-was-fehlt .stage {
-    padding-bottom: calc(var(--gap) + 116px);
+    padding-bottom: calc(var(--gap) + 128px);
   }
 }
 
@@ -19,6 +19,8 @@
 .d1-shadow {
   filter: brightness(0);
   opacity: 0.9;
+  /* Emoji-Glyphen ragen über die Zeilenbox hinaus; der Filter würde sie dort abschneiden */
+  padding: 0.08em;
 }
 .d1-mirror { transform: scaleX(-1); }
 .d1-spacer { display: block; }
@@ -180,7 +182,7 @@
     linear-gradient(180deg, #fffdf5, #f3e9cf);
   box-shadow: inset 0 -6px 0 rgba(160, 130, 70, 0.12), var(--shadow);
 }
-.sch-prompt-pic { font-size: clamp(80px, 17vmin, 168px); }
+.sch-prompt-pic { font-size: clamp(80px, min(24vw, 17vh), 168px); }
 /* Aha-Effekt: Schatten färbt sich nach der Lösung ein */
 .sch-reveal .d1-shadow { filter: none; opacity: 1; }
 .sch-choices .tile { font-size: calc(var(--tile) * 0.6); }
