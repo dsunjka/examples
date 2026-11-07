@@ -1,1 +1,171 @@
-/* Styles der Spielgruppe 'welt1'. */
+/* ==========================================================================
+   Styles der Spielgruppe 'welt1' (Raum-Lage, Körper, Gefühle, Verkehr)
+   Präfixe: .w1- (gemeinsam), .raum-, .koerper-, .gef-, .verk-
+   ========================================================================== */
+
+/* ---------- Gemeinsam ---------- */
+.w1-emo { font-family: var(--emoji); }
+.w1-prompt {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: clamp(8px, 1.8vmin, 16px) clamp(14px, 3vmin, 28px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(6px, 1.4vmin, 14px);
+  max-width: 100%;
+  text-align: center;
+}
+.w1-prompt .w1-q { font-size: clamp(18px, 3.2vmin, 30px); font-weight: 700; }
+.w1-prompt .emoji { font-size: clamp(34px, 7vmin, 64px); }
+
+/* Hervorhebung als Hilfe (auf SVG-Zonen und HTML-Elementen) */
+@keyframes w1-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .45; } }
+@keyframes w1-shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+/* ---------- Raum-Lage ---------- */
+.game-raumlage .stage { gap: clamp(10px, 2.2vmin, 22px); }
+.raum-prompt {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: clamp(6px, 1.4vmin, 14px) clamp(14px, 3vmin, 28px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px clamp(10px, 2vmin, 18px);
+  max-width: 100%;
+}
+.raum-word {
+  font-size: clamp(30px, 6.4vmin, 56px);
+  font-weight: 700;
+  color: #fff;
+  background: var(--area);
+  border-radius: 18px;
+  padding: 2px 18px 6px;
+  text-shadow: 0 2px 0 rgba(0, 0, 0, .15);
+}
+.raum-sentence { font-size: clamp(16px, 2.8vmin, 26px); font-weight: 700; color: var(--ink-soft); }
+.raum-arrow, .raum-who { font-size: clamp(34px, 6.4vmin, 56px); }
+.raum-arrow { animation: tile-hint 1.1s ease-in-out infinite; }
+
+.raum-choices { --rw: min(30vw, calc((100vh - 330px) * 1.4), 360px); gap: clamp(10px, 2vmin, 22px); }
+@media (orientation: portrait) {
+  .raum-choices { --rw: min(86vw, calc((100vh - 420px) / 3 * 1.4), 400px); flex-direction: column; flex-wrap: nowrap; }
+}
+@media (orientation: portrait) and (max-width: 520px) {
+  .raum-choices { --rw: min(88vw, calc((100vh - 330px) / 3 * 1.4)); gap: 10px; }
+}
+.tile.raum-tile {
+  width: var(--rw);
+  height: calc(var(--rw) * 0.7167);
+  padding: clamp(4px, 0.8vmin, 8px);
+  border-radius: clamp(14px, 2.4vmin, 24px);
+}
+.raum-scene, .raum-big-svg { width: 100%; height: 100%; display: flex; }
+.raum-svg { width: 100%; height: 100%; display: block; border-radius: clamp(10px, 1.8vmin, 18px); }
+
+.raum-big {
+  position: relative;
+  width: min(92vw, calc((100vh - 360px) * 1.395), 760px);
+  aspect-ratio: 240 / 172;
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 0;
+  overflow: hidden;
+}
+.raum-big .raum-svg { border-radius: 0; }
+.raum-zones { position: absolute; inset: 0; }
+.tile.raum-zone {
+  position: absolute;
+  width: auto;
+  height: auto;
+  min-width: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .55);
+  border: 4px dashed var(--area);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, .12);
+  padding: 0;
+}
+.tile.raum-zone .raum-ghost { font-size: min(7vmin, 52px); opacity: .32; filter: grayscale(.6); }
+.tile.raum-zone:active { transform: scale(.94); }
+.tile.raum-zone.is-correct { animation: none; }
+.raum-zones-done .tile { opacity: 0; transition: opacity .25s; }
+
+/* Hilfe/Feedback auf SVG-Trefferzonen (Körper u. a.) */
+.kz-g { cursor: pointer; }
+.kz-g.w1-hint .kz:not(.kz-line) { fill: rgba(255, 197, 51, .42); stroke: var(--gold); stroke-width: 3; animation: w1-pulse 1.1s ease-in-out infinite; }
+.kz-g.w1-hint .kz-line { stroke: rgba(255, 197, 51, .5); animation: w1-pulse 1.1s ease-in-out infinite; }
+.kz-g.w1-wrong .kz:not(.kz-line) { fill: rgba(255, 178, 107, .45); }
+.kz-g.w1-wrong .kz-line { stroke: rgba(255, 178, 107, .45); }
+.kz-g.w1-ok .kz:not(.kz-line) { fill: rgba(34, 178, 107, .35); stroke: var(--ok); stroke-width: 3; }
+.kz-g.w1-ok .kz-line { stroke: rgba(34, 178, 107, .4); }
+
+/* ---------- Mein Körper ---------- */
+.koerper-wrap {
+  background: var(--card);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow);
+  padding: clamp(6px, 1.4vmin, 14px);
+  display: flex;
+  min-height: 0;
+}
+.koerper-svg { display: block; touch-action: manipulation; }
+.koerper-figure { height: calc(100vh - var(--topbar-h) - 150px); width: auto; max-width: 80vw; }
+.koerper-face { height: calc(100vh - var(--topbar-h) - 160px); width: auto; max-width: 84vw; max-height: 620px; }
+@media (orientation: landscape) {
+  .stage.koerper-stage { flex-direction: row; gap: clamp(16px, 4vw, 60px); }
+  .koerper-prompt { max-width: 34vw; flex-direction: column; }
+}
+@media (orientation: portrait) {
+  .koerper-figure { height: calc(100vh - var(--topbar-h) - 280px); max-height: 820px; }
+  .koerper-face { width: min(84vw, calc(100vh - var(--topbar-h) - 260px)); height: auto; }
+}
+.koerper-senses .tile .emoji { font-size: 1.1em; }
+
+/* ---------- Gefühle ---------- */
+.gef-face { width: 100%; height: 100%; display: block; }
+.tile.gef-tile { padding: clamp(6px, 1.2vmin, 12px); }
+.gef-face-model { width: clamp(70px, 13vmin, 120px); height: clamp(70px, 13vmin, 120px); flex: 0 0 auto; }
+.gef-story { max-width: min(900px, 100%); flex-wrap: nowrap; }
+.gef-story .w1-q { text-align: left; line-height: 1.25; }
+.gef-scene { display: flex; gap: 4px; flex: 0 0 auto; }
+.gef-scene .emoji { font-size: clamp(36px, 7.5vmin, 66px); }
+@media (max-width: 520px) {
+  .gef-story { flex-wrap: wrap; }
+  .gef-story .w1-q { text-align: center; font-size: 17px; }
+}
+.tile.gef-tile.large { --tile: clamp(120px, min(28vmin, 40vw), 240px); }
+
+/* ---------- Sicher unterwegs ---------- */
+.verk-ampel { display: block; width: 100%; height: 100%; }
+.tile.verk-ampel-tile { width: clamp(110px, min(22vw, 20vh), 190px); height: calc(clamp(110px, min(22vw, 20vh), 190px) * 1.9); padding: 10px; }
+.verk-ampel-row { display: flex; align-items: center; justify-content: center; gap: clamp(12px, 3vmin, 30px); }
+.verk-ampel-big { width: auto; height: clamp(200px, calc(100vh - 430px), 420px); }
+.verk-empty { width: min(40vw, 320px); background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 6px; }
+.verk-mini-street { display: block; width: 100%; height: auto; border-radius: 16px; }
+@media (orientation: portrait) {
+  .verk-ampel-row { flex-direction: column; }
+  .verk-ampel-row.with-street .verk-ampel-big { height: clamp(170px, calc(100vh - 640px), 420px); }
+  .verk-empty { width: min(70vw, 340px); }
+}
+.verk-go-choices .tile, .verk-arrows .tile { --tile: clamp(96px, 17vmin, 150px); }
+
+.verk-choices { --vw: min(42vw, calc((100vh - 330px) * 1.5), 470px); }
+@media (orientation: portrait) {
+  .verk-choices { --vw: min(88vw, calc((100vh - 400px) / 2 * 1.5), 470px); flex-direction: column; flex-wrap: nowrap; }
+}
+.tile.verk-tile { width: var(--vw); height: calc(var(--vw) / 1.5); padding: clamp(4px, .8vmin, 8px); }
+.verk-scene { display: block; width: 100%; height: 100%; border-radius: clamp(10px, 1.8vmin, 18px); }
+.verk-sign { display: block; width: 100%; height: 100%; }
+.tile.verk-sign-tile { padding: clamp(10px, 2vmin, 18px); }
+
+.stage.verk-cross-stage { gap: clamp(8px, 1.8vmin, 18px); }
+.verk-cross-wrap { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 6px; }
+.verk-cross { display: block; width: min(90vw, calc((100vh - 470px) * 1.5), 720px); height: auto; border-radius: 18px; }
+.verk-look { transition: opacity .3s; }
+.verk-bar { min-height: clamp(110px, 19vmin, 170px); display: flex; align-items: center; justify-content: center; }

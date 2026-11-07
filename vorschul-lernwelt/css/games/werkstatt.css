@@ -1,1 +1,254 @@
-/* Styles der Spielgruppe 'werkstatt'. */
+/* ==========================================================================
+   Styles der Spielgruppe 'werkstatt' (Malwerkstatt)
+   Präfixe: .spur-  (Nachspuren)  ·  .pv-  (Punkte verbinden)  ·  .mal-  (Ausmalen)
+   ========================================================================== */
+
+/* ---------- gemeinsam ---------- */
+.spur-board, .pv-board, .mal-board {
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  display: block;
+}
+
+/* ==========================================================================
+   NACHSPUREN
+   ========================================================================== */
+.stage.spur-stage { justify-content: stretch; }
+.spur-wrap {
+  align-self: stretch;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(8px, 1.8vmin, 16px);
+}
+.spur-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 2vmin, 16px);
+  max-width: 100%;
+}
+.spur-head {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  min-height: clamp(58px, 9vmin, 86px);
+  padding: 4px clamp(14px, 3vmin, 26px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(8px, 2vmin, 18px);
+  max-width: calc(100vw - 110px);
+  overflow: hidden;
+}
+.spur-help { flex: none; }
+.spur-area {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.spur-board {
+  background: #fff;
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow);
+  cursor: crosshair;
+}
+.spur-walk { font-size: clamp(30px, 6vmin, 52px); display: flex; align-items: center; gap: 10px; }
+.spur-arrow-txt { color: var(--ink-faint); font-weight: 700; font-size: .7em; }
+.spur-glyph {
+  font: 700 clamp(40px, 8vmin, 70px)/1 var(--font);
+  color: var(--area);
+  min-width: 1ch;
+  text-align: center;
+}
+.spur-anchor { font-size: clamp(32px, 6.4vmin, 56px); }
+.spur-word { font: 700 clamp(22px, 4.4vmin, 38px)/1 var(--font); color: var(--ink); }
+.spur-word b { color: var(--area); }
+.spur-dots { display: flex; flex-wrap: wrap; gap: 2px; max-width: 46vw; font-size: clamp(18px, 3.6vmin, 30px); align-items: center; }
+.spur-dots:empty { display: none; }
+.spur-zero { font: 700 clamp(18px, 3.2vmin, 26px) var(--font); color: var(--ink-soft); }
+.spur-strip { display: flex; gap: clamp(4px, 1vmin, 10px); flex-wrap: wrap; justify-content: center; }
+.spur-letter {
+  font: 700 clamp(26px, 5.4vmin, 46px)/1 var(--font);
+  color: var(--ink-faint);
+  min-width: 1.05em;
+  text-align: center;
+  padding: 4px 4px 6px;
+  border-radius: 12px;
+  border-bottom: 4px solid transparent;
+  transition: color .2s, background .2s, transform .2s;
+}
+.spur-letter.current { color: var(--ink); background: var(--area-soft); border-bottom-color: var(--area); transform: scale(1.08); }
+.spur-letter.done { color: var(--area); }
+.spur-strip-done .spur-letter { color: var(--ok); }
+
+/* SVG-Inhalte der Nachspur-Fläche (Einheiten = viewBox 0..100) */
+.spur-guides line { stroke: #c9cfe6; stroke-width: 0.5; }
+.spur-guides line.spur-mid { stroke-dasharray: 1.5 1.5; stroke: #dde1f0; }
+.spur-guides line.spur-base { stroke: #9aa3c8; stroke-width: 0.7; }
+.spur-band { fill: #f6f8ff; }
+.spur-road { fill: none; stroke: #fdf0c8; stroke-width: 12; stroke-linecap: round; stroke-linejoin: round; }
+.spur-dash { fill: none; stroke: #c9a032; stroke-width: 1.3; stroke-dasharray: 2.6 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.spur-road-dot { fill: #fdf0c8; }
+.spur-dash-dot { fill: none; stroke: #c9a032; stroke-width: 1; stroke-dasharray: 1.5 1.2; }
+.spur-done-path { fill: none; stroke: #f2a900; stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; transition: stroke .3s; }
+.spur-done-dot { fill: #f2a900; }
+.spur-board.is-finished .spur-done-path { stroke: #22b26b; }
+.spur-board.is-finished .spur-done-dot { fill: #22b26b; }
+.spur-ink-path { fill: none; stroke: #3b6fe0; stroke-width: 3.6; stroke-linecap: round; stroke-linejoin: round; opacity: .85; transition: opacity .6s; }
+.spur-ink-path.fade, .spur-demo-trail.fade { opacity: 0; }
+.spur-board.is-finished .spur-ink-path { opacity: .35; }
+.spur-badge circle { fill: #8a90b0; }
+.spur-badge text, .spur-start text {
+  fill: #fff; font: 700 4.4px var(--font); text-anchor: middle; dominant-baseline: central; pointer-events: none;
+}
+.spur-start circle { fill: #22b26b; stroke: #fff; stroke-width: 1.4; }
+.spur-start text { font-size: 5.4px; }
+.spur-start-pulse { pointer-events: none; }
+.spur-start-pulse > g > circle { animation: spur-breathe 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.spur-start-pulse.bump > g > circle, .spur-start-pulse.hint > g > circle { animation: spur-bump .5s ease-in-out 3; }
+.spur-start-pulse.hint > g > circle { stroke: #ffc533; stroke-width: 2.2; animation: spur-bump .7s ease-in-out infinite; }
+@keyframes spur-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+@keyframes spur-bump { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.5); } }
+.spur-arrow polygon { fill: #ff7a2f; stroke: #fff; stroke-width: 0.8; stroke-linejoin: round; }
+.spur-arrow { pointer-events: none; }
+.spur-emoji { font-family: var(--emoji); font-size: 12px; text-anchor: middle; dominant-baseline: central; pointer-events: none; }
+.spur-walker { transition: x .12s, y .12s; }
+.spur-demo circle { fill: rgba(255, 122, 47, .55); stroke: #ff7a2f; stroke-width: 0.8; }
+.spur-demo .spur-emoji { font-size: 10px; }
+.spur-demo { pointer-events: none; }
+.spur-demo-trail { fill: none; stroke: #ff7a2f; stroke-width: 2.6; stroke-dasharray: 1 2.2; stroke-linecap: round; opacity: .9; transition: opacity .6s; pointer-events: none; }
+
+/* ==========================================================================
+   PUNKTE VERBINDEN
+   ========================================================================== */
+.stage.pv-stage { justify-content: stretch; }
+.pv-wrap {
+  align-self: stretch;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(8px, 1.8vmin, 16px);
+}
+.pv-head {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--font);
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  min-height: clamp(64px, 9vmin, 86px);
+  min-width: clamp(140px, 22vmin, 200px);
+  padding: 4px clamp(16px, 3vmin, 28px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.pv-point { font-size: clamp(30px, 5.6vmin, 48px); }
+.pv-next-num { font: 700 clamp(40px, 7.4vmin, 64px)/1 var(--font); color: var(--area); min-width: 1.3em; text-align: center; }
+.pv-pic-emoji { font-size: clamp(34px, 6.4vmin, 56px); }
+.pv-pic-name { font: 700 clamp(24px, 4.6vmin, 40px)/1 var(--font); color: var(--ink); }
+.pv-head.solved { animation: pv-pop .5s ease-out; }
+@keyframes pv-pop { 0% { transform: scale(.8); } 60% { transform: scale(1.1); } 100% { transform: scale(1); } }
+.pv-area { flex: 1; min-height: 0; width: 100%; display: flex; align-items: center; justify-content: center; }
+.pv-board { background: #fff; border-radius: var(--radius-l); box-shadow: var(--shadow); cursor: pointer; }
+.pv-fill, .pv-decor { opacity: 0; transition: opacity .8s ease; }
+.pv-reveal .pv-fill, .pv-reveal .pv-decor { opacity: 1; }
+.pv-line { stroke: #2b2d42; stroke-width: 1.8; stroke-linecap: round; }
+.pv-reveal .pv-line { stroke-width: 2.2; }
+.pv-rubber { stroke: #f2a900; stroke-width: 1.4; stroke-dasharray: 2 2; stroke-linecap: round; opacity: 0; pointer-events: none; }
+.pv-rubber.on { opacity: 1; }
+.pv-hit { fill: transparent; }
+.pv-ring { fill: none; stroke: transparent; stroke-width: 1.2; }
+.pv-pt { fill: #2b2d42; }
+.pv-num { font: 700 5.2px var(--font); fill: #3d4160; text-anchor: middle; dominant-baseline: central; pointer-events: none; paint-order: stroke; stroke: #fff; stroke-width: 1.4px; }
+.pv-dot.first .pv-pt { fill: #22b26b; }
+.pv-dot.first .pv-ring { stroke: #22b26b; }
+.pv-dot.first .pv-num { fill: #1a8c53; }
+.pv-dot.done .pv-pt { fill: #f2a900; }
+.pv-dot.done .pv-num { fill: #b8bdd6; }
+.pv-dot.pv-hinted .pv-ring { stroke: #ffc533; stroke-width: 1.8; fill: rgba(255, 197, 51, .35); animation: pv-pulse .8s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes pv-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.6); } }
+.pv-reveal .pv-dots { opacity: 0; transition: opacity .8s; }
+
+/* ==========================================================================
+   AUSMALEN
+   ========================================================================== */
+.stage.mal-stage { justify-content: stretch; gap: clamp(8px, 1.8vmin, 16px); }
+/* Galerie */
+.mal-gallery-area { align-self: stretch; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; }
+.mal-gallery { display: grid; justify-content: center; align-content: center; }
+.mal-card {
+  appearance: none; border: 0; padding: 0; cursor: pointer; position: relative;
+  aspect-ratio: 1; width: 100%;
+  border-radius: var(--radius); background: #fff; box-shadow: var(--shadow); overflow: hidden;
+  transition: transform .15s;
+}
+.mal-card:active { transform: translateY(4px); box-shadow: var(--shadow-press); }
+.mal-card:focus-visible { outline: 4px solid #2b7bff; outline-offset: 3px; }
+.mal-thumb-svg { width: 100%; height: 100%; display: block; pointer-events: none; }
+.mal-card-badge {
+  position: absolute; right: 6px; top: 6px; width: 34px; height: 34px; border-radius: 50%;
+  background: var(--area); display: flex; align-items: center; justify-content: center; font-size: 18px;
+  box-shadow: 0 2px 0 rgba(0,0,0,.15);
+}
+.mal-gallery-actions { align-self: stretch; display: flex; justify-content: flex-end; }
+.mal-done { min-height: 64px; }
+
+/* Malfläche */
+.mal-editor {
+  align-self: stretch; flex: 1; min-height: 0; width: 100%;
+  display: flex; flex-direction: row; align-items: center; justify-content: center;
+  gap: clamp(10px, 2.4vmin, 24px);
+}
+.mal-area { flex: 1; min-width: 0; height: 100%; display: flex; align-items: center; justify-content: center; }
+.mal-board { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+.mal-side { flex: none; display: flex; flex-direction: column; align-items: center; gap: clamp(10px, 2vmin, 18px); }
+.mal-palette {
+  display: grid; grid-template-columns: repeat(3, var(--sws)); gap: clamp(6px, 1.2vmin, 10px);
+  --sws: clamp(64px, 8.4vmin, 76px);
+  background: var(--card); padding: clamp(8px, 1.4vmin, 12px); border-radius: var(--radius); box-shadow: var(--shadow);
+}
+.mal-swatch {
+  appearance: none; cursor: pointer; width: var(--sws); height: var(--sws); border-radius: 50%;
+  background: var(--sw); border: 4px solid rgba(0,0,0,.12); padding: 0;
+  display: flex; align-items: center; justify-content: center; font-size: calc(var(--sws) * .5);
+  transition: transform .15s, box-shadow .15s;
+}
+.mal-swatch.eraser { background: #fff; border-style: dashed; border-color: #b8bdd6; }
+.mal-swatch.selected { transform: scale(1.1); border-color: #fff; box-shadow: 0 0 0 4px var(--ink), 0 4px 10px rgba(0,0,0,.25); }
+.mal-swatch:focus-visible { outline: 4px solid #2b7bff; outline-offset: 3px; }
+.mal-actions { display: flex; align-items: center; justify-content: center; gap: clamp(8px, 1.6vmin, 14px); flex-wrap: wrap; }
+
+.mal-region { stroke: #2b2d42; stroke-width: 3; stroke-linejoin: round; cursor: pointer; transition: fill .25s; }
+.mal-bg { stroke: none; }
+.mal-deco { pointer-events: none; }
+.mal-deco path { stroke: #2b2d42; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.mal-splash { animation: mal-splash .35s ease-out; transform-box: fill-box; transform-origin: center; }
+@keyframes mal-splash { 0% { opacity: .55; } 100% { opacity: 1; } }
+.mal-confirm-pic { width: clamp(120px, 26vmin, 200px); margin: 0 auto 10px; border-radius: var(--radius-s); overflow: hidden; box-shadow: var(--shadow); }
+
+/* Hochformat: Palette unter dem Bild */
+@media (max-aspect-ratio: 1/1) {
+  .mal-editor { flex-direction: column; }
+  .mal-area { width: 100%; height: auto; flex: 1; min-height: 0; }
+  .mal-side { width: 100%; }
+  .mal-palette { grid-template-columns: repeat(7, var(--sws)); --sws: clamp(64px, 8.6vmin, 80px); }
+  .mal-actions { flex-wrap: nowrap; }
+}
+@media (max-aspect-ratio: 1/1) and (max-width: 600px) {
+  .mal-palette { grid-template-columns: repeat(5, var(--sws)); --sws: 60px; gap: 6px; padding: 7px; }
+}
