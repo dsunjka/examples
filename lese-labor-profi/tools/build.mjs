@@ -88,7 +88,8 @@ ${skripte}
 </body>
 </html>
 `;
-const ZIEL = MIT_TEST ? join(ROOT, 'tests', 'build') : join(ROOT, 'dist');
+const zielArg = process.argv.find((a) => a.startsWith('--ziel='));
+const ZIEL = zielArg ? zielArg.slice(7) : MIT_TEST ? join(ROOT, 'tests', 'build') : join(ROOT, 'dist');
 mkdirSync(ZIEL, { recursive: true });
 writeFileSync(join(ZIEL, 'lese-labor-profi.html'), standalone);
 writeFileSync(join(ZIEL, 'artifact.html'), fragment);

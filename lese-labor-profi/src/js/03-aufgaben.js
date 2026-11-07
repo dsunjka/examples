@@ -78,9 +78,14 @@ function bewerte(it, a) {
       const soll = it.optionen.map((o, i) => (o.richtig ? i : -1)).filter((i) => i >= 0);
       const tp = a.filter((i) => soll.includes(i)).length, fp = a.length - tp;
       if (tp === soll.length && fp === 0) return { status: 'richtig', tp, fp, n: soll.length, richtigAnz: tp, gesamt: soll.length };
-      return { status: tp > 0 && tp - fp >= 1 ? 'teilweise' : 'falsch', tp, fp, n: soll.length, richtigAnz: tp, gesamt: soll.length };
+      return { status: tp > 0 && tp - fp >= Math.ceil(soll.length / 2) ? 'teilweise' : 'falsch', tp, fp, n: soll.length, richtigAnz: tp, gesamt: soll.length };
     }
-    case 'matrix': return aus(it.aussagen.filter((s, z) => a[z] === (s.richtig ? 0 : 1)).length, it.aussagen.length);
+    case 'matrix': {
+      const n = it.aussagen.length, ok = it.aussagen.filter((s, z) => a[z] === (s.richtig ? 0 : 1)).length;
+      if (ok === n) return { status: 'richtig', richtigAnz: ok, gesamt: n };
+      const ueberall = new Set(a).size === 1; // überall dieselbe Spalte ist Raten
+      return { status: !ueberall && n >= 3 && ok >= n - 1 ? 'teilweise' : 'falsch', richtigAnz: ok, gesamt: n };
+    }
     case 'luecke': { const g = it.teile.filter((t) => t.wahl); return aus(g.filter((t, i) => a[i] === t.loesung).length, g.length); }
     case 'markieren': {
       const ziele = it.teile.map((t, k) => (t.ziel ? k : -1)).filter((k) => k >= 0);
@@ -88,7 +93,12 @@ function bewerte(it, a) {
       if (tp === ziele.length && fp === 0) return { status: 'richtig', tp, fp, n: ziele.length, richtigAnz: tp, gesamt: ziele.length };
       return { status: tp > 0 && tp - fp >= Math.ceil(ziele.length / 2) ? 'teilweise' : 'falsch', tp, fp, n: ziele.length, richtigAnz: tp, gesamt: ziele.length };
     }
-    case 'zuordnen': return aus(it.elemente.filter((e, i) => a[i] === e.g).length, it.elemente.length);
+    case 'zuordnen': {
+      const n = it.elemente.length, ok = it.elemente.filter((e, i) => a[i] === e.g).length;
+      if (ok === n) return { status: 'richtig', richtigAnz: ok, gesamt: n };
+      const ueberall = new Set(a.filter((g) => g >= 0)).size <= 1; // alles in eine Kiste ist Raten
+      return { status: !ueberall && ok >= Math.ceil(n * 0.75) ? 'teilweise' : 'falsch', richtigAnz: ok, gesamt: n };
+    }
     case 'reihenfolge': return aus(a.ordnung.filter((v, i) => v === i).length, a.ordnung.length);
     case 'eingabe': {
       const g = normEingabe(a), loes = (it.loesungen || []).map(normEingabe);
@@ -165,29 +175,42 @@ function renderAntwortflaeche(it, a, perm, modus, ui = {}, gesperrt = false) {
       }).join('')}</div>`;
     }
     case 'luecke': {
+      // Text in Wörter und Leerräume zerlegen; Lücken und angrenzende Wortteile bilden eine nicht trennbare Gruppe.
       let g = -1;
-      return `<p class="luecken-text">${it.teile.map((t) => {
-        if (!t.wahl) return rich(t.t || '');
+      const stuecke = [];
+      for (const t of it.teile) {
+        if (!t.wahl) { for (const s of String(t.t || '').split(/(\s+)/)) if (s) stuecke.push({ leer: /^\s+$/.test(s), html: rich(s) }); continue; }
         g++;
         const gi = g, wert = a ? a[gi] : null, order = (perm && perm.gaps && perm.gaps[gi]) || t.wahl.map((_, i) => i);
         const cls = L ? (wert === t.loesung ? 'ok' : 'nein') : wert == null ? 'leer' : '';
         const sel = `<select class="luecke ${cls}" data-act="lk" data-g="${gi}" aria-label="Lücke ${gi + 1}" ${L ? 'disabled' : ''}><option value="">…</option>${order.map((wi) => `<option value="${wi}" ${wert === wi ? 'selected' : ''}>${esc(t.wahl[wi])}</option>`).join('')}</select>`;
-        return sel + (L && wert !== t.loesung ? `<span class="luecke-loesung">→ ${esc(t.wahl[t.loesung])}</span>` : '');
-      }).join('')}</p>`;
+        stuecke.push({ leer: false, luecke: true, html: sel + (L && wert !== t.loesung ? `<span class="luecke-loesung">→ ${esc(t.wahl[t.loesung])}</span>` : '') });
+      }
+      let html = '', gruppe = [];
+      const raus = () => { if (gruppe.length) html += gruppe.some((x) => x.luecke) ? `<span class="wort-gruppe">${gruppe.map((x) => x.html).join('')}</span>` : gruppe.map((x) => x.html).join(''); gruppe = []; };
+      for (const s of stuecke) { if (s.leer) { raus(); html += s.html; } else gruppe.push(s); }
+      raus();
+      return `<p class="luecken-text">${html}</p>`;
     }
     case 'markieren': {
       const sel = new Set(a || []);
       let prev = '';
-      return `<p class="mark-text">${it.teile.map((t, k) => {
+      const gruppen = [];
+      it.teile.forEach((t, k) => {
         const txt = t.t || '';
-        const leer = k > 0 && !PUNKT_DAVOR.test(txt) && !KEIN_LEER_DANACH.test(prev) ? ' ' : '';
+        const leer = k > 0 && !PUNKT_DAVOR.test(txt) && !KEIN_LEER_DANACH.test(prev);
         prev = txt;
-        if (t.fix) return `${leer}<span class="fix-teil">${esc(txt)}</span>`;
-        const an = sel.has(k);
-        let cls = '';
-        if (L) cls = t.ziel && an ? 'ok' : !t.ziel && an ? 'nein' : t.ziel ? 'fehlt' : '';
-        return `${leer}<button type="button" class="tok ${cls}" data-act="tok" data-i="${k}" aria-pressed="${an}">${esc(txt)}</button>`;
-      }).join('')}</p>`;
+        let html;
+        if (t.fix) html = `<span class="fix-teil">${esc(txt)}</span>`;
+        else {
+          const an = sel.has(k);
+          let cls = txt.trim().length <= 1 ? 'tok-zeichen' : '';
+          if (L) cls += ' ' + (t.ziel && an ? 'ok' : !t.ziel && an ? 'nein' : t.ziel ? 'fehlt' : '');
+          html = `<button type="button" class="tok ${cls}" data-act="tok" data-i="${k}" aria-pressed="${an}">${esc(txt)}</button>`;
+        }
+        if (k === 0 || leer) gruppen.push([html]); else gruppen[gruppen.length - 1].push(html);
+      });
+      return `<p class="mark-text">${gruppen.map((g) => (g.length > 1 ? `<span class="mark-gruppe">${g.join('')}</span>` : g[0])).join(' ')}</p>`;
     }
     case 'zuordnen': {
       const order = (perm && perm.el) || it.elemente.map((_, i) => i);

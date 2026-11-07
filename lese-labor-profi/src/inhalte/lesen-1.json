@@ -560,7 +560,7 @@
       }
      ],
      "tipp": "Schreibe hinter jeden Vers einer Strophe einen Buchstaben. Verse, die sich reimen, bekommen den gleichen Buchstaben.",
-     "erklaerung": "In jeder Strophe reimt sich Vers 1 auf Vers 3 und Vers 2 auf Vers 4, zum Beispiel „Sohlen – weggestohlen“ und „sacht – gemacht“. Das ist ein Kreuzreim (abab)."
+     "erklaerung": "In jeder Strophe reimt sich der erste Vers auf den dritten und der zweite auf den vierten, zum Beispiel „Sohlen – weggestohlen“ und „sacht – gemacht“ in der ersten Strophe. Das ist ein Kreuzreim (abab)."
     }
    ]
   }

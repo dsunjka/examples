@@ -190,6 +190,152 @@ try {
     check(farben.every(([c, b]) => c !== 'rgb(255, 255, 255)' || b !== 'rgba(0, 0, 0, 0)'), 'Menüpunkte weiß auf transparentem (weißem) Grund');
     await page.context().close();
   }
+
+  /* ---------- Testrunde 2 ---------- */
+  console.log('• Prüfung: Zurück-Geste während „Die Zeit ist um!“ umgeht das Zeitlimit nicht');
+  {
+    const page = await seite();
+    await page.clock.install();
+    await page.reload();
+    await profilAnlegen(page);
+    await page.click('.labor-karte[data-nav="rechtschreibung"]');
+    await page.click('[data-act="pruef-intro"]');
+    await page.click('[data-act="pruef-los"]');
+    await page.waitForSelector('#uhr');
+    await page.clock.runFor(21 * 60 * 1000);
+    await page.waitForSelector('.dialog');
+    await page.goBack().catch(() => {});
+    await page.waitForTimeout(300);
+    const text = await page.textContent('.dialog').catch(() => '');
+    check(text.includes('Zeit ist um'), `Zurück-Geste ersetzt den Zeitablauf-Dialog („${text.slice(0, 40)}“)`);
+    await page.click('.dialog [data-dlg="0"]').catch(() => {});
+    await page.waitForSelector('.ergebnis-kopf', { timeout: 5000 }).catch(() => {});
+    check(await page.isVisible('.ergebnis-kopf'), 'nach Zeitablauf keine Auswertung');
+    await page.context().close();
+  }
+
+  console.log('• Wertung: Raten (überall dieselbe Spalte) ergibt nicht „Fast!“');
+  {
+    const page = await seite();
+    await profilAnlegen(page);
+    const ziel = await page.evaluate(() => { for (const t of window.LL_INHALT.lesen) { const it = t.items.find((x) => x.typ === 'matrix' && x.aussagen.some((a) => a.richtig) && x.aussagen.some((a) => !a.richtig)); if (it) return { g: t.id, id: it.id, i: t.items.indexOf(it) }; } return null; });
+    await page.click('.labor-karte[data-nav="lesen"]');
+    await page.click(`[data-act="training-gruppe"][data-g="${ziel.g}"]`);
+    await page.click(`[data-act="s-gehe"][data-i="${ziel.i}"]`).catch(() => {});
+    const n = (await page.$$('.matrix-zeile')).length;
+    for (let z = 0; z < n; z++) await page.click(`.mx-knopf[data-z="${z}"][data-s="0"]`);
+    await page.click('[data-act="s-pruefen"]');
+    check(await page.isVisible('.rueckmeldung.f'), 'gleichförmige Antwort wird als „Fast!“ gewertet');
+    await page.context().close();
+  }
+
+  console.log('• Darstellung: Lücke und Wortteile, Satzzeichen und Wort bleiben zusammen');
+  {
+    const page = await seite();
+    await profilAnlegen(page);
+    const ziel = await page.evaluate(() => { for (const th of window.LL_INHALT.rechtschreibung.themen) { const i = th.items.findIndex((x) => x.typ === 'luecke' && x.teile.some((t, k) => t.wahl && x.teile[k - 1] && !x.teile[k - 1].wahl && /\S$/.test(x.teile[k - 1].t || ''))); if (i >= 0) return { g: th.id, i }; } return null; });
+    if (ziel) {
+      await page.click('.labor-karte[data-nav="rechtschreibung"]');
+      await page.click(`[data-act="training-gruppe"][data-g="${ziel.g}"]`);
+      await page.click(`[data-act="s-gehe"][data-i="${ziel.i}"]`).catch(() => {});
+      check(await page.$('.wort-gruppe select.luecke') !== null, 'Lücke ist nicht mit dem angrenzenden Wortteil gruppiert');
+    }
+    await page.context().close();
+  }
+
+  console.log('• Schreib-Check: wörtliche Rede, Abkürzungen, E-Mail-Schluss');
+  {
+    const page = await seite();
+    await profilAnlegen(page);
+    await page.click('.labor-karte[data-nav="schreiben"]');
+    await page.click('[data-act="schreibauftrag"][data-id="sa-fantasie"]');
+    await page.fill('#schreibfeld', '„Komm schnell her!“, rief Mia. „Wohin denn?“, fragte Tom. „Zum alten Baum!“, rief Mia. „Was ist dort?“, fragte Tom. „Ein Nest!“, rief Mia. Wir sahen z. B. drei Eier am 3. oder 4. Tag.');
+    await page.click('[data-act="schreib-check"]');
+    const a = await page.textContent('#schreib-analyse');
+    check(!a.includes('„Rief“'), 'nachgestellter Redebegleitsatz wird als Satzanfang gezählt');
+    check(!a.includes('beginnen klein'), 'Abkürzung oder Ordnungszahl wird als Satzende gewertet');
+    await page.click('[data-nav="start"]'); await page.click('.labor-karte[data-nav="schreiben"]');
+    await page.click('[data-act="schreibauftrag"][data-id="sa-brief"]');
+    await page.fill('#schreibfeld', 'Sehr geehrte Frau Kaya,\n\nich wünsche mir einen Trinkbrunnen. Vielen Dank!\n\nMit freundlichen Grüßen\nLena Huber');
+    await page.click('[data-act="schreib-check"]');
+    check(!(await page.textContent('#schreib-analyse')).includes('Satzschlusszeichen'), 'E-Mail mit Grußformel bekommt den Satzzeichen-Hinweis');
+    await page.context().close();
+  }
+
+  console.log('• Wortspeicher: Einfügen am Textende in einem wieder geöffneten Text');
+  {
+    const page = await seite();
+    await profilAnlegen(page);
+    await page.click('.labor-karte[data-nav="schreiben"]');
+    await page.click('[data-act="schreibauftrag"]');
+    await page.fill('#schreibfeld', 'Am Anfang war es still.');
+    await page.click('[data-nav="start"]'); await page.click('.labor-karte[data-nav="schreiben"]');
+    await page.click('[data-act="schreibauftrag"]');
+    const wort = await page.getAttribute('[data-act="wort-einfuegen"]', 'data-wort');
+    await page.click('[data-act="wort-einfuegen"]');
+    const v = await page.inputValue('#schreibfeld');
+    check(v.startsWith('Am Anfang') && v.trim().endsWith(wort), `Wort nicht am Textende eingefügt („${v.slice(0, 40)}“)`);
+    await page.context().close();
+  }
+
+  console.log('• Mehrere Tabs: ein unveränderter alter Tab überschreibt nichts');
+  {
+    const ctx = await browser.newContext({ ...devices['iPad Pro 11 landscape'] });
+    const a = await ctx.newPage(); await a.goto(URL); await profilAnlegen(a, 'TabA');
+    const b = await ctx.newPage(); await b.goto(URL); await b.waitForSelector('.held');
+    await a.click('.labor-karte[data-nav="digital"]'); await a.click('[data-act="training-gruppe"]');
+    const it = await aktuellesItem(a); await beantworte(a, it, true); await a.click('[data-act="s-pruefen"]');
+    await a.waitForTimeout(400);
+    const vorher = await a.evaluate((k) => localStorage.getItem(k), KEY);
+    await b.evaluate(() => window.dispatchEvent(new Event('pagehide')));
+    const nachher = await a.evaluate((k) => localStorage.getItem(k), KEY);
+    check(vorher === nachher, 'unveränderter zweiter Tab überschreibt den neueren Stand');
+    await ctx.close();
+  }
+
+  console.log('• Dialoge, Import, Löschen, Umbenennen, Sicherung');
+  {
+    const page = await seite();
+    await profilAnlegen(page, 'Alt');
+    await erwachseneOeffnen(page);
+    await page.click('[data-act="alles-loeschen"]');
+    await page.waitForTimeout(80);
+    check((await page.evaluate(() => document.activeElement && document.activeElement.textContent)) === 'Abbrechen', 'Dialog fokussiert nicht den sicheren Knopf');
+    await page.keyboard.press('Escape');
+    await page.click('[data-act="export-zeigen"]');
+    check(!(await page.textContent('#letzte-sicherung')).includes('noch nie'), '„Letzte Sicherung“ nicht aktualisiert');
+    const code = await page.inputValue('#export-code');
+    await page.fill('#import-code', code);
+    await page.click('[data-act="import"]');
+    check((await page.textContent('.dialog').catch(() => '')).includes('ersetzen'), 'keine Rückfrage beim Ersetzen eines vorhandenen Profils');
+    await page.click('.dialog [data-dlg="0"]');
+    await page.fill('[data-act="profil-name"]', 'Neu');
+    await page.click('[data-nav="start"]');
+    check((await page.textContent('.held h1')).includes('Neu'), 'Umbenennung nicht sofort sichtbar');
+    await page.evaluate((k) => localStorage.setItem(k + ':defekt-1', 'alt'), KEY);
+    await erwachseneOeffnen(page);
+    await page.click('[data-act="alles-loeschen"]');
+    await page.click('.dialog [data-dlg="1"]');
+    await page.waitForSelector('#profil-form');
+    check(!(await page.evaluate(() => Object.keys(localStorage).some((x) => x.includes(':defekt-')))), 'Sicherungskopien bleiben nach „Alles löschen“');
+    await page.context().close();
+  }
+
+  console.log('• Lese-Tempo: Bestwert bleibt auch nach vielen Tests erhalten');
+  {
+    const page = await seite();
+    await profilAnlegen(page);
+    await page.waitForTimeout(400);
+    await page.evaluate((k) => {
+      const d = JSON.parse(localStorage.getItem(k)); const p = d.profile[d.aktivesProfil];
+      p.tempo = Array.from({ length: 60 }, (_, i) => ({ datum: Date.now() - i * 1000, richtig: 10, falsch: 0, dauer: 180, gelesen: 10 }));
+      p.tempoRekord = 47; localStorage.setItem(k, JSON.stringify(d));
+    }, KEY);
+    await page.reload();
+    await page.click('.labor-karte[data-nav="tempo"]');
+    check((await page.textContent('#inhalt')).includes('Dein Bestwert: 47'), 'Tempo-Rekord geht verloren');
+    await page.context().close();
+  }
 } catch (e) {
   fehler++;
   console.log('  ✗ Testabbruch: ' + (e && e.stack ? e.stack.split('\n').slice(0, 3).join(' | ') : e));

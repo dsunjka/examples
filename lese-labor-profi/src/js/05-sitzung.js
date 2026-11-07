@@ -130,7 +130,7 @@ function zeichneAufgabe() {
   } else if (g && g.art === 'thema' && !pruef) {
     const ersteDesThemas = SITZ.ids.findIndex((x) => REG.items[x].gruppe === g.id) === SITZ.index;
     const offen = SITZ.offen[g.id] != null ? SITZ.offen[g.id] : (ersteDesThemas && SITZ.art === 'training');
-    kopf = `<details class="auftrag" data-gruppe="${esc(g.id)}" ${offen ? 'open' : ''}><summary>Merkkasten: ${esc(g.titel)}</summary>${renderMerkkasten(g.daten, mod.farbe)}</details>`;
+    kopf = `<details class="auftrag" data-gruppe="${esc(g.id)}" ${offen ? 'open' : ''}><summary>Merkkasten: ${esc(g.titel)}</summary>${renderMerkkasten(g.daten, mod.farbe, { ohneTitel: true })}</details>`;
   }
   const erg = loesungZeigen ? bewerte(it, a) : null;
   let rm = '';
@@ -141,7 +141,7 @@ function zeichneAufgabe() {
       <b>${phase === 'loesung' ? 'So ist es richtig:' : esc(r.titel)}</b>
       ${phase === 'nochmal' && r.text ? `<p>${esc(r.text)}</p>` : ''}
       ${loesungZeigen ? `<p>${rich(it.erklaerung)}</p>` : ''}
-      ${loesungZeigen && pkt ? `<p class="klein leise">+${pkt} Laborpunkte</p>` : ''}</div>`;
+      ${loesungZeigen && pkt ? `<p class="klein leise">+${plural(pkt, 'Laborpunkt', 'Laborpunkte')}</p>` : ''}</div>`;
   }
   const tipp = !pruef && SITZ.tipp[id] && it.tipp ? `<div class="tipp-box" role="note"><b>Tipp:</b><span>${rich(it.tipp)}</span></div>` : '';
   const leer = antwortStand(it, a) === 'leer';
@@ -178,9 +178,19 @@ function zeichneAntwortNeu() {
   const id = aktId(), it = aktIt();
   const el = $('#antwort'); if (!el) return;
   const f = document.activeElement && el.contains(document.activeElement) ? document.activeElement : null;
-  const merk = f ? ['act', 'i', 'z', 's', 'g', 'k'].map((k) => (f.dataset[k] != null ? `[data-${k}="${f.dataset[k]}"]` : '')).join('') : '';
+  let merk = f ? ['act', 'i', 'z', 's', 'g', 'k'].map((k) => (f.dataset[k] != null ? `[data-${k}="${f.dataset[k]}"]` : '')).join('') : '';
+  let ausweich = '';
+  if (f && (f.dataset.act === 'hoch' || f.dataset.act === 'runter')) {
+    const ziel = Number(f.dataset.k) + (f.dataset.act === 'hoch' ? -1 : 1);
+    merk = `[data-act="${f.dataset.act}"][data-k="${ziel}"]`;
+    ausweich = `[data-act="${f.dataset.act === 'hoch' ? 'runter' : 'hoch'}"][data-k="${ziel}"]`;
+  }
   el.innerHTML = renderAntwortflaeche(it, SITZ.antworten[id], SITZ.perms[id], 'edit', SITZ.ui);
-  if (merk) { const neu = el.querySelector(merk); if (neu) { try { neu.focus({ preventScroll: true }); } catch (e) { neu.focus(); } } }
+  if (merk) {
+    let neu = el.querySelector(merk);
+    if ((!neu || neu.disabled) && ausweich) neu = el.querySelector(ausweich);
+    if (neu) { try { neu.focus({ preventScroll: true }); } catch (e) { neu.focus(); } }
+  }
   const k = $('#pruefen-knopf'); if (k) k.disabled = antwortStand(it, SITZ.antworten[id]) === 'leer';
   if (istPruefung()) { zeichneKopf(); sitzungMerken(); }
 }
@@ -232,7 +242,7 @@ function pruefen() {
     abschliessen(id, erg.status === 'leer' ? 'falsch' : erg.status, false);
   }
   zeichneAufgabe(); zeichneKopf();
-  const rm = $('.rueckmeldung'); if (rm && rm.scrollIntoView) rm.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  const rm = $('.rueckmeldung'); if (rm && rm.scrollIntoView) rm.scrollIntoView({ block: 'nearest', behavior: sanft() });
 }
 function abschliessen(id, status, sauber) {
   if (SITZ.ergebnis[id]) return;
@@ -375,6 +385,7 @@ function trainingFertig() {
   zeige('zusammenfassung', { sitz: fertig });
 }
 async function sitzungBeenden() {
+  if (istPruefung() && SITZ.zeitLimit && SITZ.verbraucht >= SITZ.zeitLimit) { auswerten(); return true; }
   if (istPruefung()) {
     const w = await dialog({ titel: 'Prüfung unterbrechen?', text: 'Deine Antworten und die Zeit werden gespeichert. Du kannst später auf der Startseite weitermachen.', knoepfe: [{ label: 'Weiterarbeiten', wert: false, stil: 'knopf-zweit' }, { label: 'Unterbrechen', wert: true }] });
     if (!w) return false;

@@ -53,7 +53,9 @@ function bereinigeProfil(p, { mitLaufend = false } = {}) {
     if (istObj(x.details)) for (const id of ids) details[id] = STATUS.includes(x.details[id]) ? x.details[id] : 'leer';
     return { art: typeof x.art === 'string' && ID_OK.test(x.art) ? x.art : 'test', titel: kurztext(x.titel, 80), datum: zahl(x.datum), punkte: zahl(x.punkte, 1000), max: zahl(x.max, 1000), dauer: zahl(x.dauer, 1e6), zeitLimit: zahl(x.zeitLimit, 1e6), ids, details, antworten: istObj(x.antworten) ? x.antworten : {}, perms: istObj(x.perms) ? x.perms : {} };
   });
-  n.tempo = (Array.isArray(p.tempo) ? p.tempo : []).filter(istObj).slice(-60).map((t) => ({ datum: zahl(t.datum), richtig: zahl(t.richtig, 1000), falsch: zahl(t.falsch, 1000), dauer: zahl(t.dauer, 1e4) || 180, gelesen: zahl(t.gelesen, 1000) }));
+  const alleTempo = (Array.isArray(p.tempo) ? p.tempo : []).filter(istObj).map((t) => ({ datum: zahl(t.datum), richtig: zahl(t.richtig, 1000), falsch: zahl(t.falsch, 1000), dauer: zahl(t.dauer, 1e4) || 180, gelesen: zahl(t.gelesen, 1000) }));
+  n.tempoRekord = Math.max(zahl(p.tempoRekord, 1000), 0, ...alleTempo.map((t) => Math.max(0, t.richtig - t.falsch)));
+  n.tempo = alleTempo.slice(-60);
   n.diktate = {};
   if (istObj(p.diktate)) for (const [id, d] of Object.entries(p.diktate)) if (ID_OK.test(id) && istObj(d)) n.diktate[id] = { best: zahl(d.best, 100), letzte: zahl(d.letzte, 100), datum: zahl(d.datum) };
   n.texte = {};
@@ -91,16 +93,33 @@ function normalisiereProfil(p) {
 }
 let DB = null; // wird nach den Abzeichen-Definitionen geladen
 let speicherTimer = null;
+let ungespeichert = false;
 function speichern(sofort = false) {
   clearTimeout(speicherTimer);
+  ungespeichert = true;
   const los = () => {
-    try { window.localStorage.setItem(SPEICHER_KEY, JSON.stringify(DB)); speicherOk = true; }
+    try { window.localStorage.setItem(SPEICHER_KEY, JSON.stringify(DB)); speicherOk = true; ungespeichert = false; }
     catch (e) { speicherOk = false; }
   };
   if (sofort) los(); else speicherTimer = setTimeout(los, 250);
 }
-window.addEventListener('pagehide', () => speichern(true));
-document.addEventListener('visibilitychange', () => { if (document.hidden) speichern(true); });
+/** Offene Eingaben übernehmen und nur dann schreiben, wenn dieser Tab etwas geändert hat. */
+function allesSichern() {
+  try { schreibSpeichern(); } catch (e) { /* Schreib-Ansicht nicht offen */ }
+  if (ungespeichert) speichern(true);
+}
+window.addEventListener('pagehide', allesSichern);
+document.addEventListener('visibilitychange', () => { if (document.hidden) allesSichern(); });
+// Ein anderer Tab hat gespeichert: frischen Stand übernehmen, wenn hier nichts aussteht.
+window.addEventListener('storage', (ev) => {
+  if (ev.key !== SPEICHER_KEY || ungespeichert || !ev.newValue) return;
+  const neu = ladeSpeicher();
+  if (!neu || !Object.keys(neu.profile).length) return;
+  const aktiv = DB && DB.aktivesProfil;
+  DB = neu;
+  if (aktiv && DB.profile[aktiv]) DB.aktivesProfil = aktiv;
+  if (['start', 'digital', 'lesen', 'tempo', 'rechtschreibung', 'grammatik', 'schreiben', 'fortschritt'].includes(ANSICHT.name)) render();
+});
 
 const E = () => DB.einstellungen;
 const P = () => DB.profile[DB.aktivesProfil] || null;
@@ -249,18 +268,20 @@ function pruefeAbzeichen() {
   for (const a of ABZEICHEN) {
     try { if (!p.abzeichen[a.id] && a.test(p)) { p.abzeichen[a.id] = Date.now(); neu.push(a); } } catch (e) { /* Inhalte fehlen */ }
   }
-  if (neu.length) { speichern(); neu.forEach((a, i) => setTimeout(() => toast(`Neues Abzeichen: ${a.sym} ${a.name}`), 700 + i * 2600)); }
+  if (neu.length) { speichern(); neu.forEach((a, i) => setTimeout(() => toastDanach(`Neues Abzeichen: ${a.sym} ${a.name}`), 700 + i * 2600)); }
   return neu;
 }
 
 /* ---------- Sichern & Wiederherstellen ---------- */
 function exportCode() {
   DB.letzteSicherung = Date.now(); speichern();
+  const z = document.getElementById('letzte-sicherung'); if (z) z.innerHTML = '<b>Letzte Sicherung:</b> ' + esc(datumLesbar(DB.letzteSicherung));
   const daten = { app: 'lese-labor-profi', v: 1, datum: Date.now(), profile: DB.profile, einstellungen: DB.einstellungen };
   const json = JSON.stringify(daten);
   return 'LLP1:' + btoa(unescape(encodeURIComponent(json)));
 }
-function importCode(code) {
+/** Sicherungscode lesen und bereinigen, ohne etwas zu verändern. */
+function pruefeCode(code) {
   const roh = String(code || '').trim();
   const kaputt = new Error('Der Code ist unvollständig oder beschädigt. Bitte den ganzen Code einfügen (er beginnt mit „LLP1:“).');
   if (!roh.startsWith('LLP1:') && !roh.startsWith('{')) throw new Error('Das ist kein Sicherungscode von Lese-Labor PROFI. Er beginnt mit „LLP1:“.');
@@ -272,11 +293,15 @@ function importCode(code) {
   if (!istObj(d) || d.app !== 'lese-labor-profi' || !istObj(d.profile)) throw new Error('Der Code gehört nicht zu Lese-Labor PROFI.');
   const neu = {};
   for (const [id, p] of Object.entries(d.profile)) { const sauber = bereinigeProfil(p); if (sauber && sauber.id === id) neu[id] = sauber; }
-  const n = Object.keys(neu).length;
-  if (!n) throw kaputt;
+  if (!Object.keys(neu).length) throw kaputt;
+  return { neu, einst: d.einstellungen ? pruefeEinstellungen(d.einstellungen) : null };
+}
+/** Geprüfte Profile übernehmen (vorhandene mit gleicher ID werden ersetzt). */
+function uebernehmeImport({ neu, einst }) {
   Object.assign(DB.profile, neu);
-  if (d.einstellungen) DB.einstellungen = pruefeEinstellungen(d.einstellungen);
+  if (einst) DB.einstellungen = einst;
   if (!DB.profile[DB.aktivesProfil]) DB.aktivesProfil = Object.keys(DB.profile)[0] || null;
   speichern(true);
-  return n;
+  return Object.keys(neu).length;
 }
+function importCode(code) { return uebernehmeImport(pruefeCode(code)); }

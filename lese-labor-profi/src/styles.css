@@ -354,6 +354,9 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .tok.nein { background: var(--nein-hell); border-color: var(--nein); color: var(--tinte); text-decoration: line-through; }
 .tok.fehlt { border-color: var(--ok); border-style: dashed; }
 .fix-teil { font-size: 1.12rem; }
+.tok-zeichen { min-width: 44px; text-align: center; margin: 2px 3px; }
+.wort-gruppe, .mark-gruppe { white-space: nowrap; }
+.mark-gruppe > .fix-teil { white-space: normal; }
 
 .zu-pool { min-height: 64px; display: flex; flex-wrap: wrap; gap: 8px; padding: 10px; border-radius: 14px; border: 2px dashed var(--linie); background: var(--flaeche-2); align-content: flex-start; }
 .zu-pool:empty::before { content: "Alle Kärtchen sind einsortiert."; color: var(--tinte-3); font-size: .9rem; align-self: center; }

@@ -26,7 +26,11 @@ function viewTempo() {
   };
 }
 function tempoWert(t) { return Math.max(0, (Number(t.richtig) || 0) - (Number(t.falsch) || 0)); }
-function tempoBest(p) { return p && p.tempo.length ? Math.max(...p.tempo.map(tempoWert)) : null; }
+function tempoBest(p) {
+  if (!p) return null;
+  const m = p.tempo.length ? Math.max(...p.tempo.map(tempoWert)) : null;
+  return p.tempoRekord != null || m != null ? Math.max(p.tempoRekord || 0, m || 0) : null;
+}
 function tempoStart() {
   const saetze = (INHALT.tempo || {}).saetze || [];
   const n = saetze.length, drittel = Math.ceil(n / 3);
@@ -96,14 +100,15 @@ function tempoEnde() {
   const p = P();
   const verstrichen = Math.max(1, Math.min(TEMPO.dauer, Math.round((Date.now() - TEMPO.start) / 1000)));
   const erg = { datum: Date.now(), richtig: TEMPO.richtig, falsch: TEMPO.falsch, dauer: verstrichen, gelesen: TEMPO.i };
-  if (p) { p.tempo.push(erg); if (p.tempo.length > 60) p.tempo = p.tempo.slice(-60); punkteDazu(Math.round(tempoWert(erg) / 2)); merkeTag(); speichern(true); }
+  const bisher = tempoBest(p);
+  if (p) { p.tempo.push(erg); if (p.tempo.length > 60) p.tempo = p.tempo.slice(-60); p.tempoRekord = Math.max(p.tempoRekord || 0, tempoWert(erg)); punkteDazu(Math.round(tempoWert(erg) / 2)); merkeTag(); speichern(true); }
   pruefeAbzeichen();
-  zeige('tempo-ergebnis', { erg, fehler: TEMPO.fehler.slice() });
+  zeige('tempo-ergebnis', { erg, fehler: TEMPO.fehler.slice(), bisher });
 }
 function viewTempoErgebnis(param) {
   if (!param) return viewTempo();
-  const { erg, fehler } = param, p = P();
-  const frueher = p.tempo.slice(0, -1), best = frueher.length ? Math.max(...frueher.map(tempoWert)) : null;
+  const { erg, fehler } = param;
+  const best = param.bisher != null ? param.bisher : null;
   const wert = tempoWert(erg), proMin = (erg.richtig / (Math.max(1, erg.dauer) / 60)).toFixed(1).replace('.', ',');
   return {
     titel: 'Lese-Tempo – Ergebnis', schmal: true,
@@ -271,7 +276,7 @@ function vergleichHTML(ist, soll) {
 }
 
 /* ---------- Schreib-Werkstatt ---------- */
-const STOPPWOERTER = new Set('der die das den dem des ein eine einen einem einer und oder aber ich du er sie es wir ihr mir mich dir dich ihm ihn uns euch sich ist war sind waren hat hatte haben hatten wird wurde nicht auch dann da mit von zu im in am an auf aus bei für nach so wie als wenn weil dass noch schon sehr ganz mal man was wer wo nur doch ja nein'.split(' '));
+const STOPPWOERTER = new Set('mein meine meinen meinem meiner meines dein deine deinen deinem deiner deines sein seine seinen seinem seiner seines ihre ihren ihrem ihrer ihres unser unsere unseren unserem unserer unseres euer eure euren eurem eurer eures der die das den dem des ein eine einen einem einer und oder aber ich du er sie es wir ihr mir mich dir dich ihm ihn uns euch sich ist war sind waren hat hatte haben hatten wird wurde nicht auch dann da mit von zu im in am an auf aus bei für nach so wie als wenn weil dass noch schon sehr ganz mal man was wer wo nur doch ja nein'.split(' '));
 function viewSchreibauftrag(id) {
   const a = ((INHALT.schreiben || {}).auftraege || []).find((x) => x.id === id);
   if (!a) return viewModul('schreiben');
@@ -301,6 +306,7 @@ let schreibAuftragId = null, schreibTimer = null;
 function schreibNachRender() {
   schreibAuftragId = ANSICHT.param;
   const feld = $('#schreibfeld'); if (!feld) return;
+  { const n = feld.value.length; try { feld.setSelectionRange(n, n); } catch (e) { /* egal */ } }
   const zaehle = () => { const z = $('#wort-zaehler'); if (z) z.textContent = String(woerterIn(feld.value).length); };
   zaehle();
   const spaeter = () => { clearTimeout(schreibTimer); schreibTimer = setTimeout(schreibSpeichern, 400); };
@@ -324,7 +330,17 @@ function woerterIn(text) { return String(text).match(/[A-Za-zÄÖÜäöüß]+(?:
 function schreibAnalyse(text, auftrag) {
   const out = [];
   const woerter = woerterIn(text);
-  const saetze = (String(text).replace(/\n+/g, ' ').match(/[^.!?]+[.!?]+["“»]?|[^.!?]+$/g) || []).map((s) => s.trim()).filter((s) => woerterIn(s).length);
+  const PUNKT = '\u2024'; // Ersatzpunkt für Abkürzungen und Ordnungszahlen
+  const roh = String(text).replace(/\n+/g, ' ')
+    .replace(/\b(?:z\.\s?B|u\.\s?a|d\.\s?h|usw|bzw|ca|etc|Nr|vgl|evtl|ggf|Std|Min|Hr|Fr|Dr)\.(?=\s+[a-zäöüß0-9])/g, (m) => m.replace(/\./g, PUNKT))
+    .replace(/(\d)\.(?=\s+[a-zäöüß0-9])/g, '$1' + PUNKT);
+  const saetze = (roh.match(/[^.!?]+[.!?]+["“”»«]?|[^.!?]+$/g) || [])
+    .map((s) => s.trim().split(PUNKT).join('.'))
+    // „…!“, rief Mia. – der nachgestellte Begleitsatz gehört zum vorigen Satz
+    .reduce((alle, s) => { if (alle.length && /^,/.test(s)) alle[alle.length - 1] += ' ' + s; else alle.push(s); return alle; }, [])
+    .filter((s) => woerterIn(s).length);
+  const erz = /erz[äa]hlung/i.test(auftrag.textsorte);
+  const brief = /brief|e-?mail/i.test(auftrag.textsorte);
   const gut = (t) => out.push({ gut: true, t }), tipp = (t) => out.push({ gut: false, t });
   if (woerter.length >= auftrag.minWoerter) gut(`Dein Text hat ${woerter.length} Wörter – lang genug.`);
   else tipp(`Dein Text hat ${woerter.length} Wörter. Ziel: mindestens ${auftrag.minWoerter}. Was könntest du noch genauer beschreiben?`);
@@ -332,7 +348,7 @@ function schreibAnalyse(text, auftrag) {
   for (const s of saetze) { const w = woerterIn(s)[0]; if (w) { const k = w.toLowerCase(); anf[k] = (anf[k] || 0) + 1; } }
   const wieder = Object.entries(anf).filter(([w, n]) => n >= 3 || (['dann', 'und', 'da'].includes(w) && n >= 2)).sort((a, b) => b[1] - a[1]);
   if (saetze.length >= 3) {
-    if (wieder.length) tipp(`Satzanfänge: ${wieder.map(([w, n]) => `„${w[0].toUpperCase() + w.slice(1)}“ (${n}×)`).join(', ')}. Probiere andere Anfänge: Plötzlich, Kurz darauf, Am Abend, Zum Glück …`);
+    if (wieder.length) tipp(`Satzanfänge: ${wieder.map(([w, n]) => `„${w[0].toUpperCase() + w.slice(1)}“ (${n}×)`).join(', ')}. Probiere andere Anfänge: ${erz ? 'Plötzlich, Kurz darauf, Am Abend, Zum Glück' : 'Zuerst, Danach, Anschließend, Außerdem, Zum Schluss'} …`);
     else gut('Deine Satzanfänge sind abwechslungsreich.');
   }
   const anzahl = {}, schreibung = {};
@@ -340,13 +356,15 @@ function schreibAnalyse(text, auftrag) {
   const oft = Object.entries(anzahl).filter(([, n]) => n >= 3).sort((a, b) => b[1] - a[1]).slice(0, 4);
   if (oft.length) tipp(`Diese Wörter kommen oft vor: ${oft.map(([w, n]) => `„${schreibung[w]}“ (${n}×)`).join(', ')}. Ersetze manche durch ein anderes Wort oder ein Pronomen.`);
   else if (woerter.length > 30) gut('Du wiederholst kaum Wörter.');
-  const klein = saetze.filter((s) => /^[„"»]?[a-zäöüß]/.test(s)).slice(0, 3);
+  const klein = saetze.filter((s) => /^[„"»“«]?[a-zäöüß]/.test(s)).slice(0, 3);
   if (klein.length) tipp(`Diese Sätze beginnen klein: ${klein.map((s) => `„${s.slice(0, 24)}…“`).join(', ')}. Satzanfänge schreibt man groß.`);
   const lang = saetze.filter((s) => woerterIn(s).length > 25);
   if (lang.length) tipp(`${plural(lang.length, 'Satz ist', 'Sätze sind')} sehr lang (über 25 Wörter). Teile lange Sätze auf.`);
-  if (text.trim() && !/[.!?…"“»]\s*$/.test(text.trim())) tipp('Am Ende fehlt ein Satzschlusszeichen (. ! ?).');
-  const erz = /erz[äa]hlung/i.test(auftrag.textsorte);
-  const rede = (text.match(/[„"»]/g) || []).length;
+  let ende = text.trim();
+  // Im Brief stehen Grußformel und Name am Schluss ohne Satzzeichen.
+  if (brief) ende = ende.replace(/\n[^\n]*(?:gr(?:u|ü|ue)(?:ß|ss)|liebe|herzlich|tschüss|bis bald)[^\n]*(?:\n[^\n]*){0,2}\s*$/i, '').trim();
+  if (ende && !/[.!?…"“”»«]\s*$/.test(ende)) tipp('Am Ende fehlt ein Satzschlusszeichen (. ! ?).');
+  const rede = (text.match(/[„"»“«]/g) || []).length;
   if (erz) { if (rede) gut('Du benutzt wörtliche Rede – das macht die Erzählung lebendig.'); else if (woerter.length > 40) tipp('Probiere wörtliche Rede: Lass deine Figuren sprechen („…“).'); }
   const absaetze = text.split(/\n\s*\n/).filter((x) => x.trim()).length;
   if (woerter.length > 80 && absaetze < 2) tipp('Gliedere deinen Text in Absätze (Leerzeile zwischen Einleitung, Hauptteil und Schluss).');

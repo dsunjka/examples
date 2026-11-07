@@ -66,7 +66,7 @@ document.addEventListener('click', async (ev) => {
     case 's-nochmal': { SITZ.phase[aktId()] = 'edit'; zeichneAufgabe(); const f = $('input.eingabe'); if (f) f.focus(); return; }
     case 's-springen': {
       const z = el.dataset.ziel === 'quelle' ? $('.quelle-spalte') : $('#aufgabe-spalte');
-      if (z) z.scrollIntoView({ block: 'start', behavior: E().ruhig ? 'auto' : 'smooth' });
+      if (z) z.scrollIntoView({ block: 'start', behavior: sanft() });
       setTimeout(springenAktualisieren, 400); return;
     }
     case 's-uhr': SITZ.zeitVerborgen = !SITZ.zeitVerborgen; zeichneKopf(); return;
@@ -153,13 +153,27 @@ document.addEventListener('click', async (ev) => {
     case 'export-kopieren': { const t = $('#export-code'); try { await navigator.clipboard.writeText(t.value); toast('Code kopiert. Bewahren Sie ihn gut auf.'); } catch (x) { t.focus(); t.select(); toast('Bitte den markierten Code selbst kopieren.'); } return; }
     case 'export-datei': sicherungAlsDatei(); return;
     case 'import': {
-      try { const n = importCode($('#import-code').value); wendeEinstellungenAn(); toast(`${plural(n, 'Profil', 'Profile')} wiederhergestellt.`); zeige('erwachsene'); }
-      catch (x) { toast(x && /Code|Lese-Labor/.test(x.message || '') ? x.message : 'Der Code konnte nicht gelesen werden.', 4200); }
+      let geprueft;
+      try { geprueft = pruefeCode($('#import-code').value); }
+      catch (x) { toast(x && /Code|Lese-Labor/.test(x.message || '') ? x.message : 'Der Code konnte nicht gelesen werden.', 4200); return; }
+      const konflikt = Object.keys(geprueft.neu).filter((id) => DB.profile[id]);
+      if (konflikt.length) {
+        const info = konflikt.map((id) => `${DB.profile[id].name}: auf diesem Gerät ${DB.profile[id].punkte} Punkte${DB.profile[id].laufend ? ' und eine angefangene Prüfung' : ''}, im Code ${geprueft.neu[id].punkte} Punkte`).join(' · ');
+        const w = await dialog({ titel: 'Vorhandenes Profil ersetzen?', text: `${info}. Der Stand auf diesem Gerät wird dabei ersetzt.`, knoepfe: [{ label: 'Abbrechen', wert: false, stil: 'knopf-zweit' }, { label: 'Ersetzen', wert: true }] });
+        if (!w) return;
+      }
+      const n = uebernehmeImport(geprueft); wendeEinstellungenAn();
+      toast(speicherOk ? `${plural(n, 'Profil', 'Profile')} wiederhergestellt.` : `${plural(n, 'Profil', 'Profile')} geladen, aber dieser Browser kann gerade nicht speichern (Speicher voll oder privater Modus).`, speicherOk ? 2600 : 6000);
+      zeige('erwachsene');
       return;
     }
     case 'alles-loeschen': {
       const ok = await dialog({ titel: 'Wirklich alles löschen?', text: 'Alle Profile, Ergebnisse, Texte und Einstellungen werden von diesem Gerät gelöscht.', knoepfe: [{ label: 'Abbrechen', wert: false, stil: 'knopf-zweit' }, { label: 'Alles löschen', wert: true, stil: 'knopf-gefahr' }] });
-      if (ok) { DB = leererSpeicher(); speichern(true); erwachseneOffen = false; wendeEinstellungenAn(); zeige('profile'); }
+      if (ok) {
+        try { for (const k of Object.keys(window.localStorage)) if (k.startsWith(SPEICHER_KEY + ':')) window.localStorage.removeItem(k); } catch (x) { /* Speicher nicht verfügbar */ }
+        speicherWarnung = '';
+        DB = leererSpeicher(); speichern(true); erwachseneOffen = false; wendeEinstellungenAn(); zeige('profile');
+      }
       return;
     }
     default: return;
@@ -183,14 +197,13 @@ document.addEventListener('change', (ev) => {
     r.readAsText(el.files[0]);
   }
 });
-let nameTimer = null;
 document.addEventListener('input', (ev) => {
   const el = ev.target;
   if (!(el instanceof Element)) return;
   if (el.matches('input[data-act="eingabe"]')) { antwortAktion('eingabe', { wert: el.value }); return; }
   if (el.matches('[data-act="profil-name"]')) {
-    clearTimeout(nameTimer);
-    nameTimer = setTimeout(() => { const p = DB.profile[el.dataset.id]; if (p) { p.name = el.value.trim().slice(0, 24) || p.name; speichern(); } }, 300);
+    const p = DB.profile[el.dataset.id], n = el.value.trim().slice(0, 24);
+    if (p && n) { p.name = n; speichern(); }
   }
 });
 document.addEventListener('submit', (ev) => {
@@ -206,7 +219,7 @@ document.addEventListener('submit', (ev) => {
   if (f.id === 'diktat-form') { diktatPruefen($('#diktat-eingabe').value); }
 });
 document.addEventListener('keydown', (ev) => {
-  if (dialogAufloeser) { if (ev.key === 'Escape') dialogAufloeser('Escape'); return; }
+  if (dialogAufloeser) { if (ev.key === 'Escape') dialogAufloeser('Escape'); else if (ev.repeat) ev.preventDefault(); return; }
   const el = ev.target;
   if (ev.key === 'Enter' && el instanceof Element && el.matches('input[data-act="eingabe"]')) {
     ev.preventDefault();
@@ -221,6 +234,7 @@ document.addEventListener('keydown', (ev) => {
   if (ev.key === 'Enter' && el instanceof Element && el.matches('.zu-gruppe')) { ev.preventDefault(); antwortAktion('gruppe', el.dataset); return; }
   if ((ev.key === 'Enter' || ev.key === ' ') && el instanceof Element && el.matches('a[data-ziel], a[data-extern]')) { ev.preventDefault(); el.click(); return; }
   if (ANSICHT.name === 'tempo-lauf' && TEMPO && TEMPO.phase !== 'start') {
+    if (ev.repeat) return;
     if (ev.key === 'ArrowLeft' || ev.key === 'j') tempoAntwort(1);
     if (ev.key === 'ArrowRight' || ev.key === 'n') tempoAntwort(0);
   }
@@ -236,6 +250,7 @@ window.addEventListener('popstate', async () => {
   verlaufGesetzt = false;
   const n = ANSICHT.name;
   const zurueckLegen = () => { try { history.pushState({ lese: n }, '', location.href); verlaufGesetzt = true; } catch (e) { /* egal */ } };
+  if (dialogAufloeser) { zurueckLegen(); return; } // Während eines Dialogs (z. B. „Die Zeit ist um!“) zählt die Zurück-Geste nicht
   if (n === 'sitzung' && SITZ) { const ok = await sitzungBeenden(); if (ok === false) zurueckLegen(); return; }
   if (n === 'tempo-lauf') { tempoStopp(); TEMPO = null; zeige('tempo'); return; }
   if (n === 'diktat') { zeige('rechtschreibung'); return; }

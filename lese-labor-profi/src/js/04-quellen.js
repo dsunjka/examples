@@ -98,9 +98,9 @@ function renderLesetext(textId) {
 }
 
 /* ---------- Merkkasten ---------- */
-function renderMerkkasten(thema, farbe) {
+function renderMerkkasten(thema, farbe, { ohneTitel = false } = {}) {
   const w = thema.wissen || {};
-  return `<section class="merkkasten" style="--farbe:${farbe}"><h3>Merkkasten: ${esc(thema.titel)}</h3>
+  return `<section class="merkkasten" style="--farbe:${farbe}">${ohneTitel ? '' : `<h3>Merkkasten: ${esc(thema.titel)}</h3>`}
     ${w.merksatz ? `<p class="merksatz">${rich(w.merksatz)}</p>` : ''}
     ${(w.punkte || []).length ? `<ul>${w.punkte.map((p) => `<li>${rich(p)}</li>`).join('')}</ul>` : ''}
     ${(w.beispiele || []).length ? `<div class="beispiele">${w.beispiele.map((b) => `<span>${rich(b)}</span>`).join('')}</div>` : ''}</section>`;

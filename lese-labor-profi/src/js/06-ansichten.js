@@ -15,20 +15,23 @@ function zeige(name, param = null) {
   ANSICHT = { name, param };
   if (VERLAUF_ANSICHTEN.has(name) && !verlaufGesetzt) {
     // Eigener Verlaufseintrag: Die Zurück-Geste von Safari beendet dann die Übung statt die App zu verlassen.
-    try { history.pushState({ lese: name }, '', location.href); verlaufGesetzt = true; } catch (e) { /* Rahmen erlaubt es nicht */ }
+    try {
+      if (!(history.state && history.state.lese)) history.pushState({ lese: name }, '', location.href);
+      verlaufGesetzt = true;
+    } catch (e) { /* Rahmen erlaubt es nicht */ }
   }
   if (!VERLAUF_ANSICHTEN.has(name)) verlaufGesetzt = false;
   render();
   if (HASH_ANSICHTEN.has(name)) {
     const h = '#' + name;
-    if (location.hash !== h) { try { history.replaceState(null, '', h); } catch (e) { /* Rahmen erlaubt es nicht */ } }
+    if (location.hash !== h) { try { history.replaceState(history.state, '', h); } catch (e) { /* Rahmen erlaubt es nicht */ } }
   }
 }
 function render() {
   const app = $('#app');
   if (!P() && !['profile', 'info', 'erwachsene'].includes(ANSICHT.name)) ANSICHT = { name: 'profile', param: null };
   const n = ANSICHT.name;
-  if (n === 'sitzung') { if (SITZ) { renderSitzung(); return; } ANSICHT = { name: 'start', param: null }; }
+  if (n === 'sitzung') { if (SITZ) { renderSitzung(); window.scrollTo(0, 0); return; } ANSICHT = { name: 'start', param: null }; }
   if (n === 'tempo-lauf') { renderTempoLauf(); return; }
   const views = {
     profile: viewProfile, start: viewStart, digital: () => viewModul('digital'), lesen: () => viewModul('lesen'),
@@ -128,12 +131,12 @@ function viewStart() {
         <div class="held-oben">
           <div><p class="leise">Hallo,</p><h1>${esc(p.name)} ${esc(p.avatar)}</h1>
             <p class="level">Level ${lv.nr}: ${esc(lv.name)}</p>
-            ${lv.bis ? `<p class="klein leise">Noch ${lv.bis - p.punkte} Laborpunkte bis „${esc(lv.naechsterName)}“</p>` : '<p class="klein leise">Höchstes Level erreicht!</p>'}</div>
+            ${lv.bis ? `<p class="klein leise">Noch ${plural(lv.bis - p.punkte, 'Laborpunkt', 'Laborpunkte')} bis „${esc(lv.naechsterName)}“</p>` : '<p class="klein leise">Höchstes Level erreicht!</p>'}</div>
           ${kolbenSVG(g.prozent / 100)}
         </div>
         <div class="kennzahlen">
           <div class="kennzahl"><b>${g.gemeistert}</b><span>von ${g.gesamt} gemeistert</span></div>
-          <div class="kennzahl"><b>${serie()}</b><span>Tage in Folge</span></div>
+          <div class="kennzahl"><b>${serie()}</b><span>${serie() === 1 ? 'Tag' : 'Tage'} in Folge</span></div>
           <div class="kennzahl"><b>${Object.keys(p.abzeichen).length}</b><span>Abzeichen</span></div>
         </div>
         ${m && m.ids.length ? `<div class="mission">
@@ -335,7 +338,7 @@ function viewFortschritt() {
   return {
     titel: 'Mein Labor-Buch',
     html: `<section class="karte modul-kopf" style="--farbe:var(--akzent)"><span class="labor-symbol" style="font-size:2rem">${esc(p.avatar)}</span>
-      <div style="display:grid;gap:6px"><h1>${esc(p.name)}s Labor-Buch</h1><p>Level ${lv.nr}: <b>${esc(lv.name)}</b> · ${p.punkte} Laborpunkte · ${g.gemeistert} von ${g.gesamt} Aufgaben gemeistert</p>
+      <div style="display:grid;gap:6px"><h1>${esc(p.name)}s Labor-Buch</h1><p>Level ${lv.nr}: <b>${esc(lv.name)}</b> · ${plural(p.punkte, 'Laborpunkt', 'Laborpunkte')} · ${g.gemeistert} von ${g.gesamt} Aufgaben gemeistert</p>
       ${lv.bis ? `<div class="balken"><i style="width:${pct(p.punkte - lv.ab, lv.bis - lv.ab)}%"></i></div>` : ''}</div></section>
       <div class="start-raster" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))">${modKarten}</div>
       <section class="karte" style="display:grid;gap:12px"><h2 style="font-size:1.1rem">Prüfungen</h2>
@@ -345,7 +348,7 @@ function viewFortschritt() {
           ${tempo.length ? `<div class="mini-diagramm" role="img" aria-label="Letzte Ergebnisse im Lese-Tempo">${tempo.map((t) => `<div style="height:${Math.max(6, pct(tempoWert(t), maxT))}%" title="${datumLesbar(t.datum)}"><span>${tempoWert(t)}</span></div>`).join('')}</div>` : '<p class="leise">Noch kein Tempo-Test.</p>'}</section>
         <section class="karte" style="display:grid;gap:12px"><h2 style="font-size:1.1rem">Übungstage (letzte 4 Wochen)</h2>
           <div class="kalender" role="img" aria-label="${p.tage.filter((t) => tage.includes(t)).length} Übungstage in den letzten 4 Wochen">${tage.map((t) => `<i class="${p.tage.includes(t) ? 'an' : ''}" title="${t}"></i>`).join('')}</div>
-          <p class="klein leise">${serie()} Tage in Folge · ${p.tage.length} Übungstage insgesamt</p></section>
+          <p class="klein leise">${plural(serie(), 'Tag', 'Tage')} in Folge · ${plural(p.tage.length, 'Übungstag', 'Übungstage')} insgesamt</p></section>
       </div>
       <section class="karte" style="display:grid;gap:12px"><h2 style="font-size:1.1rem">Abzeichen · ${Object.keys(p.abzeichen).length} von ${ABZEICHEN.length}</h2>
         <div class="abzeichen-raster">${ABZEICHEN.map((a) => `<div class="abzeichen ${p.abzeichen[a.id] ? 'hat' : ''}"><span class="sym" aria-hidden="true">${a.sym}</span><b>${esc(a.name)}</b><span>${esc(a.text)}</span>${p.abzeichen[a.id] ? `<span>✓ ${datumLesbar(p.abzeichen[a.id])}</span>` : ''}</div>`).join('')}</div></section>`,
@@ -402,7 +405,8 @@ function viewErwachsene() {
       </section>
       <section class="karte" style="display:grid;gap:14px"><h2 style="font-size:1.2rem">Fortschritt sichern</h2>
         <p class="klein leise">Der Fortschritt liegt nur in diesem Browser. Safari kann gespeicherte Daten von Websites löschen, die einige Tage nicht geöffnet wurden. Eine App auf dem Home-Bildschirm hat außerdem einen eigenen, getrennten Speicher. Sichern Sie den Fortschritt deshalb regelmäßig, z. B. vor den Ferien.</p>
-        <p class="klein"><b>Letzte Sicherung:</b> ${DB.letzteSicherung ? datumLesbar(DB.letzteSicherung) : 'noch nie'}</p>
+        ${!speicherOk ? '<p class="banner">⚠️ Dieser Browser kann gerade nicht speichern (Speicher voll oder privater Modus).</p>' : ''}
+        <p class="klein" id="letzte-sicherung"><b>Letzte Sicherung:</b> ${DB.letzteSicherung ? datumLesbar(DB.letzteSicherung) : 'noch nie'}</p>
         <div class="zeile"><button type="button" class="knopf knopf-klein" data-act="export-zeigen">Sicherungscode erstellen</button><button type="button" class="knopf knopf-zweit knopf-klein" data-act="export-datei" id="export-datei" hidden>Als Datei speichern</button></div>
         <div class="feld" id="export-feld" hidden><label for="export-code">Sicherungscode</label><textarea id="export-code" readonly></textarea><button type="button" class="knopf knopf-zweit knopf-klein" data-act="export-kopieren">Kopieren</button></div>
         <div class="feld"><label for="import-code">Sicherungscode einfügen</label><textarea id="import-code" placeholder="LLP1:…" autocomplete="off" spellcheck="false"></textarea></div>
@@ -456,7 +460,9 @@ function viewInfo() {
 
 /* ---------- Dialog & Toast ---------- */
 let dialogAufloeser = null;
+let dialogSchliessen = null;
 function dialog({ titel, text = '', html = '', knoepfe = [{ label: 'OK', wert: true }] }) {
+  if (dialogSchliessen) dialogSchliessen(undefined);
   return new Promise((resolve) => {
     const wurzel = $('#dialog-wurzel');
     const vorher = document.activeElement;
@@ -464,17 +470,29 @@ function dialog({ titel, text = '', html = '', knoepfe = [{ label: 'OK', wert: t
       <h2 id="dlg-titel">${esc(titel)}</h2>${text ? `<p>${esc(text)}</p>` : ''}${html}
       <div class="aktionen">${knoepfe.map((k, i) => `<button type="button" class="knopf ${k.stil || ''}" data-dlg="${i}">${esc(k.label)}</button>`).join('')}</div></div></div>`;
     const app = $('#app'); if (app) { app.setAttribute('inert', ''); app.setAttribute('aria-hidden', 'true'); }
-    const fertig = (wert) => { wurzel.innerHTML = ''; dialogAufloeser = null; if (app) { app.removeAttribute('inert'); app.removeAttribute('aria-hidden'); } try { if (vorher && vorher.focus) vorher.focus(); } catch (e) { /* egal */ } resolve(wert); };
+    const fertig = (wert) => { if (dialogSchliessen !== fertig) return; dialogSchliessen = null; wurzel.innerHTML = ''; dialogAufloeser = null; if (app) { app.removeAttribute('inert'); app.removeAttribute('aria-hidden'); } try { if (vorher && vorher.focus) vorher.focus(); } catch (e) { /* egal */ } resolve(wert); };
     dialogAufloeser = (taste) => {
       if (taste === 'Escape') { const k = knoepfe.find((x) => x.wert === false || x.wert === null); fertig(k ? k.wert : undefined); }
     };
+    dialogSchliessen = fertig;
     $$('[data-dlg]', wurzel).forEach((b) => b.addEventListener('click', () => fertig(knoepfe[Number(b.dataset.dlg)].wert)));
-    const letzter = $$('[data-dlg]', wurzel).pop(); if (letzter) setTimeout(() => letzter.focus(), 30);
+    // Den sicheren Knopf (Abbrechen/Weiterarbeiten) fokussieren, damit ein versehentliches Enter nichts bestätigt.
+    const alle = $$('[data-dlg]', wurzel), si = knoepfe.findIndex((k) => k.wert === false || k.wert === null);
+    const ziel = si >= 0 ? alle[si] : alle[alle.length - 1];
+    if (ziel) setTimeout(() => { try { ziel.focus(); } catch (e) { /* egal */ } }, 30);
   });
 }
 let toastTimer = null;
+let toastEnde = 0;
+const sanft = () => (E().ruhig || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) ? 'auto' : 'smooth');
+/** Meldung erst zeigen, wenn die aktuelle fertig ist (für Abzeichen). */
+function toastDanach(text) {
+  const rest = toastEnde - Date.now();
+  if (rest > 0) setTimeout(() => toastDanach(text), rest + 300); else toast(text);
+}
 function toast(text, ms = 2600) {
   const t = $('#toast'); if (!t) return;
+  toastEnde = Date.now() + ms;
   t.textContent = text; t.hidden = false;
   clearTimeout(toastTimer);
   toastTimer = setTimeout(() => { t.hidden = true; }, ms);
