@@ -309,7 +309,7 @@ function schreibNachRender() {
   $$('[data-check]').forEach((el) => el.addEventListener('change', schreibSpeichern));
 }
 /** Beim Verlassen der Schreib-Ansicht sofort speichern, solange die Felder noch da sind. */
-function schreibVerlassen() { schreibSpeichern(); }
+function schreibVerlassen() { schreibSpeichern(); speichern(true); }
 function schreibSpeichern() {
   clearTimeout(schreibTimer); schreibTimer = null;
   const p = P(); if (!p || !schreibAuftragId || !$('#schreibfeld') || ANSICHT.name !== 'schreibauftrag') return;
