@@ -24,6 +24,35 @@ function leereAntwort(it, perm) {
     default: return null;
   }
 }
+/** Gespeicherte Anzeige-Reihenfolge prüfen (z. B. nach Import oder geänderten Inhalten). */
+function sicherePerm(it, p) {
+  const ok = (arr, n) => Array.isArray(arr) && arr.length === n && new Set(arr).size === n && arr.every((v) => Number.isInteger(v) && v >= 0 && v < n);
+  const neu = neuePerm(it);
+  if (!p || typeof p !== 'object') return neu;
+  if (neu.opt && !ok(p.opt, neu.opt.length)) return neu;
+  if (neu.gaps && !(Array.isArray(p.gaps) && p.gaps.length === neu.gaps.length && p.gaps.every((g, i) => ok(g, neu.gaps[i].length)))) return neu;
+  if (neu.el && !ok(p.el, neu.el.length)) return neu;
+  if (neu.reihe && !ok(p.reihe, neu.reihe.length)) return neu;
+  return p;
+}
+/** Gespeicherte Antwort auf die passende Form prüfen; sonst leere Antwort. */
+function sichereAntwort(it, a, perm) {
+  const leer = leereAntwort(it, perm);
+  const idx = (v, n) => Number.isInteger(v) && v >= 0 && v < n;
+  try {
+    switch (it.typ) {
+      case 'single': return a === null || idx(a, it.optionen.length) ? a : leer;
+      case 'multi': return Array.isArray(a) && a.every((v) => idx(v, it.optionen.length)) ? Array.from(new Set(a)) : leer;
+      case 'matrix': return Array.isArray(a) && a.length === it.aussagen.length && a.every((v) => v === null || v === 0 || v === 1) ? a : leer;
+      case 'luecke': { const g = it.teile.filter((t) => t.wahl); return Array.isArray(a) && a.length === g.length && a.every((v, i) => v === null || idx(v, g[i].wahl.length)) ? a : leer; }
+      case 'markieren': return Array.isArray(a) && a.every((v) => idx(v, it.teile.length)) ? Array.from(new Set(a)) : leer;
+      case 'zuordnen': return Array.isArray(a) && a.length === it.elemente.length && a.every((v) => v === -1 || idx(v, it.gruppen.length)) ? a : leer;
+      case 'reihenfolge': { const n = it.reihe.length; return a && Array.isArray(a.ordnung) && a.ordnung.length === n && new Set(a.ordnung).size === n && a.ordnung.every((v) => idx(v, n)) ? { ordnung: a.ordnung, beruehrt: !!a.beruehrt } : leer; }
+      case 'eingabe': return typeof a === 'string' ? a.slice(0, 200) : leer;
+      default: return leer;
+    }
+  } catch (e) { return leer; }
+}
 function antwortStand(it, a) {
   if (a == null) return 'leer';
   switch (it.typ) {
@@ -108,7 +137,7 @@ function aendereAntwort(it, a, act, ds, ui) {
 }
 
 /** HTML der Antwortfläche. modus: 'edit' | 'loesung' */
-function renderAntwortflaeche(it, a, perm, modus, ui = {}) {
+function renderAntwortflaeche(it, a, perm, modus, ui = {}, gesperrt = false) {
   const L = modus === 'loesung';
   switch (it.typ) {
     case 'single': case 'multi': {
@@ -176,14 +205,14 @@ function renderAntwortflaeche(it, a, perm, modus, ui = {}) {
       const o = a ? a.ordnung : it.reihe.map((_, i) => i);
       return `<ol class="reihe">${o.map((ri, k) => {
         const cls = L ? (ri === k ? 'ok' : 'nein') : '';
-        return `<li class="reihe-el ${cls}"><span class="reihe-nr">${k + 1}</span><span class="reihe-text">${rich(it.reihe[ri])}${L && ri !== k ? `<br><span class="reihe-soll">gehört an Platz ${ri + 1}</span>` : ''}</span>
+        return `<li class="reihe-el ${cls}"><span class="reihe-nr">${k + 1}</span><span class="reihe-text">${rich(it.reihe[ri])}${L && ri !== k ? `<br><span class="reihe-soll">gehört an Platz ${Number(ri) + 1}</span>` : ''}</span>
           <span class="reihe-knoepfe"><button type="button" data-act="hoch" data-k="${k}" aria-label="nach oben" ${k === 0 ? 'disabled' : ''}>▲</button><button type="button" data-act="runter" data-k="${k}" aria-label="nach unten" ${k === o.length - 1 ? 'disabled' : ''}>▼</button></span></li>`;
       }).join('')}</ol>`;
     }
     case 'eingabe': {
       const erg = L ? bewerte(it, a) : null;
       const cls = L ? (erg.status === 'richtig' ? 'ok' : 'nein') : '';
-      return `<input class="eingabe ${cls}" type="text" id="eingabe-${esc(it.id)}" data-act="eingabe" value="${esc(a || '')}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="Deine Antwort" ${L ? 'readonly' : ''}>
+      return `<input class="eingabe ${cls}" type="text" id="eingabe-${esc(it.id)}" data-act="eingabe" value="${esc(a || '')}" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" aria-label="Deine Antwort" ${L || gesperrt ? 'readonly' : ''}>
         ${L && erg.status !== 'richtig' ? `<p class="mx-loesung">Richtig ist: ${esc((it.loesungen || [])[0] || '')}</p>` : ''}`;
     }
     default: return '<p>Unbekannter Aufgabentyp.</p>';

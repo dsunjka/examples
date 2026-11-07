@@ -25,6 +25,12 @@ function saeubere(html) {
     if (tag === 'a' && (el.hasAttribute('data-ziel') || el.hasAttribute('data-extern'))) { el.setAttribute('role', 'link'); el.setAttribute('tabindex', '0'); }
     if (tag === 'button') el.setAttribute('type', 'button');
   }
+  for (const t of Array.from(tpl.content.querySelectorAll('table'))) {
+    const huelle = document.createElement('div');
+    huelle.className = 'w-tabelle-huelle';
+    t.parentNode.insertBefore(huelle, t);
+    huelle.appendChild(t);
+  }
   const div = document.createElement('div');
   div.appendChild(tpl.content.cloneNode(true));
   const out = div.innerHTML;

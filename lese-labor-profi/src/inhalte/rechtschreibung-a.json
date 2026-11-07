@@ -12,8 +12,10 @@
      "Jede Silbe hat einen Vokal (a, e, i, o, u, ä, ö, ü) oder einen Zwielaut (au, ei, eu, äu).",
      "Steht nur ein Mitlaut zwischen zwei Vokalen, kommt er in die neue Zeile: Ho-se, Na-se, le-sen.",
      "Stehen mehrere Mitlaute dazwischen, kommt nur der letzte in die neue Zeile: Kat-ze, Fens-ter, Ap-fel. Aber: <b>ck</b>, <b>ch</b> und <b>sch</b> bleiben immer zusammen: Zu-cker, Ku-chen, Ta-sche.",
-     "Ein einzelner Vokal am Wortanfang oder am Wortende wird nicht abgetrennt: Igel, Abend und Ofen trennst du gar nicht.",
-     "Endet eine Silbe mit einem Vokal, ist sie <b>offen</b>: <b>Ro</b>-se. Endet sie mit einem Mitlaut, ist sie <b>geschlossen</b>: <b>Kat</b>-ze. In einer offenen Silbe klingt der Vokal meist lang, in einer geschlossenen meist kurz."
+     "Ein einzelner Vokal am Wortanfang oder am Wortende wird nicht abgetrennt: Igel, Abend und Ofen trennst du gar nicht. Längere Wörter trennst du an einer anderen Stelle: Ele-fant (nicht E-lefant).",
+     "Ein <b>Zwielaut</b> (au, ei, eu, äu) am Wortanfang darf allein stehen, denn er hat zwei Buchstaben: Au-to, Ei-sen, Eu-ro.",
+     "Endet eine Silbe mit einem Vokal, ist sie <b>offen</b>: <b>Ro</b>-se. Endet sie mit einem Mitlaut, ist sie <b>geschlossen</b>: <b>Kat</b>-ze. In einer offenen Silbe klingt der Vokal meist lang, in einer geschlossenen meist kurz.",
+     "Achtung bei <b>ck</b>: In Zu-cker oder We-cker klingt der Vokal trotzdem kurz, denn ck steht für ein doppeltes k."
     ],
     "beispiele": [
      "Fens-ter",
@@ -360,8 +362,8 @@
        "richtig": false
       }
      ],
-     "tipp": "Schwinge jedes Wort. Prüfe dann: Bliebe am Zeilenende nur ein einzelner Buchstabe stehen? Das ist nicht erlaubt.",
-     "erklaerung": "Bei I-gel, A-bend und E-sel bliebe nur ein einzelner Vokal stehen, darum trennst du sie nicht. Eu-le und Ei-mer darfst du trennen, denn eu und ei sind zwei Buchstaben. Ameise trennst du so: Amei-se."
+     "tipp": "Schwinge jedes Wort. Prüfe dann: Bliebe am Zeilenende nur ein einzelner Buchstabe stehen? Das ist nicht erlaubt. Denk auch an die Regel für Zwielaute.",
+     "erklaerung": "Bei I-gel, A-bend und E-sel bliebe nur ein einzelner Vokal stehen, darum trennst du sie nicht. Eu-le und Ei-mer darfst du trennen, denn ein Zwielaut wie eu oder ei darf am Wortanfang allein stehen. Ameise trennst du so: Amei-se."
     },
     {
      "id": "rs-silben-08",
@@ -452,20 +454,20 @@
       },
       {
        "wahl": [
-        "g",
-        "k"
+        "k",
+        "g"
        ],
-       "loesung": 0
+       "loesung": 1
       },
       {
        "t": " auf einer Ban"
       },
       {
        "wahl": [
-        "g",
-        "k"
+        "k",
+        "g"
        ],
-       "loesung": 1
+       "loesung": 0
       },
       {
        "t": "."
@@ -527,7 +529,7 @@
      "typ": "eingabe",
      "stufe": 1,
      "kompetenz": "nachdenken",
-     "frage": "b oder p? Schreibe das fehlende Wort richtig auf.",
+     "frage": "b oder p? Schreibe das Wort mit dem richtigen Buchstaben vollständig auf.",
      "vorgabe": "Der Hund schläft in seinem Kor_.",
      "loesungen": [
       "Korb"
@@ -794,7 +796,7 @@
        "t": "einen"
       },
       {
-       "t": "Korbball"
+       "t": "Sonnenhut"
       },
       {
        "t": "und"
@@ -841,7 +843,7 @@
       }
      ],
      "tipp": "Zerlege zusammengesetzte Wörter in ihre Teile. Verlängere dann jeden Teil, der auf b, d, g, p, t oder k endet.",
-     "erklaerung": "Richtig ist Handtuch (Hän-de), Brot (Bro-te) und Sandburg (Bur-gen). Samstag, Fahrrad, Bergsee und Korbball sind richtig geschrieben."
+     "erklaerung": "Richtig ist Handtuch (Hän-de), Brot (Bro-te) und Sandburg (Bur-gen). Samstag (Ta-ge), Fahrrad (Rä-der), Bergsee (Ber-ge) und Sonnenhut (Hü-te) sind richtig geschrieben."
     },
     {
      "id": "rs-verlaengern-08",
@@ -905,20 +907,20 @@
    "kurz": "e oder ä? eu oder äu?",
    "kompetenz": "nachdenken",
    "wissen": {
-    "merksatz": "Du hörst e oder ä, eu oder äu? Suche ein verwandtes Wort mit a oder au. Findest du eins, schreibst du ä oder äu: Land → Länder, Baum → Bäume.",
+    "merksatz": "Du hörst e oder ä, eu oder äu? Suche ein verwandtes Wort mit a oder au. Findest du eins, schreibst du ä oder äu: Länder → Land, Bäume → Baum.",
     "punkte": [
      "Bei <b>Nomen</b> hilft oft die Einzahl: die Hände → die Hand, die Häuser → das Haus.",
      "Bei <b>Verben</b> hilft die Grundform: er fährt → fahren, sie läuft → laufen.",
      "Bei <b>Adjektiven</b> hilft die Grundstufe: älter → alt, wärmer → warm.",
      "Findest du kein verwandtes Wort mit a oder au, schreibst du meistens e oder eu: das Bett, das Feld, heute, die Freundin.",
-     "Manche Wörter schreibt man mit ä, obwohl es kein verwandtes Wort mit a gibt. Diese <b>Merkwörter</b> musst du dir einprägen: der Käfer, der Bär, der Käse, der März."
+     "Manche Wörter schreibt man mit ä, obwohl es kein verwandtes Wort mit a gibt. Diese <b>Merkwörter</b> musst du dir einprägen, zum Beispiel: der Käfer, der Bär, der Käse, der März."
     ],
     "beispiele": [
-     "Baum → Bäume",
-     "Land → Länder",
-     "Haus → Häuser",
-     "alt → älter",
-     "fahren → er fährt",
+     "Bäume → Baum",
+     "Länder → Land",
+     "Häuser → Haus",
+     "älter → alt",
+     "er fährt → fahren",
      "Merkwörter: Käfer, Bär, Käse"
     ]
    },
@@ -1117,13 +1119,13 @@
      "typ": "eingabe",
      "stufe": 2,
      "kompetenz": "nachdenken",
-     "frage": "ä oder e? Schreibe das fehlende Wort vollständig auf.",
-     "vorgabe": "Im Juli ist es meistens w_rmer als im April.",
+     "frage": "ä oder e? Schreibe das Wort mit der Lücke vollständig und richtig auf.",
+     "vorgabe": "Im Winter ist die Nacht l_nger als im Sommer.",
      "loesungen": [
-      "wärmer"
+      "länger"
      ],
-     "tipp": "Bilde die Grundstufe des Adjektivs: Wie heißt das Wort ohne -er?",
-     "erklaerung": "„wärmer“ kommt von „warm“. Weil das verwandte Wort ein a hat, schreibst du ä."
+     "tipp": "Bilde die Grundstufe des Adjektivs, also das Wort ohne -er. Welchen Vokal hörst du dann deutlich?",
+     "erklaerung": "„länger“ kommt von „lang“. Weil das verwandte Wort ein a hat, schreibst du ä."
     },
     {
      "id": "rs-ableiten-05",
@@ -1240,7 +1242,7 @@
        "richtig": true
       },
       {
-       "text": "der Käse",
+       "text": "die Träne",
        "richtig": true
       },
       {
@@ -1261,7 +1263,7 @@
       }
      ],
      "tipp": "Überlege bei jedem Wort: Gibt es ein verwandtes Wort mit a, zum Beispiel die Einzahl, die Grundstufe oder ein Wort aus derselben Wortfamilie?",
-     "erklaerung": "„Gärtner“ kommt von „Garten“, „Kälte“ von „kalt“ und „Schränke“ von „Schrank“. Zu Käfer, Käse und März gibt es kein verwandtes Wort mit a. Diese Merkwörter musst du dir einprägen."
+     "erklaerung": "„Gärtner“ kommt von „Garten“, „Kälte“ von „kalt“ und „Schränke“ von „Schrank“. Zu Käfer, Träne und März gibt es kein verwandtes Wort mit a. Diese Merkwörter musst du dir einprägen."
     },
     {
      "id": "rs-ableiten-08",
@@ -1360,24 +1362,25 @@
   {
    "id": "rs-gross",
    "titel": "Großschreibung",
-   "kurz": "Nomen, Satzanfang und höfliche Anrede",
+   "kurz": "Nomen, Namen, Satzanfang und höfliche Anrede",
    "kompetenz": "nachdenken",
    "wissen": {
-    "merksatz": "Groß schreibst du Nomen, das erste Wort eines Satzes und die höfliche Anrede „Sie“. Ob ein Wort ein Nomen ist, prüfst du mit der Artikelprobe: Passt „der“, „die“ oder „das“ davor?",
+    "merksatz": "Groß schreibst du Nomen, Namen, das erste Wort eines Satzes und die höfliche Anrede „Sie“. Ob ein Wort ein Nomen ist, prüfst du mit der Artikelprobe: Passt „der“, „die“ oder „das“ davor?",
     "punkte": [
      "Artikelprobe: der Hund, die Freude, das Glück. Auch Gefühle und Dinge, die man nicht anfassen kann, sind Nomen.",
-     "Wörter mit den Endungen <b>-ung</b>, <b>-heit</b>, <b>-keit</b>, <b>-nis</b> und <b>-schaft</b> sind immer Nomen: die Zeitung, die Gesundheit, die Freundlichkeit, das Zeugnis, die Freundschaft.",
+     "Wörter mit den Nachsilben <b>-ung</b>, <b>-heit</b>, <b>-keit</b>, <b>-nis</b> und <b>-schaft</b> sind Nomen: die Zeitung, die Schönheit, die Freundlichkeit, das Zeugnis, die Freundschaft. Aber Achtung: In „jung“ ist -ung keine Nachsilbe. „jung“ ist ein Adjektiv und wird kleingeschrieben.",
      "Das erste Wort eines Satzes schreibst du immer groß.",
-     "Sprichst du Erwachsene höflich an, schreibst du „Sie“, „Ihnen“ und „Ihr“ groß: Können Sie mir helfen? Meinst du mit „sie“ eine andere Person, schreibst du klein.",
-     "Auch Verben können zu Nomen werden. Steht „beim“, „zum“ oder „das“ davor, schreibst du sie groß: beim Lesen, zum Malen, das Schwimmen."
+     "<b>Namen</b> von Menschen schreibst du immer groß: Lena, Paul, Herr Huber.",
+     "Sprichst du Erwachsene höflich an, schreibst du „Sie“, „Ihnen“ und „Ihr“ groß: Können Sie mir helfen? Ist das Ihr Hut? Meinst du mit „sie“ eine andere Person, schreibst du klein. Auch „ihr“ für mehrere Kinder schreibst du klein: Kommt ihr mit?",
+     "Auch Verben können zu Nomen werden. Steht ein Artikel davor (das Schwimmen) oder „beim“ oder „zum“ (bei dem, zu dem), schreibst du das Verb groß: beim Singen, zum Basteln."
     ],
     "beispiele": [
      "der Mut, die Freude",
      "die Zeitung, die Freiheit",
-     "die Ehrlichkeit, das Erlebnis",
-     "die Freundschaft",
+     "die Pünktlichkeit, das Ergebnis",
+     "Namen: Lena, Herr Huber",
      "Können Sie mir helfen?",
-     "beim Lesen, zum Malen"
+     "beim Singen, zum Basteln"
     ]
    },
    "items": [
@@ -1534,21 +1537,21 @@
      "typ": "eingabe",
      "stufe": 2,
      "kompetenz": "nachdenken",
-     "frage": "Bilde aus dem Adjektiv ein Nomen mit der Endung -keit. Schreibe nur das Nomen auf.",
-     "vorgabe": "freundlich → die ___",
+     "frage": "Bilde aus dem Adjektiv ein Nomen. Hänge dazu -heit oder -keit an. Schreibe nur das Nomen auf.",
+     "vorgabe": "höflich → die ___",
      "loesungen": [
-      "Freundlichkeit",
-      "die Freundlichkeit"
+      "Höflichkeit",
+      "die Höflichkeit"
      ],
-     "tipp": "Hänge die Endung an das Adjektiv an. Denk daran, was für Wörter mit dieser Endung gilt.",
-     "erklaerung": "Aus „freundlich“ wird „die Freundlichkeit“. Wörter mit -keit sind Nomen und werden großgeschrieben."
+     "tipp": "Probiere beide Nachsilben aus und sprich die Wörter leise vor dich hin. Denk auch daran, wie man Nomen schreibt.",
+     "erklaerung": "Aus „höflich“ wird „die Höflichkeit“. Wörter mit der Nachsilbe -keit sind Nomen, darum schreibst du sie groß."
     },
     {
      "id": "rs-gross-05",
      "typ": "zuordnen",
      "stufe": 2,
      "kompetenz": "nachdenken",
-     "frage": "Mit welcher Endung wird aus dem Wort ein Nomen? Ordne zu.",
+     "frage": "Mit welcher Nachsilbe wird aus dem Wort ein Nomen? Ordne zu.",
      "gruppen": [
       "-ung",
       "-heit",
@@ -1589,7 +1592,7 @@
        "g": 3
       }
      ],
-     "tipp": "Hänge jede Endung probeweise an und sprich das neue Wort laut. Welches Nomen kennst du?",
+     "tipp": "Hänge jede Nachsilbe probeweise an und sprich das neue Wort laut. Welches Nomen kennst du?",
      "erklaerung": "die Hoffnung, die Wohnung, die Gesundheit, die Frechheit, die Ehrlichkeit, die Sauberkeit, das Erlebnis, das Geheimnis."
     },
     {
@@ -1604,10 +1607,10 @@
       },
       {
        "wahl": [
-        "Sie",
-        "sie"
+        "sie",
+        "Sie"
        ],
-       "loesung": 0
+       "loesung": 1
       },
       {
        "t": " mir bitte "
@@ -1634,10 +1637,10 @@
       },
       {
        "wahl": [
-        "ihnen",
-        "Ihnen"
+        "Ihnen",
+        "ihnen"
        ],
-       "loesung": 1
+       "loesung": 0
       },
       {
        "t": " ab."
@@ -1727,20 +1730,20 @@
       },
       {
        "wahl": [
-        "malen",
-        "Malen"
+        "Malen",
+        "malen"
        ],
-       "loesung": 0
+       "loesung": 1
       },
       {
        "t": ". Zum "
       },
       {
        "wahl": [
-        "malen",
-        "Malen"
+        "Malen",
+        "malen"
        ],
-       "loesung": 1
+       "loesung": 0
       },
       {
        "t": " holt er Pinsel und Farben. Seine Schwester Leyla will lieber "

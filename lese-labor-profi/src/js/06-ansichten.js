@@ -3,10 +3,21 @@ let ANSICHT = { name: 'start', param: null };
 const HASH_ANSICHTEN = new Set(['start', 'digital', 'lesen', 'tempo', 'rechtschreibung', 'grammatik', 'schreiben', 'fortschritt', 'erwachsene', 'info', 'profile']);
 let erwachseneOffen = false;
 
+const VERLAUF_ANSICHTEN = new Set(['sitzung', 'tempo-lauf', 'diktat']);
+let verlaufGesetzt = false;
 function zeige(name, param = null) {
-  if (ANSICHT.name === 'sitzung' && name !== 'sitzung') stoppeUhr();
-  if (typeof tempoStopp === 'function' && ANSICHT.name === 'tempo-lauf' && name !== 'tempo-lauf') tempoStopp();
+  const alt = ANSICHT.name;
+  if (alt === 'sitzung' && name !== 'sitzung') stoppeUhr();
+  if (alt === 'tempo-lauf' && name !== 'tempo-lauf') tempoStopp();
+  if (alt === 'schreibauftrag') schreibVerlassen();
+  if (alt === 'diktat' && name !== 'diktat') diktatVerlassen();
+  if (!['erwachsene', 'info'].includes(name)) erwachseneOffen = false;
   ANSICHT = { name, param };
+  if (VERLAUF_ANSICHTEN.has(name) && !verlaufGesetzt) {
+    // Eigener Verlaufseintrag: Die Zurück-Geste von Safari beendet dann die Übung statt die App zu verlassen.
+    try { history.pushState({ lese: name }, '', location.href); verlaufGesetzt = true; } catch (e) { /* Rahmen erlaubt es nicht */ }
+  }
+  if (!VERLAUF_ANSICHTEN.has(name)) verlaufGesetzt = false;
   render();
   if (HASH_ANSICHTEN.has(name)) {
     const h = '#' + name;
@@ -31,6 +42,8 @@ function render() {
   app.innerHTML = kopfHTML(titel) + `<main class="seite ${schmal ? 'seite-schmal' : ''}" id="inhalt">${html}</main>`;
   window.scrollTo(0, 0);
   nachRender();
+  const haupt = $('#inhalt');
+  if (haupt && !haupt.contains(document.activeElement)) { haupt.setAttribute('tabindex', '-1'); try { haupt.focus({ preventScroll: true }); } catch (e) { /* egal */ } }
 }
 function nachRender() {
   if (ANSICHT.name === 'diktat') diktatNachRender();
@@ -56,6 +69,7 @@ function viewProfile() {
   return {
     titel: 'Wer forscht heute?', schmal: true,
     html: `<section class="willkommen">
+      ${speicherWarnung ? `<div class="banner" role="alert">⚠️ ${esc(speicherWarnung)}</div>` : ''}
       <h1>Lese-Labor <span class="stempel">PROFI</span></h1>
       <p class="leise">Dein Deutsch-Labor für die 4. Klasse: Internetseiten prüfen, Texte knacken, Rechtschreibung und Grammatik trainieren.</p>
       ${liste.length ? `<div class="profil-liste">${liste.map((p) => `<button type="button" class="profil-karte" data-act="profil-wahl" data-id="${esc(p.id)}" aria-pressed="${p.id === DB.aktivesProfil}"><span class="ava" aria-hidden="true">${esc(p.avatar)}</span>${esc(p.name)}<small>${p.punkte} Punkte</small></button>`).join('')}</div>` : ''}
@@ -82,8 +96,10 @@ function kolbenSVG(anteil) {
 }
 function laufendBanner() {
   const p = P(); if (!p || !p.laufend) return '';
-  const l = p.laufend, beantw = l.ids.filter((id) => REG.items[id] && antwortStand(REG.items[id].it, l.antworten[id]) !== 'leer').length;
-  return `<div class="banner" role="status"><span>⏸️ Du hast „${esc(l.titel)}“ angefangen: ${beantw} von ${l.ids.length} beantwortet${l.zeitLimit ? `, noch ${zeitLesbar(l.zeitLimit - l.verbraucht)} Minuten` : ''}.</span>
+  const l = p.laufend, ids = (Array.isArray(l.ids) ? l.ids : []).filter((id) => REG.items[id]);
+  if (!ids.length) return '';
+  const beantw = ids.filter((id) => antwortStand(REG.items[id].it, sichereAntwort(REG.items[id].it, (l.antworten || {})[id], sicherePerm(REG.items[id].it, (l.perms || {})[id]))) !== 'leer').length;
+  return `<div class="banner" role="status"><span>⏸️ Du hast „${esc(l.titel)}“ angefangen: ${beantw} von ${ids.length} beantwortet${l.zeitLimit ? `, noch ${zeitLesbar(Number(l.zeitLimit) - Number(l.verbraucht || 0))} Minuten` : ''}.</span>
     <span class="zeile" style="margin-left:auto"><button type="button" class="knopf knopf-klein" data-act="laufend-weiter">Weitermachen</button><button type="button" class="knopf knopf-klein knopf-zweit" data-act="laufend-verwerfen">Verwerfen</button></span></div>`;
 }
 function viewStart() {
@@ -95,8 +111,8 @@ function viewStart() {
   const karten = MODULE.map((mod) => {
     let fuss;
     if (mod.id === 'tempo') {
-      const best = p.tempo.length ? Math.max(...p.tempo.map((t) => t.richtig)) : null;
-      fuss = `<div class="labor-fuss"><span>${best != null ? `Bestwert: ${best} Sätze richtig` : 'Noch kein Test'}</span></div>`;
+      const best = tempoBest(p);
+      fuss = `<div class="labor-fuss"><span>${best != null ? `Bester Tempo-Wert: ${best}` : 'Noch kein Test'}</span></div>`;
     } else {
       const s = modulStand(mod.id);
       fuss = `<div class="labor-fuss"><div class="balken"><i style="width:${pct(s.gemeistert, s.gesamt)}%"></i></div><span>${s.gemeistert}/${s.gesamt}</span></div>`;
@@ -134,7 +150,7 @@ function viewStart() {
         <div class="labore">${karten}</div>
         <div class="schnell-liste">
           <button type="button" class="schnell" data-act="fehler-kiste" ${kiste ? '' : 'disabled'}><b>${icon('kiste', '')} Fehler-Kiste ${kiste ? `<span class="zahl-blase">${kiste}</span>` : ''}</b><span>${kiste ? 'Übe die Aufgaben, die noch nicht geklappt haben.' : 'Leer – super!'}</span></button>
-          <button type="button" class="schnell" data-act="pruef-intro" data-art="gross"><b>Großer Deutsch-Check</b><span>20 gemischte Aufgaben aus allen Laboren</span></button>
+          <button type="button" class="schnell" data-act="pruef-intro" data-art="gross"><b>Großer Deutsch-Check</b><span>${grosserCheckAnzahl()} gemischte Aufgaben aus allen Laboren</span></button>
           <button type="button" class="schnell" data-nav="fortschritt"><b>Mein Labor-Buch</b><span>Fortschritt, Prüfungen und Abzeichen</span></button>
         </div>
       </div>
@@ -217,6 +233,11 @@ function modulTest(modul, proThema = 2) {
   const out = [];
   for (const gid of REG.module[modul].gruppen) out.push(...mische(REG.gruppen[gid].items).slice(0, proThema));
   return out;
+}
+function grosserCheckAnzahl() {
+  const n = (m, k) => Math.min(k, REG.module[m].items.length);
+  const erste = (m) => (REG.module[m].gruppen.length ? REG.gruppen[REG.module[m].gruppen[0]].items.length : 0);
+  return erste('digital') + erste('lesen') + n('rechtschreibung', 4) + n('grammatik', 4) + n('schreiben', 3);
 }
 function grosserCheck() {
   const p = P(), anz = p.pruefungen.filter((x) => x.art === 'gross').length;
@@ -308,7 +329,7 @@ function viewFortschritt() {
   }).join('');
   const pr = p.pruefungen.slice().reverse();
   const tempo = p.tempo.slice(-12);
-  const maxT = Math.max(10, ...tempo.map((t) => t.richtig));
+  const maxT = Math.max(10, ...tempo.map(tempoWert));
   const tage = []; const d = new Date(); d.setDate(d.getDate() - 27);
   for (let i = 0; i < 28; i++) { tage.push(heute(d)); d.setDate(d.getDate() + 1); }
   return {
@@ -320,8 +341,8 @@ function viewFortschritt() {
       <section class="karte" style="display:grid;gap:12px"><h2 style="font-size:1.1rem">Prüfungen</h2>
         ${pr.length ? `<div class="tabelle-scroll"><table class="verlauf-tabelle"><thead><tr><th>Datum</th><th>Prüfung</th><th>Punkte</th><th>Zeit</th><th></th></tr></thead><tbody>${pr.map((x, i) => `<tr><td>${datumLesbar(x.datum)}</td><td>${esc(x.titel)}</td><td><b>${x.punkte}/${x.max}</b></td><td>${zeitLesbar(x.dauer)}</td><td><button type="button" class="knopf knopf-geist knopf-klein" data-act="pruefung-ansehen" data-i="${p.pruefungen.length - 1 - i}">Ansehen</button></td></tr>`).join('')}</tbody></table></div>` : '<p class="leise">Noch keine Prüfung. Probiere die BYLET-D-Prüfung aus!</p>'}</section>
       <div class="start-raster" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))">
-        <section class="karte" style="display:grid;gap:12px;--farbe:var(--m-tempo)"><h2 style="font-size:1.1rem">Lese-Tempo (richtige Sätze)</h2>
-          ${tempo.length ? `<div class="mini-diagramm" role="img" aria-label="Letzte Ergebnisse im Lese-Tempo">${tempo.map((t) => `<div style="height:${Math.max(6, pct(t.richtig, maxT))}%" title="${datumLesbar(t.datum)}"><span>${t.richtig}</span></div>`).join('')}</div>` : '<p class="leise">Noch kein Tempo-Test.</p>'}</section>
+        <section class="karte" style="display:grid;gap:12px;--farbe:var(--m-tempo)"><h2 style="font-size:1.1rem">Lese-Tempo (Tempo-Wert)</h2>
+          ${tempo.length ? `<div class="mini-diagramm" role="img" aria-label="Letzte Ergebnisse im Lese-Tempo">${tempo.map((t) => `<div style="height:${Math.max(6, pct(tempoWert(t), maxT))}%" title="${datumLesbar(t.datum)}"><span>${tempoWert(t)}</span></div>`).join('')}</div>` : '<p class="leise">Noch kein Tempo-Test.</p>'}</section>
         <section class="karte" style="display:grid;gap:12px"><h2 style="font-size:1.1rem">Übungstage (letzte 4 Wochen)</h2>
           <div class="kalender" role="img" aria-label="${p.tage.filter((t) => tage.includes(t)).length} Übungstage in den letzten 4 Wochen">${tage.map((t) => `<i class="${p.tage.includes(t) ? 'an' : ''}" title="${t}"></i>`).join('')}</div>
           <p class="klein leise">${serie()} Tage in Folge · ${p.tage.length} Übungstage insgesamt</p></section>
@@ -372,7 +393,7 @@ function viewErwachsene() {
       <section class="karte" style="display:grid;gap:14px;grid-column:1/-1"><h2 style="font-size:1.2rem">Übersicht aller Profile auf diesem Gerät</h2>
         ${Object.keys(DB.profile).length ? `<div class="tabelle-scroll"><table class="verlauf-tabelle"><thead><tr><th>Profil</th><th>Gemeistert</th>${MODULE.filter((m) => m.id !== 'tempo' && modulHatInhalt(m.id)).map((m) => `<th>${esc(m.titel.replace('-Labor', '').replace('Schreib-Werkstatt', 'Schreiben'))}</th>`).join('')}<th>BYLET-D (beste)</th><th>Tempo (beste)</th><th>Zuletzt</th></tr></thead><tbody>${Object.values(DB.profile).map((p) => {
           const g = gesamtStand(p), by = p.pruefungen.filter((x) => x.art === 'digital'), tm = p.tempo;
-          return `<tr><td>${esc(p.avatar)} ${esc(p.name)}</td><td><b>${g.prozent} %</b></td>${MODULE.filter((m) => m.id !== 'tempo' && modulHatInhalt(m.id)).map((m) => { const s = modulStand(m.id, p); return `<td>${s.gemeistert}/${s.gesamt}</td>`; }).join('')}<td>${by.length ? Math.max(...by.map((x) => x.punkte)) + '/' + by[0].max : '–'}</td><td>${tm.length ? Math.max(...tm.map((x) => x.richtig)) : '–'}</td><td>${p.tage.length ? esc(p.tage[p.tage.length - 1].split('-').reverse().join('.')) : '–'}</td></tr>`;
+          return `<tr><td>${esc(p.avatar)} ${esc(p.name)}</td><td><b>${g.prozent} %</b></td>${MODULE.filter((m) => m.id !== 'tempo' && modulHatInhalt(m.id)).map((m) => { const s = modulStand(m.id, p); return `<td>${s.gemeistert}/${s.gesamt}</td>`; }).join('')}<td>${by.length ? Math.max(...by.map((x) => x.punkte)) + '/' + by[0].max : '–'}</td><td>${tm.length ? tempoBest(p) : '–'}</td><td>${p.tage.length ? esc(p.tage[p.tage.length - 1].split('-').reverse().join('.')) : '–'}</td></tr>`;
         }).join('')}</tbody></table></div>` : '<p class="leise">Noch keine Profile.</p>'}
       </section>
       <section class="karte" style="display:grid;gap:14px"><h2 style="font-size:1.2rem">Profile</h2>
@@ -380,7 +401,8 @@ function viewErwachsene() {
         <button type="button" class="knopf knopf-zweit knopf-klein" data-nav="profile">Neues Profil</button>
       </section>
       <section class="karte" style="display:grid;gap:14px"><h2 style="font-size:1.2rem">Fortschritt sichern</h2>
-        <p class="klein leise">Der Fortschritt liegt nur in diesem Browser. Mit dem Sicherungscode übertragen Sie ihn auf ein anderes Gerät oder bewahren ihn auf.</p>
+        <p class="klein leise">Der Fortschritt liegt nur in diesem Browser. Safari kann gespeicherte Daten von Websites löschen, die einige Tage nicht geöffnet wurden. Eine App auf dem Home-Bildschirm hat außerdem einen eigenen, getrennten Speicher. Sichern Sie den Fortschritt deshalb regelmäßig, z. B. vor den Ferien.</p>
+        <p class="klein"><b>Letzte Sicherung:</b> ${DB.letzteSicherung ? datumLesbar(DB.letzteSicherung) : 'noch nie'}</p>
         <div class="zeile"><button type="button" class="knopf knopf-klein" data-act="export-zeigen">Sicherungscode erstellen</button><button type="button" class="knopf knopf-zweit knopf-klein" data-act="export-datei" id="export-datei" hidden>Als Datei speichern</button></div>
         <div class="feld" id="export-feld" hidden><label for="export-code">Sicherungscode</label><textarea id="export-code" readonly></textarea><button type="button" class="knopf knopf-zweit knopf-klein" data-act="export-kopieren">Kopieren</button></div>
         <div class="feld"><label for="import-code">Sicherungscode einfügen</label><textarea id="import-code" placeholder="LLP1:…" autocomplete="off" spellcheck="false"></textarea></div>
@@ -441,7 +463,8 @@ function dialog({ titel, text = '', html = '', knoepfe = [{ label: 'OK', wert: t
     wurzel.innerHTML = `<div class="dialog-huelle"><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg-titel">
       <h2 id="dlg-titel">${esc(titel)}</h2>${text ? `<p>${esc(text)}</p>` : ''}${html}
       <div class="aktionen">${knoepfe.map((k, i) => `<button type="button" class="knopf ${k.stil || ''}" data-dlg="${i}">${esc(k.label)}</button>`).join('')}</div></div></div>`;
-    const fertig = (wert) => { wurzel.innerHTML = ''; dialogAufloeser = null; try { if (vorher && vorher.focus) vorher.focus(); } catch (e) { /* egal */ } resolve(wert); };
+    const app = $('#app'); if (app) { app.setAttribute('inert', ''); app.setAttribute('aria-hidden', 'true'); }
+    const fertig = (wert) => { wurzel.innerHTML = ''; dialogAufloeser = null; if (app) { app.removeAttribute('inert'); app.removeAttribute('aria-hidden'); } try { if (vorher && vorher.focus) vorher.focus(); } catch (e) { /* egal */ } resolve(wert); };
     dialogAufloeser = (taste) => {
       if (taste === 'Escape') { const k = knoepfe.find((x) => x.wert === false || x.wert === null); fertig(k ? k.wert : undefined); }
     };

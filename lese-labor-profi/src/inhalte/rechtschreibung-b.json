@@ -3,8 +3,8 @@
  "themen": [
   {
    "id": "rs-merk",
-   "titel": "Merkwörter: ie, h, aa/ee/oo, v",
-   "kurz": "Langes i, Dehnungs-h, Doppelvokale und v",
+   "titel": "ie-Regel und Merkwörter: h, aa/ee/oo, v",
+   "kurz": "Langes i, Dehnungs-h, doppelte Selbstlaute und v",
    "kompetenz": "merken",
    "wissen": {
     "merksatz": "Ein langes i schreibst du meistens <b>ie</b>. Wörter mit Dehnungs-h, mit <b>aa, ee, oo</b> oder mit <b>v</b> sind Merkwörter: Präge sie dir gut ein!",
@@ -19,7 +19,7 @@
      "Biene, Wiese, liegen → ie",
      "Tiger, Kino, Igel → Ausnahmen mit i",
      "Zahl, Huhn, Uhr → Dehnungs-h",
-     "Haar, Meer, Boot → Doppelvokal",
+     "Haar, Meer, Boot → doppelte Selbstlaute",
      "Vogel, vier, verlieren → v"
     ]
    },
@@ -163,7 +163,7 @@
        "fix": true
       }
      ],
-     "tipp": "Lies jedes Wort einzeln. Achte auf Doppelvokale, auf das Dehnungs-h und auf v.",
+     "tipp": "Lies jedes Wort einzeln. Achte auf doppelte Selbstlaute, auf das Dehnungs-h und auf v.",
      "erklaerung": "Richtig ist <b>See</b> mit ee, <b>Stuhl</b> mit Dehnungs-h vor l und <b>Vogel</b> mit v. „steht“ stimmt: Es kommt von „stehen“."
     },
     {
@@ -231,7 +231,7 @@
        "richtig": false
       }
      ],
-     "tipp": "Vergleiche die Sätze Wort für Wort. Prüfe das lange i, das v und den Doppelvokal.",
+     "tipp": "Vergleiche die Sätze Wort für Wort. Prüfe das lange i, das v und den doppelten Selbstlaut.",
      "erklaerung": "Nur im ersten Satz stimmen <b>liegt</b> mit ie, <b>viel</b> mit v und <b>Schnee</b> mit ee. „fiel“ gibt es auch, es kommt aber von „fallen“."
     },
     {
@@ -324,21 +324,23 @@
    "kurz": "Kurzer Selbstlaut – dann zwei Mitlaute",
    "kompetenz": "mitsprechen",
    "wissen": {
-    "merksatz": "Nach einem kurzen, betonten Selbstlaut folgen zwei Mitlaute. Hörst du nur einen, verdoppelst du ihn. Statt kk schreibst du <b>ck</b>, statt zz schreibst du <b>tz</b>.",
+    "merksatz": "Nach einem kurzen, betonten Selbstlaut folgen fast immer zwei Mitlaute. Hörst du nur einen, verdoppelst du ihn. Statt kk schreibst du <b>ck</b>, statt zz schreibst du <b>tz</b>.",
     "punkte": [
      "Sprich das Wort deutlich in Silben. Ist der betonte Selbstlaut kurz (Son-ne) oder lang (Ha-se)?",
-     "Nach kurzem Selbstlaut folgen zwei Mitlaute. Hörst du nur einen, wird er verdoppelt: Sonne, Teller, Mutter. Bei einsilbigen Wörtern hilft Verlängern: Ball → Bälle.",
+     "Nach kurzem Selbstlaut folgen zwei Mitlaute. Hörst du nur einen, wird er verdoppelt: Sonne, Teller, Mutter. Bei einsilbigen Wörtern hilft Verlängern: Ball → Bälle. Ausnahmen: Kleine Wörter wie <b>an, in, mit, um</b> haben einen kurzen Selbstlaut und trotzdem nur einen Mitlaut.",
      "Statt kk schreibst du <b>ck</b>, statt zz schreibst du <b>tz</b>: Decke, Zucker, Katze, sitzen.",
      "Nach l, n, r – das merke ja – steht nie tz und nie ck: Wolke, Bank, stark, Pilz, tanzen, Kerze.",
-     "Nach langem Selbstlaut und nach au, ei, eu folgt nur ein Mitlaut: Haken, Schaukel, heizen. Kleine Wörter wie an, in, mit, um sind Ausnahmen."
+     "Nach langem Selbstlaut und nach au, ei, eu wird nicht verdoppelt (kein ck, kein tz): Haken, Schaukel, heizen."
     ],
     "beispiele": [
      "Sonne, Teller, Mutter",
      "Ball → Bälle",
+     "an, in, mit, um → Ausnahmen mit einem Mitlaut",
      "Decke, Zucker → ck",
      "Katze, sitzen → tz",
      "Wolke, Bank, Pilz, Kerze → nach l, n, r",
-     "Haken, heizen → nach langem Laut"
+     "Haken → nach langem Selbstlaut",
+     "Schaukel, heizen → nach au, ei"
     ]
    },
    "items": [
@@ -627,7 +629,7 @@
        "loesung": 1
       },
       {
-       "t": "t ihn mit Tannenzweigen."
+       "t": "t das Zimmer mit Tannenzweigen."
       }
      ],
      "tipp": "Schau genau, was vor jeder Lücke steht: ei, ein Mitlaut oder ein kurzer Selbstlaut?",
@@ -665,21 +667,21 @@
   {
    "id": "rs-s",
    "titel": "s, ss oder ß",
-   "kurz": "Summend oder zischend, lang oder kurz?",
+   "kurz": "Kurz oder lang? Verlängern hilft!",
    "kompetenz": "nachdenken",
    "wissen": {
-    "merksatz": "Summt das s, schreibst du <b>s</b>. Zischt es nach langem Selbstlaut oder nach au, ei, eu, schreibst du <b>ß</b>. Zischt es nach kurzem Selbstlaut, schreibst du <b>ss</b>.",
+    "merksatz": "Nach kurzem Selbstlaut schreibst du meistens <b>ss</b>. Nach langem Selbstlaut und nach au, ei, eu schreibst du <b>ß</b> oder <b>s</b>. Bist du unsicher, verlängerst du das Wort oder lernst es als Merkwort.",
     "punkte": [
-     "Ein summendes s (es klingt wie eine Biene) schreibst du mit <b>s</b>: Rose, Hose, Wiese, lesen.",
-     "Ein zischendes s nach langem Selbstlaut schreibst du mit <b>ß</b>: Straße, Füße, grüßen, groß.",
-     "Auch nach au, ei und eu schreibst du für das zischende s ein <b>ß</b>: draußen, heißen, fleißig.",
+     "Sprich das Wort deutlich und frag dich zuerst: Ist der Selbstlaut vor dem s-Laut kurz oder lang?",
      "Nach kurzem Selbstlaut schreibst du <b>ss</b>: Wasser, Kissen, essen, Fluss.",
-     "Am Wortende hörst du den Unterschied nicht. Verlängere das Wort: Gras → Gräser, Fuß → Füße, Kuss → küssen."
+     "Nach langem Selbstlaut und nach au, ei, eu gibt es <b>ß</b> und <b>s</b>. Sprich das Wort ganz deutlich. Zischt das s, schreibst du ß (Straße, Füße, heißen, draußen). Summt es wie eine Biene, schreibst du s (Rose, Hose, Wiese, lesen).",
+     "Am Wortende hörst du den Unterschied nicht. Verlängere das Wort: Gras → Gräser, Fuß → Füße, Kuss → küssen.",
+     "In Bayern sprechen viele Menschen auch das s in Rose oder Hose zischend. Hörst du den Unterschied nicht sicher, ist das ganz normal. Dann hilft dir: auf kurz oder lang achten, verlängern und die Wörter mit ß als Merkwörter lernen, zum Beispiel Straße, groß, Fuß, heißen, draußen, fleißig."
     ],
     "beispiele": [
-     "Rose, Hose, lesen → s",
-     "Straße, groß, heißen → ß",
-     "Wasser, Kissen, essen → ss",
+     "Wasser, Kissen, essen → kurz: ss",
+     "Straße, groß, heißen → lang oder ei, zischend: ß",
+     "Rose, Hose, lesen → lang, summend: s",
      "Gras → Gräser",
      "Fuß → Füße",
      "Kuss → küssen"
@@ -880,13 +882,14 @@
      "typ": "eingabe",
      "stufe": 2,
      "kompetenz": "nachdenken",
-     "frage": "Wie schreibt man das Wort richtig? Tippe es ein.",
+     "frage": "Wie schreibt man das Wort richtig? Tippe das ganze Wort ein.",
      "vorgabe": "Ich trinke Saft aus einem Gla_.",
      "loesungen": [
-      "Glas"
+      "Glas",
+      "s"
      ],
-     "tipp": "Verlängere das Wort: Bilde die Mehrzahl. Summt oder zischt das s dann?",
-     "erklaerung": "Die Mehrzahl heißt <b>Gläser</b>. Dort hörst du ein summendes s – also schreibt man auch <b>Glas</b> mit s."
+     "tipp": "Verlängere das Wort: Bilde die Mehrzahl und sprich sie ganz deutlich. Summt oder zischt das s dann?",
+     "erklaerung": "Die Mehrzahl heißt <b>Gläser</b>. Wenn du sie deutlich sprichst, summt das s – also schreibt man auch <b>Glas</b> mit s."
     },
     {
      "id": "rs-s-06",
@@ -1079,18 +1082,6 @@
      "frage": "Tippe alle Wörter des Begleitsatzes an.",
      "teile": [
       {
-       "t": "Oma",
-       "ziel": true
-      },
-      {
-       "t": "fragt",
-       "ziel": true
-      },
-      {
-       "t": ":",
-       "fix": true
-      },
-      {
        "t": "„",
        "fix": true
       },
@@ -1119,10 +1110,30 @@
       {
        "t": "“",
        "fix": true
+      },
+      {
+       "t": ",",
+       "fix": true
+      },
+      {
+       "t": "fragt",
+       "ziel": true
+      },
+      {
+       "t": "Oma",
+       "ziel": true
+      },
+      {
+       "t": "freundlich",
+       "ziel": true
+      },
+      {
+       "t": ".",
+       "fix": true
       }
      ],
-     "tipp": "Der Begleitsatz steht nicht in den Anführungszeichen. Er verrät, wer spricht.",
-     "erklaerung": "„Oma fragt“ ist der Begleitsatz, denn er sagt, wer spricht. Weil er vorn steht, folgt ein Doppelpunkt."
+     "tipp": "Der Begleitsatz steht nicht in den Anführungszeichen. Er verrät, wer spricht und manchmal auch, wie jemand spricht.",
+     "erklaerung": "„fragt Oma freundlich“ ist der Begleitsatz: Er sagt, wer spricht und wie. Weil er hinten steht, folgt nach der wörtlichen Rede ein Komma."
     },
     {
      "id": "rs-rede-03",
@@ -1241,10 +1252,15 @@
       "Doppelpunkt",
       "der Doppelpunkt",
       "ein Doppelpunkt",
+      "Der Doppelpunkt",
+      "Ein Doppelpunkt",
+      "doppelpunkt",
+      "der doppelpunkt",
+      "ein doppelpunkt",
       ":"
      ],
      "tipp": "Der Begleitsatz steht vor der wörtlichen Rede. Welches Zeichen kündigt an, dass gleich jemand spricht?",
-     "erklaerung": "Steht der Begleitsatz vorn, folgt ein <b>Doppelpunkt</b>: Paul flüstert: „Das Baby schläft.“"
+     "erklaerung": "Steht der Begleitsatz vorn, folgt ein <b>Doppelpunkt</b>: Paul flüstert: „Das Baby schläft.“ Das Wort „Doppelpunkt“ ist ein Nomen, deshalb schreibst du es groß."
     },
     {
      "id": "rs-rede-07",
@@ -1496,8 +1512,8 @@
    "titel": "Profi-Diktat: alles gemischt",
    "woerter": [
     {
-     "wort": "vielleicht",
-     "satz": "Morgen regnet es vielleicht."
+     "wort": "verstecken",
+     "satz": "Die Kinder verstecken sich hinter der Hecke."
     },
     {
      "wort": "Fahrrad",
@@ -1532,8 +1548,8 @@
      "satz": "Die Bienen arbeiten fleißig."
     },
     {
-     "wort": "Familie",
-     "satz": "Meine Familie fährt in den Urlaub."
+     "wort": "Fußball",
+     "satz": "In der Pause spielen wir Fußball."
     }
    ]
   }

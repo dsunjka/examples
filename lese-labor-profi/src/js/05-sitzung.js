@@ -25,11 +25,15 @@ function starteSitzung(cfg) {
 }
 function sitzungFortsetzen() {
   const p = P(); if (!p || !p.laufend) return;
+  const ids = (Array.isArray(p.laufend.ids) ? p.laufend.ids : []).filter((id) => REG.items[id]);
+  if (!ids.length) { sitzungVerwerfen(); toast('Diese Prüfung passt nicht mehr zu den Aufgaben und wurde verworfen.', 3600); render(); return; }
   SITZ = p.laufend;
-  SITZ.ids = SITZ.ids.filter((id) => REG.items[id]);
+  SITZ.ids = ids;
+  SITZ.perms = SITZ.perms || {}; SITZ.antworten = SITZ.antworten || {}; SITZ.markiert = SITZ.markiert || {}; SITZ.offen = SITZ.offen || {};
   for (const id of SITZ.ids) {
-    if (!SITZ.perms[id]) SITZ.perms[id] = neuePerm(REG.items[id].it);
-    if (SITZ.antworten[id] === undefined) SITZ.antworten[id] = leereAntwort(REG.items[id].it, SITZ.perms[id]);
+    const it = REG.items[id].it;
+    SITZ.perms[id] = sicherePerm(it, SITZ.perms[id]);
+    SITZ.antworten[id] = sichereAntwort(it, SITZ.antworten[id], SITZ.perms[id]);
   }
   SITZ.ui = { chip: null };
   SITZ.index = clamp(SITZ.index || 0, 0, SITZ.ids.length - 1);
@@ -66,7 +70,8 @@ function renderSitzung() {
 }
 function springenAktualisieren() {
   const b = $('#springen'), a = $('#aufgabe-spalte'); if (!b || !a) return;
-  const unten = a.getBoundingClientRect().top < window.innerHeight * 0.45;
+  const q = $('.quelle-spalte');
+  const unten = q ? q.getBoundingClientRect().bottom < window.innerHeight * 0.55 : a.getBoundingClientRect().top < window.innerHeight * 0.45;
   b.textContent = unten ? 'Zur Quelle ↑' : 'Zur Aufgabe ↓';
   b.dataset.ziel = unten ? 'quelle' : 'aufgabe';
 }
@@ -119,7 +124,7 @@ function zeichneAufgabe() {
   if (g && g.art === 'fall') {
     const ersteDesFalls = SITZ.ids.findIndex((x) => REG.items[x].gruppe === g.id) === SITZ.index;
     const offen = SITZ.offen[g.id] != null ? SITZ.offen[g.id] : ersteDesFalls;
-    kopf = `<details class="auftrag" data-gruppe="${esc(g.id)}" ${offen ? 'open' : ''}><summary>Dein Auftrag – Fall ${g.daten.nummer}: ${esc(g.titel)}</summary><p>${rich(g.daten.einleitung)}</p></details>`;
+    kopf = `<details class="auftrag" data-gruppe="${esc(g.id)}" ${offen ? 'open' : ''}><summary>Dein Auftrag – Fall ${esc(g.daten.nummer)}: ${esc(g.titel)}</summary><p>${rich(g.daten.einleitung)}</p></details>`;
   } else if (g && g.art === 'text' && g.daten.einleitung) {
     kopf = `<details class="auftrag" data-gruppe="${esc(g.id)}" ${SITZ.offen[g.id] ? 'open' : ''}><summary>Worum geht es?</summary><p>${rich(g.daten.einleitung)}</p></details>`;
   } else if (g && g.art === 'thema' && !pruef) {
@@ -163,7 +168,7 @@ function zeichneAufgabe() {
       <p class="frage-text" id="frage-${esc(id)}">${rich(it.frage)}</p>
       ${it.vorgabe ? `<p class="frage-vorgabe">${rich(it.vorgabe)}</p>` : ''}
       <p class="hinweis-typ">${esc(TYP_HINWEIS[it.typ] || '')}</p>
-      <div class="antwort" id="antwort">${renderAntwortflaeche(it, a, SITZ.perms[id], loesungZeigen ? 'loesung' : 'edit', SITZ.ui)}</div>
+      <div class="antwort" id="antwort">${renderAntwortflaeche(it, a, SITZ.perms[id], loesungZeigen ? 'loesung' : 'edit', SITZ.ui, gesperrt)}</div>
       ${tipp}${rm}
       <div class="aktionen">${aktionen}</div>
     </article>`;
@@ -172,14 +177,17 @@ function zeichneAufgabe() {
 function zeichneAntwortNeu() {
   const id = aktId(), it = aktIt();
   const el = $('#antwort'); if (!el) return;
+  const f = document.activeElement && el.contains(document.activeElement) ? document.activeElement : null;
+  const merk = f ? ['act', 'i', 'z', 's', 'g', 'k'].map((k) => (f.dataset[k] != null ? `[data-${k}="${f.dataset[k]}"]` : '')).join('') : '';
   el.innerHTML = renderAntwortflaeche(it, SITZ.antworten[id], SITZ.perms[id], 'edit', SITZ.ui);
+  if (merk) { const neu = el.querySelector(merk); if (neu) { try { neu.focus({ preventScroll: true }); } catch (e) { neu.focus(); } } }
   const k = $('#pruefen-knopf'); if (k) k.disabled = antwortStand(it, SITZ.antworten[id]) === 'leer';
   if (istPruefung()) { zeichneKopf(); sitzungMerken(); }
 }
 
 /* ---------- Aktionen ---------- */
 function antwortAktion(act, ds) {
-  if (!SITZ) return;
+  if (!SITZ || SITZ.abgegeben || ANSICHT.name !== 'sitzung') return;
   const id = aktId(), it = aktIt();
   if (!istPruefung() && SITZ.phase[id] !== 'edit') return;
   SITZ.antworten[id] = aendereAntwort(it, SITZ.antworten[id], act, ds, SITZ.ui);
@@ -232,8 +240,18 @@ function abschliessen(id, status, sauber) {
   const n = notiereErgebnis(id, status, { sauber });
   SITZ.punkte += n;
   SITZ._letztePunkte = { id, n };
-  if (SITZ.art === 'mission') { const p = P(); if (p && p.mission && !p.mission.erledigt.includes(id)) p.mission.erledigt.push(id); }
+  if (SITZ.art === 'mission') { const p = P(); if (p && p.mission && !p.mission.erledigt.includes(id)) p.mission.erledigt.push(id); missionPruefen(); }
   pruefeAbzeichen();
+}
+/** Bonus für die vollständig erledigte Tagesmission (egal, wie die Sitzung beendet wird). */
+function missionPruefen() {
+  const p = P();
+  if (!p || !p.mission || p.mission.erledigt.length < p.mission.ids.length || p.missionGeschafft === p.mission.datum) return;
+  p.missionGeschafft = p.mission.datum;
+  punkteDazu(30);
+  if (SITZ && SITZ.art === 'mission') SITZ.punkte += 30;
+  speichern();
+  toast('Tagesmission geschafft! +30 Laborpunkte');
 }
 function loesungZeigen() {
   const id = aktId(), it = aktIt();
@@ -260,9 +278,9 @@ function weiter() {
 
 /* ---------- Uhr ---------- */
 function starteUhr() {
-  stoppeUhr();
-  if (!istPruefung()) return;
+  if (!istPruefung()) { stoppeUhr(); return; }
   bildschirmWach(true);
+  if (uhrTimer) return;
   uhrTimer = setInterval(() => {
     if (!SITZ || !istPruefung() || SITZ.abgegeben) { stoppeUhr(); return; }
     if (document.visibilityState !== 'visible' || $('.dialog-huelle')) return;
@@ -279,12 +297,20 @@ function starteUhr() {
   }, 1000);
 }
 function stoppeUhr() { if (uhrTimer) clearInterval(uhrTimer); uhrTimer = null; bildschirmWach(false); }
+let wachGewuenscht = false;
 async function bildschirmWach(an) {
+  wachGewuenscht = an;
   try {
-    if (an && 'wakeLock' in navigator && !wakeLock) { wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', () => { wakeLock = null; }); }
-    if (!an && wakeLock) { await wakeLock.release(); wakeLock = null; }
+    if (an && 'wakeLock' in navigator && !wakeLock && document.visibilityState === 'visible') {
+      const lock = await navigator.wakeLock.request('screen');
+      if (!wachGewuenscht) { lock.release(); return; }
+      wakeLock = lock;
+      lock.addEventListener('release', () => { if (wakeLock === lock) wakeLock = null; });
+    }
+    if (!an && wakeLock) { const lock = wakeLock; wakeLock = null; await lock.release(); }
   } catch (e) { wakeLock = null; }
 }
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && wachGewuenscht && !wakeLock) bildschirmWach(true); });
 async function zeitAbgelaufen() {
   stoppeUhr();
   await dialog({ titel: 'Die Zeit ist um!', text: 'Deine Prüfung wird jetzt ausgewertet. Alle Antworten, die du gegeben hast, zählen.', knoepfe: [{ label: 'Zur Auswertung', wert: true }] });
@@ -321,7 +347,7 @@ function auswerten() {
     const st = erg.status === 'richtig' ? 'r' : erg.status === 'teilweise' ? 't' : erg.status === 'leer' ? 'leer' : 'f';
     details[id] = st;
     if (st === 'r') punkte++;
-    notiereErgebnis(id, erg.status === 'richtig' ? 'richtig' : erg.status === 'teilweise' ? 'teilweise' : 'falsch', { sauber: true });
+    if (st !== 'leer') notiereErgebnis(id, erg.status === 'richtig' ? 'richtig' : erg.status === 'teilweise' ? 'teilweise' : 'falsch', { sauber: true });
   }
   const p = P();
   const eintrag = {
@@ -336,22 +362,22 @@ function auswerten() {
     speichern(true);
   }
   pruefeAbzeichen();
+  SITZ = null;
   zeige('ergebnis', { index: p ? p.pruefungen.length - 1 : -1, eintrag });
 }
 function trainingFertig() {
   stoppeUhr();
   const p = P();
-  if (SITZ.art === 'mission' && p && p.mission && p.mission.erledigt.length >= p.mission.ids.length) {
-    if (p.missionGeschafft !== p.mission.datum) { p.missionGeschafft = p.mission.datum; punkteDazu(30); SITZ.punkte += 30; }
-    speichern();
-  }
+  if (SITZ.art === 'mission') missionPruefen();
   pruefeAbzeichen();
-  zeige('zusammenfassung', { sitz: SITZ });
+  const fertig = SITZ;
+  SITZ = null;
+  zeige('zusammenfassung', { sitz: fertig });
 }
 async function sitzungBeenden() {
   if (istPruefung()) {
     const w = await dialog({ titel: 'Prüfung unterbrechen?', text: 'Deine Antworten und die Zeit werden gespeichert. Du kannst später auf der Startseite weitermachen.', knoepfe: [{ label: 'Weiterarbeiten', wert: false, stil: 'knopf-zweit' }, { label: 'Unterbrechen', wert: true }] });
-    if (!w) return;
+    if (!w) return false;
     sitzungMerken(true);
   } else {
     const offen = SITZ.ids.filter((id) => !SITZ.ergebnis[id]).length;
@@ -359,13 +385,14 @@ async function sitzungBeenden() {
       // nichts gelöst: ohne Rückfrage zurück
     } else if (offen) {
       const w = await dialog({ titel: 'Training beenden?', text: `Noch ${plural(offen, 'Aufgabe ist', 'Aufgaben sind')} offen. Was du schon gelöst hast, ist gespeichert.`, knoepfe: [{ label: 'Weiterüben', wert: false, stil: 'knopf-zweit' }, { label: 'Beenden', wert: true }] });
-      if (!w) return;
+      if (!w) return false;
     }
   }
   stoppeUhr();
   const z = SITZ.zurueck || { name: 'start' };
   SITZ = null;
   zeige(z.name, z.param);
+  return true;
 }
 
 /* ---------- Ergebnisansichten ---------- */
@@ -400,10 +427,10 @@ function auswertungNach(ids, details) {
 function reviewListe(ids, antworten, perms, details) {
   return `<div class="review-liste">${ids.map((id, i) => {
     const info = REG.items[id]; if (!info) return '';
-    const it = info.it, st = details[id] || 'leer', g = REG.gruppen[info.gruppe];
+    const it = info.it, st = ['r', 't', 'f', 'leer'].includes(details[id]) ? details[id] : 'leer', g = REG.gruppen[info.gruppe];
     const sym = st === 'r' ? '✓' : st === 't' ? '½' : st === 'leer' ? '–' : '✗';
-    const perm = (perms && perms[id]) || neuePerm(it);
-    const a = antworten && antworten[id] !== undefined ? antworten[id] : leereAntwort(it, perm);
+    const perm = sicherePerm(it, perms && perms[id]);
+    const a = sichereAntwort(it, antworten ? antworten[id] : undefined, perm);
     return `<details class="review"><summary><span class="status-icon ${st}" aria-label="${st === 'r' ? 'richtig' : st === 't' ? 'teilweise' : st === 'leer' ? 'nicht beantwortet' : 'falsch'}">${sym}</span><span><b>${i + 1}.</b> ${rich(it.frage)}</span><span class="leise klein">${esc(g ? (g.art === 'fall' ? 'Fall ' + g.daten.nummer : g.titel) : '')}</span></summary>
       <div class="inhalt">${it.vorgabe ? `<p class="frage-vorgabe">${rich(it.vorgabe)}</p>` : ''}<div class="gesperrt">${renderAntwortflaeche(it, a, perm, 'loesung', {})}</div><div class="rueckmeldung l"><b>Erklärung</b><p>${rich(it.erklaerung)}</p></div></div></details>`;
   }).join('')}</div>`;

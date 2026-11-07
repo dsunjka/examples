@@ -5,8 +5,8 @@ const TEMPO_UEBUNG = [{ t: 'Ein Hund kann bellen.', r: true }, { t: 'Die Sonne i
 let TEMPO = null, tempoTimer = null;
 function viewTempo() {
   const p = P(), saetze = (INHALT.tempo || {}).saetze || [];
-  const letzte = p.tempo.slice(-10), best = p.tempo.length ? Math.max(...p.tempo.map((t) => t.richtig)) : null;
-  const maxT = Math.max(10, ...letzte.map((t) => t.richtig));
+  const letzte = p.tempo.slice(-10), best = tempoBest(p);
+  const maxT = Math.max(10, ...letzte.map(tempoWert));
   const dauer = E().tempoDauer;
   return {
     titel: 'Lese-Tempo',
@@ -19,12 +19,14 @@ function viewTempo() {
           <button type="button" class="knopf" data-act="tempo-start" ${saetze.length ? '' : 'disabled'}>Test starten</button>
         </section>
         <section class="karte" style="display:grid;gap:12px;--farbe:var(--m-tempo)"><h2 style="font-size:1.2rem">Deine letzten Ergebnisse</h2>
-          ${letzte.length ? `<div class="mini-diagramm" role="img" aria-label="Richtige Sätze der letzten Tests">${letzte.map((t) => `<div style="height:${Math.max(6, pct(t.richtig, maxT))}%" title="${datumLesbar(t.datum)}"><span>${t.richtig}</span></div>`).join('')}</div>
-          <div class="tabelle-scroll"><table class="verlauf-tabelle"><thead><tr><th>Datum</th><th>Richtig</th><th>Falsch</th><th>Tempo-Wert</th></tr></thead><tbody>${letzte.slice().reverse().map((t) => `<tr><td>${datumLesbar(t.datum)}</td><td>${t.richtig}</td><td>${t.falsch}</td><td><b>${Math.max(0, t.richtig - t.falsch)}</b></td></tr>`).join('')}</tbody></table></div>` : '<p class="leise">Noch kein Test gemacht. Probiere es aus!</p>'}
+          ${letzte.length ? `<div class="mini-diagramm" role="img" aria-label="Tempo-Werte der letzten Tests">${letzte.map((t) => `<div style="height:${Math.max(6, pct(tempoWert(t), maxT))}%" title="${datumLesbar(t.datum)}"><span>${tempoWert(t)}</span></div>`).join('')}</div>
+          <div class="tabelle-scroll"><table class="verlauf-tabelle"><thead><tr><th>Datum</th><th>Richtig</th><th>Falsch</th><th>Tempo-Wert</th></tr></thead><tbody>${letzte.slice().reverse().map((t) => `<tr><td>${datumLesbar(t.datum)}</td><td>${t.richtig}</td><td>${t.falsch}</td><td><b>${tempoWert(t)}</b></td></tr>`).join('')}</tbody></table></div>` : '<p class="leise">Noch kein Test gemacht. Probiere es aus!</p>'}
           <p class="klein leise">Der Tempo-Wert ist: richtige minus falsche Sätze. Vergleiche dich mit dir selbst – jedes Mal ein bisschen besser!</p></section>
       </div>`,
   };
 }
+function tempoWert(t) { return Math.max(0, (Number(t.richtig) || 0) - (Number(t.falsch) || 0)); }
+function tempoBest(p) { return p && p.tempo.length ? Math.max(...p.tempo.map(tempoWert)) : null; }
 function tempoStart() {
   const saetze = (INHALT.tempo || {}).saetze || [];
   const n = saetze.length, drittel = Math.ceil(n / 3);
@@ -92,23 +94,25 @@ function tempoEnde() {
   if (!TEMPO || TEMPO.phase !== 'lauf') { zeige('tempo'); return; }
   TEMPO.phase = 'ende';
   const p = P();
-  const erg = { datum: Date.now(), richtig: TEMPO.richtig, falsch: TEMPO.falsch, dauer: TEMPO.dauer, gelesen: TEMPO.i };
-  if (p) { p.tempo.push(erg); if (p.tempo.length > 60) p.tempo = p.tempo.slice(-60); punkteDazu(Math.round(TEMPO.richtig / 2)); merkeTag(); speichern(true); }
+  const verstrichen = Math.max(1, Math.min(TEMPO.dauer, Math.round((Date.now() - TEMPO.start) / 1000)));
+  const erg = { datum: Date.now(), richtig: TEMPO.richtig, falsch: TEMPO.falsch, dauer: verstrichen, gelesen: TEMPO.i };
+  if (p) { p.tempo.push(erg); if (p.tempo.length > 60) p.tempo = p.tempo.slice(-60); punkteDazu(Math.round(tempoWert(erg) / 2)); merkeTag(); speichern(true); }
   pruefeAbzeichen();
   zeige('tempo-ergebnis', { erg, fehler: TEMPO.fehler.slice() });
 }
 function viewTempoErgebnis(param) {
   if (!param) return viewTempo();
   const { erg, fehler } = param, p = P();
-  const frueher = p.tempo.slice(0, -1), best = frueher.length ? Math.max(...frueher.map((t) => t.richtig)) : null;
-  const wert = Math.max(0, erg.richtig - erg.falsch), proMin = (erg.richtig / (erg.dauer / 60)).toFixed(1).replace('.', ',');
+  const frueher = p.tempo.slice(0, -1), best = frueher.length ? Math.max(...frueher.map(tempoWert)) : null;
+  const wert = tempoWert(erg), proMin = (erg.richtig / (Math.max(1, erg.dauer) / 60)).toFixed(1).replace('.', ',');
   return {
     titel: 'Lese-Tempo – Ergebnis', schmal: true,
     html: `<section class="karte ergebnis-kopf">${ringSVG(erg.richtig, Math.max(erg.gelesen, 1), 'var(--m-tempo)')}
-      <div style="display:grid;gap:8px"><h1 class="titel-urkunde">${best != null && erg.richtig > best ? 'Neuer Bestwert! 🚀' : 'Geschafft!'}</h1>
+      <div style="display:grid;gap:8px"><h1 class="titel-urkunde">${best != null && wert > best ? 'Neuer Bestwert! 🚀' : 'Geschafft!'}</h1>
       <p>Du hast <b>${erg.gelesen}</b> Sätze gelesen: <b>${erg.richtig}</b> richtig, <b>${erg.falsch}</b> falsch.</p>
       <p>Tempo-Wert: <b>${wert}</b> · ${proMin} richtige Sätze pro Minute${best != null ? ` · bisheriger Bestwert: ${best}` : ''}</p>
       <div class="zeile"><button type="button" class="knopf" data-act="tempo-start">Nochmal</button><button type="button" class="knopf knopf-zweit" data-nav="tempo">Zur Übersicht</button></div></div></section>
+      ${erg.falsch > erg.richtig / 4 ? `<section class="info-box" style="--farbe:var(--signal)"><b>Genauigkeit vor Tempo</b><p>Du hattest viele falsche Antworten. Sie werden vom Tempo-Wert abgezogen – raten lohnt sich nicht. Lies jeden Satz bis zum Ende.</p></section>` : ''}
       ${fehler.length ? `<section class="karte" style="display:grid;gap:10px"><h2 style="font-size:1.15rem">Diese Sätze hast du falsch beurteilt</h2><ul style="margin:0;padding-left:20px;display:grid;gap:6px">${fehler.map((s) => `<li>${esc(s.t)} <b>→ ${s.r ? 'stimmt' : 'stimmt nicht'}</b></li>`).join('')}</ul><p class="klein leise">Tipp: Lies genau bis zum Ende des Satzes – manchmal steckt der Unsinn im letzten Wort.</p></section>` : ''}`,
   };
 }
@@ -156,7 +160,7 @@ function viewDiktat() {
     return {
       titel: 'Diktat – Ergebnis', schmal: true,
       html: `<section class="karte ergebnis-kopf">${ringSVG(ok, n, farbe)}<div style="display:grid;gap:8px"><h1 class="titel-urkunde">${ok === n ? 'Fehlerfrei – Diktat-Meister!' : 'Diktat geschafft!'}</h1><p>${ok} von ${n} Wörtern sofort richtig geschrieben.</p>
-        <div class="zeile"><button type="button" class="knopf" data-act="diktat" data-id="${esc(D.id)}">Nochmal</button><button type="button" class="knopf knopf-zweit" data-nav="rechtschreibung">Zum Rechtschreib-Labor</button></div></div></section>
+        <div class="zeile">${D.id !== '__fehler' || P().fehlerwoerter.length ? `<button type="button" class="knopf" data-act="diktat" data-id="${esc(D.id)}">Nochmal</button>` : '<span class="leise">Keine Fehlerwörter mehr – super!</span>'}<button type="button" class="knopf knopf-zweit" data-nav="rechtschreibung">Zum Rechtschreib-Labor</button></div></div></section>
         ${falsch.length ? `<section class="karte" style="display:grid;gap:10px"><h2 style="font-size:1.15rem">Übe diese Wörter</h2><div class="beispiele">${falsch.map((x) => `<span><b>${esc(x.wort)}</b> (du: ${esc(x.eingabe)})</span>`).join('')}</div></section>` : ''}`,
     };
   }
@@ -187,7 +191,7 @@ function viewDiktat() {
         : `<p class="blitz-wort" id="blitz-wort" aria-live="polite">${D.phase === 'blitz' ? esc(w.wort) : D.phase === 'geprueft' ? '' : '???'}</p>${D.phase === 'bereit' ? `<button type="button" class="knopf" data-act="diktat-blitz">Wort zeigen</button>` : ''}`}
       <form id="diktat-form" style="display:grid;gap:12px;width:min(480px,100%)">
         <label for="diktat-eingabe" class="unsichtbar">Dein Wort</label>
-        <input class="eingabe" type="text" id="diktat-eingabe" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" placeholder="${D.korrektur ? 'Jetzt richtig abschreiben' : 'Schreibe hier'}" ${D.phase === 'blitz' ? 'disabled' : ''}>
+        <input class="eingabe" type="text" id="diktat-eingabe" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" enterkeyhint="done" placeholder="${D.korrektur ? 'Jetzt richtig abschreiben' : 'Schreibe hier'}" ${D.phase === 'blitz' || D.phase === 'bereit' || (D.phase === 'geprueft' && !D.korrektur) ? 'disabled' : ''}>
         ${D.phase === 'geprueft' && !D.korrektur ? `<button type="button" class="knopf" data-act="diktat-weiter">${D.i + 1 < n ? 'Nächstes Wort' : 'Ergebnis ansehen'}${icon('vor')}</button>` : `<button type="submit" class="knopf" ${D.phase === 'blitz' ? 'disabled' : ''}>${D.korrektur ? 'Abschreiben prüfen' : 'Prüfen'}</button>`}
       </form>${rueck}</section>`,
   };
@@ -197,7 +201,10 @@ function diktatNachRender() {
   if (inp && !inp.disabled && !(DIKTAT && DIKTAT.phase === 'geprueft' && !DIKTAT.korrektur)) setTimeout(() => inp.focus(), 60);
 }
 function diktatPruefen(wert) {
-  const D = DIKTAT, w = D.woerter[D.i];
+  const D = DIKTAT; if (!D || D.phase === 'ende') return;
+  const darf = D.korrektur || (D.modus === 'hoer' && D.phase === 'hoer') || (D.modus === 'blitz' && D.phase === 'schreiben');
+  if (!darf) { if (D.modus === 'blitz' && D.phase === 'bereit') toast('Tippe zuerst auf „Wort zeigen“.'); return; }
+  const w = D.woerter[D.i];
   const g = normEingabe(wert);
   if (!g) return;
   if (D.korrektur) {
@@ -236,10 +243,18 @@ function diktatVorlesen(nurSatz = false) {
   const w = DIKTAT.woerter[DIKTAT.i];
   if (!sprich(nurSatz ? [w.satz] : [w.wort, w.satz, w.wort])) toast('Die Sprachausgabe funktioniert hier leider nicht. Nutze das Blitz-Diktat.');
 }
+let blitzTimer = null;
 function diktatBlitz() {
-  DIKTAT.phase = 'blitz';
+  const d = DIKTAT;
+  d.phase = 'blitz';
   zeige('diktat');
-  setTimeout(() => { if (DIKTAT && DIKTAT.phase === 'blitz') { DIKTAT.phase = 'schreiben'; zeige('diktat'); } }, (Number(E().blitzSek) || 3) * 1000);
+  clearTimeout(blitzTimer);
+  blitzTimer = setTimeout(() => { if (DIKTAT === d && d.phase === 'blitz' && ANSICHT.name === 'diktat') { d.phase = 'schreiben'; zeige('diktat'); } }, (Number(E().blitzSek) || 3) * 1000);
+}
+function diktatVerlassen() {
+  clearTimeout(blitzTimer); blitzTimer = null;
+  if (DIKTAT && DIKTAT.phase === 'blitz') DIKTAT.phase = 'bereit';
+  try { if (sprachausgabeOk()) speechSynthesis.cancel(); } catch (e) { /* egal */ }
 }
 /** Buchstabenvergleich (Levenshtein-Pfad) für die Fehleranzeige. */
 function vergleichHTML(ist, soll) {
@@ -282,19 +297,22 @@ function viewSchreibauftrag(id) {
       </div></div>`,
   };
 }
-let schreibAuftragId = null;
+let schreibAuftragId = null, schreibTimer = null;
 function schreibNachRender() {
   schreibAuftragId = ANSICHT.param;
   const feld = $('#schreibfeld'); if (!feld) return;
   const zaehle = () => { const z = $('#wort-zaehler'); if (z) z.textContent = String(woerterIn(feld.value).length); };
   zaehle();
-  let t = null;
-  feld.addEventListener('input', () => { zaehle(); clearTimeout(t); t = setTimeout(() => schreibSpeichern(), 400); });
-  $$('[data-notiz]').forEach((el) => el.addEventListener('input', () => { clearTimeout(t); t = setTimeout(() => schreibSpeichern(), 400); }));
-  $$('[data-check]').forEach((el) => el.addEventListener('change', () => schreibSpeichern()));
+  const spaeter = () => { clearTimeout(schreibTimer); schreibTimer = setTimeout(schreibSpeichern, 400); };
+  feld.addEventListener('input', () => { zaehle(); spaeter(); });
+  $$('[data-notiz]').forEach((el) => el.addEventListener('input', spaeter));
+  $$('[data-check]').forEach((el) => el.addEventListener('change', schreibSpeichern));
 }
+/** Beim Verlassen der Schreib-Ansicht sofort speichern, solange die Felder noch da sind. */
+function schreibVerlassen() { schreibSpeichern(); }
 function schreibSpeichern() {
-  const p = P(); if (!p || !schreibAuftragId) return;
+  clearTimeout(schreibTimer); schreibTimer = null;
+  const p = P(); if (!p || !schreibAuftragId || !$('#schreibfeld') || ANSICHT.name !== 'schreibauftrag') return;
   const st = p.texte[schreibAuftragId] || (p.texte[schreibAuftragId] = {});
   const feld = $('#schreibfeld'); if (feld) st.text = feld.value;
   st.notizen = $$('[data-notiz]').map((el) => el.value);
@@ -317,10 +335,10 @@ function schreibAnalyse(text, auftrag) {
     if (wieder.length) tipp(`Satzanfänge: ${wieder.map(([w, n]) => `„${w[0].toUpperCase() + w.slice(1)}“ (${n}×)`).join(', ')}. Probiere andere Anfänge: Plötzlich, Kurz darauf, Am Abend, Zum Glück …`);
     else gut('Deine Satzanfänge sind abwechslungsreich.');
   }
-  const zahl = {};
-  for (const w of woerter) { const k = w.toLowerCase(); if (k.length >= 4 && !STOPPWOERTER.has(k)) zahl[k] = (zahl[k] || 0) + 1; }
-  const oft = Object.entries(zahl).filter(([, n]) => n >= 3).sort((a, b) => b[1] - a[1]).slice(0, 4);
-  if (oft.length) tipp(`Diese Wörter kommen oft vor: ${oft.map(([w, n]) => `„${w}“ (${n}×)`).join(', ')}. Ersetze manche durch ein anderes Wort oder ein Pronomen.`);
+  const anzahl = {}, schreibung = {};
+  for (const w of woerter) { const k = w.toLowerCase(); if (k.length >= 4 && !STOPPWOERTER.has(k)) { anzahl[k] = (anzahl[k] || 0) + 1; if (!schreibung[k] || /^[A-ZÄÖÜ]/.test(w)) schreibung[k] = w; } }
+  const oft = Object.entries(anzahl).filter(([, n]) => n >= 3).sort((a, b) => b[1] - a[1]).slice(0, 4);
+  if (oft.length) tipp(`Diese Wörter kommen oft vor: ${oft.map(([w, n]) => `„${schreibung[w]}“ (${n}×)`).join(', ')}. Ersetze manche durch ein anderes Wort oder ein Pronomen.`);
   else if (woerter.length > 30) gut('Du wiederholst kaum Wörter.');
   const klein = saetze.filter((s) => /^[„"»]?[a-zäöüß]/.test(s)).slice(0, 3);
   if (klein.length) tipp(`Diese Sätze beginnen klein: ${klein.map((s) => `„${s.slice(0, 24)}…“`).join(', ')}. Satzanfänge schreibt man groß.`);

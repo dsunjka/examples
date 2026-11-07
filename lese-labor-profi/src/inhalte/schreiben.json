@@ -1,0 +1,1649 @@
+{
+ "modul": "schreiben",
+ "themen": [
+  {
+   "id": "sc-aufbau",
+   "titel": "Eine Erzählung aufbauen",
+   "kurz": "Einleitung, Hauptteil mit Höhepunkt, Schluss – der rote Faden einer Geschichte",
+   "kompetenz": "planen",
+   "wissen": {
+    "merksatz": "Eine gute Erzählung hat einen roten Faden: Die <b>Einleitung</b> stellt die Situation vor, im <b>Hauptteil</b> steigt die Spannung bis zum <b>Höhepunkt</b>, und der <b>Schluss</b> erzählt, wie alles ausgeht.",
+    "punkte": [
+     "Einleitung: Beantworte die W-Fragen <b>Wer? Wo? Wann?</b> Verrate noch nicht, wie die Geschichte ausgeht.",
+     "Hauptteil: Erzähle Schritt für Schritt, was passiert. Die Spannung steigt bis zum Höhepunkt – dem spannendsten Moment.",
+     "Schluss: Erzähle kurz, wie es ausgeht und wie sich die Figuren fühlen. Die Spannung löst sich.",
+     "Erzähle in der richtigen zeitlichen Reihenfolge und im Präteritum. Die wörtliche Rede darf im Präsens stehen.",
+     "Die Überschrift passt zum Inhalt, macht neugierig und verrät das Ende nicht."
+    ],
+    "beispiele": [
+     "Wer? – Mia und ihre Freundin Lena",
+     "Wo? – im Schullandheim am Waldsee",
+     "Wann? – in der letzten Nacht vor der Heimfahrt",
+     "Höhepunkt: Im allerletzten Moment …",
+     "Gute Überschrift: „Das Geheimnis auf dem Dachboden“",
+     "Verrät zu viel: „Wie wir den Schatz fanden“"
+    ]
+   },
+   "items": [
+    {
+     "id": "sc-aufbau-01",
+     "typ": "reihenfolge",
+     "stufe": 1,
+     "kompetenz": "planen",
+     "frage": "Bringe die Sätze der Erzählung in die richtige Reihenfolge.",
+     "reihe": [
+      "Am Samstag fuhr Emir mit seinem Opa zum Angeln an den Mühlweiher.",
+      "Zwei Stunden lang biss kein einziger Fisch an.",
+      "Auf einmal zuckte die Angel, und die Schnur spannte sich.",
+      "Emir zog mit aller Kraft und hielt endlich einen riesigen Karpfen in den Händen.",
+      "Am Abend erzählte Emir der ganzen Familie stolz von seinem Fang."
+     ],
+     "tipp": "Suche zuerst den Satz, der verrät, wer dabei ist, wo und wann es spielt. Achte danach auf Signalwörter wie „auf einmal“ und „endlich“.",
+     "erklaerung": "Zuerst kommt die Einleitung mit Wer, Wo und Wann. Dann steigt die Spannung: Lange beißt nichts, auf einmal zuckt die Angel. Der Fang ist der Höhepunkt, Emirs stolze Erzählung am Abend ist der Schluss."
+    },
+    {
+     "id": "sc-aufbau-02",
+     "typ": "multi",
+     "stufe": 1,
+     "kompetenz": "planen",
+     "frage": "Welche Fragen beantwortest du schon in der Einleitung einer Erzählung?",
+     "optionen": [
+      {
+       "text": "Wer ist dabei?",
+       "richtig": true
+      },
+      {
+       "text": "Wo spielt die Geschichte?",
+       "richtig": true
+      },
+      {
+       "text": "Wann passiert es?",
+       "richtig": true
+      },
+      {
+       "text": "Wie geht die Geschichte aus?",
+       "richtig": false
+      },
+      {
+       "text": "Was ist der spannendste Moment?",
+       "richtig": false
+      }
+     ],
+     "tipp": "Die Einleitung stellt die Geschichte vor. Überlege: Was muss der Leser gleich am Anfang wissen – und was soll noch eine Überraschung bleiben?",
+     "erklaerung": "In die Einleitung gehören Wer, Wo und Wann. Den spannendsten Moment und den Ausgang verrätst du erst im Hauptteil und im Schluss."
+    },
+    {
+     "id": "sc-aufbau-03",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "planen",
+     "frage": "Welcher Satz ist der beste Anfang für eine Erzählung über einen Tag im Freibad?",
+     "optionen": [
+      {
+       "text": "An einem heißen Sonntag im Juli radelten Aylin und ihre Cousine Leyla zum Freibad in Seebrunn.",
+       "richtig": true
+      },
+      {
+       "text": "An einem heißen Tag fuhren wir irgendwohin, und dort passierte dann etwas sehr Komisches.",
+       "richtig": false
+      },
+      {
+       "text": "Aylin und Leyla fanden im Freibad einen verlorenen Schlüssel und brachten ihn zum Bademeister.",
+       "richtig": false
+      },
+      {
+       "text": "Im Freibad ist es im Sommer immer schön, weil das Wasser kühl ist und es Pommes gibt.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Prüfe jeden Satz: Erfährst du, wer dabei ist, wo und wann es spielt? Und bleibt noch offen, was passieren wird?",
+     "erklaerung": "Nur „An einem heißen Sonntag im Juli …“ nennt Wer (Aylin und Leyla), Wann (Sonntag im Juli) und Wo (Freibad in Seebrunn) und verrät noch nicht, was passiert. Der Satz mit dem Schlüssel erzählt schon die ganze Geschichte."
+    },
+    {
+     "id": "sc-aufbau-04",
+     "typ": "zuordnen",
+     "stufe": 2,
+     "kompetenz": "planen",
+     "frage": "Ordne jeden Satz dem passenden Teil der Erzählung zu.",
+     "gruppen": [
+      "Einleitung",
+      "Hauptteil",
+      "Schluss"
+     ],
+     "elemente": [
+      {
+       "t": "Am Wandertag stieg die Klasse 4b mit Frau Huber auf den Kogelberg.",
+       "g": 0
+      },
+      {
+       "t": "Jonas durfte an diesem Tag das Klassenmaskottchen tragen, einen kleinen Plüschfuchs.",
+       "g": 0
+      },
+      {
+       "t": "Oben am Gipfelkreuz merkte Jonas plötzlich, dass der Fuchs verschwunden war.",
+       "g": 1
+      },
+      {
+       "t": "Alle suchten aufgeregt. Im allerletzten Moment, kurz vor dem Abstieg, entdeckte Sofia etwas Rotes im hohen Gras.",
+       "g": 1
+      },
+      {
+       "t": "Erleichtert lachten alle auf dem Heimweg über die große Suchaktion.",
+       "g": 2
+      },
+      {
+       "t": "Seit diesem Tag bindet Jonas den Fuchs immer an seinem Rucksack fest.",
+       "g": 2
+      }
+     ],
+     "tipp": "In der Einleitung ist noch alles ruhig. Im Hauptteil gibt es ein Problem, und die Spannung steigt bis zum Höhepunkt. Im Schluss ist die Spannung vorbei.",
+     "erklaerung": "Die Einleitung stellt Klasse, Ort und Zeit vor. Im Hauptteil verschwindet der Fuchs, alle suchen, und im allerletzten Moment entdeckt Sofia ihn – das ist der Höhepunkt. Der Schluss erzählt, wie sich alle fühlen und was danach passiert."
+    },
+    {
+     "id": "sc-aufbau-05",
+     "typ": "markieren",
+     "stufe": 3,
+     "kompetenz": "planen",
+     "frage": "Tippe den Satz an, der den Höhepunkt dieser Erzählung bildet.",
+     "teile": [
+      {
+       "t": "Leyla hatte zum Geburtstag einen Wellensittich bekommen und ihn Kiwi genannt."
+      },
+      {
+       "t": "Eines Morgens vergaß sie, die Käfigtür zu schließen."
+      },
+      {
+       "t": "Kiwi schlüpfte hinaus und flatterte aufgeregt durch die Küche."
+      },
+      {
+       "t": "Gerade als er auf das offene Fenster zuflog, schloss Leyla es im allerletzten Moment.",
+       "ziel": true
+      },
+      {
+       "t": "Erschöpft landete Kiwi auf ihrer Schulter."
+      },
+      {
+       "t": "Seitdem prüft Leyla die Käfigtür immer zweimal."
+      }
+     ],
+     "tipp": "Der Höhepunkt ist der spannendste Moment. Dort entscheidet sich, wie die Geschichte ausgeht.",
+     "erklaerung": "Am Fenster ist die Spannung am größten: Fliegt Kiwi davon oder nicht? Danach löst sich die Spannung, und der Schluss beginnt."
+    },
+    {
+     "id": "sc-aufbau-06",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "planen",
+     "frage": "Welche Überschrift passt am besten zu dieser Erzählung?",
+     "vorgabe": "<b>Inhalt:</b> Paul und Amira hören beim Spielen im Park ein seltsames Schnaufen. In einer Hecke hat sich ein Igel in einem alten Netz verfangen. Die beiden holen Hilfe, und der Igel wird befreit.",
+     "optionen": [
+      {
+       "text": "Gefangen im Netz",
+       "richtig": true
+      },
+      {
+       "text": "Wie wir den Igel retteten",
+       "richtig": false
+      },
+      {
+       "text": "Spielen im Park",
+       "richtig": false
+      },
+      {
+       "text": "Der Igel ist wieder frei!",
+       "richtig": false
+      }
+     ],
+     "tipp": "Eine gute Überschrift passt zum Inhalt, macht neugierig und verrät das Ende nicht. Prüfe jede Überschrift mit diesen drei Fragen.",
+     "erklaerung": "„Gefangen im Netz“ passt zum Ereignis und macht neugierig, wie es weitergeht. „Wie wir den Igel retteten“ und „Der Igel ist wieder frei!“ verraten das Ende. „Spielen im Park“ sagt nichts über das Ereignis."
+    }
+   ]
+  },
+  {
+   "id": "sc-lebendig",
+   "titel": "Lebendig erzählen",
+   "kurz": "Treffende Verben, anschauliche Adjektive, Gefühle und wörtliche Rede",
+   "kompetenz": "formulieren",
+   "wissen": {
+    "merksatz": "Lebendig erzählen heißt: Der Leser sieht die Geschichte wie einen Film im Kopf. Dabei helfen <b>treffende Verben</b>, <b>anschauliche Adjektive</b>, <b>gezeigte Gefühle</b> und <b>wörtliche Rede</b>.",
+    "punkte": [
+     "Ersetze „sagen“ und „gehen“ durch treffende Verben: erklären, schimpfen, jubeln – rennen, stolpern, trödeln.",
+     "Adjektive malen Bilder: ein <i>knorriger</i> Baum, eine <i>eiskalte</i> Hand.",
+     "Zeige Gefühle, statt sie nur zu nennen: „Mein Herz klopfte bis zum Hals.“ statt „Ich hatte Angst.“",
+     "Lass deine Figuren sprechen. Wörtliche Rede steht in Anführungszeichen.",
+     "Spannungswörter wie <i>plötzlich</i>, <i>auf einmal</i> oder <i>im letzten Moment</i> machen neugierig – aber nicht zu oft!"
+    ],
+    "beispiele": [
+     "sagen → brüllen, wispern, erklären, jammern",
+     "gehen → stolzieren, trödeln, rennen, waten",
+     "ein Baum → ein knorriger, uralter Baum",
+     "Ich war froh. → Ich hätte die ganze Welt umarmen können.",
+     "„Pst!“, flüsterte Ben.",
+     "plötzlich, auf einmal, im letzten Moment"
+    ]
+   },
+   "items": [
+    {
+     "id": "sc-lebendig-01",
+     "typ": "zuordnen",
+     "stufe": 1,
+     "kompetenz": "formulieren",
+     "frage": "Sortiere die Verben: Gehören sie zum Wortfeld „sagen“ oder zum Wortfeld „gehen“?",
+     "gruppen": [
+      "Wortfeld „sagen“",
+      "Wortfeld „gehen“"
+     ],
+     "elemente": [
+      {
+       "t": "flüstern",
+       "g": 0
+      },
+      {
+       "t": "schleichen",
+       "g": 1
+      },
+      {
+       "t": "rufen",
+       "g": 0
+      },
+      {
+       "t": "humpeln",
+       "g": 1
+      },
+      {
+       "t": "stottern",
+       "g": 0
+      },
+      {
+       "t": "schlendern",
+       "g": 1
+      },
+      {
+       "t": "murmeln",
+       "g": 0
+      },
+      {
+       "t": "hetzen",
+       "g": 1
+      }
+     ],
+     "tipp": "Frage dich bei jedem Verb: Macht man das mit dem Mund oder mit den Beinen?",
+     "erklaerung": "Flüstern, rufen, stottern und murmeln sind Arten zu sprechen. Schleichen, humpeln, schlendern und hetzen sind Arten, sich fortzubewegen."
+    },
+    {
+     "id": "sc-lebendig-02",
+     "typ": "luecke",
+     "stufe": 1,
+     "kompetenz": "formulieren",
+     "frage": "Wähle jeweils das Verb, das am besten passt.",
+     "teile": [
+      {
+       "t": "Damit niemand mithören konnte, "
+      },
+      {
+       "wahl": [
+        "flüsterte",
+        "erzählte",
+        "rief"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " Mia ihrer Freundin das Geheimnis ins Ohr. Danach "
+      },
+      {
+       "wahl": [
+        "schlich",
+        "rannte",
+        "schlenderte"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " sie auf Zehenspitzen aus dem Zimmer, denn ihr kleiner Bruder schlief schon."
+      }
+     ],
+     "tipp": "Achte auf die Hinweise im Text: „niemand mithören“, „ins Ohr“, „auf Zehenspitzen“ und „schlief schon“. Welches Verb beschreibt am genauesten, wie Mia spricht und geht?",
+     "erklaerung": "Ein Geheimnis, das niemand mithören soll, flüstert man ins Ohr. „Erzählte“ ist zu ungenau, „rief“ zu laut. Wer auf Zehenspitzen geht, damit der Bruder weiterschläft, schleicht – rennen wäre zu laut, und schlendern heißt gemütlich bummeln."
+    },
+    {
+     "id": "sc-lebendig-03",
+     "typ": "markieren",
+     "stufe": 2,
+     "kompetenz": "formulieren",
+     "frage": "Tippe die drei Spannungswörter an.",
+     "teile": [
+      {
+       "t": "Ben"
+      },
+      {
+       "t": "las"
+      },
+      {
+       "t": "im Bett"
+      },
+      {
+       "t": ".",
+       "fix": true
+      },
+      {
+       "t": "Plötzlich",
+       "ziel": true
+      },
+      {
+       "t": "hörte"
+      },
+      {
+       "t": "er"
+      },
+      {
+       "t": "ein Kratzen"
+      },
+      {
+       "t": "an der Tür"
+      },
+      {
+       "t": ".",
+       "fix": true
+      },
+      {
+       "t": "Er"
+      },
+      {
+       "t": "hielt"
+      },
+      {
+       "t": "den Atem"
+      },
+      {
+       "t": "an"
+      },
+      {
+       "t": ".",
+       "fix": true
+      },
+      {
+       "t": "Auf einmal",
+       "ziel": true
+      },
+      {
+       "t": "war"
+      },
+      {
+       "t": "es"
+      },
+      {
+       "t": "ganz still"
+      },
+      {
+       "t": ".",
+       "fix": true
+      },
+      {
+       "t": "Im nächsten Moment",
+       "ziel": true
+      },
+      {
+       "t": "sprang"
+      },
+      {
+       "t": "die Tür"
+      },
+      {
+       "t": "auf"
+      },
+      {
+       "t": "–",
+       "fix": true
+      },
+      {
+       "t": "und"
+      },
+      {
+       "t": "Kater Moritz"
+      },
+      {
+       "t": "spazierte"
+      },
+      {
+       "t": "herein"
+      },
+      {
+       "t": ".",
+       "fix": true
+      }
+     ],
+     "tipp": "Spannungswörter kündigen an, dass gleich etwas Überraschendes passiert. Achte auch auf Wortgruppen aus mehreren Wörtern.",
+     "erklaerung": "„Plötzlich“, „Auf einmal“ und „Im nächsten Moment“ sind Spannungswörter. Sie zeigen: Jetzt passiert etwas Überraschendes."
+    },
+    {
+     "id": "sc-lebendig-04",
+     "typ": "luecke",
+     "stufe": 2,
+     "kompetenz": "formulieren",
+     "frage": "Wähle für jede wörtliche Rede das Verb, das am besten zur Situation passt.",
+     "teile": [
+      {
+       "t": "„Hurra, wir haben gewonnen!“, "
+      },
+      {
+       "wahl": [
+        "jubelte",
+        "schluchzte",
+        "flüsterte"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " Luca. „Mein Knie tut so weh!“, "
+      },
+      {
+       "wahl": [
+        "jammerte",
+        "lachte",
+        "prahlte"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " Felix. „Räum sofort dein Zimmer auf!“, "
+      },
+      {
+       "wahl": [
+        "befahl",
+        "bettelte",
+        "kicherte"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " Papa."
+      }
+     ],
+     "tipp": "Überlege bei jeder wörtlichen Rede: Wie fühlt sich die Person gerade, und was will sie?",
+     "erklaerung": "Wer gewonnen hat, jubelt. Wer Schmerzen hat, jammert. „Räum sofort dein Zimmer auf!“ ist ein Befehl – Papa befiehlt."
+    },
+    {
+     "id": "sc-lebendig-05",
+     "typ": "multi",
+     "stufe": 3,
+     "kompetenz": "formulieren",
+     "frage": "Welche Sätze zeigen ein Gefühl, ohne es beim Namen zu nennen?",
+     "optionen": [
+      {
+       "text": "Mateo biss sich auf die Lippe und starrte auf seine Schuhe.",
+       "richtig": true
+      },
+      {
+       "text": "Hannah hüpfte quietschend durchs Zimmer und klatschte in die Hände.",
+       "richtig": true
+      },
+      {
+       "text": "Mir lief ein eiskalter Schauer über den Rücken.",
+       "richtig": true
+      },
+      {
+       "text": "Mateo war sehr traurig, weil er das Spiel verloren hatte.",
+       "richtig": false
+      },
+      {
+       "text": "Hannah freute sich riesig über das große Geschenk von Oma.",
+       "richtig": false
+      },
+      {
+       "text": "Ich hatte große Angst vor dem lauten Gewitter in der Nacht.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Ein Gefühl zeigen heißt: beschreiben, was der Körper tut. Ein Gefühl nennen heißt: das Gefühlswort hinschreiben, zum Beispiel „wütend“.",
+     "erklaerung": "Auf die Lippe beißen, quietschend hüpfen und ein Schauer über den Rücken zeigen Gefühle durch den Körper. In den anderen Sätzen stehen die Gefühle direkt da: traurig, freute sich, Angst."
+    },
+    {
+     "id": "sc-lebendig-06",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "formulieren",
+     "frage": "Welche Fassung erzählt am lebendigsten?",
+     "optionen": [
+      {
+       "text": "Ben schlich die knarrende Kellertreppe hinunter. Sein Herz pochte wie wild. „Ist da jemand?“, flüsterte er.",
+       "richtig": true
+      },
+      {
+       "text": "Ben ging die Kellertreppe hinunter, weil er etwas holen wollte. Er hatte Angst. Dann sagte er: „Ist da jemand?“",
+       "richtig": false
+      },
+      {
+       "text": "Plötzlich ging Ben in den Keller. Plötzlich war es dunkel. Plötzlich sagte er: „Ist da jemand?“",
+       "richtig": false
+      },
+      {
+       "text": "Ben ging in den Keller. Er hatte sehr, sehr große Angst. Er sagte ganz leise: „Ist da jemand im Keller?“",
+       "richtig": false
+      }
+     ],
+     "tipp": "Achte auf drei Dinge: treffende Verben statt „gehen“ und „sagen“, ein gezeigtes Gefühl und keine Wiederholungen.",
+     "erklaerung": "Mit „schlich“, „knarrende Kellertreppe“, „Herz pochte“ und „flüsterte“ siehst du die Szene wie im Film. Die anderen Fassungen nutzen „ging“ und „sagte“, nennen das Gefühl nur oder wiederholen „plötzlich“."
+    }
+   ]
+  },
+  {
+   "id": "sc-satzanfaenge",
+   "titel": "Satzanfänge und Satzverbindungen",
+   "kurz": "Abwechslung statt „Dann … dann …“ und Sätze geschickt verbinden",
+   "kompetenz": "formulieren",
+   "wissen": {
+    "merksatz": "Beginne nicht jeden Satz mit „Dann“ oder „Und dann“. Wechsle die Satzanfänge ab und verbinde Sätze mit passenden <b>Verbindungswörtern</b>.",
+    "punkte": [
+     "Abwechslungsreiche Satzanfänge: zuerst, danach, kurz darauf, anschließend, nach einer Weile, am Abend, schließlich.",
+     "Du kannst auch ein anderes Satzglied nach vorne stellen: „Im Garten spielte Noah.“ statt „Noah spielte im Garten.“",
+     "<b>weil</b> und <b>denn</b> nennen einen Grund, <b>deshalb</b> nennt eine Folge, <b>obwohl</b> und <b>trotzdem</b> zeigen einen Gegensatz.",
+     "<b>als</b>, <b>nachdem</b> und <b>bevor</b> sagen, wann etwas passiert. Bei <i>nachdem</i> ist das eine schon fertig, wenn das andere beginnt.",
+     "Nach <b>weil</b>, <b>als</b>, <b>nachdem</b>, <b>obwohl</b> und <b>bevor</b> steht das Verb am Ende: „…, weil ich krank <i>war</i>.“ Diesen Satzteil trennst du mit einem Komma ab.",
+     "Steht eines dieser Wörter am Satzanfang, kommt nach dem Komma gleich das Verb: „Obwohl es regnete, <i>spielten</i> wir Fußball.“",
+     "Nach <b>deshalb</b> und <b>trotzdem</b> kommt gleich das Verb: „Deshalb <i>blieb</i> ich zu Hause.“"
+    ],
+    "beispiele": [
+     "Dann … Dann … → Zuerst … Danach … Zum Schluss …",
+     "Ich blieb zu Hause, weil ich krank war.",
+     "Ich war krank. Deshalb blieb ich zu Hause.",
+     "Obwohl es regnete, spielten wir Fußball.",
+     "Nachdem wir gegessen hatten, gingen wir hinaus.",
+     "Bevor wir losfuhren, packten wir die Koffer.",
+     "Als der Wecker klingelte, sprang ich aus dem Bett."
+    ]
+   },
+   "items": [
+    {
+     "id": "sc-satzanfaenge-01",
+     "typ": "single",
+     "stufe": 1,
+     "kompetenz": "formulieren",
+     "frage": "Welcher Text hat die abwechslungsreichsten Satzanfänge?",
+     "optionen": [
+      {
+       "text": "Am Morgen packten wir die Koffer. Kurz darauf kam der Bus. Nach zwei Stunden erreichten wir das Schullandheim.",
+       "richtig": true
+      },
+      {
+       "text": "Dann packten wir die Koffer. Dann kam der Bus. Dann erreichten wir nach zwei langen Stunden das Schullandheim.",
+       "richtig": false
+      },
+      {
+       "text": "Wir packten am Morgen die Koffer. Wir stiegen in den Bus. Wir erreichten nach zwei Stunden das Schullandheim.",
+       "richtig": false
+      },
+      {
+       "text": "Und dann packten wir die Koffer. Und dann kam der Bus. Und dann waren wir endlich im Schullandheim.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lies nur den Anfang jedes Satzes. In welchem Text beginnt jeder Satz anders?",
+     "erklaerung": "„Am Morgen“, „Kurz darauf“ und „Nach zwei Stunden“ sind verschiedene Satzanfänge. Sie zeigen außerdem genau, wann etwas passiert. Die anderen Texte beginnen jeden Satz gleich."
+    },
+    {
+     "id": "sc-satzanfaenge-02",
+     "typ": "zuordnen",
+     "stufe": 1,
+     "kompetenz": "formulieren",
+     "frage": "Was zeigen diese Verbindungswörter an? Sortiere sie.",
+     "gruppen": [
+      "nennt einen Grund",
+      "zeigt einen Gegensatz",
+      "sagt, wann etwas passiert"
+     ],
+     "elemente": [
+      {
+       "t": "weil",
+       "g": 0
+      },
+      {
+       "t": "denn",
+       "g": 0
+      },
+      {
+       "t": "obwohl",
+       "g": 1
+      },
+      {
+       "t": "trotzdem",
+       "g": 1
+      },
+      {
+       "t": "als",
+       "g": 2
+      },
+      {
+       "t": "nachdem",
+       "g": 2
+      },
+      {
+       "t": "bevor",
+       "g": 2
+      }
+     ],
+     "tipp": "Bilde mit jedem Wort einen kurzen Satz, zum Beispiel über das Wetter. Was drückt das Wort in deinem Satz aus?",
+     "erklaerung": "Weil und denn nennen einen Grund. Obwohl und trotzdem zeigen einen Gegensatz. Als, nachdem und bevor sagen, wann etwas passiert."
+    },
+    {
+     "id": "sc-satzanfaenge-03",
+     "typ": "luecke",
+     "stufe": 2,
+     "kompetenz": "formulieren",
+     "frage": "Wähle die Verbindungswörter, die den Sinn richtig ausdrücken.",
+     "teile": [
+      {
+       "t": "Lena zog ihre Regenjacke an, "
+      },
+      {
+       "wahl": [
+        "weil",
+        "obwohl",
+        "sodass"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " es in Strömen regnete. "
+      },
+      {
+       "wahl": [
+        "Obwohl",
+        "Weil",
+        "Damit"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " sie die Jacke trug, wurde sie auf dem Schulweg klatschnass. Zu Hause fror sie, "
+      },
+      {
+       "wahl": [
+        "deshalb",
+        "trotzdem",
+        "obwohl"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " kochte Mama ihr einen heißen Kakao."
+      }
+     ],
+     "tipp": "Frage bei jeder Lücke: Wird ein Grund genannt, ein Gegensatz oder eine Folge?",
+     "erklaerung": "Der Regen ist der Grund für die Jacke: weil. Nass werden trotz Jacke ist ein Gegensatz: obwohl. Der Kakao ist die Folge davon, dass Lena fror: deshalb."
+    },
+    {
+     "id": "sc-satzanfaenge-04",
+     "typ": "reihenfolge",
+     "stufe": 2,
+     "kompetenz": "formulieren",
+     "frage": "Bringe die Sätze in die richtige Reihenfolge. Achte auf die Satzanfänge und Verbindungswörter.",
+     "reihe": [
+      "Am Samstagmorgen wollten Mia und Paul für Omas Geburtstag einen Kuchen backen.",
+      "Zuerst gaben sie Butter, Zucker, Eier und Mehl in eine große Schüssel.",
+      "Nachdem sie alles gut verrührt hatten, füllten sie den Teig in die Backform.",
+      "Während der Kuchen im Ofen war, deckten sie den Geburtstagstisch.",
+      "Zum Schluss verzierten sie den abgekühlten Kuchen mit bunten Streuseln."
+     ],
+     "tipp": "Signalwörter helfen dir: „Zuerst“, „Nachdem“, „Während“ und „Zum Schluss“. Überlege auch, was beim Backen zuerst passieren muss.",
+     "erklaerung": "Nach der Einleitung kommt „Zuerst“. „Nachdem sie alles verrührt hatten“ zeigt, dass das Rühren schon fertig war, und „Während“ heißt: gleichzeitig mit dem Backen. „Zum Schluss“ steht am Ende."
+    },
+    {
+     "id": "sc-satzanfaenge-05",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "formulieren",
+     "frage": "Die beiden Sätze bilden einen Gegensatz. Welcher Satz verbindet sie richtig?",
+     "vorgabe": "Felix hatte fleißig geübt. Er war beim Vorspielen sehr aufgeregt.",
+     "optionen": [
+      {
+       "text": "Obwohl Felix fleißig geübt hatte, war er beim Vorspielen sehr aufgeregt.",
+       "richtig": true
+      },
+      {
+       "text": "Weil Felix fleißig geübt hatte, war er beim Vorspielen sehr aufgeregt.",
+       "richtig": false
+      },
+      {
+       "text": "Felix hatte fleißig geübt, deshalb war er beim Vorspielen sehr aufgeregt.",
+       "richtig": false
+      },
+      {
+       "text": "Obwohl Felix fleißig geübt hatte, er war beim Vorspielen sehr aufgeregt.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Prüfe zwei Dinge: Drückt das Verbindungswort einen Gegensatz aus? Und steht das Verb nach dem Komma an der richtigen Stelle?",
+     "erklaerung": "„Obwohl“ zeigt den Gegensatz: Felix hatte geübt und war trotzdem aufgeregt. Nach dem Komma folgt sofort das Verb: „…, war er …“. „Weil“ und „deshalb“ nennen Grund und Folge – das passt hier nicht."
+    },
+    {
+     "id": "sc-satzanfaenge-06",
+     "typ": "multi",
+     "stufe": 3,
+     "kompetenz": "formulieren",
+     "frage": "Welche Sätze sind richtig verbunden – mit Komma an der richtigen Stelle und richtigem Satzbau?",
+     "optionen": [
+      {
+       "text": "Wir blieben drinnen, weil es draußen stürmte.",
+       "richtig": true
+      },
+      {
+       "text": "Nachdem Aylin ihre Hausaufgaben gemacht hatte, ging sie zum Training.",
+       "richtig": true
+      },
+      {
+       "text": "Es war schon spät, deshalb liefen wir schnell nach Hause.",
+       "richtig": true
+      },
+      {
+       "text": "Wir blieben drinnen, weil es stürmte draußen.",
+       "richtig": false
+      },
+      {
+       "text": "Obwohl Paul nach der Schule sehr müde war ging er noch zum Training.",
+       "richtig": false
+      },
+      {
+       "text": "Lena war krank, deshalb sie blieb im Bett.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Prüfe bei jedem Satz das Komma und die Stelle des Verbs. Erinnere dich an den Merkkasten: Wo steht das Verb nach „weil“ oder „obwohl“, und wo nach „deshalb“?",
+     "erklaerung": "Richtig sind „…, weil es draußen stürmte“, „Nachdem … gemacht hatte, ging …“ und „…, deshalb liefen wir …“. Bei „weil es stürmte draußen“ steht das Verb nicht am Ende, bei Paul fehlt das Komma, und nach „deshalb“ muss das Verb sofort folgen: „deshalb blieb sie“."
+    }
+   ]
+  },
+  {
+   "id": "sc-bericht",
+   "titel": "Informieren und berichten",
+   "kurz": "Sachlich, genau und in der richtigen zeitlichen Reihenfolge",
+   "kompetenz": "planen",
+   "wissen": {
+    "merksatz": "Ein <b>Bericht</b> informiert sachlich und genau über etwas, das wirklich passiert ist. Er beantwortet die W-Fragen und hält sich an die zeitliche Reihenfolge – ohne Spannung und ohne Gefühle.",
+    "punkte": [
+     "Beantworte die W-Fragen: Wer? Was? Wann? Wo? Wie? Warum? Manchmal auch: Welche Folgen hatte es?",
+     "Schreibe in der zeitlichen Reihenfolge, so wie es passiert ist.",
+     "Schreibe im Präteritum: Die Klasse fuhr um 8:00 Uhr los. Was jetzt noch gilt, darf im Präsens stehen: Die Brille liegt im Sekretariat.",
+     "Keine Spannungswörter, keine wörtliche Rede, keine eigenen Gefühle oder Meinungen.",
+     "Eine Erzählung will unterhalten und Spannung erzeugen. Ein Bericht will genau und sachlich informieren."
+    ],
+    "beispiele": [
+     "Wer? Was? Wann? Wo? Wie? Warum? Welche Folgen?",
+     "Sachlich: Um 10:15 Uhr begann die Siegerehrung.",
+     "Nicht sachlich: Endlich kam der spannendste Moment!",
+     "Bericht: Ein Kind verletzte sich leicht am Knie.",
+     "Erzählung: Autsch! Mein Knie brannte wie Feuer."
+    ]
+   },
+   "items": [
+    {
+     "id": "sc-bericht-01",
+     "typ": "multi",
+     "stufe": 1,
+     "kompetenz": "planen",
+     "frage": "Für die Schülerzeitung entsteht ein Bericht über das Schulfest. Welche Sätze passen in den Bericht?",
+     "optionen": [
+      {
+       "text": "Das Schulfest begann um 14:00 Uhr auf dem Pausenhof.",
+       "richtig": true
+      },
+      {
+       "text": "Die Klasse 4a verkaufte selbst gebackene Waffeln.",
+       "richtig": true
+      },
+      {
+       "text": "Den Erlös von 312 € spendete die Schule dem Tierheim.",
+       "richtig": true
+      },
+      {
+       "text": "Plötzlich passierte etwas total Unglaubliches!",
+       "richtig": false
+      },
+      {
+       "text": "Ich fand die Hüpfburg einfach supertoll.",
+       "richtig": false
+      },
+      {
+       "text": "„Das ist das beste Fest aller Zeiten!“, jubelte Ben.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Ein Bericht informiert sachlich und genau. Prüfe: Nennt der Satz Tatsachen – oder enthält er Spannung, eine eigene Meinung oder wörtliche Rede?",
+     "erklaerung": "Die Sätze mit Uhrzeit, Waffelverkauf und Erlös informieren sachlich. Spannungswörter, die eigene Meinung und wörtliche Rede gehören in eine Erzählung."
+    },
+    {
+     "id": "sc-bericht-02",
+     "typ": "reihenfolge",
+     "stufe": 1,
+     "kompetenz": "planen",
+     "frage": "Bringe die Sätze des Berichts über das Sommerfest in die richtige zeitliche Reihenfolge.",
+     "reihe": [
+      "Um 14:00 Uhr eröffnete Schulleiterin Frau Kaya das Sommerfest auf dem Pausenhof.",
+      "Direkt nach der Eröffnungsrede sang der Schulchor drei Lieder.",
+      "Ab 15:00 Uhr konnten die Gäste an zwölf Spielstationen mitmachen.",
+      "Um 17:30 Uhr wurden die Preise der Tombola verlost.",
+      "Gegen 18:00 Uhr endete das Fest mit dem gemeinsamen Aufräumen."
+     ],
+     "tipp": "Achte auf die Uhrzeiten und auf Wörter, die an etwas anknüpfen, das vorher passiert ist.",
+     "erklaerung": "Ein Bericht hält sich an die zeitliche Reihenfolge: Eröffnung um 14:00 Uhr, direkt danach der Chor, ab 15:00 Uhr die Spiele, um 17:30 Uhr die Tombola, gegen 18:00 Uhr das Ende."
+    },
+    {
+     "id": "sc-bericht-03",
+     "typ": "zuordnen",
+     "stufe": 2,
+     "kompetenz": "planen",
+     "frage": "Passt der Satz in einen sachlichen Bericht über eine Fundsache oder eher in eine Erzählung? Sortiere.",
+     "gruppen": [
+      "Bericht",
+      "Erzählung"
+     ],
+     "elemente": [
+      {
+       "t": "Der Hausmeister fand am Mittwoch auf dem Pausenhof eine blaue Trinkflasche.",
+       "g": 0
+      },
+      {
+       "t": "Die Flasche hat einen grünen Deckel und einen Aufkleber mit einem Fuchs.",
+       "g": 0
+      },
+      {
+       "t": "Die Besitzerin oder der Besitzer kann sie im Sekretariat abholen.",
+       "g": 0
+      },
+      {
+       "t": "Mir stockte der Atem, als ich die geheimnisvolle Flasche entdeckte.",
+       "g": 1
+      },
+      {
+       "t": "„Wem gehört bloß dieses seltsame Ding?“, rätselte ich.",
+       "g": 1
+      },
+      {
+       "t": "Plötzlich blitzte im Gebüsch etwas Blaues auf!",
+       "g": 1
+      }
+     ],
+     "tipp": "Ein Bericht nennt Tatsachen genau und sachlich. Eine Erzählung will unterhalten und spannend sein.",
+     "erklaerung": "Fundort, Aussehen und Abholort sind sachliche Angaben für einen Bericht. Der stockende Atem, die Frage in wörtlicher Rede und „Plötzlich …!“ erzeugen Spannung – das ist typisch für eine Erzählung."
+    },
+    {
+     "id": "sc-bericht-04",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "planen",
+     "frage": "Welche wichtige Information fehlt in diesem Bericht?",
+     "vorgabe": "Am Dienstag fand in der Turnhalle der Grundschule am Mühlbach ein Vorlesewettbewerb statt. Zwölf Kinder aus den vierten Klassen lasen aus ihren Lieblingsbüchern vor. Eine Jury aus drei Lehrkräften bewertete die Vorträge.",
+     "optionen": [
+      {
+       "text": "Wann fand der Wettbewerb statt?",
+       "richtig": false
+      },
+      {
+       "text": "Wo fand der Wettbewerb statt?",
+       "richtig": false
+      },
+      {
+       "text": "Wer hat den Wettbewerb gewonnen?",
+       "richtig": true
+      },
+      {
+       "text": "Wer hat beim Wettbewerb vorgelesen?",
+       "richtig": false
+      }
+     ],
+     "tipp": "Gehe die Antworten einzeln durch und suche die Information im Bericht. Bei welcher Frage findest du nichts?",
+     "erklaerung": "Im Bericht steht, wann (am Dienstag) und wo (in der Turnhalle) der Wettbewerb war und wer vorgelesen hat (zwölf Kinder). Das Ergebnis fehlt: Die Leser erfahren nicht, wer gewonnen hat."
+    },
+    {
+     "id": "sc-bericht-05",
+     "typ": "markieren",
+     "stufe": 3,
+     "kompetenz": "planen",
+     "frage": "Tippe die drei Sätze an, die nicht in einen sachlichen Bericht für die Schülerzeitung passen.",
+     "teile": [
+      {
+       "t": "Am Freitag fand auf dem Sportplatz das Sportfest der Grundschule am Mühlbach statt."
+      },
+      {
+       "t": "Es war der allertollste Tag meines Lebens!",
+       "ziel": true
+      },
+      {
+       "t": "Rund 200 Kinder traten in sechs Disziplinen gegeneinander an."
+      },
+      {
+       "t": "Wegen eines Gewitters unterbrach die Schulleitung die Wettkämpfe um 11:00 Uhr für eine halbe Stunde."
+      },
+      {
+       "t": "Mein Herz raste vor Aufregung, als ich an den Start ging.",
+       "ziel": true
+      },
+      {
+       "t": "Die Siegerehrung fand um 13:00 Uhr in der Turnhalle statt."
+      },
+      {
+       "t": "„Wir sind die Größten!“, brüllte die Klasse 4a.",
+       "ziel": true
+      }
+     ],
+     "tipp": "Ein Bericht enthält nur Tatsachen. Suche Sätze mit eigenen Gefühlen, eigener Meinung oder wörtlicher Rede.",
+     "erklaerung": "Der „allertollste Tag“ ist eine Meinung, das rasende Herz ein Gefühl, und „Wir sind die Größten!“ ist wörtliche Rede. Die übrigen Sätze nennen sachlich, was wann und wo geschah."
+    },
+    {
+     "id": "sc-bericht-06",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "planen",
+     "frage": "Lena berichtet in der Schülerzeitung über eine gefundene Brille. Welcher Anfang passt am besten zu einem Bericht?",
+     "optionen": [
+      {
+       "text": "Am Montagmorgen fand Hausmeister Herr Brandl im Musiksaal eine rote Kinderbrille.",
+       "richtig": true
+      },
+      {
+       "text": "Ihr werdet nicht glauben, was unser Hausmeister am Montag im Musiksaal entdeckt hat!",
+       "richtig": false
+      },
+      {
+       "text": "Es war einmal eine kleine rote Brille, die ganz allein und traurig im Musiksaal lag.",
+       "richtig": false
+      },
+      {
+       "text": "Irgendwann letzte Woche fand jemand irgendwo in unserer Schule eine Brille.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Ein guter Berichtsanfang beantwortet gleich die wichtigsten W-Fragen – genau und ohne Spannung.",
+     "erklaerung": "Nur „Am Montagmorgen fand Hausmeister Herr Brandl …“ nennt genau, wer, wann, wo und was. Die anderen Anfänge erzeugen Spannung, klingen wie ein Märchen oder sind ungenau."
+    }
+   ]
+  },
+  {
+   "id": "sc-meinung",
+   "titel": "Meinung begründen",
+   "kurz": "Standpunkt, Gründe und Beispiele – höflich überzeugen in Brief und E-Mail",
+   "kompetenz": "planen",
+   "wissen": {
+    "merksatz": "Wer überzeugen will, sagt seine <b>Meinung</b> klar, begründet sie mit <b>Gründen</b> und macht sie mit <b>Beispielen</b> anschaulich. Dabei bleibt man immer höflich.",
+    "punkte": [
+     "Standpunkt: Sag klar, was du denkst oder dir wünschst: „Ich finde, dass …“, „Ich wünsche mir …“",
+     "Gründe: Erkläre, warum: „…, weil …“, „Ein wichtiger Grund ist …“, „Außerdem …“",
+     "Beispiele machen Gründe anschaulich: „Zum Beispiel …“",
+     "Ein Brief hat Ort und Datum, Anrede, Text, Gruß und Unterschrift. Eine E-Mail hat einen Betreff, Anrede, Text, Gruß und Namen.",
+     "Bleib höflich: Bitte freundlich, statt zu fordern. Drohe nicht und beleidige niemanden. Bedanke dich am Ende."
+    ],
+    "beispiele": [
+     "Ich finde, dass …",
+     "Ein wichtiger Grund ist …",
+     "Zum Beispiel könnten wir …",
+     "Sehr geehrte Frau Kaya,",
+     "Sehr geehrter Herr Brandl,",
+     "Mit freundlichen Grüßen"
+    ]
+   },
+   "items": [
+    {
+     "id": "sc-meinung-01",
+     "typ": "reihenfolge",
+     "stufe": 1,
+     "kompetenz": "planen",
+     "frage": "Bringe die Teile der E-Mail in die richtige Reihenfolge.",
+     "reihe": [
+      "Betreff: Bitte um eine Lesekiste für die Regenpause",
+      "Sehr geehrte Frau Kaya,",
+      "wir wünschen uns eine Lesekiste, weil wir in der Regenpause gern lesen würden.",
+      "Mit freundlichen Grüßen",
+      "Klasse 4b"
+     ],
+     "tipp": "Überlege, was in einer E-Mail ganz oben steht und womit man sich am Ende verabschiedet.",
+     "erklaerung": "Eine E-Mail beginnt mit dem Betreff, dann folgt die Anrede mit Komma. Danach kommt der Text, am Ende stehen Gruß und Name."
+    },
+    {
+     "id": "sc-meinung-02",
+     "typ": "single",
+     "stufe": 1,
+     "kompetenz": "planen",
+     "frage": "Welche Anrede passt in eine E-Mail an die Schulleiterin Frau Kaya?",
+     "optionen": [
+      {
+       "text": "Sehr geehrte Frau Kaya,",
+       "richtig": true
+      },
+      {
+       "text": "Sehr geehrter Frau Kaya,",
+       "richtig": false
+      },
+      {
+       "text": "Hallo Kaya,",
+       "richtig": false
+      },
+      {
+       "text": "Hey Frau Schulleiterin!",
+       "richtig": false
+      }
+     ],
+     "tipp": "Die Anrede soll höflich sein und zur Person passen. Achte auch auf die Endung des Wortes nach „Sehr“.",
+     "erklaerung": "„Sehr geehrte Frau Kaya,“ ist höflich und richtig: Bei einer Frau heißt es „geehrte“, bei einem Mann „geehrter“. „Hallo“ und „Hey“ sind für die Schulleitung zu locker."
+    },
+    {
+     "id": "sc-meinung-03",
+     "typ": "zuordnen",
+     "stufe": 2,
+     "kompetenz": "planen",
+     "frage": "Ist der Satz eine Meinung, ein Grund oder ein Beispiel? Sortiere.",
+     "gruppen": [
+      "Meinung",
+      "Grund",
+      "Beispiel"
+     ],
+     "elemente": [
+      {
+       "t": "Unsere Schule braucht unbedingt einen Schulgarten.",
+       "g": 0
+      },
+      {
+       "t": "Meiner Meinung nach sollte jede Klasse ein eigenes Beet bekommen.",
+       "g": 0
+      },
+      {
+       "t": "Denn draußen lernen wir am besten, wie Pflanzen wachsen.",
+       "g": 1
+      },
+      {
+       "t": "Außerdem ist Gartenarbeit gesund, weil man sich viel bewegt.",
+       "g": 1
+      },
+      {
+       "t": "Zum Beispiel könnten wir Radieschen säen und später ernten.",
+       "g": 2
+      },
+      {
+       "t": "Wir könnten zum Beispiel beobachten, wie aus einem winzigen Kürbiskern eine riesige Pflanze wird.",
+       "g": 2
+      }
+     ],
+     "tipp": "Frage dich bei jedem Satz: Sagt er, was jemand will oder denkt? Erklärt er, warum? Oder zeigt er an einem genauen Fall, wie es aussehen könnte? Signalwörter helfen dir dabei.",
+     "erklaerung": "Die Meinung sagt, was man sich wünscht: einen Schulgarten und eigene Beete. „Denn“ und „weil“ leiten Gründe ein. Die Beispiele zeigen ganz genau, was man im Garten tun und beobachten könnte."
+    },
+    {
+     "id": "sc-meinung-04",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "planen",
+     "frage": "Die Klasse 4c möchte in der Regenpause in die Turnhalle. Welcher Satz ist höflich und überzeugend?",
+     "optionen": [
+      {
+       "text": "Wir würden uns freuen, die Turnhalle in der Regenpause nutzen zu dürfen, weil wir uns dann bewegen können.",
+       "richtig": true
+      },
+      {
+       "text": "Wir wollen in der Regenpause sofort in die Turnhalle, sonst machen wir beim Schulfest einfach nicht mehr mit!",
+       "richtig": false
+      },
+      {
+       "text": "Bitte, bitte, bitte lassen Sie uns in der Regenpause in die Turnhalle, das wäre echt mega cool!",
+       "richtig": false
+      },
+      {
+       "text": "Die Turnhalle in der Regenpause wäre vielleicht ganz schön, aber eigentlich ist es uns auch egal.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Ein überzeugender Satz ist freundlich und nennt einen Grund. Prüfe jeden Satz auf beides.",
+     "erklaerung": "Nur „Wir würden uns freuen …“ ist freundlich und nennt einen Grund: Bewegung. Die anderen Sätze drohen, betteln ohne Grund oder zeigen keinen klaren Standpunkt."
+    },
+    {
+     "id": "sc-meinung-05",
+     "typ": "markieren",
+     "stufe": 3,
+     "kompetenz": "planen",
+     "frage": "Emir hat eine E-Mail an die Schulleiterin geschrieben. Tippe die drei Stellen an, die zu locker oder unhöflich sind.",
+     "teile": [
+      {
+       "t": "Hi Frau Kaya!",
+       "ziel": true
+      },
+      {
+       "t": "Wir, die Klasse 4a, wünschen uns einen Trinkbrunnen im Schulhaus."
+      },
+      {
+       "t": "Viele Kinder vergessen ihre Trinkflasche und haben dann im Unterricht Durst."
+      },
+      {
+       "t": "Ehrlich, das ist voll nervig und total unfair!",
+       "ziel": true
+      },
+      {
+       "t": "Ein Trinkbrunnen würde außerdem viele Plastikflaschen sparen."
+      },
+      {
+       "t": "Wir würden uns sehr über Ihre Antwort freuen."
+      },
+      {
+       "t": "Tschüss!",
+       "ziel": true
+      },
+      {
+       "t": "Emir für die Klasse 4a"
+      }
+     ],
+     "tipp": "Lies die E-Mail so, als wärst du die Schulleiterin. Achte besonders auf Anrede, Gruß und Wörter aus der Umgangssprache.",
+     "erklaerung": "„Hi“ und „Tschüss“ sind für die Schulleiterin zu locker – besser sind „Sehr geehrte Frau Kaya,“ und „Mit freundlichen Grüßen“. „Voll nervig und total unfair“ klingt wie ein Vorwurf und überzeugt nicht."
+    },
+    {
+     "id": "sc-meinung-06",
+     "typ": "multi",
+     "stufe": 3,
+     "kompetenz": "planen",
+     "frage": "Ben möchte die Schulleiterin überzeugen, dass seine Klasse in den Kletterwald fahren darf. Welche Argumente sind sachlich und überzeugend?",
+     "optionen": [
+      {
+       "text": "Im Kletterwald müssen wir zusammenhalten. Das stärkt unsere Klassengemeinschaft.",
+       "richtig": true
+      },
+      {
+       "text": "Der Eintritt kostet nur 8 € pro Kind, und mit dem Bus sind wir in 20 Minuten dort.",
+       "richtig": true
+      },
+      {
+       "text": "Ausgebildete Trainer erklären uns vorher genau, wie wir uns richtig sichern.",
+       "richtig": true
+      },
+      {
+       "text": "Alle anderen Klassen dürfen sowieso immer viel mehr als wir, das ist ungerecht.",
+       "richtig": false
+      },
+      {
+       "text": "Klettern ist einfach cool, das weiß doch jeder in unserer Klasse.",
+       "richtig": false
+      },
+      {
+       "text": "Wenn wir nicht in den Kletterwald dürfen, sind wir eben alle beleidigt.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Stell dir vor, du bist die Schulleiterin. Welche Sätze nennen einen echten Vorteil, den du nachprüfen kannst?",
+     "erklaerung": "Klassengemeinschaft, niedrige Kosten mit kurzer Fahrt und die Sicherheit durch Trainer sind echte Gründe. Ein Vorwurf, „Das weiß doch jeder“ und beleidigt sein überzeugen niemanden."
+    }
+   ]
+  },
+  {
+   "id": "sc-ueberarbeiten",
+   "titel": "Texte überarbeiten",
+   "kurz": "Wortwiederholungen ersetzen, Fehler finden, Absätze und Satzzeichen prüfen",
+   "kompetenz": "ueberarbeiten",
+   "wissen": {
+    "merksatz": "Kein Text ist sofort perfekt! Lies deinen Text noch einmal mit einem bestimmten <b>Überarbeitungsziel</b>: Wiederholungen? Fehler? Absätze? Satzzeichen? Dann verbessere ihn Schritt für Schritt.",
+    "punkte": [
+     "Wortwiederholungen ersetzen: Statt dreimal „der Hund“ schreibst du „er“, „das Tier“ oder den Namen des Hundes. Achte darauf, dass klar bleibt, wen du meinst.",
+     "Fehler finden: Lies langsam Wort für Wort, am besten halblaut. Prüfe die Großschreibung von Nomen und Satzanfängen.",
+     "Absätze: Beginne eine neue Zeile, wenn ein neuer Teil beginnt oder wenn Zeit oder Ort wechseln.",
+     "Satzzeichen: Jeder Satz endet mit Punkt, Fragezeichen oder Ausrufezeichen. Wörtliche Rede steht in Anführungszeichen.",
+     "Nimm dir für jeden Durchgang ein Ziel vor, zum Beispiel: „Jetzt achte ich nur auf die Satzanfänge.“"
+    ],
+    "beispiele": [
+     "der Hund → er, das Tier, der Vierbeiner",
+     "das Fahrrad → es, das Rad",
+     "„Komm her!“, rief Ben.",
+     "Ben rief: „Komm her!“",
+     "neue Zeit oder neuer Ort → neuer Absatz"
+    ]
+   },
+   "items": [
+    {
+     "id": "sc-ueberarbeiten-01",
+     "typ": "zuordnen",
+     "stufe": 1,
+     "kompetenz": "ueberarbeiten",
+     "frage": "Amira schreibt über ihren Dackel Bruno und ihre Katze Minka. Welche Wörter können „der Hund“ ersetzen, welche „die Katze“? Sortiere.",
+     "gruppen": [
+      "statt „der Hund“",
+      "statt „die Katze“"
+     ],
+     "elemente": [
+      {
+       "t": "er",
+       "g": 0
+      },
+      {
+       "t": "Bruno",
+       "g": 0
+      },
+      {
+       "t": "der Dackel",
+       "g": 0
+      },
+      {
+       "t": "der kleine Kläffer",
+       "g": 0
+      },
+      {
+       "t": "sie",
+       "g": 1
+      },
+      {
+       "t": "Minka",
+       "g": 1
+      },
+      {
+       "t": "die Samtpfote",
+       "g": 1
+      },
+      {
+       "t": "der Stubentiger",
+       "g": 1
+      }
+     ],
+     "tipp": "Frage dich bei jedem Wort: Passt es nur zu einem Hund oder nur zu einer Katze? Verlass dich nicht allein auf den Begleiter „der“ oder „die“.",
+     "erklaerung": "„Er“ und „Bruno“ stehen für den Hund, „sie“ und „Minka“ für die Katze. Ein Dackel ist ein Hund, und ein Kläffer bellt – das passt nur zu Bruno. „Samtpfote“ und „Stubentiger“ sind Spitznamen für Katzen, auch wenn es „der Stubentiger“ heißt."
+    },
+    {
+     "id": "sc-ueberarbeiten-02",
+     "typ": "single",
+     "stufe": 1,
+     "kompetenz": "ueberarbeiten",
+     "frage": "Worauf sollte Ben beim Überarbeiten dieses Textes vor allem achten?",
+     "vorgabe": "Wir gingen ins Kino. Das Kino war ganz voll. Im Kino roch es nach Popcorn.",
+     "optionen": [
+      {
+       "text": "auf Wortwiederholungen",
+       "richtig": true
+      },
+      {
+       "text": "auf die Satzzeichen",
+       "richtig": false
+      },
+      {
+       "text": "auf die Großschreibung",
+       "richtig": false
+      },
+      {
+       "text": "auf die Zeitform",
+       "richtig": false
+      }
+     ],
+     "tipp": "Prüfe die Satzzeichen, die Großschreibung und die Zeitform. Was davon ist schon in Ordnung – und was stört beim Lesen?",
+     "erklaerung": "Das Wort „Kino“ steht dreimal hintereinander. Satzzeichen, Großschreibung und Zeitform stimmen schon. Besser: „Es war ganz voll. Drinnen roch es nach Popcorn.“"
+    },
+    {
+     "id": "sc-ueberarbeiten-03",
+     "typ": "luecke",
+     "stufe": 2,
+     "kompetenz": "ueberarbeiten",
+     "frage": "Damit sich „Elefant“, „Pinguine“ und „Löwe“ nicht wiederholen, brauchst du Ersatzwörter. Wähle jeweils das passende Wort.",
+     "teile": [
+      {
+       "t": "Im Zoo sahen wir zuerst einen Elefanten. "
+      },
+      {
+       "wahl": [
+        "Der Dickhäuter",
+        "Der Vogel",
+        "Die Raubkatze"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " spritzte sich mit seinem Rüssel nass. Danach besuchten wir die Pinguine. "
+      },
+      {
+       "wahl": [
+        "Die Frackträger",
+        "Die Dickhäuter",
+        "Die Raubkatzen"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " watschelten über die Felsen. Zum Schluss beobachteten wir einen Löwen. "
+      },
+      {
+       "wahl": [
+        "Die Raubkatze",
+        "Der Dickhäuter",
+        "Der Vogel"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " gähnte laut."
+      }
+     ],
+     "tipp": "Jedes Ersatzwort beschreibt eine Besonderheit des Tieres. Denke an die Haut, das Aussehen und die Tierfamilie.",
+     "erklaerung": "Elefanten haben eine sehr dicke Haut – man nennt sie auch Dickhäuter. Pinguine sehen mit ihrem schwarz-weißen Gefieder aus, als hätten sie einen Frack an – einen festlichen Anzug. Löwen gehören zu den Raubkatzen."
+    },
+    {
+     "id": "sc-ueberarbeiten-04",
+     "typ": "multi",
+     "stufe": 2,
+     "kompetenz": "ueberarbeiten",
+     "frage": "Welche Sätze mit wörtlicher Rede sind richtig geschrieben?",
+     "optionen": [
+      {
+       "text": "„Wo ist mein Schlüssel?“, fragte Paul.",
+       "richtig": true
+      },
+      {
+       "text": "Mama rief: „Das Essen ist fertig!“",
+       "richtig": true
+      },
+      {
+       "text": "„Wo ist mein Schlüssel“, fragte Paul?",
+       "richtig": false
+      },
+      {
+       "text": "„Komm schnell her!“ rief Noah.",
+       "richtig": false
+      },
+      {
+       "text": "Mia sagte: „ich habe großen Hunger.“",
+       "richtig": false
+      }
+     ],
+     "tipp": "Prüfe bei jedem Satz: Steht das Satzzeichen der Rede innerhalb der Anführungszeichen? Steht ein Komma vor dem nachgestellten Begleitsatz? Beginnt die Rede groß?",
+     "erklaerung": "Richtig: In Pauls Frage steht das Fragezeichen in der Rede und danach ein Komma. Bei Mama steht vor der Rede ein Doppelpunkt. Falsch: Das Fragezeichen hinter „Paul“ gehört in die Rede, nach Noahs Rede fehlt das Komma, und Mias Rede muss groß beginnen."
+    },
+    {
+     "id": "sc-ueberarbeiten-05",
+     "typ": "markieren",
+     "stufe": 3,
+     "kompetenz": "ueberarbeiten",
+     "frage": "In diesem Text von Felix sind drei Wörter falsch geschrieben. Tippe sie an.",
+     "teile": [
+      {
+       "t": "Am"
+      },
+      {
+       "t": "Wochenende"
+      },
+      {
+       "t": "fuhren"
+      },
+      {
+       "t": "wir"
+      },
+      {
+       "t": "mit"
+      },
+      {
+       "t": "dem"
+      },
+      {
+       "t": "Fahrrad"
+      },
+      {
+       "t": "zum"
+      },
+      {
+       "t": "see",
+       "ziel": true
+      },
+      {
+       "t": ".",
+       "fix": true
+      },
+      {
+       "t": "Dort"
+      },
+      {
+       "t": "war"
+      },
+      {
+       "t": "es"
+      },
+      {
+       "t": "sehr"
+      },
+      {
+       "t": "heis",
+       "ziel": true
+      },
+      {
+       "t": ".",
+       "fix": true
+      },
+      {
+       "t": "Wir"
+      },
+      {
+       "t": "sprangen"
+      },
+      {
+       "t": "sofort"
+      },
+      {
+       "t": "ins"
+      },
+      {
+       "t": "kühle"
+      },
+      {
+       "t": "Wasser"
+      },
+      {
+       "t": ".",
+       "fix": true
+      },
+      {
+       "t": "Danach"
+      },
+      {
+       "t": "assen",
+       "ziel": true
+      },
+      {
+       "t": "wir"
+      },
+      {
+       "t": "ein"
+      },
+      {
+       "t": "Eis"
+      },
+      {
+       "t": ".",
+       "fix": true
+      }
+     ],
+     "tipp": "Lies langsam Wort für Wort. Prüfe bei jedem Wort: Ist es ein Nomen? Wird es mit s, ss oder ß geschrieben?",
+     "erklaerung": "Richtig heißt es „See“ (Nomen schreibt man groß), „heiß“ und „aßen“ (nach einem langen Vokal oder ei steht hier ß)."
+    },
+    {
+     "id": "sc-ueberarbeiten-06",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "ueberarbeiten",
+     "frage": "Emir möchte seinen Text in zwei Absätze teilen. Vor welchem Satz sollte der zweite Absatz beginnen?",
+     "vorgabe": "(1) Am Samstag fuhr ich mit Oma auf den Christkindlmarkt. (2) Dort duftete es nach gebrannten Mandeln. (3) Wir kauften Lebkuchen und einen Holzstern. (4) Am nächsten Morgen lag draußen dicker Schnee. (5) Sofort zog ich mich warm an und baute im Garten einen Schneemann.",
+     "optionen": [
+      {
+       "text": "vor Satz 2",
+       "richtig": false
+      },
+      {
+       "text": "vor Satz 3",
+       "richtig": false
+      },
+      {
+       "text": "vor Satz 4",
+       "richtig": true
+      },
+      {
+       "text": "vor Satz 5",
+       "richtig": false
+      }
+     ],
+     "tipp": "Ein neuer Absatz beginnt, wenn ein neuer Abschnitt anfängt – zum Beispiel, wenn sich Zeit und Ort ändern.",
+     "erklaerung": "Mit Satz 4 beginnt ein neuer Tag an einem anderen Ort: am nächsten Morgen zu Hause im Schnee. Die Sätze 1 bis 3 gehören zusammen, weil sie alle auf dem Christkindlmarkt spielen."
+    }
+   ]
+  }
+ ],
+ "auftraege": [
+  {
+   "id": "sa-fantasie",
+   "titel": "Der leuchtende Schlüssel",
+   "textsorte": "Fantasieerzählung",
+   "auftrag": "Beim Aufräumen auf dem Dachboden findest du in einer alten Kiste einen goldenen Schlüssel. Als du ihn berührst, beginnt er geheimnisvoll zu leuchten … Schreibe eine spannende Fantasieerzählung. Die Bildzeichen über dem Auftrag geben dir Ideen, wohin dich der Schlüssel führen könnte.",
+   "impuls": "🗝️✨🚪☁️🏰🐉",
+   "planung": [
+    "Wer ist die Hauptfigur, und wer ist noch dabei?",
+    "Wo und wann beginnt die Geschichte?",
+    "Was passiert, als der Schlüssel zu leuchten beginnt?",
+    "Welches Abenteuer oder Problem gibt es? Was ist der Höhepunkt?",
+    "Wie geht die Geschichte aus?",
+    "Welche Überschrift macht neugierig, ohne das Ende zu verraten?"
+   ],
+   "woerter": [
+    "plötzlich",
+    "auf einmal",
+    "im letzten Moment",
+    "geheimnisvoll",
+    "funkelte",
+    "schimmerte",
+    "flüsterte",
+    "staunte",
+    "knarrte",
+    "vorsichtig",
+    "mein Herz klopfte",
+    "verzaubert",
+    "schwebte",
+    "erleichtert"
+   ],
+   "checkliste": [
+    "Meine Erzählung hat eine Überschrift, die neugierig macht.",
+    "In der Einleitung erfährt man, wer dabei ist, wo und wann alles beginnt.",
+    "Im Hauptteil steigt die Spannung bis zum Höhepunkt.",
+    "Im Schluss erzähle ich, wie das Abenteuer ausgeht.",
+    "Ich verwende treffende Verben und anschauliche Adjektive.",
+    "Meine Figuren sprechen in wörtlicher Rede mit Anführungszeichen.",
+    "Meine Satzanfänge sind abwechslungsreich.",
+    "Ich erzähle im Präteritum. Die wörtliche Rede darf im Präsens stehen."
+   ],
+   "minWoerter": 120
+  },
+  {
+   "id": "sa-erlebnis",
+   "titel": "Ein Erlebnis, das ich nie vergesse",
+   "textsorte": "Erlebniserzählung",
+   "auftrag": "Erzähle von einem Erlebnis, das du nicht vergessen wirst – zum Beispiel aus dem Schullandheim, von einem Turnier oder von einem Ausflug. Schreibe so, dass deine Leser alles miterleben, als wären sie dabei gewesen. Erzähle in der Ich-Form und im Präteritum.",
+   "impuls": "🏕️⚽🎢🎤😲",
+   "planung": [
+    "Welches Erlebnis wähle ich? Was war der aufregendste Moment?",
+    "Wer war dabei? Wo und wann war das?",
+    "Was geschah Schritt für Schritt bis zum Höhepunkt?",
+    "Was habe ich in diesem Moment gedacht und gefühlt?",
+    "Wie ging es aus, und wie fühlte ich mich danach?"
+   ],
+   "woerter": [
+    "aufgeregt",
+    "gespannt",
+    "mein Herz pochte",
+    "ich hielt die Luft an",
+    "kurz darauf",
+    "nachdem",
+    "schließlich",
+    "rief",
+    "jubelte",
+    "stolperte",
+    "zitterte",
+    "im nächsten Moment",
+    "vor Freude",
+    "erleichtert"
+   ],
+   "checkliste": [
+    "Ich erzähle in der Ich-Form und im Präteritum.",
+    "Meine Einleitung beantwortet die Fragen Wer? Wo? Wann?",
+    "Ich erzähle Schritt für Schritt bis zum spannendsten Moment.",
+    "Ich zeige meine Gefühle und Gedanken.",
+    "Ich verwende wörtliche Rede.",
+    "Meine Satzanfänge sind abwechslungsreich – nicht immer „Dann“.",
+    "Ich habe Absätze für Einleitung, Hauptteil und Schluss gemacht.",
+    "Meine Überschrift passt und verrät nicht das Ende."
+   ],
+   "minWoerter": 110
+  },
+  {
+   "id": "sa-bericht",
+   "titel": "Bericht vom Sommerfest",
+   "textsorte": "Bericht",
+   "auftrag": "Stell dir vor, an deiner Schule fand am Freitag das Sommerfest statt. Schreibe für die Schülerzeitung „Pausenpost“ einen Bericht darüber. Nutze die Wörter im Wortspeicher und denke dir passende Einzelheiten aus. Berichte aber so sachlich und genau wie in einer echten Zeitung und in der richtigen zeitlichen Reihenfolge.",
+   "impuls": "🎪🧇🎵🎟️📰",
+   "planung": [
+    "Was fand statt? Wann und wo?",
+    "Wer hat das Fest vorbereitet, und wer war dabei?",
+    "Was geschah nacheinander? Notiere die Reihenfolge mit Uhrzeiten.",
+    "Gab es etwas Besonderes, zum Beispiel einen Auftritt oder eine Tombola?",
+    "Welches Ergebnis gab es am Ende, zum Beispiel einen Erlös für einen guten Zweck?",
+    "Welche Überschrift sagt kurz und genau, worum es geht?"
+   ],
+   "woerter": [
+    "fand statt",
+    "um 14:00 Uhr",
+    "auf dem Pausenhof",
+    "eröffnete",
+    "die Schulleiterin",
+    "der Elternbeirat",
+    "die Spielstationen",
+    "der Schulchor",
+    "die Tombola",
+    "anschließend",
+    "gegen Abend",
+    "der Erlös",
+    "spendete",
+    "insgesamt"
+   ],
+   "checkliste": [
+    "Mein Bericht beantwortet die W-Fragen: Wer? Was? Wann? Wo? Wie? Warum?",
+    "Ich berichte in der richtigen zeitlichen Reihenfolge.",
+    "Ich schreibe sachlich – ohne Spannungswörter und ohne meine Gefühle.",
+    "Ich verwende keine wörtliche Rede.",
+    "Ich schreibe im Präteritum.",
+    "Ich nenne genaue Angaben wie Uhrzeiten, Orte und Zahlen.",
+    "Meine Überschrift sagt kurz, worum es geht."
+   ],
+   "minWoerter": 90
+  },
+  {
+   "id": "sa-brief",
+   "titel": "Ein Wunsch an die Schulleitung",
+   "textsorte": "Brief als E-Mail",
+   "auftrag": "Was würde eure Schule noch schöner machen? Vielleicht ein Trinkbrunnen, eine Lesekiste für die Regenpause oder ein Schulgarten? Schreibe eine E-Mail an die Schulleiterin Frau Kaya. Nenne deinen Wunsch, begründe ihn mit mindestens zwei Gründen und bleibe dabei höflich.",
+   "impuls": "✉️🏫💡🌻📚",
+   "planung": [
+    "Was wünsche ich mir genau?",
+    "Welcher Betreff sagt kurz, worum es geht?",
+    "Mit welcher Anrede beginne ich?",
+    "Welche Gründe sprechen für meinen Wunsch? Notiere mindestens zwei.",
+    "Welches Beispiel macht einen Grund anschaulich?",
+    "Wie bedanke ich mich, und mit welchem Gruß ende ich?"
+   ],
+   "woerter": [
+    "Sehr geehrte Frau Kaya",
+    "ich wünsche mir",
+    "meiner Meinung nach",
+    "weil",
+    "außerdem",
+    "ein weiterer Grund ist",
+    "zum Beispiel",
+    "deshalb",
+    "dadurch",
+    "wir würden uns sehr freuen",
+    "Ihre Antwort",
+    "vielen Dank",
+    "Mit freundlichen Grüßen"
+   ],
+   "checkliste": [
+    "Meine E-Mail hat einen Betreff, der kurz sagt, worum es geht.",
+    "Ich beginne mit einer höflichen Anrede und setze danach ein Komma.",
+    "Ich sage klar, was ich mir wünsche.",
+    "Ich nenne mindestens zwei Gründe.",
+    "Ich mache mindestens einen Grund mit einem Beispiel anschaulich.",
+    "Ich bleibe höflich und schreibe „Sie“ und „Ihnen“ groß.",
+    "Am Schluss bedanke ich mich und verabschiede mich mit einem Gruß und meinem Namen.",
+    "Ich habe meine E-Mail noch einmal auf Fehler durchgelesen."
+   ],
+   "minWoerter": 80
+  }
+ ]
+}

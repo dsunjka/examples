@@ -55,6 +55,7 @@ export function pruefeInhalte(pakete) {
       const f = d.fall;
       if (!f) { add('fehler', datei, '-', 'fall fehlt'); continue; }
       gruppe(datei, f.id);
+      if (!Number.isInteger(f.nummer) || f.nummer < 1) add('fehler', datei, f.id, 'nummer muss eine positive Ganzzahl sein');
       const seiten = new Set((f.seiten || []).map((s) => s.id));
       if (!seiten.has(f.startseite)) add('fehler', datei, f.id, 'startseite existiert nicht');
       const erreichbar = new Set([f.startseite]);

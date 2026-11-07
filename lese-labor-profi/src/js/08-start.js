@@ -63,7 +63,7 @@ document.addEventListener('click', async (ev) => {
     case 's-tipp': tippZeigen(); return;
     case 's-pruefen': pruefen(); return;
     case 's-loesung': loesungZeigen(); return;
-    case 's-nochmal': SITZ.phase[aktId()] = 'edit'; zeichneAufgabe(); return;
+    case 's-nochmal': { SITZ.phase[aktId()] = 'edit'; zeichneAufgabe(); const f = $('input.eingabe'); if (f) f.focus(); return; }
     case 's-springen': {
       const z = el.dataset.ziel === 'quelle' ? $('.quelle-spalte') : $('#aufgabe-spalte');
       if (z) z.scrollIntoView({ block: 'start', behavior: E().ruhig ? 'auto' : 'smooth' });
@@ -104,6 +104,13 @@ document.addEventListener('click', async (ev) => {
     case 'pruef-intro': { const cfg = pruefConfig(ds.art); if (cfg && cfg.ids.length) zeige('pruefung-start', cfg); else toast('Für diese Prüfung fehlen noch Aufgaben.'); return; }
     case 'pruef-los': {
       const cfg = ANSICHT.param; if (!cfg) return;
+      const lauf = P() && P().laufend;
+      if (lauf && (lauf.ids || []).some((id) => REG.items[id])) {
+        const w = await dialog({ titel: 'Angefangene Prüfung', text: `Du hast „${lauf.titel}“ noch nicht abgegeben. Wenn du eine neue Prüfung startest, wird die alte gelöscht.`, knoepfe: [{ label: 'Abbrechen', wert: null, stil: 'knopf-geist' }, { label: 'Alte weitermachen', wert: 'alt', stil: 'knopf-zweit' }, { label: 'Neu starten', wert: 'neu', stil: 'knopf-signal' }] });
+        if (w === 'alt') { sitzungFortsetzen(); return; }
+        if (w !== 'neu') return;
+        sitzungVerwerfen();
+      }
       const box = $('#uhr-zeigen'); if (box) { E().timerZeigen = box.checked; speichern(); }
       starteSitzung({ art: 'pruefung', titel: cfg.titel, ids: cfg.ids, pruefArt: cfg.art, zeitMin: cfg.zeitMin, zurueck: { name: cfg.modul || 'start' } });
       return;
@@ -147,7 +154,7 @@ document.addEventListener('click', async (ev) => {
     case 'export-datei': sicherungAlsDatei(); return;
     case 'import': {
       try { const n = importCode($('#import-code').value); wendeEinstellungenAn(); toast(`${plural(n, 'Profil', 'Profile')} wiederhergestellt.`); zeige('erwachsene'); }
-      catch (x) { toast(x.message || 'Der Code konnte nicht gelesen werden.', 3600); }
+      catch (x) { toast(x && /Code|Lese-Labor/.test(x.message || '') ? x.message : 'Der Code konnte nicht gelesen werden.', 4200); }
       return;
     }
     case 'alles-loeschen': {
@@ -203,8 +210,12 @@ document.addEventListener('keydown', (ev) => {
   const el = ev.target;
   if (ev.key === 'Enter' && el instanceof Element && el.matches('input[data-act="eingabe"]')) {
     ev.preventDefault();
-    if (!SITZ) return;
-    if (istPruefung()) weiter(); else if (SITZ.phase[aktId()] === 'edit') pruefen(); else weiter();
+    if (!SITZ || ANSICHT.name !== 'sitzung') return;
+    const ph = SITZ.phase[aktId()];
+    if (istPruefung()) weiter();
+    else if (ph === 'edit') pruefen();
+    else if (ph === 'nochmal') { SITZ.phase[aktId()] = 'edit'; zeichneAufgabe(); const f = $('input.eingabe'); if (f) f.focus(); }
+    else weiter();
     return;
   }
   if (ev.key === 'Enter' && el instanceof Element && el.matches('.zu-gruppe')) { ev.preventDefault(); antwortAktion('gruppe', el.dataset); return; }
@@ -220,6 +231,15 @@ document.addEventListener('click', (ev) => {
   const d = sum.parentElement;
   setTimeout(() => { if (SITZ) SITZ.offen[d.getAttribute('data-gruppe')] = d.open; }, 0);
 });
+window.addEventListener('popstate', async () => {
+  if (!verlaufGesetzt) return;
+  verlaufGesetzt = false;
+  const n = ANSICHT.name;
+  const zurueckLegen = () => { try { history.pushState({ lese: n }, '', location.href); verlaufGesetzt = true; } catch (e) { /* egal */ } };
+  if (n === 'sitzung' && SITZ) { const ok = await sitzungBeenden(); if (ok === false) zurueckLegen(); return; }
+  if (n === 'tempo-lauf') { tempoStopp(); TEMPO = null; zeige('tempo'); return; }
+  if (n === 'diktat') { zeige('rechtschreibung'); return; }
+});
 window.addEventListener('hashchange', () => {
   const h = location.hash.slice(1);
   if (!HASH_ANSICHTEN.has(h) || h === ANSICHT.name) return;
@@ -228,6 +248,7 @@ window.addEventListener('hashchange', () => {
 });
 
 function starteApp() {
+  try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {}); } catch (e) { /* egal */ }
   try { document.documentElement.lang = 'de'; } catch (e) { /* egal */ }
   baueRegister();
   wendeEinstellungenAn();

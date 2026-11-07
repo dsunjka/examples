@@ -10,19 +10,77 @@ const INTERVALLE = [0, 864e5, 2 * 864e5, 4 * 864e5, 8 * 864e5, 16 * 864e5];
 let speicherOk = true;
 
 function leererSpeicher() { return { version: 1, aktivesProfil: null, profile: {}, einstellungen: { ...EINST_STANDARD } }; }
+let speicherWarnung = '';
 function ladeSpeicher() {
-  try {
-    const roh = window.localStorage.getItem(SPEICHER_KEY);
-    if (roh) {
-      const d = JSON.parse(roh);
-      if (d && d.version === 1 && d.profile) {
-        d.einstellungen = { ...EINST_STANDARD, ...(d.einstellungen || {}) };
-        for (const p of Object.values(d.profile)) normalisiereProfil(p);
-        return d;
-      }
-    }
-  } catch (e) { speicherOk = false; }
-  return leererSpeicher();
+  let roh = null;
+  try { roh = window.localStorage.getItem(SPEICHER_KEY); } catch (e) { speicherOk = false; return leererSpeicher(); }
+  if (!roh) return leererSpeicher();
+  let d;
+  try { d = JSON.parse(roh); } catch (e) { d = null; }
+  if (!d || typeof d !== 'object' || d.version !== 1 || !d.profile || typeof d.profile !== 'object') {
+    // Beschädigte Daten nicht stillschweigend überschreiben: Sicherungskopie anlegen.
+    try { window.localStorage.setItem(SPEICHER_KEY + ':defekt-' + Date.now(), roh); } catch (e) { /* kein Platz */ }
+    speicherWarnung = 'Der gespeicherte Fortschritt war beschädigt und konnte nicht geladen werden. Eine Kopie wurde aufbewahrt.';
+    return leererSpeicher();
+  }
+  const out = leererSpeicher();
+  out.einstellungen = pruefeEinstellungen(d.einstellungen);
+  for (const [id, p] of Object.entries(d.profile)) {
+    const sauber = bereinigeProfil(p, { mitLaufend: true });
+    if (sauber && sauber.id === id) out.profile[id] = sauber;
+  }
+  out.aktivesProfil = out.profile[d.aktivesProfil] ? d.aktivesProfil : (Object.keys(out.profile)[0] || null);
+  out.letzteSicherung = zahl(d.letzteSicherung);
+  return out;
+}
+const zahl = (v, max = 1e13) => { const n = Number(v); return Number.isFinite(n) ? Math.max(0, Math.min(max, Math.round(n))) : 0; };
+const ID_OK = /^[a-z0-9-]{1,64}$/;
+const istObj = (v) => v && typeof v === 'object' && !Array.isArray(v);
+const kurztext = (v, max = 20000) => String(v == null ? '' : v).slice(0, max);
+/** Profil auf Typen und Wertebereiche prüfen (schützt auch vor manipulierten Sicherungscodes). */
+function bereinigeProfil(p, { mitLaufend = false } = {}) {
+  if (!istObj(p) || typeof p.id !== 'string' || !/^[a-z0-9]{1,40}$/.test(p.id)) return null;
+  const n = { id: p.id, name: kurztext(p.name, 24).trim() || 'Forscherkind', avatar: AVATARE.includes(p.avatar) ? p.avatar : AVATARE[0], erstellt: zahl(p.erstellt), punkte: zahl(p.punkte, 1e7), fehlerBehoben: zahl(p.fehlerBehoben, 1e6) };
+  n.items = {};
+  if (istObj(p.items)) for (const [id, r] of Object.entries(p.items)) {
+    if (!ID_OK.test(id) || !istObj(r)) continue;
+    n.items[id] = { v: zahl(r.v, 1e6), ok: zahl(r.ok, 1e6), x: zahl(r.x, 1e6), b: Math.min(5, zahl(r.b)), d: zahl(r.d), z: zahl(r.z), l: ['r', 'h', 't', 'f'].includes(r.l) ? r.l : 'f' };
+  }
+  const STATUS = ['r', 't', 'f', 'leer'];
+  n.pruefungen = (Array.isArray(p.pruefungen) ? p.pruefungen : []).filter(istObj).slice(-40).map((x) => {
+    const ids = (Array.isArray(x.ids) ? x.ids : []).filter((id) => typeof id === 'string' && ID_OK.test(id)).slice(0, 60);
+    const details = {};
+    if (istObj(x.details)) for (const id of ids) details[id] = STATUS.includes(x.details[id]) ? x.details[id] : 'leer';
+    return { art: typeof x.art === 'string' && ID_OK.test(x.art) ? x.art : 'test', titel: kurztext(x.titel, 80), datum: zahl(x.datum), punkte: zahl(x.punkte, 1000), max: zahl(x.max, 1000), dauer: zahl(x.dauer, 1e6), zeitLimit: zahl(x.zeitLimit, 1e6), ids, details, antworten: istObj(x.antworten) ? x.antworten : {}, perms: istObj(x.perms) ? x.perms : {} };
+  });
+  n.tempo = (Array.isArray(p.tempo) ? p.tempo : []).filter(istObj).slice(-60).map((t) => ({ datum: zahl(t.datum), richtig: zahl(t.richtig, 1000), falsch: zahl(t.falsch, 1000), dauer: zahl(t.dauer, 1e4) || 180, gelesen: zahl(t.gelesen, 1000) }));
+  n.diktate = {};
+  if (istObj(p.diktate)) for (const [id, d] of Object.entries(p.diktate)) if (ID_OK.test(id) && istObj(d)) n.diktate[id] = { best: zahl(d.best, 100), letzte: zahl(d.letzte, 100), datum: zahl(d.datum) };
+  n.texte = {};
+  if (istObj(p.texte)) for (const [id, t] of Object.entries(p.texte)) if (ID_OK.test(id) && istObj(t)) n.texte[id] = { text: kurztext(t.text, 50000), notizen: (Array.isArray(t.notizen) ? t.notizen : []).map((x) => kurztext(x, 500)).slice(0, 20), check: (Array.isArray(t.check) ? t.check : []).map(Boolean).slice(0, 20), fertig: !!t.fertig, datum: zahl(t.datum), fertigDatum: zahl(t.fertigDatum) };
+  n.abzeichen = {};
+  if (istObj(p.abzeichen)) for (const a of ABZEICHEN) if (p.abzeichen[a.id]) n.abzeichen[a.id] = zahl(p.abzeichen[a.id]) || 1;
+  n.tage = (Array.isArray(p.tage) ? p.tage : []).filter((t) => typeof t === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(t)).slice(-400);
+  n.fehlerwoerter = (Array.isArray(p.fehlerwoerter) ? p.fehlerwoerter : []).filter((w) => typeof w === 'string').map((w) => w.slice(0, 40)).slice(-50);
+  if (istObj(p.mission) && typeof p.mission.datum === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(p.mission.datum)) {
+    const ids = (Array.isArray(p.mission.ids) ? p.mission.ids : []).filter((id) => typeof id === 'string' && ID_OK.test(id)).slice(0, 10);
+    n.mission = { datum: p.mission.datum, ids, erledigt: (Array.isArray(p.mission.erledigt) ? p.mission.erledigt : []).filter((id) => ids.includes(id)) };
+  }
+  if (typeof p.missionGeschafft === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(p.missionGeschafft)) n.missionGeschafft = p.missionGeschafft;
+  if (mitLaufend && istObj(p.laufend) && Array.isArray(p.laufend.ids)) n.laufend = p.laufend;
+  return n;
+}
+const EINST_ERLAUBT = {
+  zeitDigital: [30, 40, 50, 60, 0], zeitLesen: [20, 30, 40, 0], zeitTest: [15, 20, 30, 0], zeitGross: [30, 45, 60, 0], timerZeigen: [true, false],
+  schrift: ['normal', 'gross', 'sehrgross'], weit: [true, false], ruhig: [true, false], thema: ['auto', 'light', 'dark'],
+  sprechTempo: [0.7, 0.85, 1], tempoDauer: [60, 120, 180], blitzSek: [2, 3, 5],
+};
+function pruefeEinstellungen(e) {
+  const out = { ...EINST_STANDARD };
+  if (!istObj(e)) return out;
+  for (const [k, werte] of Object.entries(EINST_ERLAUBT)) if (werte.includes(e[k])) out[k] = e[k];
+  if (typeof e.stimme === 'string') out.stimme = e.stimme.slice(0, 120);
+  return out;
 }
 function normalisiereProfil(p) {
   p.items = p.items || {}; p.pruefungen = p.pruefungen || []; p.tempo = p.tempo || [];
@@ -31,7 +89,7 @@ function normalisiereProfil(p) {
   p.fehlerwoerter = p.fehlerwoerter || [];
   return p;
 }
-let DB = ladeSpeicher();
+let DB = null; // wird nach den Abzeichen-Definitionen geladen
 let speicherTimer = null;
 function speichern(sofort = false) {
   clearTimeout(speicherTimer);
@@ -175,7 +233,7 @@ const ABZEICHEN = [
   { id: 'bylet15', sym: '🏅', name: 'BYLET-D bestanden', text: 'In der BYLET-D-Prüfung mindestens 15 von 20', test: (p) => p.pruefungen.some((x) => x.art === 'digital' && x.punkte >= 15) },
   { id: 'bylet18', sym: '🏆', name: 'PROFI-Prüfung', text: 'In der BYLET-D-Prüfung mindestens 18 von 20', test: (p) => p.pruefungen.some((x) => x.art === 'digital' && x.punkte >= 18) },
   { id: 'leser', sym: '📚', name: 'Bücherwurm', text: 'Alle Texte im Lese-Labor bearbeitet', test: (p) => { const s = modulStand('lesen', p); return s.gesamt > 0 && s.gesehen === s.gesamt; } },
-  { id: 'tempo30', sym: '🚀', name: 'Tempo-Rakete', text: 'Im Lese-Tempo mindestens 30 Sätze richtig', test: (p) => p.tempo.some((x) => x.richtig >= 30) },
+  { id: 'tempo30', sym: '🚀', name: 'Tempo-Rakete', text: 'Im Lese-Tempo einen Tempo-Wert von mindestens 30', test: (p) => p.tempo.some((x) => x.richtig - x.falsch >= 30) },
   { id: 'rs', sym: '✍️', name: 'Rechtschreib-Ass', text: '80 % im Rechtschreib-Labor gemeistert', test: (p) => { const s = modulStand('rechtschreibung', p); return s.gesamt > 0 && s.gemeistert >= 0.8 * s.gesamt; } },
   { id: 'gr', sym: '🧩', name: 'Grammatik-Genie', text: '80 % im Grammatik-Labor gemeistert', test: (p) => { const s = modulStand('grammatik', p); return s.gesamt > 0 && s.gemeistert >= 0.8 * s.gesamt; } },
   { id: 'diktat', sym: '🎧', name: 'Diktat-Meister', text: 'Ein Diktat mit 10 von 10 Wörtern', test: (p) => Object.values(p.diktate).some((d) => d.best >= 10) },
@@ -184,6 +242,7 @@ const ABZEICHEN = [
   { id: 'serie5', sym: '🔥', name: 'Dranbleiber', text: 'An 5 Tagen hintereinander geübt', test: (p) => serie(p) >= 5 },
   { id: 'mission', sym: '🎯', name: 'Missionserfüller', text: 'Eine Tagesmission komplett erledigt', test: (p) => !!p.missionGeschafft },
 ];
+DB = ladeSpeicher();
 function pruefeAbzeichen() {
   const p = P(); if (!p) return [];
   const neu = [];
@@ -196,21 +255,27 @@ function pruefeAbzeichen() {
 
 /* ---------- Sichern & Wiederherstellen ---------- */
 function exportCode() {
+  DB.letzteSicherung = Date.now(); speichern();
   const daten = { app: 'lese-labor-profi', v: 1, datum: Date.now(), profile: DB.profile, einstellungen: DB.einstellungen };
   const json = JSON.stringify(daten);
   return 'LLP1:' + btoa(unescape(encodeURIComponent(json)));
 }
 function importCode(code) {
   const roh = String(code || '').trim();
-  let json;
-  if (roh.startsWith('LLP1:')) json = decodeURIComponent(escape(atob(roh.slice(5).replace(/\s+/g, ''))));
-  else if (roh.startsWith('{')) json = roh;
-  else throw new Error('Das ist kein gültiger Sicherungscode. Er beginnt mit „LLP1:“.');
-  const d = JSON.parse(json);
-  if (!d || d.app !== 'lese-labor-profi' || !d.profile) throw new Error('Der Code gehört nicht zu Lese-Labor PROFI.');
-  let n = 0;
-  for (const [id, p] of Object.entries(d.profile)) { DB.profile[id] = normalisiereProfil(p); n++; }
-  if (d.einstellungen) DB.einstellungen = { ...EINST_STANDARD, ...d.einstellungen };
+  const kaputt = new Error('Der Code ist unvollständig oder beschädigt. Bitte den ganzen Code einfügen (er beginnt mit „LLP1:“).');
+  if (!roh.startsWith('LLP1:') && !roh.startsWith('{')) throw new Error('Das ist kein Sicherungscode von Lese-Labor PROFI. Er beginnt mit „LLP1:“.');
+  let d;
+  try {
+    const json = roh.startsWith('LLP1:') ? decodeURIComponent(escape(atob(roh.slice(5).replace(/\s+/g, '')))) : roh;
+    d = JSON.parse(json);
+  } catch (e) { throw kaputt; }
+  if (!istObj(d) || d.app !== 'lese-labor-profi' || !istObj(d.profile)) throw new Error('Der Code gehört nicht zu Lese-Labor PROFI.');
+  const neu = {};
+  for (const [id, p] of Object.entries(d.profile)) { const sauber = bereinigeProfil(p); if (sauber && sauber.id === id) neu[id] = sauber; }
+  const n = Object.keys(neu).length;
+  if (!n) throw kaputt;
+  Object.assign(DB.profile, neu);
+  if (d.einstellungen) DB.einstellungen = pruefeEinstellungen(d.einstellungen);
   if (!DB.profile[DB.aktivesProfil]) DB.aktivesProfil = Object.keys(DB.profile)[0] || null;
   speichern(true);
   return n;
