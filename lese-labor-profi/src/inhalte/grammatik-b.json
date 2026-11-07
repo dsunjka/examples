@@ -7,20 +7,21 @@
    "kurz": "Präsens, Präteritum, Perfekt und Futur",
    "kompetenz": "zeitformen",
    "wissen": {
-    "merksatz": "Das Verb verrät dir, <b>wann</b> etwas passiert: jetzt (Präsens), früher (Präteritum oder Perfekt) oder später (Futur).",
+    "merksatz": "Die <b>Zeitform</b> erkennst du an der Verbform. Sie zeigt dir meistens, <b>wann</b> etwas passiert: jetzt, früher oder später.",
     "punkte": [
-     "<b>Präsens</b> (Gegenwart): Es passiert jetzt oder immer wieder. Beispiel: <i>Lena liest.</i>",
+     "<b>Präsens</b> (Gegenwart): Es passiert jetzt oder immer wieder. Beispiel: <i>Lena liest.</i> Mit einem Signalwort kann man im Präsens auch über die Zukunft sprechen: <i>Am Freitag spielen wir Theater.</i>",
      "<b>Präteritum</b> (1. Vergangenheit): Es ist vorbei. Man benutzt es vor allem in geschriebenen Texten wie Erzählungen. Beispiel: <i>Lena las.</i>",
-     "<b>Perfekt</b> (2. Vergangenheit): Es ist vorbei. Man benutzt es vor allem beim mündlichen Erzählen. Es besteht aus einer Form von <i>haben</i> oder <i>sein</i> und dem Partizip. Beispiele: <i>Lena hat gelesen. Lena ist gerannt.</i>",
+     "<b>Perfekt</b> (2. Vergangenheit): Es ist vorbei. Man benutzt es vor allem beim mündlichen Erzählen. Es besteht aus einer Form von <i>haben</i> oder <i>sein</i> und dem <b>Partizip</b>. Das Partizip ist eine Verbform wie <i>gelesen</i>, <i>gespielt</i> oder <i>gerannt</i>. Beispiele: <i>Lena hat gelesen. Lena ist gerannt.</i>",
      "<b>Futur</b> (Zukunft): Es passiert später. Es besteht aus einer Form von <i>werden</i> und der Grundform. Beispiel: <i>Lena wird lesen.</i>",
-     "Starke Verben ändern im Präteritum ihren Vokal: <i>gehen – ging – ist gegangen</i>. Signalwörter wie <i>gestern</i>, <i>jetzt</i> oder <i>morgen</i> helfen dir, die passende Zeitform zu finden."
+     "<b>Schwache Verben</b> bekommen im Präteritum <i>-te</i>: <i>spielen – spielte – hat gespielt</i>. <b>Starke Verben</b> ändern im Präteritum ihren Vokal: <i>gehen – ging – ist gegangen</i>. Manche Verben machen beides: <i>rennen – rannte – ist gerannt</i>, <i>kennen – kannte – hat gekannt</i>.",
+     "Signalwörter wie <i>gestern</i>, <i>jetzt</i> oder <i>morgen</i> verraten dir, <b>wann</b> etwas passiert. Welche Zeitform ein Satz hat, erkennst du aber immer an der Verbform."
     ],
     "beispiele": [
      "Präsens: ich spiele, er geht",
      "Präteritum: ich spielte, er ging",
      "Perfekt: ich habe gespielt, er ist gegangen",
      "Futur: ich werde spielen, er wird gehen",
-     "finden – fand – hat gefunden"
+     "schreiben – schrieb – hat geschrieben"
     ]
    },
    "items": [
@@ -114,7 +115,7 @@
        "wahl": [
         "schwamm",
         "schwimmt",
-        "geschwommen"
+        "schwimmte"
        ],
        "loesung": 0
       },
@@ -123,29 +124,29 @@
       },
       {
        "wahl": [
-        "schwimmt",
         "schwamm",
-        "geschwommen"
+        "schwimmt",
+        "schwomm"
        ],
-       "loesung": 0
+       "loesung": 1
       },
       {
        "t": " sie im Hallenbad. Nächstes Jahr "
       },
       {
        "wahl": [
-        "wird",
         "hat",
-        "ist"
+        "wurde",
+        "wird"
        ],
-       "loesung": 0
+       "loesung": 2
       },
       {
        "t": " sie den Freischwimmer machen."
       }
      ],
-     "tipp": "Suche zuerst die Signalwörter. Sagen sie dir: vorbei, jetzt oder später?",
-     "erklaerung": "<i>Letzten Sommer</i> → Präteritum: <i>schwamm</i>. <i>Jetzt</i> → Präsens: <i>schwimmt</i>. <i>Nächstes Jahr</i> → Futur mit <i>werden</i>: <i>wird … machen</i>."
+     "tipp": "Suche zuerst die Signalwörter. Sagen sie dir: vorbei, jetzt oder später? Prüfe auch, ob es die Verbform wirklich gibt.",
+     "erklaerung": "<i>Letzten Sommer</i> → Präteritum: <i>schwamm</i> (die Formen „schwimmte“ und „schwomm“ gibt es nicht). <i>Jetzt</i> → Präsens: <i>schwimmt</i>. <i>Nächstes Jahr</i> → Futur mit <i>werden</i>: <i>wird … machen</i>."
     },
     {
      "id": "gr-zeiten-04",
@@ -176,20 +177,20 @@
        "richtig": false
       },
       {
-       "text": "Der Zug ___ pünktlich angekommen.",
-       "richtig": true
-      },
-      {
        "text": "Ben ___ den Gartenzaun gestrichen.",
        "richtig": false
       },
       {
-       "text": "Das Baby ___ endlich eingeschlafen.",
+       "text": "Der Zug ___ pünktlich angekommen.",
        "richtig": true
       },
       {
        "text": "Die Katze ___ ihre Milch getrunken.",
        "richtig": false
+      },
+      {
+       "text": "Das Baby ___ endlich eingeschlafen.",
+       "richtig": true
       }
      ],
      "tipp": "Sprich jeden Satz einmal mit <i>ist</i> und einmal mit <i>hat</i>. Verben, die eine Bewegung zu einem anderen Ort oder eine Veränderung ausdrücken, bilden das Perfekt oft mit <i>sein</i>.",
@@ -302,24 +303,24 @@
      ],
      "aussagen": [
       {
-       "text": "Der Satz „Morgen fährt Emir ins Schullandheim“ steht im Präsens.",
-       "richtig": true
+       "text": "Der Satz „Der Wind wehte die ganze Nacht“ steht im Perfekt.",
+       "richtig": false
       },
       {
-       "text": "Der Satz „Wir sind gestern lange wach geblieben“ steht im Präteritum.",
-       "richtig": false
+       "text": "Der Satz „Morgen fährt Emir ins Schullandheim“ steht im Präsens.",
+       "richtig": true
       },
       {
        "text": "Der Satz „Die Kinder werden im Zelt schlafen“ steht im Futur.",
        "richtig": true
       },
       {
-       "text": "Der Satz „Der Wind wehte die ganze Nacht“ steht im Perfekt.",
+       "text": "Der Satz „Wir sind gestern lange wach geblieben“ steht im Präteritum.",
        "richtig": false
       }
      ],
      "tipp": "Achte nur auf die Verbform, nicht auf Wörter wie <i>morgen</i> oder <i>gestern</i>. Aus wie vielen Teilen besteht das Prädikat, und welche Teile sind es?",
-     "erklaerung": "Die Form <i>fährt</i> ist Präsens – mit <i>morgen</i> kann das Präsens auch über die Zukunft sprechen. Dagegen ist <i>sind … geblieben</i> Perfekt, <i>werden … schlafen</i> Futur und <i>wehte</i> Präteritum."
+     "erklaerung": "Die Form <i>wehte</i> ist Präteritum. Die Form <i>fährt</i> ist Präsens – zusammen mit <i>morgen</i> spricht sie über die Zukunft. Dagegen ist <i>werden … schlafen</i> Futur und <i>sind … geblieben</i> Perfekt."
     },
     {
      "id": "gr-zeiten-08",
@@ -328,10 +329,6 @@
      "kompetenz": "zeitformen",
      "frage": "In welcher Reihe sind alle drei Verbformen richtig?",
      "optionen": [
-      {
-       "text": "trinken – trank – hat getrunken",
-       "richtig": true
-      },
       {
        "text": "bringen – bringte – hat gebracht",
        "richtig": false
@@ -343,6 +340,10 @@
       {
        "text": "denken – dachte – hat gedenkt",
        "richtig": false
+      },
+      {
+       "text": "trinken – trank – hat getrunken",
+       "richtig": true
       }
      ],
      "tipp": "Prüfe jede Form mit einem kleinen Satz: „Heute …“ – „Gestern …“ – „Ich habe …“ oder „Ich bin …“. In drei Reihen steckt je ein Fehler.",
@@ -352,7 +353,7 @@
   },
   {
    "id": "gr-satzglieder",
-   "titel": "Satzglieder und Umstellprobe",
+   "titel": "Satzglieder",
    "kurz": "Umstellprobe, Subjekt und Prädikat",
    "kompetenz": "satzglieder",
    "wissen": {
@@ -517,28 +518,28 @@
      "vorgabe": "Die Kinder der 4b besuchen am Freitag das Naturkundemuseum. → Am Freitag besuchen die Kinder der 4b das Naturkundemuseum. → Das Naturkundemuseum besuchen die Kinder der 4b am Freitag.",
      "optionen": [
       {
-       "text": "die Kinder der 4b",
-       "richtig": true
-      },
-      {
-       "text": "am Freitag",
-       "richtig": true
-      },
-      {
-       "text": "das Naturkundemuseum",
-       "richtig": true
-      },
-      {
        "text": "die Kinder",
        "richtig": false
+      },
+      {
+       "text": "die Kinder der 4b",
+       "richtig": true
       },
       {
        "text": "am Freitag das Naturkundemuseum",
        "richtig": false
       },
       {
+       "text": "am Freitag",
+       "richtig": true
+      },
+      {
        "text": "der 4b",
        "richtig": false
+      },
+      {
+       "text": "das Naturkundemuseum",
+       "richtig": true
       }
      ],
      "tipp": "Prüfe jede Wortgruppe: Bleibt sie in allen drei Sätzen genau so zusammen? Fehlt ihr etwas, das immer dabeisteht?",
@@ -630,12 +631,12 @@
        "richtig": true
       },
       {
-       "text": "Das Subjekt ist <i>Felix</i>.",
-       "richtig": false
-      },
-      {
        "text": "Die Wörter <i>Gestern Nachmittag</i> bilden zusammen ein Satzglied.",
        "richtig": true
+      },
+      {
+       "text": "Das Subjekt ist <i>Felix</i>.",
+       "richtig": false
       },
       {
        "text": "Die Wörter <i>einen Drachen gebaut</i> bilden zusammen ein Satzglied.",
@@ -643,7 +644,7 @@
       }
      ],
      "tipp": "Mach die Umstellprobe: Beginne den Satz mit <i>Opa</i> oder mit <i>Einen Drachen</i>. Was bleibt zusammen, was wandert an eine andere Stelle?",
-     "erklaerung": "Das Prädikat <i>hat … gebaut</i> ist zweiteilig. <i>Wer hat gebaut?</i> – <i>Opa</i>, nicht Felix. <i>Gestern Nachmittag</i> bleibt beim Umstellen zusammen. Das Wort <i>gebaut</i> gehört zum Prädikat, nicht zu <i>einen Drachen</i>."
+     "erklaerung": "Das Prädikat <i>hat … gebaut</i> ist zweiteilig, und <i>Gestern Nachmittag</i> bleibt beim Umstellen zusammen. <i>Wer hat gebaut?</i> – <i>Opa</i>, nicht Felix. Das Wort <i>gebaut</i> gehört zum Prädikat, nicht zu <i>einen Drachen</i>."
     }
    ]
   },
@@ -653,13 +654,13 @@
    "kurz": "Wem? Wen oder was? Wo? Wann?",
    "kompetenz": "satzglieder",
    "wissen": {
-    "merksatz": "Die richtige Frage verrät dir das Satzglied: <i>Wem?</i> → Dativobjekt, <i>Wen oder was?</i> → Akkusativobjekt, <i>Wo?</i> oder <i>Wohin?</i> → Ortsangabe, <i>Wann?</i> oder <i>Wie lange?</i> → Zeitangabe.",
+    "merksatz": "Die richtige Frage verrät dir das Satzglied: <i>Wem?</i> → Dativobjekt, <i>Wen oder was?</i> → Akkusativobjekt, <i>Wo? Wohin? Woher?</i> → Ortsangabe, <i>Wann? Wie lange? Seit wann? Wie oft?</i> → Zeitangabe.",
     "punkte": [
      "Das <b>Dativobjekt</b> erfragst du mit <i>Wem?</i> Beispiel: Emir schenkt <i>seiner Schwester</i> ein Buch.",
      "Das <b>Akkusativobjekt</b> erfragst du mit <i>Wen oder was?</i> Beispiel: Emir schenkt seiner Schwester <i>ein Buch</i>.",
      "Die <b>Ortsangabe</b> erfragst du mit <i>Wo?</i>, <i>Wohin?</i> oder <i>Woher?</i> Beispiel: Wir treffen uns <i>am Brunnen</i>.",
-     "Die <b>Zeitangabe</b> erfragst du mit <i>Wann?</i>, <i>Wie lange?</i> oder <i>Seit wann?</i> Beispiel: <i>Am Freitag</i> ist Wandertag.",
-     "Das Prädikat bestimmt, welches Objekt ein Satz braucht: <i>Ben hilft seinem Opa.</i> (Wem?) – <i>Ben besucht seinen Opa.</i> (Wen?) Orts- und Zeitangaben kannst du meist ergänzen oder weglassen."
+     "Die <b>Zeitangabe</b> erfragst du mit <i>Wann?</i>, <i>Wie lange?</i>, <i>Seit wann?</i> oder <i>Wie oft?</i> Beispiel: <i>Am Freitag</i> ist Wandertag.",
+     "Das Prädikat bestimmt, welches Objekt ein Satz braucht: <i>Ben folgt seinem Hund.</i> (Wem?) – <i>Ben sucht seinen Hund.</i> (Wen?) Orts- und Zeitangaben kannst du meist ergänzen oder weglassen."
     ],
     "beispiele": [
      "Die Lehrerin gibt <i>dem Jungen</i> ein Heft. → Wem? Dativobjekt",
@@ -682,15 +683,15 @@
        "richtig": true
       },
       {
+       "text": "im Schwimmbad",
+       "richtig": false
+      },
+      {
        "text": "drei Stunden lang",
        "richtig": true
       },
       {
-       "text": "nach dem Frühstück",
-       "richtig": true
-      },
-      {
-       "text": "im Schwimmbad",
+       "text": "seinem Bruder",
        "richtig": false
       },
       {
@@ -698,8 +699,8 @@
        "richtig": false
       },
       {
-       "text": "seinem Bruder",
-       "richtig": false
+       "text": "nach dem Frühstück",
+       "richtig": true
       }
      ],
      "tipp": "Probiere bei jeder Wortgruppe die Fragen <i>Wann?</i> und <i>Wie lange?</i> aus.",
@@ -714,16 +715,16 @@
      "vorgabe": "Aylin hilft <b>ihrem Opa</b> im Garten.",
      "optionen": [
       {
-       "text": "Dativobjekt",
-       "richtig": true
-      },
-      {
        "text": "Akkusativobjekt",
        "richtig": false
       },
       {
        "text": "Subjekt",
        "richtig": false
+      },
+      {
+       "text": "Dativobjekt",
+       "richtig": true
       },
       {
        "text": "Ortsangabe",
@@ -822,17 +823,17 @@
      "frage": "Das Prädikat bestimmt, welches Objekt folgt. Wähle die richtige Form.",
      "teile": [
       {
-       "t": "Am Samstag hilft Mateo "
+       "t": "Am Samstag gratuliert Mateo "
       },
       {
        "wahl": [
-        "seinem",
-        "seinen"
+        "seinen",
+        "seinem"
        ],
-       "loesung": 0
+       "loesung": 1
       },
       {
-       "t": " Opa im Garten. Danach fährt er mit dem Bus in die Stadt und dankt beim Aussteigen "
+       "t": " Opa zum Geburtstag. Danach fährt er mit dem Bus in die Stadt und dankt beim Aussteigen "
       },
       {
        "wahl": [
@@ -846,17 +847,17 @@
       },
       {
        "wahl": [
-        "seine",
-        "seiner"
+        "seiner",
+        "seine"
        ],
-       "loesung": 0
+       "loesung": 1
       },
       {
        "t": " Tante."
       }
      ],
      "tipp": "Bilde mit jedem Prädikat eine Frage. Klingt sie mit <i>Wem</i> oder mit <i>Wen</i> richtig?",
-     "erklaerung": "Die Verben <i>helfen</i> und <i>danken</i> brauchen ein Dativobjekt (Wem?): <i>seinem Opa</i>, <i>dem Busfahrer</i>. Das Verb <i>besuchen</i> braucht ein Akkusativobjekt (Wen?): <i>seine Tante</i>."
+     "erklaerung": "Die Verben <i>gratulieren</i> und <i>danken</i> brauchen ein Dativobjekt (Wem?): <i>seinem Opa</i>, <i>dem Busfahrer</i>. Das Verb <i>besuchen</i> braucht ein Akkusativobjekt (Wen?): <i>seine Tante</i>."
     },
     {
      "id": "gr-objekte-06",
@@ -919,7 +920,7 @@
       }
      ],
      "tipp": "Frage bei jedem Satzglied: <i>Wann?</i>, <i>Seit wann?</i> oder <i>Wie oft?</i> Lass dich nicht von der Form der Wörter täuschen.",
-     "erklaerung": "<i>Seit Montag</i> antwortet auf <i>Seit wann?</i>, <i>jeden Nachmittag</i> auf <i>Wann?</i> – beides sind Zeitangaben. Dagegen ist <i>im Kinderzimmer</i> eine Ortsangabe und <i>Flöte</i> ein Akkusativobjekt (Was übt Mia?)."
+     "erklaerung": "<i>Seit Montag</i> antwortet auf <i>Seit wann?</i>, <i>jeden Nachmittag</i> auf <i>Wann?</i> oder <i>Wie oft?</i> – beides sind Zeitangaben. Dagegen ist <i>im Kinderzimmer</i> eine Ortsangabe und <i>Flöte</i> ein Akkusativobjekt (Was übt Mia?)."
     },
     {
      "id": "gr-objekte-08",
@@ -934,24 +935,24 @@
      ],
      "aussagen": [
       {
-       "text": "Die Wortgruppe „seine Oma“ ist ein Akkusativobjekt.",
-       "richtig": true
-      },
-      {
        "text": "Die Wortgruppe „in Mühlbach“ ist eine Zeitangabe.",
        "richtig": false
       },
       {
-       "text": "Ohne „am Sonntag“ ist der Satz immer noch vollständig.",
+       "text": "Ohne „seine Oma“ ist der Satz immer noch vollständig.",
+       "richtig": false
+      },
+      {
+       "text": "Die Wortgruppe „seine Oma“ ist ein Akkusativobjekt.",
        "richtig": true
       },
       {
-       "text": "Ohne „seine Oma“ ist der Satz immer noch vollständig.",
-       "richtig": false
+       "text": "Ohne „am Sonntag“ ist der Satz immer noch vollständig.",
+       "richtig": true
       }
      ],
      "tipp": "Lass das Satzglied in Gedanken weg und lies den Rest laut. Klingt der Satz fertig, oder fehlt etwas, das <i>besucht</i> unbedingt braucht?",
-     "erklaerung": "<i>Wen besucht Emir?</i> – <i>seine Oma</i>: ein Akkusativobjekt, das <i>besuchen</i> unbedingt braucht. Die Wortgruppe <i>in Mühlbach</i> ist eine Ortsangabe. Zeit- und Ortsangaben wie <i>am Sonntag</i> kannst du weglassen."
+     "erklaerung": "Die Wortgruppe <i>in Mühlbach</i> ist eine Ortsangabe (Wo?). <i>Wen besucht Emir?</i> – <i>seine Oma</i>: ein Akkusativobjekt, das <i>besuchen</i> unbedingt braucht. Zeit- und Ortsangaben wie <i>am Sonntag</i> kannst du weglassen."
     }
    ]
   },
@@ -967,7 +968,8 @@
      "<b>2. Fall – Genitiv</b>: <i>Wessen</i> Napf ist das? → Das ist der Napf <i>des Hundes</i>.",
      "<b>3. Fall – Dativ</b>: <i>Wem</i> gebe ich Futter? → Ich gebe <i>dem Hund</i> Futter.",
      "<b>4. Fall – Akkusativ</b>: <i>Wen oder was</i> streichle ich? → Ich streichle <i>den Hund</i>.",
-     "Je nach Fall verändern sich der Artikel (Begleiter), manchmal das Nomen und auch das Adjektiv: <i>der große Hund – des großen Hundes – dem großen Hund – den großen Hund</i>."
+     "Je nach Fall verändern sich der Artikel (Begleiter), manchmal das Nomen und auch das Adjektiv: <i>der große Hund – des großen Hundes – dem großen Hund – den großen Hund</i>.",
+     "Auch nach <i>ein</i> ändert sich das Adjektiv: <i>ein großer Hund – eines großen Hundes – einem großen Hund – einen großen Hund</i>."
     ],
     "beispiele": [
      "der Hund – des Hundes – dem Hund – den Hund",
@@ -1062,7 +1064,18 @@
      "frage": "Wähle den richtigen Artikel.",
      "teile": [
       {
-       "t": "Ich gebe "
+       "t": "Im Streichelzoo gebe ich "
+      },
+      {
+       "wahl": [
+        "den",
+        "dem",
+        "des"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": " Esel eine Karotte. Das Fell "
       },
       {
        "wahl": [
@@ -1070,25 +1083,25 @@
         "den",
         "des"
        ],
-       "loesung": 0
+       "loesung": 2
       },
       {
-       "t": " Hund einen Knochen. Der Schwanz "
+       "t": " Esels ist ganz struppig. Zum Abschied streichle ich "
       },
       {
        "wahl": [
-        "des",
+        "den",
         "dem",
-        "den"
+        "des"
        ],
        "loesung": 0
       },
       {
-       "t": " Hundes wedelt vor Freude."
+       "t": " Esel noch einmal."
       }
      ],
-     "tipp": "Stelle zu jeder Lücke die passende Fallfrage. Achte auch auf die Endung von <i>Hund</i>.",
-     "erklaerung": "<i>Wem gebe ich einen Knochen?</i> – <i>dem Hund</i> (Dativ). <i>Wessen Schwanz wedelt?</i> – der Schwanz <i>des Hundes</i> (Genitiv)."
+     "tipp": "Stelle zu jeder Lücke die passende Fallfrage. Achte auch auf die Endung von <i>Esel</i>.",
+     "erklaerung": "<i>Wem gebe ich eine Karotte?</i> – <i>dem Esel</i> (Dativ). <i>Wessen Fell?</i> – das Fell <i>des Esels</i> (Genitiv). <i>Wen streichle ich?</i> – <i>den Esel</i> (Akkusativ)."
     },
     {
      "id": "gr-faelle-04",
@@ -1214,24 +1227,24 @@
      ],
      "aussagen": [
       {
-       "text": "Die Wortgruppe „des Bäckers“ steht im Genitiv.",
-       "richtig": true
-      },
-      {
        "text": "Die Wortgruppe „den Gästen“ steht im Akkusativ.",
        "richtig": false
       },
       {
-       "text": "Die Wortgruppe „den Kuchen“ steht im Akkusativ.",
+       "text": "Die Wortgruppe „des Bäckers“ steht im Genitiv.",
        "richtig": true
       },
       {
-       "text": "Die Wortgruppe „Die Tochter“ steht im Dativ.",
-       "richtig": false
+       "text": "Die Wortgruppe „Die Tochter“ steht im Nominativ.",
+       "richtig": true
+      },
+      {
+       "text": "Die Wortgruppe „den Kuchen“ steht im Akkusativ.",
+       "richtig": true
       }
      ],
      "tipp": "Verlass dich nicht nur auf den Artikel. Stelle zu jeder Wortgruppe die Fallfrage und achte auch auf das Ende des Nomens.",
-     "erklaerung": "<i>Wessen Tochter?</i> – <i>des Bäckers</i> (Genitiv). <i>Wem bringt sie den Kuchen?</i> – <i>den Gästen</i> (Dativ, Mehrzahl). <i>Wen oder was bringt sie?</i> – <i>den Kuchen</i> (Akkusativ). <i>Die Tochter</i> ist das Subjekt und steht im Nominativ."
+     "erklaerung": "<i>Wem bringt sie den Kuchen?</i> – <i>den Gästen</i> (Dativ, Mehrzahl). <i>Wessen Tochter?</i> – <i>des Bäckers</i> (Genitiv). <i>Die Tochter</i> ist das Subjekt und steht im Nominativ, <i>den Kuchen</i> antwortet auf <i>Wen oder was?</i> (Akkusativ)."
     },
     {
      "id": "gr-faelle-08",

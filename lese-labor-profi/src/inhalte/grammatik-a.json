@@ -12,7 +12,7 @@
      "Nomen-Probe: Passt <i>der</i>, <i>die</i> oder <i>das</i> davor? Dann ist es ein Nomen: <i>die Angst, der Traum, die Hoffnung</i>.",
      "Jedes Nomen hat ein Geschlecht: männlich (<i>der</i> Tisch), weiblich (<i>die</i> Lampe) oder sächlich (<i>das</i> Bett).",
      "Bestimmte Artikel sind <i>der, die, das</i>. Unbestimmte Artikel sind <i>ein, eine</i>.",
-     "Die meisten Nomen haben eine Einzahl und eine Mehrzahl: <i>das Buch – die Bücher</i>. In der Mehrzahl heißt der bestimmte Artikel immer <i>die</i>.",
+     "Die meisten Nomen haben eine Einzahl und eine Mehrzahl: <i>das Buch – die Bücher</i>. In der Mehrzahl heißt der bestimmte Artikel bei <i>Wer oder was?</i> immer <i>die</i>: <i>die Bücher, die Bäume</i>.",
      "Personalpronomen sind <i>ich, du, er, sie, es, wir, ihr, sie</i>. Sie ersetzen Nomen, damit sich Wörter nicht dauernd wiederholen: <i>Der Hund bellt. Er hat Hunger.</i>"
     ],
     "beispiele": [
@@ -233,16 +233,16 @@
        "richtig": false
       },
       {
-       "text": "Bei <i>der Koffer</i> sieht die Mehrzahl genauso aus wie die Einzahl: <i>die Koffer</i>.",
+       "text": "Beim Wort <i>der Koffer</i> sieht das Nomen in der Mehrzahl genauso aus wie in der Einzahl: <i>die Koffer</i>.",
        "richtig": true
       },
       {
-       "text": "Weil es <i>der Baum</i> heißt, sagt man in der Mehrzahl <i>der Bäume</i>.",
+       "text": "Weil es <i>der Baum</i> heißt, sagt man in der Mehrzahl: <i>Im Wald stehen der Bäume.</i>",
        "richtig": false
       }
      ],
      "tipp": "Bilde die Mehrzahl laut: <i>eine Maus – zwei …</i>, <i>ein Koffer – zwei …</i>. Setze dann <i>der</i>, <i>die</i> oder <i>das</i> vor die Mehrzahl und hör genau hin.",
-     "erklaerung": "Richtig: die Maus – die Mäuse, der Koffer – die Koffer. Falsch: <i>ein</i> und <i>eine</i> sind unbestimmte Artikel. In der Mehrzahl heißt der bestimmte Artikel immer <i>die</i>, also <i>die Bäume</i>."
+     "erklaerung": "Richtig: die Maus – die Mäuse, der Koffer – die Koffer. Falsch: <i>ein</i> und <i>eine</i> sind unbestimmte Artikel. In der Mehrzahl heißt der bestimmte Artikel bei <i>Wer oder was?</i> immer <i>die</i>: <i>Im Wald stehen die Bäume.</i>"
     },
     {
      "id": "gr-nomen-06",
@@ -349,7 +349,7 @@
    "wissen": {
     "merksatz": "<b>Verben</b> (Tunwörter) sagen, was jemand tut oder was geschieht: <i>lachen, rennen, regnen</i>. Im Wörterbuch steht die <b>Grundform</b> (Infinitiv): <i>spielen</i>. Im Satz steht die <b>Personalform</b>, die zur Person passt: <i>du spielst</i>.",
     "punkte": [
-     "Ein Verb besteht aus dem <b>Wortstamm</b> und der <b>Endung</b>: <i>spiel-en, spiel-st, spiel-t</i>. Der Wortstamm bleibt, die Endung wechselt.",
+     "Ein Verb besteht aus dem <b>Wortstamm</b> und der <b>Endung</b>: <i>spiel-en, spiel-st, spiel-t</i>. Der Wortstamm bleibt meistens gleich, die Endung wechselt. Manchmal heißt die Endung der Grundform nur <i>-n</i>: <i>kletter-n – du kletter-st</i>.",
      "Personalendungen: ich spiel<b>e</b>, du spiel<b>st</b>, er/sie/es spiel<b>t</b>, wir spiel<b>en</b>, ihr spiel<b>t</b>, sie spiel<b>en</b>.",
      "Bei manchen Verben ändert sich bei <i>du</i> und <i>er/sie/es</i> der Selbstlaut im Wortstamm: <i>schlafen – du schläfst</i>, <i>helfen – sie hilft</i>.",
      "Bei <i>ihr</i> bleibt der Selbstlaut wie in der Grundform: <i>ihr schlaft, ihr helft</i>.",
@@ -537,7 +537,7 @@
       }
      ],
      "tipp": "Schau genau, wer etwas tut: <i>ich</i>, <i>du</i>, <i>wir</i> oder <i>ihr</i>? Jede Person hat ihre eigene Endung.",
-     "erklaerung": "Es heißt: ich spiel<b>e</b>, du spiel<b>st</b>, wir spiel<b>en</b>, ihr hör<b>t</b>. Der Wortstamm bleibt gleich, nur die Endung passt sich der Person an."
+     "erklaerung": "Es heißt: ich spiel<b>e</b>, du spiel<b>st</b>, wir spiel<b>en</b>, ihr hör<b>t</b>. Der Wortstamm bleibt hier gleich, nur die Endung passt sich der Person an."
     },
     {
      "id": "gr-verben-04",
@@ -738,10 +738,10 @@
        "t": "sitzt"
       },
       {
-       "t": "ein"
+       "t": "der"
       },
       {
-       "t": "kleiner",
+       "t": "kleine",
        "ziel": true
       },
       {
@@ -763,7 +763,7 @@
       }
      ],
      "tipp": "Adjektive sagen, wie etwas ist. Frage: Wie ist die Wiese? Wie ist der Hase? Wie sind seine Ohren?",
-     "erklaerung": "<i>bunten</i>, <i>kleiner</i> und <i>langen</i> beschreiben, wie die Wiese, der Hase und die Ohren sind. Es sind Adjektive. Sie stehen hier jeweils direkt vor einem Nomen."
+     "erklaerung": "<i>bunten</i>, <i>kleine</i> und <i>langen</i> beschreiben, wie die Wiese, der Hase und die Ohren sind. Es sind Adjektive. Sie stehen hier jeweils direkt vor einem Nomen."
     },
     {
      "id": "gr-adjektive-02",
@@ -929,7 +929,7 @@
      "typ": "matrix",
      "stufe": 2,
      "kompetenz": "wortarten",
-     "frage": "Ist der Vergleich richtig oder falsch?",
+     "frage": "Ist der Vergleich richtig gebildet? Achte auf <i>als</i> und <i>wie</i>.",
      "aussagen": [
       {
        "text": "Die Katze ist schneller als die Schildkröte.",
@@ -1059,11 +1059,12 @@
    "wissen": {
     "merksatz": "Aus <b>Wortbausteinen</b> entstehen neue Wörter. Ein <b>zusammengesetztes Nomen</b> besteht aus <b>Bestimmungswort</b> und <b>Grundwort</b>. Das Grundwort steht hinten und bestimmt den Artikel: <i>das Haus + die Tür = die Haustür</i>. Wörter mit demselben Wortstamm bilden eine <b>Wortfamilie</b>.",
     "punkte": [
-     "Das Bestimmungswort erklärt das Grundwort genauer: Eine <i>Haustür</i> ist eine Tür, ein <i>Türschloss</i> ist ein Schloss.",
+     "Das Bestimmungswort erklärt das Grundwort genauer: Eine <i>Haustür</i> ist eine Tür <b>am Haus</b>, ein <i>Türschloss</i> ist ein Schloss <b>an der Tür</b>.",
      "Eine <b>Wortfamilie</b> hat einen gemeinsamen Wortstamm: <i>spielen, der Spieler, der Spielplatz, verspielt</i>. Manchmal ändert sich dabei ein Selbstlaut: <i>fahren – die Fähre</i>.",
-     "Ein <b>Wortfeld</b> sind Wörter mit ähnlicher Bedeutung, aber verschiedenem Wortstamm: <i>sagen – flüstern, rufen, fragen</i>; <i>gehen – schleichen, rennen, bummeln</i>.",
+     "Zu einem <b>Wortfeld</b> gehören Wörter mit ähnlicher Bedeutung, aber verschiedenem Wortstamm: <i>sagen – flüstern, rufen, fragen</i>; <i>gehen – schleichen, rennen, bummeln</i>.",
      "<b>Vorsilben</b> (Präfixe) stehen vorn und verändern die Bedeutung: <i>kaufen – verkaufen</i>, <i>decken – entdecken</i>, <i>freundlich – unfreundlich</i>.",
-     "<b>Nachsilben</b> (Suffixe) stehen hinten. Mit <i>-ung, -heit, -keit</i> und <i>-nis</i> entstehen Nomen: <i>die Hoffnung, die Freiheit, die Ehrlichkeit, das Ergebnis</i>."
+     "<b>Nachsilben</b> (Suffixe) stehen hinten. Mit <i>-ung, -heit, -keit</i> und <i>-nis</i> entstehen Nomen: <i>die Hoffnung, die Freiheit, die Ehrlichkeit, das Ergebnis</i>.",
+     "Bei Verben fällt die Endung der Grundform weg: <i>wohnen → die Wohnung</i>, <i>erleben → das Erlebnis</i>. Nach <i>-ig</i>, <i>-lich</i> und <i>-bar</i> steht meist <i>-keit</i>: <i>die Fröhlichkeit</i>, <i>die Dankbarkeit</i>."
     ],
     "beispiele": [
      "der Apfel + der Saft = der Apfelsaft",
@@ -1350,7 +1351,7 @@
      "frage": "Lies jede Aussage genau. Ist sie richtig oder falsch?",
      "aussagen": [
       {
-       "text": "Es heißt <i>die Apfelsaftflasche</i>, weil das letzte Wort <i>die Flasche</i> ist.",
+       "text": "Es heißt <i>die Apfelsaftflasche</i>, weil das Grundwort <i>die Flasche</i> ist.",
        "richtig": true
       },
       {
@@ -1383,7 +1384,7 @@
      ],
      "elemente": [
       {
-       "t": "dunkel",
+       "t": "frech",
        "g": 0
       },
       {
@@ -1395,7 +1396,7 @@
        "g": 1
       },
       {
-       "t": "sauber",
+       "t": "dankbar",
        "g": 1
       },
       {
@@ -1415,8 +1416,8 @@
        "g": 3
       }
      ],
-     "tipp": "Hänge jede Nachsilbe probeweise an und sprich das neue Wort laut. Nur eine Nachsilbe ergibt ein echtes Nomen.",
-     "erklaerung": "Es heißt: die Dunkelheit, die Krankheit – die Freundlichkeit, die Sauberkeit – die Übung, die Wanderung – die Erlaubnis, das Geheimnis. Alle neuen Wörter sind Nomen und werden großgeschrieben."
+     "tipp": "Hänge jede Nachsilbe probeweise an und sprich das neue Wort laut. Bei Verben lässt du vorher die Endung der Grundform weg. Nur eine Nachsilbe ergibt ein echtes Nomen.",
+     "erklaerung": "Es heißt: die Frechheit, die Krankheit – die Freundlichkeit, die Dankbarkeit – die Übung, die Wanderung – die Erlaubnis, das Geheimnis. Nach <i>-lich</i> und <i>-bar</i> steht <i>-keit</i>. Alle neuen Wörter sind Nomen und werden großgeschrieben."
     }
    ]
   }
