@@ -1,0 +1,1274 @@
+{
+ "modul": "grammatik",
+ "themen": [
+  {
+   "id": "gr-zeiten",
+   "titel": "Zeitformen",
+   "kurz": "Präsens, Präteritum, Perfekt und Futur",
+   "kompetenz": "zeitformen",
+   "wissen": {
+    "merksatz": "Das Verb verrät dir, <b>wann</b> etwas passiert: jetzt (Präsens), früher (Präteritum oder Perfekt) oder später (Futur).",
+    "punkte": [
+     "<b>Präsens</b> (Gegenwart): Es passiert jetzt oder immer wieder. Beispiel: <i>Lena liest.</i>",
+     "<b>Präteritum</b> (1. Vergangenheit): Es ist vorbei. Man benutzt es vor allem in geschriebenen Texten wie Erzählungen. Beispiel: <i>Lena las.</i>",
+     "<b>Perfekt</b> (2. Vergangenheit): Es ist vorbei. Man benutzt es vor allem beim mündlichen Erzählen. Es besteht aus einer Form von <i>haben</i> oder <i>sein</i> und dem Partizip. Beispiele: <i>Lena hat gelesen. Lena ist gerannt.</i>",
+     "<b>Futur</b> (Zukunft): Es passiert später. Es besteht aus einer Form von <i>werden</i> und der Grundform. Beispiel: <i>Lena wird lesen.</i>",
+     "Starke Verben ändern im Präteritum ihren Vokal: <i>gehen – ging – ist gegangen</i>. Signalwörter wie <i>gestern</i>, <i>jetzt</i> oder <i>morgen</i> helfen dir, die passende Zeitform zu finden."
+    ],
+    "beispiele": [
+     "Präsens: ich spiele, er geht",
+     "Präteritum: ich spielte, er ging",
+     "Perfekt: ich habe gespielt, er ist gegangen",
+     "Futur: ich werde spielen, er wird gehen",
+     "finden – fand – hat gefunden"
+    ]
+   },
+   "items": [
+    {
+     "id": "gr-zeiten-01",
+     "typ": "single",
+     "stufe": 1,
+     "kompetenz": "zeitformen",
+     "frage": "In welcher Zeitform steht dieser Satz?",
+     "vorgabe": "Sofia hat im Freibad einen Kopfsprung gemacht.",
+     "optionen": [
+      {
+       "text": "Präsens",
+       "richtig": false
+      },
+      {
+       "text": "Präteritum",
+       "richtig": false
+      },
+      {
+       "text": "Perfekt",
+       "richtig": true
+      },
+      {
+       "text": "Futur",
+       "richtig": false
+      }
+     ],
+     "tipp": "Schau dir das Verb genau an. Besteht es aus einem Teil oder aus zwei Teilen? Steckt eine Form von <i>haben</i>, <i>sein</i> oder <i>werden</i> darin?",
+     "erklaerung": "Das Prädikat <i>hat … gemacht</i> besteht aus einer Form von <i>haben</i> und dem Partizip. Das ist das Perfekt."
+    },
+    {
+     "id": "gr-zeiten-02",
+     "typ": "zuordnen",
+     "stufe": 1,
+     "kompetenz": "zeitformen",
+     "frage": "Signalwörter verraten dir die Zeit. Sortiere sie.",
+     "gruppen": [
+      "Vergangenheit",
+      "Gegenwart",
+      "Zukunft"
+     ],
+     "elemente": [
+      {
+       "t": "gestern",
+       "g": 0
+      },
+      {
+       "t": "letzte Woche",
+       "g": 0
+      },
+      {
+       "t": "vor zwei Tagen",
+       "g": 0
+      },
+      {
+       "t": "jetzt",
+       "g": 1
+      },
+      {
+       "t": "im Moment",
+       "g": 1
+      },
+      {
+       "t": "morgen",
+       "g": 2
+      },
+      {
+       "t": "übermorgen",
+       "g": 2
+      },
+      {
+       "t": "nächsten Sommer",
+       "g": 2
+      }
+     ],
+     "tipp": "Frage dich bei jedem Wort: Ist das schon vorbei, passiert es gerade oder kommt es erst noch?",
+     "erklaerung": "<i>Gestern</i>, <i>letzte Woche</i> und <i>vor zwei Tagen</i> sind vorbei. <i>Jetzt</i> und <i>im Moment</i> bedeuten, dass etwas gerade passiert. <i>Morgen</i>, <i>übermorgen</i> und <i>nächsten Sommer</i> liegen in der Zukunft."
+    },
+    {
+     "id": "gr-zeiten-03",
+     "typ": "luecke",
+     "stufe": 1,
+     "kompetenz": "zeitformen",
+     "frage": "Achte auf die Signalwörter. Wähle die passende Verbform.",
+     "teile": [
+      {
+       "t": "Letzten Sommer "
+      },
+      {
+       "wahl": [
+        "schwamm",
+        "schwimmt",
+        "geschwommen"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " Leyla im Badesee. Jetzt "
+      },
+      {
+       "wahl": [
+        "schwimmt",
+        "schwamm",
+        "geschwommen"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " sie im Hallenbad. Nächstes Jahr "
+      },
+      {
+       "wahl": [
+        "wird",
+        "hat",
+        "ist"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " sie den Freischwimmer machen."
+      }
+     ],
+     "tipp": "Suche zuerst die Signalwörter. Sagen sie dir: vorbei, jetzt oder später?",
+     "erklaerung": "<i>Letzten Sommer</i> → Präteritum: <i>schwamm</i>. <i>Jetzt</i> → Präsens: <i>schwimmt</i>. <i>Nächstes Jahr</i> → Futur mit <i>werden</i>: <i>wird … machen</i>."
+    },
+    {
+     "id": "gr-zeiten-04",
+     "typ": "eingabe",
+     "stufe": 2,
+     "kompetenz": "zeitformen",
+     "frage": "Setze das Verb <i>finden</i> ins Präteritum und tippe es ein.",
+     "vorgabe": "Beim Wandertag ___ Ben eine Vogelfeder.",
+     "loesungen": [
+      "fand"
+     ],
+     "tipp": "Sprich den Satz mit <i>gestern</i>: „Gestern … Ben eine Feder.“ Achtung: <i>finden</i> ist ein starkes Verb und bekommt im Präteritum kein <i>-te</i>.",
+     "erklaerung": "Das Verb <i>finden</i> ist stark: <i>finden – fand – hat gefunden</i>. Im Präteritum heißt es also <i>fand</i>, nicht „findete“."
+    },
+    {
+     "id": "gr-zeiten-05",
+     "typ": "multi",
+     "stufe": 2,
+     "kompetenz": "zeitformen",
+     "frage": "In welche Sätze gehört <i>ist</i>? Die anderen brauchen <i>hat</i>.",
+     "optionen": [
+      {
+       "text": "Der Apfel ___ vom Baum gefallen.",
+       "richtig": true
+      },
+      {
+       "text": "Amira ___ ein spannendes Buch gelesen.",
+       "richtig": false
+      },
+      {
+       "text": "Der Zug ___ pünktlich angekommen.",
+       "richtig": true
+      },
+      {
+       "text": "Ben ___ den Gartenzaun gestrichen.",
+       "richtig": false
+      },
+      {
+       "text": "Das Baby ___ endlich eingeschlafen.",
+       "richtig": true
+      },
+      {
+       "text": "Die Katze ___ ihre Milch getrunken.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Sprich jeden Satz einmal mit <i>ist</i> und einmal mit <i>hat</i>. Verben, die eine Bewegung zu einem anderen Ort oder eine Veränderung ausdrücken, bilden das Perfekt oft mit <i>sein</i>.",
+     "erklaerung": "Die Verben <i>fallen</i>, <i>ankommen</i> und <i>einschlafen</i> bilden das Perfekt mit <i>sein</i>. Sie drücken eine Bewegung oder eine Veränderung aus. Die Verben <i>lesen</i>, <i>streichen</i> und <i>trinken</i> bilden es mit <i>haben</i>."
+    },
+    {
+     "id": "gr-zeiten-06",
+     "typ": "markieren",
+     "stufe": 2,
+     "kompetenz": "zeitformen",
+     "frage": "Markiere alle Verben, die im Präteritum stehen.",
+     "teile": [
+      {
+       "t": "Am Samstag"
+      },
+      {
+       "t": "besuchte",
+       "ziel": true
+      },
+      {
+       "t": "Hannah"
+      },
+      {
+       "t": "den Christkindlmarkt"
+      },
+      {
+       "t": ".",
+       "fix": true
+      },
+      {
+       "t": "Es"
+      },
+      {
+       "t": "war",
+       "ziel": true
+      },
+      {
+       "t": "sehr voll"
+      },
+      {
+       "t": ".",
+       "fix": true
+      },
+      {
+       "t": "Sie"
+      },
+      {
+       "t": "trank",
+       "ziel": true
+      },
+      {
+       "t": "einen Kinderpunsch"
+      },
+      {
+       "t": ".",
+       "fix": true
+      },
+      {
+       "t": "Heute"
+      },
+      {
+       "t": "erzählt"
+      },
+      {
+       "t": "sie"
+      },
+      {
+       "t": "Luca"
+      },
+      {
+       "t": "davon"
+      },
+      {
+       "t": ":",
+       "fix": true
+      },
+      {
+       "t": "„",
+       "fix": true
+      },
+      {
+       "t": "Ich"
+      },
+      {
+       "t": "habe"
+      },
+      {
+       "t": "eine Krippe"
+      },
+      {
+       "t": "gesehen"
+      },
+      {
+       "t": "!“",
+       "fix": true
+      }
+     ],
+     "tipp": "Suche zuerst alle Verben. Prüfe dann bei jedem: Steht es allein und erzählt es von etwas, das schon vorbei ist?",
+     "erklaerung": "Die Formen <i>besuchte</i>, <i>war</i> und <i>trank</i> stehen im Präteritum. Die Form <i>erzählt</i> ist Präsens. Mit <i>habe … gesehen</i> spricht Hannah im Perfekt – so erzählt man meistens mündlich."
+    },
+    {
+     "id": "gr-zeiten-07",
+     "typ": "matrix",
+     "stufe": 3,
+     "kompetenz": "zeitformen",
+     "frage": "Stimmt die Zeitform? Entscheide bei jedem Satz.",
+     "spalten": [
+      "stimmt",
+      "stimmt nicht"
+     ],
+     "aussagen": [
+      {
+       "text": "Der Satz „Morgen fährt Emir ins Schullandheim“ steht im Präsens.",
+       "richtig": true
+      },
+      {
+       "text": "Der Satz „Wir sind gestern lange wach geblieben“ steht im Präteritum.",
+       "richtig": false
+      },
+      {
+       "text": "Der Satz „Die Kinder werden im Zelt schlafen“ steht im Futur.",
+       "richtig": true
+      },
+      {
+       "text": "Der Satz „Der Wind wehte die ganze Nacht“ steht im Perfekt.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Achte nur auf die Verbform, nicht auf Wörter wie <i>morgen</i> oder <i>gestern</i>. Aus wie vielen Teilen besteht das Prädikat, und welche Teile sind es?",
+     "erklaerung": "Die Form <i>fährt</i> ist Präsens – mit <i>morgen</i> kann das Präsens auch über die Zukunft sprechen. Dagegen ist <i>sind … geblieben</i> Perfekt, <i>werden … schlafen</i> Futur und <i>wehte</i> Präteritum."
+    },
+    {
+     "id": "gr-zeiten-08",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "zeitformen",
+     "frage": "In welcher Reihe sind alle drei Verbformen richtig?",
+     "optionen": [
+      {
+       "text": "trinken – trank – hat getrunken",
+       "richtig": true
+      },
+      {
+       "text": "bringen – bringte – hat gebracht",
+       "richtig": false
+      },
+      {
+       "text": "schwimmen – schwomm – ist geschwommen",
+       "richtig": false
+      },
+      {
+       "text": "denken – dachte – hat gedenkt",
+       "richtig": false
+      }
+     ],
+     "tipp": "Prüfe jede Form mit einem kleinen Satz: „Heute …“ – „Gestern …“ – „Ich habe …“ oder „Ich bin …“. In drei Reihen steckt je ein Fehler.",
+     "erklaerung": "Nur <i>trinken – trank – hat getrunken</i> stimmt ganz. Richtig heißt es: <i>bringen – brachte</i>, <i>schwimmen – schwamm</i> und <i>denken – hat gedacht</i>."
+    }
+   ]
+  },
+  {
+   "id": "gr-satzglieder",
+   "titel": "Satzglieder und Umstellprobe",
+   "kurz": "Umstellprobe, Subjekt und Prädikat",
+   "kompetenz": "satzglieder",
+   "wissen": {
+    "merksatz": "Stelle einen Satz um, ohne dass er seinen Sinn verliert. Wörter, die dabei immer zusammenbleiben, bilden ein <b>Satzglied</b>.",
+    "punkte": [
+     "Ein Satzglied kann aus einem Wort oder aus mehreren Wörtern bestehen: <i>Mia</i> oder <i>meine beste Freundin Mia</i>.",
+     "Das <b>Prädikat</b> (Satzkern) sagt, was jemand tut oder was geschieht. Im Aussagesatz steht das Prädikat (oder sein erster Teil) immer als zweites Satzglied.",
+     "Das Prädikat kann aus zwei Teilen bestehen. Sie bilden eine Klammer um andere Satzglieder: <i>Ben <b>ruft</b> seine Oma <b>an</b>.</i> <i>Lena <b>hat</b> ein Bild <b>gemalt</b>.</i>",
+     "Das <b>Subjekt</b> (Satzgegenstand) findest du mit der Frage <i>Wer oder was …?</i> und dem Prädikat: <i>Wer oder was bellt?</i> → <i>der Hund</i>.",
+     "Subjekt und Prädikat passen immer zusammen: <i>Der Hund bellt.</i> – <i>Die Hunde bellen.</i>"
+    ],
+    "beispiele": [
+     "Der Hausmeister | repariert | heute | die Schaukel.",
+     "Heute | repariert | der Hausmeister | die Schaukel.",
+     "Die Schaukel | repariert | der Hausmeister | heute.",
+     "Wer oder was repariert? → der Hausmeister",
+     "zweiteilige Prädikate: ruft … an, hat … gemalt"
+    ]
+   },
+   "items": [
+    {
+     "id": "gr-satzglieder-01",
+     "typ": "markieren",
+     "stufe": 1,
+     "kompetenz": "satzglieder",
+     "frage": "Markiere das Subjekt.",
+     "teile": [
+      {
+       "t": "Im Herbst"
+      },
+      {
+       "t": "sammelt"
+      },
+      {
+       "t": "der kleine Igel",
+       "ziel": true
+      },
+      {
+       "t": "Laub"
+      },
+      {
+       "t": "für sein Nest"
+      },
+      {
+       "t": ".",
+       "fix": true
+      }
+     ],
+     "tipp": "Stelle die Frage <i>Wer oder was …?</i> und setze das Prädikat ein.",
+     "erklaerung": "<i>Wer oder was sammelt Laub?</i> – <i>der kleine Igel</i>. Das Subjekt steht hier nicht am Anfang, sondern nach dem Prädikat."
+    },
+    {
+     "id": "gr-satzglieder-02",
+     "typ": "eingabe",
+     "stufe": 1,
+     "kompetenz": "satzglieder",
+     "frage": "Wie viele Satzglieder hat dieser Satz? Mach die Umstellprobe und tippe die Zahl ein.",
+     "vorgabe": "Meine große Schwester backt am Wochenende einen Apfelkuchen.",
+     "loesungen": [
+      "4",
+      "vier",
+      "Vier"
+     ],
+     "tipp": "Stelle den Satz mehrmals um. Beginne zum Beispiel mit <i>Am Wochenende …</i>. Zähle dann die Wortgruppen, die immer zusammenbleiben.",
+     "erklaerung": "<i>Meine große Schwester | backt | am Wochenende | einen Apfelkuchen</i>: Das sind 4 Satzglieder. Probe: <i>Einen Apfelkuchen backt meine große Schwester am Wochenende.</i>"
+    },
+    {
+     "id": "gr-satzglieder-03",
+     "typ": "luecke",
+     "stufe": 1,
+     "kompetenz": "satzglieder",
+     "frage": "Subjekt und Prädikat müssen zusammenpassen. Wähle die richtige Verbform.",
+     "teile": [
+      {
+       "t": "In der Pause "
+      },
+      {
+       "wahl": [
+        "spielen",
+        "spielt",
+        "spielst"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " die Kinder Fangen. Der Hausmeister "
+      },
+      {
+       "wahl": [
+        "schaut",
+        "schauen",
+        "schaust"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " ihnen dabei zu."
+      }
+     ],
+     "tipp": "Suche zuerst das Subjekt. Steht es in der Einzahl oder in der Mehrzahl?",
+     "erklaerung": "Das Subjekt <i>die Kinder</i> steht in der Mehrzahl, also <i>spielen</i>. Das Subjekt <i>der Hausmeister</i> steht in der Einzahl, also <i>schaut … zu</i>."
+    },
+    {
+     "id": "gr-satzglieder-04",
+     "typ": "markieren",
+     "stufe": 2,
+     "kompetenz": "satzglieder",
+     "frage": "Markiere in beiden Sätzen alle Teile des Prädikats.",
+     "teile": [
+      {
+       "t": "Lena"
+      },
+      {
+       "t": "hat",
+       "ziel": true
+      },
+      {
+       "t": "in der Pause"
+      },
+      {
+       "t": "ein Pferd"
+      },
+      {
+       "t": "gemalt",
+       "ziel": true
+      },
+      {
+       "t": ".",
+       "fix": true
+      },
+      {
+       "t": "Danach"
+      },
+      {
+       "t": "räumt",
+       "ziel": true
+      },
+      {
+       "t": "sie"
+      },
+      {
+       "t": "ihre Stifte"
+      },
+      {
+       "t": "auf",
+       "ziel": true
+      },
+      {
+       "t": ".",
+       "fix": true
+      }
+     ],
+     "tipp": "Ein Prädikat kann aus zwei Teilen bestehen. Der zweite Teil steht dann oft ganz am Ende des Satzes.",
+     "erklaerung": "Im ersten Satz heißt das Prädikat <i>hat … gemalt</i>, im zweiten <i>räumt … auf</i>. Die beiden Teile bilden jeweils eine Klammer um die anderen Satzglieder."
+    },
+    {
+     "id": "gr-satzglieder-05",
+     "typ": "multi",
+     "stufe": 2,
+     "kompetenz": "satzglieder",
+     "frage": "Emir hat mit diesem Satz die Umstellprobe gemacht. Welche Wortgruppen sind vollständige Satzglieder?",
+     "vorgabe": "Die Kinder der 4b besuchen am Freitag das Naturkundemuseum. → Am Freitag besuchen die Kinder der 4b das Naturkundemuseum. → Das Naturkundemuseum besuchen die Kinder der 4b am Freitag.",
+     "optionen": [
+      {
+       "text": "die Kinder der 4b",
+       "richtig": true
+      },
+      {
+       "text": "am Freitag",
+       "richtig": true
+      },
+      {
+       "text": "das Naturkundemuseum",
+       "richtig": true
+      },
+      {
+       "text": "die Kinder",
+       "richtig": false
+      },
+      {
+       "text": "am Freitag das Naturkundemuseum",
+       "richtig": false
+      },
+      {
+       "text": "der 4b",
+       "richtig": false
+      }
+     ],
+     "tipp": "Prüfe jede Wortgruppe: Bleibt sie in allen drei Sätzen genau so zusammen? Fehlt ihr etwas, das immer dabeisteht?",
+     "erklaerung": "Die Wortgruppen <i>die Kinder der 4b</i>, <i>am Freitag</i> und <i>das Naturkundemuseum</i> bleiben beim Umstellen immer zusammen. Dagegen sind <i>die Kinder</i> und <i>der 4b</i> nur Teile eines Satzglieds. Im zweiten Satz werden <i>am Freitag</i> und <i>das Naturkundemuseum</i> getrennt – es sind also zwei Satzglieder."
+    },
+    {
+     "id": "gr-satzglieder-06",
+     "typ": "zuordnen",
+     "stufe": 2,
+     "kompetenz": "satzglieder",
+     "frage": "Ordne die Teile des Satzes richtig zu.",
+     "vorgabe": "Morgen früh holt Opa Franz die Kinder mit dem Traktor ab.",
+     "gruppen": [
+      "Subjekt",
+      "Prädikat",
+      "anderes Satzglied"
+     ],
+     "elemente": [
+      {
+       "t": "Morgen früh",
+       "g": 2
+      },
+      {
+       "t": "holt",
+       "g": 1
+      },
+      {
+       "t": "Opa Franz",
+       "g": 0
+      },
+      {
+       "t": "die Kinder",
+       "g": 2
+      },
+      {
+       "t": "mit dem Traktor",
+       "g": 2
+      },
+      {
+       "t": "ab",
+       "g": 1
+      }
+     ],
+     "tipp": "Frage: <i>Wer oder was holt ab?</i> Achte darauf, ob <i>holt</i> zu einer Person oder zu mehreren passt.",
+     "erklaerung": "Das Prädikat ist zweiteilig: <i>holt … ab</i>. <i>Wer holt ab?</i> – <i>Opa Franz</i>, denn <i>holt</i> passt nur zur Einzahl. <i>Morgen früh</i>, <i>die Kinder</i> und <i>mit dem Traktor</i> sind weitere Satzglieder."
+    },
+    {
+     "id": "gr-satzglieder-07",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "satzglieder",
+     "frage": "Was ist das Subjekt dieses Satzes?",
+     "vorgabe": "Dem kleinen Luca gefallen die bunten Herbstblätter besonders gut.",
+     "optionen": [
+      {
+       "text": "Dem kleinen Luca",
+       "richtig": false
+      },
+      {
+       "text": "die bunten Herbstblätter",
+       "richtig": true
+      },
+      {
+       "text": "besonders gut",
+       "richtig": false
+      },
+      {
+       "text": "Der Satz hat kein Subjekt.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Frage genau: <i>Wer oder was gefällt …?</i> Prüfe auch, ob die Verbform <i>gefallen</i> zur Einzahl oder zur Mehrzahl passt.",
+     "erklaerung": "<i>Wer oder was gefällt Luca?</i> – <i>die bunten Herbstblätter</i>. Die Verbform <i>gefallen</i> steht in der Mehrzahl und passt zu ihnen. Nach <i>dem kleinen Luca</i> fragt man mit <i>Wem?</i> – das ist kein Subjekt."
+    },
+    {
+     "id": "gr-satzglieder-08",
+     "typ": "matrix",
+     "stufe": 3,
+     "kompetenz": "satzglieder",
+     "frage": "Lies den Satz. Stimmen die Aussagen?",
+     "vorgabe": "Gestern Nachmittag hat Opa mit Felix einen Drachen gebaut.",
+     "spalten": [
+      "stimmt",
+      "stimmt nicht"
+     ],
+     "aussagen": [
+      {
+       "text": "Das Prädikat besteht aus zwei Teilen: <i>hat</i> und <i>gebaut</i>.",
+       "richtig": true
+      },
+      {
+       "text": "Das Subjekt ist <i>Felix</i>.",
+       "richtig": false
+      },
+      {
+       "text": "Die Wörter <i>Gestern Nachmittag</i> bilden zusammen ein Satzglied.",
+       "richtig": true
+      },
+      {
+       "text": "Die Wörter <i>einen Drachen gebaut</i> bilden zusammen ein Satzglied.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Mach die Umstellprobe: Beginne den Satz mit <i>Opa</i> oder mit <i>Einen Drachen</i>. Was bleibt zusammen, was wandert an eine andere Stelle?",
+     "erklaerung": "Das Prädikat <i>hat … gebaut</i> ist zweiteilig. <i>Wer hat gebaut?</i> – <i>Opa</i>, nicht Felix. <i>Gestern Nachmittag</i> bleibt beim Umstellen zusammen. Das Wort <i>gebaut</i> gehört zum Prädikat, nicht zu <i>einen Drachen</i>."
+    }
+   ]
+  },
+  {
+   "id": "gr-objekte",
+   "titel": "Objekte, Orts- und Zeitangaben",
+   "kurz": "Wem? Wen oder was? Wo? Wann?",
+   "kompetenz": "satzglieder",
+   "wissen": {
+    "merksatz": "Die richtige Frage verrät dir das Satzglied: <i>Wem?</i> → Dativobjekt, <i>Wen oder was?</i> → Akkusativobjekt, <i>Wo?</i> oder <i>Wohin?</i> → Ortsangabe, <i>Wann?</i> oder <i>Wie lange?</i> → Zeitangabe.",
+    "punkte": [
+     "Das <b>Dativobjekt</b> erfragst du mit <i>Wem?</i> Beispiel: Emir schenkt <i>seiner Schwester</i> ein Buch.",
+     "Das <b>Akkusativobjekt</b> erfragst du mit <i>Wen oder was?</i> Beispiel: Emir schenkt seiner Schwester <i>ein Buch</i>.",
+     "Die <b>Ortsangabe</b> erfragst du mit <i>Wo?</i>, <i>Wohin?</i> oder <i>Woher?</i> Beispiel: Wir treffen uns <i>am Brunnen</i>.",
+     "Die <b>Zeitangabe</b> erfragst du mit <i>Wann?</i>, <i>Wie lange?</i> oder <i>Seit wann?</i> Beispiel: <i>Am Freitag</i> ist Wandertag.",
+     "Das Prädikat bestimmt, welches Objekt ein Satz braucht: <i>Ben hilft seinem Opa.</i> (Wem?) – <i>Ben besucht seinen Opa.</i> (Wen?) Orts- und Zeitangaben kannst du meist ergänzen oder weglassen."
+    ],
+    "beispiele": [
+     "Die Lehrerin gibt <i>dem Jungen</i> ein Heft. → Wem? Dativobjekt",
+     "Mia füttert <i>die Katze</i>. → Wen oder was? Akkusativobjekt",
+     "Die Katze schläft <i>im Körbchen</i>. → Wo? Ortsangabe",
+     "Wir fahren <i>ins Schullandheim</i>. → Wohin? Ortsangabe",
+     "Wir bleiben <i>drei Tage</i>. → Wie lange? Zeitangabe"
+    ]
+   },
+   "items": [
+    {
+     "id": "gr-objekte-01",
+     "typ": "multi",
+     "stufe": 1,
+     "kompetenz": "satzglieder",
+     "frage": "Welche Wortgruppen sind Zeitangaben?",
+     "optionen": [
+      {
+       "text": "am Freitag",
+       "richtig": true
+      },
+      {
+       "text": "drei Stunden lang",
+       "richtig": true
+      },
+      {
+       "text": "nach dem Frühstück",
+       "richtig": true
+      },
+      {
+       "text": "im Schwimmbad",
+       "richtig": false
+      },
+      {
+       "text": "unter dem Bett",
+       "richtig": false
+      },
+      {
+       "text": "seinem Bruder",
+       "richtig": false
+      }
+     ],
+     "tipp": "Probiere bei jeder Wortgruppe die Fragen <i>Wann?</i> und <i>Wie lange?</i> aus.",
+     "erklaerung": "Die Wortgruppen <i>am Freitag</i> und <i>nach dem Frühstück</i> sagen, wann etwas passiert. Die Wortgruppe <i>drei Stunden lang</i> sagt, wie lange es dauert. Dagegen sind <i>im Schwimmbad</i> und <i>unter dem Bett</i> Ortsangaben, und <i>seinem Bruder</i> ist ein Dativobjekt."
+    },
+    {
+     "id": "gr-objekte-02",
+     "typ": "single",
+     "stufe": 1,
+     "kompetenz": "satzglieder",
+     "frage": "Welches Satzglied ist fett gedruckt?",
+     "vorgabe": "Aylin hilft <b>ihrem Opa</b> im Garten.",
+     "optionen": [
+      {
+       "text": "Dativobjekt",
+       "richtig": true
+      },
+      {
+       "text": "Akkusativobjekt",
+       "richtig": false
+      },
+      {
+       "text": "Subjekt",
+       "richtig": false
+      },
+      {
+       "text": "Ortsangabe",
+       "richtig": false
+      }
+     ],
+     "tipp": "Bilde eine Frage nach dem fett gedruckten Satzglied. Beginnt sie mit <i>Wer</i>, <i>Wem</i>, <i>Wen</i> oder <i>Wo</i>?",
+     "erklaerung": "Du fragst: <i>Wem hilft Aylin im Garten?</i> – <i>ihrem Opa</i>. Mit <i>Wem?</i> fragt man nach dem Dativobjekt."
+    },
+    {
+     "id": "gr-objekte-03",
+     "typ": "markieren",
+     "stufe": 1,
+     "kompetenz": "satzglieder",
+     "frage": "Markiere die Ortsangabe.",
+     "teile": [
+      {
+       "t": "Nach dem Unterricht"
+      },
+      {
+       "t": "spielen"
+      },
+      {
+       "t": "die Kinder"
+      },
+      {
+       "t": "auf dem Bolzplatz",
+       "ziel": true
+      },
+      {
+       "t": "Fußball"
+      },
+      {
+       "t": ".",
+       "fix": true
+      }
+     ],
+     "tipp": "Welche Wortgruppe antwortet auf die Frage <i>Wo?</i>",
+     "erklaerung": "<i>Wo spielen die Kinder Fußball?</i> – <i>auf dem Bolzplatz</i>. <i>Nach dem Unterricht</i> ist eine Zeitangabe (Wann?)."
+    },
+    {
+     "id": "gr-objekte-04",
+     "typ": "zuordnen",
+     "stufe": 2,
+     "kompetenz": "satzglieder",
+     "frage": "Sortiere die Satzglieder aus den beiden Sätzen.",
+     "vorgabe": "Am Sonntag schenkt Leyla ihrem Bruder im Garten einen Fußball. Nach dem Spiel bringt Papa den Kindern Limonade auf die Terrasse.",
+     "gruppen": [
+      "Dativobjekt",
+      "Akkusativobjekt",
+      "Ortsangabe",
+      "Zeitangabe"
+     ],
+     "elemente": [
+      {
+       "t": "Am Sonntag",
+       "g": 3
+      },
+      {
+       "t": "ihrem Bruder",
+       "g": 0
+      },
+      {
+       "t": "im Garten",
+       "g": 2
+      },
+      {
+       "t": "einen Fußball",
+       "g": 1
+      },
+      {
+       "t": "Nach dem Spiel",
+       "g": 3
+      },
+      {
+       "t": "den Kindern",
+       "g": 0
+      },
+      {
+       "t": "Limonade",
+       "g": 1
+      },
+      {
+       "t": "auf die Terrasse",
+       "g": 2
+      }
+     ],
+     "tipp": "Stelle zu jedem Satzglied eine Frage mit dem Prädikat: <i>Wem …?</i>, <i>Wen oder was …?</i>, <i>Wo oder wohin …?</i> oder <i>Wann …?</i>",
+     "erklaerung": "<i>Wem?</i> – ihrem Bruder, den Kindern. <i>Wen oder was?</i> – einen Fußball, Limonade. <i>Wo oder wohin?</i> – im Garten, auf die Terrasse. <i>Wann?</i> – am Sonntag, nach dem Spiel. Achtung: <i>den Kindern</i> antwortet auf <i>Wem?</i>, obwohl <i>den</i> davorsteht."
+    },
+    {
+     "id": "gr-objekte-05",
+     "typ": "luecke",
+     "stufe": 2,
+     "kompetenz": "satzglieder",
+     "frage": "Das Prädikat bestimmt, welches Objekt folgt. Wähle die richtige Form.",
+     "teile": [
+      {
+       "t": "Am Samstag hilft Mateo "
+      },
+      {
+       "wahl": [
+        "seinem",
+        "seinen"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " Opa im Garten. Danach fährt er mit dem Bus in die Stadt und dankt beim Aussteigen "
+      },
+      {
+       "wahl": [
+        "dem",
+        "den"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " Busfahrer. Dort besucht er "
+      },
+      {
+       "wahl": [
+        "seine",
+        "seiner"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " Tante."
+      }
+     ],
+     "tipp": "Bilde mit jedem Prädikat eine Frage. Klingt sie mit <i>Wem</i> oder mit <i>Wen</i> richtig?",
+     "erklaerung": "Die Verben <i>helfen</i> und <i>danken</i> brauchen ein Dativobjekt (Wem?): <i>seinem Opa</i>, <i>dem Busfahrer</i>. Das Verb <i>besuchen</i> braucht ein Akkusativobjekt (Wen?): <i>seine Tante</i>."
+    },
+    {
+     "id": "gr-objekte-06",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "satzglieder",
+     "frage": "Hannah will den Satz um eine <b>Zeitangabe</b> erweitern. Welcher Satz passt?",
+     "vorgabe": "Die Kinder bauen eine Sandburg.",
+     "optionen": [
+      {
+       "text": "Die Kinder bauen am Nachmittag eine Sandburg.",
+       "richtig": true
+      },
+      {
+       "text": "Die Kinder bauen am Badesee eine Sandburg.",
+       "richtig": false
+      },
+      {
+       "text": "Die Kinder bauen ihrem Vater eine Sandburg.",
+       "richtig": false
+      },
+      {
+       "text": "Die fröhlichen Kinder bauen eine Sandburg.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Finde in jedem Satz das neue Wort oder die neue Wortgruppe. Mit welcher Frage kannst du danach fragen?",
+     "erklaerung": "Die Wortgruppe <i>am Nachmittag</i> antwortet auf die Frage <i>Wann?</i> – das ist eine Zeitangabe. Dagegen ist <i>am Badesee</i> eine Ortsangabe und <i>ihrem Vater</i> ein Dativobjekt. Das Adjektiv <i>fröhlichen</i> gehört zum Subjekt und ist kein eigenes Satzglied."
+    },
+    {
+     "id": "gr-objekte-07",
+     "typ": "markieren",
+     "stufe": 3,
+     "kompetenz": "satzglieder",
+     "frage": "Markiere alle Zeitangaben.",
+     "teile": [
+      {
+       "t": "Seit Montag",
+       "ziel": true
+      },
+      {
+       "t": "übt"
+      },
+      {
+       "t": "Mia"
+      },
+      {
+       "t": "jeden Nachmittag",
+       "ziel": true
+      },
+      {
+       "t": "im Kinderzimmer"
+      },
+      {
+       "t": "Flöte"
+      },
+      {
+       "t": ".",
+       "fix": true
+      }
+     ],
+     "tipp": "Frage bei jedem Satzglied: <i>Wann?</i>, <i>Seit wann?</i> oder <i>Wie oft?</i> Lass dich nicht von der Form der Wörter täuschen.",
+     "erklaerung": "<i>Seit Montag</i> antwortet auf <i>Seit wann?</i>, <i>jeden Nachmittag</i> auf <i>Wann?</i> – beides sind Zeitangaben. Dagegen ist <i>im Kinderzimmer</i> eine Ortsangabe und <i>Flöte</i> ein Akkusativobjekt (Was übt Mia?)."
+    },
+    {
+     "id": "gr-objekte-08",
+     "typ": "matrix",
+     "stufe": 3,
+     "kompetenz": "satzglieder",
+     "frage": "Lies den Satz. Stimmen die Aussagen?",
+     "vorgabe": "Emir besucht am Sonntag in Mühlbach seine Oma.",
+     "spalten": [
+      "stimmt",
+      "stimmt nicht"
+     ],
+     "aussagen": [
+      {
+       "text": "Die Wortgruppe „seine Oma“ ist ein Akkusativobjekt.",
+       "richtig": true
+      },
+      {
+       "text": "Die Wortgruppe „in Mühlbach“ ist eine Zeitangabe.",
+       "richtig": false
+      },
+      {
+       "text": "Ohne „am Sonntag“ ist der Satz immer noch vollständig.",
+       "richtig": true
+      },
+      {
+       "text": "Ohne „seine Oma“ ist der Satz immer noch vollständig.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lass das Satzglied in Gedanken weg und lies den Rest laut. Klingt der Satz fertig, oder fehlt etwas, das <i>besucht</i> unbedingt braucht?",
+     "erklaerung": "<i>Wen besucht Emir?</i> – <i>seine Oma</i>: ein Akkusativobjekt, das <i>besuchen</i> unbedingt braucht. Die Wortgruppe <i>in Mühlbach</i> ist eine Ortsangabe. Zeit- und Ortsangaben wie <i>am Sonntag</i> kannst du weglassen."
+    }
+   ]
+  },
+  {
+   "id": "gr-faelle",
+   "titel": "Die vier Fälle",
+   "kurz": "Nominativ, Genitiv, Dativ und Akkusativ",
+   "kompetenz": "faelle",
+   "wissen": {
+    "merksatz": "Jedes Nomen steht in einem der vier Fälle. Die Fallfrage verrät dir den Fall – und der Artikel zeigt ihn oft an.",
+    "punkte": [
+     "<b>1. Fall – Nominativ</b>: <i>Wer oder was</i> bellt? → <i>Der Hund</i> bellt.",
+     "<b>2. Fall – Genitiv</b>: <i>Wessen</i> Napf ist das? → Das ist der Napf <i>des Hundes</i>.",
+     "<b>3. Fall – Dativ</b>: <i>Wem</i> gebe ich Futter? → Ich gebe <i>dem Hund</i> Futter.",
+     "<b>4. Fall – Akkusativ</b>: <i>Wen oder was</i> streichle ich? → Ich streichle <i>den Hund</i>.",
+     "Je nach Fall verändern sich der Artikel (Begleiter), manchmal das Nomen und auch das Adjektiv: <i>der große Hund – des großen Hundes – dem großen Hund – den großen Hund</i>."
+    ],
+    "beispiele": [
+     "der Hund – des Hundes – dem Hund – den Hund",
+     "die Katze – der Katze – der Katze – die Katze",
+     "das Pferd – des Pferdes – dem Pferd – das Pferd",
+     "die Hunde – der Hunde – den Hunden – die Hunde"
+    ]
+   },
+   "items": [
+    {
+     "id": "gr-faelle-01",
+     "typ": "zuordnen",
+     "stufe": 1,
+     "kompetenz": "faelle",
+     "frage": "In welchem Fall stehen die Wortgruppen? Sortiere sie.",
+     "gruppen": [
+      "Nominativ",
+      "Genitiv",
+      "Dativ",
+      "Akkusativ"
+     ],
+     "elemente": [
+      {
+       "t": "der Apfel",
+       "g": 0
+      },
+      {
+       "t": "der Zug",
+       "g": 0
+      },
+      {
+       "t": "des Baumes",
+       "g": 1
+      },
+      {
+       "t": "des Vaters",
+       "g": 1
+      },
+      {
+       "t": "dem Lehrer",
+       "g": 2
+      },
+      {
+       "t": "dem Freund",
+       "g": 2
+      },
+      {
+       "t": "den Ball",
+       "g": 3
+      },
+      {
+       "t": "den Igel",
+       "g": 3
+      }
+     ],
+     "tipp": "Alle Nomen sind männlich. Achte genau auf den Artikel und auf die Endung des Nomens.",
+     "erklaerung": "Bei männlichen Nomen zeigt der Artikel den Fall: <i>der</i> → Nominativ, <i>des</i> (und <i>-es</i> oder <i>-s</i> am Nomen) → Genitiv, <i>dem</i> → Dativ, <i>den</i> → Akkusativ."
+    },
+    {
+     "id": "gr-faelle-02",
+     "typ": "single",
+     "stufe": 1,
+     "kompetenz": "faelle",
+     "frage": "In welchem Fall steht das fett gedruckte Satzglied?",
+     "vorgabe": "Elif streichelt <b>das Pony</b>.",
+     "optionen": [
+      {
+       "text": "Nominativ",
+       "richtig": false
+      },
+      {
+       "text": "Genitiv",
+       "richtig": false
+      },
+      {
+       "text": "Dativ",
+       "richtig": false
+      },
+      {
+       "text": "Akkusativ",
+       "richtig": true
+      }
+     ],
+     "tipp": "Stelle die passende Fallfrage mit dem Prädikat: <i>Wer oder was …?</i>, <i>Wessen …?</i>, <i>Wem …?</i> oder <i>Wen oder was …?</i>",
+     "erklaerung": "<i>Wen oder was streichelt Elif?</i> – <i>das Pony</i>. Das ist der Akkusativ. Bei sächlichen Nomen heißt der Artikel im Nominativ und im Akkusativ gleich: <i>das</i>."
+    },
+    {
+     "id": "gr-faelle-03",
+     "typ": "luecke",
+     "stufe": 1,
+     "kompetenz": "faelle",
+     "frage": "Wähle den richtigen Artikel.",
+     "teile": [
+      {
+       "t": "Ich gebe "
+      },
+      {
+       "wahl": [
+        "dem",
+        "den",
+        "des"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " Hund einen Knochen. Der Schwanz "
+      },
+      {
+       "wahl": [
+        "des",
+        "dem",
+        "den"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " Hundes wedelt vor Freude."
+      }
+     ],
+     "tipp": "Stelle zu jeder Lücke die passende Fallfrage. Achte auch auf die Endung von <i>Hund</i>.",
+     "erklaerung": "<i>Wem gebe ich einen Knochen?</i> – <i>dem Hund</i> (Dativ). <i>Wessen Schwanz wedelt?</i> – der Schwanz <i>des Hundes</i> (Genitiv)."
+    },
+    {
+     "id": "gr-faelle-04",
+     "typ": "markieren",
+     "stufe": 2,
+     "kompetenz": "faelle",
+     "frage": "Markiere alle Wortgruppen, die im Dativ stehen.",
+     "teile": [
+      {
+       "t": "Heute"
+      },
+      {
+       "t": "zeigt"
+      },
+      {
+       "t": "Paul"
+      },
+      {
+       "t": "seinem Freund",
+       "ziel": true
+      },
+      {
+       "t": "den neuen Fußball"
+      },
+      {
+       "t": ".",
+       "fix": true
+      },
+      {
+       "t": "Später"
+      },
+      {
+       "t": "bringt"
+      },
+      {
+       "t": "er"
+      },
+      {
+       "t": "der Nachbarin",
+       "ziel": true
+      },
+      {
+       "t": "einen Blumenstrauß"
+      },
+      {
+       "t": ".",
+       "fix": true
+      }
+     ],
+     "tipp": "Stelle zu jedem Satz die Fallfrage für den Dativ. Verlass dich nicht nur auf den Artikel.",
+     "erklaerung": "<i>Wem zeigt Paul den Fußball?</i> – <i>seinem Freund</i>. <i>Wem bringt er einen Blumenstrauß?</i> – <i>der Nachbarin</i>. Beide stehen im Dativ. Die Wortgruppen <i>den neuen Fußball</i> und <i>einen Blumenstrauß</i> stehen im Akkusativ."
+    },
+    {
+     "id": "gr-faelle-05",
+     "typ": "luecke",
+     "stufe": 2,
+     "kompetenz": "faelle",
+     "frage": "Auch Adjektive verändern sich. Wähle die richtige Form.",
+     "teile": [
+      {
+       "t": "Ein "
+      },
+      {
+       "wahl": [
+        "kleiner",
+        "kleinen",
+        "kleines"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " Igel sucht im Laub nach Futter. Die Stacheln des "
+      },
+      {
+       "wahl": [
+        "kleinen",
+        "kleines",
+        "kleiner"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " Igels sind spitz. Lena stellt dem "
+      },
+      {
+       "wahl": [
+        "durstigen",
+        "durstiger",
+        "durstiges"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " Igel eine Schale Wasser hin."
+      }
+     ],
+     "tipp": "Bestimme zuerst den Fall: <i>Wer oder was sucht?</i> – <i>Wessen Stacheln?</i> – <i>Wem stellt Lena Wasser hin?</i> Sprich dann die Wortgruppe leise mit jeder Form.",
+     "erklaerung": "Nominativ: <i>ein kleiner Igel</i>. Genitiv: <i>des kleinen Igels</i>. Dativ: <i>dem durstigen Igel</i>. Nach <i>des</i> und <i>dem</i> endet das Adjektiv auf <i>-en</i>."
+    },
+    {
+     "id": "gr-faelle-06",
+     "typ": "eingabe",
+     "stufe": 2,
+     "kompetenz": "faelle",
+     "frage": "Setze <i>der Fuchs</i> in den Genitiv. Tippe Artikel und Nomen ein.",
+     "vorgabe": "Der Schwanz ___ ist lang und buschig.",
+     "loesungen": [
+      "des Fuchses"
+     ],
+     "tipp": "Frage: <i>Wessen Schwanz?</i> Im Genitiv ändert sich der Artikel, und das Nomen bekommt eine Endung.",
+     "erklaerung": "Genitiv (Wessen?): <i>des Fuchses</i>. Weil <i>Fuchs</i> auf <i>s</i> endet, bekommt es im Genitiv die Endung <i>-es</i>."
+    },
+    {
+     "id": "gr-faelle-07",
+     "typ": "matrix",
+     "stufe": 3,
+     "kompetenz": "faelle",
+     "frage": "Bestimme die Fälle. Stimmen die Aussagen?",
+     "vorgabe": "Die Tochter des Bäckers bringt den Gästen den Kuchen.",
+     "spalten": [
+      "stimmt",
+      "stimmt nicht"
+     ],
+     "aussagen": [
+      {
+       "text": "Die Wortgruppe „des Bäckers“ steht im Genitiv.",
+       "richtig": true
+      },
+      {
+       "text": "Die Wortgruppe „den Gästen“ steht im Akkusativ.",
+       "richtig": false
+      },
+      {
+       "text": "Die Wortgruppe „den Kuchen“ steht im Akkusativ.",
+       "richtig": true
+      },
+      {
+       "text": "Die Wortgruppe „Die Tochter“ steht im Dativ.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Verlass dich nicht nur auf den Artikel. Stelle zu jeder Wortgruppe die Fallfrage und achte auch auf das Ende des Nomens.",
+     "erklaerung": "<i>Wessen Tochter?</i> – <i>des Bäckers</i> (Genitiv). <i>Wem bringt sie den Kuchen?</i> – <i>den Gästen</i> (Dativ, Mehrzahl). <i>Wen oder was bringt sie?</i> – <i>den Kuchen</i> (Akkusativ). <i>Die Tochter</i> ist das Subjekt und steht im Nominativ."
+    },
+    {
+     "id": "gr-faelle-08",
+     "typ": "multi",
+     "stufe": 3,
+     "kompetenz": "faelle",
+     "frage": "In welchen Sätzen steht <i>der Katze</i> im Dativ?",
+     "optionen": [
+      {
+       "text": "Oskar gibt der Katze frisches Wasser.",
+       "richtig": true
+      },
+      {
+       "text": "Das Fell der Katze ist ganz weich.",
+       "richtig": false
+      },
+      {
+       "text": "Der Katze gefällt das neue Kissen.",
+       "richtig": true
+      },
+      {
+       "text": "Die Ohren der Katze sind spitz.",
+       "richtig": false
+      },
+      {
+       "text": "Lena winkt der Katze zu.",
+       "richtig": true
+      },
+      {
+       "text": "Der Napf der Katze ist leer.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Ersetze <i>der Katze</i> in Gedanken durch <i>dem Kater</i> oder durch <i>des Katers</i>. Welche Form passt in den Satz?",
+     "erklaerung": "Bei <i>geben</i>, <i>gefallen</i> und <i>zuwinken</i> fragst du <i>Wem?</i> – dort steht <i>der Katze</i> im Dativ (<i>dem Kater</i>). Bei <i>Fell</i>, <i>Ohren</i> und <i>Napf</i> fragst du <i>Wessen?</i> – dort ist es Genitiv (<i>des Katers</i>)."
+    }
+   ]
+  }
+ ]
+}

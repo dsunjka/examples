@@ -82,7 +82,12 @@ function aendereAntwort(it, a, act, ds, ui) {
     case 'mx': { const n = a.slice(); const z = Number(ds.z), s = Number(ds.s); n[z] = n[z] === s ? null : s; return n; }
     case 'lk': { const n = a.slice(); n[Number(ds.g)] = ds.wert === '' ? null : Number(ds.wert); return n; }
     case 'tok': { const k = Number(ds.i); return a.includes(k) ? a.filter((x) => x !== k) : a.concat(k); }
-    case 'chip': { const i = Number(ds.i); ui.chip = ui.chip === i ? null : i; return a; }
+    case 'chip': {
+      const i = Number(ds.i);
+      // Ein anderes Kärtchen ist ausgewählt und das angetippte liegt schon in einer Kiste: dorthin einsortieren.
+      if (ui.chip != null && ui.chip !== i && a[i] >= 0) { const n = a.slice(); n[ui.chip] = a[i]; ui.chip = null; return n; }
+      ui.chip = ui.chip === i ? null : i; return a;
+    }
     case 'gruppe': {
       if (ui.chip == null) return a;
       const n = a.slice(); n[ui.chip] = Number(ds.g); ui.chip = null; return n;

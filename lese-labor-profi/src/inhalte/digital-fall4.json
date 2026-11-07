@@ -1,0 +1,188 @@
+{
+ "modul": "digital",
+ "fall": {
+  "id": "fall4",
+  "nummer": 4,
+  "titel": "Post für Mateo",
+  "quellenart": "E-Mail",
+  "einleitung": "Heute ist Donnerstag, der 19. November 2026. Mateo (10) schwimmt beim SV Wasserflöhe Hollerstadt und hat ein Kinder-Mailkonto bei „Flinkpost Kids“. Seine Eltern können seine Mails mitlesen. Hilf Mateo, sich auf den Herbstpokal vorzubereiten und gefährliche Mails zu erkennen.",
+  "rahmen": "app",
+  "app": {
+   "name": "Flinkpost Kids",
+   "symbol": "✉️",
+   "farbe": "tuerkis"
+  },
+  "startseite": "start",
+  "seiten": [
+   {
+    "id": "start",
+    "titel": "Posteingang",
+    "html": "<h1>📥 Posteingang</h1><p class=\"w-klein\">Postfach von Mateo · mateo.k@flinkpost-kids.de · 2 ungelesene Mails</p><div class=\"w-kasten w-kasten--info\"><p>👀 Kinder-Postfach: Deine Eltern können deine Mails mitlesen. Wenn dir eine Mail komisch vorkommt, zeig sie ihnen.</p></div><p class=\"w-klein\"><b>Fett</b> = ungelesen · 📎 = mit Anhang</p><div class=\"m-liste\"><a class=\"m-eintrag m-neu\" data-ziel=\"mail-gewinn\"><span class=\"m-von\">Flinkpost Gewinn-Team</span><span class=\"m-datum\">Heute, 7:12 Uhr</span><span class=\"m-betreff\">HERZLICHEN GLÜKWUNSCH!!! Du hast gewonnen 🎉</span><span class=\"m-vorschau\">Hallo lieber Flinkpost-Nutzer, Herzlichen Glükwunsch!!! Deine Mailadresse wurde …</span></a><a class=\"m-eintrag m-neu\" data-ziel=\"mail-aenderung\"><span class=\"m-von\">Sabine Albrecht (SV Wasserflöhe)</span><span class=\"m-datum\">Gestern, 18:30 Uhr</span><span class=\"m-betreff\">Wichtig: Änderung beim Herbstpokal</span><span class=\"m-vorschau\">Hallo Mateo, liebe Eltern, leider gibt es eine wichtige Änderung …</span></a><a class=\"m-eintrag\" data-ziel=\"mail-buecherei\"><span class=\"m-von\">Stadtbücherei Hollerstadt</span><span class=\"m-datum\">Di., 17. Nov.</span><span class=\"m-betreff\">Erinnerung: Rückgabe bald fällig</span><span class=\"m-vorschau\">Hallo Mateo, bald ist die Leihfrist für dieses Buch zu Ende …</span></a><a class=\"m-eintrag\" data-ziel=\"mail-oma\"><span class=\"m-von\">Oma Rosi</span><span class=\"m-datum\">So., 15. Nov.</span><span class=\"m-betreff\">Wir kommen zum Zuschauen!</span><span class=\"m-vorschau\">Lieber Mateo, Mama hat mir erzählt, dass du beim Herbstpokal …</span></a><a class=\"m-eintrag\" data-ziel=\"mail-einladung\"><span class=\"m-von\">Sabine Albrecht (SV Wasserflöhe)</span><span class=\"m-datum\">Mo., 9. Nov.</span><span class=\"m-betreff\">📎 Einladung zum Herbstpokal</span><span class=\"m-vorschau\">Hallo Mateo, super, du bist für unseren Herbstpokal gemeldet! …</span></a></div><div class=\"w-kasten w-kasten--tipp\"><p>🛡️ <b>Sicher-Tipp:</b> Das Flinkpost-Team schreibt dir nur von der Adresse <b>team@flinkpost-kids.de</b>. Es fragt dich nie nach deinem Passwort.</p></div><div class=\"w-fuss\"><span>Flinkpost Kids – das Postfach für Kinder</span><span>Hilfe</span><span>Datenschutz</span><span>Impressum</span></div>"
+   },
+   {
+    "id": "mail-gewinn",
+    "titel": "Du hast gewonnen 🎉",
+    "html": "<div class=\"m-warnung\">⚠️ Von diesem Absender hast du noch nie eine Mail bekommen.</div><div class=\"m-mail\"><dl class=\"m-kopfzeilen\"><dt>Von</dt><dd>Flinkpost Gewinn-Team<details><summary>Adresse anzeigen</summary>gewinner@flinkpost-preise-sofort.xyz</details></dd><dt>An</dt><dd>mateo.k@flinkpost-kids.de</dd><dt>Datum</dt><dd>Donnerstag, 19. November 2026, 7:12 Uhr</dd><dt>Betreff</dt><dd>HERZLICHEN GLÜKWUNSCH!!! Du hast gewonnen 🎉</dd></dl><div class=\"m-text\"><p>Hallo lieber Flinkpost-Nutzer,</p><p>Herzlichen Glükwunsch!!! Deine Mailadresse wurde unter allen Nutzern ausgelost. Du hast ein <b>nagelneues Tablet</b> gewonnen!</p><p>Damit wir dir das Paket schiken können, musst du nur noch dein <b>Passwort</b> und deine <b>Adresse</b> eingeben.</p><p><b>ACHTUNG: Dein Gewinn verfällt in 24 Stunden!!! Beeil dich!</b></p><p><a class=\"w-knopf\" data-extern>👉 GEWINN JETZT ABHOLEN</a></p><p>Dein Flinkpost Gewinn-Team</p></div></div>"
+   },
+   {
+    "id": "mail-aenderung",
+    "titel": "Wichtig: Änderung beim Herbstpokal",
+    "html": "<div class=\"m-mail\"><dl class=\"m-kopfzeilen\"><dt>Von</dt><dd>Sabine Albrecht (SV Wasserflöhe)<details><summary>Adresse anzeigen</summary>training@sv-wasserfloehe-hollerstadt.de</details></dd><dt>An</dt><dd>mateo.k@flinkpost-kids.de</dd><dt>Datum</dt><dd>Mittwoch, 18. November 2026, 18:30 Uhr</dd><dt>Betreff</dt><dd>Wichtig: Änderung beim Herbstpokal</dd></dl><div class=\"m-text\"><p>Hallo Mateo, liebe Eltern,</p><p>leider gibt es eine wichtige Änderung: Im Hallenbad Hollerstadt ist die Heizung kaputt und das Wasser ist viel zu kalt. Der Herbstpokal findet deshalb im <b>Sportbad Talbrunn</b> statt (Lindenallee 12, Talbrunn).</p><p>Der Tag bleibt gleich: Samstag, 28. November 2026.</p><p>Weil die Fahrt nach Talbrunn länger dauert, verschieben sich <b>alle Uhrzeiten im Zeitplan um 30 Minuten nach hinten</b>, also auf später. Aus 9:00 Uhr wird zum Beispiel 9:30 Uhr. Das gilt auch für das Einschwimmen und für die Siegerehrung, die jetzt um 14:30 Uhr beginnt.</p><p>Den Zeitplan und die Packliste findet ihr weiterhin im Anhang meiner Einladung vom 9. November. Die Packliste bleibt genau gleich.</p><p>Sportliche Grüße<br>Sabine Albrecht<br>Trainerin, SV Wasserflöhe Hollerstadt e. V.</p></div><p><a data-ziel=\"mail-einladung\">Ursprüngliche Nachricht anzeigen</a></p></div>"
+   },
+   {
+    "id": "mail-buecherei",
+    "titel": "Erinnerung: Rückgabe bald fällig",
+    "html": "<div class=\"m-mail\"><dl class=\"m-kopfzeilen\"><dt>Von</dt><dd>Stadtbücherei Hollerstadt<details><summary>Adresse anzeigen</summary>ausleihe@buecherei-hollerstadt.de</details></dd><dt>An</dt><dd>mateo.k@flinkpost-kids.de</dd><dt>Datum</dt><dd>Dienstag, 17. November 2026, 9:00 Uhr</dd><dt>Betreff</dt><dd>Erinnerung: Rückgabe bald fällig</dd></dl><div class=\"m-text\"><p>Hallo Mateo,</p><p>bald ist die Leihfrist für dieses Buch zu Ende:</p><p><b>„Das Geheimnis der Leuchtturminsel“</b><br>Rückgabe bis: <b>Dienstag, 24. November 2026</b></p><p>Du kannst das Buch einmal um vier Wochen verlängern, wenn es niemand vorbestellt hat.</p><p><a class=\"w-knopf\" data-extern>Jetzt verlängern</a></p><details><summary>Alle Ausleihen anzeigen (3)</summary><table class=\"w-tabelle\"><thead><tr><th>Titel</th><th>Rückgabe bis</th></tr></thead><tbody><tr><td>Das Geheimnis der Leuchtturminsel (Buch)</td><td>24. November 2026</td></tr><tr><td>Alles über Wale (Sachbuch)</td><td>8. Dezember 2026</td></tr><tr><td>Kapitän Krabbe und der Sturm (Hörbuch)</td><td>8. Dezember 2026</td></tr></tbody></table></details><p>Bücher und Hörbücher kannst du auch rund um die Uhr in den Rückgabekasten neben dem Eingang werfen.</p><p>Öffnungszeiten: Dienstag bis Freitag 10–18 Uhr, Samstag 10–13 Uhr</p><p>Deine Stadtbücherei Hollerstadt</p></div><p class=\"w-klein\">Diese Mail wurde automatisch verschickt. Bitte antworte nicht auf diese Mail.</p></div>"
+   },
+   {
+    "id": "mail-oma",
+    "titel": "Wir kommen zum Zuschauen!",
+    "html": "<div class=\"m-mail\"><dl class=\"m-kopfzeilen\"><dt>Von</dt><dd>Oma Rosi<details><summary>Adresse anzeigen</summary>rosi.huber@hollerpost.de</details></dd><dt>An</dt><dd>mateo.k@flinkpost-kids.de</dd><dt>Datum</dt><dd>Sonntag, 15. November 2026, 16:20 Uhr</dd><dt>Betreff</dt><dd>Wir kommen zum Zuschauen!</dd></dl><div class=\"m-text\"><p>Lieber Mateo,</p><p>Mama hat mir erzählt, dass du beim Herbstpokal am 28. November mitschwimmst. Opa und ich kommen zum Zuschauen! 🏊</p><p>Wir möchten pünktlich da sein, wenn dein Wettkampf beginnt. Schreibst du mir bitte, um wie viel Uhr das ist? Opa hat sich den Weg zum Hallenbad Hollerstadt schon herausgesucht.</p><p>Heute habe ich Apfelstrudel gebacken. Ein großes Stück habe ich für dich eingefroren. 🍎</p><p>Viele Bussis<br>deine Oma Rosi und Opa Heinz</p></div></div>"
+   },
+   {
+    "id": "mail-einladung",
+    "titel": "Einladung zum Herbstpokal",
+    "html": "<div class=\"m-mail\"><dl class=\"m-kopfzeilen\"><dt>Von</dt><dd>Sabine Albrecht (SV Wasserflöhe)<details><summary>Adresse anzeigen</summary>training@sv-wasserfloehe-hollerstadt.de</details></dd><dt>An</dt><dd>mateo.k@flinkpost-kids.de</dd><dt>Datum</dt><dd>Montag, 9. November 2026, 17:05 Uhr</dd><dt>Betreff</dt><dd>Einladung zum Herbstpokal</dd></dl><div class=\"m-text\"><p>Hallo Mateo,</p><p>super, du bist für unseren Herbstpokal gemeldet! Er findet am <b>Samstag, 28. November 2026</b>, im Hallenbad Hollerstadt (Am Weiherfeld 3) statt.</p><p>Du schwimmst mit deinem <b>Jahrgang 2016</b> über 50 m Brust und 50 m Freistil.</p><p>Im Anhang findest du den Zeitplan für alle Gruppen und die Packliste. Bitte schau dir beides mit deinen Eltern an.</p><p>Kannst du nicht mitmachen? Dann gib mir bitte bis Freitag, 20. November, Bescheid.</p><p>Ich freue mich auf dich!<br>Sabine Albrecht<br>Trainerin, SV Wasserflöhe Hollerstadt e. V.</p></div><a class=\"m-anhang\" data-ziel=\"anhang\">📎 Herbstpokal_2026.pdf <small>(PDF, 120 KB)</small></a></div>"
+   },
+   {
+    "id": "anhang",
+    "titel": "Anhang: Herbstpokal_2026.pdf",
+    "farbe": "rot",
+    "html": "<div class=\"w-kasten w-kasten--info\"><p>📎 Anhang aus der Mail „Einladung zum Herbstpokal“ vom 9. November 2026</p></div><h1>🏊 Herbstpokal 2026</h1><p><b>SV Wasserflöhe Hollerstadt e. V.</b><br>Samstag, 28. November 2026<br>Hallenbad Hollerstadt, Am Weiherfeld 3</p><h2>Zeitplan</h2><table class=\"w-tabelle\"><thead><tr><th>Gruppe</th><th>Jahrgänge</th><th>Einschwimmen</th><th>Wettkampfbeginn</th></tr></thead><tbody><tr><td>A</td><td>2017 und jünger</td><td>8:30 Uhr</td><td>9:00 Uhr</td></tr><tr><td>B</td><td>2015 und 2016</td><td>10:00 Uhr</td><td>10:30 Uhr</td></tr><tr><td>C</td><td>2013 und 2014</td><td>11:30 Uhr</td><td>12:00 Uhr</td></tr></tbody></table><p>Jede Gruppe schwimmt zuerst 50 m Brust und danach 50 m Freistil. Die <b>Siegerehrung</b> für alle Gruppen beginnt um 14:00 Uhr.</p><p class=\"w-klein\">Eltern, Großeltern und Freunde sind herzlich willkommen. Der Eintritt ist frei.</p><h2>Packliste</h2><div class=\"w-spalten\"><div class=\"w-karte\"><h3>✅ Unbedingt mitbringen</h3><ul><li>Badehose oder Badeanzug</li><li>Badekappe (ohne Kappe darf niemand starten)</li><li>Handtuch</li><li>Badeschlappen</li><li>rotes Vereins-T-Shirt für die Siegerehrung</li></ul></div><div class=\"w-karte\"><h3>👍 Gern mitbringen</h3><ul><li>Schwimmbrille</li><li>Brotzeit und etwas zu trinken</li><li>warmer Pulli für die Wartezeit</li></ul></div><div class=\"w-karte\"><h3>🚫 Bitte zu Hause lassen</h3><ul><li>Uhren und Schmuck</li><li>Getränke in Glasflaschen</li></ul></div></div><p class=\"w-klein\">Fragen? Schreibt uns: training@sv-wasserfloehe-hollerstadt.de</p>"
+   }
+  ],
+  "items": [
+   {
+    "id": "d4-1",
+    "typ": "matrix",
+    "stufe": 2,
+    "kompetenz": "navigieren",
+    "frage": "Was passiert, wenn du in Mateos Postfach etwas antippst? Probiere es aus.",
+    "spalten": [
+     "stimmt",
+     "stimmt nicht"
+    ],
+    "aussagen": [
+     {
+      "text": "In der Mail „Einladung zum Herbstpokal“ tippst du auf „📎 Herbstpokal_2026.pdf“. Dann siehst du den Zeitplan und die Packliste.",
+      "richtig": true
+     },
+     {
+      "text": "In der Mail „Wichtig: Änderung beim Herbstpokal“ tippst du auf „Ursprüngliche Nachricht anzeigen“. Dann siehst du sofort die Packliste.",
+      "richtig": false
+     },
+     {
+      "text": "In der Gewinnspiel-Mail tippst du neben „Von“ auf „Adresse anzeigen“. Dann siehst du, von welcher Mailadresse die Mail kommt.",
+      "richtig": true
+     },
+     {
+      "text": "In der Mail der Stadtbücherei tippst du auf „Alle Ausleihen anzeigen“. Dann öffnet sich die Internetseite der Bücherei.",
+      "richtig": false
+     }
+    ],
+    "tipp": "Öffne die genannten Mails und tippe die Stellen wirklich an. Achte darauf, ob eine neue Seite erscheint oder ob nur etwas aufklappt.",
+    "erklaerung": "Der Anhang zeigt Zeitplan und Packliste, und „Adresse anzeigen“ klappt die Absenderadresse auf. „Ursprüngliche Nachricht anzeigen“ führt nur zur Einladung – die Packliste steckt erst in ihrem Anhang. „Alle Ausleihen anzeigen“ klappt eine Liste in der Mail auf und öffnet keine Internetseite."
+   },
+   {
+    "id": "d4-2",
+    "typ": "multi",
+    "stufe": 2,
+    "kompetenz": "finden",
+    "frage": "Mateo packt seine Sporttasche für den Herbstpokal. Was muss er laut Packliste <b>unbedingt</b> mitbringen?",
+    "optionen": [
+     {
+      "text": "eine Badekappe",
+      "richtig": true
+     },
+     {
+      "text": "Badeschlappen",
+      "richtig": true
+     },
+     {
+      "text": "das rote Vereins-T-Shirt",
+      "richtig": true
+     },
+     {
+      "text": "eine Schwimmbrille",
+      "richtig": false
+     },
+     {
+      "text": "eine Brotzeit und etwas zu trinken",
+      "richtig": false
+     },
+     {
+      "text": "eine Armbanduhr",
+      "richtig": false
+     }
+    ],
+    "tipp": "Die Packliste steckt im Anhang der Einladung. Sie hat drei Kästen – nur einer passt zu „unbedingt“.",
+    "tippSeite": "anhang",
+    "erklaerung": "Im Kasten „Unbedingt mitbringen“ stehen Badekappe, Badeschlappen und das rote Vereins-T-Shirt. Schwimmbrille und Brotzeit sind nur „gern mitbringen“, und Uhren soll Mateo sogar zu Hause lassen."
+   },
+   {
+    "id": "d4-3",
+    "typ": "single",
+    "stufe": 3,
+    "kompetenz": "verknuepfen",
+    "frage": "Oma möchte pünktlich da sein, wenn Mateos Wettkampf beginnt. Was soll Mateo ihr antworten?",
+    "optionen": [
+     {
+      "text": "Um 11:00 Uhr im Sportbad Talbrunn",
+      "richtig": true
+     },
+     {
+      "text": "Um 10:30 Uhr im Sportbad Talbrunn",
+      "richtig": false
+     },
+     {
+      "text": "Um 11:00 Uhr im Hallenbad Hollerstadt",
+      "richtig": false
+     },
+     {
+      "text": "Um 10:30 Uhr im Hallenbad Hollerstadt",
+      "richtig": false
+     }
+    ],
+    "tipp": "Suche Mateos Jahrgang in der Einladung und dann seine Gruppe im Zeitplan. Lies danach die neueste Mail des Vereins ganz genau.",
+    "tippSeite": "mail-aenderung",
+    "erklaerung": "Mateo hat Jahrgang 2016 und schwimmt deshalb in Gruppe B. Laut Zeitplan beginnt ihr Wettkampf um 10:30 Uhr. Die neuere Mail verlegt den Wettkampf ins Sportbad Talbrunn und verschiebt alle Zeiten um 30 Minuten – also 11:00 Uhr in Talbrunn."
+   },
+   {
+    "id": "d4-4",
+    "typ": "multi",
+    "stufe": 3,
+    "kompetenz": "bewerten",
+    "frage": "Mateo zeigt seinen Eltern die Gewinnspiel-Mail. Welche Aussagen über diese Mail sind richtig?",
+    "optionen": [
+     {
+      "text": "Die echte Absenderadresse gehört nicht zum Flinkpost-Team.",
+      "richtig": true
+     },
+     {
+      "text": "Die Mail will Mateos Passwort und seine Adresse haben.",
+      "richtig": true
+     },
+     {
+      "text": "Die Mail setzt Mateo unter Druck, schnell zu handeln.",
+      "richtig": true
+     },
+     {
+      "text": "Die Mail ist echt, weil „Flinkpost“ im Absendernamen steht.",
+      "richtig": false
+     },
+     {
+      "text": "Die Mail beginnt mit einer Anrede, in der Mateos Name steht.",
+      "richtig": false
+     },
+     {
+      "text": "In der Mail sind alle Wörter richtig geschrieben.",
+      "richtig": false
+     }
+    ],
+    "tipp": "Prüfe jede Aussage an der Mail selbst: Lies sie Wort für Wort und tippe auf „Adresse anzeigen“. Vergleiche die Adresse mit dem Sicher-Tipp im Posteingang.",
+    "tippSeite": "mail-gewinn",
+    "erklaerung": "Die Adresse ist nicht team@flinkpost-kids.de, die Mail will Passwort und Adresse und macht mit „24 Stunden“ Druck – typische Zeichen für Betrug. Auch die Anrede „lieber Flinkpost-Nutzer“ ohne Mateos Namen und Fehler wie „Glükwunsch“ und „schiken“ sind Warnzeichen. Ein bekannter Name im Absender beweist nichts – am besten zeigt Mateo die Mail seinen Eltern und löscht sie."
+   }
+  ]
+ }
+}

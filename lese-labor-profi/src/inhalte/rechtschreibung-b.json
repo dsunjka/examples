@@ -1,0 +1,1541 @@
+{
+ "modul": "rechtschreibung",
+ "themen": [
+  {
+   "id": "rs-merk",
+   "titel": "Merkwörter: ie, h, aa/ee/oo, v",
+   "kurz": "Langes i, Dehnungs-h, Doppelvokale und v",
+   "kompetenz": "merken",
+   "wissen": {
+    "merksatz": "Ein langes i schreibst du meistens <b>ie</b>. Wörter mit Dehnungs-h, mit <b>aa, ee, oo</b> oder mit <b>v</b> sind Merkwörter: Präge sie dir gut ein!",
+    "punkte": [
+     "Hörst du ein langes i, schreibst du fast immer <b>ie</b>: Biene, Wiese, Spiegel, liegen. Ausnahmen wie <b>Tiger, Kino, Igel, Krokodil</b> und <b>Maschine</b> musst du dir merken.",
+     "Das Dehnungs-h hörst du nicht. Es steht meistens vor <b>l, m, n</b> oder <b>r</b>: Zahl, nehmen, Huhn, Uhr. Viele Wörter haben aber kein h: Schule, Name, Tor.",
+     "Das h bleibt in der ganzen Wortfamilie: fahren – Fahrt – Fahrrad – er fährt.",
+     "Doppelte Selbstlaute gibt es nur als <b>aa, ee</b> und <b>oo</b>: Haar, Meer, Boot. In deutschen Wörtern gibt es kein ii und kein uu.",
+     "Bei <b>v</b> hörst du oft ein f: Vogel, Vater, viel, vier. Die Wortbausteine <b>ver-</b> und <b>vor-</b> schreibst du immer mit v: verlieren, vorlesen."
+    ],
+    "beispiele": [
+     "Biene, Wiese, liegen → ie",
+     "Tiger, Kino, Igel → Ausnahmen mit i",
+     "Zahl, Huhn, Uhr → Dehnungs-h",
+     "Haar, Meer, Boot → Doppelvokal",
+     "Vogel, vier, verlieren → v"
+    ]
+   },
+   "items": [
+    {
+     "id": "rs-merk-01",
+     "typ": "luecke",
+     "stufe": 1,
+     "kompetenz": "merken",
+     "frage": "Wähle die richtige Schreibung aus.",
+     "teile": [
+      {
+       "t": "Lena kämmt sich vor dem "
+      },
+      {
+       "wahl": [
+        "Spiegel",
+        "Spigel",
+        "Spihgel"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " ihre langen "
+      },
+      {
+       "wahl": [
+        "Haare",
+        "Hare",
+        "Hahre"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": "."
+      }
+     ],
+     "tipp": "Sprich beide Wörter langsam. Wie schreibt man ein langes i meistens? Und welche Selbstlaute dürfen doppelt stehen?",
+     "erklaerung": "<b>Spiegel</b> schreibt man mit ie, denn ein langes i schreibt man meistens ie. <b>Haare</b> ist ein Merkwort mit aa."
+    },
+    {
+     "id": "rs-merk-02",
+     "typ": "zuordnen",
+     "stufe": 2,
+     "kompetenz": "merken",
+     "frage": "v oder f? Ordne jedes Wort der richtigen Kiste zu.",
+     "vorgabe": "Das Zeichen _ steht für den fehlenden Buchstaben.",
+     "gruppen": [
+      "mit v",
+      "mit f"
+     ],
+     "elemente": [
+      {
+       "t": "_ogel",
+       "g": 0
+      },
+      {
+       "t": "_ier",
+       "g": 0
+      },
+      {
+       "t": "_erstecken",
+       "g": 0
+      },
+      {
+       "t": "_orlesen",
+       "g": 0
+      },
+      {
+       "t": "_ertig",
+       "g": 1
+      },
+      {
+       "t": "_reund",
+       "g": 1
+      },
+      {
+       "t": "_ernsehen",
+       "g": 1
+      },
+      {
+       "t": "_ahrrad",
+       "g": 1
+      }
+     ],
+     "tipp": "Denk an die Merkwörter mit v und an die Bausteine ver- und vor-. Vorsicht: Nicht jedes Wort, das mit „fer“ beginnt, hat den Baustein ver-.",
+     "erklaerung": "Vogel und vier sind Merkwörter mit v, verstecken und vorlesen haben die Bausteine ver- und vor-. Fertig, Freund, fernsehen (von „fern“) und Fahrrad schreibt man mit f."
+    },
+    {
+     "id": "rs-merk-03",
+     "typ": "markieren",
+     "stufe": 2,
+     "kompetenz": "merken",
+     "frage": "In diesem Satz sind drei Wörter falsch geschrieben. Tippe sie an.",
+     "teile": [
+      {
+       "t": "Am"
+      },
+      {
+       "t": "Se",
+       "ziel": true
+      },
+      {
+       "t": "steht"
+      },
+      {
+       "t": "ein"
+      },
+      {
+       "t": "alter"
+      },
+      {
+       "t": "Stul",
+       "ziel": true
+      },
+      {
+       "t": ",",
+       "fix": true
+      },
+      {
+       "t": "auf"
+      },
+      {
+       "t": "dem"
+      },
+      {
+       "t": "ein"
+      },
+      {
+       "t": "bunter"
+      },
+      {
+       "t": "Fogel",
+       "ziel": true
+      },
+      {
+       "t": "sitzt"
+      },
+      {
+       "t": ".",
+       "fix": true
+      }
+     ],
+     "tipp": "Lies jedes Wort einzeln. Achte auf Doppelvokale, auf das Dehnungs-h und auf v.",
+     "erklaerung": "Richtig ist <b>See</b> mit ee, <b>Stuhl</b> mit Dehnungs-h vor l und <b>Vogel</b> mit v. „steht“ stimmt: Es kommt von „stehen“."
+    },
+    {
+     "id": "rs-merk-04",
+     "typ": "eingabe",
+     "stufe": 1,
+     "kompetenz": "merken",
+     "frage": "Schreibe die fehlende Zahl als Wort auf.",
+     "vorgabe": "Ein Hund hat ___ Beine.",
+     "loesungen": [
+      "vier"
+     ],
+     "tipp": "Überlege, wie viele Beine ein Hund hat. Das Zahlwort gehört zu den Merkwörtern.",
+     "erklaerung": "Ein Hund hat <b>vier</b> Beine. „vier“ schreibt man mit v und mit ie – ein Merkwort, das du dir einprägen musst."
+    },
+    {
+     "id": "rs-merk-05",
+     "typ": "single",
+     "stufe": 1,
+     "kompetenz": "merken",
+     "frage": "Welches Wort passt in die Lücke?",
+     "vorgabe": "In den Sommerferien baden wir im ___.",
+     "optionen": [
+      {
+       "text": "Meer",
+       "richtig": true
+      },
+      {
+       "text": "Mehr",
+       "richtig": false
+      },
+      {
+       "text": "Mer",
+       "richtig": false
+      },
+      {
+       "text": "Meher",
+       "richtig": false
+      }
+     ],
+     "tipp": "Gesucht ist das große, salzige Wasser. Welche Selbstlaute dürfen doppelt stehen?",
+     "erklaerung": "Das <b>Meer</b> schreibt man mit ee. Das Wort „mehr“ mit h gibt es auch. Es bedeutet aber „eine größere Menge“: Ich möchte mehr Eis."
+    },
+    {
+     "id": "rs-merk-06",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "merken",
+     "frage": "In welchem Satz sind alle Wörter richtig geschrieben?",
+     "optionen": [
+      {
+       "text": "Im Winter liegt viel Schnee auf den Wiesen.",
+       "richtig": true
+      },
+      {
+       "text": "Im Winter ligt viel Schnee auf den Wiesen.",
+       "richtig": false
+      },
+      {
+       "text": "Im Winter liegt fiel Schnee auf den Wiesen.",
+       "richtig": false
+      },
+      {
+       "text": "Im Winter liegt viel Schne auf den Wiesen.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Vergleiche die Sätze Wort für Wort. Prüfe das lange i, das v und den Doppelvokal.",
+     "erklaerung": "Nur im ersten Satz stimmen <b>liegt</b> mit ie, <b>viel</b> mit v und <b>Schnee</b> mit ee. „fiel“ gibt es auch, es kommt aber von „fallen“."
+    },
+    {
+     "id": "rs-merk-07",
+     "typ": "luecke",
+     "stufe": 3,
+     "kompetenz": "merken",
+     "frage": "Setze die richtigen Wörter ein.",
+     "teile": [
+      {
+       "t": "Der "
+      },
+      {
+       "wahl": [
+        "Tiger",
+        "Tieger",
+        "Tihger"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " im Zoo frisst "
+      },
+      {
+       "wahl": [
+        "viel",
+        "fiel",
+        "vihl"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " Fleisch. Danach "
+      },
+      {
+       "wahl": [
+        "liegt",
+        "ligt",
+        "lihgt"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " er müde im Gras."
+      }
+     ],
+     "tipp": "Denk an die Ausnahmen beim langen i. Überlege bei der zweiten Lücke: Kommt das Wort von „fallen“ oder bedeutet es „eine große Menge“?",
+     "erklaerung": "<b>Tiger</b> ist eine Ausnahme: langes i, aber kein e. <b>viel</b> (eine große Menge) schreibt man mit v und ie, <b>liegt</b> mit ie wie „liegen“."
+    },
+    {
+     "id": "rs-merk-08",
+     "typ": "multi",
+     "stufe": 3,
+     "kompetenz": "merken",
+     "frage": "Welche Wörter sind richtig geschrieben?",
+     "optionen": [
+      {
+       "text": "das Kino",
+       "richtig": true
+      },
+      {
+       "text": "der Tiger",
+       "richtig": true
+      },
+      {
+       "text": "die Maschine",
+       "richtig": true
+      },
+      {
+       "text": "der Spigel",
+       "richtig": false
+      },
+      {
+       "text": "die Wise",
+       "richtig": false
+      },
+      {
+       "text": "das Krokodiel",
+       "richtig": false
+      }
+     ],
+     "tipp": "Sprich jedes Wort. Überlege: Ist es ein normales Wort mit ie oder eine Ausnahme, die man nur mit i schreibt?",
+     "erklaerung": "Kino, Tiger und Maschine sind Ausnahmen: langes i ohne e. Richtig heißt es <b>Spiegel</b>, <b>Wiese</b> und <b>Krokodil</b>."
+    }
+   ]
+  },
+  {
+   "id": "rs-doppel",
+   "titel": "Doppelte Mitlaute, ck und tz",
+   "kurz": "Kurzer Selbstlaut – dann zwei Mitlaute",
+   "kompetenz": "mitsprechen",
+   "wissen": {
+    "merksatz": "Nach einem kurzen, betonten Selbstlaut folgen zwei Mitlaute. Hörst du nur einen, verdoppelst du ihn. Statt kk schreibst du <b>ck</b>, statt zz schreibst du <b>tz</b>.",
+    "punkte": [
+     "Sprich das Wort deutlich in Silben. Ist der betonte Selbstlaut kurz (Son-ne) oder lang (Ha-se)?",
+     "Nach kurzem Selbstlaut folgen zwei Mitlaute. Hörst du nur einen, wird er verdoppelt: Sonne, Teller, Mutter. Bei einsilbigen Wörtern hilft Verlängern: Ball → Bälle.",
+     "Statt kk schreibst du <b>ck</b>, statt zz schreibst du <b>tz</b>: Decke, Zucker, Katze, sitzen.",
+     "Nach l, n, r – das merke ja – steht nie tz und nie ck: Wolke, Bank, stark, Pilz, tanzen, Kerze.",
+     "Nach langem Selbstlaut und nach au, ei, eu folgt nur ein Mitlaut: Haken, Schaukel, heizen. Kleine Wörter wie an, in, mit, um sind Ausnahmen."
+    ],
+    "beispiele": [
+     "Sonne, Teller, Mutter",
+     "Ball → Bälle",
+     "Decke, Zucker → ck",
+     "Katze, sitzen → tz",
+     "Wolke, Bank, Pilz, Kerze → nach l, n, r",
+     "Haken, heizen → nach langem Laut"
+    ]
+   },
+   "items": [
+    {
+     "id": "rs-doppel-01",
+     "typ": "zuordnen",
+     "stufe": 1,
+     "kompetenz": "mitsprechen",
+     "frage": "Sprich jedes Wort deutlich. Ist der betonte Selbstlaut lang oder kurz? Ordne zu.",
+     "gruppen": [
+      "langer Selbstlaut",
+      "kurzer Selbstlaut"
+     ],
+     "elemente": [
+      {
+       "t": "Hase",
+       "g": 0
+      },
+      {
+       "t": "Kasse",
+       "g": 1
+      },
+      {
+       "t": "Ofen",
+       "g": 0
+      },
+      {
+       "t": "offen",
+       "g": 1
+      },
+      {
+       "t": "Schal",
+       "g": 0
+      },
+      {
+       "t": "Schall",
+       "g": 1
+      },
+      {
+       "t": "Miete",
+       "g": 0
+      },
+      {
+       "t": "Mitte",
+       "g": 1
+      }
+     ],
+     "tipp": "Sprich zwei Wörter mit gleichem Anfang direkt nacheinander und vergleiche. Klingt der Selbstlaut gedehnt oder kurz und knapp?",
+     "erklaerung": "In Kasse, offen, Schall und Mitte ist der Selbstlaut kurz – deshalb folgen zwei Mitlaute. In Hase, Ofen, Schal und Miete ist er lang."
+    },
+    {
+     "id": "rs-doppel-02",
+     "typ": "luecke",
+     "stufe": 1,
+     "kompetenz": "mitsprechen",
+     "frage": "Setze die richtigen Buchstaben ein.",
+     "teile": [
+      {
+       "t": "Die Ka"
+      },
+      {
+       "wahl": [
+        "tz",
+        "z",
+        "zz"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": "e liegt auf einer De"
+      },
+      {
+       "wahl": [
+        "ck",
+        "k",
+        "kk"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": "e in der So"
+      },
+      {
+       "wahl": [
+        "nn",
+        "n",
+        "hn"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": "e."
+      }
+     ],
+     "tipp": "Sprich die Wörter in Silben. Ist der Selbstlaut vor der Lücke kurz? Denk daran, wie man ein doppeltes k und ein doppeltes z schreibt.",
+     "erklaerung": "In <b>Katze</b>, <b>Decke</b> und <b>Sonne</b> ist der Selbstlaut kurz. Deshalb folgen zwei Mitlaute: tz statt zz, ck statt kk und nn."
+    },
+    {
+     "id": "rs-doppel-03",
+     "typ": "markieren",
+     "stufe": 2,
+     "kompetenz": "mitsprechen",
+     "frage": "In diesem Satz sind drei Wörter falsch geschrieben. Tippe sie an.",
+     "teile": [
+      {
+       "t": "Am"
+      },
+      {
+       "t": "Mitwoch",
+       "ziel": true
+      },
+      {
+       "t": "sitzt"
+      },
+      {
+       "t": "Ben"
+      },
+      {
+       "t": "mit"
+      },
+      {
+       "t": "Opa"
+      },
+      {
+       "t": "am"
+      },
+      {
+       "t": "Bach"
+      },
+      {
+       "t": "und"
+      },
+      {
+       "t": "pakt",
+       "ziel": true
+      },
+      {
+       "t": "zwei"
+      },
+      {
+       "t": "Semeln",
+       "ziel": true
+      },
+      {
+       "t": "aus"
+      },
+      {
+       "t": ".",
+       "fix": true
+      }
+     ],
+     "tipp": "Sprich jedes Wort in Silben. Wo ist der Selbstlaut kurz, aber danach steht nur ein Mitlaut? Vorsicht: Kleine Wörter sind manchmal Ausnahmen.",
+     "erklaerung": "Richtig ist <b>Mittwoch</b> (wie Mitte), <b>packt</b> (von packen) und <b>Semmeln</b>. Das kleine Wort „mit“ ist eine Ausnahme und hat nur ein t."
+    },
+    {
+     "id": "rs-doppel-04",
+     "typ": "eingabe",
+     "stufe": 1,
+     "kompetenz": "mitsprechen",
+     "frage": "Verlängere das Wort. Schreibe die Mehrzahl auf.",
+     "vorgabe": "der Ball → die ___",
+     "loesungen": [
+      "Bälle"
+     ],
+     "tipp": "Die Mehrzahl hat zwei Silben. Achte auf den Umlaut.",
+     "erklaerung": "Die Mehrzahl heißt <b>Bälle</b>. Beim Verlängern hörst du deutlich: Bäl-le. Der kurze Selbstlaut braucht zwei l."
+    },
+    {
+     "id": "rs-doppel-05",
+     "typ": "zuordnen",
+     "stufe": 2,
+     "kompetenz": "mitsprechen",
+     "frage": "ck oder k? Ordne jedes Wort der richtigen Kiste zu.",
+     "vorgabe": "Das Zeichen _ steht für die fehlenden Buchstaben.",
+     "gruppen": [
+      "ck",
+      "k"
+     ],
+     "elemente": [
+      {
+       "t": "Glo_e",
+       "g": 0
+      },
+      {
+       "t": "Zu_er",
+       "g": 0
+      },
+      {
+       "t": "Ja_e",
+       "g": 0
+      },
+      {
+       "t": "Brü_e",
+       "g": 0
+      },
+      {
+       "t": "Wol_e",
+       "g": 1
+      },
+      {
+       "t": "Ban_",
+       "g": 1
+      },
+      {
+       "t": "Schau_el",
+       "g": 1
+      },
+      {
+       "t": "Mar_t",
+       "g": 1
+      }
+     ],
+     "tipp": "Schau genau, was direkt vor der Lücke steht: ein kurzer Selbstlaut, ein Mitlaut oder au?",
+     "erklaerung": "Nach kurzem Selbstlaut steht ck: Glocke, Zucker, Jacke, Brücke. Nach l, n, r und nach au steht nur k: Wolke, Bank, Markt, Schaukel."
+    },
+    {
+     "id": "rs-doppel-06",
+     "typ": "multi",
+     "stufe": 2,
+     "kompetenz": "mitsprechen",
+     "frage": "Welche Wörter sind richtig geschrieben?",
+     "optionen": [
+      {
+       "text": "der Pilz",
+       "richtig": true
+      },
+      {
+       "text": "die Mütze",
+       "richtig": true
+      },
+      {
+       "text": "die Kerze",
+       "richtig": true
+      },
+      {
+       "text": "der Plaz",
+       "richtig": false
+      },
+      {
+       "text": "der Tantz",
+       "richtig": false
+      },
+      {
+       "text": "die Wurtzel",
+       "richtig": false
+      }
+     ],
+     "tipp": "Prüfe bei jedem Wort, was vor dem z-Laut steht: ein kurzer Selbstlaut oder l, n, r?",
+     "erklaerung": "Nach kurzem Selbstlaut steht tz: <b>Mütze</b>, <b>Platz</b>. Nach l, n, r steht nur z: <b>Pilz</b>, <b>Kerze</b>, <b>Tanz</b>, <b>Wurzel</b>."
+    },
+    {
+     "id": "rs-doppel-07",
+     "typ": "luecke",
+     "stufe": 3,
+     "kompetenz": "mitsprechen",
+     "frage": "Setze die richtigen Buchstaben ein.",
+     "teile": [
+      {
+       "t": "Oma hei"
+      },
+      {
+       "wahl": [
+        "z",
+        "tz"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": "t den Ofen, stellt eine Ker"
+      },
+      {
+       "wahl": [
+        "z",
+        "tz"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": "e auf den Tisch und schmü"
+      },
+      {
+       "wahl": [
+        "k",
+        "ck"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": "t ihn mit Tannenzweigen."
+      }
+     ],
+     "tipp": "Schau genau, was vor jeder Lücke steht: ei, ein Mitlaut oder ein kurzer Selbstlaut?",
+     "erklaerung": "Nach ei steht nur z: <b>heizt</b>. Nach r steht nie tz: <b>Kerze</b>. Das ü in <b>schmückt</b> ist kurz, deshalb ck."
+    },
+    {
+     "id": "rs-doppel-08",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "mitsprechen",
+     "frage": "Emir schreibt „Wolcke“. Welche Erklärung hilft ihm, seinen Fehler zu verstehen?",
+     "optionen": [
+      {
+       "text": "Nach l steht nie ck, also schreibt man Wolke.",
+       "richtig": true
+      },
+      {
+       "text": "Das o ist lang, deshalb schreibt man Wolke.",
+       "richtig": false
+      },
+      {
+       "text": "Nach o steht nie ck, also schreibt man Wolke.",
+       "richtig": false
+      },
+      {
+       "text": "Wolke ist ein Nomen, also schreibt man Wolke.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Sprich „Wolke“ in Silben. Welcher Buchstabe steht direkt vor dem k-Laut?",
+     "erklaerung": "Vor dem k steht ein l, und nach l, n, r steht nie ck. Das o in <b>Wolke</b> ist zwar kurz, aber das l ist schon der erste von zwei Mitlauten."
+    }
+   ]
+  },
+  {
+   "id": "rs-s",
+   "titel": "s, ss oder ß",
+   "kurz": "Summend oder zischend, lang oder kurz?",
+   "kompetenz": "nachdenken",
+   "wissen": {
+    "merksatz": "Summt das s, schreibst du <b>s</b>. Zischt es nach langem Selbstlaut oder nach au, ei, eu, schreibst du <b>ß</b>. Zischt es nach kurzem Selbstlaut, schreibst du <b>ss</b>.",
+    "punkte": [
+     "Ein summendes s (es klingt wie eine Biene) schreibst du mit <b>s</b>: Rose, Hose, Wiese, lesen.",
+     "Ein zischendes s nach langem Selbstlaut schreibst du mit <b>ß</b>: Straße, Füße, grüßen, groß.",
+     "Auch nach au, ei und eu schreibst du für das zischende s ein <b>ß</b>: draußen, heißen, fleißig.",
+     "Nach kurzem Selbstlaut schreibst du <b>ss</b>: Wasser, Kissen, essen, Fluss.",
+     "Am Wortende hörst du den Unterschied nicht. Verlängere das Wort: Gras → Gräser, Fuß → Füße, Kuss → küssen."
+    ],
+    "beispiele": [
+     "Rose, Hose, lesen → s",
+     "Straße, groß, heißen → ß",
+     "Wasser, Kissen, essen → ss",
+     "Gras → Gräser",
+     "Fuß → Füße",
+     "Kuss → küssen"
+    ]
+   },
+   "items": [
+    {
+     "id": "rs-s-01",
+     "typ": "luecke",
+     "stufe": 1,
+     "kompetenz": "nachdenken",
+     "frage": "Setze s, ss oder ß richtig ein.",
+     "teile": [
+      {
+       "t": "Im Sommer baden wir drau"
+      },
+      {
+       "wahl": [
+        "ß",
+        "ss",
+        "s"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": "en im Flu"
+      },
+      {
+       "wahl": [
+        "ss",
+        "ß",
+        "s"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": ". Das Wa"
+      },
+      {
+       "wahl": [
+        "ss",
+        "ß",
+        "s"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": "er ist herrlich kühl."
+      }
+     ],
+     "tipp": "Sprich jedes Wort deutlich. Was steht vor dem s-Laut: ein kurzer Selbstlaut, ein langer oder au?",
+     "erklaerung": "Nach au schreibt man ß: <b>draußen</b>. In <b>Fluss</b> und <b>Wasser</b> ist der Selbstlaut kurz, deshalb ss."
+    },
+    {
+     "id": "rs-s-02",
+     "typ": "zuordnen",
+     "stufe": 1,
+     "kompetenz": "nachdenken",
+     "frage": "ss oder ß? Ordne jedes Wort der richtigen Kiste zu.",
+     "vorgabe": "Das Zeichen _ steht für die fehlenden Buchstaben.",
+     "gruppen": [
+      "ss",
+      "ß"
+     ],
+     "elemente": [
+      {
+       "t": "Ki_en",
+       "g": 0
+      },
+      {
+       "t": "e_en",
+       "g": 0
+      },
+      {
+       "t": "Schlü_el",
+       "g": 0
+      },
+      {
+       "t": "Ta_e",
+       "g": 0
+      },
+      {
+       "t": "Stra_e",
+       "g": 1
+      },
+      {
+       "t": "Fü_e",
+       "g": 1
+      },
+      {
+       "t": "grü_en",
+       "g": 1
+      },
+      {
+       "t": "hei_en",
+       "g": 1
+      }
+     ],
+     "tipp": "Sprich jedes Wort und hör auf den Laut vor der Lücke: kurz und knapp, lang gezogen oder ein ei?",
+     "erklaerung": "Kurzer Selbstlaut → ss: Kissen, essen, Schlüssel, Tasse. Langer Selbstlaut oder ei → ß: Straße, Füße, grüßen, heißen."
+    },
+    {
+     "id": "rs-s-03",
+     "typ": "single",
+     "stufe": 1,
+     "kompetenz": "nachdenken",
+     "frage": "Welches Wort passt in die Lücke?",
+     "vorgabe": "Am Morgen ___ Lena freundlich ihre Nachbarin.",
+     "optionen": [
+      {
+       "text": "grüßt",
+       "richtig": true
+      },
+      {
+       "text": "grüsst",
+       "richtig": false
+      },
+      {
+       "text": "grüst",
+       "richtig": false
+      },
+      {
+       "text": "grühst",
+       "richtig": false
+      }
+     ],
+     "tipp": "Sprich das Wort langsam. Ist das ü lang oder kurz? Summt oder zischt das s?",
+     "erklaerung": "In <b>grüßt</b> (von grüßen) ist das ü lang und das s zischt. Deshalb schreibt man ß."
+    },
+    {
+     "id": "rs-s-04",
+     "typ": "markieren",
+     "stufe": 2,
+     "kompetenz": "nachdenken",
+     "frage": "In diesem Satz sind drei Wörter falsch geschrieben. Tippe sie an.",
+     "teile": [
+      {
+       "t": "Nach"
+      },
+      {
+       "t": "der"
+      },
+      {
+       "t": "Schule"
+      },
+      {
+       "t": "laufen"
+      },
+      {
+       "t": "wir"
+      },
+      {
+       "t": "über"
+      },
+      {
+       "t": "die"
+      },
+      {
+       "t": "Strasse",
+       "ziel": true
+      },
+      {
+       "t": "zum"
+      },
+      {
+       "t": "Fluß",
+       "ziel": true
+      },
+      {
+       "t": "und"
+      },
+      {
+       "t": "werfen"
+      },
+      {
+       "t": "kleine"
+      },
+      {
+       "t": "Steine"
+      },
+      {
+       "t": "ins"
+      },
+      {
+       "t": "Waßer",
+       "ziel": true
+      },
+      {
+       "t": ".",
+       "fix": true
+      }
+     ],
+     "tipp": "Prüfe jedes Wort mit s-Laut: Ist der Selbstlaut davor lang oder kurz? Am Wortende hilft dir das Verlängern.",
+     "erklaerung": "Richtig ist <b>Straße</b> (langes a → ß), <b>Fluss</b> (Flüsse: kurzes u → ss) und <b>Wasser</b> (kurzes a → ss)."
+    },
+    {
+     "id": "rs-s-05",
+     "typ": "eingabe",
+     "stufe": 2,
+     "kompetenz": "nachdenken",
+     "frage": "Wie schreibt man das Wort richtig? Tippe es ein.",
+     "vorgabe": "Ich trinke Saft aus einem Gla_.",
+     "loesungen": [
+      "Glas"
+     ],
+     "tipp": "Verlängere das Wort: Bilde die Mehrzahl. Summt oder zischt das s dann?",
+     "erklaerung": "Die Mehrzahl heißt <b>Gläser</b>. Dort hörst du ein summendes s – also schreibt man auch <b>Glas</b> mit s."
+    },
+    {
+     "id": "rs-s-06",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "nachdenken",
+     "frage": "Ben weiß nicht, ob man „Nuss“ oder „Nuß“ schreibt. Was hilft ihm?",
+     "optionen": [
+      {
+       "text": "Er verlängert zu „Nüsse“: Das ü ist kurz, also ss.",
+       "richtig": true
+      },
+      {
+       "text": "Er verlängert zu „Nüsse“: Das ü ist lang, also ß.",
+       "richtig": false
+      },
+      {
+       "text": "Er merkt sich: Am Ende eines Wortes steht immer ß.",
+       "richtig": false
+      },
+      {
+       "text": "Er merkt sich: Nach dem Buchstaben u steht nie ss.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Bilde die Mehrzahl und sprich sie langsam. Wie klingt das ü?",
+     "erklaerung": "In <b>Nüsse</b> ist das ü kurz. Nach kurzem Selbstlaut schreibt man ss – also auch <b>Nuss</b>."
+    },
+    {
+     "id": "rs-s-07",
+     "typ": "luecke",
+     "stufe": 3,
+     "kompetenz": "nachdenken",
+     "frage": "Setze s, ss oder ß richtig ein.",
+     "teile": [
+      {
+       "t": "Im Gra"
+      },
+      {
+       "wahl": [
+        "s",
+        "ss",
+        "ß"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " schläft unser Hund, auf einem gro"
+      },
+      {
+       "wahl": [
+        "ß",
+        "ss",
+        "s"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": "en Stein sitzt die Katze, und eine Mau"
+      },
+      {
+       "wahl": [
+        "s",
+        "ss",
+        "ß"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " huscht vorbei."
+      }
+     ],
+     "tipp": "Am Wortende hilft das Verlängern. Prüfe dann: Summt das s oder zischt es? Ist der Laut davor lang oder kurz?",
+     "erklaerung": "<b>Gras</b> → Gräser und <b>Maus</b> → Mäuse: Das s summt, also s. In <b>großen</b> ist das o lang und das s zischt, also ß."
+    },
+    {
+     "id": "rs-s-08",
+     "typ": "multi",
+     "stufe": 3,
+     "kompetenz": "nachdenken",
+     "frage": "In welche Wörter gehört ein ß?",
+     "vorgabe": "Das Zeichen _ steht für die Lücke.",
+     "optionen": [
+      {
+       "text": "flei_ig",
+       "richtig": true
+      },
+      {
+       "text": "sü_",
+       "richtig": true
+      },
+      {
+       "text": "bei_en",
+       "richtig": true
+      },
+      {
+       "text": "die Na_e",
+       "richtig": false
+      },
+      {
+       "text": "na_",
+       "richtig": false
+      },
+      {
+       "text": "das Schlo_",
+       "richtig": false
+      }
+     ],
+     "tipp": "Verlängere die kurzen Wörter. Ist der Laut vor dem s lang, kurz oder ein ei? Summt oder zischt das s?",
+     "erklaerung": "ß gehört in <b>fleißig</b> und <b>beißen</b> (nach ei) und in <b>süß</b> (süße: langes ü, zischendes s). <b>Nase</b> hat ein summendes s, <b>nass</b> und <b>Schloss</b> haben einen kurzen Selbstlaut."
+    }
+   ]
+  },
+  {
+   "id": "rs-rede",
+   "titel": "Wörtliche Rede und Satzzeichen",
+   "kurz": "Anführungszeichen, Doppelpunkt, Komma",
+   "kompetenz": "zeichen",
+   "wissen": {
+    "merksatz": "Was jemand wörtlich sagt, setzt du in Anführungszeichen. Der Begleitsatz verrät, wer spricht.",
+    "punkte": [
+     "Die wörtliche Rede steht in Anführungszeichen: am Anfang unten („), am Ende oben (“).",
+     "Steht der Begleitsatz vorn, folgt ein <b>Doppelpunkt</b>: Mia ruft: „Komm schnell!“",
+     "Steht der Begleitsatz hinten, folgt nach dem Anführungszeichen ein <b>Komma</b>. Der Punkt der wörtlichen Rede fällt weg: „Ich komme mit“, sagt Ben.",
+     "Fragezeichen und Ausrufezeichen bleiben stehen, das Komma kommt trotzdem dazu: „Kommst du mit?“, fragt Lena.",
+     "Jede Satzart hat ihr Zeichen: Aussagesatz → Punkt, Fragesatz → Fragezeichen, Ausruf → Ausrufezeichen."
+    ],
+    "beispiele": [
+     "Tim sagt: „Ich habe Hunger.“",
+     "„Ich habe Hunger“, sagt Tim.",
+     "Oma fragt: „Hast du Hunger?“",
+     "„Hast du Hunger?“, fragt Oma.",
+     "„Pass auf!“, ruft Papa."
+    ]
+   },
+   "items": [
+    {
+     "id": "rs-rede-01",
+     "typ": "zuordnen",
+     "stufe": 1,
+     "kompetenz": "zeichen",
+     "frage": "Welches Satzzeichen fehlt am Ende? Ordne jeden Satz zu.",
+     "gruppen": [
+      "Punkt",
+      "Fragezeichen",
+      "Ausrufezeichen"
+     ],
+     "elemente": [
+      {
+       "t": "Wie heißt dein Hund",
+       "g": 1
+      },
+      {
+       "t": "Wann fährt der Bus ab",
+       "g": 1
+      },
+      {
+       "t": "Hast du deine Brotzeit dabei",
+       "g": 1
+      },
+      {
+       "t": "Mein Bruder ist acht Jahre alt",
+       "g": 0
+      },
+      {
+       "t": "Der Bus fährt um halb acht ab",
+       "g": 0
+      },
+      {
+       "t": "Unsere Schule hat einen großen Pausenhof",
+       "g": 0
+      },
+      {
+       "t": "Au, das tut weh",
+       "g": 2
+      },
+      {
+       "t": "Hurra, wir haben gewonnen",
+       "g": 2
+      }
+     ],
+     "tipp": "Lies jeden Satz laut. Fragst du etwas, erzählst du ruhig etwas oder rufst du etwas aus?",
+     "erklaerung": "Fragesätze beginnen oft mit einem Fragewort oder dem Verb und bekommen ein Fragezeichen. Aussagesätze bekommen einen Punkt, Ausrufe wie „Au“ oder „Hurra“ ein Ausrufezeichen."
+    },
+    {
+     "id": "rs-rede-02",
+     "typ": "markieren",
+     "stufe": 1,
+     "kompetenz": "zeichen",
+     "frage": "Tippe alle Wörter des Begleitsatzes an.",
+     "teile": [
+      {
+       "t": "Oma",
+       "ziel": true
+      },
+      {
+       "t": "fragt",
+       "ziel": true
+      },
+      {
+       "t": ":",
+       "fix": true
+      },
+      {
+       "t": "„",
+       "fix": true
+      },
+      {
+       "t": "Wer"
+      },
+      {
+       "t": "möchte"
+      },
+      {
+       "t": "noch"
+      },
+      {
+       "t": "ein"
+      },
+      {
+       "t": "Stück"
+      },
+      {
+       "t": "Kuchen"
+      },
+      {
+       "t": "?",
+       "fix": true
+      },
+      {
+       "t": "“",
+       "fix": true
+      }
+     ],
+     "tipp": "Der Begleitsatz steht nicht in den Anführungszeichen. Er verrät, wer spricht.",
+     "erklaerung": "„Oma fragt“ ist der Begleitsatz, denn er sagt, wer spricht. Weil er vorn steht, folgt ein Doppelpunkt."
+    },
+    {
+     "id": "rs-rede-03",
+     "typ": "single",
+     "stufe": 1,
+     "kompetenz": "zeichen",
+     "frage": "Welcher Satz ist richtig geschrieben?",
+     "optionen": [
+      {
+       "text": "Lena sagt: „Ich komme gleich.“",
+       "richtig": true
+      },
+      {
+       "text": "Lena sagt, „Ich komme gleich.“",
+       "richtig": false
+      },
+      {
+       "text": "Lena sagt: „Ich komme gleich“.",
+       "richtig": false
+      },
+      {
+       "text": "Lena sagt: “Ich komme gleich.„",
+       "richtig": false
+      }
+     ],
+     "tipp": "Achte auf drei Dinge: das Zeichen nach dem Begleitsatz, die Form der Anführungszeichen und die Stelle des Punktes.",
+     "erklaerung": "Steht der Begleitsatz vorn, folgt ein Doppelpunkt. Die Anführungszeichen stehen am Anfang unten („) und am Ende oben (“). Der Punkt steht innerhalb der Anführungszeichen."
+    },
+    {
+     "id": "rs-rede-04",
+     "typ": "luecke",
+     "stufe": 2,
+     "kompetenz": "zeichen",
+     "frage": "Wähle die richtigen Satzzeichen aus.",
+     "teile": [
+      {
+       "t": "„Heute fahren wir ins Freibad"
+      },
+      {
+       "wahl": [
+        "“,",
+        ".“,",
+        "“."
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " sagt Papa. Mia fragt"
+      },
+      {
+       "wahl": [
+        ":",
+        ",",
+        "."
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " „Darf Aylin auch mitkommen"
+      },
+      {
+       "wahl": [
+        "?“",
+        "“?",
+        "?“."
+       ],
+       "loesung": 0
+      }
+     ],
+     "tipp": "Wo steht der Begleitsatz – vor oder nach der wörtlichen Rede? Denk daran, was mit dem Punkt passiert und dass Fragezeichen stehen bleiben.",
+     "erklaerung": "Begleitsatz hinten: erst das Anführungszeichen, dann ein Komma, kein Punkt. Begleitsatz vorn: Doppelpunkt. Das Fragezeichen steht vor dem schließenden Anführungszeichen, danach kommt kein Punkt mehr."
+    },
+    {
+     "id": "rs-rede-05",
+     "typ": "multi",
+     "stufe": 2,
+     "kompetenz": "zeichen",
+     "frage": "Welche Sätze sind richtig geschrieben?",
+     "optionen": [
+      {
+       "text": "„Ich habe Durst“, sagt Ben.",
+       "richtig": true
+      },
+      {
+       "text": "„Hast du Durst?“, fragt Oma.",
+       "richtig": true
+      },
+      {
+       "text": "„Trink etwas!“, ruft Papa.",
+       "richtig": true
+      },
+      {
+       "text": "„Ich habe Durst.“, sagt Ben.",
+       "richtig": false
+      },
+      {
+       "text": "„Hast du Durst“? fragt Oma.",
+       "richtig": false
+      },
+      {
+       "text": "„Ich habe Durst“ sagt Ben.",
+       "richtig": false
+      }
+     ],
+     "tipp": "In allen Sätzen steht der Begleitsatz hinten. Prüfe Schritt für Schritt: das Zeichen in der Rede, das schließende Anführungszeichen und das Komma.",
+     "erklaerung": "Steht der Begleitsatz hinten, folgt nach dem Anführungszeichen immer ein Komma. Ein Punkt in der Rede fällt weg, Frage- und Ausrufezeichen bleiben in den Anführungszeichen."
+    },
+    {
+     "id": "rs-rede-06",
+     "typ": "eingabe",
+     "stufe": 2,
+     "kompetenz": "zeichen",
+     "frage": "Hier fehlt ein Satzzeichen. Schreibe seinen Namen auf.",
+     "vorgabe": "Paul flüstert ___ „Das Baby schläft.“",
+     "loesungen": [
+      "Doppelpunkt",
+      "der Doppelpunkt",
+      "ein Doppelpunkt",
+      ":"
+     ],
+     "tipp": "Der Begleitsatz steht vor der wörtlichen Rede. Welches Zeichen kündigt an, dass gleich jemand spricht?",
+     "erklaerung": "Steht der Begleitsatz vorn, folgt ein <b>Doppelpunkt</b>: Paul flüstert: „Das Baby schläft.“"
+    },
+    {
+     "id": "rs-rede-07",
+     "typ": "luecke",
+     "stufe": 3,
+     "kompetenz": "zeichen",
+     "frage": "Wähle die richtigen Satzzeichen aus.",
+     "teile": [
+      {
+       "t": "„Wann beginnt der Film"
+      },
+      {
+       "wahl": [
+        "?“,",
+        "?“",
+        "“?,"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " fragt Felix. „Um halb vier"
+      },
+      {
+       "wahl": [
+        "“,",
+        ".“,",
+        "“."
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " antwortet Amira. „Beeil dich"
+      },
+      {
+       "wahl": [
+        "!“,",
+        "!“",
+        "“!,"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " ruft sie."
+      }
+     ],
+     "tipp": "In allen drei Sätzen steht der Begleitsatz hinten. Überlege bei jeder Lücke: Bleibt das Zeichen der Rede stehen oder fällt es weg? Und was folgt nach dem Anführungszeichen?",
+     "erklaerung": "Frage- und Ausrufezeichen bleiben in den Anführungszeichen, der Punkt fällt weg. Danach folgt immer ein Komma: <b>Film?“, fragt</b> – <b>vier“, antwortet</b> – <b>dich!“, ruft</b>."
+    },
+    {
+     "id": "rs-rede-08",
+     "typ": "markieren",
+     "stufe": 3,
+     "kompetenz": "zeichen",
+     "frage": "Leyla und Ben haben ihr Gespräch aufgeschrieben. Zwei Satzzeichen sind falsch. Tippe sie an.",
+     "teile": [
+      {
+       "t": "„"
+      },
+      {
+       "t": "Ich habe meinen Schlüssel verloren",
+       "fix": true
+      },
+      {
+       "t": ".",
+       "ziel": true
+      },
+      {
+       "t": "“"
+      },
+      {
+       "t": ","
+      },
+      {
+       "t": "sagt Leyla",
+       "fix": true
+      },
+      {
+       "t": "."
+      },
+      {
+       "t": "Ben fragt",
+       "fix": true
+      },
+      {
+       "t": ",",
+       "ziel": true
+      },
+      {
+       "t": "„"
+      },
+      {
+       "t": "Wo hast du ihn zuletzt gesehen",
+       "fix": true
+      },
+      {
+       "t": "?"
+      },
+      {
+       "t": "“"
+      }
+     ],
+     "tipp": "Prüfe die beiden Sätze einzeln: Steht der Begleitsatz vorn oder hinten? Welche Zeichen gehören dann an welche Stelle?",
+     "erklaerung": "Im ersten Satz steht der Begleitsatz hinten, deshalb fällt der Punkt in der Rede weg. Im zweiten Satz steht er vorn, deshalb gehört nach „Ben fragt“ ein Doppelpunkt statt eines Kommas."
+    }
+   ]
+  }
+ ],
+ "diktate": [
+  {
+   "id": "dk-merk",
+   "titel": "Merkwörter-Diktat",
+   "woerter": [
+    {
+     "wort": "Vogel",
+     "satz": "Der Vogel baut ein Nest."
+    },
+    {
+     "wort": "vier",
+     "satz": "Unsere Katze hat vier Pfoten."
+    },
+    {
+     "wort": "verlieren",
+     "satz": "Ich will das Spiel nicht verlieren."
+    },
+    {
+     "wort": "Zahl",
+     "satz": "Schreibe die Zahl an die Tafel."
+    },
+    {
+     "wort": "Uhr",
+     "satz": "Meine Uhr tickt ganz leise."
+    },
+    {
+     "wort": "Boot",
+     "satz": "Wir fahren mit dem Boot über den See."
+    },
+    {
+     "wort": "Meer",
+     "satz": "Im Urlaub baden wir im Meer."
+    },
+    {
+     "wort": "Zoo",
+     "satz": "Am Sonntag gehen wir in den Zoo."
+    },
+    {
+     "wort": "Biene",
+     "satz": "Die Biene fliegt von Blüte zu Blüte."
+    },
+    {
+     "wort": "Tiger",
+     "satz": "Der Tiger hat schwarze Streifen."
+    }
+   ]
+  },
+  {
+   "id": "dk-doppel",
+   "titel": "Diktat: Doppelte Mitlaute, ck und tz",
+   "woerter": [
+    {
+     "wort": "Sonne",
+     "satz": "Die Sonne scheint hell."
+    },
+    {
+     "wort": "Ball",
+     "satz": "Der Ball fliegt ins Tor."
+    },
+    {
+     "wort": "kommen",
+     "satz": "Morgen kommen meine Großeltern."
+    },
+    {
+     "wort": "schnell",
+     "satz": "Mein Hund rennt sehr schnell."
+    },
+    {
+     "wort": "Brücke",
+     "satz": "Wir gehen über die Brücke."
+    },
+    {
+     "wort": "Zucker",
+     "satz": "Opa nimmt Zucker in den Tee."
+    },
+    {
+     "wort": "Glück",
+     "satz": "Ich wünsche dir viel Glück."
+    },
+    {
+     "wort": "Katze",
+     "satz": "Die Katze schläft auf dem Sofa."
+    },
+    {
+     "wort": "Platz",
+     "satz": "Ist dieser Platz noch frei?"
+    },
+    {
+     "wort": "sitzen",
+     "satz": "Wir sitzen alle am Tisch."
+    }
+   ]
+  },
+  {
+   "id": "dk-s",
+   "titel": "Diktat: s, ss oder ß",
+   "woerter": [
+    {
+     "wort": "Straße",
+     "satz": "Wir gehen am Zebrastreifen über die Straße."
+    },
+    {
+     "wort": "Fuß",
+     "satz": "Ich gehe zu Fuß zur Schule."
+    },
+    {
+     "wort": "groß",
+     "satz": "Der Elefant ist sehr groß."
+    },
+    {
+     "wort": "draußen",
+     "satz": "Heute spielen wir draußen."
+    },
+    {
+     "wort": "heißen",
+     "satz": "Wie heißen deine Freunde?"
+    },
+    {
+     "wort": "Wasser",
+     "satz": "Bitte gib mir ein Glas Wasser."
+    },
+    {
+     "wort": "Fluss",
+     "satz": "Im Fluss schwimmen Fische."
+    },
+    {
+     "wort": "essen",
+     "satz": "Mittags essen wir Nudeln."
+    },
+    {
+     "wort": "Hose",
+     "satz": "Meine Hose hat ein Loch."
+    },
+    {
+     "wort": "Gras",
+     "satz": "Die Kühe fressen Gras."
+    }
+   ]
+  },
+  {
+   "id": "dk-mix",
+   "titel": "Profi-Diktat: alles gemischt",
+   "woerter": [
+    {
+     "wort": "vielleicht",
+     "satz": "Morgen regnet es vielleicht."
+    },
+    {
+     "wort": "Fahrrad",
+     "satz": "Ich fahre mit dem Fahrrad zur Schule."
+    },
+    {
+     "wort": "Spiegel",
+     "satz": "Im Spiegel sehe ich mich."
+    },
+    {
+     "wort": "Schnee",
+     "satz": "Im Winter fällt viel Schnee."
+    },
+    {
+     "wort": "Wolke",
+     "satz": "Am Himmel zieht eine dunkle Wolke vorbei."
+    },
+    {
+     "wort": "plötzlich",
+     "satz": "Da klingelt plötzlich das Telefon."
+    },
+    {
+     "wort": "Kerze",
+     "satz": "Auf dem Kuchen brennt eine Kerze."
+    },
+    {
+     "wort": "Schlüssel",
+     "satz": "Ich habe meinen Schlüssel vergessen."
+    },
+    {
+     "wort": "fleißig",
+     "satz": "Die Bienen arbeiten fleißig."
+    },
+    {
+     "wort": "Familie",
+     "satz": "Meine Familie fährt in den Urlaub."
+    }
+   ]
+  }
+ ]
+}

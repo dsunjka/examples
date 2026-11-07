@@ -1,0 +1,1775 @@
+{
+ "modul": "rechtschreibung",
+ "themen": [
+  {
+   "id": "rs-silben",
+   "titel": "Silben und Trennung",
+   "kurz": "Silben schwingen und am Zeilenende richtig trennen",
+   "kompetenz": "mitsprechen",
+   "wissen": {
+    "merksatz": "Sprich ein Wort langsam und schwinge bei jeder Silbe mit. Am Zeilenende trennst du das Wort nach diesen Silben: Fens-ter, Ho-se, Zu-cker.",
+    "punkte": [
+     "Jede Silbe hat einen Vokal (a, e, i, o, u, ä, ö, ü) oder einen Zwielaut (au, ei, eu, äu).",
+     "Steht nur ein Mitlaut zwischen zwei Vokalen, kommt er in die neue Zeile: Ho-se, Na-se, le-sen.",
+     "Stehen mehrere Mitlaute dazwischen, kommt nur der letzte in die neue Zeile: Kat-ze, Fens-ter, Ap-fel. Aber: <b>ck</b>, <b>ch</b> und <b>sch</b> bleiben immer zusammen: Zu-cker, Ku-chen, Ta-sche.",
+     "Ein einzelner Vokal am Wortanfang oder am Wortende wird nicht abgetrennt: Igel, Abend und Ofen trennst du gar nicht.",
+     "Endet eine Silbe mit einem Vokal, ist sie <b>offen</b>: <b>Ro</b>-se. Endet sie mit einem Mitlaut, ist sie <b>geschlossen</b>: <b>Kat</b>-ze. In einer offenen Silbe klingt der Vokal meist lang, in einer geschlossenen meist kurz."
+    ],
+    "beispiele": [
+     "Fens-ter",
+     "Kat-ze",
+     "Zu-cker",
+     "Ta-sche",
+     "Ho-se",
+     "Igel (nicht trennen)"
+    ]
+   },
+   "items": [
+    {
+     "id": "rs-silben-01",
+     "typ": "zuordnen",
+     "stufe": 1,
+     "kompetenz": "mitsprechen",
+     "frage": "Schwinge die Silben mit. Wie viele Silben hat jedes Wort? Sortiere.",
+     "gruppen": [
+      "2 Silben",
+      "3 Silben",
+      "4 Silben"
+     ],
+     "elemente": [
+      {
+       "t": "Fenster",
+       "g": 0
+      },
+      {
+       "t": "Zucker",
+       "g": 0
+      },
+      {
+       "t": "Katze",
+       "g": 0
+      },
+      {
+       "t": "Banane",
+       "g": 1
+      },
+      {
+       "t": "Tomate",
+       "g": 1
+      },
+      {
+       "t": "Eidechse",
+       "g": 1
+      },
+      {
+       "t": "Schokolade",
+       "g": 2
+      },
+      {
+       "t": "Marmelade",
+       "g": 2
+      }
+     ],
+     "tipp": "Sprich jedes Wort langsam und klatsche bei jeder Silbe einmal in die Hände. Zähle mit.",
+     "erklaerung": "Fens-ter, Zu-cker und Kat-ze haben 2 Silben. Ba-na-ne, To-ma-te und Ei-dech-se haben 3. Scho-ko-la-de und Mar-me-la-de haben sogar 4 Silben."
+    },
+    {
+     "id": "rs-silben-02",
+     "typ": "luecke",
+     "stufe": 1,
+     "kompetenz": "mitsprechen",
+     "frage": "Wie trennt man diese Wörter am Zeilenende richtig? Wähle aus.",
+     "teile": [
+      {
+       "t": "Am Zeilenende trennt Jonas das Wort „Fenster“ so: "
+      },
+      {
+       "wahl": [
+        "Fen-ster",
+        "Fens-ter",
+        "Fenst-er"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": ". Das Wort „Katze“ trennt er so: "
+      },
+      {
+       "wahl": [
+        "Kat-ze",
+        "Ka-tze",
+        "Katz-e"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": ". Und „Zucker“ trennt er so: "
+      },
+      {
+       "wahl": [
+        "Zuc-ker",
+        "Zuck-er",
+        "Zu-cker"
+       ],
+       "loesung": 2
+      },
+      {
+       "t": "."
+      }
+     ],
+     "tipp": "Schwinge die Silben. Denk daran: Bei mehreren Mitlauten kommt nur der letzte in die neue Zeile – und ck bleibt zusammen.",
+     "erklaerung": "Fens-ter und Kat-ze: Von mehreren Mitlauten kommt nur der letzte in die neue Zeile. Zu-cker: ck wird nie getrennt und kommt ganz in die neue Zeile."
+    },
+    {
+     "id": "rs-silben-03",
+     "typ": "markieren",
+     "stufe": 1,
+     "kompetenz": "mitsprechen",
+     "frage": "Tippe alle Wörter an, die nur eine Silbe haben.",
+     "teile": [
+      {
+       "t": "Hund",
+       "ziel": true
+      },
+      {
+       "t": ",",
+       "fix": true
+      },
+      {
+       "t": "Wiese"
+      },
+      {
+       "t": ",",
+       "fix": true
+      },
+      {
+       "t": "Brot",
+       "ziel": true
+      },
+      {
+       "t": ",",
+       "fix": true
+      },
+      {
+       "t": "Lehrerin"
+      },
+      {
+       "t": ",",
+       "fix": true
+      },
+      {
+       "t": "Baum",
+       "ziel": true
+      },
+      {
+       "t": ",",
+       "fix": true
+      },
+      {
+       "t": "Apfel"
+      },
+      {
+       "t": ",",
+       "fix": true
+      },
+      {
+       "t": "Schrank",
+       "ziel": true
+      },
+      {
+       "t": ",",
+       "fix": true
+      },
+      {
+       "t": "Ameise"
+      },
+      {
+       "t": ",",
+       "fix": true
+      },
+      {
+       "t": "Zwerg",
+       "ziel": true
+      },
+      {
+       "t": ",",
+       "fix": true
+      },
+      {
+       "t": "Tafel"
+      }
+     ],
+     "tipp": "Schwinge jedes Wort. Wenn du nur ein einziges Mal schwingst, hat es nur eine Silbe.",
+     "erklaerung": "Hund, Brot, Baum, Schrank und Zwerg schwingst du nur einmal. Wie-se, Ap-fel und Ta-fel haben zwei Silben, Leh-re-rin und A-mei-se sogar drei."
+    },
+    {
+     "id": "rs-silben-04",
+     "typ": "markieren",
+     "stufe": 2,
+     "kompetenz": "mitsprechen",
+     "frage": "Tippe die Wörter an, die falsch getrennt sind.",
+     "teile": [
+      {
+       "t": "Ho-se"
+      },
+      {
+       "t": ",",
+       "fix": true
+      },
+      {
+       "t": "Tas-che",
+       "ziel": true
+      },
+      {
+       "t": ",",
+       "fix": true
+      },
+      {
+       "t": "Bä-cker"
+      },
+      {
+       "t": ",",
+       "fix": true
+      },
+      {
+       "t": "Mü-tze",
+       "ziel": true
+      },
+      {
+       "t": ",",
+       "fix": true
+      },
+      {
+       "t": "Kis-te"
+      },
+      {
+       "t": ",",
+       "fix": true
+      },
+      {
+       "t": "Ap-fel"
+      },
+      {
+       "t": ",",
+       "fix": true
+      },
+      {
+       "t": "Lö-ffel",
+       "ziel": true
+      },
+      {
+       "t": ",",
+       "fix": true
+      },
+      {
+       "t": "Wol-ke"
+      }
+     ],
+     "tipp": "Prüfe jedes Wort: Steht nur ein Mitlaut zwischen den Vokalen oder stehen mehrere dort? Und welche Buchstaben bleiben immer zusammen?",
+     "erklaerung": "Richtig wäre Ta-sche (sch bleibt zusammen), Müt-ze und Löf-fel (nur der letzte Mitlaut kommt in die neue Zeile). Ap-fel und Kis-te sind richtig getrennt."
+    },
+    {
+     "id": "rs-silben-05",
+     "typ": "zuordnen",
+     "stufe": 2,
+     "kompetenz": "mitsprechen",
+     "frage": "Trenne jedes Wort in Gedanken. Ist die erste Silbe offen oder geschlossen? Sortiere.",
+     "gruppen": [
+      "offen: endet mit Vokal",
+      "geschlossen: endet mit Mitlaut"
+     ],
+     "elemente": [
+      {
+       "t": "Rose",
+       "g": 0
+      },
+      {
+       "t": "Nase",
+       "g": 0
+      },
+      {
+       "t": "Tafel",
+       "g": 0
+      },
+      {
+       "t": "lesen",
+       "g": 0
+      },
+      {
+       "t": "Katze",
+       "g": 1
+      },
+      {
+       "t": "Hunde",
+       "g": 1
+      },
+      {
+       "t": "Winter",
+       "g": 1
+      },
+      {
+       "t": "Fenster",
+       "g": 1
+      }
+     ],
+     "tipp": "Trenne das Wort zuerst, zum Beispiel Bo-den oder Wan-ne. Schau dann auf den letzten Buchstaben der ersten Silbe.",
+     "erklaerung": "Ro-, Na-, Ta- und le- enden mit einem Vokal: Das sind offene Silben, der Vokal klingt lang. Kat-, Hun-, Win- und Fens- enden mit einem Mitlaut: Das sind geschlossene Silben, der Vokal klingt kurz."
+    },
+    {
+     "id": "rs-silben-06",
+     "typ": "eingabe",
+     "stufe": 2,
+     "kompetenz": "mitsprechen",
+     "frage": "Trenne das Wort nach allen Silben. Schreibe es mit Bindestrichen und ohne Leerzeichen.",
+     "vorgabe": "Taschenlampe",
+     "loesungen": [
+      "Ta-schen-lam-pe"
+     ],
+     "tipp": "Schwinge das Wort langsam. Achte auf sch: Diese drei Buchstaben bleiben zusammen.",
+     "erklaerung": "Ta-schen-lam-pe hat vier Silben. sch bleibt zusammen, und zwischen m und p wird getrennt."
+    },
+    {
+     "id": "rs-silben-07",
+     "typ": "multi",
+     "stufe": 3,
+     "kompetenz": "mitsprechen",
+     "frage": "Welche Wörter darfst du am Zeilenende gar nicht trennen?",
+     "optionen": [
+      {
+       "text": "Igel",
+       "richtig": true
+      },
+      {
+       "text": "Abend",
+       "richtig": true
+      },
+      {
+       "text": "Esel",
+       "richtig": true
+      },
+      {
+       "text": "Eule",
+       "richtig": false
+      },
+      {
+       "text": "Ameise",
+       "richtig": false
+      },
+      {
+       "text": "Eimer",
+       "richtig": false
+      }
+     ],
+     "tipp": "Schwinge jedes Wort. Prüfe dann: Bliebe am Zeilenende nur ein einzelner Buchstabe stehen? Das ist nicht erlaubt.",
+     "erklaerung": "Bei I-gel, A-bend und E-sel bliebe nur ein einzelner Vokal stehen, darum trennst du sie nicht. Eu-le und Ei-mer darfst du trennen, denn eu und ei sind zwei Buchstaben. Ameise trennst du so: Amei-se."
+    },
+    {
+     "id": "rs-silben-08",
+     "typ": "matrix",
+     "stufe": 3,
+     "kompetenz": "mitsprechen",
+     "frage": "Stimmt das? Entscheide bei jeder Aussage.",
+     "spalten": [
+      "richtig",
+      "falsch"
+     ],
+     "aussagen": [
+      {
+       "text": "„Wecker“ trennt man so: We-cker.",
+       "richtig": true
+      },
+      {
+       "text": "„Ufer“ darf man so trennen: U-fer.",
+       "richtig": false
+      },
+      {
+       "text": "„Kasten“ trennt man so: Kas-ten.",
+       "richtig": true
+      },
+      {
+       "text": "In „Ho-se“ ist die erste Silbe geschlossen.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Denk an die Regeln für ck, für einzelne Vokale am Wortanfang und für mehrere Mitlaute. Bei der letzten Aussage hilft dir der letzte Buchstabe der ersten Silbe.",
+     "erklaerung": "We-cker stimmt, denn ck bleibt zusammen. Kas-ten stimmt auch: Nur der letzte Mitlaut kommt in die neue Zeile. Ufer darfst du nicht trennen, und „Ho-“ endet mit einem Vokal, ist also offen."
+    }
+   ]
+  },
+  {
+   "id": "rs-verlaengern",
+   "titel": "Verlängern",
+   "kurz": "b oder p? d oder t? g oder k?",
+   "kompetenz": "nachdenken",
+   "wissen": {
+    "merksatz": "Am Wortende hörst du b, d und g oft wie p, t und k. Verlängere das Wort – dann hörst du den richtigen Buchstaben deutlich: Hund → Hun-de.",
+    "punkte": [
+     "Auch vor einem Mitlaut klingen b, d und g oft hart: er lebt, sie fragt. Verlängern hilft auch hier.",
+     "<b>Nomen</b> verlängerst du mit der Mehrzahl: der Zwerg → die Zwerge, der Wald → die Wälder.",
+     "<b>Verben</b> verlängerst du mit der Grundform: er lebt → leben, sie fragt → fragen.",
+     "<b>Adjektive</b> verlängerst du mit der Steigerung oder mit einem Nomen dahinter: wild → wilder, rund → der runde Ball.",
+     "Bei zusammengesetzten Wörtern verlängerst du den Wortteil, bei dem du unsicher bist: Handtuch → Hand → Hände."
+    ],
+    "beispiele": [
+     "Hund → Hunde",
+     "Zwerg → Zwerge",
+     "Wald → Wälder",
+     "er lebt → leben",
+     "wild → wilder",
+     "Handtuch → Hand → Hände"
+    ]
+   },
+   "items": [
+    {
+     "id": "rs-verlaengern-01",
+     "typ": "luecke",
+     "stufe": 1,
+     "kompetenz": "nachdenken",
+     "frage": "d oder t? g oder k? Verlängere die Wörter und wähle richtig.",
+     "teile": [
+      {
+       "t": "Im Wal"
+      },
+      {
+       "wahl": [
+        "d",
+        "t"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " steht ein Zel"
+      },
+      {
+       "wahl": [
+        "d",
+        "t"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": ". Davor sitzt ein Zwer"
+      },
+      {
+       "wahl": [
+        "g",
+        "k"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " auf einer Ban"
+      },
+      {
+       "wahl": [
+        "g",
+        "k"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": "."
+      }
+     ],
+     "tipp": "Bilde von jedem Nomen die Mehrzahl und sprich sie deutlich in Silben.",
+     "erklaerung": "Wald → Wäl-der, Zelt → Zel-te, Zwerg → Zwer-ge, Bank → Bän-ke. In der Mehrzahl hörst du den richtigen Buchstaben."
+    },
+    {
+     "id": "rs-verlaengern-02",
+     "typ": "zuordnen",
+     "stufe": 1,
+     "kompetenz": "nachdenken",
+     "frage": "Wie verlängerst du diese Wörter am besten? Sortiere.",
+     "gruppen": [
+      "Mehrzahl bilden",
+      "Grundform bilden",
+      "steigern"
+     ],
+     "elemente": [
+      {
+       "t": "der Korb",
+       "g": 0
+      },
+      {
+       "t": "das Kleid",
+       "g": 0
+      },
+      {
+       "t": "der Berg",
+       "g": 0
+      },
+      {
+       "t": "sie lebt",
+       "g": 1
+      },
+      {
+       "t": "er fragt",
+       "g": 1
+      },
+      {
+       "t": "es gibt",
+       "g": 1
+      },
+      {
+       "t": "wild",
+       "g": 2
+      },
+      {
+       "t": "lieb",
+       "g": 2
+      }
+     ],
+     "tipp": "Überlege zuerst: Ist das Wort ein Nomen, ein Verb oder ein Adjektiv?",
+     "erklaerung": "Nomen verlängerst du mit der Mehrzahl (Körbe, Kleider, Berge), Verben mit der Grundform (leben, fragen, geben) und Adjektive mit der Steigerung (wilder, lieber)."
+    },
+    {
+     "id": "rs-verlaengern-03",
+     "typ": "eingabe",
+     "stufe": 1,
+     "kompetenz": "nachdenken",
+     "frage": "b oder p? Schreibe das fehlende Wort richtig auf.",
+     "vorgabe": "Der Hund schläft in seinem Kor_.",
+     "loesungen": [
+      "Korb"
+     ],
+     "tipp": "Bilde die Mehrzahl des Wortes und sprich sie deutlich in Silben.",
+     "erklaerung": "Korb → Kör-be. In der Mehrzahl hörst du deutlich ein b."
+    },
+    {
+     "id": "rs-verlaengern-04",
+     "typ": "luecke",
+     "stufe": 2,
+     "kompetenz": "nachdenken",
+     "frage": "Wähle die richtigen Buchstaben. Verlängere dazu Verben, Adjektive und Nomen.",
+     "teile": [
+      {
+       "t": "Elif schrei"
+      },
+      {
+       "wahl": [
+        "b",
+        "p"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": "t Opa eine Karte: „Die Bucht hier ist run"
+      },
+      {
+       "wahl": [
+        "d",
+        "t"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " wie ein Hal"
+      },
+      {
+       "wahl": [
+        "b",
+        "p"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": "mond. Das Wasser ist ganz schön kal"
+      },
+      {
+       "wahl": [
+        "d",
+        "t"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": "!“"
+      }
+     ],
+     "tipp": "Verben verlängerst du mit der Grundform, Adjektive mit der Steigerung. Beim zusammengesetzten Wort verlängerst du nur den ersten Teil.",
+     "erklaerung": "schreibt → schrei-ben, rund → run-der, Halbmond → halb → hal-be, kalt → käl-ter."
+    },
+    {
+     "id": "rs-verlaengern-05",
+     "typ": "markieren",
+     "stufe": 2,
+     "kompetenz": "nachdenken",
+     "frage": "Tippe die falsch geschriebenen Wörter an.",
+     "teile": [
+      {
+       "t": "Am"
+      },
+      {
+       "t": "Wandertag"
+      },
+      {
+       "t": "laufen"
+      },
+      {
+       "t": "wir"
+      },
+      {
+       "t": "durch"
+      },
+      {
+       "t": "den"
+      },
+      {
+       "t": "Walt",
+       "ziel": true
+      },
+      {
+       "t": "bis"
+      },
+      {
+       "t": "zur"
+      },
+      {
+       "t": "alten"
+      },
+      {
+       "t": "Burk",
+       "ziel": true
+      },
+      {
+       "t": ".",
+       "fix": true
+      },
+      {
+       "t": "Dort"
+      },
+      {
+       "t": "gipt",
+       "ziel": true
+      },
+      {
+       "t": "uns"
+      },
+      {
+       "t": "Herr"
+      },
+      {
+       "t": "Huber"
+      },
+      {
+       "t": "ein"
+      },
+      {
+       "t": "Stück"
+      },
+      {
+       "t": "Brot"
+      },
+      {
+       "t": "und"
+      },
+      {
+       "t": "einen"
+      },
+      {
+       "t": "gelben"
+      },
+      {
+       "t": "Apfel"
+      },
+      {
+       "t": ".",
+       "fix": true
+      }
+     ],
+     "tipp": "Verlängere jedes Wort, das auf b, d, g, p, t oder k endet. Auch Verben kannst du verlängern.",
+     "erklaerung": "Richtig ist Wald (Wäl-der), Burg (Bur-gen) und gibt (ge-ben). Wandertag (Ta-ge) und Brot (Bro-te) sind richtig geschrieben."
+    },
+    {
+     "id": "rs-verlaengern-06",
+     "typ": "zuordnen",
+     "stufe": 2,
+     "kompetenz": "nachdenken",
+     "frage": "Welcher Buchstabe fehlt? Verlängere jedes Wort und sortiere.",
+     "gruppen": [
+      "d",
+      "t",
+      "g",
+      "k"
+     ],
+     "elemente": [
+      {
+       "t": "der Mon_",
+       "g": 0
+      },
+      {
+       "t": "gesun_",
+       "g": 0
+      },
+      {
+       "t": "das Bro_",
+       "g": 1
+      },
+      {
+       "t": "lau_",
+       "g": 1
+      },
+      {
+       "t": "der Zu_",
+       "g": 2
+      },
+      {
+       "t": "der We_",
+       "g": 2
+      },
+      {
+       "t": "der Schran_",
+       "g": 3
+      },
+      {
+       "t": "kran_",
+       "g": 3
+      }
+     ],
+     "tipp": "Bilde die Mehrzahl oder setze ein -e oder -er an. Dann hörst du den Buchstaben am Anfang der zweiten Silbe.",
+     "erklaerung": "Mon-de, ge-sun-de → d. Bro-te, lau-ter → t. Zü-ge, We-ge → g. Schrän-ke, kran-ke → k."
+    },
+    {
+     "id": "rs-verlaengern-07",
+     "typ": "markieren",
+     "stufe": 3,
+     "kompetenz": "nachdenken",
+     "frage": "Tippe die falsch geschriebenen Wörter an. Achtung: Auch zusammengesetzte Wörter sind dabei.",
+     "teile": [
+      {
+       "t": "Am"
+      },
+      {
+       "t": "Samstag"
+      },
+      {
+       "t": "fährt"
+      },
+      {
+       "t": "Ben"
+      },
+      {
+       "t": "mit"
+      },
+      {
+       "t": "dem"
+      },
+      {
+       "t": "Fahrrad"
+      },
+      {
+       "t": "zum"
+      },
+      {
+       "t": "Bergsee"
+      },
+      {
+       "t": ".",
+       "fix": true
+      },
+      {
+       "t": "Im"
+      },
+      {
+       "t": "Rucksack"
+      },
+      {
+       "t": "hat"
+      },
+      {
+       "t": "er"
+      },
+      {
+       "t": "ein"
+      },
+      {
+       "t": "Hanttuch",
+       "ziel": true
+      },
+      {
+       "t": ",",
+       "fix": true
+      },
+      {
+       "t": "einen"
+      },
+      {
+       "t": "Korbball"
+      },
+      {
+       "t": "und"
+      },
+      {
+       "t": "ein"
+      },
+      {
+       "t": "Brod",
+       "ziel": true
+      },
+      {
+       "t": "mit"
+      },
+      {
+       "t": "Käse"
+      },
+      {
+       "t": ".",
+       "fix": true
+      },
+      {
+       "t": "Am"
+      },
+      {
+       "t": "Ufer"
+      },
+      {
+       "t": "baut"
+      },
+      {
+       "t": "er"
+      },
+      {
+       "t": "eine"
+      },
+      {
+       "t": "Sandburk",
+       "ziel": true
+      },
+      {
+       "t": ".",
+       "fix": true
+      }
+     ],
+     "tipp": "Zerlege zusammengesetzte Wörter in ihre Teile. Verlängere dann jeden Teil, der auf b, d, g, p, t oder k endet.",
+     "erklaerung": "Richtig ist Handtuch (Hän-de), Brot (Bro-te) und Sandburg (Bur-gen). Samstag, Fahrrad, Bergsee und Korbball sind richtig geschrieben."
+    },
+    {
+     "id": "rs-verlaengern-08",
+     "typ": "luecke",
+     "stufe": 3,
+     "kompetenz": "nachdenken",
+     "frage": "Verlängere jedes Verb mit der Grundform. Wähle dann den richtigen Buchstaben.",
+     "teile": [
+      {
+       "t": "Papa tan"
+      },
+      {
+       "wahl": [
+        "g",
+        "k"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": "t das Auto voll. Hinter uns hu"
+      },
+      {
+       "wahl": [
+        "b",
+        "p"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": "t ein Bus. Ein Luftballon schwe"
+      },
+      {
+       "wahl": [
+        "b",
+        "p"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": "t über die Straße. Auf dem Gehweg lie"
+      },
+      {
+       "wahl": [
+        "g",
+        "k"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": "t ein Handschuh."
+      }
+     ],
+     "tipp": "Sprich die Grundform jedes Verbs langsam in Silben. Achte auf den Laut am Anfang der zweiten Silbe.",
+     "erklaerung": "tankt → tan-ken, hupt → hu-pen, schwebt → schwe-ben, liegt → lie-gen. Die Grundform zeigt dir, ob du einen weichen oder einen harten Buchstaben schreibst."
+    }
+   ]
+  },
+  {
+   "id": "rs-ableiten",
+   "titel": "Ableiten: ä und äu",
+   "kurz": "e oder ä? eu oder äu?",
+   "kompetenz": "nachdenken",
+   "wissen": {
+    "merksatz": "Du hörst e oder ä, eu oder äu? Suche ein verwandtes Wort mit a oder au. Findest du eins, schreibst du ä oder äu: Land → Länder, Baum → Bäume.",
+    "punkte": [
+     "Bei <b>Nomen</b> hilft oft die Einzahl: die Hände → die Hand, die Häuser → das Haus.",
+     "Bei <b>Verben</b> hilft die Grundform: er fährt → fahren, sie läuft → laufen.",
+     "Bei <b>Adjektiven</b> hilft die Grundstufe: älter → alt, wärmer → warm.",
+     "Findest du kein verwandtes Wort mit a oder au, schreibst du meistens e oder eu: das Bett, das Feld, heute, die Freundin.",
+     "Manche Wörter schreibt man mit ä, obwohl es kein verwandtes Wort mit a gibt. Diese <b>Merkwörter</b> musst du dir einprägen: der Käfer, der Bär, der Käse, der März."
+    ],
+    "beispiele": [
+     "Baum → Bäume",
+     "Land → Länder",
+     "Haus → Häuser",
+     "alt → älter",
+     "fahren → er fährt",
+     "Merkwörter: Käfer, Bär, Käse"
+    ]
+   },
+   "items": [
+    {
+     "id": "rs-ableiten-01",
+     "typ": "luecke",
+     "stufe": 1,
+     "kompetenz": "nachdenken",
+     "frage": "eu oder äu? e oder ä? Suche verwandte Wörter und wähle richtig.",
+     "teile": [
+      {
+       "t": "H"
+      },
+      {
+       "wahl": [
+        "eu",
+        "äu"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": "te spielen Aylin und Emir vor den alten H"
+      },
+      {
+       "wahl": [
+        "eu",
+        "äu"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": "sern. Unter den B"
+      },
+      {
+       "wahl": [
+        "eu",
+        "äu"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": "men stehen zwei B"
+      },
+      {
+       "wahl": [
+        "e",
+        "ä"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": "nke."
+      }
+     ],
+     "tipp": "Suche zu jedem Wort ein verwandtes Wort mit a oder au. Gibt es keins, nimmst du e oder eu.",
+     "erklaerung": "Häuser kommt von Haus, Bäume von Baum und Bänke von Bank. Zu „heute“ gibt es kein verwandtes Wort mit au, darum schreibst du eu."
+    },
+    {
+     "id": "rs-ableiten-02",
+     "typ": "zuordnen",
+     "stufe": 1,
+     "kompetenz": "nachdenken",
+     "frage": "Welcher Buchstabe fehlt: ä oder e? Suche verwandte Wörter und sortiere.",
+     "gruppen": [
+      "ä",
+      "e"
+     ],
+     "elemente": [
+      {
+       "t": "die H_nde",
+       "g": 0
+      },
+      {
+       "t": "die Gl_ser",
+       "g": 0
+      },
+      {
+       "t": "die M_use",
+       "g": 0
+      },
+      {
+       "t": "tr_umen",
+       "g": 0
+      },
+      {
+       "t": "das B_tt",
+       "g": 1
+      },
+      {
+       "t": "das F_ld",
+       "g": 1
+      },
+      {
+       "t": "die L_ute",
+       "g": 1
+      },
+      {
+       "t": "das F_uer",
+       "g": 1
+      }
+     ],
+     "tipp": "Setze probeweise ä ein und frage dich: Gibt es ein verwandtes Wort mit a oder au? Nur dann bleibt das ä.",
+     "erklaerung": "Hände (Hand), Gläser (Glas), Mäuse (Maus) und träumen (Traum) haben verwandte Wörter mit a oder au. Bett, Feld, Leute und Feuer haben keine, darum schreibst du sie mit e."
+    },
+    {
+     "id": "rs-ableiten-03",
+     "typ": "markieren",
+     "stufe": 1,
+     "kompetenz": "nachdenken",
+     "frage": "Tippe die falsch geschriebenen Wörter an.",
+     "teile": [
+      {
+       "t": "Im"
+      },
+      {
+       "t": "Herbst"
+      },
+      {
+       "t": "fallen"
+      },
+      {
+       "t": "die"
+      },
+      {
+       "t": "Bletter",
+       "ziel": true
+      },
+      {
+       "t": "von"
+      },
+      {
+       "t": "den"
+      },
+      {
+       "t": "Beumen",
+       "ziel": true
+      },
+      {
+       "t": ".",
+       "fix": true
+      },
+      {
+       "t": "Die"
+      },
+      {
+       "t": "Kinder"
+      },
+      {
+       "t": "sammeln"
+      },
+      {
+       "t": "das"
+      },
+      {
+       "t": "Laub"
+      },
+      {
+       "t": "mit"
+      },
+      {
+       "t": "den"
+      },
+      {
+       "t": "Henden",
+       "ziel": true
+      },
+      {
+       "t": "und"
+      },
+      {
+       "t": "springen"
+      },
+      {
+       "t": "in"
+      },
+      {
+       "t": "den"
+      },
+      {
+       "t": "großen"
+      },
+      {
+       "t": "Haufen"
+      },
+      {
+       "t": ".",
+       "fix": true
+      }
+     ],
+     "tipp": "Prüfe jedes Wort mit e oder eu: Gibt es ein verwandtes Wort mit a oder au?",
+     "erklaerung": "Richtig ist Blätter (Blatt), Bäumen (Baum) und Händen (Hand). „Herbst“ schreibt man mit e, denn es gibt kein verwandtes Wort mit a."
+    },
+    {
+     "id": "rs-ableiten-04",
+     "typ": "eingabe",
+     "stufe": 2,
+     "kompetenz": "nachdenken",
+     "frage": "ä oder e? Schreibe das fehlende Wort vollständig auf.",
+     "vorgabe": "Im Juli ist es meistens w_rmer als im April.",
+     "loesungen": [
+      "wärmer"
+     ],
+     "tipp": "Bilde die Grundstufe des Adjektivs: Wie heißt das Wort ohne -er?",
+     "erklaerung": "„wärmer“ kommt von „warm“. Weil das verwandte Wort ein a hat, schreibst du ä."
+    },
+    {
+     "id": "rs-ableiten-05",
+     "typ": "luecke",
+     "stufe": 2,
+     "kompetenz": "nachdenken",
+     "frage": "Wähle die richtige Schreibung. Suche dazu verwandte Wörter mit a oder au.",
+     "teile": [
+      {
+       "t": "Jeden Morgen f"
+      },
+      {
+       "wahl": [
+        "e",
+        "ä"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": "hrt Luca mit dem Bus zur Schule. Seine Schwester l"
+      },
+      {
+       "wahl": [
+        "eu",
+        "äu"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": "ft lieber mit ihren Fr"
+      },
+      {
+       "wahl": [
+        "eu",
+        "äu"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": "ndinnen. Im Bus tr"
+      },
+      {
+       "wahl": [
+        "eu",
+        "äu"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": "mt Luca von den Ferien."
+      }
+     ],
+     "tipp": "Bei Verben hilft die Grundform. Bei Nomen überlegst du, ob es ein verwandtes Wort mit au gibt.",
+     "erklaerung": "„fährt“ kommt von „fahren“, „läuft“ von „laufen“ und „träumt“ von „Traum“. Zu „Freundin“ gibt es kein verwandtes Wort mit au, also schreibst du eu."
+    },
+    {
+     "id": "rs-ableiten-06",
+     "typ": "zuordnen",
+     "stufe": 2,
+     "kompetenz": "nachdenken",
+     "frage": "Mit welchem Wort ist jedes Wort verwandt? Ordne zu.",
+     "gruppen": [
+      "Raum",
+      "Kraft",
+      "fahren",
+      "Hand"
+     ],
+     "elemente": [
+      {
+       "t": "aufräumen",
+       "g": 0
+      },
+      {
+       "t": "geräumig",
+       "g": 0
+      },
+      {
+       "t": "kräftig",
+       "g": 1
+      },
+      {
+       "t": "die Kräfte",
+       "g": 1
+      },
+      {
+       "t": "die Fähre",
+       "g": 2
+      },
+      {
+       "t": "er fährt",
+       "g": 2
+      },
+      {
+       "t": "die Hände",
+       "g": 3
+      },
+      {
+       "t": "das Händchen",
+       "g": 3
+      }
+     ],
+     "tipp": "Ersetze in jedem Wort ä durch a oder äu durch au. Welches Wort aus den Kisten steckt dann darin?",
+     "erklaerung": "aufräumen und geräumig gehören zu Raum, kräftig und Kräfte zu Kraft, Fähre und fährt zu fahren, Hände und Händchen zu Hand. Darum schreibst du sie mit ä oder äu."
+    },
+    {
+     "id": "rs-ableiten-07",
+     "typ": "multi",
+     "stufe": 3,
+     "kompetenz": "merken",
+     "frage": "Welche Wörter sind Merkwörter? Bei ihnen gibt es kein verwandtes Wort mit a.",
+     "optionen": [
+      {
+       "text": "der Käfer",
+       "richtig": true
+      },
+      {
+       "text": "der Käse",
+       "richtig": true
+      },
+      {
+       "text": "der März",
+       "richtig": true
+      },
+      {
+       "text": "der Gärtner",
+       "richtig": false
+      },
+      {
+       "text": "die Kälte",
+       "richtig": false
+      },
+      {
+       "text": "die Schränke",
+       "richtig": false
+      }
+     ],
+     "tipp": "Überlege bei jedem Wort: Gibt es ein verwandtes Wort mit a, zum Beispiel die Einzahl, die Grundstufe oder ein Wort aus derselben Wortfamilie?",
+     "erklaerung": "„Gärtner“ kommt von „Garten“, „Kälte“ von „kalt“ und „Schränke“ von „Schrank“. Zu Käfer, Käse und März gibt es kein verwandtes Wort mit a. Diese Merkwörter musst du dir einprägen."
+    },
+    {
+     "id": "rs-ableiten-08",
+     "typ": "markieren",
+     "stufe": 3,
+     "kompetenz": "nachdenken",
+     "frage": "Tippe die falsch geschriebenen Wörter an. Achtung: Auch Merkwörter sind dabei.",
+     "teile": [
+      {
+       "t": "Im"
+      },
+      {
+       "t": "März"
+      },
+      {
+       "t": "entdeckt"
+      },
+      {
+       "t": "Hannah"
+      },
+      {
+       "t": "im"
+      },
+      {
+       "t": "Garten"
+      },
+      {
+       "t": "einen"
+      },
+      {
+       "t": "kleinen"
+      },
+      {
+       "t": "Kefer",
+       "ziel": true
+      },
+      {
+       "t": ".",
+       "fix": true
+      },
+      {
+       "t": "Er"
+      },
+      {
+       "t": "krabbelt"
+      },
+      {
+       "t": "über"
+      },
+      {
+       "t": "die"
+      },
+      {
+       "t": "Handschuhe"
+      },
+      {
+       "t": "des"
+      },
+      {
+       "t": "Gertners",
+       "ziel": true
+      },
+      {
+       "t": ".",
+       "fix": true
+      },
+      {
+       "t": "Hannah"
+      },
+      {
+       "t": "lechelt",
+       "ziel": true
+      },
+      {
+       "t": "und"
+      },
+      {
+       "t": "holt"
+      },
+      {
+       "t": "ihre"
+      },
+      {
+       "t": "Lupe"
+      },
+      {
+       "t": ".",
+       "fix": true
+      }
+     ],
+     "tipp": "Prüfe jedes Wort mit e oder ä: Gibt es ein verwandtes Wort mit a? Denk auch an die Merkwörter.",
+     "erklaerung": "Richtig ist Käfer (ein Merkwort), Gärtners (von Garten) und lächelt (von lachen). „März“ ist ein Merkwort mit ä und richtig geschrieben."
+    }
+   ]
+  },
+  {
+   "id": "rs-gross",
+   "titel": "Großschreibung",
+   "kurz": "Nomen, Satzanfang und höfliche Anrede",
+   "kompetenz": "nachdenken",
+   "wissen": {
+    "merksatz": "Groß schreibst du Nomen, das erste Wort eines Satzes und die höfliche Anrede „Sie“. Ob ein Wort ein Nomen ist, prüfst du mit der Artikelprobe: Passt „der“, „die“ oder „das“ davor?",
+    "punkte": [
+     "Artikelprobe: der Hund, die Freude, das Glück. Auch Gefühle und Dinge, die man nicht anfassen kann, sind Nomen.",
+     "Wörter mit den Endungen <b>-ung</b>, <b>-heit</b>, <b>-keit</b>, <b>-nis</b> und <b>-schaft</b> sind immer Nomen: die Zeitung, die Gesundheit, die Freundlichkeit, das Zeugnis, die Freundschaft.",
+     "Das erste Wort eines Satzes schreibst du immer groß.",
+     "Sprichst du Erwachsene höflich an, schreibst du „Sie“, „Ihnen“ und „Ihr“ groß: Können Sie mir helfen? Meinst du mit „sie“ eine andere Person, schreibst du klein.",
+     "Auch Verben können zu Nomen werden. Steht „beim“, „zum“ oder „das“ davor, schreibst du sie groß: beim Lesen, zum Malen, das Schwimmen."
+    ],
+    "beispiele": [
+     "der Mut, die Freude",
+     "die Zeitung, die Freiheit",
+     "die Ehrlichkeit, das Erlebnis",
+     "die Freundschaft",
+     "Können Sie mir helfen?",
+     "beim Lesen, zum Malen"
+    ]
+   },
+   "items": [
+    {
+     "id": "rs-gross-01",
+     "typ": "markieren",
+     "stufe": 1,
+     "kompetenz": "nachdenken",
+     "frage": "Hier ist alles kleingeschrieben. Tippe die Wörter an, die man großschreiben muss.",
+     "teile": [
+      {
+       "t": "am",
+       "ziel": true
+      },
+      {
+       "t": "samstag",
+       "ziel": true
+      },
+      {
+       "t": "backt"
+      },
+      {
+       "t": "emir",
+       "ziel": true
+      },
+      {
+       "t": "mit"
+      },
+      {
+       "t": "seiner"
+      },
+      {
+       "t": "oma",
+       "ziel": true
+      },
+      {
+       "t": "einen"
+      },
+      {
+       "t": "kuchen",
+       "ziel": true
+      },
+      {
+       "t": ".",
+       "fix": true
+      }
+     ],
+     "tipp": "Denk an den Satzanfang und an Namen. Mache bei den anderen Wörtern die Artikelprobe.",
+     "erklaerung": "„Am“ steht am Satzanfang. Samstag, Oma und Kuchen sind Nomen (der Samstag, die Oma, der Kuchen), und Emir ist ein Name."
+    },
+    {
+     "id": "rs-gross-02",
+     "typ": "luecke",
+     "stufe": 1,
+     "kompetenz": "nachdenken",
+     "frage": "Groß oder klein? Wähle die richtige Schreibung.",
+     "teile": [
+      {
+       "t": "Mia fährt mit dem "
+      },
+      {
+       "wahl": [
+        "Fahrrad",
+        "fahrrad"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " zur "
+      },
+      {
+       "wahl": [
+        "schule",
+        "Schule"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": ". Dort "
+      },
+      {
+       "wahl": [
+        "Spielt",
+        "spielt"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": " sie mit ihren "
+      },
+      {
+       "wahl": [
+        "Freunden",
+        "freunden"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": "."
+      }
+     ],
+     "tipp": "Mache die Artikelprobe: Kannst du der, die oder das davorsetzen?",
+     "erklaerung": "Fahrrad, Schule und Freunde sind Nomen (das Fahrrad, die Schule, die Freunde). „spielt“ ist ein Verb und wird kleingeschrieben."
+    },
+    {
+     "id": "rs-gross-03",
+     "typ": "zuordnen",
+     "stufe": 1,
+     "kompetenz": "nachdenken",
+     "frage": "Die Wörter stehen in Großbuchstaben. Wie schreibt man sie normal? Sortiere.",
+     "gruppen": [
+      "großschreiben",
+      "kleinschreiben"
+     ],
+     "elemente": [
+      {
+       "t": "WIESE",
+       "g": 0
+      },
+      {
+       "t": "MUT",
+       "g": 0
+      },
+      {
+       "t": "FREUDE",
+       "g": 0
+      },
+      {
+       "t": "MANTEL",
+       "g": 0
+      },
+      {
+       "t": "SCHNELL",
+       "g": 1
+      },
+      {
+       "t": "SPRINGT",
+       "g": 1
+      },
+      {
+       "t": "LEISE",
+       "g": 1
+      },
+      {
+       "t": "OFT",
+       "g": 1
+      }
+     ],
+     "tipp": "Mache die Artikelprobe: Passt der, die oder das davor?",
+     "erklaerung": "die Wiese, der Mut, die Freude, der Mantel: Das sind Nomen. „schnell“ und „leise“ sind Adjektive, „springt“ ist ein Verb, und vor „oft“ passt kein Artikel."
+    },
+    {
+     "id": "rs-gross-04",
+     "typ": "eingabe",
+     "stufe": 2,
+     "kompetenz": "nachdenken",
+     "frage": "Bilde aus dem Adjektiv ein Nomen mit der Endung -keit. Schreibe nur das Nomen auf.",
+     "vorgabe": "freundlich → die ___",
+     "loesungen": [
+      "Freundlichkeit",
+      "die Freundlichkeit"
+     ],
+     "tipp": "Hänge die Endung an das Adjektiv an. Denk daran, was für Wörter mit dieser Endung gilt.",
+     "erklaerung": "Aus „freundlich“ wird „die Freundlichkeit“. Wörter mit -keit sind Nomen und werden großgeschrieben."
+    },
+    {
+     "id": "rs-gross-05",
+     "typ": "zuordnen",
+     "stufe": 2,
+     "kompetenz": "nachdenken",
+     "frage": "Mit welcher Endung wird aus dem Wort ein Nomen? Ordne zu.",
+     "gruppen": [
+      "-ung",
+      "-heit",
+      "-keit",
+      "-nis"
+     ],
+     "elemente": [
+      {
+       "t": "hoffen",
+       "g": 0
+      },
+      {
+       "t": "wohnen",
+       "g": 0
+      },
+      {
+       "t": "gesund",
+       "g": 1
+      },
+      {
+       "t": "frech",
+       "g": 1
+      },
+      {
+       "t": "ehrlich",
+       "g": 2
+      },
+      {
+       "t": "sauber",
+       "g": 2
+      },
+      {
+       "t": "erleben",
+       "g": 3
+      },
+      {
+       "t": "geheim",
+       "g": 3
+      }
+     ],
+     "tipp": "Hänge jede Endung probeweise an und sprich das neue Wort laut. Welches Nomen kennst du?",
+     "erklaerung": "die Hoffnung, die Wohnung, die Gesundheit, die Frechheit, die Ehrlichkeit, die Sauberkeit, das Erlebnis, das Geheimnis."
+    },
+    {
+     "id": "rs-gross-06",
+     "typ": "luecke",
+     "stufe": 2,
+     "kompetenz": "nachdenken",
+     "frage": "Ben schreibt seiner Nachbarin. Groß oder klein? Wähle richtig.",
+     "teile": [
+      {
+       "t": "Liebe Frau Berger, können "
+      },
+      {
+       "wahl": [
+        "Sie",
+        "sie"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " mir bitte "
+      },
+      {
+       "wahl": [
+        "ihr",
+        "Ihr"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": " Buch über Pferde leihen? Meine Mama sagt, "
+      },
+      {
+       "wahl": [
+        "sie",
+        "Sie"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " holt es morgen bei "
+      },
+      {
+       "wahl": [
+        "ihnen",
+        "Ihnen"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": " ab."
+      }
+     ],
+     "tipp": "Frage dich bei jedem Wort: Spricht Ben Frau Berger höflich an? Oder ist eine andere Person gemeint?",
+     "erklaerung": "„Sie“, „Ihr“ und „Ihnen“ sind die höfliche Anrede für Frau Berger, darum schreibt Ben sie groß. Mit „sie“ ist die Mama gemeint, das schreibt man klein."
+    },
+    {
+     "id": "rs-gross-07",
+     "typ": "markieren",
+     "stufe": 3,
+     "kompetenz": "nachdenken",
+     "frage": "Hier ist alles kleingeschrieben. Tippe alle Wörter an, die man großschreiben muss.",
+     "teile": [
+      {
+       "t": "beim",
+       "ziel": true
+      },
+      {
+       "t": "lesen",
+       "ziel": true
+      },
+      {
+       "t": "vergisst"
+      },
+      {
+       "t": "er"
+      },
+      {
+       "t": "oft"
+      },
+      {
+       "t": "die"
+      },
+      {
+       "t": "zeit",
+       "ziel": true
+      },
+      {
+       "t": ",",
+       "fix": true
+      },
+      {
+       "t": "denn"
+      },
+      {
+       "t": "das"
+      },
+      {
+       "t": "spannende"
+      },
+      {
+       "t": "buch",
+       "ziel": true
+      },
+      {
+       "t": "macht"
+      },
+      {
+       "t": "ihm"
+      },
+      {
+       "t": "großen"
+      },
+      {
+       "t": "spaß",
+       "ziel": true
+      },
+      {
+       "t": ".",
+       "fix": true
+      }
+     ],
+     "tipp": "Denk an den Satzanfang und mache die Artikelprobe. Achtung: Auch ein Verb kann zum Nomen werden.",
+     "erklaerung": "„Beim“ steht am Satzanfang. „Lesen“ ist hier ein Nomen, denn in „beim“ steckt der Artikel (bei dem Lesen). Zeit, Buch und Spaß sind Nomen. „spannende“ beschreibt das Buch und bleibt klein."
+    },
+    {
+     "id": "rs-gross-08",
+     "typ": "luecke",
+     "stufe": 3,
+     "kompetenz": "nachdenken",
+     "frage": "Verb oder Nomen? Wähle die richtige Schreibung.",
+     "teile": [
+      {
+       "t": "Am Nachmittag möchte Emir "
+      },
+      {
+       "wahl": [
+        "malen",
+        "Malen"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": ". Zum "
+      },
+      {
+       "wahl": [
+        "malen",
+        "Malen"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": " holt er Pinsel und Farben. Seine Schwester Leyla will lieber "
+      },
+      {
+       "wahl": [
+        "lesen",
+        "Lesen"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": ", denn beim "
+      },
+      {
+       "wahl": [
+        "lesen",
+        "Lesen"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": " kann sie sich gut entspannen."
+      }
+     ],
+     "tipp": "Prüfe, ob im Wort davor ein Artikel versteckt ist: zum = zu dem, beim = bei dem.",
+     "erklaerung": "Nach „möchte“ und „will“ stehen die Verben malen und lesen, sie bleiben klein. In „zum“ und „beim“ steckt der Artikel „dem“. Darum sind „Malen“ und „Lesen“ dort Nomen und werden großgeschrieben."
+    }
+   ]
+  }
+ ]
+}

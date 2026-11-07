@@ -1,0 +1,485 @@
+{
+ "modul": "tempo",
+ "saetze": [
+  {
+   "t": "Kartoffeln wachsen hoch oben in den Kronen der Bäume.",
+   "r": false
+  },
+  {
+   "t": "Im Frühling blühen auf vielen Wiesen bunte Blumen.",
+   "r": true
+  },
+  {
+   "t": "Eulen sind Vögel, die vor allem nachts unterwegs sind.",
+   "r": true
+  },
+  {
+   "t": "Ein Radiergummi macht Bleistiftstriche auf dem Papier dicker und dunkler.",
+   "r": false
+  },
+  {
+   "t": "Unser Herz pumpt das Blut durch den ganzen Körper.",
+   "r": true
+  },
+  {
+   "t": "Ein Specht klopft mit seinem Schnabel Löcher in Baumstämme.",
+   "r": true
+  },
+  {
+   "t": "In der Pause essen viele Kinder ihre Brotzeit.",
+   "r": true
+  },
+  {
+   "t": "Eine reife Zitrone schmeckt genauso süß wie Honig.",
+   "r": false
+  },
+  {
+   "t": "Bienen fliegen von Blüte zu Blüte und sammeln dabei Nektar.",
+   "r": true
+  },
+  {
+   "t": "Ein Eichhörnchen sammelt im Herbst Nüsse für den Winter.",
+   "r": true
+  },
+  {
+   "t": "In jeder Woche kommt der Montag direkt nach dem Dienstag.",
+   "r": false
+  },
+  {
+   "t": "Mit ihrem langen Hals kommt die Giraffe an hohe Blätter heran.",
+   "r": true
+  },
+  {
+   "t": "Ein Elefant ist viel kleiner als eine Maus.",
+   "r": false
+  },
+  {
+   "t": "Ein Hamster ist ungefähr so groß wie ein Bus.",
+   "r": false
+  },
+  {
+   "t": "Mit einem Lineal kann man gerade Linien zeichnen.",
+   "r": true
+  },
+  {
+   "t": "Am hellsten scheint die Sonne mitten in der Nacht.",
+   "r": false
+  },
+  {
+   "t": "Ein Schneemann schmilzt, wenn es draußen sehr warm wird.",
+   "r": true
+  },
+  {
+   "t": "Enten schwimmen gern auf Teichen und Seen herum.",
+   "r": true
+  },
+  {
+   "t": "Eine Brille hilft manchen Menschen, besser zu sehen.",
+   "r": true
+  },
+  {
+   "t": "Zum Schwimmen im Freibad zieht man einen dicken Wintermantel an.",
+   "r": false
+  },
+  {
+   "t": "Bei einem Gewitter kann man Blitze sehen und Donner hören.",
+   "r": true
+  },
+  {
+   "t": "Mit seinen Wurzeln nimmt ein Baum Wasser aus dem Boden auf.",
+   "r": true
+  },
+  {
+   "t": "Unser Mund hilft uns beim Essen, Trinken und Sprechen.",
+   "r": true
+  },
+  {
+   "t": "Sonnenblumen blühen mitten im Winter auf den verschneiten Feldern.",
+   "r": false
+  },
+  {
+   "t": "Regentropfen fallen von der Erde nach oben in die Wolken.",
+   "r": false
+  },
+  {
+   "t": "Ein Fußball hat Ecken und Kanten wie ein Würfel.",
+   "r": false
+  },
+  {
+   "t": "Ein Kaninchen kann mit seinen Hinterbeinen weit springen.",
+   "r": true
+  },
+  {
+   "t": "Wenn Bananen reif sind, wird ihre Schale meistens blau.",
+   "r": false
+  },
+  {
+   "t": "Ein Kissen aus Federn ist härter als ein Stein.",
+   "r": false
+  },
+  {
+   "t": "Ein neugeborenes Baby ist größer als seine Mutter.",
+   "r": false
+  },
+  {
+   "t": "Ein Fisch hat keine Beine, sondern Flossen zum Schwimmen.",
+   "r": true
+  },
+  {
+   "t": "Wir Menschen sehen mit den Ohren und hören mit den Augen.",
+   "r": false
+  },
+  {
+   "t": "Löwen sind Raubtiere und fressen am liebsten frisches Gras.",
+   "r": false
+  },
+  {
+   "t": "Viele Marienkäfer sind rot und haben schwarze Punkte.",
+   "r": true
+  },
+  {
+   "t": "Schwalben fliegen im Herbst nach Norden, weil es dort wärmer ist.",
+   "r": false
+  },
+  {
+   "t": "Eine Ameise kann ein ganzes Haus auf dem Rücken tragen.",
+   "r": false
+  },
+  {
+   "t": "Auf den Herbst folgt im Jahreslauf immer der Winter.",
+   "r": true
+  },
+  {
+   "t": "Im Sommer ist es meistens kälter als im Winter.",
+   "r": false
+  },
+  {
+   "t": "Im Winter tragen viele Menschen warme Mützen und dicke Jacken.",
+   "r": true
+  },
+  {
+   "t": "Ein Wal ist das kleinste Tier im Meer.",
+   "r": false
+  },
+  {
+   "t": "Ein ganzes Jahr dauert zwar länger als ein Monat, aber kürzer als eine einzige Woche.",
+   "r": false
+  },
+  {
+   "t": "Weil Pflanzen Wasser zum Wachsen brauchen, gießt man Blumen an heißen Tagen besonders oft.",
+   "r": true
+  },
+  {
+   "t": "Tannen und Fichten verlieren im Herbst alle ihre Nadeln und sind im Winter ganz kahl.",
+   "r": false
+  },
+  {
+   "t": "Im eisigen Januar ist das Wasser im See am wärmsten und lädt zum Baden ein.",
+   "r": false
+  },
+  {
+   "t": "Ein Nagel aus Eisen schwimmt auf dem Wasser, während ein Stück Holz sofort untergeht.",
+   "r": false
+  },
+  {
+   "t": "Ein Korken schwimmt auf dem Wasser, ein Kieselstein dagegen sinkt sofort auf den Grund.",
+   "r": true
+  },
+  {
+   "t": "Eine Schildkröte ist das schnellste Tier der Welt und überholt mühelos jedes Rennauto.",
+   "r": false
+  },
+  {
+   "t": "Ein Igel hält im Sommer einen langen Winterschlaf, weil es dann so heiß ist.",
+   "r": false
+  },
+  {
+   "t": "Wenn es draußen dunkel wird, schalten viele Menschen in ihren Wohnungen das Licht an.",
+   "r": true
+  },
+  {
+   "t": "In der Bücherei kann man sich Bücher ausleihen und sie später wieder zurückbringen.",
+   "r": true
+  },
+  {
+   "t": "Wenn man im Dunkeln eine Taschenlampe einschaltet, wird es ringsherum noch viel dunkler.",
+   "r": false
+  },
+  {
+   "t": "Für ihr Nest sammeln viele Vögel kleine Zweige, Moos, Gras und manchmal auch Federn.",
+   "r": true
+  },
+  {
+   "t": "Eine Katze, die sich wohlfühlt, bellt so laut wie ein großer Schäferhund im Garten.",
+   "r": false
+  },
+  {
+   "t": "Im Sommer sind die Tage länger als im Winter, deshalb ist es abends lange hell.",
+   "r": true
+  },
+  {
+   "t": "Nach dem Sportunterricht haben viele Kinder Durst und trinken gern einen Schluck Wasser.",
+   "r": true
+  },
+  {
+   "t": "Im Winter ziehen viele Menschen kurze Hosen und Sandalen an, weil es draußen so kalt ist.",
+   "r": false
+  },
+  {
+   "t": "Ein Hund kann mit seiner feinen Nase viel besser riechen als ein Mensch.",
+   "r": true
+  },
+  {
+   "t": "Wer sich auf dem Pausenhof das Knie aufschürft, bekommt oft ein Pflaster auf die Wunde.",
+   "r": true
+  },
+  {
+   "t": "Wenn es im Winter viel geschneit hat, können Kinder mit dem Schlitten einen Hügel hinunterfahren.",
+   "r": true
+  },
+  {
+   "t": "Kinder, die morgens viel zu lange schlafen, kommen deshalb besonders früh in der Schule an.",
+   "r": false
+  },
+  {
+   "t": "Radfahrer tragen nachts am besten schwarze Kleidung, damit die Autofahrer sie gut sehen können.",
+   "r": false
+  },
+  {
+   "t": "Ein Regenwurm hat ein buntes Federkleid und singt morgens laut auf den Dächern der Stadt.",
+   "r": false
+  },
+  {
+   "t": "Weil Fische an Land besonders gut atmen können, wohnen sie in Höhlen im Wald.",
+   "r": false
+  },
+  {
+   "t": "Ein Meter ist länger als ein Zentimeter, aber kürzer als ein Kilometer.",
+   "r": true
+  },
+  {
+   "t": "Auf einem Kalender kann man nachsehen, an welchem Wochentag man in diesem Jahr Geburtstag hat.",
+   "r": true
+  },
+  {
+   "t": "Je öfter man das Lesen übt, desto schlechter und langsamer kann man lesen.",
+   "r": false
+  },
+  {
+   "t": "Fische atmen unter Wasser mit ihren Kiemen, wir Menschen dagegen atmen mit unserer Lunge.",
+   "r": true
+  },
+  {
+   "t": "Wenn heute Freitag ist, dann ist morgen Samstag, und übermorgen ist schon Sonntag.",
+   "r": true
+  },
+  {
+   "t": "Bei Sonnenschein und Regen zugleich kann man manchmal einen bunten Regenbogen am Himmel sehen.",
+   "r": true
+  },
+  {
+   "t": "Wirft man einen Ball hoch in die Luft, fällt er kurz danach wieder auf den Boden.",
+   "r": true
+  },
+  {
+   "t": "Weil es im Kino ganz still sein soll, unterhalten sich alle Zuschauer während des Films laut.",
+   "r": false
+  },
+  {
+   "t": "Nachdem man sich die Hände gründlich mit Seife gewaschen hat, sind sie schmutziger als vorher.",
+   "r": false
+  },
+  {
+   "t": "Ein Eiswürfel, den man in der warmen Hand hält, wird mit der Zeit immer größer.",
+   "r": false
+  },
+  {
+   "t": "Nudeln werden vor dem Essen in der Gefriertruhe gekocht, bis sie schön weich sind.",
+   "r": false
+  },
+  {
+   "t": "Bevor man über die Straße geht, schaut man nach links, nach rechts und noch einmal nach links.",
+   "r": true
+  },
+  {
+   "t": "Ein Fohlen ist ein junges Pferd, das aus einem Ei geschlüpft ist.",
+   "r": false
+  },
+  {
+   "t": "Wenn heute Mittwoch ist, dann ist morgen Donnerstag, und gestern war Freitag.",
+   "r": false
+  },
+  {
+   "t": "Im Herbst färben sich die Blätter vieler Bäume gelb, orange oder rot, bevor sie herunterfallen.",
+   "r": true
+  },
+  {
+   "t": "Ein Pinguin ist ein Vogel, der zwar nicht fliegen, dafür aber sehr gut schwimmen kann.",
+   "r": true
+  },
+  {
+   "t": "Kühe stehen tagsüber oft auf der Weide und fressen dort Gras und Kräuter.",
+   "r": true
+  },
+  {
+   "t": "Weil Igel nachts auf Futtersuche gehen, sieht man sie tagsüber nur selten im Garten.",
+   "r": true
+  },
+  {
+   "t": "Ein Thermometer zeigt an, wie warm oder kalt es ist, und eine Waage zeigt das Gewicht an.",
+   "r": true
+  },
+  {
+   "t": "Ein Fahrradhelm schützt den Kopf nur dann gut, wenn er fest sitzt und richtig eingestellt ist.",
+   "r": true
+  },
+  {
+   "t": "Wenn ein See im Winter zufriert, bildet sich das Eis zuerst ganz unten am Grund.",
+   "r": false
+  },
+  {
+   "t": "Während der Klassenfahrt ins Schullandheim schlafen alle Kinder jede Nacht zu Hause in ihren eigenen Betten.",
+   "r": false
+  },
+  {
+   "t": "Wenn man eine Pflanze wochenlang in einen dunklen Schrank stellt, wächst sie dort besonders kräftig und grün.",
+   "r": false
+  },
+  {
+   "t": "Wer beim Wandern seinen Müll einfach in den Wald wirft, schützt damit die Tiere und die Natur.",
+   "r": false
+  },
+  {
+   "t": "Weil Schnee aus gefrorenem Wasser besteht, wird er zu Wasser, wenn die Sonne ihn lange wärmt.",
+   "r": true
+  },
+  {
+   "t": "Wenn man einen Brief verschicken will, klebt man eine Briefmarke darauf und wirft ihn in den Briefkasten.",
+   "r": true
+  },
+  {
+   "t": "Wenn man im Schwimmbad untertaucht und die Luft anhält, kann man stundenlang unter Wasser bleiben.",
+   "r": false
+  },
+  {
+   "t": "Weil es seit dem frühen Morgen stark regnet, bleiben die Straßen und Gehwege in der ganzen Stadt trocken.",
+   "r": false
+  },
+  {
+   "t": "Wenn man einen Luftballon immer weiter aufbläst, kann er irgendwann mit einem lauten Knall platzen.",
+   "r": true
+  },
+  {
+   "t": "Weil Elefanten sehr schwer sind, können sie sich mühelos auf einen dünnen Ast in der Baumkrone setzen.",
+   "r": false
+  },
+  {
+   "t": "Wenn man im Winter die Fenster lange weit offen lässt, wird es im Zimmer immer wärmer.",
+   "r": false
+  },
+  {
+   "t": "Wenn man einen Apfel in zwei Hälften schneidet und eine davon isst, bleibt noch eine Hälfte übrig.",
+   "r": true
+  },
+  {
+   "t": "Wenn man einen Teelöffel Zucker in heißen Tee rührt, schmeckt der Tee danach saurer als vorher.",
+   "r": false
+  },
+  {
+   "t": "Bienen sind für viele Obstbäume wichtig, weil sie beim Sammeln von Nektar die Blüten bestäuben.",
+   "r": true
+  },
+  {
+   "t": "Wer abends spät ins Bett geht und früh aufstehen muss, ist am nächsten Morgen oft müde.",
+   "r": true
+  },
+  {
+   "t": "Wenn man eine Pizza in vier gleich große Stücke teilt, ist jedes Stück größer als die halbe Pizza.",
+   "r": false
+  },
+  {
+   "t": "Wenn ein Kind am Zebrastreifen über die Straße gehen will, müssen die Autos anhalten und warten.",
+   "r": true
+  },
+  {
+   "t": "Weil Wale Säugetiere sind, bringen sie lebende Junge zur Welt und ernähren sie anfangs mit Milch.",
+   "r": true
+  },
+  {
+   "t": "Wer im Freibad vom Sprungturm springen will, sollte vorher prüfen, ob das Becken darunter frei ist.",
+   "r": true
+  },
+  {
+   "t": "Wer mit dem Fahrrad nach rechts abbiegen will, streckt vorher den rechten Arm zur Seite aus.",
+   "r": true
+  },
+  {
+   "t": "Aus einer Kaulquappe wird nach einiger Zeit ein Frosch, aus einer Raupe dagegen ein Marienkäfer.",
+   "r": false
+  },
+  {
+   "t": "Wer seine Hausaufgaben vergessen hat, bekommt dafür in der Schule immer eine Belohnung.",
+   "r": false
+  },
+  {
+   "t": "Auf einer Uhr mit Zeigern bewegt sich der große Minutenzeiger schneller als der kleine Stundenzeiger.",
+   "r": true
+  },
+  {
+   "t": "Wenn eine Kerze lange brennt, wird sie mit der Zeit immer kürzer, weil das Wachs verbraucht wird.",
+   "r": true
+  },
+  {
+   "t": "Die Kinder dürfen jetzt über die Straße gehen, weil die Fußgängerampel gerade auf Rot geschaltet hat.",
+   "r": false
+  },
+  {
+   "t": "Bei einem Gewitter hört man meistens zuerst den Donner und sieht erst ein paar Sekunden später den Blitz.",
+   "r": false
+  },
+  {
+   "t": "Nachdem sich eine Raupe verpuppt hat, schlüpft nach einiger Zeit ein Schmetterling aus der Puppe.",
+   "r": true
+  },
+  {
+   "t": "Ein Kind, das zehn Jahre alt ist, ist älter als ein Kind, das schon zwölf Jahre alt ist.",
+   "r": false
+  },
+  {
+   "t": "Je weiter man sich von einer lauten Blaskapelle entfernt, desto leiser hört man ihre Musik.",
+   "r": true
+  },
+  {
+   "t": "Weil Fahrradfahren ohne Licht im Dunkeln gefährlich ist, schaltet man abends das Fahrradlicht aus.",
+   "r": false
+  },
+  {
+   "t": "Damit Milch im Sommer länger frisch bleibt, stellt man sie am besten in die warme Sonne.",
+   "r": false
+  },
+  {
+   "t": "Wer beim Wandertag bei großer Hitze lange unterwegs ist, sollte genug zu trinken im Rucksack haben.",
+   "r": true
+  },
+  {
+   "t": "Die Nadel eines Kompasses zeigt nach Norden, deshalb hilft ein Kompass beim Wandern, den Weg zu finden.",
+   "r": true
+  },
+  {
+   "t": "Bevor man mit dem Fahrrad links abbiegt, gibt man mit dem rechten Arm ein Handzeichen.",
+   "r": false
+  },
+  {
+   "t": "Je länger man einen Apfel im warmen Zimmer liegen lässt, desto frischer und knackiger wird er.",
+   "r": false
+  },
+  {
+   "t": "Wer krank ist und hohes Fieber hat, sollte im Bett bleiben, sich ausruhen und viel trinken.",
+   "r": true
+  },
+  {
+   "t": "Das Wasser im Topf fängt erst an zu kochen, wenn man die Herdplatte ganz ausgeschaltet hat.",
+   "r": false
+  }
+ ]
+}

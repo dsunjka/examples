@@ -140,6 +140,41 @@ try {
   }
   console.log('  Typen getestet:', [...typenGesehen].join(', '));
 
+  /* ---------- 2b. Jede Aufgabe aller Gruppen über die Oberfläche lösbar ---------- */
+  schritt('Alle Aufgaben aller Fälle, Texte und Themen richtig lösen');
+  {
+    let geloest = 0, gesamt = 0;
+    for (const modul of ['digital', 'lesen', 'rechtschreibung', 'grammatik', 'schreiben']) {
+      await page.click('[data-nav="start"]');
+      if (!(await page.$(`.labor-karte[data-nav="${modul}"]:not([disabled])`))) continue;
+      await page.click(`.labor-karte[data-nav="${modul}"]`);
+      const anzahl = (await page.$$('[data-act="training-gruppe"]')).length;
+      for (let g = 0; g < anzahl; g++) {
+        await page.click('[data-nav="start"]');
+        await page.click(`.labor-karte[data-nav="${modul}"]`);
+        await (await page.$$('[data-act="training-gruppe"]'))[g].click();
+        await page.waitForSelector('.frage-karte');
+        for (let n = 0; n < 20; n++) {
+          const it = await aktuellesItem(page);
+          if (!it) break;
+          gesamt++;
+          await beantworte(page, it, true);
+          await page.click('[data-act="s-pruefen"]');
+          if (await page.$('.rueckmeldung.r')) geloest++;
+          else { check(false, `${it.id} (${it.typ}) lässt sich nicht richtig lösen`); await page.click('[data-act="s-loesung"]').catch(() => {}); }
+          const weiter = await page.$('[data-act="s-weiter"]');
+          if (!weiter) break;
+          const fertig = (await weiter.textContent()).includes('Fertig');
+          await weiter.click();
+          if (fertig) break;
+        }
+        await page.waitForSelector('.ergebnis-kopf');
+      }
+    }
+    console.log(`  ${geloest} von ${gesamt} Aufgaben über die Oberfläche richtig gelöst`);
+    check(geloest === gesamt && gesamt > 0, 'nicht alle Aufgaben lösbar');
+  }
+
   /* ---------- 3. Falsch-Pfad, Tipp, Lösung ---------- */
   schritt('Training: falsche Antwort, Tipp, zweiter Versuch, Lösung');
   await page.click('[data-nav="start"]');

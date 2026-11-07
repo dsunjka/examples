@@ -1,0 +1,568 @@
+{
+ "modul": "lesen",
+ "texte": [
+  {
+   "id": "l-fledermaus",
+   "titel": "Jäger der Nacht",
+   "textsorte": "Sachtext",
+   "einleitung": "Ein Sachtext darüber, wie Fledermäuse jagen, wo sie wohnen und warum sie unseren Schutz brauchen.",
+   "text": {
+    "titel": "Jäger der Nacht",
+    "untertitel": "Wie Fledermäuse leben und warum sie Hilfe brauchen",
+    "absaetze": [
+     "An Sommerabenden huschen in der Dämmerung oft dunkle Schatten lautlos über Gärten. Das sind keine Vögel, sondern Fledermäuse. Sie sind die einzigen Säugetiere, die wirklich fliegen können. Ihre Flügel sind aus dünner Haut, die zwischen den langen Fingern, den Armen und den Beinen gespannt ist. In Deutschland leben etwa 25 Fledermausarten.",
+     "## Jagen mit den Ohren",
+     "Bei der nächtlichen Jagd verlassen sich Fledermäuse vor allem auf ihre Ohren. Im Flug stoßen sie ständig kurze, sehr hohe Rufe aus. Diese Töne sind so hoch, dass Menschen sie nicht hören können. Man nennt sie Ultraschall. Treffen die Rufe auf einen Ast oder eine Mücke, wird der Schall zurückgeworfen. An diesem Echo erkennt die Fledermaus, wo etwas ist, wie groß es ist und ob es sich bewegt. Das nennt man <b>Echoortung</b>. Blind sind sie übrigens nicht, doch im Dunkeln helfen ihnen die Augen wenig.",
+     "Unsere Fledermäuse fressen vor allem Insekten, etwa Mücken, Nachtfalter und Käfer. Viele schnappen ihre Beute direkt in der Luft. Die Zwergfledermaus wiegt nur etwa fünf Gramm. Trotzdem kann sie in einer Nacht mehrere Hundert Mücken fangen.",
+     "## Vom Dachboden in die Höhle",
+     "Tagsüber schlafen Fledermäuse in einem Versteck, dem Quartier. Dort hängen sie meist kopfüber und halten sich mit den Fußkrallen fest. Im Sommer wohnen sie gern auf warmen Dachböden, in Baumhöhlen oder in engen Spalten hinter Fensterläden. Die Weibchen bilden dann große Gruppen, die man Wochenstuben nennt. Dort bekommt jedes Weibchen meist nur ein Junges im Jahr.",
+     "Im Herbst finden Fledermäuse kaum noch Insekten. Deshalb fressen sie sich ein Fettpolster an und suchen ein frostfreies Winterquartier, etwa eine Höhle, einen alten Stollen oder einen kühlen Keller. Dort halten sie Winterschlaf. Ihr Körper kühlt stark ab, und das Herz schlägt nur noch ganz langsam. So sparen sie Energie. Jedes Aufwachen kostet sie viel von ihrem Fettvorrat. Wird eine Fledermaus zu oft gestört, reicht der Vorrat nicht bis zum Frühling.",
+     "## Fledermäuse brauchen Hilfe",
+     "Viele Fledermausarten sind selten geworden. Alte Bäume mit Höhlen werden gefällt. Bei Renovierungen werden oft die Einfluglöcher zu den Dachböden verschlossen. Außerdem gibt es weniger Insekten als früher. Deshalb stehen alle Fledermäuse in Deutschland unter strengem Schutz. Jeder kann helfen: Wer einen Fledermauskasten aufhängt, schenkt den Tieren ein Quartier. Ein Garten mit vielen Blüten lockt Nachtfalter an – und damit Futter für die Jäger der Nacht."
+    ]
+   },
+   "items": [
+    {
+     "id": "l-fledermaus-1",
+     "typ": "multi",
+     "stufe": 1,
+     "kompetenz": "entnehmen",
+     "frage": "Lies Absatz 2. Was erkennt eine Fledermaus am Echo ihrer Rufe?",
+     "optionen": [
+      {
+       "text": "wo sich etwas befindet",
+       "richtig": true
+      },
+      {
+       "text": "wie groß es ist",
+       "richtig": true
+      },
+      {
+       "text": "ob es sich bewegt",
+       "richtig": true
+      },
+      {
+       "text": "welche Farbe es hat",
+       "richtig": false
+      },
+      {
+       "text": "wie es riecht",
+       "richtig": false
+      },
+      {
+       "text": "wie schwer es ist",
+       "richtig": false
+      }
+     ],
+     "tipp": "Suche in Absatz 2 den Satz, in dem das Wort „Echo“ vorkommt. Prüfe dann jede Antwort einzeln.",
+     "erklaerung": "Im Text steht: An diesem Echo erkennt die Fledermaus, wo etwas ist, wie groß es ist und ob es sich bewegt. Farbe, Geruch und Gewicht werden nicht genannt."
+    },
+    {
+     "id": "l-fledermaus-2",
+     "typ": "zuordnen",
+     "stufe": 2,
+     "kompetenz": "entnehmen",
+     "frage": "Wo wohnen Fledermäuse laut Text im Sommer und wo im Winter? Ordne zu.",
+     "gruppen": [
+      "Sommerquartier",
+      "Winterquartier"
+     ],
+     "elemente": [
+      {
+       "t": "warmer Dachboden",
+       "g": 0
+      },
+      {
+       "t": "Baumhöhle",
+       "g": 0
+      },
+      {
+       "t": "Spalte hinter einem Fensterladen",
+       "g": 0
+      },
+      {
+       "t": "Höhle",
+       "g": 1
+      },
+      {
+       "t": "alter Stollen",
+       "g": 1
+      },
+      {
+       "t": "kühler Keller",
+       "g": 1
+      }
+     ],
+     "tipp": "Absatz 4 erzählt vom Sommer, Absatz 5 vom Winter. Lies die Orte dort Wort für Wort.",
+     "erklaerung": "Im Sommer wohnen Fledermäuse auf warmen Dachböden, in Baumhöhlen und in Spalten hinter Fensterläden. Für den Winterschlaf suchen sie einen frostfreien Ort: eine Höhle, einen alten Stollen oder einen kühlen Keller."
+    },
+    {
+     "id": "l-fledermaus-3",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "schliessen",
+     "frage": "In Absatz 1 huschen die Fledermäuse lautlos über die Gärten. Dabei rufen sie im Flug ständig. Wie passt das zusammen?",
+     "optionen": [
+      {
+       "text": "Ihre Rufe sind zu hoch für menschliche Ohren.",
+       "richtig": true
+      },
+      {
+       "text": "Ihre Rufe sind leiser als das Summen einer Mücke.",
+       "richtig": false
+      },
+      {
+       "text": "Ihre Rufe gehen im Rauschen der Bäume unter.",
+       "richtig": false
+      },
+      {
+       "text": "Die weiche Flughaut dämpft alle ihre Rufe.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lies in Absatz 2 nach, was über die Rufe der Fledermäuse steht. Wer kann sie hören und wer nicht?",
+     "erklaerung": "Fledermäuse rufen mit Ultraschall. Diese Töne sind so hoch, dass Menschen sie nicht hören können. Für uns wirken die Tiere deshalb lautlos."
+    },
+    {
+     "id": "l-fledermaus-4",
+     "typ": "matrix",
+     "stufe": 3,
+     "kompetenz": "schliessen",
+     "frage": "Was kannst du aus dem Text schließen? Entscheide bei jeder Aussage.",
+     "spalten": [
+      "richtig",
+      "falsch"
+     ],
+     "aussagen": [
+      {
+       "text": "Eine Wiese mit vielen Blüten kann Fledermäusen helfen, satt zu werden.",
+       "richtig": true
+      },
+      {
+       "text": "Wer eine Fledermaus im Winterschlaf weckt, um sie anzuschauen, schadet ihr.",
+       "richtig": true
+      },
+      {
+       "text": "Im Winter jagen Fledermäuse in kühlen Kellern nach Mücken.",
+       "richtig": false
+      },
+      {
+       "text": "Ein Fledermauskasten ist für die Tiere vor allem ein Futterplatz.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Diese Sätze stehen so nicht im Text. Überlege bei jedem: Passt er zu dem, was du über Futter, Winterschlaf und Quartiere gelesen hast?",
+     "erklaerung": "Blüten locken Nachtfalter an, also gibt es dort Futter, und jedes Aufwachen im Winterschlaf kostet wertvolles Fett. Im Winter jagen Fledermäuse aber nicht, und ein Fledermauskasten ist ein Quartier, kein Futterplatz."
+    },
+    {
+     "id": "l-fledermaus-5",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "reflektieren",
+     "frage": "Lies den letzten Absatz. Was soll er bei den Lesern vor allem bewirken?",
+     "optionen": [
+      {
+       "text": "Die Leser sollen Fledermäusen helfen und sie schützen.",
+       "richtig": true
+      },
+      {
+       "text": "Die Leser sollen erfahren, wie Fledermäuse Beute finden.",
+       "richtig": false
+      },
+      {
+       "text": "Die Leser sollen Fledermäuse aus dem Garten vertreiben.",
+       "richtig": false
+      },
+      {
+       "text": "Die Leser sollen erfahren, wo Fledermäuse überwintern.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lies die Zwischenüberschrift über dem letzten Absatz. Worum geht es in den letzten beiden Sätzen?",
+     "erklaerung": "Der Absatz erklärt, warum Fledermäuse selten geworden sind, und zeigt, wie jeder helfen kann. Die Leser sollen die Tiere also schützen."
+    }
+   ]
+  },
+  {
+   "id": "l-schullandheim",
+   "titel": "Das Licht zwischen den Bäumen",
+   "textsorte": "Erzählung",
+   "einleitung": "Paul ist mit seiner Klasse im Schullandheim – und dann steht auch noch eine Nachtwanderung an.",
+   "text": {
+    "titel": "Das Licht zwischen den Bäumen",
+    "untertitel": "Eine Geschichte aus dem Schullandheim",
+    "absaetze": [
+     "Am ersten Abend im Schullandheim Moosgrund lag Paul lange wach. Durch das gekippte Fenster hörte er die Tannen rauschen, und irgendwo rief ein Käuzchen. Die anderen Jungen in Zimmer 4 schliefen schon. Paul drückte sein Gesicht ins Kissen. Es roch fremd, gar nicht nach zu Hause. Er dachte an Mama, an seinen Hund Bruno und an sein eigenes Bett. Am liebsten wäre er sofort heimgefahren.",
+     "Beim Abendessen am nächsten Tag klopfte Frau Huber an ihr Glas. „Heute machen wir eine Nachtwanderung!“, verkündete sie. „Im Wald hängen fünf Laternen. An jeder findet ihr einen Buchstaben. Jedes Zweierteam bringt mir am Ende das Lösungswort.“ Die Klasse jubelte. Nur Paul wurde ganz still und schob seinen Teller weg. Im Dunkeln durch den Wald? Schon bei dem Gedanken daran wurde ihm mulmig.",
+     "Ausgerechnet mit Aylin sollte er gehen. Aylin kletterte im Sportunterricht immer bis unter die Hallendecke und erzählte gern, dass sie vor nichts Angst habe. „Na los, das wird lustig!“, rief sie und lief voraus. Paul bekam die Taschenlampe. Er knipste sie an und stapfte hinter Aylin her.",
+     "Die ersten drei Laternen fanden die beiden schnell. Doch auf dem Weg zur vierten flackerte die Taschenlampe plötzlich und ging aus. Um sie herum war es stockdunkel. Pauls Herz klopfte bis zum Hals, und seine Beine fühlten sich an wie Pudding. Da schob sich eine Hand in seine. Aylins Finger zitterten.",
+     "„Paul?“, flüsterte Aylin. „Ich habe Angst im Dunkeln. Das habe ich noch nie jemandem erzählt.“ Paul staunte. Die mutige Aylin fürchtete sich auch? Auf einmal fühlte er sich nicht mehr so allein. Er musste an seinen Opa denken. Der hatte einmal zu ihm gesagt: „Wenn du nicht weiterweißt, bleib stehen, atme tief durch und schau dich in Ruhe um.“",
+     "„Wir bleiben erst mal stehen“, sagte Paul leise. Gemeinsam atmeten sie dreimal tief ein und aus. Langsam gewöhnten sich ihre Augen an die Dunkelheit. Zwischen den Stämmen schimmerte ein gelbes Licht. „Da vorne!“, rief Paul. Hand in Hand tasteten sie sich vorwärts. Das Licht war die vierte Laterne! „Gut gemacht, Paul“, flüsterte Aylin erleichtert. Von der Laterne aus sahen sie schon die hellen Fenster des Schullandheims, und am Gartentor leuchtete die fünfte Laterne.",
+     "„Richtig!“, lobte Frau Huber, als die beiden ihr das Lösungswort nannten. Es hieß MUTIG. Aylin zwinkerte Paul zu, und Paul spürte, wie er vor Stolz ein bisschen größer wurde. Nur die beiden wussten, wie gut dieses Wort zu ihrem Abend passte. In dieser Nacht schlief Paul sofort ein. An das fremde Kissen dachte er kein einziges Mal."
+    ]
+   },
+   "items": [
+    {
+     "id": "l-schullandheim-1",
+     "typ": "matrix",
+     "stufe": 2,
+     "kompetenz": "entnehmen",
+     "frage": "Was steht in der Geschichte? Entscheide bei jeder Aussage.",
+     "spalten": [
+      "richtig",
+      "falsch"
+     ],
+     "aussagen": [
+      {
+       "text": "An jeder Laterne finden die Kinder einen Buchstaben.",
+       "richtig": true
+      },
+      {
+       "text": "Paul und Aylin finden alle fünf Laternen ohne Schwierigkeiten.",
+       "richtig": false
+      },
+      {
+       "text": "Das gelbe Licht zwischen den Bäumen ist ein Fenster des Schullandheims.",
+       "richtig": false
+      },
+      {
+       "text": "Die fünfte Laterne hängt am Gartentor.",
+       "richtig": true
+      }
+     ],
+     "tipp": "Suche zu jeder Aussage die passende Stelle. Die Absätze 2, 4 und 6 helfen dir.",
+     "erklaerung": "An jeder Laterne gibt es einen Buchstaben, und die fünfte hängt am Gartentor. Das gelbe Licht war aber die vierte Laterne, und als die Taschenlampe ausging, wurde es schwierig."
+    },
+    {
+     "id": "l-schullandheim-2",
+     "typ": "reihenfolge",
+     "stufe": 3,
+     "kompetenz": "entnehmen",
+     "frage": "Bringe die Ereignisse in die richtige Reihenfolge.",
+     "reihe": [
+      "Frau Huber kündigt beim Abendessen die Nachtwanderung an.",
+      "Paul und Aylin finden die ersten drei Laternen.",
+      "Die Taschenlampe flackert und geht aus.",
+      "Aylin gibt zu, dass sie Angst im Dunkeln hat.",
+      "Paul denkt an den Rat seines Opas.",
+      "Die beiden entdecken die vierte Laterne."
+     ],
+     "tipp": "Gehe die Geschichte Absatz für Absatz durch und suche jedes Ereignis im Text.",
+     "erklaerung": "Erst kündigt Frau Huber die Wanderung an, dann finden die beiden drei Laternen. Danach geht die Lampe aus, Aylin gesteht ihre Angst, Paul erinnert sich an Opas Rat – und so entdecken sie die vierte Laterne."
+    },
+    {
+     "id": "l-schullandheim-3",
+     "typ": "multi",
+     "stufe": 2,
+     "kompetenz": "schliessen",
+     "frage": "Lies Absatz 1. Wie fühlt sich Paul am ersten Abend?",
+     "optionen": [
+      {
+       "text": "Er hat Heimweh.",
+       "richtig": true
+      },
+      {
+       "text": "Er fühlt sich fremd und unwohl.",
+       "richtig": true
+      },
+      {
+       "text": "Er freut sich auf die Nachtwanderung.",
+       "richtig": false
+      },
+      {
+       "text": "Er ist stolz auf sich.",
+       "richtig": false
+      },
+      {
+       "text": "Er ist wütend auf die anderen Jungen.",
+       "richtig": false
+      },
+      {
+       "text": "Er ist so müde, dass er gleich einschläft.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Das Gefühl wird nicht direkt genannt. Achte darauf, woran Paul denkt und was er sich wünscht.",
+     "erklaerung": "Paul denkt an Mama, Bruno und sein Bett und möchte am liebsten heimfahren: Er hat Heimweh. Das Kissen riecht fremd, deshalb fühlt er sich unwohl."
+    },
+    {
+     "id": "l-schullandheim-4",
+     "typ": "markieren",
+     "stufe": 2,
+     "kompetenz": "schliessen",
+     "frage": "Lies diese Stelle aus Absatz 4. Tippe die Satzteile an, die zeigen, wie Pauls Körper auf die Angst reagiert.",
+     "teile": [
+      {
+       "t": "Um sie herum war es stockdunkel"
+      },
+      {
+       "t": ".",
+       "fix": true
+      },
+      {
+       "t": "Pauls Herz klopfte bis zum Hals",
+       "ziel": true
+      },
+      {
+       "t": ",",
+       "fix": true
+      },
+      {
+       "t": "und",
+       "fix": true
+      },
+      {
+       "t": "seine Beine fühlten sich an wie Pudding",
+       "ziel": true
+      },
+      {
+       "t": ".",
+       "fix": true
+      },
+      {
+       "t": "Da schob sich eine Hand in seine"
+      },
+      {
+       "t": ".",
+       "fix": true
+      },
+      {
+       "t": "Aylins Finger zitterten"
+      },
+      {
+       "t": ".",
+       "fix": true
+      }
+     ],
+     "tipp": "Achte genau darauf, wessen Körper beschrieben wird.",
+     "erklaerung": "Ein Herz, das bis zum Hals klopft, und Beine wie Pudding sind Zeichen für große Angst. Die zitternden Finger gehören Aylin, nicht Paul."
+    },
+    {
+     "id": "l-schullandheim-5",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "reflektieren",
+     "frage": "Am Anfang riecht Pauls Kissen fremd. Im letzten Satz kommt das Kissen noch einmal vor. Was will die Geschichte damit zeigen?",
+     "optionen": [
+      {
+       "text": "Pauls Heimweh ist verschwunden.",
+       "richtig": true
+      },
+      {
+       "text": "Paul ist nach der Wanderung erschöpft.",
+       "richtig": false
+      },
+      {
+       "text": "Paul fühlt sich noch immer fremd.",
+       "richtig": false
+      },
+      {
+       "text": "Paul hat ein neues Kissen bekommen.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Überlege, warum Paul am ersten Abend an das Kissen gedacht hat. Was hat sich bis zum Schluss verändert?",
+     "erklaerung": "Am Anfang erinnert das fremde Kissen Paul daran, dass er nicht zu Hause ist. Am Ende denkt er gar nicht mehr daran – sein Heimweh ist verschwunden."
+    }
+   ]
+  },
+  {
+   "id": "l-gedicht",
+   "titel": "Novembernebel",
+   "textsorte": "Gedicht",
+   "einleitung": "Ein Gedicht über einen nebligen Tag im November – achte auf die sprachlichen Bilder.",
+   "text": {
+    "titel": "Novembernebel",
+    "autor": "Mira Sonnleitner",
+    "strophen": [
+     [
+      "Der Nebel kommt auf leisen Sohlen,",
+      "er schleicht durchs Dorf ganz still und sacht.",
+      "Er hat die Farben weggestohlen",
+      "und aus dem Tag ein Grau gemacht."
+     ],
+     [
+      "Die Bäume sind wie graue Riesen,",
+      "die stumm am Rand des Weges stehn.",
+      "Kein Vogel singt mehr auf den Wiesen,",
+      "man kann die eigne Hand kaum sehn."
+     ],
+     [
+      "Doch mittags scheint die Sonne wieder",
+      "ganz schüchtern durch das graue Tuch.",
+      "Die Amsel schüttelt ihr Gefieder",
+      "und wagt den ersten Liedversuch."
+     ],
+     [
+      "Am Abend ist der Nebel fort,",
+      "die Welt ist bunt und weit und klar.",
+      "Doch morgen liegt er wieder dort,",
+      "wo er auch heute Morgen war."
+     ]
+    ]
+   },
+   "items": [
+    {
+     "id": "l-gedicht-1",
+     "typ": "matrix",
+     "stufe": 1,
+     "kompetenz": "entnehmen",
+     "frage": "Was steht im Gedicht? Entscheide bei jeder Aussage.",
+     "spalten": [
+      "steht im Gedicht",
+      "steht nicht im Gedicht"
+     ],
+     "aussagen": [
+      {
+       "text": "Der Nebel schleicht durch das Dorf.",
+       "richtig": true
+      },
+      {
+       "text": "Mittags scheint die Sonne wieder.",
+       "richtig": true
+      },
+      {
+       "text": "Die Amsel fliegt in den Süden.",
+       "richtig": false
+      },
+      {
+       "text": "Am Abend fängt es an zu regnen.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Suche zu jeder Aussage den passenden Vers. Findest du keinen, steht es nicht im Gedicht.",
+     "erklaerung": "Der Nebel schleicht durchs Dorf (Vers 2), und mittags scheint die Sonne wieder (Vers 9). Von einer Amsel, die in den Süden fliegt, und von Regen ist keine Rede."
+    },
+    {
+     "id": "l-gedicht-2",
+     "typ": "multi",
+     "stufe": 2,
+     "kompetenz": "entnehmen",
+     "frage": "Lies Strophe 2. Was erfährst du dort über den Nebeltag?",
+     "optionen": [
+      {
+       "text": "Die Bäume sehen aus wie graue Riesen.",
+       "richtig": true
+      },
+      {
+       "text": "Auf den Wiesen singt kein Vogel mehr.",
+       "richtig": true
+      },
+      {
+       "text": "Man kann die eigene Hand kaum sehen.",
+       "richtig": true
+      },
+      {
+       "text": "Die Bäume verlieren ihre letzten Blätter.",
+       "richtig": false
+      },
+      {
+       "text": "Kinder spielen auf den Wiesen Verstecken.",
+       "richtig": false
+      },
+      {
+       "text": "Ein kalter Wind pfeift über den Weg.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Strophe 2 hat vier Verse. Vergleiche jede Antwort mit diesen vier Versen.",
+     "erklaerung": "In Strophe 2 sehen die Bäume aus wie graue Riesen, kein Vogel singt, und man sieht die eigene Hand kaum. Von fallenden Blättern, spielenden Kindern oder Wind steht dort nichts."
+    },
+    {
+     "id": "l-gedicht-3",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "schliessen",
+     "frage": "In Vers 10 scheint die Sonne „durch das graue Tuch“. Was ist mit dem grauen Tuch gemeint?",
+     "optionen": [
+      {
+       "text": "der Nebel, der über dem Dorf liegt",
+       "richtig": true
+      },
+      {
+       "text": "ein Vorhang vor dem Fenster",
+       "richtig": false
+      },
+      {
+       "text": "das dunkle Gefieder der Amsel",
+       "richtig": false
+      },
+      {
+       "text": "ein Tuch, das an der Wäscheleine hängt",
+       "richtig": false
+      }
+     ],
+     "tipp": "Ein Tuch kann etwas zudecken. Was deckt an diesem Tag alles zu?",
+     "erklaerung": "Der Nebel liegt grau über dem Dorf und verdeckt alles wie ein Tuch. Die Sonne scheint also durch den Nebel. So ein sprachliches Bild nennt man Metapher."
+    },
+    {
+     "id": "l-gedicht-4",
+     "typ": "zuordnen",
+     "stufe": 3,
+     "kompetenz": "schliessen",
+     "frage": "Das Gedicht beschreibt einen ganzen Tag. Ordne zu: Wann passiert was?",
+     "gruppen": [
+      "am Morgen",
+      "am Mittag",
+      "am Abend"
+     ],
+     "elemente": [
+      {
+       "t": "Der Nebel schleicht durchs Dorf.",
+       "g": 0
+      },
+      {
+       "t": "Man kann die eigene Hand kaum sehen.",
+       "g": 0
+      },
+      {
+       "t": "Die Sonne scheint wieder.",
+       "g": 1
+      },
+      {
+       "t": "Die Amsel schüttelt ihr Gefieder.",
+       "g": 1
+      },
+      {
+       "t": "Der Nebel ist fort.",
+       "g": 2
+      },
+      {
+       "t": "Die Welt ist bunt und weit und klar.",
+       "g": 2
+      }
+     ],
+     "tipp": "Achte auf Zeitangaben wie „mittags“. Wann der Nebel gekommen ist, erfährst du erst ganz am Ende des Gedichts.",
+     "erklaerung": "Im letzten Vers steht, dass der Nebel „heute Morgen“ da war – also gehören die Strophen 1 und 2 zum Morgen. Strophe 3 beginnt mit „mittags“, Strophe 4 mit „Am Abend“."
+    },
+    {
+     "id": "l-gedicht-5",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "reflektieren",
+     "frage": "Welches Reimschema haben die Strophen dieses Gedichts?",
+     "optionen": [
+      {
+       "text": "Kreuzreim (abab)",
+       "richtig": true
+      },
+      {
+       "text": "Paarreim (aabb)",
+       "richtig": false
+      },
+      {
+       "text": "umarmender Reim (abba)",
+       "richtig": false
+      },
+      {
+       "text": "kein festes Reimschema",
+       "richtig": false
+      }
+     ],
+     "tipp": "Schreibe hinter jeden Vers einer Strophe einen Buchstaben. Verse, die sich reimen, bekommen den gleichen Buchstaben.",
+     "erklaerung": "In jeder Strophe reimt sich Vers 1 auf Vers 3 und Vers 2 auf Vers 4, zum Beispiel „Sohlen – weggestohlen“ und „sacht – gemacht“. Das ist ein Kreuzreim (abab)."
+    }
+   ]
+  }
+ ]
+}

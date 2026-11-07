@@ -1,0 +1,1424 @@
+{
+ "modul": "grammatik",
+ "themen": [
+  {
+   "id": "gr-nomen",
+   "titel": "Nomen, Artikel und Pronomen",
+   "kurz": "Namenwörter erkennen, Begleiter wählen, Fürwörter einsetzen",
+   "kompetenz": "wortarten",
+   "wissen": {
+    "merksatz": "<b>Nomen</b> (Namenwörter) sind Wörter für Menschen, Tiere, Pflanzen und Dinge – aber auch für Gefühle und Gedanken wie <i>Angst</i>, <i>Traum</i> oder <i>Hoffnung</i>. Nomen schreibt man immer groß. Vor dem Nomen steht oft ein <b>Artikel</b> (Begleiter). Ein <b>Personalpronomen</b> (persönliches Fürwort) kann ein Nomen ersetzen.",
+    "punkte": [
+     "Nomen-Probe: Passt <i>der</i>, <i>die</i> oder <i>das</i> davor? Dann ist es ein Nomen: <i>die Angst, der Traum, die Hoffnung</i>.",
+     "Jedes Nomen hat ein Geschlecht: männlich (<i>der</i> Tisch), weiblich (<i>die</i> Lampe) oder sächlich (<i>das</i> Bett).",
+     "Bestimmte Artikel sind <i>der, die, das</i>. Unbestimmte Artikel sind <i>ein, eine</i>.",
+     "Die meisten Nomen haben eine Einzahl und eine Mehrzahl: <i>das Buch – die Bücher</i>. In der Mehrzahl heißt der bestimmte Artikel immer <i>die</i>.",
+     "Personalpronomen sind <i>ich, du, er, sie, es, wir, ihr, sie</i>. Sie ersetzen Nomen, damit sich Wörter nicht dauernd wiederholen: <i>Der Hund bellt. Er hat Hunger.</i>"
+    ],
+    "beispiele": [
+     "die Angst, der Traum, die Hoffnung",
+     "das Buch – die Bücher",
+     "ein Igel – der Igel",
+     "Lena und Tom → sie",
+     "Das Fahrrad ist neu. → Es ist neu."
+    ]
+   },
+   "items": [
+    {
+     "id": "gr-nomen-01",
+     "typ": "markieren",
+     "stufe": 1,
+     "kompetenz": "wortarten",
+     "frage": "Tippe alle Nomen an.",
+     "teile": [
+      {
+       "t": "Im"
+      },
+      {
+       "t": "Herbst",
+       "ziel": true
+      },
+      {
+       "t": "sammelt"
+      },
+      {
+       "t": "der"
+      },
+      {
+       "t": "Igel",
+       "ziel": true
+      },
+      {
+       "t": "trockene"
+      },
+      {
+       "t": "Blätter",
+       "ziel": true
+      },
+      {
+       "t": "für"
+      },
+      {
+       "t": "sein"
+      },
+      {
+       "t": "Nest",
+       "ziel": true
+      },
+      {
+       "t": ".",
+       "fix": true
+      }
+     ],
+     "tipp": "Das erste Wort im Satz schreibt man immer groß. Prüfe deshalb bei jedem Wort, ob du <i>der</i>, <i>die</i> oder <i>das</i> davorsetzen kannst.",
+     "erklaerung": "<i>Herbst</i>, <i>Igel</i>, <i>Blätter</i> und <i>Nest</i> sind Nomen: der Herbst, der Igel, die Blätter, das Nest. <i>Im</i> ist nur groß, weil es am Satzanfang steht."
+    },
+    {
+     "id": "gr-nomen-02",
+     "typ": "zuordnen",
+     "stufe": 1,
+     "kompetenz": "wortarten",
+     "frage": "Welcher Artikel passt? Ordne jedes Nomen zu.",
+     "gruppen": [
+      "der",
+      "die",
+      "das"
+     ],
+     "elemente": [
+      {
+       "t": "Löffel",
+       "g": 0
+      },
+      {
+       "t": "Gabel",
+       "g": 1
+      },
+      {
+       "t": "Messer",
+       "g": 2
+      },
+      {
+       "t": "Mut",
+       "g": 0
+      },
+      {
+       "t": "Freude",
+       "g": 1
+      },
+      {
+       "t": "Glück",
+       "g": 2
+      },
+      {
+       "t": "Mädchen",
+       "g": 2
+      }
+     ],
+     "tipp": "Sprich jedes Nomen leise mit <i>der</i>, <i>die</i> und <i>das</i>. Was klingt richtig?",
+     "erklaerung": "Es heißt: der Löffel, der Mut – die Gabel, die Freude – das Messer, das Glück, das Mädchen. Auch Gefühle wie Mut und Freude haben einen Artikel."
+    },
+    {
+     "id": "gr-nomen-03",
+     "typ": "luecke",
+     "stufe": 1,
+     "kompetenz": "wortarten",
+     "frage": "Wähle den passenden Artikel.",
+     "teile": [
+      {
+       "t": "Im Tierpark sieht Ben "
+      },
+      {
+       "wahl": [
+        "ein",
+        "eine",
+        "einen"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " Zebra. "
+      },
+      {
+       "wahl": [
+        "Der",
+        "Die",
+        "Das"
+       ],
+       "loesung": 2
+      },
+      {
+       "t": " Zebra frisst Heu. Daneben steht "
+      },
+      {
+       "wahl": [
+        "ein",
+        "eine",
+        "einen"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": " Giraffe."
+      }
+     ],
+     "tipp": "Überlege zuerst: Heißt es <i>der</i>, <i>die</i> oder <i>das</i> Zebra? Und wie ist es bei der Giraffe?",
+     "erklaerung": "Es heißt <i>das Zebra</i>, also <i>ein Zebra</i>, und <i>die Giraffe</i>, also <i>eine Giraffe</i>. <i>Das</i> ist ein bestimmter Artikel, <i>ein</i> und <i>eine</i> sind unbestimmte Artikel."
+    },
+    {
+     "id": "gr-nomen-04",
+     "typ": "markieren",
+     "stufe": 2,
+     "kompetenz": "wortarten",
+     "frage": "Tippe nur die Nomen an, die etwas bezeichnen, das man <b>nicht</b> anfassen kann.",
+     "teile": [
+      {
+       "t": "Voller"
+      },
+      {
+       "t": "Stolz",
+       "ziel": true
+      },
+      {
+       "t": "und"
+      },
+      {
+       "t": "mit"
+      },
+      {
+       "t": "viel"
+      },
+      {
+       "t": "Mut",
+       "ziel": true
+      },
+      {
+       "t": "springt"
+      },
+      {
+       "t": "Hannah"
+      },
+      {
+       "t": "vom"
+      },
+      {
+       "t": "Dreimeterbrett"
+      },
+      {
+       "t": "ins"
+      },
+      {
+       "t": "Becken"
+      },
+      {
+       "t": ".",
+       "fix": true
+      }
+     ],
+     "tipp": "Suche zuerst alle Nomen. Frage dann bei jedem: Kann ich das mit meinen Händen berühren?",
+     "erklaerung": "<i>Stolz</i> und <i>Mut</i> sind Gefühle. Man kann sie nicht anfassen, trotzdem sind es Nomen: der Stolz, der Mut. <i>Hannah</i>, <i>Dreimeterbrett</i> und <i>Becken</i> sind Nomen für eine Person und für Dinge, die man anfassen kann."
+    },
+    {
+     "id": "gr-nomen-05",
+     "typ": "matrix",
+     "stufe": 2,
+     "kompetenz": "wortarten",
+     "frage": "Lies jede Aussage. Ist sie richtig oder falsch?",
+     "aussagen": [
+      {
+       "text": "Die Mehrzahl von <i>die Maus</i> heißt <i>die Mäuse</i>.",
+       "richtig": true
+      },
+      {
+       "text": "<i>Ein</i> und <i>eine</i> sind bestimmte Artikel.",
+       "richtig": false
+      },
+      {
+       "text": "Bei <i>der Koffer</i> sieht die Mehrzahl genauso aus wie die Einzahl: <i>die Koffer</i>.",
+       "richtig": true
+      },
+      {
+       "text": "Weil es <i>der Baum</i> heißt, sagt man in der Mehrzahl <i>der Bäume</i>.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Bilde die Mehrzahl laut: <i>eine Maus – zwei …</i>, <i>ein Koffer – zwei …</i>. Setze dann <i>der</i>, <i>die</i> oder <i>das</i> vor die Mehrzahl und hör genau hin.",
+     "erklaerung": "Richtig: die Maus – die Mäuse, der Koffer – die Koffer. Falsch: <i>ein</i> und <i>eine</i> sind unbestimmte Artikel. In der Mehrzahl heißt der bestimmte Artikel immer <i>die</i>, also <i>die Bäume</i>."
+    },
+    {
+     "id": "gr-nomen-06",
+     "typ": "luecke",
+     "stufe": 2,
+     "kompetenz": "wortarten",
+     "frage": "Welches Personalpronomen ersetzt das Nomen richtig?",
+     "teile": [
+      {
+       "t": "Paul und Mia bauen ein Floß. "
+      },
+      {
+       "wahl": [
+        "Sie",
+        "Er",
+        "Es"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " sammeln dafür dicke Äste. Nach zwei Stunden ist das Floß fertig, aber "
+      },
+      {
+       "wahl": [
+        "es",
+        "er",
+        "sie"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " wackelt noch ein bisschen. Mia findet einen langen Stock. "
+      },
+      {
+       "wahl": [
+        "Er",
+        "Sie",
+        "Es"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " ist genau richtig für den Mast."
+      }
+     ],
+     "tipp": "Frage dich bei jeder Lücke: Wer oder was ist gemeint? Ist es eine Person oder sind es mehrere? Heißt das Nomen <i>der</i>, <i>die</i> oder <i>das</i>?",
+     "erklaerung": "<i>Paul und Mia</i> sind zwei Personen, also <i>sie</i>. <i>Das Floß</i> wird zu <i>es</i>, <i>der Stock</i> wird zu <i>er</i>. Das Pronomen passt zum Geschlecht des Nomens: der → er, die → sie, das → es."
+    },
+    {
+     "id": "gr-nomen-07",
+     "typ": "multi",
+     "stufe": 3,
+     "kompetenz": "wortarten",
+     "frage": "Hier stehen alle Wörter in Großbuchstaben. So verrät dir die Schreibung nicht, welche Wörter Nomen sind. Welche Wörter sind Nomen?",
+     "optionen": [
+      {
+       "text": "FREUDE",
+       "richtig": true
+      },
+      {
+       "text": "FRÖHLICH",
+       "richtig": false
+      },
+      {
+       "text": "MUT",
+       "richtig": true
+      },
+      {
+       "text": "MUTIG",
+       "richtig": false
+      },
+      {
+       "text": "IDEE",
+       "richtig": true
+      },
+      {
+       "text": "WÜTEND",
+       "richtig": false
+      }
+     ],
+     "tipp": "Mach die Nomen-Probe: Kannst du <i>der</i>, <i>die</i> oder <i>das</i> davorsetzen? Probiere auch, ob das Wort in den Satz <i>Ich bin sehr …</i> passt.",
+     "erklaerung": "Nomen sind <i>die Freude</i>, <i>der Mut</i> und <i>die Idee</i>. Man kann sie nicht anfassen, aber sie haben einen Artikel. <i>Fröhlich</i>, <i>mutig</i> und <i>wütend</i> sind Adjektive: Sie sagen, wie jemand ist."
+    },
+    {
+     "id": "gr-nomen-08",
+     "typ": "eingabe",
+     "stufe": 3,
+     "kompetenz": "wortarten",
+     "frage": "Ersetze die fett gedruckten Wörter durch ein Personalpronomen. Tippe nur das Pronomen ein.",
+     "vorgabe": "Heute haben <b>Emir und ich</b> ein Fußballturnier. → Heute haben ___ ein Fußballturnier.",
+     "loesungen": [
+      "wir"
+     ],
+     "tipp": "Zähle: Wie viele Personen sind gemeint? Und gehört die Person, die spricht, selbst dazu?",
+     "erklaerung": "<i>Emir und ich</i> sind zwei Personen, und wer spricht, gehört selbst dazu. Dafür steht das Personalpronomen <i>wir</i>."
+    }
+   ]
+  },
+  {
+   "id": "gr-verben",
+   "titel": "Verben",
+   "kurz": "Grundform, Personalform, Wortstamm und Personalendungen",
+   "kompetenz": "wortarten",
+   "wissen": {
+    "merksatz": "<b>Verben</b> (Tunwörter) sagen, was jemand tut oder was geschieht: <i>lachen, rennen, regnen</i>. Im Wörterbuch steht die <b>Grundform</b> (Infinitiv): <i>spielen</i>. Im Satz steht die <b>Personalform</b>, die zur Person passt: <i>du spielst</i>.",
+    "punkte": [
+     "Ein Verb besteht aus dem <b>Wortstamm</b> und der <b>Endung</b>: <i>spiel-en, spiel-st, spiel-t</i>. Der Wortstamm bleibt, die Endung wechselt.",
+     "Personalendungen: ich spiel<b>e</b>, du spiel<b>st</b>, er/sie/es spiel<b>t</b>, wir spiel<b>en</b>, ihr spiel<b>t</b>, sie spiel<b>en</b>.",
+     "Bei manchen Verben ändert sich bei <i>du</i> und <i>er/sie/es</i> der Selbstlaut im Wortstamm: <i>schlafen – du schläfst</i>, <i>helfen – sie hilft</i>.",
+     "Bei <i>ihr</i> bleibt der Selbstlaut wie in der Grundform: <i>ihr schlaft, ihr helft</i>.",
+     "Endet der Wortstamm auf <i>s</i>, <i>ß</i> oder <i>z</i>, hängt man bei <i>du</i> nur <i>-t</i> an: <i>du reist, du heißt, du sitzt</i>."
+    ],
+    "beispiele": [
+     "spielen – ich spiele – du spielst",
+     "schlafen – er schläft",
+     "helfen – du hilfst",
+     "malen → Wortstamm: mal"
+    ]
+   },
+   "items": [
+    {
+     "id": "gr-verben-01",
+     "typ": "markieren",
+     "stufe": 1,
+     "kompetenz": "wortarten",
+     "frage": "Tippe alle Verben an.",
+     "teile": [
+      {
+       "t": "Am"
+      },
+      {
+       "t": "Nachmittag"
+      },
+      {
+       "t": "füttert",
+       "ziel": true
+      },
+      {
+       "t": "Elif"
+      },
+      {
+       "t": "die"
+      },
+      {
+       "t": "Hasen"
+      },
+      {
+       "t": ",",
+       "fix": true
+      },
+      {
+       "t": "dann"
+      },
+      {
+       "t": "holt",
+       "ziel": true
+      },
+      {
+       "t": "sie"
+      },
+      {
+       "t": "ihren"
+      },
+      {
+       "t": "Ball"
+      },
+      {
+       "t": "und"
+      },
+      {
+       "t": "spielt",
+       "ziel": true
+      },
+      {
+       "t": "mit"
+      },
+      {
+       "t": "Luca"
+      },
+      {
+       "t": ".",
+       "fix": true
+      }
+     ],
+     "tipp": "Verben sagen, was jemand tut. Frage: Was macht Elif alles?",
+     "erklaerung": "<i>füttert</i>, <i>holt</i> und <i>spielt</i> sagen, was Elif tut. Es sind Verben in der Personalform. Ihre Grundformen heißen <i>füttern</i>, <i>holen</i> und <i>spielen</i>."
+    },
+    {
+     "id": "gr-verben-02",
+     "typ": "zuordnen",
+     "stufe": 1,
+     "kompetenz": "wortarten",
+     "frage": "Grundform oder Personalform? Ordne zu.",
+     "gruppen": [
+      "Grundform",
+      "Personalform"
+     ],
+     "elemente": [
+      {
+       "t": "schwimmen",
+       "g": 0
+      },
+      {
+       "t": "du schwimmst",
+       "g": 1
+      },
+      {
+       "t": "lachen",
+       "g": 0
+      },
+      {
+       "t": "sie lacht",
+       "g": 1
+      },
+      {
+       "t": "springen",
+       "g": 0
+      },
+      {
+       "t": "ich springe",
+       "g": 1
+      },
+      {
+       "t": "ihr malt",
+       "g": 1
+      },
+      {
+       "t": "erzählen",
+       "g": 0
+      }
+     ],
+     "tipp": "Die Grundform steht so im Wörterbuch und endet meist auf <i>-en</i>. Die Personalform passt zu einer Person wie <i>ich</i>, <i>du</i> oder <i>sie</i>.",
+     "erklaerung": "Grundformen sind <i>schwimmen</i>, <i>lachen</i>, <i>springen</i> und <i>erzählen</i>. Bei <i>du schwimmst</i>, <i>sie lacht</i>, <i>ich springe</i> und <i>ihr malt</i> passt das Verb zur Person: Das sind Personalformen."
+    },
+    {
+     "id": "gr-verben-03",
+     "typ": "luecke",
+     "stufe": 1,
+     "kompetenz": "wortarten",
+     "frage": "Welche Personalendung passt?",
+     "teile": [
+      {
+       "t": "Ich spiel"
+      },
+      {
+       "wahl": [
+        "e",
+        "st",
+        "t",
+        "en"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " Flöte. Du spiel"
+      },
+      {
+       "wahl": [
+        "e",
+        "st",
+        "t",
+        "en"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": " Gitarre. Wir spiel"
+      },
+      {
+       "wahl": [
+        "e",
+        "st",
+        "t",
+        "en"
+       ],
+       "loesung": 3
+      },
+      {
+       "t": " zusammen im Schulorchester. Ihr hör"
+      },
+      {
+       "wahl": [
+        "e",
+        "st",
+        "t",
+        "en"
+       ],
+       "loesung": 2
+      },
+      {
+       "t": " uns zu."
+      }
+     ],
+     "tipp": "Schau genau, wer etwas tut: <i>ich</i>, <i>du</i>, <i>wir</i> oder <i>ihr</i>? Jede Person hat ihre eigene Endung.",
+     "erklaerung": "Es heißt: ich spiel<b>e</b>, du spiel<b>st</b>, wir spiel<b>en</b>, ihr hör<b>t</b>. Der Wortstamm bleibt gleich, nur die Endung passt sich der Person an."
+    },
+    {
+     "id": "gr-verben-04",
+     "typ": "multi",
+     "stufe": 2,
+     "kompetenz": "wortarten",
+     "frage": "Bei welchen Verben ändert sich in der du-Form der Selbstlaut im Wortstamm?",
+     "optionen": [
+      {
+       "text": "lesen",
+       "richtig": true
+      },
+      {
+       "text": "fahren",
+       "richtig": true
+      },
+      {
+       "text": "geben",
+       "richtig": true
+      },
+      {
+       "text": "kaufen",
+       "richtig": false
+      },
+      {
+       "text": "gehen",
+       "richtig": false
+      },
+      {
+       "text": "malen",
+       "richtig": false
+      }
+     ],
+     "tipp": "Bilde zu jedem Verb die du-Form und sprich sie laut. Klingt der Selbstlaut noch so wie in der Grundform?",
+     "erklaerung": "<i>lesen – du liest</i>, <i>fahren – du fährst</i>, <i>geben – du gibst</i>: Hier wechselt der Selbstlaut. Bei <i>du kaufst</i>, <i>du gehst</i> und <i>du malst</i> bleibt er gleich."
+    },
+    {
+     "id": "gr-verben-05",
+     "typ": "luecke",
+     "stufe": 2,
+     "kompetenz": "wortarten",
+     "frage": "Wähle die richtige Verbform.",
+     "teile": [
+      {
+       "t": "Mama, "
+      },
+      {
+       "wahl": [
+        "liest",
+        "lest",
+        "lesst"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " du mir etwas vor? Papa "
+      },
+      {
+       "wahl": [
+        "fahrt",
+        "fährt",
+        "fährst"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": " heute mit dem Bus zur Arbeit. Sofia "
+      },
+      {
+       "wahl": [
+        "gebt",
+        "gibst",
+        "gibt"
+       ],
+       "loesung": 2
+      },
+      {
+       "t": " mir ihren Radiergummi."
+      }
+     ],
+     "tipp": "Wer tut hier jeweils etwas: <i>du</i>, <i>er</i> oder <i>sie</i>? Denke daran, dass sich bei manchen Verben der Selbstlaut im Wortstamm ändert.",
+     "erklaerung": "Richtig ist: du <b>liest</b>, Papa (er) <b>fährt</b>, Sofia (sie) <b>gibt</b>. <i>lest</i>, <i>fahrt</i> und <i>gebt</i> passen zu <i>ihr</i>, <i>fährst</i> und <i>gibst</i> passen zu <i>du</i>."
+    },
+    {
+     "id": "gr-verben-06",
+     "typ": "eingabe",
+     "stufe": 2,
+     "kompetenz": "wortarten",
+     "frage": "Setze das Verb in der passenden Personalform ein. Der Satz steht in der Gegenwart.",
+     "vorgabe": "sehen → Felix ___ am Himmel einen Regenbogen.",
+     "loesungen": [
+      "sieht"
+     ],
+     "tipp": "Felix ist eine Person, also <i>er</i>. Prüfe, ob sich bei <i>sehen</i> der Selbstlaut im Wortstamm ändert.",
+     "erklaerung": "Bei <i>sehen</i> wird in der er-Form aus dem <i>e</i> ein <i>ie</i>: Felix <b>sieht</b>. Das <i>h</i> aus dem Wortstamm bleibt erhalten."
+    },
+    {
+     "id": "gr-verben-07",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "wortarten",
+     "frage": "Was ist der Wortstamm in <i>du wanderst</i>?",
+     "optionen": [
+      {
+       "text": "wander",
+       "richtig": true
+      },
+      {
+       "text": "wand",
+       "richtig": false
+      },
+      {
+       "text": "wanderst",
+       "richtig": false
+      },
+      {
+       "text": "wandern",
+       "richtig": false
+      }
+     ],
+     "tipp": "Nimm die Personalendung weg. Welche Endung gehört zu <i>du</i>? Vergleiche auch mit <i>ich wandere</i> und <i>er wandert</i>.",
+     "erklaerung": "Bei <i>du</i> ist die Endung <i>-st</i>. Was übrig bleibt, ist der Wortstamm <i>wander</i>. Er steckt auch in <i>er wandert</i> und <i>wir wandern</i>."
+    },
+    {
+     "id": "gr-verben-08",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "wortarten",
+     "frage": "In welchem Satz passt die Verbform zur Person?",
+     "optionen": [
+      {
+       "text": "Du trägst die schwere Kiste.",
+       "richtig": true
+      },
+      {
+       "text": "Er tragt die schwere Kiste.",
+       "richtig": false
+      },
+      {
+       "text": "Ihr trägt die schwere Kiste.",
+       "richtig": false
+      },
+      {
+       "text": "Du tragst die schwere Kiste.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Bilde zuerst die Formen von <i>fahren</i> mit <i>du</i>, <i>er</i> und <i>ihr</i>. <i>tragen</i> verhält sich genauso.",
+     "erklaerung": "Richtig ist <i>du trägst</i>. Außerdem heißt es <i>er trägt</i> und <i>ihr tragt</i>: Bei <i>ihr</i> bleibt das <i>a</i> aus der Grundform."
+    }
+   ]
+  },
+  {
+   "id": "gr-adjektive",
+   "titel": "Adjektive",
+   "kurz": "Eigenschaften beschreiben, steigern und vergleichen",
+   "kompetenz": "wortarten",
+   "wissen": {
+    "merksatz": "<b>Adjektive</b> (Wiewörter) sagen, wie jemand oder etwas ist: <i>groß, leise, mutig</i>. Adjektive schreibt man klein. Die meisten Adjektive kann man <b>steigern</b>: <i>schnell – schneller – am schnellsten</i>.",
+    "punkte": [
+     "Adjektiv-Probe: Passt das Wort zwischen Artikel und Nomen? <i>der … Hund</i> → <i>der freche Hund</i>.",
+     "Es gibt drei Stufen: Grundstufe <i>klein</i>, Vergleichsstufe <i>kleiner</i>, Höchststufe <i>am kleinsten</i>. Oft kommt ein Umlaut dazu: <i>jung – jünger – am jüngsten</i>.",
+     "Manche Adjektive werden unregelmäßig gesteigert: <i>gut – besser – am besten</i> und <i>viel – mehr – am meisten</i>.",
+     "Vergleichen: Sind zwei gleich, sagt man <i>wie</i>: <i>so groß wie</i>. Sind sie verschieden, sagt man <i>als</i>: <i>größer als</i>.",
+     "Die Nachsilben <i>-ig, -lich, -isch</i> und <i>-bar</i> zeigen oft ein Adjektiv an: <i>lustig, ehrlich, neidisch, essbar</i>."
+    ],
+    "beispiele": [
+     "leise – leiser – am leisesten",
+     "gut – besser – am besten",
+     "viel – mehr – am meisten",
+     "Mia ist so alt wie Ben.",
+     "Ben ist größer als Mia.",
+     "der Durst → durstig"
+    ]
+   },
+   "items": [
+    {
+     "id": "gr-adjektive-01",
+     "typ": "markieren",
+     "stufe": 1,
+     "kompetenz": "wortarten",
+     "frage": "Tippe alle Adjektive an.",
+     "teile": [
+      {
+       "t": "Auf"
+      },
+      {
+       "t": "der"
+      },
+      {
+       "t": "bunten",
+       "ziel": true
+      },
+      {
+       "t": "Wiese"
+      },
+      {
+       "t": "sitzt"
+      },
+      {
+       "t": "ein"
+      },
+      {
+       "t": "kleiner",
+       "ziel": true
+      },
+      {
+       "t": "Hase"
+      },
+      {
+       "t": "mit"
+      },
+      {
+       "t": "langen",
+       "ziel": true
+      },
+      {
+       "t": "Ohren"
+      },
+      {
+       "t": ".",
+       "fix": true
+      }
+     ],
+     "tipp": "Adjektive sagen, wie etwas ist. Frage: Wie ist die Wiese? Wie ist der Hase? Wie sind seine Ohren?",
+     "erklaerung": "<i>bunten</i>, <i>kleiner</i> und <i>langen</i> beschreiben, wie die Wiese, der Hase und die Ohren sind. Es sind Adjektive. Sie stehen hier jeweils direkt vor einem Nomen."
+    },
+    {
+     "id": "gr-adjektive-02",
+     "typ": "zuordnen",
+     "stufe": 1,
+     "kompetenz": "wortarten",
+     "frage": "In welcher Stufe steht das Adjektiv? Ordne zu.",
+     "gruppen": [
+      "Grundstufe",
+      "Vergleichsstufe",
+      "Höchststufe"
+     ],
+     "elemente": [
+      {
+       "t": "leise",
+       "g": 0
+      },
+      {
+       "t": "kalt",
+       "g": 0
+      },
+      {
+       "t": "gut",
+       "g": 0
+      },
+      {
+       "t": "wärmer",
+       "g": 1
+      },
+      {
+       "t": "besser",
+       "g": 1
+      },
+      {
+       "t": "älter",
+       "g": 1
+      },
+      {
+       "t": "am schnellsten",
+       "g": 2
+      },
+      {
+       "t": "am meisten",
+       "g": 2
+      }
+     ],
+     "tipp": "Die Vergleichsstufe endet meist auf <i>-er</i>. Vor der Höchststufe steht <i>am</i>.",
+     "erklaerung": "Grundstufe: leise, kalt, gut. Vergleichsstufe: wärmer, besser, älter. Höchststufe: am schnellsten, am meisten. <i>besser</i> und <i>am meisten</i> sind unregelmäßig gesteigert."
+    },
+    {
+     "id": "gr-adjektive-03",
+     "typ": "luecke",
+     "stufe": 1,
+     "kompetenz": "wortarten",
+     "frage": "Welche Stufe passt in den Satz?",
+     "teile": [
+      {
+       "t": "Der Bleistift ist lang. Das Lineal ist "
+      },
+      {
+       "wahl": [
+        "lang",
+        "länger",
+        "am längsten"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": " als der Bleistift. Das Maßband ist von allen drei Sachen "
+      },
+      {
+       "wahl": [
+        "lang",
+        "länger",
+        "am längsten"
+       ],
+       "loesung": 2
+      },
+      {
+       "t": "."
+      }
+     ],
+     "tipp": "Achte auf die Wörter nach der Lücke: Steht dort <i>als</i>? Oder werden alle drei Sachen miteinander verglichen?",
+     "erklaerung": "Mit <i>als</i> vergleicht man zwei Dinge: <i>länger als</i> ist die Vergleichsstufe. Ist etwas von allen am längsten, braucht man die Höchststufe: <i>am längsten</i>."
+    },
+    {
+     "id": "gr-adjektive-04",
+     "typ": "luecke",
+     "stufe": 2,
+     "kompetenz": "wortarten",
+     "frage": "Mit welcher Nachsilbe wird daraus ein Adjektiv? Wähle aus.",
+     "teile": [
+      {
+       "t": "Am Morgen war es noch sonn"
+      },
+      {
+       "wahl": [
+        "ig",
+        "lich",
+        "isch",
+        "bar"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": ", doch am Nachmittag wurde es stürm"
+      },
+      {
+       "wahl": [
+        "ig",
+        "lich",
+        "isch",
+        "bar"
+       ],
+       "loesung": 2
+      },
+      {
+       "t": ". Unser Bergführer war sehr freund"
+      },
+      {
+       "wahl": [
+        "ig",
+        "lich",
+        "isch",
+        "bar"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": ". Er zeigte uns eine Quelle. Das Wasser dort ist trink"
+      },
+      {
+       "wahl": [
+        "ig",
+        "lich",
+        "isch",
+        "bar"
+       ],
+       "loesung": 3
+      },
+      {
+       "t": "."
+      }
+     ],
+     "tipp": "Sprich jedes Wort mit allen vier Nachsilben leise vor dich hin. Nur eine Möglichkeit ergibt ein echtes Wort.",
+     "erklaerung": "Es heißt <i>sonnig</i>, <i>stürmisch</i>, <i>freundlich</i> und <i>trinkbar</i>. Die Nachsilben machen aus <i>Sonne</i>, <i>Sturm</i>, <i>Freund</i> und <i>trinken</i> Adjektive."
+    },
+    {
+     "id": "gr-adjektive-05",
+     "typ": "eingabe",
+     "stufe": 2,
+     "kompetenz": "wortarten",
+     "frage": "Setze das Adjektiv in der Vergleichsstufe ein.",
+     "vorgabe": "gut → Heute ist mein Bild viel ___ als gestern.",
+     "loesungen": [
+      "besser"
+     ],
+     "tipp": "Achtung: <i>gut</i> wird unregelmäßig gesteigert. Hänge also nicht einfach <i>-er</i> an.",
+     "erklaerung": "Die Steigerung heißt <i>gut – besser – am besten</i>. Vor <i>als</i> steht die Vergleichsstufe: <i>besser als gestern</i>."
+    },
+    {
+     "id": "gr-adjektive-06",
+     "typ": "matrix",
+     "stufe": 2,
+     "kompetenz": "wortarten",
+     "frage": "Ist der Vergleich richtig oder falsch?",
+     "aussagen": [
+      {
+       "text": "Die Katze ist schneller als die Schildkröte.",
+       "richtig": true
+      },
+      {
+       "text": "Mein Rucksack ist so schwer als deiner.",
+       "richtig": false
+      },
+      {
+       "text": "Heute ist es kälter wie gestern.",
+       "richtig": false
+      },
+      {
+       "text": "Der Kuchen schmeckt so gut wie bei Oma.",
+       "richtig": true
+      }
+     ],
+     "tipp": "Prüfe zuerst: Sind die beiden Dinge gleich oder verschieden? Schau dann, ob das Adjektiv in der Grundstufe oder in der Vergleichsstufe steht.",
+     "erklaerung": "Bei Gleichheit sagt man <i>so … wie</i>: so schwer wie, so gut wie. Bei einem Unterschied sagt man <i>als</i>: schneller als, kälter als. Falsch sind also <i>so schwer als</i> und <i>kälter wie</i>."
+    },
+    {
+     "id": "gr-adjektive-07",
+     "typ": "multi",
+     "stufe": 3,
+     "kompetenz": "wortarten",
+     "frage": "Welche Steigerungen sind richtig?",
+     "optionen": [
+      {
+       "text": "gut – besser – am besten",
+       "richtig": true
+      },
+      {
+       "text": "viel – mehr – am meisten",
+       "richtig": true
+      },
+      {
+       "text": "alt – älter – am ältesten",
+       "richtig": true
+      },
+      {
+       "text": "viel – mehr – am mehrsten",
+       "richtig": false
+      },
+      {
+       "text": "gut – guter – am gutesten",
+       "richtig": false
+      },
+      {
+       "text": "groß – größer – am größesten",
+       "richtig": false
+      }
+     ],
+     "tipp": "Sprich jede Reihe laut. Achte besonders auf die Höchststufe mit <i>am</i>.",
+     "erklaerung": "Richtig sind <i>gut – besser – am besten</i>, <i>viel – mehr – am meisten</i> und <i>alt – älter – am ältesten</i>. Falsch sind <i>am mehrsten</i>, <i>guter</i> und <i>am größesten</i>. Richtig heißt es <i>am meisten</i>, <i>besser</i> und <i>am größten</i>."
+    },
+    {
+     "id": "gr-adjektive-08",
+     "typ": "markieren",
+     "stufe": 3,
+     "kompetenz": "wortarten",
+     "frage": "Tippe alle Adjektive an. Achtung: Nicht jedes Wort, das auf <i>-ig</i> endet, ist ein Adjektiv!",
+     "teile": [
+      {
+       "t": "Zum"
+      },
+      {
+       "t": "Frühstück"
+      },
+      {
+       "t": "isst"
+      },
+      {
+       "t": "der"
+      },
+      {
+       "t": "König"
+      },
+      {
+       "t": "frisches",
+       "ziel": true
+      },
+      {
+       "t": "Brot"
+      },
+      {
+       "t": "mit"
+      },
+      {
+       "t": "süßem",
+       "ziel": true
+      },
+      {
+       "t": "Honig"
+      },
+      {
+       "t": "und"
+      },
+      {
+       "t": "ist"
+      },
+      {
+       "t": "danach"
+      },
+      {
+       "t": "sehr"
+      },
+      {
+       "t": "fröhlich",
+       "ziel": true
+      },
+      {
+       "t": ".",
+       "fix": true
+      }
+     ],
+     "tipp": "Prüfe jedes Wort: Sagt es, wie jemand oder etwas ist? Passt es zwischen Artikel und Nomen, zum Beispiel <i>der … König</i>?",
+     "erklaerung": "<i>frisches</i>, <i>süßem</i> und <i>fröhlich</i> sagen, wie das Brot, der Honig und der König sind. <i>König</i> und <i>Honig</i> enden zwar auf <i>-ig</i>, sind aber Nomen. <i>sehr</i> verstärkt nur ein Adjektiv, ist aber selbst kein Adjektiv."
+    }
+   ]
+  },
+  {
+   "id": "gr-wortbildung",
+   "titel": "Wortbausteine und Wortfamilien",
+   "kurz": "Zusammengesetzte Nomen, Wortfamilien, Wortfelder, Vor- und Nachsilben",
+   "kompetenz": "wortbildung",
+   "wissen": {
+    "merksatz": "Aus <b>Wortbausteinen</b> entstehen neue Wörter. Ein <b>zusammengesetztes Nomen</b> besteht aus <b>Bestimmungswort</b> und <b>Grundwort</b>. Das Grundwort steht hinten und bestimmt den Artikel: <i>das Haus + die Tür = die Haustür</i>. Wörter mit demselben Wortstamm bilden eine <b>Wortfamilie</b>.",
+    "punkte": [
+     "Das Bestimmungswort erklärt das Grundwort genauer: Eine <i>Haustür</i> ist eine Tür, ein <i>Türschloss</i> ist ein Schloss.",
+     "Eine <b>Wortfamilie</b> hat einen gemeinsamen Wortstamm: <i>spielen, der Spieler, der Spielplatz, verspielt</i>. Manchmal ändert sich dabei ein Selbstlaut: <i>fahren – die Fähre</i>.",
+     "Ein <b>Wortfeld</b> sind Wörter mit ähnlicher Bedeutung, aber verschiedenem Wortstamm: <i>sagen – flüstern, rufen, fragen</i>; <i>gehen – schleichen, rennen, bummeln</i>.",
+     "<b>Vorsilben</b> (Präfixe) stehen vorn und verändern die Bedeutung: <i>kaufen – verkaufen</i>, <i>decken – entdecken</i>, <i>freundlich – unfreundlich</i>.",
+     "<b>Nachsilben</b> (Suffixe) stehen hinten. Mit <i>-ung, -heit, -keit</i> und <i>-nis</i> entstehen Nomen: <i>die Hoffnung, die Freiheit, die Ehrlichkeit, das Ergebnis</i>."
+    ],
+    "beispiele": [
+     "der Apfel + der Saft = der Apfelsaft",
+     "das Haus + die Tür = die Haustür",
+     "Wortfamilie: spielen, Spieler, Spielplatz",
+     "Wortfeld sagen: flüstern, rufen, fragen",
+     "Vorsilbe: kaufen → verkaufen",
+     "Nachsilbe: frei → die Freiheit"
+    ]
+   },
+   "items": [
+    {
+     "id": "gr-wortbildung-01",
+     "typ": "markieren",
+     "stufe": 1,
+     "kompetenz": "wortbildung",
+     "frage": "Tippe alle zusammengesetzten Nomen an.",
+     "teile": [
+      {
+       "t": "Am"
+      },
+      {
+       "t": "Wandertag",
+       "ziel": true
+      },
+      {
+       "t": "packt"
+      },
+      {
+       "t": "Noah"
+      },
+      {
+       "t": "eine"
+      },
+      {
+       "t": "Wasserflasche",
+       "ziel": true
+      },
+      {
+       "t": ",",
+       "fix": true
+      },
+      {
+       "t": "einen"
+      },
+      {
+       "t": "Apfel"
+      },
+      {
+       "t": "und"
+      },
+      {
+       "t": "seine"
+      },
+      {
+       "t": "Regenjacke",
+       "ziel": true
+      },
+      {
+       "t": "in"
+      },
+      {
+       "t": "die"
+      },
+      {
+       "t": "Tasche"
+      },
+      {
+       "t": ".",
+       "fix": true
+      }
+     ],
+     "tipp": "Suche zuerst alle Nomen. Prüfe dann bei jedem: Stecken darin zwei Wörter, so wie in <i>Schnee + Mann</i>?",
+     "erklaerung": "<i>Wandertag</i> (wandern + Tag), <i>Wasserflasche</i> (Wasser + Flasche) und <i>Regenjacke</i> (Regen + Jacke) sind zusammengesetzt. <i>Apfel</i>, <i>Tasche</i> und <i>Noah</i> kann man nicht zerlegen."
+    },
+    {
+     "id": "gr-wortbildung-02",
+     "typ": "luecke",
+     "stufe": 1,
+     "kompetenz": "wortbildung",
+     "frage": "Welcher Artikel passt zum zusammengesetzten Nomen?",
+     "teile": [
+      {
+       "t": "Bei Oma blüht "
+      },
+      {
+       "wahl": [
+        "der",
+        "die",
+        "das"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": " Kirschbaum. "
+      },
+      {
+       "wahl": [
+        "Der",
+        "Die",
+        "Das"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": " Gartentür steht offen. "
+      },
+      {
+       "wahl": [
+        "Der",
+        "Die",
+        "Das"
+       ],
+       "loesung": 2
+      },
+      {
+       "t": " Vogelhaus hängt am Zaun."
+      }
+     ],
+     "tipp": "Zerlege jedes Nomen in seine zwei Teile. Welcher der beiden Teile bestimmt den Artikel?",
+     "erklaerung": "Der Artikel richtet sich nach dem Grundwort, also nach dem hinteren Wort: <i>der Baum → der Kirschbaum</i>, <i>die Tür → die Gartentür</i>, <i>das Haus → das Vogelhaus</i>."
+    },
+    {
+     "id": "gr-wortbildung-03",
+     "typ": "zuordnen",
+     "stufe": 1,
+     "kompetenz": "wortbildung",
+     "frage": "Zu welchem Wortfeld gehört das Verb? Ordne zu.",
+     "gruppen": [
+      "Wortfeld sagen",
+      "Wortfeld gehen"
+     ],
+     "elemente": [
+      {
+       "t": "brüllen",
+       "g": 0
+      },
+      {
+       "t": "murmeln",
+       "g": 0
+      },
+      {
+       "t": "antworten",
+       "g": 0
+      },
+      {
+       "t": "erzählen",
+       "g": 0
+      },
+      {
+       "t": "schlendern",
+       "g": 1
+      },
+      {
+       "t": "wandern",
+       "g": 1
+      },
+      {
+       "t": "stapfen",
+       "g": 1
+      },
+      {
+       "t": "eilen",
+       "g": 1
+      }
+     ],
+     "tipp": "Stell dir vor, wie jemand das macht: Braucht er dafür vor allem den Mund oder die Beine?",
+     "erklaerung": "<i>brüllen, murmeln, antworten</i> und <i>erzählen</i> sind verschiedene Arten zu sprechen. <i>schlendern, wandern, stapfen</i> und <i>eilen</i> sind verschiedene Arten, sich zu Fuß fortzubewegen."
+    },
+    {
+     "id": "gr-wortbildung-04",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "wortbildung",
+     "frage": "Was ist eine <i>Topfblume</i>?",
+     "optionen": [
+      {
+       "text": "eine Blume, die in einem Topf wächst",
+       "richtig": true
+      },
+      {
+       "text": "ein Topf, in den man Blumen pflanzt",
+       "richtig": false
+      },
+      {
+       "text": "ein Topf mit einem bunten Blumenmuster",
+       "richtig": false
+      },
+      {
+       "text": "ein Topf, der wie eine Blume aussieht",
+       "richtig": false
+      }
+     ],
+     "tipp": "Welches Wort steht hinten? Das Grundwort sagt dir, was für ein Ding gemeint ist.",
+     "erklaerung": "Das Grundwort steht hinten: <i>Blume</i>. Eine Topfblume ist also eine Blume, und das Bestimmungswort <i>Topf</i> sagt, wo sie wächst. Ein Topf für Blumen heißt umgekehrt <i>Blumentopf</i>."
+    },
+    {
+     "id": "gr-wortbildung-05",
+     "typ": "multi",
+     "stufe": 2,
+     "kompetenz": "wortbildung",
+     "frage": "Welche Wörter gehören zur Wortfamilie <i>fahren</i>?",
+     "optionen": [
+      {
+       "text": "der Beifahrer",
+       "richtig": true
+      },
+      {
+       "text": "die Abfahrt",
+       "richtig": true
+      },
+      {
+       "text": "das Fahrrad",
+       "richtig": true
+      },
+      {
+       "text": "die Farbe",
+       "richtig": false
+      },
+      {
+       "text": "die Fahne",
+       "richtig": false
+      },
+      {
+       "text": "der Pfarrer",
+       "richtig": false
+      }
+     ],
+     "tipp": "Suche in jedem Wort den Wortstamm <i>fahr</i>. Klingt ein Wort nur ähnlich, gehört es nicht dazu.",
+     "erklaerung": "In <i>Beifahrer</i>, <i>Abfahrt</i> und <i>Fahrrad</i> steckt der Wortstamm <i>fahr</i>. <i>Farbe</i>, <i>Fahne</i> und <i>Pfarrer</i> klingen nur ähnlich, mit <i>fahren</i> haben sie nichts zu tun."
+    },
+    {
+     "id": "gr-wortbildung-06",
+     "typ": "luecke",
+     "stufe": 2,
+     "kompetenz": "wortbildung",
+     "frage": "Welche Vorsilbe passt? Wähle aus.",
+     "teile": [
+      {
+       "t": "Gestern ist Amiras Katze aus dem Garten "
+      },
+      {
+       "wahl": [
+        "ver",
+        "ent",
+        "be"
+       ],
+       "loesung": 1
+      },
+      {
+       "t": "laufen. Bei der Suche im Nebel haben sich Amira und ihr Bruder fast selbst "
+      },
+      {
+       "wahl": [
+        "ver",
+        "ent",
+        "be"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": "laufen. Am Abend saß die Katze vor der Tür und wartete "
+      },
+      {
+       "wahl": [
+        "un",
+        "ver",
+        "ent"
+       ],
+       "loesung": 0
+      },
+      {
+       "t": "geduldig auf ihr Futter."
+      }
+     ],
+     "tipp": "Lies den ganzen Satz mit jeder Vorsilbe. Welches Wort gibt es wirklich, und welches passt zum Sinn?",
+     "erklaerung": "Die Katze ist <i>entlaufen</i>: Sie ist weggelaufen. Amira und ihr Bruder hätten sich fast <i>verlaufen</i>: Sie hätten beinahe den Weg nicht mehr gefunden. <i>Ungeduldig</i> bedeutet „nicht geduldig“ – die Vorsilbe verändert die Bedeutung."
+    },
+    {
+     "id": "gr-wortbildung-07",
+     "typ": "matrix",
+     "stufe": 3,
+     "kompetenz": "wortbildung",
+     "frage": "Lies jede Aussage genau. Ist sie richtig oder falsch?",
+     "aussagen": [
+      {
+       "text": "Es heißt <i>die Apfelsaftflasche</i>, weil das letzte Wort <i>die Flasche</i> ist.",
+       "richtig": true
+      },
+      {
+       "text": "Bei <i>Haustür</i> ist <i>Haus</i> das Grundwort.",
+       "richtig": false
+      },
+      {
+       "text": "<i>murmeln</i>, <i>schreien</i> und <i>fragen</i> gehören zu einer Wortfamilie.",
+       "richtig": false
+      },
+      {
+       "text": "<i>backen</i>, <i>der Bäcker</i> und <i>das Gebäck</i> gehören zu einer Wortfamilie.",
+       "richtig": true
+      }
+     ],
+     "tipp": "Bei einer Wortfamilie steckt in allen Wörtern derselbe Wortstamm. Bei einem Wortfeld haben die Wörter nur eine ähnliche Bedeutung. Und: Wo steht das Grundwort?",
+     "erklaerung": "Das Grundwort steht immer hinten: bei <i>Apfelsaftflasche</i> ist es <i>Flasche</i>, bei <i>Haustür</i> ist es <i>Tür</i>. <i>murmeln, schreien, fragen</i> sind ein Wortfeld, weil sie Ähnliches bedeuten. In <i>backen, Bäcker, Gebäck</i> steckt derselbe Wortstamm <i>back</i>, manchmal mit <i>ä</i>."
+    },
+    {
+     "id": "gr-wortbildung-08",
+     "typ": "zuordnen",
+     "stufe": 3,
+     "kompetenz": "wortbildung",
+     "frage": "Mit welcher Nachsilbe wird aus dem Wort ein Nomen? Ordne zu.",
+     "gruppen": [
+      "-heit",
+      "-keit",
+      "-ung",
+      "-nis"
+     ],
+     "elemente": [
+      {
+       "t": "dunkel",
+       "g": 0
+      },
+      {
+       "t": "krank",
+       "g": 0
+      },
+      {
+       "t": "freundlich",
+       "g": 1
+      },
+      {
+       "t": "sauber",
+       "g": 1
+      },
+      {
+       "t": "üben",
+       "g": 2
+      },
+      {
+       "t": "wandern",
+       "g": 2
+      },
+      {
+       "t": "erlauben",
+       "g": 3
+      },
+      {
+       "t": "geheim",
+       "g": 3
+      }
+     ],
+     "tipp": "Hänge jede Nachsilbe probeweise an und sprich das neue Wort laut. Nur eine Nachsilbe ergibt ein echtes Nomen.",
+     "erklaerung": "Es heißt: die Dunkelheit, die Krankheit – die Freundlichkeit, die Sauberkeit – die Übung, die Wanderung – die Erlaubnis, das Geheimnis. Alle neuen Wörter sind Nomen und werden großgeschrieben."
+    }
+   ]
+  }
+ ]
+}

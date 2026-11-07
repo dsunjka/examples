@@ -21,14 +21,14 @@
     "titel": "Öffnungszeiten & Preise",
     "adresse": "www.staunwerk-talbrunn.de/besuch/preise",
     "farbe": "tuerkis",
-    "html": "<div class=\"w-kopf\"><div class=\"w-logo\">🔬 Staunwerk Talbrunn</div><small class=\"w-klein\">Mitmach-Museum für Naturwissenschaften</small></div><div class=\"w-menue\"><a data-ziel=\"start\">Start</a><a data-ziel=\"preise\" class=\"aktiv\">Öffnungszeiten &amp; Preise</a><a data-ziel=\"labore\">Mitmach-Labore</a><a data-ziel=\"anfahrt\">Anfahrt</a><a data-ziel=\"fragen\">Häufige Fragen</a></div><div class=\"w-inhalt\"><h1>Öffnungszeiten &amp; Preise</h1><h2>Öffnungszeiten</h2><table class=\"w-tabelle\"><thead><tr><th>Tag</th><th>Geöffnet</th></tr></thead><tbody><tr><td>Montag</td><td>Ruhetag – geschlossen</td></tr><tr><td>Dienstag bis Freitag</td><td>9:00–17:00 Uhr</td></tr><tr><td>Samstag, Sonntag und Feiertage</td><td>10:00–18:00 Uhr</td></tr></tbody></table><div class=\"w-kasten w-kasten--info\"><strong>Ferien und Feiertage:</strong> In den bayerischen Schulferien ist täglich von 10:00 bis 18:00 Uhr geöffnet – auch montags. Am 24., 25. und 31. Dezember bleibt das Staunwerk geschlossen. Letzter Einlass ist eine Stunde vor Schließung.</div><h2>Eintrittspreise</h2><table class=\"w-tabelle\"><thead><tr><th>Eintritt</th><th>Preis</th></tr></thead><tbody><tr><td>Erwachsene</td><td>9,00 €</td></tr><tr><td>Kinder und Jugendliche (6 bis 17 Jahre)</td><td>5,50 €</td></tr><tr><td>Kinder unter 6 Jahren</td><td>frei</td></tr><tr><td>Ermäßigt (Studierende, Menschen mit Behinderung)</td><td>6,50 €</td></tr><tr><td>Schulklassen ab 10 Kindern, pro Kind</td><td>4,00 €</td></tr></tbody></table><div class=\"w-kasten w-kasten--tipp\"><strong>Für Schulklassen:</strong> Zwei Begleitpersonen pro Klasse haben freien Eintritt. Jede weitere Begleitperson zahlt 5,00 €. Die Mitmach-Labore kosten zusätzlich zum Eintritt.</div><p class=\"w-klein\">Stand der Preise: 1. September 2026</p></div><div class=\"w-fuss\"><a data-ziel=\"kontakt\">Kontakt &amp; Impressum</a> · <a data-extern>Datenschutz</a> · <small>© 2026 Staunwerk Talbrunn</small></div>"
+    "html": "<div class=\"w-kopf\"><div class=\"w-logo\">🔬 Staunwerk Talbrunn</div><small class=\"w-klein\">Mitmach-Museum für Naturwissenschaften</small></div><div class=\"w-menue\"><a data-ziel=\"start\">Start</a><a data-ziel=\"preise\" class=\"aktiv\">Öffnungszeiten &amp; Preise</a><a data-ziel=\"labore\">Mitmach-Labore</a><a data-ziel=\"anfahrt\">Anfahrt</a><a data-ziel=\"fragen\">Häufige Fragen</a></div><div class=\"w-inhalt\"><h1>Öffnungszeiten &amp; Preise</h1><h2>Öffnungszeiten</h2><table class=\"w-tabelle\"><thead><tr><th>Tag</th><th>Geöffnet</th></tr></thead><tbody><tr><td>Montag</td><td>Ruhetag – geschlossen</td></tr><tr><td>Dienstag bis Freitag</td><td>9:00–17:00 Uhr</td></tr><tr><td>Samstag, Sonntag und Feiertage</td><td>10:00–18:00 Uhr</td></tr></tbody></table><p><strong>Letzter Einlass:</strong> immer eine Stunde vor Schließung.</p><div class=\"w-kasten w-kasten--info\"><strong>Ferien und Feiertage:</strong> In den bayerischen Schulferien ist täglich von 10:00 bis 18:00 Uhr geöffnet – auch montags. Am 24., 25. und 31. Dezember bleibt das Staunwerk geschlossen.</div><h2>Eintrittspreise</h2><table class=\"w-tabelle\"><thead><tr><th>Eintritt</th><th>Preis</th></tr></thead><tbody><tr><td>Erwachsene</td><td>9,00 €</td></tr><tr><td>Kinder und Jugendliche (6 bis 17 Jahre)</td><td>5,50 €</td></tr><tr><td>Kinder unter 6 Jahren</td><td>frei</td></tr><tr><td>Ermäßigt (Studierende, Menschen mit Behinderung)</td><td>6,50 €</td></tr><tr><td>Schulklassen ab 10 Kindern, pro Kind</td><td>4,00 €</td></tr></tbody></table><div class=\"w-kasten w-kasten--tipp\"><strong>Für Schulklassen:</strong> Zwei Begleitpersonen pro Klasse haben freien Eintritt. Jede weitere Begleitperson zahlt 5,00 €. Die Mitmach-Labore kosten zusätzlich zum Eintritt.</div><p class=\"w-klein\">Stand der Preise: 1. September 2026</p></div><div class=\"w-fuss\"><a data-ziel=\"kontakt\">Kontakt &amp; Impressum</a> · <a data-extern>Datenschutz</a> · <small>© 2026 Staunwerk Talbrunn</small></div>"
    },
    {
     "id": "labore",
     "titel": "Mitmach-Labore",
     "adresse": "www.staunwerk-talbrunn.de/mitmach-labore",
     "farbe": "tuerkis",
-    "html": "<div class=\"w-kopf\"><div class=\"w-logo\">🔬 Staunwerk Talbrunn</div><small class=\"w-klein\">Mitmach-Museum für Naturwissenschaften</small></div><div class=\"w-menue\"><a data-ziel=\"start\">Start</a><a data-ziel=\"preise\">Öffnungszeiten &amp; Preise</a><a data-ziel=\"labore\" class=\"aktiv\">Mitmach-Labore</a><a data-ziel=\"anfahrt\">Anfahrt</a><a data-ziel=\"fragen\">Häufige Fragen</a></div><div class=\"w-inhalt\"><h1>Mitmach-Labore für Schulklassen</h1><p>In unseren Laboren forscht ihr mit echten Geräten.</p><div class=\"w-kasten w-kasten--info\"><strong>So bucht ihr ein Labor:</strong> Ein Labor wird immer für die ganze Klasse gebucht. Die Klasse kann dafür nicht geteilt werden. Lehrkräfte melden ihre Klasse telefonisch beim Besucherservice an. Die Telefonnummer steht unter <a data-ziel=\"kontakt\">Kontakt &amp; Impressum</a>. Der Laborpreis kommt zum Eintritt dazu.</div><div class=\"w-karte\"><h2>⚡ Strom-Detektive</h2><p>Wie kommt der Strom in die Lampe? Ihr baut eigene Stromkreise und testet, welche Dinge Strom leiten.</p><dl><dt>Alter</dt><dd>8 bis 11 Jahre</dd><dt>Termine</dt><dd>dienstags und donnerstags, 9:30 Uhr</dd><dt>Dauer</dt><dd>90 Minuten</dd><dt>Gruppe</dt><dd>höchstens 28 Kinder</dd><dt>Preis</dt><dd>3,00 € pro Kind</dd><dt>Anmeldung</dt><dd>spätestens 7 Tage vorher</dd></dl></div><div class=\"w-karte\"><h2>🚀 Raketen-Werkstatt</h2><p>Warum fliegt eine Rakete? Ihr lasst Luftballon-Raketen an einer Schnur sausen und lernt den Rückstoß kennen.</p><dl><dt>Alter</dt><dd>9 bis 12 Jahre</dd><dt>Termine</dt><dd>mittwochs und freitags, 10:00 Uhr</dd><dt>Dauer</dt><dd>2 Stunden</dd><dt>Gruppe</dt><dd>höchstens 25 Personen (Kinder und Begleitpersonen zusammen)</dd><dt>Preis</dt><dd>4,00 € pro Kind</dd><dt>Anmeldung</dt><dd>spätestens 7 Tage vorher</dd></dl></div><div class=\"w-kasten w-kasten--tipp\"><strong>Für Nachwuchs-Forscher:</strong> Das Strom-Set „Blitzbox“ für zu Hause gibt es in unserem Museumsshop – jetzt nur 19,99 € statt 24,99 €! Schnell zugreifen!</div><div class=\"w-karte\"><h2>🎨 Farben-Labor</h2><p>Steckt in einem schwarzen Filzstift nur Schwarz? Ihr trennt Farben mit Wasser und Filterpapier und lasst Rotkohlsaft die Farbe wechseln.</p><dl><dt>Alter</dt><dd>7 bis 10 Jahre</dd><dt>Termine</dt><dd>dienstags bis freitags, 11:00 Uhr</dd><dt>Dauer</dt><dd>60 Minuten</dd><dt>Gruppe</dt><dd>höchstens 30 Kinder</dd><dt>Preis</dt><dd>2,50 € pro Kind</dd><dt>Anmeldung</dt><dd>spätestens 2 Wochen vorher</dd></dl></div><div class=\"w-karte\"><h2>🔍 Mikroskop-Safari</h2><p>Was lebt in einem Tropfen Teichwasser? Mit echten Mikroskopen entdeckt ihr winzige Lebewesen.</p><dl><dt>Alter</dt><dd>ab 11 Jahren (ab Klasse 5)</dd><dt>Termine</dt><dd>dienstags bis freitags, 13:00 Uhr</dd><dt>Dauer</dt><dd>90 Minuten</dd><dt>Gruppe</dt><dd>höchstens 30 Kinder</dd><dt>Preis</dt><dd>3,50 € pro Kind</dd><dt>Anmeldung</dt><dd>spätestens 14 Tage vorher</dd></dl></div></div><div class=\"w-fuss\"><a data-ziel=\"kontakt\">Kontakt &amp; Impressum</a> · <a data-extern>Datenschutz</a> · <small>© 2026 Staunwerk Talbrunn</small></div>"
+    "html": "<div class=\"w-kopf\"><div class=\"w-logo\">🔬 Staunwerk Talbrunn</div><small class=\"w-klein\">Mitmach-Museum für Naturwissenschaften</small></div><div class=\"w-menue\"><a data-ziel=\"start\">Start</a><a data-ziel=\"preise\">Öffnungszeiten &amp; Preise</a><a data-ziel=\"labore\" class=\"aktiv\">Mitmach-Labore</a><a data-ziel=\"anfahrt\">Anfahrt</a><a data-ziel=\"fragen\">Häufige Fragen</a></div><div class=\"w-inhalt\"><h1>Mitmach-Labore für Schulklassen</h1><p>In unseren Laboren forscht ihr mit echten Geräten.</p><div class=\"w-kasten w-kasten--info\"><strong>So bucht ihr ein Labor:</strong> Ein Labor wird immer für die ganze Klasse gebucht. Die Klasse kann dafür nicht geteilt werden. Alle Begleitpersonen der Klasse nehmen am Labor teil. Lehrkräfte melden ihre Klasse telefonisch beim Besucherservice an. Die Telefonnummer steht unter <a data-ziel=\"kontakt\">Kontakt &amp; Impressum</a>. Der Laborpreis kommt zum Eintritt dazu.</div><div class=\"w-karte\"><h2>⚡ Strom-Detektive</h2><p>Wie kommt der Strom in die Lampe? Ihr baut eigene Stromkreise und testet, welche Dinge Strom leiten.</p><dl><dt>Alter</dt><dd>8 bis 11 Jahre</dd><dt>Termine</dt><dd>dienstags und donnerstags, 9:30 Uhr</dd><dt>Dauer</dt><dd>90 Minuten</dd><dt>Gruppe</dt><dd>höchstens 28 Kinder</dd><dt>Preis</dt><dd>3,00 € pro Kind</dd><dt>Anmeldung</dt><dd>spätestens 7 Tage vorher</dd></dl></div><div class=\"w-karte\"><h2>🚀 Raketen-Werkstatt</h2><p>Warum fliegt eine Rakete? Ihr lasst Luftballon-Raketen an einer Schnur sausen und lernt den Rückstoß kennen.</p><dl><dt>Alter</dt><dd>9 bis 12 Jahre</dd><dt>Termine</dt><dd>mittwochs und freitags, 10:00 Uhr</dd><dt>Dauer</dt><dd>2 Stunden</dd><dt>Gruppe</dt><dd>höchstens 25 Personen (Kinder und Begleitpersonen zusammen)</dd><dt>Preis</dt><dd>4,00 € pro Kind</dd><dt>Anmeldung</dt><dd>spätestens 7 Tage vorher</dd></dl></div><div class=\"w-kasten w-kasten--tipp\"><strong>Für Nachwuchs-Forscher:</strong> Das Strom-Set „Blitzbox“ für zu Hause gibt es in unserem Museumsshop – jetzt nur 19,99 € statt 24,99 €! Schnell zugreifen!</div><div class=\"w-karte\"><h2>🎨 Farben-Labor</h2><p>Steckt in einem schwarzen Filzstift nur Schwarz? Ihr trennt Farben mit Wasser und Filterpapier und lasst Rotkohlsaft die Farbe wechseln.</p><dl><dt>Alter</dt><dd>7 bis 10 Jahre</dd><dt>Termine</dt><dd>dienstags bis freitags, 11:00 Uhr</dd><dt>Dauer</dt><dd>60 Minuten</dd><dt>Gruppe</dt><dd>höchstens 30 Kinder</dd><dt>Preis</dt><dd>2,50 € pro Kind</dd><dt>Anmeldung</dt><dd>spätestens 2 Wochen vorher</dd></dl></div><div class=\"w-karte\"><h2>🔍 Mikroskop-Safari</h2><p>Was lebt in einem Tropfen Teichwasser? Mit echten Mikroskopen entdeckt ihr winzige Lebewesen.</p><dl><dt>Alter</dt><dd>ab 11 Jahren</dd><dt>Termine</dt><dd>dienstags bis freitags, 13:00 Uhr</dd><dt>Dauer</dt><dd>90 Minuten</dd><dt>Gruppe</dt><dd>höchstens 30 Kinder</dd><dt>Preis</dt><dd>3,50 € pro Kind</dd><dt>Anmeldung</dt><dd>spätestens 14 Tage vorher</dd></dl></div></div><div class=\"w-fuss\"><a data-ziel=\"kontakt\">Kontakt &amp; Impressum</a> · <a data-extern>Datenschutz</a> · <small>© 2026 Staunwerk Talbrunn</small></div>"
    },
    {
     "id": "anfahrt",
@@ -42,7 +42,7 @@
     "titel": "Häufige Fragen",
     "adresse": "www.staunwerk-talbrunn.de/fragen",
     "farbe": "tuerkis",
-    "html": "<div class=\"w-kopf\"><div class=\"w-logo\">🔬 Staunwerk Talbrunn</div><small class=\"w-klein\">Mitmach-Museum für Naturwissenschaften</small></div><div class=\"w-menue\"><a data-ziel=\"start\">Start</a><a data-ziel=\"preise\">Öffnungszeiten &amp; Preise</a><a data-ziel=\"labore\">Mitmach-Labore</a><a data-ziel=\"anfahrt\">Anfahrt</a><a data-ziel=\"fragen\" class=\"aktiv\">Häufige Fragen</a></div><div class=\"w-inhalt\"><h1>Häufige Fragen</h1><p>Tippt auf eine Frage, um die Antwort zu lesen.</p><details><summary>Wo dürfen wir unsere mitgebrachte Brotzeit essen?</summary><p>Eure Brotzeit dürft ihr nur im Picknickraum im Erdgeschoss essen. In der Ausstellung und in den Laboren sind Essen und Trinken nicht erlaubt. Im Museumscafé dürfen nur Speisen und Getränke aus dem Café verzehrt werden.</p></details><details><summary>Wohin mit Jacken und Rucksäcken?</summary><p>In der Garderobe im Erdgeschoss gibt es Schließfächer. Dafür braucht ihr eine 1-€-Münze, die ihr beim Aufschließen zurückbekommt. Schulklassen bekommen außerdem kostenlos einen Garderobenwagen.</p></details><details><summary>Darf man im Museum fotografieren?</summary><p>In der Ausstellung dürft ihr fotografieren und filmen – bitte ohne Blitz. In den Mitmach-Laboren ist Fotografieren nicht erlaubt, damit sich alle ganz auf ihre Versuche konzentrieren können.</p></details></div><div class=\"w-fuss\"><a data-ziel=\"kontakt\">Kontakt &amp; Impressum</a> · <a data-extern>Datenschutz</a> · <small>© 2026 Staunwerk Talbrunn</small></div>"
+    "html": "<div class=\"w-kopf\"><div class=\"w-logo\">🔬 Staunwerk Talbrunn</div><small class=\"w-klein\">Mitmach-Museum für Naturwissenschaften</small></div><div class=\"w-menue\"><a data-ziel=\"start\">Start</a><a data-ziel=\"preise\">Öffnungszeiten &amp; Preise</a><a data-ziel=\"labore\">Mitmach-Labore</a><a data-ziel=\"anfahrt\">Anfahrt</a><a data-ziel=\"fragen\" class=\"aktiv\">Häufige Fragen</a></div><div class=\"w-inhalt\"><h1>Häufige Fragen</h1><p>Tippt auf eine Frage, um die Antwort zu lesen.</p><details><summary>Wo dürfen wir unsere mitgebrachte Brotzeit essen?</summary><p>Eure Brotzeit dürft ihr nur im Picknickraum im Erdgeschoss essen. In der Ausstellung und in den Laboren sind Essen und Trinken nicht erlaubt. Im Museumscafé dürft ihr nur essen und trinken, was ihr im Café gekauft habt.</p></details><details><summary>Wohin mit Jacken und Rucksäcken?</summary><p>In der Garderobe im Erdgeschoss gibt es Schließfächer. Dafür braucht ihr eine 1-€-Münze, die ihr beim Aufschließen zurückbekommt. Schulklassen bekommen außerdem kostenlos einen Garderobenwagen.</p></details><details><summary>Darf man im Museum fotografieren?</summary><p>In der Ausstellung dürft ihr fotografieren und filmen – bitte ohne Blitz. In den Mitmach-Laboren ist Fotografieren nicht erlaubt, damit sich alle ganz auf ihre Versuche konzentrieren können.</p></details></div><div class=\"w-fuss\"><a data-ziel=\"kontakt\">Kontakt &amp; Impressum</a> · <a data-extern>Datenschutz</a> · <small>© 2026 Staunwerk Talbrunn</small></div>"
    },
    {
     "id": "kontakt",
@@ -58,27 +58,27 @@
     "typ": "single",
     "stufe": 2,
     "kompetenz": "navigieren",
-    "frage": "Die Kinder möchten wissen, wo sie im Staunwerk ihre mitgebrachte Brotzeit essen dürfen. Wie findet Frau Yilmaz das auf der Website heraus?",
+    "frage": "Herr Brandl fragt: „Dürfen die Kinder in den Mitmach-Laboren fotografieren?“ Wo findet Frau Yilmaz die Antwort auf der Website, und wie lautet sie?",
     "optionen": [
      {
-      "text": "„Häufige Fragen“ antippen und die passende Frage aufklappen",
+      "text": "Auf der Seite „Häufige Fragen“ nach dem Aufklappen: In den Laboren ist Fotografieren nicht erlaubt.",
       "richtig": true
      },
      {
-      "text": "„Öffnungszeiten & Preise“ antippen und die Tabellen lesen",
+      "text": "Auf der Seite „Häufige Fragen“ nach dem Aufklappen: In den Laboren darf man ohne Blitz fotografieren.",
       "richtig": false
      },
      {
-      "text": "„Mitmach-Labore“ antippen und den Infokasten lesen",
+      "text": "Auf der Seite „Mitmach-Labore“ im Kasten zum Buchen: In den Laboren ist Fotografieren nicht erlaubt.",
       "richtig": false
      },
      {
-      "text": "„Kontakt & Impressum“ antippen und die Adresse lesen",
+      "text": "Auf der Seite „Öffnungszeiten & Preise“ im Kasten „Für Schulklassen“: Man darf ohne Blitz fotografieren.",
       "richtig": false
      }
     ],
-    "tipp": "Überlege, wo eine Website Antworten auf typische Fragen von Besuchern sammelt. Öffne die Seiten und suche nach dem Wort „Brotzeit“.",
-    "erklaerung": "Die Frage „Wo dürfen wir unsere mitgebrachte Brotzeit essen?“ steht unter „Häufige Fragen“. Erst wenn du sie antippst, klappt die Antwort auf: nur im Picknickraum."
+    "tipp": "Öffne die Seiten, die in den Antworten genannt werden, und suche nach dem Wort „fotografieren“. Manche Texte erscheinen erst, wenn du etwas antippst.",
+    "erklaerung": "Die Antwort steht unter „Häufige Fragen“ und erscheint erst, wenn du die Frage zum Fotografieren antippst. Dort steht: In der Ausstellung darf man ohne Blitz fotografieren, in den Mitmach-Laboren aber gar nicht."
    },
    {
     "id": "d2-2",
@@ -97,11 +97,11 @@
       "richtig": false
      },
      {
-      "text": "Für jedes Kind der Klasse kostet der Eintritt 4,00 €.",
+      "text": "Für alle 24 Kinder zusammen kostet der Eintritt 96,00 €.",
       "richtig": true
      },
      {
-      "text": "Für jedes Kind der Klasse kostet der Eintritt 5,50 €.",
+      "text": "Am Freitag, 27. November, ist der letzte Einlass um 17:00 Uhr.",
       "richtig": false
      },
      {
@@ -109,12 +109,12 @@
       "richtig": true
      },
      {
-      "text": "Herr Brandl muss als zweite Begleitperson 5,00 € zahlen.",
+      "text": "Ein Mitmach-Labor ist im Eintrittspreis schon enthalten.",
       "richtig": false
      }
     ],
-    "tipp": "Such in der Preistabelle die Zeile, die zu einer ganzen Schulklasse passt. Lies auch die beiden farbigen Kästen genau.",
-    "erklaerung": "Montags ist Ruhetag, und die Ferienregel gilt in einer Schulwoche nicht. Die Klasse zahlt den Schulklassenpreis von 4,00 € pro Kind, und zwei Begleitpersonen pro Klasse sind frei – erst jede weitere zahlt 5,00 €. Unter der Woche öffnet das Museum schon um 9:00 Uhr."
+    "tipp": "Such in der Preistabelle die Zeile, die zu einer ganzen Schulklasse passt, und rechne für alle Kinder. Lies auch die Hinweise unter den Tabellen und in den farbigen Kästen genau.",
+    "erklaerung": "Montags ist Ruhetag (die Ferienregel gilt in einer Schulwoche nicht), und zwei Begleitpersonen pro Klasse haben freien Eintritt. Die Kinder zahlen den Schulklassenpreis: 24 × 4,00 € = 96,00 €. Dienstags bis freitags öffnet das Museum aber schon um 9:00 Uhr, der letzte Einlass ist eine Stunde vor Schließung (16:00 Uhr), und die Labore kosten extra."
    },
    {
     "id": "d2-3",
@@ -122,7 +122,7 @@
     "stufe": 3,
     "kompetenz": "verknuepfen",
     "tippSeite": "labore",
-    "frage": "Frau Yilmaz will die Klasse noch heute für ein Mitmach-Labor anmelden. Welche Angebote passen für die Klasse 4b?",
+    "frage": "Frau Yilmaz will die Klasse heute Vormittag für ein Mitmach-Labor anmelden. Welche Angebote passen für die Klasse 4b?",
     "optionen": [
      {
       "text": "„Strom-Detektive“ am Dienstag, 24. November",
@@ -149,8 +149,8 @@
       "richtig": false
      }
     ],
-    "tipp": "Prüfe jedes Angebot der Reihe nach: Alter, Wochentag, Gruppengröße und Anmeldefrist. Schau auch, ob die Website an anderer Stelle Neuigkeiten zu den Laboren meldet.",
-    "erklaerung": "Passend sind die Strom-Detektive am Dienstag und das Farben-Labor am Freitag – beide Anmeldefristen schafft Frau Yilmaz heute noch. Die Strom-Detektive gibt es nicht mittwochs, das Farben-Labor ist laut Startseite bis 25. November wegen Umbau geschlossen, die Mikroskop-Safari ist erst für Kinder ab 11 Jahren und in der Raketen-Werkstatt wären es mit den Lehrkräften 26 Personen statt höchstens 25."
+    "tipp": "Prüfe jedes Angebot der Reihe nach: Alter, Wochentag, Gruppengröße und Anmeldefrist. Lies auch den Kasten „So bucht ihr ein Labor“ genau. Schau außerdem, ob die Website an anderer Stelle Neuigkeiten zu den Laboren meldet.",
+    "erklaerung": "Passend sind die Strom-Detektive am Dienstag und das Farben-Labor am Freitag – beide Anmeldefristen schafft Frau Yilmaz heute noch. Die Strom-Detektive gibt es nicht mittwochs, im Farben-Labor finden laut Startseite bis 25. November wegen Umbau keine Termine statt, die Mikroskop-Safari ist erst ab 11 Jahren, und in der Raketen-Werkstatt wären es mit beiden Lehrkräften 26 Personen statt höchstens 25."
    },
    {
     "id": "d2-4",
@@ -158,7 +158,7 @@
     "stufe": 2,
     "kompetenz": "bewerten",
     "tippSeite": "labore",
-    "frage": "Auf der Website stehen verschiedene Kästen und Hinweise. Ist das eine Information oder Werbung? Entscheide bei jedem Teil.",
+    "frage": "Auf der Website stehen verschiedene Kästen, Meldungen und Hinweise. Entscheide in jeder Zeile: Ist das eine Information oder Werbung?",
     "spalten": [
      "Information",
      "Werbung"
@@ -181,7 +181,7 @@
       "richtig": true
      }
     ],
-    "tipp": "Frag dich bei jedem Teil: Will es dir etwas verkaufen oder nur etwas mitteilen? Werbung ist nicht immer mit „Anzeige“ beschriftet.",
+    "tipp": "Frag dich in jeder Zeile: Will dir der Text etwas verkaufen oder nur etwas mitteilen? Werbung ist nicht immer mit „Anzeige“ beschriftet.",
     "erklaerung": "Werbung will, dass du etwas kaufst. Der Riegel-Kasten ist als „Anzeige“ gekennzeichnet, und der Blitzbox-Kasten wirbt mit einem Sonderpreis für ein Produkt aus dem Museumsshop – auch ohne das Wort „Anzeige“. Die Umbau-Meldung und der Baustellen-Hinweis teilen nur etwas mit."
    }
   ]

@@ -1,0 +1,527 @@
+{
+ "modul": "lesen",
+ "texte": [
+  {
+   "id": "l-schulweg",
+   "titel": "Unterwegs zur Schule",
+   "textsorte": "Sachtext mit Tabelle",
+   "einleitung": "Die Klasse 4a hat herausgefunden, wie die Kinder ihrer Schule morgens zum Unterricht kommen – lies den Bericht und schau dir die Tabelle genau an.",
+   "text": {
+    "titel": "So kommen wir zur Schule",
+    "untertitel": "Eine Umfrage der Klasse 4a",
+    "autor": "Aylin und Mateo, Klasse 4a der Grundschule am Lindenbach in Lindenbrunn",
+    "absaetze": [
+     "Wie kommen die Kinder unserer Schule morgens zum Unterricht? Das wollten wir, die Klasse 4a, im Mai genau wissen. Deshalb haben wir alle 120 Kinder unserer Schule befragt. Jedes Kind durfte nur ein Verkehrsmittel nennen: das, mit dem es meistens kommt. Außerdem hat jedes Kind gesagt, wie viele Minuten sein Schulweg ungefähr dauert. Daraus haben wir für jedes Verkehrsmittel die Durchschnittszeit berechnet.",
+     "Die meisten Kinder gehen zu Fuß. Viele von ihnen wohnen nur wenige Straßen von der Schule entfernt. Wer zu Fuß geht, Fahrrad fährt oder Tretroller fährt, bewegt sich schon vor dem Unterricht an der frischen Luft.",
+     "Mit dem Fahrrad dürfen an unserer Schule nur Kinder kommen, die die Radfahrprüfung bestanden haben. Diese Prüfung machen bei uns alle Kinder in der 4. Klasse. Die Kinder mit dem Tretroller gehen dagegen fast alle in die 1. oder 2. Klasse.",
+     "Die Kinder, die mit dem Schulbus fahren, wohnen in den Dörfern Erlenried und Fuchsbühl. Diese liegen mehrere Kilometer von der Schule entfernt. Auf seinem Weg hält der Schulbus an sieben Haltestellen.",
+     "Am schnellsten sind im Durchschnitt die Kinder, die mit dem Auto gebracht werden. Trotzdem ist dieses „Elterntaxi“ ein Problem. Unser Hausmeister, Herr Kofler, hat an einem Morgen gezählt, wie viele Autos zwischen 7:40 Uhr und 8:00 Uhr vor dem Schultor gehalten haben. Es waren 15 Autos. Manche halten auf dem Gehweg oder an der Bushaltestelle. Dann wird es für die Kinder, die zu Fuß kommen, eng und gefährlich.",
+     "Deshalb starten wir nach den Pfingstferien unser Projekt „Laufbus“. Dabei gehen Kinder morgens gemeinsam zur Schule, wie bei einem Bus mit festen Haltestellen. Ein Erwachsener begleitet die Gruppe. Unser Ziel: Mindestens die Hälfte der Kinder, die jetzt mit dem Auto kommen, soll bald mit dem Laufbus kommen."
+    ],
+    "tabelle": {
+     "titel": "Umfrage der Klasse 4a: So kommen die Kinder zur Schule",
+     "kopf": [
+      "Verkehrsmittel",
+      "Anzahl der Kinder",
+      "Durchschnittliche Dauer des Schulwegs"
+     ],
+     "zeilen": [
+      [
+       "zu Fuß",
+       "52",
+       "12 Minuten"
+      ],
+      [
+       "Fahrrad",
+       "16",
+       "9 Minuten"
+      ],
+      [
+       "Tretroller",
+       "14",
+       "8 Minuten"
+      ],
+      [
+       "Schulbus",
+       "20",
+       "18 Minuten"
+      ],
+      [
+       "Auto („Elterntaxi“)",
+       "18",
+       "7 Minuten"
+      ]
+     ]
+    }
+   },
+   "items": [
+    {
+     "id": "l-schulweg-1",
+     "typ": "matrix",
+     "stufe": 3,
+     "kompetenz": "entnehmen",
+     "frage": "Stimmen die Aussagen? Nutze den Text und die Tabelle.",
+     "spalten": [
+      "richtig",
+      "falsch"
+     ],
+     "aussagen": [
+      {
+       "text": "Mit dem Tretroller kommen mehr Kinder als mit dem Schulbus.",
+       "richtig": false
+      },
+      {
+       "text": "Die Fahrradkinder brauchen im Durchschnitt länger als die Kinder mit dem Tretroller.",
+       "richtig": true
+      },
+      {
+       "text": "Herr Kofler hat an einem Morgen 18 Autos vor dem Schultor gezählt.",
+       "richtig": false
+      },
+      {
+       "text": "Mit dem Laufbus sollen bald mindestens 9 Kinder kommen, die jetzt mit dem Auto gebracht werden.",
+       "richtig": true
+      }
+     ],
+     "tipp": "Für manche Aussagen brauchst du die Tabelle, für andere den Text. Bei einer Aussage musst du Text und Tabelle verbinden und rechnen.",
+     "erklaerung": "Mit dem Tretroller kommen 14 Kinder, mit dem Bus 20. Fahrradkinder brauchen im Durchschnitt 9 Minuten, Rollerkinder 8. Herr Kofler hat 15 Autos gezählt, nicht 18. Und 18 : 2 = 9, also sollen mindestens 9 Auto-Kinder mit dem Laufbus kommen."
+    },
+    {
+     "id": "l-schulweg-2",
+     "typ": "eingabe",
+     "stufe": 3,
+     "kompetenz": "entnehmen",
+     "frage": "Im Text steht, welche Kinder sich schon vor dem Unterricht an der frischen Luft bewegen. Wie viele Kinder sind das laut Umfrage? Rechne mit der Tabelle.",
+     "vorgabe": "Tippe nur die Zahl ein.",
+     "loesungen": [
+      "82",
+      "82 Kinder"
+     ],
+     "tipp": "Suche in Absatz 2 die drei Arten, wie sich Kinder auf dem Schulweg selbst bewegen. Zähle dann die passenden Zahlen aus der Tabelle zusammen.",
+     "erklaerung": "Laut Absatz 2 bewegen sich die Kinder, die zu Fuß gehen, Fahrrad fahren oder Tretroller fahren. Das sind 52 + 16 + 14 = 82 Kinder."
+    },
+    {
+     "id": "l-schulweg-3",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "schliessen",
+     "frage": "Alle Kinder, die mit dem Fahrrad zur Schule kommen, gehen in die 4. Klasse. Woran liegt das?",
+     "optionen": [
+      {
+       "text": "Man braucht die Radfahrprüfung, und die machen die Kinder in der 4. Klasse.",
+       "richtig": true
+      },
+      {
+       "text": "Die Kinder der 4. Klasse wohnen am weitesten von der Schule entfernt.",
+       "richtig": false
+      },
+      {
+       "text": "Die jüngeren Kinder fahren lieber Tretroller, weil das mehr Spaß macht.",
+       "richtig": false
+      },
+      {
+       "text": "Nur für die 4. Klassen gibt es an der Schule einen eigenen Fahrradständer.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lies Absatz 3. Verbinde die ersten beiden Sätze miteinander.",
+     "erklaerung": "Mit dem Rad dürfen nur Kinder kommen, die die Radfahrprüfung bestanden haben. Diese Prüfung machen die Kinder in der 4. Klasse. Deshalb sind alle Radfahrer Viertklässler."
+    },
+    {
+     "id": "l-schulweg-4",
+     "typ": "multi",
+     "stufe": 2,
+     "kompetenz": "schliessen",
+     "frage": "Die Buskinder fahren mit einem Fahrzeug. Trotzdem brauchen sie im Durchschnitt länger als die Kinder, die zu Fuß gehen. Welche Gründe kannst du aus dem Text erschließen?",
+     "optionen": [
+      {
+       "text": "Sie wohnen in Dörfern, die mehrere Kilometer entfernt liegen.",
+       "richtig": true
+      },
+      {
+       "text": "Der Schulbus hält auf seinem Weg an sieben Haltestellen.",
+       "richtig": true
+      },
+      {
+       "text": "Der Schulbus steht jeden Morgen lange im Stau.",
+       "richtig": false
+      },
+      {
+       "text": "Sie müssen zu Hause erst weit zur Haltestelle laufen.",
+       "richtig": false
+      },
+      {
+       "text": "Der Busfahrer fährt besonders langsam, weil Kinder mitfahren.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Vergleiche zuerst in der Tabelle die Zeiten. Lies dann Absatz 4 genau: Was erfährst du dort über den Weg der Buskinder?",
+     "erklaerung": "In Absatz 4 steht, dass die Buskinder mehrere Kilometer entfernt wohnen und der Bus an sieben Haltestellen hält. Von Stau, langen Fußwegen oder einem langsamen Fahrer steht nichts im Text."
+    },
+    {
+     "id": "l-schulweg-5",
+     "typ": "single",
+     "stufe": 1,
+     "kompetenz": "reflektieren",
+     "frage": "Die Klasse hat ihre Ergebnisse zusätzlich in einer Tabelle dargestellt. Wozu ist die Tabelle vor allem gut?",
+     "optionen": [
+      {
+       "text": "Man kann die Zahlen schnell finden und gut miteinander vergleichen.",
+       "richtig": true
+      },
+      {
+       "text": "Man erfährt, warum die Kinder ihr Verkehrsmittel gewählt haben.",
+       "richtig": false
+      },
+      {
+       "text": "Man sieht, wie weit jedes Kind von der Schule entfernt wohnt.",
+       "richtig": false
+      },
+      {
+       "text": "Man erfährt, wie gefährlich jedes Verkehrsmittel für Kinder ist.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Schau dir die Spalten der Tabelle an. Welche Angaben stehen dort – und welche findest du dort gar nicht?",
+     "erklaerung": "In der Tabelle stehen nur Zahlen: die Anzahl der Kinder und die Durchschnittszeit. So findest du sie schnell und kannst sie vergleichen. Gründe, Entfernungen oder Gefahren stehen nicht darin."
+    }
+   ]
+  },
+  {
+   "id": "l-experiment",
+   "titel": "Das schwimmende Ei",
+   "textsorte": "Anleitung",
+   "einleitung": "Mit dieser Anleitung bringst du ein rohes Ei zum Schwimmen und erfährst, warum das klappt.",
+   "text": {
+    "titel": "Kann ein Ei schwimmen?",
+    "untertitel": "Ein Experiment für zu Hause oder für die Schule",
+    "autor": "Forscherkarte Nr. 7 aus der Forscherecke",
+    "absaetze": [
+     "Ein Stein geht im Wasser unter, ein Stück Holz schwimmt. Aber was macht ein rohes Ei? Mit diesem Experiment findest du heraus, wie du ein Ei zum Schwimmen bringst. Du brauchst dafür etwa 20 Minuten.",
+     "## Material",
+     "Du brauchst ein frisches, rohes Ei, ein großes, durchsichtiges Glas (mindestens 500 Milliliter), einen Messbecher, Leitungswasser, Speisesalz, einen Esslöffel und ein Geschirrtuch.",
+     "## So gehst du vor",
+     "Schritt 1: Stelle das Glas auf das Geschirrtuch. Miss 250 Milliliter Leitungswasser ab und gieße es ins Glas.",
+     "Schritt 2: Lege das Ei mit dem Esslöffel vorsichtig ins Wasser. Beobachte genau, wo das Ei bleibt.",
+     "Schritt 3: Hole das Ei mit dem Löffel wieder heraus und lege es auf das Geschirrtuch.",
+     "Schritt 4: Gib einen Esslöffel Salz ins Wasser und rühre so lange um, bis sich das Salz aufgelöst hat. Mach das noch dreimal, bis insgesamt vier Löffel Salz im Wasser sind.",
+     "Schritt 5: Lege das Ei wieder mit dem Löffel ins Glas. Was passiert jetzt?",
+     "Schritt 6 (für Profis): Halte den Löffel umgedreht neben dem Ei knapp über das Wasser. Gieße langsam Leitungswasser auf den Löffel, bis das Glas fast voll ist.",
+     "## Was du beobachtest",
+     "Im Leitungswasser sinkt das Ei auf den Boden. Im Salzwasser steigt es nach oben und schwimmt. Nach Schritt 6 schwebt das Ei ungefähr in der Mitte: Unter ihm ist Salzwasser, über ihm Leitungswasser.",
+     "## Warum ist das so?",
+     "Ob etwas schwimmt oder sinkt, hängt davon ab, ob es schwerer oder leichter ist als die gleiche Menge Wasser. Ein frisches Ei ist etwas schwerer als gleich viel Leitungswasser. Darum sinkt es. Löst sich Salz im Wasser auf, wird das Wasser schwerer, ohne dass es viel mehr wird. Jetzt ist gleich viel Salzwasser schwerer als das Ei. Deshalb trägt das Salzwasser das Ei. Das leichtere Leitungswasser bleibt oben, wenn man es vorsichtig darübergießt. Darum schwebt das Ei dort, wo das Salzwasser beginnt.",
+     "Übrigens: Ein altes Ei kann sogar im Leitungswasser schwimmen. In seinem Inneren hat sich mit der Zeit eine größere Luftblase gebildet.",
+     "## Sicherheitshinweis",
+     "Auf rohen Eiern können Keime sein. Wasche dir deshalb nach dem Experiment gründlich die Hände. Trinke das Salzwasser nicht, denn so viel Salz schadet deinem Körper. Iss das Ei danach nicht roh."
+    ]
+   },
+   "items": [
+    {
+     "id": "l-experiment-1",
+     "typ": "reihenfolge",
+     "stufe": 2,
+     "kompetenz": "entnehmen",
+     "frage": "Bringe die Arbeitsschritte in die richtige Reihenfolge.",
+     "reihe": [
+      "Leitungswasser abmessen und ins Glas gießen",
+      "Das Ei ins Leitungswasser legen",
+      "Das Ei wieder herausholen",
+      "Vier Löffel Salz einrühren",
+      "Das Ei ins Salzwasser legen",
+      "Leitungswasser langsam über den Löffel gießen"
+     ],
+     "tipp": "Lies die Schritte 1 bis 6 noch einmal. Achte darauf, wann das Ei im Glas liegt und wann nicht.",
+     "erklaerung": "Zuerst kommt Leitungswasser ins Glas. Dann wird das Ei getestet und wieder herausgeholt. Erst danach wird das Salz eingerührt und das Ei zurückgelegt. Zum Schluss wird vorsichtig Leitungswasser darübergegossen."
+    },
+    {
+     "id": "l-experiment-2",
+     "typ": "matrix",
+     "stufe": 1,
+     "kompetenz": "entnehmen",
+     "frage": "Stimmen die Aussagen? Lies die Anleitung genau.",
+     "spalten": [
+      "richtig",
+      "falsch"
+     ],
+     "aussagen": [
+      {
+       "text": "Für das Experiment brauchst du etwa 20 Minuten.",
+       "richtig": true
+      },
+      {
+       "text": "Du sollst für das Experiment ein gekochtes Ei verwenden.",
+       "richtig": false
+      },
+      {
+       "text": "Du schüttest das ganze Salz auf einmal ins Wasser.",
+       "richtig": false
+      },
+      {
+       "text": "Nach dem Experiment sollst du dir die Hände waschen.",
+       "richtig": true
+      }
+     ],
+     "tipp": "Schau im ersten Absatz, in der Materialliste, in Schritt 4 und im Sicherheitshinweis nach.",
+     "erklaerung": "Das Experiment dauert etwa 20 Minuten, und danach sollst du dir die Hände waschen. Das Ei ist roh, nicht gekocht. Das Salz rührst du Löffel für Löffel ein."
+    },
+    {
+     "id": "l-experiment-3",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "schliessen",
+     "frage": "Paul nimmt für das Experiment ein sehr altes Ei. Warum klappt sein Experiment nicht richtig?",
+     "optionen": [
+      {
+       "text": "Sein Ei schwimmt schon im Leitungswasser. So sieht er nicht, was das Salz bewirkt.",
+       "richtig": true
+      },
+      {
+       "text": "Sein Ei ist viel zu schwer. Deshalb sinkt es auch im Salzwasser wieder nach unten.",
+       "richtig": false
+      },
+      {
+       "text": "Sein Ei saugt das Salz auf. Deshalb wird das Wasser im Glas gar nicht schwerer.",
+       "richtig": false
+      },
+      {
+       "text": "Sein Ei hat gar keine Luftblase. Deshalb kann das Salzwasser es nicht tragen.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lies den Absatz, der mit „Übrigens“ beginnt. Überlege dann, was mit Pauls Ei schon in Schritt 2 passiert.",
+     "erklaerung": "Ein altes Ei hat eine größere Luftblase und kann schon im Leitungswasser schwimmen. Dann gibt es keinen Unterschied zum Salzwasser, und Paul kann nicht sehen, dass das Salz das Ei zum Schwimmen bringt."
+    },
+    {
+     "id": "l-experiment-4",
+     "typ": "multi",
+     "stufe": 3,
+     "kompetenz": "schliessen",
+     "frage": "Was kannst du aus dem Abschnitt „Warum ist das so?“ schließen?",
+     "optionen": [
+      {
+       "text": "Mit nur einer Prise Salz würde das Ei wahrscheinlich am Boden bleiben.",
+       "richtig": true
+      },
+      {
+       "text": "Durch das Salz verändert sich das Wasser, nicht das Ei.",
+       "richtig": true
+      },
+      {
+       "text": "Je mehr Leitungswasser im Glas ist, desto besser schwimmt das Ei.",
+       "richtig": false
+      },
+      {
+       "text": "Das Salz macht das Ei leichter, deshalb steigt es nach oben.",
+       "richtig": false
+      },
+      {
+       "text": "Ein frisches Ei sinkt, weil in ihm eine große Luftblase ist.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lies den Abschnitt „Warum ist das so?“ und den Absatz mit „Übrigens“ noch einmal. Prüfe jede Aussage: Passt sie zu dem, was dort über das Wasser und das Ei steht?",
+     "erklaerung": "Das Salz macht das Wasser schwerer, das Ei bleibt gleich. Mit nur einer Prise wird das Wasser kaum schwerer, deshalb bliebe das Ei unten. Wie viel Wasser im Glas ist, spielt keine Rolle, und eine große Luftblase hat nur ein altes Ei."
+    },
+    {
+     "id": "l-experiment-5",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "reflektieren",
+     "frage": "In den Schritten stehen viele Aufforderungen wie „Lege …“, „Gib …“ oder „Gieße …“. Warum ist das so?",
+     "optionen": [
+      {
+       "text": "Wer den Text liest, soll die Schritte selbst nacheinander ausführen.",
+       "richtig": true
+      },
+      {
+       "text": "Der Text soll erzählen, was ein Kind bei einem Experiment erlebt hat.",
+       "richtig": false
+      },
+      {
+       "text": "Der Text soll die Leser von einer bestimmten Meinung überzeugen.",
+       "richtig": false
+      },
+      {
+       "text": "Der Text soll die Leser mit einer lustigen Geschichte unterhalten.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Überlege, zu welcher Textsorte der Text gehört. Was macht man mit so einem Text?",
+     "erklaerung": "Der Text ist eine Anleitung. Die Aufforderungen sagen dir genau, was du tun sollst. So kannst du das Experiment selbst Schritt für Schritt durchführen."
+    }
+   ]
+  },
+  {
+   "id": "l-meinung",
+   "titel": "Bücher für die Pause?",
+   "textsorte": "Zeitungsartikel",
+   "einleitung": "In der Kinderzeitung „Rabenblatt“ geht es um eine Frage, über die an einer Grundschule gerade heftig diskutiert wird.",
+   "text": {
+    "titel": "Ein Bücherschrank für den Pausenhof?",
+    "untertitel": "An der Grundschule an der Mühlwiese wird diskutiert – am Freitag fällt die Entscheidung",
+    "autor": "Leyla Aksoy, Kinderreporterin",
+    "absaetze": [
+     "An der Grundschule an der Mühlwiese in Kirchwinkel wird gerade heftig diskutiert: Soll auf dem Pausenhof ein offener Bücherschrank stehen? In so einen Schrank darf jeder Bücher hineinstellen. Wer möchte, darf sich auch Bücher herausnehmen und behalten. Das kostet nichts. Der Elternbeirat hat angeboten, einen Schrank aus Holz zu bezahlen. Er kostet 450 €. Am Freitag stimmen die Klassensprecherinnen und Klassensprecher aller zwölf Klassen darüber ab.",
+     "## Amira sagt: Ja!",
+     "Amira (10) aus der Klasse 4b ist für den Bücherschrank. „Viele Kinder wollen in der Pause nicht Fußball oder Fangen spielen“, sagt sie. „Für sie wäre ein spannendes Buch genau das Richtige.“ Außerdem findet Amira, dass Bücher zu schade sind, um zu Hause im Regal zu verstauben. Sie hat schon zehn Bücher gesammelt, die sie verschenken möchte. Amira ist sicher: Mit dem Schrank bekommen mehr Kinder Lust aufs Lesen.",
+     "## Jonas sagt: Nein!",
+     "Jonas (9) aus der Klasse 4a ist dagegen. „Die Pause ist zum Toben da. Wir lesen doch schon den ganzen Vormittag im Unterricht“, meint er. Außerdem befürchtet Jonas, dass die Bücher bei Regen nass werden und kaputtgehen. „Für 450 € sollten wir lieber neue Bälle und Springseile kaufen. Davon hätten viel mehr Kinder etwas“, sagt er.",
+     "## Was man weiß",
+     "Die Schulleiterin, Frau Hölzl, möchte sich nicht festlegen. Sie nennt aber ein paar Zahlen: In der Schulbücherei werden pro Woche etwa 40 Bücher ausgeliehen. Die Bücherei ist allerdings nur am Dienstag und am Donnerstag geöffnet. In der Spielekiste für die Pause sind von 20 Bällen nur noch 8 zu gebrauchen.",
+     "An der Grundschule im Nachbarort Oberwinkel steht schon seit zwei Jahren ein Bücherschrank mit einem kleinen Dach. Der Hausmeister dort erzählt: „Nasse Bücher hatten wir bisher nur ein einziges Mal. Da hatte jemand die Tür offen gelassen.“ Allerdings räumt er den Schrank jede Woche auf, weil oft Bücher herumliegen.",
+     "Welche Seite überzeugt dich mehr? Wie die Abstimmung ausgegangen ist, liest du in der nächsten Ausgabe des „Rabenblatts“."
+    ]
+   },
+   "items": [
+    {
+     "id": "l-meinung-1",
+     "typ": "single",
+     "stufe": 1,
+     "kompetenz": "entnehmen",
+     "frage": "Wer stimmt am Freitag über den Bücherschrank ab?",
+     "optionen": [
+      {
+       "text": "Die Klassensprecherinnen und Klassensprecher aller Klassen",
+       "richtig": true
+      },
+      {
+       "text": "Die Schulleiterin Frau Hölzl zusammen mit dem Elternbeirat",
+       "richtig": false
+      },
+      {
+       "text": "Alle Kinder der Grundschule an der Mühlwiese",
+       "richtig": false
+      },
+      {
+       "text": "Die Leserinnen und Leser der Kinderzeitung",
+       "richtig": false
+      }
+     ],
+     "tipp": "Die Antwort steht im ersten Absatz. Suche das Wort „Freitag“.",
+     "erklaerung": "Im ersten Absatz steht: Am Freitag stimmen die Klassensprecherinnen und Klassensprecher aller zwölf Klassen ab."
+    },
+    {
+     "id": "l-meinung-2",
+     "typ": "multi",
+     "stufe": 2,
+     "kompetenz": "entnehmen",
+     "frage": "Welche Gründe nennt Jonas gegen den Bücherschrank?",
+     "optionen": [
+      {
+       "text": "In der Pause sollen sich die Kinder austoben können.",
+       "richtig": true
+      },
+      {
+       "text": "Die Bücher könnten bei Regen nass werden und kaputtgehen.",
+       "richtig": true
+      },
+      {
+       "text": "Mit Bällen und Springseilen hätten mehr Kinder etwas vom Geld.",
+       "richtig": true
+      },
+      {
+       "text": "Der Elternbeirat hat zu wenig Geld für den Schrank.",
+       "richtig": false
+      },
+      {
+       "text": "In der Schulbücherei gibt es schon genug Bücher für alle.",
+       "richtig": false
+      },
+      {
+       "text": "Ein Schrank aus Holz passt nicht auf den Pausenhof.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lies nur den Abschnitt „Jonas sagt: Nein!“. Achte auf alles, was Jonas sagt oder befürchtet.",
+     "erklaerung": "Jonas meint, die Pause sei zum Toben da. Er befürchtet, dass die Bücher bei Regen nass werden, und er möchte von dem Geld lieber Bälle und Springseile kaufen. Die anderen Gründe nennt er nicht."
+    },
+    {
+     "id": "l-meinung-3",
+     "typ": "matrix",
+     "stufe": 2,
+     "kompetenz": "schliessen",
+     "frage": "Ist das eine Tatsache oder eine Meinung? Entscheide bei jeder Aussage.",
+     "spalten": [
+      "Tatsache",
+      "Meinung"
+     ],
+     "aussagen": [
+      {
+       "text": "Der Bücherschrank aus Holz kostet 450 €.",
+       "richtig": true
+      },
+      {
+       "text": "Bücher sind zu schade, um im Regal zu verstauben.",
+       "richtig": false
+      },
+      {
+       "text": "Die Schulbücherei ist nur am Dienstag und am Donnerstag geöffnet.",
+       "richtig": true
+      },
+      {
+       "text": "Die Pause ist zum Toben da.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Eine Tatsache kann man nachprüfen, zum Beispiel durch Nachschauen oder Zählen. Eine Meinung zeigt, was jemand denkt oder findet.",
+     "erklaerung": "Den Preis und die Öffnungszeiten kann man nachprüfen, das sind Tatsachen. Ob Bücher zu schade fürs Regal sind und wozu die Pause da ist, sehen nicht alle gleich. Das sind Meinungen von Amira und Jonas."
+    },
+    {
+     "id": "l-meinung-4",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "schliessen",
+     "frage": "Jonas befürchtet, dass die Bücher bei Regen nass werden. Welche Information aus dem Text zeigt, dass diese Sorge vielleicht unnötig ist?",
+     "optionen": [
+      {
+       "text": "An einer Nachbarschule wurden in zwei Jahren nur einmal Bücher nass.",
+       "richtig": true
+      },
+      {
+       "text": "In der Schulbücherei werden pro Woche etwa 40 Bücher ausgeliehen.",
+       "richtig": false
+      },
+      {
+       "text": "Von den 20 Bällen in der Spielekiste sind nur noch 8 zu gebrauchen.",
+       "richtig": false
+      },
+      {
+       "text": "Der Elternbeirat würde den Bücherschrank aus Holz bezahlen.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Alle Antworten stehen im Text. Frage dich bei jeder: Hat sie etwas mit Regen und nassen Büchern zu tun?",
+     "erklaerung": "In Oberwinkel steht schon seit zwei Jahren ein Bücherschrank. Dort sind nur einmal Bücher nass geworden, weil die Tür offen war. Das spricht gegen die Sorge von Jonas."
+    },
+    {
+     "id": "l-meinung-5",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "reflektieren",
+     "frage": "Was will die Kinderreporterin Leyla Aksoy mit ihrem Artikel vor allem erreichen?",
+     "optionen": [
+      {
+       "text": "Sie will beide Seiten zeigen, damit sich jeder selbst eine Meinung bildet.",
+       "richtig": true
+      },
+      {
+       "text": "Sie will die Leser davon überzeugen, für den Bücherschrank zu stimmen.",
+       "richtig": false
+      },
+      {
+       "text": "Sie will allen mitteilen, wie die Abstimmung am Freitag ausgegangen ist.",
+       "richtig": false
+      },
+      {
+       "text": "Sie will erreichen, dass die Schule neue Bälle und Springseile kauft.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Vergleiche, wie viel Platz Amira und Jonas bekommen. Achte auch darauf, ob Leyla ihre eigene Meinung sagt und wie der Artikel endet.",
+     "erklaerung": "Leyla stellt beide Meinungen ausführlich vor und nennt Tatsachen. Ihre eigene Meinung verrät sie nicht. Am Ende fragt sie dich, welche Seite dich mehr überzeugt."
+    }
+   ]
+  }
+ ]
+}

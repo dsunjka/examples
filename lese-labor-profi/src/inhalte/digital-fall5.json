@@ -1,0 +1,222 @@
+{
+ "modul": "digital",
+ "fall": {
+  "id": "fall5",
+  "nummer": 5,
+  "titel": "Wandertag zum Wildpark",
+  "quellenart": "Apps",
+  "einleitung": "Heute ist Dienstag, der 13. Oktober 2026. Die Klasse 4a macht am Donnerstag, dem 15. Oktober, einen Wandertag zum Wildpark Fuchsbühl. Dort beginnt um 9:00 Uhr eine Führung, deshalb muss die Klasse vor 9:00 Uhr an der Haltestelle „Fuchsbühl, Wildpark“ direkt am Eingang ankommen. Prüfe mit der Wetter-App Wolkenblick und der Fahrplan-App Linienflitzer, ob alles klappt.",
+  "rahmen": "app",
+  "app": {
+   "name": "Wolkenblick",
+   "symbol": "🌦️",
+   "farbe": "blau"
+  },
+  "startseite": "start",
+  "seiten": [
+   {
+    "id": "start",
+    "titel": "5-Tage-Vorhersage",
+    "app": {
+     "name": "Wolkenblick",
+     "symbol": "🌦️",
+     "farbe": "blau"
+    },
+    "farbe": "blau",
+    "html": "<div class=\"a-reiter\"><a class=\"aktiv\" data-ziel=\"start\">5 Tage</a><a data-ziel=\"heute\">Heute</a><a data-ziel=\"morgen\">Morgen</a><a data-ziel=\"uebermorgen\">Übermorgen</a><a data-ziel=\"warnung\">⚠️ Warnungen</a></div><div class=\"a-kachel\"><div class=\"a-zeile\"><strong>📍 Fuchsbühl</strong><span class=\"w-klein\">Aktualisiert: heute, 6:50 Uhr</span></div><div class=\"a-zeile\"><span class=\"a-symbol\">⛅</span><span class=\"a-gross\">7 °C</span><span>Jetzt: wolkig, schwacher Wind</span></div></div><div class=\"w-kasten w-kasten--warnung\"><p><strong>⚠️ Warnung vor Sturmböen</strong> am Mittwoch, 14. Oktober. Auch Busse und Bahnen können betroffen sein.</p><p><a data-ziel=\"warnung\">Warnung lesen ›</a> · <a data-ziel=\"fahrplan\">🚌 Verbindungen prüfen in Linienflitzer ›</a></p></div><h2>Vorhersage für 5 Tage</h2><div class=\"a-zeile\"><span><b>Di, 13.10.</b> Heute</span><span class=\"a-symbol\">⛅</span><span>12° / 6°</span><span>💧 30 %</span></div><div class=\"a-zeile\"><span><b>Mi, 14.10.</b></span><span class=\"a-symbol\">🌧️💨</span><span>11° / 8°</span><span>💧 90 %</span></div><div class=\"a-zeile\"><span><b>Do, 15.10.</b></span><span class=\"a-symbol\">🌤️</span><span>13° / 4°</span><span>💧 20 %</span></div><div class=\"a-zeile\"><span><b>Fr, 16.10.</b></span><span class=\"a-symbol\">☀️</span><span>15° / 5°</span><span>💧 10 %</span></div><div class=\"a-zeile\"><span><b>Sa, 17.10.</b></span><span class=\"a-symbol\">🌦️</span><span>14° / 7°</span><span>💧 40 %</span></div><p class=\"w-klein\">Höchstwert / Tiefstwert in °C · 💧 = Regenwahrscheinlichkeit</p><div class=\"w-werbung\"><span class=\"w-werbung-label\">Werbung</span><p><strong>Wolkenblick Premium – ohne Werbung!</strong> Mit 14-Tage-Vorhersage und Regenradar. 7 Tage gratis testen, danach nur 2,99 € im Monat.</p><a class=\"w-knopf\" data-extern>Jetzt kaufen</a></div><div class=\"a-kachel\"><p class=\"w-datum\">Wetter-News · Montag, 5. Oktober 2026</p><h3>Goldener Oktober: Diese Woche bleibt es sonnig</h3><p>Bis zum Sonntag scheint fast überall die Sonne. Mittags wird es bis zu 20 Grad warm, nachts aber schon recht kühl.</p></div>"
+   },
+   {
+    "id": "heute",
+    "titel": "Heute",
+    "app": {
+     "name": "Wolkenblick",
+     "symbol": "🌦️",
+     "farbe": "blau"
+    },
+    "farbe": "blau",
+    "html": "<div class=\"a-reiter\"><a data-ziel=\"start\">5 Tage</a><a class=\"aktiv\" data-ziel=\"heute\">Heute</a><a data-ziel=\"morgen\">Morgen</a><a data-ziel=\"uebermorgen\">Übermorgen</a><a data-ziel=\"warnung\">⚠️ Warnungen</a></div><h2>Dienstag, 13. Oktober</h2><p class=\"w-klein\">📍 Fuchsbühl · Aktualisiert: heute, 6:50 Uhr</p><p>🌡️ 12° / 6° · 💧 bis 30 %</p><div class=\"a-raster\"><div class=\"a-zelle\"><b>7 Uhr</b><br>⛅<br>7 °C<br>💧 20 %</div><div class=\"a-zelle\"><b>8 Uhr</b><br>⛅<br>8 °C<br>💧 20 %</div><div class=\"a-zelle\"><b>9 Uhr</b><br>☁️<br>9 °C<br>💧 30 %</div><div class=\"a-zelle\"><b>10 Uhr</b><br>🌦️<br>10 °C<br>💧 30 %</div><div class=\"a-zelle\"><b>11 Uhr</b><br>🌦️<br>11 °C<br>💧 30 %</div><div class=\"a-zelle\"><b>12 Uhr</b><br>☁️<br>12 °C<br>💧 20 %</div><div class=\"a-zelle\"><b>13 Uhr</b><br>☁️<br>12 °C<br>💧 20 %</div><div class=\"a-zelle\"><b>14 Uhr</b><br>⛅<br>12 °C<br>💧 10 %</div><div class=\"a-zelle\"><b>15 Uhr</b><br>⛅<br>11 °C<br>💧 10 %</div><div class=\"a-zelle\"><b>16 Uhr</b><br>☁️<br>10 °C<br>💧 20 %</div></div>"
+   },
+   {
+    "id": "morgen",
+    "titel": "Morgen",
+    "app": {
+     "name": "Wolkenblick",
+     "symbol": "🌦️",
+     "farbe": "blau"
+    },
+    "farbe": "blau",
+    "html": "<div class=\"a-reiter\"><a data-ziel=\"start\">5 Tage</a><a data-ziel=\"heute\">Heute</a><a class=\"aktiv\" data-ziel=\"morgen\">Morgen</a><a data-ziel=\"uebermorgen\">Übermorgen</a><a data-ziel=\"warnung\">⚠️ Warnungen</a></div><h2>Mittwoch, 14. Oktober</h2><p class=\"w-klein\">📍 Fuchsbühl · Aktualisiert: heute, 6:50 Uhr</p><div class=\"w-kasten w-kasten--warnung\"><p>⚠️ Sturmböen von 10 bis 22 Uhr möglich. <a data-ziel=\"warnung\">Zur Warnung ›</a></p></div><p>🌡️ 11° / 8° · 💧 bis 90 %</p><div class=\"a-raster\"><div class=\"a-zelle\"><b>7 Uhr</b><br>🌧️<br>9 °C<br>💧 70 %</div><div class=\"a-zelle\"><b>8 Uhr</b><br>🌧️<br>9 °C<br>💧 80 %</div><div class=\"a-zelle\"><b>9 Uhr</b><br>🌧️<br>10 °C<br>💧 80 %</div><div class=\"a-zelle\"><b>10 Uhr</b><br>🌧️💨<br>10 °C<br>💧 90 %</div><div class=\"a-zelle\"><b>11 Uhr</b><br>🌧️💨<br>11 °C<br>💧 90 %</div><div class=\"a-zelle\"><b>12 Uhr</b><br>🌧️💨<br>11 °C<br>💧 90 %</div><div class=\"a-zelle\"><b>13 Uhr</b><br>🌧️💨<br>11 °C<br>💧 90 %</div><div class=\"a-zelle\"><b>14 Uhr</b><br>🌧️💨<br>11 °C<br>💧 80 %</div><div class=\"a-zelle\"><b>15 Uhr</b><br>💨<br>10 °C<br>💧 70 %</div><div class=\"a-zelle\"><b>16 Uhr</b><br>💨<br>10 °C<br>💧 60 %</div></div>"
+   },
+   {
+    "id": "uebermorgen",
+    "titel": "Übermorgen",
+    "app": {
+     "name": "Wolkenblick",
+     "symbol": "🌦️",
+     "farbe": "blau"
+    },
+    "farbe": "blau",
+    "html": "<div class=\"a-reiter\"><a data-ziel=\"start\">5 Tage</a><a data-ziel=\"heute\">Heute</a><a data-ziel=\"morgen\">Morgen</a><a class=\"aktiv\" data-ziel=\"uebermorgen\">Übermorgen</a><a data-ziel=\"warnung\">⚠️ Warnungen</a></div><h2>Donnerstag, 15. Oktober</h2><p class=\"w-klein\">📍 Fuchsbühl · Aktualisiert: heute, 6:50 Uhr</p><p>🌡️ 13° / 4° · 💧 bis 20 %</p><div class=\"a-raster\"><div class=\"a-zelle\"><b>7 Uhr</b><br>☁️<br>5 °C<br>💧 10 %</div><div class=\"a-zelle\"><b>8 Uhr</b><br>⛅<br>6 °C<br>💧 10 %</div><div class=\"a-zelle\"><b>9 Uhr</b><br>⛅<br>7 °C<br>💧 10 %</div><div class=\"a-zelle\"><b>10 Uhr</b><br>🌤️<br>9 °C<br>💧 5 %</div><div class=\"a-zelle\"><b>11 Uhr</b><br>🌤️<br>10 °C<br>💧 5 %</div><div class=\"a-zelle\"><b>12 Uhr</b><br>☀️<br>11 °C<br>💧 5 %</div><div class=\"a-zelle\"><b>13 Uhr</b><br>🌤️<br>12 °C<br>💧 10 %</div><div class=\"a-zelle\"><b>14 Uhr</b><br>⛅<br>13 °C<br>💧 15 %</div><div class=\"a-zelle\"><b>15 Uhr</b><br>🌦️<br>12 °C<br>💧 20 %</div><div class=\"a-zelle\"><b>16 Uhr</b><br>🌦️<br>11 °C<br>💧 20 %</div></div><div class=\"w-kasten w-kasten--tipp\"><p>🧥 Morgens ist es noch kühl. Ab Mittag wird es freundlich.</p></div>"
+   },
+   {
+    "id": "warnung",
+    "titel": "Warnungen",
+    "app": {
+     "name": "Wolkenblick",
+     "symbol": "🌦️",
+     "farbe": "blau"
+    },
+    "farbe": "blau",
+    "html": "<div class=\"a-reiter\"><a data-ziel=\"start\">5 Tage</a><a data-ziel=\"heute\">Heute</a><a data-ziel=\"morgen\">Morgen</a><a data-ziel=\"uebermorgen\">Übermorgen</a><a class=\"aktiv\" data-ziel=\"warnung\">⚠️ Warnungen</a></div><div class=\"w-kasten w-kasten--warnung\"><h2>⚠️ Warnung vor Sturmböen</h2><p><b>Gültig:</b> Mittwoch, 14. Oktober, 10:00 bis 22:00 Uhr<br><b>Gebiet:</b> Fuchsbühl und Umgebung</p></div><p>Am Mittwoch zieht ein kräftiges Tief über das Land. Es gibt Sturmböen bis 80 km/h und viel Regen. Äste können abbrechen.</p><h3>Das rät der Wetterdienst</h3><ul><li>Meide am Mittwoch Wälder und Parks.</li><li>Räume lose Dinge auf Balkon und Terrasse weg.</li><li>Busse und Bahnen können Verspätung haben oder ausfallen.</li></ul><h3>Ausblick</h3><p>In der Nacht zum Donnerstag lässt der Wind nach. Am Donnerstag wird es freundlich und meist trocken. Auf Waldwegen können noch Äste liegen.</p><p class=\"w-klein\">Aktualisiert: heute, 5:40 Uhr · Quelle: Wetterdienst Wolkenblick</p><a class=\"w-knopf\" data-ziel=\"fahrplan\">🚌 Verbindungen prüfen in Linienflitzer</a>"
+   },
+   {
+    "id": "fahrplan",
+    "titel": "Verbindungen",
+    "app": {
+     "name": "Linienflitzer",
+     "symbol": "🚌",
+     "farbe": "gruen"
+    },
+    "farbe": "gruen",
+    "html": "<div class=\"a-reiter\"><a class=\"aktiv\" data-ziel=\"fahrplan\">Verbindungen</a><a data-ziel=\"stoerungen\">⚠️ Störungen</a></div><div class=\"a-kachel\"><div class=\"a-zeile\"><span>Von</span><strong>Sonnhofen, Bahnhof</strong></div><div class=\"a-zeile\"><span>Nach</span><strong>Fuchsbühl, Wildpark</strong></div><div class=\"a-zeile\"><span>Wann</span><strong>Do, 15.10.2026 · Abfahrt ab 7:00</strong></div></div><div class=\"a-fahrt\"><div class=\"a-zeile\"><strong>7:05 → 8:10</strong><span>1 Std. 5 min · 1 Umstieg</span></div><div>🚆 RB 12 › 🚌 Bus 7</div><small class=\"w-klein\">Umstieg in Talheim, Bahnhof: an 7:25, Bus 7 ab 7:40</small><span class=\"a-hinweis\">⚠️ Meldung zu RB 12</span></div><div class=\"a-fahrt\"><div class=\"a-zeile\"><strong>7:15 → 8:10</strong><span>55 min · direkt</span></div><div>🚌 Bus 34</div><span class=\"a-hinweis\">+12 min</span></div><div class=\"a-fahrt\"><div class=\"a-zeile\"><strong>7:35 → 8:40</strong><span>1 Std. 5 min · 1 Umstieg</span></div><div>🚆 RB 12 › 🚌 Bus 7</div><small class=\"w-klein\">Umstieg in Talheim, Bahnhof: an 7:55, Bus 7 ab 8:10</small><span class=\"a-hinweis\">⚠️ Meldung zu RB 12</span></div><div class=\"a-fahrt\"><div class=\"a-zeile\"><strong>7:45 → 8:40</strong><span>55 min · direkt</span></div><div>🚌 Bus 34</div><span class=\"a-hinweis\">❌ Fahrt fällt aus</span></div><div class=\"a-fahrt\"><div class=\"a-zeile\"><strong>8:05 → 9:10</strong><span>1 Std. 5 min · 1 Umstieg</span></div><div>🚆 RB 12 › 🚌 Bus 7</div><small class=\"w-klein\">Umstieg in Talheim, Bahnhof: an 8:25, Bus 7 ab 8:40</small><span class=\"a-hinweis\">⚠️ Meldung zu RB 12</span></div><p class=\"w-klein\">Alle Zeiten laut Fahrplan. Hinweise zu Verspätungen und Ausfällen stehen direkt bei der Verbindung.</p>"
+   },
+   {
+    "id": "stoerungen",
+    "titel": "Störungen",
+    "app": {
+     "name": "Linienflitzer",
+     "symbol": "🚌",
+     "farbe": "gruen"
+    },
+    "farbe": "gruen",
+    "html": "<div class=\"a-reiter\"><a data-ziel=\"fahrplan\">Verbindungen</a><a class=\"aktiv\" data-ziel=\"stoerungen\">⚠️ Störungen</a></div><h2>Aktuelle Meldungen</h2><p class=\"w-klein\">Stand: heute, 7:20 Uhr</p><div class=\"a-kachel\"><h3>🚆 RB 12 Sonnhofen – Talheim</h3><p><b>Donnerstag, 15. Oktober:</b> Wegen Bauarbeiten an den Gleisen fahren bis 7:30 Uhr keine Züge zwischen Sonnhofen und Talheim. Alle Züge, die in Sonnhofen vor 7:30 Uhr abfahren, fallen aus. Danach fahren die Züge wieder nach Fahrplan.</p></div><div class=\"a-kachel\"><h3>🚌 Bus 34</h3><p><b>12. bis 23. Oktober:</b> Umleitung wegen einer Baustelle in Kreuzbach. Alle Fahrten dauern etwa 12 Minuten länger. Die Haltestelle „Kreuzbach, Kirche“ entfällt.</p></div><div class=\"a-kachel\"><h3>🚌 Bus 7</h3><p><b>Freitag, 16. Oktober:</b> Wegen des Herbstfests hält Bus 7 nicht an der Haltestelle „Fuchsbühl, Wildpark“. Bitte steige an der Haltestelle „Fuchsbühl, Ortsmitte“ aus.</p></div><div class=\"a-kachel\"><h3>Alle Linien</h3><p><b>Mittwoch, 14. Oktober:</b> Wegen der Sturmwarnung kann es zu Verspätungen und Ausfällen kommen. Prüfe vor der Fahrt deine Verbindung.</p></div>"
+   }
+  ],
+  "items": [
+   {
+    "id": "d5-1",
+    "typ": "single",
+    "stufe": 2,
+    "kompetenz": "finden",
+    "frage": "Die Klasse will am Wandertag um 9 Uhr im Wildpark losgehen. Was sagt die Wetter-App für diese Uhrzeit voraus?",
+    "optionen": [
+     {
+      "text": "7 °C und 10 % Regenwahrscheinlichkeit",
+      "richtig": true
+     },
+     {
+      "text": "13 °C und 20 % Regenwahrscheinlichkeit",
+      "richtig": false
+     },
+     {
+      "text": "10 °C und 80 % Regenwahrscheinlichkeit",
+      "richtig": false
+     },
+     {
+      "text": "9 °C und 5 % Regenwahrscheinlichkeit",
+      "richtig": false
+     }
+    ],
+    "tipp": "Welcher Tag ist heute, welcher Tag ist der Wandertag? Öffne die Stundenwerte für den richtigen Tag und suche genau das Feld für 9 Uhr.",
+    "tippSeite": "uebermorgen",
+    "erklaerung": "Heute ist Dienstag, der Wandertag ist am Donnerstag – also übermorgen. Im Reiter „Übermorgen“ stehen für 9 Uhr 7 °C und 10 % Regenwahrscheinlichkeit. Die 13 °C sind der Höchstwert für den ganzen Tag."
+   },
+   {
+    "id": "d5-2",
+    "typ": "single",
+    "stufe": 2,
+    "kompetenz": "navigieren",
+    "frage": "Bei manchen Verbindungen steht „⚠️ Meldung zu RB 12“. Was musst du antippen, um zu erfahren, was mit der RB 12 los ist?",
+    "optionen": [
+     {
+      "text": "den Reiter „Störungen“ in der App Linienflitzer",
+      "richtig": true
+     },
+     {
+      "text": "den Reiter „Warnungen“ in der App Wolkenblick",
+      "richtig": false
+     },
+     {
+      "text": "den Reiter „Verbindungen“ in der App Linienflitzer",
+      "richtig": false
+     },
+     {
+      "text": "den Reiter „Übermorgen“ in der App Wolkenblick",
+      "richtig": false
+     }
+    ],
+    "tipp": "Überlege, welche App sich um Busse und Züge kümmert. Probiere dort die Reiter aus und lies, was erscheint.",
+    "tippSeite": "fahrplan",
+    "erklaerung": "Im Reiter „Störungen“ der Fahrplan-App steht, dass am Donnerstag wegen Bauarbeiten bis 7:30 Uhr keine Züge der RB 12 fahren. Die Wetter-App kennt nur das Wetter, aber keine Bauarbeiten an den Gleisen."
+   },
+   {
+    "id": "d5-3",
+    "typ": "multi",
+    "stufe": 3,
+    "kompetenz": "verknuepfen",
+    "frage": "Mit welchen Verbindungen kommt die Klasse am Donnerstag vor 9:00 Uhr am Wildpark an? Beachte alle Hinweise und Meldungen in der Fahrplan-App.",
+    "optionen": [
+     {
+      "text": "Abfahrt 7:05 Uhr mit RB 12 und Bus 7",
+      "richtig": false
+     },
+     {
+      "text": "Abfahrt 7:15 Uhr mit Bus 34",
+      "richtig": true
+     },
+     {
+      "text": "Abfahrt 7:35 Uhr mit RB 12 und Bus 7",
+      "richtig": true
+     },
+     {
+      "text": "Abfahrt 7:45 Uhr mit Bus 34",
+      "richtig": false
+     },
+     {
+      "text": "Abfahrt 8:05 Uhr mit RB 12 und Bus 7",
+      "richtig": false
+     }
+    ],
+    "tipp": "Rechne Verspätungen zur Ankunftszeit dazu. Lies im Reiter „Störungen“ genau, für welchen Tag und bis zu welcher Uhrzeit eine Meldung gilt.",
+    "tippSeite": "stoerungen",
+    "erklaerung": "Bus 34 um 7:15 Uhr kommt trotz 12 Minuten Verspätung um 8:22 Uhr an. Der Zug um 7:35 Uhr fährt nach dem Ende der Bauarbeiten, damit ist die Klasse um 8:40 Uhr da. Der Zug um 7:05 Uhr und Bus 34 um 7:45 Uhr fallen aus, und mit der Verbindung um 8:05 Uhr wäre die Klasse erst um 9:10 Uhr da."
+   },
+   {
+    "id": "d5-4",
+    "typ": "multi",
+    "stufe": 3,
+    "kompetenz": "bewerten",
+    "frage": "Schau dir die Startseite der Wetter-App genau an. Welche Aussagen stimmen?",
+    "optionen": [
+     {
+      "text": "Der Kasten „Wolkenblick Premium“ ist Werbung: Die App will dir etwas verkaufen.",
+      "richtig": true
+     },
+     {
+      "text": "Die Werte für Samstag sind unsicherer, weil Samstag weiter in der Zukunft liegt.",
+      "richtig": true
+     },
+     {
+      "text": "Die Meldung „Goldener Oktober“ ist alt und sagt nichts über den Wandertag.",
+      "richtig": true
+     },
+     {
+      "text": "Die 5-Tage-Vorhersage ist veraltet, weil sie schon am 5. Oktober erstellt wurde.",
+      "richtig": false
+     },
+     {
+      "text": "Premium kostet kein Geld, weil man es 7 Tage gratis testen kann.",
+      "richtig": false
+     },
+     {
+      "text": "Bei 20 % Regenwahrscheinlichkeit bleibt es am Donnerstag ganz sicher trocken.",
+      "richtig": false
+     }
+    ],
+    "tipp": "Achte auf das Wort „Werbung“, auf alle Datumsangaben und darauf, was eine Regenwahrscheinlichkeit in Prozent bedeutet.",
+    "tippSeite": "start",
+    "erklaerung": "Der Premium-Kasten ist als Werbung gekennzeichnet und kostet nach dem Test 2,99 € im Monat. Vorhersagen für weiter entfernte Tage sind unsicherer, und die Meldung vom 5. Oktober ist veraltet – die Vorhersage selbst ist von heute, 6:50 Uhr. 20 % heißt: Regen ist eher unwahrscheinlich, aber möglich."
+   }
+  ]
+ }
+}
