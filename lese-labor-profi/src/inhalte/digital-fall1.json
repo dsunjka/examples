@@ -5,7 +5,7 @@
   "nummer": 1,
   "titel": "Ein Igel am helllichten Tag",
   "quellenart": "Suchmaschine",
-  "einleitung": "Heute ist Mittwoch, der 4. November 2026. Am Nachmittag entdeckt Elif (9) im Garten einen kleinen Igel, der im Hellen herumläuft. Ihr Papa zieht dicke Handschuhe an und wiegt den Igel vorsichtig auf der Küchenwaage: 380 g. Mit der Kindersuchmaschine „Suchfuchs“ sucht Elif heraus, was die beiden jetzt tun sollen.",
+  "einleitung": "Heute ist Mittwoch, der 4. November 2026. Am Nachmittag entdeckt Elif (9) im Garten einen kleinen Igel, der im Hellen herumläuft. Ihr Papa zieht dicke Handschuhe an und wiegt den Igel vorsichtig auf der Küchenwaage: 380 g. Auf Papas Tablet sucht Elif mit der Suchmaschine „Suchfuchs“ heraus, was die beiden jetzt tun sollen.",
   "rahmen": "browser",
   "app": {
    "name": "Suchfuchs",
@@ -102,7 +102,7 @@
     "frage": "Woran erkennst du laut der Igelhilfe, dass ein Igel Hilfe braucht?",
     "optionen": [
      {
-      "text": "Er ist im Spätherbst mitten am Tag unterwegs.",
+      "text": "Er läuft im Spätherbst mitten am Tag herum.",
       "richtig": true
      },
      {
@@ -110,25 +110,25 @@
       "richtig": true
      },
      {
-      "text": "Er blutet oder humpelt beim Laufen.",
+      "text": "Er humpelt oder torkelt beim Laufen.",
       "richtig": true
      },
      {
-      "text": "Er ist nur nachts im Garten unterwegs.",
+      "text": "Er wiegt im November 500 g oder mehr.",
       "richtig": false
      },
      {
-      "text": "Er rollt sich zu einer Stachelkugel zusammen.",
+      "text": "Er schläft tagsüber in einem Nest aus Laub.",
       "richtig": false
      },
      {
-      "text": "Er schmatzt und schnauft laut beim Fressen.",
+      "text": "Er frisst sich im Herbst ein Fettpolster an.",
       "richtig": false
      }
     ],
-    "tipp": "Öffne den Treffer der Igelhilfe. Lies in der Tabelle genau die Zeilen, in denen steht, dass du anrufen sollst.",
+    "tipp": "Öffne den Treffer der Igelhilfe. Lies in der Tabelle genau die Zeilen, in denen steht, dass du anrufen sollst. Achte dabei genau auf das Gewicht und die Tageszeit.",
     "tippSeite": "hilfe",
-    "erklaerung": "Laut Tabelle sollst du anrufen, wenn ein Igel verletzt ist, im Spätherbst am Tag herumläuft oder im November weniger als 500 g wiegt. Wenn ein Igel nachts unterwegs ist, sich einrollt oder laut schmatzt, ist das ganz normal."
+    "erklaerung": "Laut Tabelle sollst du anrufen, wenn ein Igel humpelt, torkelt, im Spätherbst am Tag herumläuft oder im November weniger als 500 g wiegt. Mit 500 g oder mehr ist er schwer genug. Tagsüber im Laubnest schlafen und sich im Herbst ein Fettpolster anfressen ist ganz normal."
    },
    {
     "id": "d1-3",
@@ -167,15 +167,17 @@
      {
       "wahl": [
        "0123 456789",
-       "0123 654321"
+       "0123 645321",
+       "0123 654321",
+       "0123 654312"
       ],
-      "loesung": 1
+      "loesung": 2
      },
      {
       "t": "."
      }
     ],
-    "tipp": "Tippe auf der Website der Igelhilfe die Menüpunkte an und suche nach Uhrzeiten. Überlege dann, in welche Zeile der Tabelle der Mittwoch gehört. Lies auch den Satz unter der Tabelle mit den Uhrzeiten.",
+    "tipp": "Tippe auf der Website der Igelhilfe die Menüpunkte an und suche nach Uhrzeiten. Überlege dann, in welche Zeile der Tabelle der Mittwoch gehört. Lies auch den Satz unter der Tabelle und vergleiche die Nummern Ziffer für Ziffer.",
     "tippSeite": "station",
     "erklaerung": "Die Telefonzeiten stehen unter „Kontakt“. Mittwoch gehört zu „Montag bis Freitag“: Am Nachmittag geht ab 15 Uhr jemand ans Telefon, aber nur bis 18 Uhr. Danach hilft die Tierarztpraxis Dr. Lehner unter 0123 654321 weiter."
    },

@@ -11,11 +11,11 @@
     "untertitel": "Eine Umfrage der Klasse 4a",
     "autor": "Aylin und Mateo, Klasse 4a der Grundschule am Lindenbach in Lindenbrunn",
     "absaetze": [
-     "Wie kommen die Kinder unserer Schule morgens zum Unterricht? Das wollten wir, die Klasse 4a, im Mai genau wissen. Deshalb haben wir alle 120 Kinder unserer Schule befragt. Jedes Kind durfte nur ein Verkehrsmittel nennen: das, mit dem es meistens kommt. Außerdem hat jedes Kind gesagt, wie viele Minuten sein Schulweg ungefähr dauert. Daraus haben wir für jedes Verkehrsmittel die Durchschnittszeit berechnet.",
-     "Die meisten Kinder gehen zu Fuß. Viele von ihnen wohnen nur wenige Straßen von der Schule entfernt. Wer zu Fuß geht, Fahrrad fährt oder Tretroller fährt, bewegt sich schon vor dem Unterricht an der frischen Luft.",
+     "Wie kommen die Kinder unserer Schule morgens zum Unterricht? Das wollten wir, die Klasse 4a, im Mai genau wissen. Deshalb haben wir alle 120 Kinder unserer Schule befragt. Jedes Kind durfte nur ein Verkehrsmittel nennen: das, mit dem es meistens kommt. Außerdem hat jedes Kind gesagt, wie viele Minuten sein Schulweg ungefähr dauert. In der Tabelle steht für jedes Verkehrsmittel, wie lange ein Kind damit ungefähr unterwegs ist.",
+     "Die größte Gruppe der Kinder geht zu Fuß. Viele von ihnen wohnen nur wenige Straßen von der Schule entfernt. Wer zu Fuß geht, Fahrrad fährt oder Tretroller fährt, bewegt sich schon vor dem Unterricht an der frischen Luft.",
      "Mit dem Fahrrad dürfen an unserer Schule nur Kinder kommen, die die Radfahrprüfung bestanden haben. Diese Prüfung machen bei uns alle Kinder in der 4. Klasse. Die Kinder mit dem Tretroller gehen dagegen fast alle in die 1. oder 2. Klasse.",
      "Die Kinder, die mit dem Schulbus fahren, wohnen in den Dörfern Erlenried und Fuchsbühl. Diese liegen mehrere Kilometer von der Schule entfernt. Auf seinem Weg hält der Schulbus an sieben Haltestellen.",
-     "Am schnellsten sind im Durchschnitt die Kinder, die mit dem Auto gebracht werden. Trotzdem ist dieses „Elterntaxi“ ein Problem. Unser Hausmeister, Herr Kofler, hat an einem Morgen gezählt, wie viele Autos zwischen 7:40 Uhr und 8:00 Uhr vor dem Schultor gehalten haben. Es waren 15 Autos. Manche halten auf dem Gehweg oder an der Bushaltestelle. Dann wird es für die Kinder, die zu Fuß kommen, eng und gefährlich.",
+     "Am schnellsten in der Schule sind die Kinder, die mit dem Auto gebracht werden. Trotzdem ist dieses „Elterntaxi“ ein Problem. Unser Hausmeister, Herr Kofler, hat an einem Morgen gezählt, wie viele Autos zwischen 7:40 Uhr und 8:00 Uhr vor dem Schultor gehalten haben. Es waren 15 Autos. Manche halten auf dem Gehweg oder an der Bushaltestelle. Dann wird es für die Kinder, die zu Fuß kommen, eng und gefährlich.",
      "Deshalb starten wir nach den Pfingstferien unser Projekt „Laufbus“. Dabei gehen Kinder morgens gemeinsam zur Schule, wie bei einem Bus mit festen Haltestellen. Ein Erwachsener begleitet die Gruppe. Unser Ziel: Mindestens die Hälfte der Kinder, die jetzt mit dem Auto kommen, soll bald mit dem Laufbus kommen."
     ],
     "tabelle": {
@@ -23,7 +23,7 @@
      "kopf": [
       "Verkehrsmittel",
       "Anzahl der Kinder",
-      "Durchschnittliche Dauer des Schulwegs"
+      "Ungefähre Dauer des Schulwegs"
      ],
      "zeilen": [
       [
@@ -71,7 +71,7 @@
        "richtig": false
       },
       {
-       "text": "Die Fahrradkinder brauchen im Durchschnitt länger als die Kinder mit dem Tretroller.",
+       "text": "Die Fahrradkinder sind laut Tabelle länger unterwegs als die Kinder mit dem Tretroller.",
        "richtig": true
       },
       {
@@ -84,7 +84,7 @@
       }
      ],
      "tipp": "Für manche Aussagen brauchst du die Tabelle, für andere den Text. Bei einer Aussage musst du Text und Tabelle verbinden und rechnen.",
-     "erklaerung": "Mit dem Tretroller kommen 14 Kinder, mit dem Bus 20. Fahrradkinder brauchen im Durchschnitt 9 Minuten, Rollerkinder 8. Herr Kofler hat 15 Autos gezählt, nicht 18. Und 18 : 2 = 9, also sollen mindestens 9 Auto-Kinder mit dem Laufbus kommen."
+     "erklaerung": "Mit dem Tretroller kommen 14 Kinder, mit dem Bus 20. Fahrradkinder brauchen ungefähr 9 Minuten, Rollerkinder ungefähr 8. Herr Kofler hat 15 Autos gezählt, nicht 18. Und 18 : 2 = 9, also sollen mindestens 9 Auto-Kinder mit dem Laufbus kommen."
     },
     {
      "id": "l-schulweg-2",
@@ -105,34 +105,34 @@
      "typ": "single",
      "stufe": 2,
      "kompetenz": "schliessen",
-     "frage": "Alle Kinder, die mit dem Fahrrad zur Schule kommen, gehen in die 4. Klasse. Woran liegt das?",
+     "frage": "In welche Klasse gehen die Kinder, die mit dem Fahrrad zur Schule kommen? Wähle die Antwort mit der passenden Begründung.",
      "optionen": [
       {
-       "text": "Man braucht die Radfahrprüfung, und die machen die Kinder in der 4. Klasse.",
+       "text": "Sie gehen alle in die 4. Klasse, denn erst dort machen die Kinder die Radfahrprüfung.",
        "richtig": true
       },
       {
-       "text": "Die Kinder der 4. Klasse wohnen am weitesten von der Schule entfernt.",
+       "text": "Sie gehen alle in die 4. Klasse, denn diese Kinder wohnen am weitesten von der Schule weg.",
        "richtig": false
       },
       {
-       "text": "Die jüngeren Kinder fahren lieber Tretroller, weil das mehr Spaß macht.",
+       "text": "Sie gehen in die 3. und 4. Klasse, denn die Kinder der 1. und 2. Klasse fahren Tretroller.",
        "richtig": false
       },
       {
-       "text": "Nur für die 4. Klassen gibt es an der Schule einen eigenen Fahrradständer.",
+       "text": "Das kann man nicht wissen, denn im Text steht nirgends, in welche Klasse sie gehen.",
        "richtig": false
       }
      ],
-     "tipp": "Lies Absatz 3. Verbinde die ersten beiden Sätze miteinander.",
-     "erklaerung": "Mit dem Rad dürfen nur Kinder kommen, die die Radfahrprüfung bestanden haben. Diese Prüfung machen die Kinder in der 4. Klasse. Deshalb sind alle Radfahrer Viertklässler."
+     "tipp": "Lies Absatz 3. Was braucht ein Kind, damit es mit dem Fahrrad kommen darf? Und in welcher Klasse bekommt es das?",
+     "erklaerung": "Mit dem Rad dürfen nur Kinder kommen, die die Radfahrprüfung bestanden haben. Diese Prüfung machen die Kinder erst in der 4. Klasse. Also gehen alle Fahrradkinder in die 4. Klasse, auch wenn das nicht wörtlich im Text steht."
     },
     {
      "id": "l-schulweg-4",
      "typ": "multi",
      "stufe": 2,
      "kompetenz": "schliessen",
-     "frage": "Die Buskinder fahren mit einem Fahrzeug. Trotzdem brauchen sie im Durchschnitt länger als die Kinder, die zu Fuß gehen. Welche Gründe kannst du aus dem Text erschließen?",
+     "frage": "Die Buskinder fahren mit einem Fahrzeug. Trotzdem brauchen sie laut Tabelle länger als die Kinder, die zu Fuß gehen. Welche Gründe kannst du aus dem Text erschließen?",
      "optionen": [
       {
        "text": "Sie wohnen in Dörfern, die mehrere Kilometer entfernt liegen.",
@@ -183,7 +183,7 @@
       }
      ],
      "tipp": "Schau dir die Spalten der Tabelle an. Welche Angaben stehen dort – und welche findest du dort gar nicht?",
-     "erklaerung": "In der Tabelle stehen nur Zahlen: die Anzahl der Kinder und die Durchschnittszeit. So findest du sie schnell und kannst sie vergleichen. Gründe, Entfernungen oder Gefahren stehen nicht darin."
+     "erklaerung": "In der Tabelle stehen nur Zahlen: die Anzahl der Kinder und die ungefähre Dauer des Schulwegs. So findest du sie schnell und kannst sie vergleichen. Gründe, Entfernungen oder Gefahren stehen nicht darin."
     }
    ]
   },
@@ -200,20 +200,20 @@
      "Ein Stein geht im Wasser unter, ein Stück Holz schwimmt. Aber was macht ein rohes Ei? Mit diesem Experiment findest du heraus, wie du ein Ei zum Schwimmen bringst. Du brauchst dafür etwa 20 Minuten.",
      "## Material",
      "Du brauchst ein frisches, rohes Ei, ein großes, durchsichtiges Glas (mindestens 500 Milliliter), einen Messbecher, Leitungswasser, Speisesalz, einen Esslöffel und ein Geschirrtuch.",
+     "## Sicherheitshinweis",
+     "Auf rohen Eiern können Keime sein. Wasche dir deshalb nach dem Experiment gründlich die Hände. Trinke das Salzwasser nicht, denn so viel Salz schadet deinem Körper. Iss das Ei danach nicht.",
      "## So gehst du vor",
      "Schritt 1: Stelle das Glas auf das Geschirrtuch. Miss 250 Milliliter Leitungswasser ab und gieße es ins Glas.",
      "Schritt 2: Lege das Ei mit dem Esslöffel vorsichtig ins Wasser. Beobachte genau, wo das Ei bleibt.",
      "Schritt 3: Hole das Ei mit dem Löffel wieder heraus und lege es auf das Geschirrtuch.",
      "Schritt 4: Gib einen Esslöffel Salz ins Wasser und rühre so lange um, bis sich das Salz aufgelöst hat. Mach das noch dreimal, bis insgesamt vier Löffel Salz im Wasser sind.",
      "Schritt 5: Lege das Ei wieder mit dem Löffel ins Glas. Was passiert jetzt?",
-     "Schritt 6 (für Profis): Halte den Löffel umgedreht neben dem Ei knapp über das Wasser. Gieße langsam Leitungswasser auf den Löffel, bis das Glas fast voll ist.",
+     "Schritt 6 (für Profis): Halte den Esslöffel knapp über das Wasser, und zwar so, dass seine runde Rückseite nach oben zeigt. Gieße langsam Leitungswasser auf den Löffel, bis das Glas fast voll ist.",
      "## Was du beobachtest",
-     "Im Leitungswasser sinkt das Ei auf den Boden. Im Salzwasser steigt es nach oben und schwimmt. Nach Schritt 6 schwebt das Ei ungefähr in der Mitte: Unter ihm ist Salzwasser, über ihm Leitungswasser.",
+     "Im Leitungswasser sinkt das Ei auf den Boden. Im Salzwasser steigt es nach oben und schwimmt. Nach Schritt 6 schwebt das Ei im Glas, ohne den Boden zu berühren: Unter ihm ist Salzwasser, über ihm Leitungswasser.",
      "## Warum ist das so?",
-     "Ob etwas schwimmt oder sinkt, hängt davon ab, ob es schwerer oder leichter ist als die gleiche Menge Wasser. Ein frisches Ei ist etwas schwerer als gleich viel Leitungswasser. Darum sinkt es. Löst sich Salz im Wasser auf, wird das Wasser schwerer, ohne dass es viel mehr wird. Jetzt ist gleich viel Salzwasser schwerer als das Ei. Deshalb trägt das Salzwasser das Ei. Das leichtere Leitungswasser bleibt oben, wenn man es vorsichtig darübergießt. Darum schwebt das Ei dort, wo das Salzwasser beginnt.",
-     "Übrigens: Ein altes Ei kann sogar im Leitungswasser schwimmen. In seinem Inneren hat sich mit der Zeit eine größere Luftblase gebildet.",
-     "## Sicherheitshinweis",
-     "Auf rohen Eiern können Keime sein. Wasche dir deshalb nach dem Experiment gründlich die Hände. Trinke das Salzwasser nicht, denn so viel Salz schadet deinem Körper. Iss das Ei danach nicht roh."
+     "Ob etwas schwimmt oder sinkt, hängt davon ab, ob es schwerer oder leichter ist als die gleiche Menge Wasser. Ein frisches Ei ist etwas schwerer als gleich viel Leitungswasser. Darum sinkt es. Löst sich Salz im Wasser auf, wird das Wasser schwerer, ohne dass es viel mehr wird. Jetzt ist gleich viel Salzwasser schwerer als das Ei. Deshalb trägt das Salzwasser das Ei. Das leichtere Leitungswasser bleibt oben, wenn man es vorsichtig darübergießt. Darum schwebt das Ei genau an der Grenze zwischen dem Salzwasser unten und dem Leitungswasser oben.",
+     "Übrigens: Ein altes Ei kann sogar im Leitungswasser schwimmen. In seinem Inneren hat sich mit der Zeit eine größere Luftblase gebildet."
     ]
    },
    "items": [
@@ -262,7 +262,7 @@
        "richtig": true
       }
      ],
-     "tipp": "Schau im ersten Absatz, in der Materialliste, in Schritt 4 und im Sicherheitshinweis nach.",
+     "tipp": "Schau im ersten Absatz, in der Materialliste, im Sicherheitshinweis und in Schritt 4 nach.",
      "erklaerung": "Das Experiment dauert etwa 20 Minuten, und danach sollst du dir die Hände waschen. Das Ei ist roh, nicht gekocht. Das Salz rührst du Löffel für Löffel ein."
     },
     {
@@ -297,10 +297,10 @@
      "typ": "multi",
      "stufe": 3,
      "kompetenz": "schliessen",
-     "frage": "Was kannst du aus dem Abschnitt „Warum ist das so?“ schließen?",
+     "frage": "Was kannst du aus der Anleitung schließen? Nutze vor allem den Abschnitt „Warum ist das so?“.",
      "optionen": [
       {
-       "text": "Mit nur einer Prise Salz würde das Ei wahrscheinlich am Boden bleiben.",
+       "text": "Ohne Schritt 4 würde das Ei auch in Schritt 5 am Boden liegen bleiben.",
        "richtig": true
       },
       {
@@ -320,35 +320,35 @@
        "richtig": false
       }
      ],
-     "tipp": "Lies den Abschnitt „Warum ist das so?“ und den Absatz mit „Übrigens“ noch einmal. Prüfe jede Aussage: Passt sie zu dem, was dort über das Wasser und das Ei steht?",
-     "erklaerung": "Das Salz macht das Wasser schwerer, das Ei bleibt gleich. Mit nur einer Prise wird das Wasser kaum schwerer, deshalb bliebe das Ei unten. Wie viel Wasser im Glas ist, spielt keine Rolle, und eine große Luftblase hat nur ein altes Ei."
+     "tipp": "Lies den Abschnitt „Warum ist das so?“ und den Absatz mit „Übrigens“ noch einmal. Schau dir auch die Schritte 3 bis 5 an. Prüfe dann jede Aussage einzeln.",
+     "erklaerung": "Das Salz macht das Wasser schwerer, das Ei bleibt gleich. Ohne das Salz aus Schritt 4 wäre im Glas nur Leitungswasser, und darin sinkt ein frisches Ei. Wie viel Wasser im Glas ist, spielt keine Rolle, und eine große Luftblase hat nur ein altes Ei."
     },
     {
      "id": "l-experiment-5",
      "typ": "single",
      "stufe": 2,
      "kompetenz": "reflektieren",
-     "frage": "In den Schritten stehen viele Aufforderungen wie „Lege …“, „Gib …“ oder „Gieße …“. Warum ist das so?",
+     "frage": "In den Schritten beginnen viele Sätze mit „Lege …“, „Gib …“ oder „Gieße …“. Warum sind die Schritte so geschrieben?",
      "optionen": [
       {
        "text": "Wer den Text liest, soll die Schritte selbst nacheinander ausführen.",
        "richtig": true
       },
       {
+       "text": "Der Text soll erklären, warum ein rohes Ei im Salzwasser schwimmt.",
+       "richtig": false
+      },
+      {
        "text": "Der Text soll erzählen, was ein Kind bei einem Experiment erlebt hat.",
        "richtig": false
       },
       {
-       "text": "Der Text soll die Leser von einer bestimmten Meinung überzeugen.",
-       "richtig": false
-      },
-      {
-       "text": "Der Text soll die Leser mit einer lustigen Geschichte unterhalten.",
+       "text": "Der Text soll die Leser warnen, was bei dem Experiment gefährlich ist.",
        "richtig": false
       }
      ],
-     "tipp": "Überlege, zu welcher Textsorte der Text gehört. Was macht man mit so einem Text?",
-     "erklaerung": "Der Text ist eine Anleitung. Die Aufforderungen sagen dir genau, was du tun sollst. So kannst du das Experiment selbst Schritt für Schritt durchführen."
+     "tipp": "Lies Schritt 1 noch einmal. Wem sagt dieser Satz etwas, und was soll diese Person damit machen?",
+     "erklaerung": "Der Text ist eine Anleitung. Die Sätze in den Schritten sagen dir, was du tun sollst. So kannst du das Experiment selbst Schritt für Schritt durchführen. Warum das Ei schwimmt und worauf du achten musst, steht in anderen Abschnitten."
     }
    ]
   },
@@ -362,7 +362,7 @@
     "untertitel": "An der Grundschule an der Mühlwiese wird diskutiert – am Freitag fällt die Entscheidung",
     "autor": "Leyla Aksoy, Kinderreporterin",
     "absaetze": [
-     "An der Grundschule an der Mühlwiese in Kirchwinkel wird gerade heftig diskutiert: Soll auf dem Pausenhof ein offener Bücherschrank stehen? In so einen Schrank darf jeder Bücher hineinstellen. Wer möchte, darf sich auch Bücher herausnehmen und behalten. Das kostet nichts. Der Elternbeirat hat angeboten, einen Schrank aus Holz zu bezahlen. Er kostet 450 €. Am Freitag stimmen die Klassensprecherinnen und Klassensprecher aller zwölf Klassen darüber ab.",
+     "An der Grundschule an der Mühlwiese in Kirchwinkel wird gerade heftig diskutiert: Soll auf dem Pausenhof ein offener Bücherschrank stehen? In so einen Schrank darf jeder Bücher hineinstellen. Wer möchte, darf sich auch Bücher herausnehmen und behalten. Das kostet nichts. Der Elternbeirat hat angeboten, einen Schrank aus Holz zu bezahlen. Der Schrank kostet 450 €. Am Freitag stimmen die Klassensprecherinnen und Klassensprecher aller zwölf Klassen darüber ab.",
      "## Amira sagt: Ja!",
      "Amira (10) aus der Klasse 4b ist für den Bücherschrank. „Viele Kinder wollen in der Pause nicht Fußball oder Fangen spielen“, sagt sie. „Für sie wäre ein spannendes Buch genau das Richtige.“ Außerdem findet Amira, dass Bücher zu schade sind, um zu Hause im Regal zu verstauben. Sie hat schon zehn Bücher gesammelt, die sie verschenken möchte. Amira ist sicher: Mit dem Schrank bekommen mehr Kinder Lust aufs Lesen.",
      "## Jonas sagt: Nein!",

@@ -12,13 +12,13 @@
     "absaetze": [
      "An Sommerabenden huschen in der Dämmerung oft dunkle Schatten lautlos über Gärten. Das sind keine Vögel, sondern Fledermäuse. Sie sind die einzigen Säugetiere, die wirklich fliegen können. Ihre Flügel sind aus dünner Haut, die zwischen den langen Fingern, den Armen und den Beinen gespannt ist. In Deutschland leben etwa 25 Fledermausarten.",
      "## Jagen mit den Ohren",
-     "Bei der nächtlichen Jagd verlassen sich Fledermäuse vor allem auf ihre Ohren. Im Flug stoßen sie ständig kurze, sehr hohe Rufe aus. Diese Töne sind so hoch, dass Menschen sie nicht hören können. Man nennt sie Ultraschall. Treffen die Rufe auf einen Ast oder eine Mücke, wird der Schall zurückgeworfen. An diesem Echo erkennt die Fledermaus, wo etwas ist, wie groß es ist und ob es sich bewegt. Das nennt man <b>Echoortung</b>. Blind sind sie übrigens nicht, doch im Dunkeln helfen ihnen die Augen wenig.",
+     "Bei der nächtlichen Jagd verlassen sich Fledermäuse vor allem auf ihre Ohren. Im Flug stoßen sie ständig kurze, sehr hohe Rufe aus. Die meisten dieser Töne sind so hoch, dass Menschen sie nicht hören können. Man nennt sie Ultraschall. Treffen die Rufe auf einen Ast oder eine Mücke, wird der Schall zurückgeworfen. An diesem Echo erkennt die Fledermaus, wo etwas ist, wie groß es ist und ob es sich bewegt. Das nennt man <b>Echoortung</b>. Blind sind sie übrigens nicht, doch im Dunkeln helfen ihnen die Augen wenig.",
      "Unsere Fledermäuse fressen vor allem Insekten, etwa Mücken, Nachtfalter und Käfer. Viele schnappen ihre Beute direkt in der Luft. Die Zwergfledermaus wiegt nur etwa fünf Gramm. Trotzdem kann sie in einer Nacht mehrere Hundert Mücken fangen.",
      "## Vom Dachboden in die Höhle",
      "Tagsüber schlafen Fledermäuse in einem Versteck, dem Quartier. Dort hängen sie meist kopfüber und halten sich mit den Fußkrallen fest. Im Sommer wohnen sie gern auf warmen Dachböden, in Baumhöhlen oder in engen Spalten hinter Fensterläden. Die Weibchen bilden dann große Gruppen, die man Wochenstuben nennt. Dort bekommt jedes Weibchen meist nur ein Junges im Jahr.",
-     "Im Herbst finden Fledermäuse kaum noch Insekten. Deshalb fressen sie sich ein Fettpolster an und suchen ein frostfreies Winterquartier, etwa eine Höhle, einen alten Stollen oder einen kühlen Keller. Dort halten sie Winterschlaf. Ihr Körper kühlt stark ab, und das Herz schlägt nur noch ganz langsam. So sparen sie Energie. Jedes Aufwachen kostet sie viel von ihrem Fettvorrat. Wird eine Fledermaus zu oft gestört, reicht der Vorrat nicht bis zum Frühling.",
+     "Im Winter gibt es kaum Insekten. Deshalb fressen sich Fledermäuse im Spätsommer und Herbst ein Fettpolster an. Dann suchen sie ein frostfreies Winterquartier, etwa eine Höhle, einen alten Gang in einem Bergwerk oder einen kühlen Keller. Dort halten sie Winterschlaf. Ihr Körper kühlt stark ab, und das Herz schlägt nur noch ganz langsam. So sparen sie Energie. Jedes Aufwachen kostet sie viel von ihrem Fettvorrat. Wird eine Fledermaus zu oft gestört, reicht der Vorrat nicht bis zum Frühling.",
      "## Fledermäuse brauchen Hilfe",
-     "Viele Fledermausarten sind selten geworden. Alte Bäume mit Höhlen werden gefällt. Bei Renovierungen werden oft die Einfluglöcher zu den Dachböden verschlossen. Außerdem gibt es weniger Insekten als früher. Deshalb stehen alle Fledermäuse in Deutschland unter strengem Schutz. Jeder kann helfen: Wer einen Fledermauskasten aufhängt, schenkt den Tieren ein Quartier. Ein Garten mit vielen Blüten lockt Nachtfalter an – und damit Futter für die Jäger der Nacht."
+     "Viele Fledermausarten sind selten geworden. Alte Bäume mit Höhlen werden gefällt. Wenn Häuser repariert werden, verschließt man oft die kleinen Löcher, durch die Fledermäuse auf den Dachboden fliegen. Außerdem gibt es weniger Insekten als früher. Deshalb stehen alle Fledermäuse in Deutschland unter strengem Schutz. Jeder kann helfen: Wer einen Fledermauskasten aufhängt, schenkt den Tieren ein Quartier. Ein Garten mit vielen Blüten lockt Nachtfalter an – und damit Futter für die Jäger der Nacht."
     ]
    },
    "items": [
@@ -85,7 +85,7 @@
        "g": 1
       },
       {
-       "t": "alter Stollen",
+       "t": "alter Gang in einem Bergwerk",
        "g": 1
       },
       {
@@ -94,7 +94,7 @@
       }
      ],
      "tipp": "Absatz 4 erzählt vom Sommer, Absatz 5 vom Winter. Lies die Orte dort Wort für Wort.",
-     "erklaerung": "Im Sommer wohnen Fledermäuse auf warmen Dachböden, in Baumhöhlen und in Spalten hinter Fensterläden. Für den Winterschlaf suchen sie einen frostfreien Ort: eine Höhle, einen alten Stollen oder einen kühlen Keller."
+     "erklaerung": "Im Sommer wohnen Fledermäuse auf warmen Dachböden, in Baumhöhlen und in Spalten hinter Fensterläden. Für den Winterschlaf suchen sie einen frostfreien Ort: eine Höhle, einen alten Gang in einem Bergwerk oder einen kühlen Keller."
     },
     {
      "id": "l-fledermaus-3",
@@ -121,7 +121,7 @@
       }
      ],
      "tipp": "Lies in Absatz 2 nach, was über die Rufe der Fledermäuse steht. Wer kann sie hören und wer nicht?",
-     "erklaerung": "Fledermäuse rufen mit Ultraschall. Diese Töne sind so hoch, dass Menschen sie nicht hören können. Für uns wirken die Tiere deshalb lautlos."
+     "erklaerung": "Fledermäuse rufen mit Ultraschall. Die meisten dieser Töne sind so hoch, dass Menschen sie nicht hören können. Für uns wirken die Tiere deshalb lautlos."
     },
     {
      "id": "l-fledermaus-4",
@@ -162,24 +162,24 @@
      "frage": "Lies den letzten Absatz. Was soll er bei den Lesern vor allem bewirken?",
      "optionen": [
       {
-       "text": "Die Leser sollen Fledermäusen helfen und sie schützen.",
+       "text": "Die Leser sollen selbst etwas für Fledermäuse tun.",
        "richtig": true
       },
       {
-       "text": "Die Leser sollen erfahren, wie Fledermäuse Beute finden.",
+       "text": "Die Leser sollen erfahren, warum es weniger Insekten gibt.",
        "richtig": false
       },
       {
-       "text": "Die Leser sollen Fledermäuse aus dem Garten vertreiben.",
+       "text": "Die Leser sollen lernen, wie man einen Fledermauskasten baut.",
        "richtig": false
       },
       {
-       "text": "Die Leser sollen erfahren, wo Fledermäuse überwintern.",
+       "text": "Die Leser sollen erfahren, wie viele Fledermausarten es gibt.",
        "richtig": false
       }
      ],
-     "tipp": "Lies die Zwischenüberschrift über dem letzten Absatz. Worum geht es in den letzten beiden Sätzen?",
-     "erklaerung": "Der Absatz erklärt, warum Fledermäuse selten geworden sind, und zeigt, wie jeder helfen kann. Die Leser sollen die Tiere also schützen."
+     "tipp": "Lies die letzten beiden Sätze des Absatzes genau. An wen richten sie sich, und was schlagen sie vor?",
+     "erklaerung": "Der Absatz erklärt, warum Fledermäuse selten geworden sind, und zeigt dann, was jeder tun kann: einen Fledermauskasten aufhängen oder einen Garten mit vielen Blüten anlegen. Die Leser sollen also selbst helfen."
     }
    ]
   },
@@ -193,7 +193,7 @@
     "untertitel": "Eine Geschichte aus dem Schullandheim",
     "absaetze": [
      "Am ersten Abend im Schullandheim Moosgrund lag Paul lange wach. Durch das gekippte Fenster hörte er die Tannen rauschen, und irgendwo rief ein Käuzchen. Die anderen Jungen in Zimmer 4 schliefen schon. Paul drückte sein Gesicht ins Kissen. Es roch fremd, gar nicht nach zu Hause. Er dachte an Mama, an seinen Hund Bruno und an sein eigenes Bett. Am liebsten wäre er sofort heimgefahren.",
-     "Beim Abendessen am nächsten Tag klopfte Frau Huber an ihr Glas. „Heute machen wir eine Nachtwanderung!“, verkündete sie. „Im Wald hängen fünf Laternen. An jeder findet ihr einen Buchstaben. Jedes Zweierteam bringt mir am Ende das Lösungswort.“ Die Klasse jubelte. Nur Paul wurde ganz still und schob seinen Teller weg. Im Dunkeln durch den Wald? Schon bei dem Gedanken daran wurde ihm mulmig.",
+     "Beim Abendessen am nächsten Tag klopfte Frau Huber an ihr Glas. „Heute machen wir eine Nachtwanderung!“, verkündete sie. „Unser Weg führt durch den Wald und wieder zurück zum Haus. Unterwegs hängen fünf Laternen. An jeder findet ihr einen Buchstaben. Jedes Zweierteam bringt mir am Ende das Lösungswort.“ Die Klasse jubelte. Nur Paul wurde ganz still und schob seinen Teller weg. Im Dunkeln durch den Wald? Schon bei dem Gedanken daran wurde ihm mulmig.",
      "Ausgerechnet mit Aylin sollte er gehen. Aylin kletterte im Sportunterricht immer bis unter die Hallendecke und erzählte gern, dass sie vor nichts Angst habe. „Na los, das wird lustig!“, rief sie und lief voraus. Paul bekam die Taschenlampe. Er knipste sie an und stapfte hinter Aylin her.",
      "Die ersten drei Laternen fanden die beiden schnell. Doch auf dem Weg zur vierten flackerte die Taschenlampe plötzlich und ging aus. Um sie herum war es stockdunkel. Pauls Herz klopfte bis zum Hals, und seine Beine fühlten sich an wie Pudding. Da schob sich eine Hand in seine. Aylins Finger zitterten.",
      "„Paul?“, flüsterte Aylin. „Ich habe Angst im Dunkeln. Das habe ich noch nie jemandem erzählt.“ Paul staunte. Die mutige Aylin fürchtete sich auch? Auf einmal fühlte er sich nicht mehr so allein. Er musste an seinen Opa denken. Der hatte einmal zu ihm gesagt: „Wenn du nicht weiterweißt, bleib stehen, atme tief durch und schau dich in Ruhe um.“",
@@ -373,11 +373,11 @@
    "einleitung": "Ein Gedicht über einen nebligen Tag im November – achte auf die sprachlichen Bilder.",
    "text": {
     "titel": "Novembernebel",
-    "autor": "Mira Sonnleitner",
+    "autor": "Lese-Labor-Team",
     "strophen": [
      [
-      "Der Nebel kommt auf leisen Sohlen,",
-      "er schleicht durchs Dorf ganz still und sacht.",
+      "Am Morgen schleicht auf leisen Sohlen",
+      "der Nebel durch das Dorf, ganz sacht.",
       "Er hat die Farben weggestohlen",
       "und aus dem Tag ein Grau gemacht."
      ],
@@ -395,7 +395,7 @@
      ],
      [
       "Am Abend ist der Nebel fort,",
-      "die Welt ist bunt und weit und klar.",
+      "die Sterne funkeln hell und klar.",
       "Doch morgen liegt er wieder dort,",
       "wo er auch heute Morgen war."
      ]
@@ -418,11 +418,11 @@
        "richtig": true
       },
       {
-       "text": "Mittags scheint die Sonne wieder.",
+       "text": "Der Nebel hat dem Tag die Farben genommen.",
        "richtig": true
       },
       {
-       "text": "Die Amsel fliegt in den Süden.",
+       "text": "Am Mittag ist der Nebel schon ganz verschwunden.",
        "richtig": false
       },
       {
@@ -430,8 +430,8 @@
        "richtig": false
       }
      ],
-     "tipp": "Suche zu jeder Aussage den passenden Vers. Findest du keinen, steht es nicht im Gedicht.",
-     "erklaerung": "Der Nebel schleicht durchs Dorf (Vers 2), und mittags scheint die Sonne wieder (Vers 9). Von einer Amsel, die in den Süden fliegt, und von Regen ist keine Rede."
+     "tipp": "Suche zu jeder Aussage den passenden Vers. Manche Aussagen sagen dasselbe mit anderen Worten. Findest du keinen passenden Vers, steht es nicht im Gedicht.",
+     "erklaerung": "Der Nebel schleicht durch das Dorf (Vers 1 und 2) und hat die Farben weggestohlen (Vers 3). Dass er schon mittags ganz weg ist, steht nirgends – erst in Vers 13 heißt es: „Am Abend ist der Nebel fort.“ Von Regen ist keine Rede."
     },
     {
      "id": "l-gedicht-2",
@@ -449,7 +449,7 @@
        "richtig": true
       },
       {
-       "text": "Man kann die eigene Hand kaum sehen.",
+       "text": "Im dichten Nebel sieht man kaum etwas.",
        "richtig": true
       },
       {
@@ -457,7 +457,7 @@
        "richtig": false
       },
       {
-       "text": "Kinder spielen auf den Wiesen Verstecken.",
+       "text": "Die Bäume stehen mitten auf dem Weg.",
        "richtig": false
       },
       {
@@ -465,8 +465,8 @@
        "richtig": false
       }
      ],
-     "tipp": "Strophe 2 hat vier Verse. Vergleiche jede Antwort mit diesen vier Versen.",
-     "erklaerung": "In Strophe 2 sehen die Bäume aus wie graue Riesen, kein Vogel singt, und man sieht die eigene Hand kaum. Von fallenden Blättern, spielenden Kindern oder Wind steht dort nichts."
+     "tipp": "Strophe 2 hat vier Verse. Vergleiche jede Antwort genau mit diesen Versen. Manche Antworten sagen es mit anderen Worten.",
+     "erklaerung": "In Strophe 2 sehen die Bäume aus wie graue Riesen, kein Vogel singt, und man kann die eigene Hand kaum sehen. Die Bäume stehen aber am Rand des Weges, nicht mitten darauf. Von Blättern oder Wind steht dort nichts."
     },
     {
      "id": "l-gedicht-3",
@@ -508,11 +508,11 @@
      ],
      "elemente": [
       {
-       "t": "Der Nebel schleicht durchs Dorf.",
+       "t": "Der Nebel schleicht durch das Dorf.",
        "g": 0
       },
       {
-       "t": "Man kann die eigene Hand kaum sehen.",
+       "t": "Kein Vogel singt auf den Wiesen.",
        "g": 0
       },
       {
@@ -528,12 +528,12 @@
        "g": 2
       },
       {
-       "t": "Die Welt ist bunt und weit und klar.",
+       "t": "Die Sterne funkeln hell und klar.",
        "g": 2
       }
      ],
-     "tipp": "Achte auf Zeitangaben wie „mittags“. Wann der Nebel gekommen ist, erfährst du erst ganz am Ende des Gedichts.",
-     "erklaerung": "Im letzten Vers steht, dass der Nebel „heute Morgen“ da war – also gehören die Strophen 1 und 2 zum Morgen. Strophe 3 beginnt mit „mittags“, Strophe 4 mit „Am Abend“."
+     "tipp": "Suche in den Strophen nach Zeitangaben. Hat eine Strophe keine eigene Zeitangabe, dann überlege: Was passiert davor und was danach?",
+     "erklaerung": "Strophe 1 beginnt mit „Am Morgen“, Strophe 3 mit „mittags“ und Strophe 4 mit „Am Abend“. Strophe 2 gehört noch zum Morgen: Da singt kein Vogel – erst mittags wagt die Amsel ihr erstes Lied."
     },
     {
      "id": "l-gedicht-5",
