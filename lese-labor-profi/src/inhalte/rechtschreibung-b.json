@@ -503,7 +503,8 @@
      "frage": "Verlängere das Wort. Schreibe die Mehrzahl auf.",
      "vorgabe": "der Ball → die ___",
      "loesungen": [
-      "Bälle"
+      "Bälle",
+      "die Bälle"
      ],
      "tipp": "Die Mehrzahl hat zwei Silben. Achte auf den Umlaut.",
      "erklaerung": "Die Mehrzahl heißt <b>Bälle</b>. Beim Verlängern hörst du deutlich: Bäl-le. Der kurze Selbstlaut braucht zwei l."
@@ -885,8 +886,7 @@
      "frage": "Wie schreibt man das Wort richtig? Tippe das ganze Wort ein.",
      "vorgabe": "Ich trinke Saft aus einem Gla_.",
      "loesungen": [
-      "Glas",
-      "s"
+      "Glas"
      ],
      "tipp": "Verlängere das Wort: Bilde die Mehrzahl und sprich sie ganz deutlich. Summt oder zischt das s dann?",
      "erklaerung": "Die Mehrzahl heißt <b>Gläser</b>. Wenn du sie deutlich sprichst, summt das s – also schreibt man auch <b>Glas</b> mit s."
@@ -1253,11 +1253,7 @@
       "der Doppelpunkt",
       "ein Doppelpunkt",
       "Der Doppelpunkt",
-      "Ein Doppelpunkt",
-      "doppelpunkt",
-      "der doppelpunkt",
-      "ein doppelpunkt",
-      ":"
+      "Ein Doppelpunkt"
      ],
      "tipp": "Der Begleitsatz steht vor der wörtlichen Rede. Welches Zeichen kündigt an, dass gleich jemand spricht?",
      "erklaerung": "Steht der Begleitsatz vorn, folgt ein <b>Doppelpunkt</b>: Paul flüstert: „Das Baby schläft.“ Das Wort „Doppelpunkt“ ist ein Nomen, deshalb schreibst du es groß."
