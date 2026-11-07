@@ -6,7 +6,8 @@ Einfach `index.html` im Browser öffnen – funktioniert auf Handy, Tablet und C
 - Bunte Tasten fallen in vier Spuren herunter; jede getippte Taste spielt den nächsten Ton des Lieds.
 - Lange Tasten gedrückt halten, goldene Sterntasten bringen Extrapunkte.
 - 3 Sterne pro Lied, danach schnellere Runden für bis zu 3 Kronen.
-- Schwierigkeit steuert Tempo und Herzen: Leicht (langsam, 5 Herzen), Mittel (flott, 3), Profi (schnell, 1).
+- Tempo-Schieberegler (Schnecke bis Rakete); die Schwierigkeit legt die Herzen fest (Leicht 5, Mittel 3, Profi 1) und setzt ein passendes Starttempo.
+- Lange Halte-Tasten sind schwarz.
 - Regenbogen-Power ab 20er-Kombo (doppelte Punkte), Notennamen (C D E … H) zum Mitlernen.
 - Neue Tasten-Looks werden mit gesammelten Sternen freigeschaltet; Fortschritt wird lokal gespeichert.
 - 32 Lieder in sechs Genres: Kinderlieder, Weihnachten und Klassik (gemeinfrei) sowie Pop, Party & EDM und
