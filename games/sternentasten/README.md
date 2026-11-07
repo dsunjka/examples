@@ -11,9 +11,9 @@ Einfach `index.html` im Browser öffnen – funktioniert auf Handy, Tablet und C
 - Tempo-Schieberegler in Prozent vom Originaltempo (50 % „Schnecke" bis 150 % „Rakete"); die Schwierigkeit legt die
   Herzen fest (Leicht 5, Mittel 3, Profi 1) und setzt ein passendes Starttempo.
 - Tasten-Form wählbar: Vierecke, Pfoten oder Herzen.
-- Lange Halte-Tasten sind schwarz.
-- Regenbogen-Power ab 20er-Kombo (doppelte Punkte), Notennamen (C D E … H) zum Mitlernen.
-- 15 Tasten-Looks, die mit gesammelten Sternen freigeschaltet werden; Fortschritt wird lokal gespeichert.
+- Alle Tasten sind schlichte schwarze Streifen ohne Beschriftung; Bonus-Tasten tragen einen goldenen Stern.
+- Regenbogen-Power ab 20er-Kombo (doppelte Punkte); Notennamen (C D E … H) lassen sich optional einschalten.
+- 15 Farbwelten (Hintergrund und Glitzer-Effekte), die mit gesammelten Sternen freigeschaltet werden; Fortschritt wird lokal gespeichert.
 - 32 Lieder in sechs Genres: Kinderlieder, Weihnachten und Klassik (gemeinfrei) sowie Pop, Party & EDM und
   Chillen & Träumen (eigene Kompositionen mit Beat und Basslinie).
 - Töne, Beat und Bass werden live mit der Web Audio API erzeugt.

@@ -416,7 +416,7 @@ kbd { font-family: inherit; font-weight: 700; background: rgba(255,255,255,.15);
           </div>
         </div>
         <div>
-          <span class="label" id="lblSkin">Tasten-Look</span>
+          <span class="label" id="lblSkin">Farbwelt</span>
           <div class="skins" id="skins" role="radiogroup" aria-labelledby="lblSkin"></div>
         </div>
       </div>
@@ -430,13 +430,13 @@ kbd { font-family: inherit; font-weight: 700; background: rgba(255,255,255,.15);
         <ul>
           <li>Tippe auf die Taste mit <b>START</b>. Dann fallen die Tasten von oben herunter.</li>
           <li>Tippe jede Taste, bevor sie unten verschwindet. Je weiter unten du tippst, desto mehr Punkte: <b>Super</b>, <b>Klasse</b> oder <b>Perfekt!</b></li>
-          <li>Die <b>schwarzen langen Tasten</b> musst du gedrückt halten, bis die weiße Füllung oben ankommt.</li>
+          <li>Die <b>langen Tasten</b> musst du gedrückt halten, bis die weiße Füllung oben ankommt.</li>
           <li>Unter <b>Tasten-Form</b> kannst du statt Vierecken auch <b>Pfoten</b> oder <b>Herzen</b> antippen.</li>
           <li>Mit dem <b>Tempo-Regler</b> stellst du ein, wie schnell die Tasten fallen.</li>
-          <li><b>Goldene Sterntasten</b> bringen 5 Extrapunkte.</li>
+          <li>Tasten mit <b>goldenem Stern</b> bringen 5 Extrapunkte.</li>
           <li>Ab 20 Treffern ohne Fehler startet die <b>Regenbogen-Power</b>: doppelte Punkte!</li>
           <li>Drei Sterne gibt es für das ganze Lied. Danach wird es schneller, und du kannst bis zu <b>drei Kronen</b> sammeln.</li>
-          <li>Mit genug Sternen schaltest du neue Tasten-Looks frei.</li>
+          <li>Mit genug Sternen schaltest du neue Farbwelten frei.</li>
           <li>Am Computer: Tasten <kbd>D</kbd> <kbd>F</kbd> <kbd>J</kbd> <kbd>K</kbd>, Pause mit <kbd>Leertaste</kbd>.</li>
         </ul>
       </details>
@@ -631,12 +631,13 @@ SONGS.forEach(s => {
 
 /* ---------- Speichern ---------- */
 const SAVE_KEY = 'sternentasten-v1';
-let save = { best: {}, settings: { diff: 'leicht', names: true, sound: true, skin: 'bonbon', tempo: 0.8, shape: 'eckig' } };
+let save = { best: {}, settings: { diff: 'leicht', names: false, sound: true, skin: 'bonbon', tempo: 0.8, shape: 'eckig' } };
 try {
   const s = JSON.parse(localStorage.getItem(SAVE_KEY));
   if (s && typeof s === 'object') {
     save.best = s.best || {};
     Object.assign(save.settings, s.settings || {});
+    if (!save.settings.v3) { save.settings.names = false; save.settings.v3 = true; }
   }
 } catch (e) { /* kein Speicher verfügbar */ }
 function clampSpeed(v) { v = +v; return isFinite(v) ? Math.min(1.5, Math.max(0.5, v)) : 0.8; }
@@ -1147,11 +1148,9 @@ function tileBody(x, y, w, h, color, alpha) {
   ctx.fillStyle = color;
   rr(x, y, w, h, 16); ctx.fill();
   const sh = ctx.createLinearGradient(0, y, 0, y + Math.min(h, rowH));
-  sh.addColorStop(0, 'rgba(255,255,255,.45)'); sh.addColorStop(0.45, 'rgba(255,255,255,0)');
+  sh.addColorStop(0, 'rgba(255,255,255,.14)'); sh.addColorStop(0.4, 'rgba(255,255,255,0)');
   ctx.fillStyle = sh; rr(x, y, w, h, 16); ctx.fill();
-  ctx.fillStyle = 'rgba(0,0,0,.16)';
-  rr(x, y + h - 8, w, 8, 8); ctx.fill();
-  ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(255,255,255,.6)';
+  ctx.lineWidth = 2; ctx.strokeStyle = 'rgba(255,255,255,.55)';
   rr(x + 1, y + 1, w - 2, h - 2, 15); ctx.stroke();
   ctx.globalAlpha = 1;
 }
@@ -1184,8 +1183,8 @@ function drawCuteTile(t, shape, x, y, w, hh, color, time, noText) {
   const cx = x + w / 2, cy = y + hh - headH / 2;
   const s = Math.min(w * 0.36, headH * 0.4);
   // Untergrund: eine zarte Fläche, damit man die Taste gut sieht
-  ctx.globalAlpha = isHold ? 0.62 : 0.2; ctx.fillStyle = color; rr(x, y, w, hh, 18); ctx.fill();
-  ctx.globalAlpha = isHold ? 0.9 : 0.55; ctx.strokeStyle = isHold ? '#ffffff' : color; ctx.lineWidth = 2;
+  ctx.globalAlpha = isHold ? 0.62 : 0.35; ctx.fillStyle = color; rr(x, y, w, hh, 18); ctx.fill();
+  ctx.globalAlpha = isHold ? 0.9 : 0.55; ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 2;
   rr(x + 1, y + 1, w - 2, hh - 2, 17); ctx.stroke(); ctx.globalAlpha = 1;
   if (isHold) {
     if (t.state === 'holding') {
@@ -1206,14 +1205,14 @@ function drawCuteTile(t, shape, x, y, w, hh, color, time, noText) {
     ctx.globalAlpha = 1;
   }
   const bounce = t.state === 'holding' ? 1 + Math.sin(time * 12) * 0.06 : 1 + Math.sin(time * 4 + t.lane) * 0.03;
-  cuteIcon(shape, cx, cy, s * bounce, color, isHold ? '#ffffff' : 'rgba(255,255,255,.95)');
+  cuteIcon(shape, cx, cy, s * bounce, color, '#ffffff');
   if (t.state === 'holding') {
     ctx.fillStyle = '#ffffff';
     ctx.beginPath(); ctx.arc(cx, t.touchY, 9 + Math.sin(time * 12) * 2, 0, 6.283); ctx.fill();
   }
   if (noText) return;
   if (t.golden && t.state === 'pending') {
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = '#ffd34d';
     starPath(x + w - 15, y + 15, 10, time * 2); ctx.fill();
     ctx.strokeStyle = '#c9781a'; ctx.lineWidth = 1.5; ctx.stroke();
   }
@@ -1261,7 +1260,7 @@ function drawTile(t, time) {
     return;
   }
 
-  let color = t.golden ? '#ffd34d' : t.hold ? HOLD_COLOR : laneColor(t.lane, time, t);
+  let color = HOLD_COLOR;   // alle Tasten sind schwarz
   if (t.state === 'missed') color = (Math.floor(time * 8) % 2) ? '#ff5d73' : '#ffffff';
   if (shape !== 'eckig') { drawCuteTile(t, shape, x, y, w, hh, color, time); return; }
 
@@ -1292,13 +1291,13 @@ function drawTile(t, time) {
   const cx = x + w / 2, by = y + hh;
   const my = t.hold ? by - (rowH - pad * 2) / 2 : y + hh / 2;   // Mitte der Taste bzw. des Kopfes
   if (t.golden && t.state === 'pending') {
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = '#ffd34d';
     starPath(cx, my, Math.min(w, hh) * 0.3, Math.sin(time * 3) * 0.3); ctx.fill();
     ctx.strokeStyle = '#c9781a'; ctx.lineWidth = 2; ctx.stroke();
   }
   ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   if (!G.started && t === G.tiles[0]) {
-    ctx.fillStyle = '#22164d';
+    ctx.fillStyle = '#ffffff';
     ctx.font = `900 ${Math.round(Math.min(laneW * 0.24, 26))}px Grandstander, system-ui, sans-serif`;
     ctx.fillText('START', cx, my);
     const pulse = 0.5 + 0.5 * Math.sin(time * 6);
@@ -1360,10 +1359,10 @@ function drawDemo(time) {
     const pad = 4, h = d.len * rowH, shape = save.settings.shape || 'eckig';
     if (shape !== 'eckig') {
       drawCuteTile({ hold: d.len > 1, state: 'pending', lane: d.lane, midi: 60 }, shape, d.lane * laneW + pad, d.y - h + pad, laneW - pad * 2, h - pad * 2,
-        d.len > 1 ? HOLD_COLOR : laneColor(d.lane, time, null), time, true);
+        HOLD_COLOR, time, true);
       continue;
     }
-    tileBody(d.lane * laneW + pad, d.y - h + pad, laneW - pad * 2, h - pad * 2, d.len > 1 ? HOLD_COLOR : laneColor(d.lane, time, null), 0.9);
+    tileBody(d.lane * laneW + pad, d.y - h + pad, laneW - pad * 2, h - pad * 2, HOLD_COLOR, 0.9);
   }
 }
 
@@ -1439,7 +1438,7 @@ function endGame(win) {
   $('#resGold').textContent = G.gold;
   const un = $('#resUnlock');
   un.hidden = unlocked.length === 0;
-  un.textContent = unlocked.length ? 'Neuer Tasten-Look freigeschaltet: ' + unlocked.map(s => s.name).join(', ') + '!' : '';
+  un.textContent = unlocked.length ? 'Neue Farbwelt freigeschaltet: ' + unlocked.map(s => s.name).join(', ') + '!' : '';
   if (G.stars >= 3) confetti();
   setTimeout(() => {
     $('#hud').hidden = true;
