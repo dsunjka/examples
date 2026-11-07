@@ -94,5 +94,5 @@ mkdirSync(ZIEL, { recursive: true });
 writeFileSync(join(ZIEL, 'lese-labor-profi.html'), standalone);
 writeFileSync(join(ZIEL, 'artifact.html'), fragment);
 const kb = (s) => (Buffer.byteLength(s) / 1024).toFixed(0) + ' KB';
-console.log(`✓ gebaut${MIT_TEST ? ' (mit Testdaten, tests/build)' : ''}: dist/lese-labor-profi.html (${kb(standalone)}), dist/artifact.html (${kb(fragment)})`);
+console.log(`✓ gebaut nach ${ZIEL}${MIT_TEST ? ' (mit Testdaten)' : ''}: lese-labor-profi.html (${kb(standalone)}), artifact.html (${kb(fragment)})`);
 console.log(`  Inhalte: ${zaehl.faelle} Fälle/${zaehl.digitalFragen} Fragen · ${zaehl.texte} Texte/${zaehl.leseFragen} Fragen · Themen RS ${zaehl.rsThemen}, GR ${zaehl.grThemen}, SC ${zaehl.scThemen} · ${zaehl.diktate} Diktate · ${zaehl.auftraege} Schreibaufträge · ${zaehl.tempo} Tempo-Sätze · ${zaehl.aufgaben} Aufgaben insgesamt`);

@@ -81,6 +81,7 @@ const TYP_NAME = { single: 'Eine Antwort', multi: 'Mehrfachauswahl', matrix: 'Au
 /* ---------- Inhaltsregister ---------- */
 const REG = { items: {}, gruppen: {}, module: {} };
 function baueRegister() {
+  REG.items = {}; REG.gruppen = {};
   for (const m of MODULE) REG.module[m.id] = { gruppen: [], items: [] };
   const neueGruppe = (modul, art, daten, titel, extra = {}) => {
     const g = { id: daten.id, modul, art, titel, daten, items: [], ...extra };

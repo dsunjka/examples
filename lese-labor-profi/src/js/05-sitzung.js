@@ -50,6 +50,13 @@ function sitzungVerwerfen() { const p = P(); if (p) { delete p.laufend; speicher
 
 /* ---------- Darstellung ---------- */
 const aktId = () => SITZ.ids[SITZ.index];
+/** Fokus nach dem Neuzeichnen setzen (für Tastatur und VoiceOver), ohne zu scrollen. */
+function fokus(sel) {
+  if (ANSICHT.name !== 'sitzung') return;
+  const e = typeof sel === 'string' ? $(sel) : sel; if (!e) return;
+  if (!e.matches('button, input, select, textarea, summary, a, [tabindex]')) e.setAttribute('tabindex', '-1');
+  try { e.focus({ preventScroll: true }); } catch (x) { e.focus(); }
+}
 const aktIt = () => REG.items[aktId()].it;
 function quellArt(id) { const g = gruppeVon(id); return g ? g.art : null; }
 
@@ -243,7 +250,9 @@ function pruefen() {
     abschliessen(id, erg.status === 'leer' ? 'falsch' : erg.status, false);
   }
   zeichneAufgabe(); zeichneKopf();
-  const rm = $('.rueckmeldung'); if (rm && rm.scrollIntoView) rm.scrollIntoView({ block: 'nearest', behavior: sanft() });
+  const zeile = $('.frage-karte .aktionen') || $('.rueckmeldung');
+  if (zeile && zeile.scrollIntoView) zeile.scrollIntoView({ block: 'nearest', behavior: sanft() });
+  fokus('.rueckmeldung');
 }
 function abschliessen(id, status, sauber) {
   if (SITZ.ergebnis[id]) return;
@@ -270,6 +279,7 @@ function loesungZeigen() {
   const erste = SITZ.erste[id] || bewerte(it, SITZ.antworten[id]).status;
   abschliessen(id, erste === 'richtig' ? 'falsch' : erste === 'leer' ? 'falsch' : erste, false);
   zeichneAufgabe(); zeichneKopf();
+  fokus('.rueckmeldung');
 }
 function tippZeigen() {
   const id = aktId(), it = aktIt();
@@ -281,6 +291,7 @@ function tippZeigen() {
     const q = $('#quelle .geraet'); if (q) { q.classList.remove('ziel-blitz'); void q.offsetWidth; q.classList.add('ziel-blitz'); }
   }
   zeichneAufgabe();
+  fokus('.tipp-box');
   // Im Hochformat liegt die Quelle oberhalb: dorthin scrollen, damit der Seitenwechsel zu sehen ist.
   const qs = $('.quelle-spalte');
   if (mitSeite && qs && window.innerWidth <= 900 && qs.getBoundingClientRect().top < 0) {

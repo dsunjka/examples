@@ -273,7 +273,7 @@ function viewPruefungStart(cfg) {
         ${digital ? '<li>In den Internetseiten kannst du Links, Menüs und Reiter antippen. Mit dem Zurück-Pfeil kommst du zurück.</li>' : ''}
         <li>Du kannst die Prüfung unterbrechen. Die Zeit läuft nur, solange sie geöffnet ist.</li>
         <li>Erst am Ende siehst du, was richtig war – mit Erklärungen.</li></ul></div>
-      <label class="zeile" style="gap:10px;font-weight:700"><input type="checkbox" id="uhr-zeigen" ${E().timerZeigen ? 'checked' : ''} style="width:24px;height:24px;accent-color:var(--akzent)"> Uhr während der Prüfung anzeigen</label>
+      <label class="schalter"><input type="checkbox" id="uhr-zeigen" ${E().timerZeigen ? 'checked' : ''}><span>Uhr während der Prüfung anzeigen</span></label>
       <div class="aktionen"><button type="button" class="knopf knopf-zweit" data-act="zurueck-modul" data-m="${esc(cfg.modul || 'start')}">Zurück</button><span class="rechts"><button type="button" class="knopf knopf-signal" data-act="pruef-los">Prüfung starten</button></span></div>
     </section>`,
   };
@@ -371,7 +371,7 @@ function viewErwachsene() {
   const e = E();
   const sel = (id, werte, akt, fmt) => `<select id="${id}" data-einst="${id}">${werte.map((w) => `<option value="${w}" ${String(w) === String(akt) ? 'selected' : ''}>${fmt(w)}</option>`).join('')}</select>`;
   const min = (w) => (Number(w) ? `${w} Minuten` : 'ohne Zeitlimit');
-  const schalter = (id, label, wert) => `<label class="zeile" style="gap:10px;font-weight:700"><input type="checkbox" data-einst="${id}" ${wert ? 'checked' : ''} style="width:24px;height:24px;accent-color:var(--akzent)"> ${label}</label>`;
+  const schalter = (id, label, wert) => `<label class="schalter"><input type="checkbox" data-einst="${id}" ${wert ? 'checked' : ''}><span>${label}</span></label>`;
   return {
     titel: 'Für Erwachsene',
     html: `<div class="start-raster" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr))">
@@ -410,7 +410,7 @@ function viewErwachsene() {
         <div class="zeile"><button type="button" class="knopf knopf-klein" data-act="export-zeigen">Sicherungscode erstellen</button><button type="button" class="knopf knopf-zweit knopf-klein" data-act="export-datei" id="export-datei" hidden>Als Datei speichern</button></div>
         <div class="feld" id="export-feld" hidden><label for="export-code">Sicherungscode</label><textarea id="export-code" readonly></textarea><button type="button" class="knopf knopf-zweit knopf-klein" data-act="export-kopieren">Kopieren</button></div>
         <div class="feld"><label for="import-code">Sicherungscode einfügen</label><textarea id="import-code" placeholder="LLP1:…" autocomplete="off" spellcheck="false"></textarea></div>
-        <div class="zeile"><button type="button" class="knopf knopf-zweit knopf-klein" data-act="import">Wiederherstellen</button><label class="knopf knopf-geist knopf-klein" for="import-datei">Datei wählen</label><input type="file" id="import-datei" accept=".txt,.json,text/plain,application/json" hidden></div>
+        <div class="zeile"><button type="button" class="knopf knopf-zweit knopf-klein" data-act="import">Wiederherstellen</button><button type="button" class="knopf knopf-geist knopf-klein" data-act="datei-waehlen">Datei wählen</button><input type="file" id="import-datei" accept=".txt,.json,text/plain,application/json" hidden></div>
         <hr style="border:0;border-top:1px solid var(--linie);width:100%">
         <button type="button" class="knopf knopf-gefahr knopf-klein" data-act="alles-loeschen">Alle Daten auf diesem Gerät löschen</button>
       </section></div>

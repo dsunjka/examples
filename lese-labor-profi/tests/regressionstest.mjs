@@ -321,6 +321,25 @@ try {
     await page.context().close();
   }
 
+  console.log('• Einstellungen: Schriftgröße wirkt auf Fragen und Antworten; Datei-Import per Tastatur erreichbar');
+  {
+    const page = await seite();
+    await profilAnlegen(page);
+    const groesse = async () => {
+      await page.click('[data-nav="start"]'); await page.click('.labor-karte[data-nav="digital"]'); await page.click('[data-act="training-gruppe"]');
+      const px = await page.evaluate(() => parseFloat(getComputedStyle(document.querySelector('.frage-text')).fontSize));
+      await page.click('[data-act="s-beenden"]'); if (await page.isVisible('.dialog')) await page.click('.dialog [data-dlg="1"]');
+      return px;
+    };
+    const normal = await groesse();
+    await erwachseneOeffnen(page);
+    check(await page.$('button[data-act="datei-waehlen"]') !== null, '„Datei wählen“ ist kein Knopf');
+    await page.selectOption('#schrift', 'sehrgross');
+    const gross = await groesse();
+    check(gross > normal * 1.15, `Schriftgröße wirkt nicht auf die Frage (${normal}px → ${gross}px)`);
+    await page.context().close();
+  }
+
   console.log('• Lese-Tempo: Bestwert bleibt auch nach vielen Tests erhalten');
   {
     const page = await seite();

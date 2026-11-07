@@ -291,9 +291,12 @@ function pruefeAbzeichen() {
 }
 
 /* ---------- Sichern & Wiederherstellen ---------- */
-function exportCode() {
+function merkeSicherung() {
   DB.letzteSicherung = Date.now(); speichern();
   const z = document.getElementById('letzte-sicherung'); if (z) z.innerHTML = '<b>Letzte Sicherung:</b> ' + esc(datumLesbar(DB.letzteSicherung));
+}
+function exportCode() { merkeSicherung(); return sicherungsCode(); }
+function sicherungsCode() {
   const daten = { app: 'lese-labor-profi', v: 1, datum: Date.now(), profile: DB.profile, einstellungen: DB.einstellungen };
   const json = JSON.stringify(daten);
   return 'LLP1:' + btoa(unescape(encodeURIComponent(json)));

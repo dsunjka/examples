@@ -221,7 +221,7 @@ function renderAntwortflaeche(it, a, perm, modus, ui = {}, gesperrt = false) {
         return `<button type="button" class="chip ${cls}" data-act="chip" data-i="${ei}" aria-pressed="${ui.chip === ei}">${esc(e.t)}${soll}</button>`;
       };
       const pool = order.filter((ei) => !(a && a[ei] >= 0));
-      return `<div class="zu-pool" data-act="pool" aria-label="Noch nicht einsortiert">${pool.map(chip).join('')}</div>
+      return `<div class="zu-pool" data-act="pool" role="button" tabindex="0" aria-label="Noch nicht einsortiert – hierher zurücklegen">${pool.map(chip).join('')}</div>
         <div class="zu-gruppen">${it.gruppen.map((gname, gi) => `<div class="zu-gruppe ${ui.chip != null && !L ? 'ziel-bereit' : ''}" data-act="gruppe" data-g="${gi}" role="button" tabindex="0" aria-label="Kiste ${esc(gname)}"><h4>${esc(gname)}</h4><div class="zu-inhalt">${order.filter((ei) => a && a[ei] === gi).map(chip).join('')}</div></div>`).join('')}</div>`;
     }
     case 'reihenfolge': {

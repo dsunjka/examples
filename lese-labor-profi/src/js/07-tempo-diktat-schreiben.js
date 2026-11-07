@@ -405,15 +405,23 @@ async function downloadsVerfuegbar() {
   return true; // eigenständige Datei: normaler Download
 }
 async function sicherungAlsDatei() {
-  const code = exportCode(), name = `lese-labor-profi-sicherung-${heute()}.txt`;
+  const code = sicherungsCode(), name = `lese-labor-profi-sicherung-${heute()}.txt`;
+  const codeZeigen = () => { const f = $('#export-feld'), t = $('#export-code'); if (f && t) { t.value = code; f.hidden = false; } };
   try {
     if (window.claude && typeof window.claude.use === 'function') {
-      if (!downloadsNS) { toast('Speichern als Datei ist hier nicht möglich. Kopiere den Code.'); return; }
-      await downloadsNS.save({ filename: name, data: code });
+      if (!downloadsNS) { codeZeigen(); toast('Speichern als Datei ist hier nicht möglich. Kopiere den Code.'); return; }
+      const r = await downloadsNS.save({ filename: name, data: code });
+      if (r && r.status === 'saved') { merkeSicherung(); toast('Sicherung gespeichert.'); }
+      else { codeZeigen(); toast('Die Datei wurde nicht gespeichert. Du kannst den Code kopieren.'); }
       return;
     }
     const url = URL.createObjectURL(new Blob([code], { type: 'text/plain' }));
     const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
     setTimeout(() => URL.revokeObjectURL(url), 2000);
-  } catch (e) { toast('Die Datei wurde nicht gespeichert.'); }
+    merkeSicherung(); codeZeigen();
+    toast('Falls kein Download startet: Kopiere den Code unten.', 3600);
+  } catch (e) {
+    codeZeigen();
+    toast(e && e.code === 'declined' ? 'Speichern abgebrochen.' : 'Die Datei wurde nicht gespeichert. Du kannst den Code kopieren.');
+  }
 }

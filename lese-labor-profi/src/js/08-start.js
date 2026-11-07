@@ -55,21 +55,21 @@ document.addEventListener('click', async (ev) => {
       antwortAktion(act, ds); return;
     /* Sitzung */
     case 's-beenden': sitzungBeenden(); return;
-    case 's-gehe': gehe(Number(ds.i)); return;
-    case 's-zurueck': gehe(SITZ.index - 1); return;
-    case 's-weiter': weiter(); return;
+    case 's-gehe': gehe(Number(ds.i)); fokus(`.navi-punkt[data-i="${Number(ds.i)}"]`); return;
+    case 's-zurueck': gehe(SITZ.index - 1); fokus('.frage-text'); return;
+    case 's-weiter': weiter(); if (SITZ) fokus('.frage-text'); return;
     case 's-abgeben': abgebenFragen(); return;
-    case 's-markieren': { const id = aktId(); SITZ.markiert[id] = !SITZ.markiert[id]; zeichneKopf(); zeichneAufgabe(); sitzungMerken(); return; }
+    case 's-markieren': { const id = aktId(); SITZ.markiert[id] = !SITZ.markiert[id]; zeichneKopf(); zeichneAufgabe(); sitzungMerken(); fokus('[data-act="s-markieren"]'); return; }
     case 's-tipp': tippZeigen(); return;
     case 's-pruefen': pruefen(); return;
     case 's-loesung': loesungZeigen(); return;
-    case 's-nochmal': { SITZ.phase[aktId()] = 'edit'; zeichneAufgabe(); const f = $('input.eingabe'); if (f) f.focus(); return; }
+    case 's-nochmal': { SITZ.phase[aktId()] = 'edit'; zeichneAufgabe(); const f = $('input.eingabe'); if (f) f.focus(); else fokus('.frage-text'); return; }
     case 's-springen': {
       const z = el.dataset.ziel === 'quelle' ? $('.quelle-spalte') : $('#aufgabe-spalte');
       if (z) z.scrollIntoView({ block: 'start', behavior: sanft() });
       setTimeout(springenAktualisieren, 400); return;
     }
-    case 's-uhr': SITZ.zeitVerborgen = !SITZ.zeitVerborgen; zeichneKopf(); return;
+    case 's-uhr': SITZ.zeitVerborgen = !SITZ.zeitVerborgen; zeichneKopf(); fokus('#uhr'); return;
     case 'q-marker': SITZ.markerAn = !SITZ.markerAn; el.setAttribute('aria-pressed', String(SITZ.markerAn)); $('#quelle').classList.toggle('marker-an', SITZ.markerAn); if (SITZ.markerAn) toast('Textmarker an: Tippe auf Sätze, um sie gelb zu markieren.'); return;
     case 'q-loeschen': markerLoeschen(); return;
     case 'q-gross': SITZ.quelleGross = !SITZ.quelleGross; renderSitzung(); return;
@@ -149,6 +149,7 @@ document.addEventListener('click', async (ev) => {
 
     /* Erwachsene */
     case 'stimme-test': if (!sprich(['Hallo! So klingt die Vorlesestimme im Lese-Labor.'])) toast('Auf diesem Gerät gibt es keine Sprachausgabe.'); return;
+    case 'datei-waehlen': { const f = $('#import-datei'); if (f) f.click(); return; }
     case 'export-zeigen': { const f = $('#export-feld'), t = $('#export-code'); t.value = exportCode(); f.hidden = false; t.focus(); t.select(); return; }
     case 'export-kopieren': { const t = $('#export-code'); try { await navigator.clipboard.writeText(t.value); toast('Code kopiert. Bewahren Sie ihn gut auf.'); } catch (x) { t.focus(); t.select(); toast('Bitte den markierten Code selbst kopieren.'); } return; }
     case 'export-datei': sicherungAlsDatei(); return;
@@ -231,7 +232,7 @@ document.addEventListener('keydown', (ev) => {
     else weiter();
     return;
   }
-  if (ev.key === 'Enter' && el instanceof Element && el.matches('.zu-gruppe')) { ev.preventDefault(); antwortAktion('gruppe', el.dataset); return; }
+  if ((ev.key === 'Enter' || ev.key === ' ') && el instanceof Element && el.matches('.zu-gruppe, .zu-pool')) { ev.preventDefault(); antwortAktion(el.dataset.act, el.dataset); return; }
   if ((ev.key === 'Enter' || ev.key === ' ') && el instanceof Element && el.matches('a[data-ziel], a[data-extern]')) { ev.preventDefault(); el.click(); return; }
   if (ANSICHT.name === 'tempo-lauf' && TEMPO && TEMPO.phase !== 'start') {
     if (ev.repeat) return;
@@ -262,7 +263,10 @@ window.addEventListener('hashchange', () => {
   zeige(h);
 });
 
+let appGestartet = false;
 function starteApp() {
+  if (appGestartet) return; // der Host darf hot.ready mehrfach aufrufen
+  appGestartet = true;
   try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {}); } catch (e) { /* egal */ }
   try { document.documentElement.lang = 'de'; } catch (e) { /* egal */ }
   baueRegister();
