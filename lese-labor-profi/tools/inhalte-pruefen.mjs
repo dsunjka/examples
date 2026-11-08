@@ -74,6 +74,7 @@ export function pruefeInhalte(pakete) {
     } else if (d.modul === 'lesen') {
       for (const t of d.texte || []) {
         gruppe(datei, t.id);
+        if ((t.format === 'bylet-v') !== !!(t.text && Array.isArray(t.text.abschnitte))) add('fehler', datei, t.id, 'format "bylet-v" und text.abschnitte gehören zusammen');
         if (t.format === 'bylet-v') {
           // Geschichte in vier Abschnitten (BYLET-V-Format): je 4 Fragen nach jedem Abschnitt, 4 zum Gesamttext
           const ab = (t.text && t.text.abschnitte) || [];
@@ -115,7 +116,8 @@ export function pruefeInhalte(pakete) {
       const graph = (s) => { try { return [...new Intl.Segmenter('de', { granularity: 'grapheme' }).segment(String(s))].length; } catch (e) { return [...String(s)].length; } };
       const pruefeBlitz = (x, art) => {
         const ort = (x && x.id) || '(ohne id)';
-        if (!x || !x.id || !/^[a-z0-9-]+$/.test(x.id)) add('fehler', datei, ort, 'ungültige ID');
+        if (!x || typeof x !== 'object') { add('fehler', datei, ort, 'Eintrag ist kein Objekt'); return; }
+        if (!x.id || !/^[a-z0-9-]+$/.test(x.id)) add('fehler', datei, ort, 'ungültige ID');
         if (alleIds.has(x.id)) add('fehler', datei, ort, `ID doppelt (auch in ${alleIds.get(x.id)})`); else alleIds.set(x.id, datei);
         const text = art === 'wort' ? x.wort : x.satz;
         if (typeof text !== 'string' || !text.trim()) add('fehler', datei, ort, `${art} fehlt`);
@@ -123,14 +125,25 @@ export function pruefeInhalte(pakete) {
         if ((x.ablenker || []).length !== 3) add('fehler', datei, ort, 'genau 3 Ablenker nötig');
         if (bilder.some((b) => !b || typeof b.e !== 'string' || !b.e.trim() || typeof b.name !== 'string' || !b.name.trim())) add('fehler', datei, ort, 'Bild ohne e/name');
         if (new Set(bilder.map((b) => b && b.e)).size !== bilder.length) add('fehler', datei, ort, 'doppeltes Bild in einer Aufgabe');
+        if (new Set(bilder.map((b) => b && b.name)).size !== bilder.length) add('fehler', datei, ort, 'doppelter Bildname in einer Aufgabe');
         if (art === 'wort') { if (![2, 3, 4].includes(x.silben)) add('fehler', datei, ort, 'silben muss 2, 3 oder 4 sein'); if (bilder.some((b) => b && graph(b.e) !== 1)) add('fehler', datei, ort, 'Wort-Bilder: genau ein Emoji'); }
         else { if (typeof x.komplex !== 'boolean') add('fehler', datei, ort, 'komplex fehlt'); if (x.komplex && !/,/.test(x.satz || '')) add('hinweis', datei, ort, 'komplexer Satz ohne Komma?'); if (bilder.some((b) => b && (graph(b.e) < 1 || graph(b.e) > 5))) add('fehler', datei, ort, 'Satz-Bilder: 1–5 Emoji'); }
         for (const b of bilder) if (b && /[\u{1F3FB}-\u{1F3FF}]/u.test(b.e)) add('fehler', datei, ort, 'keine Hauttöne');
+        if (art === 'satz' && bilder.every((b) => b && typeof b.e === 'string')) {
+          // Ohne Lesen lösbar? Das Zielbild darf nicht das „Mehrheitsbild“ sein (Ablenker im 2×2-Schema bauen).
+          const teile = bilder.map((b) => { try { return [...new Intl.Segmenter('de', { granularity: 'grapheme' }).segment(b.e)].map((s) => s.segment); } catch (e) { return [...b.e]; } });
+          if (new Set(teile.map((x) => x.length)).size === 1) {
+            const wert = teile.map((x) => x.reduce((s, e, i) => s + teile.filter((o) => o[i] === e).length, 0));
+            const max = Math.max(...wert);
+            if (wert[0] === max && wert.filter((w) => w === max).length === 1) add('fehler', datei, ort, 'Zielbild ist das Mehrheitsbild – ohne Lesen lösbar (Ablenker im 2×2-Schema bauen)');
+          }
+        }
       };
       for (const w of d.woerter || []) pruefeBlitz(w, 'wort');
       for (const s of d.saetze || []) pruefeBlitz(s, 'satz');
-      const w2 = (d.woerter || []).filter((x) => x.silben === 2).length, w3 = (d.woerter || []).filter((x) => x.silben >= 3).length;
-      const s1 = (d.saetze || []).filter((x) => !x.komplex).length, s2 = (d.saetze || []).filter((x) => x.komplex).length;
+      const ok = (x) => x && typeof x === 'object';
+      const w2 = (d.woerter || []).filter((x) => ok(x) && x.silben === 2).length, w3 = (d.woerter || []).filter((x) => ok(x) && x.silben >= 3).length;
+      const s1 = (d.saetze || []).filter((x) => ok(x) && !x.komplex).length, s2 = (d.saetze || []).filter((x) => ok(x) && x.komplex).length;
       if (w2 < 23 || w3 < 16) add('hinweis', datei, 'woerter', `wenig Wörter für 7 Stufen ohne Wiederholung (${w2} zweisilbig, ${w3} dreisilbig)`);
       if (s1 < 20 || s2 < 14) add('hinweis', datei, 'saetze', `wenig Sätze für 6 Stufen ohne Wiederholung (${s1} einfach, ${s2} komplex)`);
     } else if (d.modul === 'tempo') {

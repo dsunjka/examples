@@ -32,10 +32,11 @@ Originalaufgaben:
 | 3 · BYLET-V | Geschichte in vier Abschnitten, je 4 Fragen, am Ende 4 Fragen zum Gesamttext | **BYLET-V-Probe** im Lese-Labor (Abschnitte als Reiter, spätere Abschnitte gesperrt) |
 | 4 · BYLET-D | Internet-Szenarien (Suchmaschine, soziale Netzwerke …) mit Fragen zu Nutzung und Inhalt | **Digital-Labor** und BYLET-D-Prüfung |
 
-Der Fahrplan führt in dieser Reihenfolge durch alle Stationen; wer alle vier an einem Tag schafft,
+Der Fahrplan führt durch alle Stationen (Reihenfolge und Termine legt im echten Test die Schule fest); wer alle vier an einem Tag schafft,
 bekommt das Abzeichen „Generalprobe“. Unter den Fragen steht wie im Test „Hier ist eine Antwort
 richtig.“ bzw. „Hier sind mehrere Antworten richtig.“. Die Einwilligung aus dem Elternbrief betrifft
-nur die Forschungsnutzung der BYLES-Daten – die App überträgt keine Daten und braucht keine.
+Forschung, Weiterentwicklung und Bildungsmonitoring mit den BYLES-Daten sowie den Hintergrundfragebogen –
+die App überträgt keine Daten und braucht keine Einwilligung.
 
 Aufgabentypen: Einfachauswahl, **Mehrfachauswahl**, Aussagen beurteilen (Matrix), Lückentext,
 Wörter antippen, Zuordnen, Reihenfolge, Eintippen.

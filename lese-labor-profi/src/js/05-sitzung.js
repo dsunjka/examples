@@ -30,6 +30,7 @@ function sitzungFortsetzen() {
   SITZ = p.laufend;
   SITZ.ids = ids;
   SITZ.perms = SITZ.perms || {}; SITZ.antworten = SITZ.antworten || {}; SITZ.markiert = SITZ.markiert || {}; SITZ.offen = SITZ.offen || {};
+  SITZ.abschnittMax = istObj(SITZ.abschnittMax) ? Object.fromEntries(Object.entries(SITZ.abschnittMax).filter(([k, v]) => REG.gruppen[k] && Number.isInteger(v) && v >= 1 && v <= 5)) : {};
   for (const id of SITZ.ids) {
     const it = REG.items[id].it;
     SITZ.perms[id] = sicherePerm(it, SITZ.perms[id]);
@@ -92,7 +93,8 @@ function zeichneKopf() {
     let cls = i === SITZ.index ? 'aktuell' : '';
     if (istPruefung()) { if (antwortStand(REG.items[id].it, SITZ.antworten[id]) !== 'leer') cls += ' beantwortet'; if (SITZ.markiert[id]) cls += ' markiert'; }
     else if (SITZ.ergebnis[id]) cls += ' s-' + SITZ.ergebnis[id];
-    return `<button type="button" class="navi-punkt ${cls}" data-act="s-gehe" data-i="${i}" aria-label="Aufgabe ${i + 1}${istPruefung() ? (cls.includes('beantwortet') ? ', beantwortet' : ', offen') : ({ r: ', richtig', h: ', mit Hilfe richtig', t: ', teilweise richtig', f: ', falsch' }[SITZ.ergebnis[id]] || '')}${SITZ.markiert[id] ? ', markiert' : ''}" ${i === SITZ.index ? 'aria-current="step"' : ''}>${i + 1}</button>`;
+    const zu = !aufgabeOffen(i);
+    return `<button type="button" class="navi-punkt ${cls}${zu ? ' gesperrt' : ''}" data-act="s-gehe" data-i="${i}" ${zu ? 'disabled' : ''} aria-label="Aufgabe ${i + 1}${zu ? ', öffnet sich nach den Fragen davor' : ''}${istPruefung() ? (cls.includes('beantwortet') ? ', beantwortet' : ', offen') : ({ r: ', richtig', h: ', mit Hilfe richtig', t: ', teilweise richtig', f: ', falsch' }[SITZ.ergebnis[id]] || '')}${SITZ.markiert[id] ? ', markiert' : ''}" ${i === SITZ.index ? 'aria-current="step"' : ''}>${i + 1}</button>`;
   }).join('');
   kopf.innerHTML = `
     <button type="button" class="rund-knopf" data-act="s-beenden" aria-label="${istPruefung() ? 'Prüfung unterbrechen' : 'Training beenden'}">${icon('zurueck')}</button>
@@ -226,17 +228,28 @@ function gehe(i) {
   if (!SITZ) return;
   i = clamp(i, 0, SITZ.ids.length - 1);
   if (i === SITZ.index) return;
+  if (!aufgabeOffen(i)) return; // Geschichte in Abschnitten: nicht nach vorn springen
   SITZ.ui.chip = null;
   const alteGruppe = REG.items[aktId()].gruppe;
   const alteArt = quellArt(aktId());
   SITZ.index = i;
+  abschnittErreicht();
   const neueArt = quellArt(aktId());
   const mitQ = (a) => a === 'fall' || a === 'text';
   if (mitQ(alteArt) !== mitQ(neueArt)) { renderSitzung(); }
   else {
     zeichneKopf();
     if (REG.items[aktId()].gruppe !== alteGruppe) zeichneQuelle();
-    else if (abschnittSchluessel() && abschnittSchluessel() !== SITZ._abschnittKey) zeichneQuellinhalt(true);
+    else if (abschnittSchluessel() && abschnittSchluessel() !== SITZ._abschnittKey) {
+      const vorher = Number(String(SITZ._abschnittKey || '').split(':').pop()) || 0;
+      zeichneQuellinhalt(true);
+      const g = gruppeVon(aktId()), jetzt = abschnittGrenze(g), a = Number(REG.items[aktId()].it.abschnitt) || 0;
+      if (a >= 1 && jetzt > vorher) {
+        // neuer Abschnitt: sichtbar machen und ansagen
+        toast(`Abschnitt ${a} ist jetzt offen – lies ihn zuerst.`); sagAn(`Abschnitt ${a} ist jetzt offen. Lies ihn zuerst.`);
+        const q = $('#quelle'); if (q && q.scrollIntoView && window.innerWidth <= 900) setTimeout(() => q.scrollIntoView({ block: 'start', behavior: sanft() }), 50);
+      }
+    }
     zeichneAufgabe();
     const fk = $('.frage-karte'); if (fk && fxStufe() !== 'aus') fk.classList.add('rein');
     const sp = $('#aufgabe-spalte'); if (sp) sp.scrollTop = 0;
@@ -419,8 +432,9 @@ function auswerten() {
   if (p) {
     if (eintrag.art === 'gross') p.grossZaehler = (p.grossZaehler != null ? p.grossZaehler : p.pruefungen.filter((x) => x.art === 'gross').length) + 1;
     p.pruefungen.push(eintrag);
-    if (eintrag.art === 'digital') bylesMerke('d');
-    if (/^lesev-/.test(eintrag.art)) bylesMerke('v');
+    const bearbeitet = SITZ.ids.filter((id) => details[id] !== 'leer').length >= Math.ceil(SITZ.ids.length * 0.75);
+    if (bearbeitet && eintrag.art === 'digital') bylesMerke('d');
+    if (bearbeitet && /^lesev-/.test(eintrag.art)) bylesMerke('v');
     if (p.pruefungen.length > 40) p.pruefungen = p.pruefungen.slice(-40);
     punkteDazu(punkte * 3);
     delete p.laufend;
@@ -462,9 +476,9 @@ async function sitzungBeenden() {
 }
 
 /* ---------- Ergebnisansichten ---------- */
-function ringSVG(wert, max) {
+function ringSVG(wert, max, beschriftung) {
   const r = 60, u = 2 * Math.PI * r, anteil = max ? wert / max : 0;
-  return `<svg class="ring" viewBox="0 0 150 150" role="img" aria-label="${wert} von ${max} Punkten"><circle class="spur" cx="75" cy="75" r="${r}"/><circle class="wert" cx="75" cy="75" r="${r}" style="--umfang:${u.toFixed(1)}" stroke-dasharray="${u.toFixed(1)}" stroke-dashoffset="${(u * (1 - anteil)).toFixed(1)}"/><text x="75" y="72" text-anchor="middle" font-size="34">${wert}</text><text x="75" y="98" text-anchor="middle" font-size="15" style="fill:var(--tinte-2)">von ${max}</text></svg>`;
+  return `<svg class="ring" viewBox="0 0 150 150" role="img" aria-label="${esc(beschriftung || `${wert} von ${max} Punkten`)}"><circle class="spur" cx="75" cy="75" r="${r}"/><circle class="wert" cx="75" cy="75" r="${r}" style="--umfang:${u.toFixed(1)}" stroke-dasharray="${u.toFixed(1)}" stroke-dashoffset="${(u * (1 - anteil)).toFixed(1)}"/><text x="75" y="72" text-anchor="middle" font-size="34">${wert}</text><text x="75" y="98" text-anchor="middle" font-size="15" style="fill:var(--tinte-2)">von ${max}</text></svg>`;
 }
 function urteil(anteil) {
   if (anteil >= 0.9) return 'Lese-Labor-PROFI! Hervorragend gearbeitet.';

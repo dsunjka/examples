@@ -281,7 +281,7 @@ const ABZEICHEN = [
   { id: 'bylet15', sym: '🏅', name: 'BYLET-D bestanden', text: 'In der BYLET-D-Prüfung mindestens 15 von 20', test: (p) => p.pruefungen.some((x) => x.art === 'digital' && x.punkte >= 15) },
   { id: 'bylet18', sym: '🏆', name: 'PROFI-Prüfung', text: 'In der BYLET-D-Prüfung mindestens 18 von 20', test: (p) => p.pruefungen.some((x) => x.art === 'digital' && x.punkte >= 18) },
   { id: 'leser', sym: '📚', name: 'Bücherwurm', text: 'Alle Texte im Lese-Labor bearbeitet', test: (p) => { const s = modulStand('lesen', p); return s.gesamt > 0 && s.gesehen === s.gesamt; } },
-  { id: 'tempo30', sym: '🚀', name: 'Tempo-Rakete', text: 'Im Lese-Tempo einen Tempo-Wert von mindestens 30', test: (p) => p.tempo.some((x) => x.richtig - x.falsch >= 30) },
+  { id: 'tempo30', sym: '🚀', name: 'Tempo-Rakete', text: 'Im Satz-Check einen Tempo-Wert von mindestens 30', test: (p) => p.tempo.some((x) => x.richtig - x.falsch >= 30) },
   { id: 'rs', sym: '✍️', name: 'Rechtschreib-Ass', text: '80 % im Rechtschreib-Labor gemeistert', test: (p) => { const s = modulStand('rechtschreibung', p); return s.gesamt > 0 && s.gemeistert >= 0.8 * s.gesamt; } },
   { id: 'gr', sym: '🧩', name: 'Grammatik-Genie', text: '80 % im Grammatik-Labor gemeistert', test: (p) => { const s = modulStand('grammatik', p); return s.gesamt > 0 && s.gemeistert >= 0.8 * s.gesamt; } },
   { id: 'diktat', sym: '🎧', name: 'Diktat-Krone', text: 'Ein Diktat mit 10 von 10 Wörtern', test: (p) => Object.values(p.diktate).some((d) => d.best >= 10) },
@@ -289,7 +289,7 @@ const ABZEICHEN = [
   { id: 'fehler', sym: '🦾', name: 'Fehler-Magie', text: '10 Fehler aus der Fehler-Kiste verbessert', test: (p) => p.fehlerBehoben >= 10, stand: (p) => [p.fehlerBehoben, 10] },
   { id: 'serie5', sym: '🔥', name: 'Dranbleib-Stern', text: 'An 5 Tagen hintereinander geübt', test: (p) => serie(p) >= 5, stand: (p) => [serie(p), 5] },
   { id: 'blitz', sym: '⚡', name: 'Blitz-Auge', text: 'Beim Blitz-Lesen alle 7 Wort-Stufen geschafft', test: (p) => (p.blitz || []).some((x) => x.w >= 7), stand: (p) => [Math.max(0, ...(p.blitz || []).map((x) => x.w)), 7] },
-  { id: 'byles', sym: '🚀', name: 'Generalprobe', text: 'Alle vier BYLES-Stationen an einem Tag geschafft', test: (p) => ['p', 'f', 'v', 'd'].every((k) => heuteGeschafft(k, p)), stand: (p) => [['p', 'f', 'v', 'd'].filter((k) => heuteGeschafft(k, p)).length, 4] },
+  { id: 'byles', sym: '🗺️', name: 'Generalprobe', text: 'Alle vier BYLES-Stationen an einem Tag geschafft', test: (p) => ['p', 'f', 'v', 'd'].every((k) => heuteGeschafft(k, p)), stand: (p) => [['p', 'f', 'v', 'd'].filter((k) => heuteGeschafft(k, p)).length, 4] },
   { id: 'mission', sym: '🎯', name: 'Missions-Stern', text: 'Eine Tagesmission komplett erledigt', test: (p) => !!p.missionGeschafft },
 ];
 DB = ladeSpeicher();

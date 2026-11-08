@@ -483,6 +483,96 @@ try {
     check(!(await page.evaluate(() => document.documentElement.classList.contains('dialog-offen'))), 'Hintergrund bleibt nach dem Dialog pausiert');
     await page.context().close();
   }
+
+  const profilDaten = (page) => page.evaluate((k) => { const d = JSON.parse(localStorage.getItem(k)); return d.profile[d.aktivesProfil]; }, KEY);
+
+  console.log('• BYLET-V-Probe: Nummernleiste öffnet keine späteren Abschnitte, neuer Abschnitt wird angesagt');
+  {
+    const page = await seite();
+    await profilAnlegen(page);
+    await page.click('.labor-karte[data-nav="lesen"]');
+    await page.click('[data-act="pruef-intro"][data-art^="lesev-"]');
+    check((await page.textContent('#inhalt')).includes('öffnen sich nacheinander'), 'V-Probe-Einführung erklärt die Abschnitte nicht');
+    await page.click('[data-act="pruef-los"]');
+    check(await page.$eval('.navi-punkt[data-i="16"]', (e) => e.disabled), 'Nummer 17 ist bei Frage 1 nicht gesperrt');
+    await page.evaluate(() => document.querySelector('.navi-punkt[data-i="16"]').click());
+    check((await page.textContent('.sitzung-titel span')).includes('Aufgabe 1 von 20'), 'Gesperrte Nummer springt trotzdem');
+    for (let i = 0; i < 4; i++) await page.click('[data-act="s-weiter"]');
+    check((await page.textContent('#toast')).includes('Abschnitt 2'), 'Neuer Abschnitt wird nicht angesagt');
+    check((await page.textContent('#sr-meldung')).length >= 0, 'Ansage-Bereich fehlt');
+    check(!(await page.$eval('.navi-punkt[data-i="0"]', (e) => e.disabled)), 'Zurückspringen in Abschnitt 1 ist gesperrt');
+    await page.click('[data-act="s-gehe"][data-i="0"]');
+    check(!(await page.$eval('.navi-punkt[data-i="5"]', (e) => e.disabled)), 'Erreichter Abschnitt 2 wird beim Zurückgehen wieder gesperrt');
+    // leer abgeben: Station zählt nicht
+    await page.click('.sitzung-kopf [data-act="s-abgeben"]'); await page.click('.dialog [data-dlg="1"]');
+    await page.waitForSelector('.ergebnis-kopf');
+    check((await page.textContent('.fahrplan-banner')).includes('zählt noch nicht'), 'Leere Abgabe zählt als Fahrplan-Station');
+    const p = await profilDaten(page);
+    check(!(p.byles && p.byles.v), 'Leere V-Abgabe wird im Fahrplan vermerkt');
+    await page.context().close();
+  }
+
+  console.log('• Blitz-Lesen: Abbruch nach Teil 1 behält das Wort-Ergebnis; Daumen-Check: Zurück-Geste, Punkte nur einmal am Tag');
+  {
+    const page = await seite();
+    await profilAnlegen(page);
+    await page.click('.labor-karte[data-nav="tempo"]');
+    await page.click('.blitz-karte [data-act="blitz-start"]');
+    const inhalt = await page.evaluate(() => window.LL_INHALT.blitz);
+    const alle = [...inhalt.woerter, ...inhalt.saetze];
+    const aufgabe = async (richtig) => {
+      const text = (await (await page.waitForSelector('#bl-wort', { timeout: 7000 })).textContent()).trim();
+      await page.waitForSelector('.bild-wahl:not([disabled])', { timeout: 9000 });
+      const x = alle.find((y) => (y.wort || y.satz) === text);
+      const labels = await page.$$eval('.bild-wahl', (bs) => bs.map((b) => b.getAttribute('aria-label')));
+      let i = labels.indexOf(x.bild.name); if (!richtig) i = (i + 1) % 4;
+      await page.click(`.bild-wahl[data-i="${i}"]`);
+      if (richtig) await page.waitForTimeout(760); else await page.click('[data-act="blitz-weiter"]');
+    };
+    await page.click('[data-act="blitz-uebung"]'); await aufgabe(true); await aufgabe(true);
+    await page.click('[data-act="blitz-los"]');
+    for (let k = 0; k < 5; k++) await aufgabe(true);
+    await page.waitForTimeout(1600);
+    for (let k = 0; k < 3; k++) await aufgabe(false);
+    await page.waitForSelector('[data-act="blitz-teil2"]');
+    await page.click('[data-act="blitz-abbruch"]');
+    const p = await profilDaten(page);
+    check(p.blitz && p.blitz.length === 1 && p.blitz[0].w === 1, 'Wort-Ergebnis geht beim Abbruch nach Teil 1 verloren');
+    check(!(p.byles && p.byles.f), 'Abgebrochenes Blitz-Lesen zählt als Fahrplan-Station');
+    // Daumen-Check
+    await page.click('.kopf [data-nav="start"]'); await page.click('.fahrplan-band'); await page.click('[data-act="daumen-start"]');
+    await page.click('.daumen-knopf[data-w="3"]'); await page.click('[data-act="daumen-weiter"]');
+    await page.evaluate(() => history.back()); await page.waitForTimeout(400);
+    check((await page.textContent('.zeile-zwischen .klein')).includes('1 von 8'), 'Zurück-Geste im Daumen-Check geht nicht einen Satz zurück');
+    await page.keyboard.press('Tab');
+    await page.focus('.daumen-knopf[aria-checked="true"]'); await page.keyboard.press('ArrowRight');
+    check(await page.getAttribute('.daumen-knopf[data-w="2"]', 'aria-checked') === 'true', 'Pfeiltasten wählen im Daumen-Check nicht');
+    const punkte0 = (await profilDaten(page)).punkte;
+    for (let r = 0; r < 2; r++) {
+      if (r) await page.click('[data-act="daumen-start"]');
+      for (let i = 0; i < 8; i++) { if (!(await page.$('.daumen-knopf[aria-checked="true"]'))) await page.click('.daumen-knopf[data-w="1"]'); await page.click('[data-act="daumen-weiter"]'); }
+      await page.waitForSelector('.ergebnis-kopf');
+    }
+    const p2 = await profilDaten(page);
+    check(p2.punkte - punkte0 === 10, `Daumen-Check gibt mehrmals am Tag Punkte (${p2.punkte - punkte0})`);
+    check(!(await page.textContent('#inhalt')).includes('super'), 'Daumen-Check bewertet die Antworten');
+    await page.context().close();
+  }
+
+  console.log('• Info-Seite: BYLES-Tabelle auf dem Handy lesbar; Blitz-Wort passt in den Rahmen');
+  {
+    const ctx = await browser.newContext({ ...devices['iPhone SE'] });
+    const page = await ctx.newPage();
+    await page.goto(URL); await profilAnlegen(page);
+    await page.goto(URL + '#info'); await page.waitForTimeout(400);
+    const t = await page.$eval('.byles-tabelle', (tab) => { const td = tab.querySelector('tbody td:nth-child(2)'); const r = td.getBoundingClientRect(); return { breite: tab.getBoundingClientRect().width, box: tab.parentElement.clientWidth, sichtbar: r.width > 150 }; });
+    check(t.breite <= t.box + 1 && t.sichtbar, `BYLES-Tabelle auf dem Handy nicht lesbar (${JSON.stringify(t)})`);
+    await page.evaluate(() => { for (const x of window.LL_INHALT.blitz.woerter) x.wort = 'Weihnachtsbaumschmuck'; });
+    await page.goto(URL + '#tempo'); await page.click('.blitz-karte [data-act="blitz-start"]'); await page.click('[data-act="blitz-uebung"]');
+    const m = await (await page.waitForSelector('#bl-wort')).evaluate((e) => ({ sw: e.scrollWidth, cw: e.parentElement.clientWidth }));
+    check(m.sw <= m.cw, `Blitz-Wort ragt aus dem Rahmen (${m.sw} > ${m.cw})`);
+    await ctx.close();
+  }
 } catch (e) {
   fehler++;
   console.log('  ✗ Testabbruch: ' + (e && e.stack ? e.stack.split('\n').slice(0, 3).join(' | ') : e));

@@ -86,6 +86,26 @@ function abschnittGrenze(g) {
   const a = info && info.gruppe === g.id ? Number(info.it.abschnitt) || 0 : 0;
   return a >= 1 && a <= n ? a : n;
 }
+const abschnittRang = (it) => { const a = Number(it && it.abschnitt) || 0; return a >= 1 ? a : 5; };
+/** Enthält die Sitzung die ganze Geschichte (BYLET-V-Probe oder Training der Geschichte)? Nur dann gilt die Reihenfolge der Abschnitte. */
+function ganzeGeschichte(g) { return !!(SITZ && istAbschnittText(g) && g.items.every((id) => SITZ.ids.includes(id))); }
+function abschnittMax(g) {
+  SITZ.abschnittMax = SITZ.abschnittMax || {};
+  if (!SITZ.abschnittMax[g.id]) { const info = REG.items[aktId()]; SITZ.abschnittMax[g.id] = info && info.gruppe === g.id ? abschnittRang(info.it) : 1; }
+  return SITZ.abschnittMax[g.id];
+}
+/** Darf Aufgabe i angesprungen werden? Spätere Abschnitte öffnen sich nur der Reihe nach (mit „Weiter“). */
+function aufgabeOffen(i) {
+  const info = SITZ && REG.items[SITZ.ids[i]]; if (!info) return true;
+  const g = REG.gruppen[info.gruppe];
+  if (!ganzeGeschichte(g)) return true;
+  return abschnittRang(info.it) <= abschnittMax(g) || i === SITZ.index + 1;
+}
+function abschnittErreicht() {
+  const info = REG.items[aktId()]; if (!info) return;
+  const g = REG.gruppen[info.gruppe];
+  if (ganzeGeschichte(g)) SITZ.abschnittMax[g.id] = Math.max(abschnittMax(g), abschnittRang(info.it));
+}
 function abschnittSchluessel() { const g = SITZ ? gruppeVon(aktId()) : null; return istAbschnittText(g) ? g.id + ':' + abschnittGrenze(g) : null; }
 function renderAbschnitte(textId) {
   const g = REG.gruppen[textId], x = g.daten.text, n = x.abschnitte.length, grenze = abschnittGrenze(g);
@@ -100,10 +120,10 @@ function renderAbschnitte(textId) {
   const zeig = Math.min(Math.max(1, SITZ.abschnittZeig || 1), grenze), a = x.abschnitte[zeig - 1] || {};
   const reiter = x.abschnitte.map((_, i) => {
     const nr = i + 1, zu = nr > grenze;
-    return `<button type="button" role="tab" class="reiter${nr === zeig ? ' aktiv' : ''}" aria-selected="${nr === zeig}" data-act="q-abschnitt" data-n="${nr}" ${zu ? 'disabled aria-label="Abschnitt ' + nr + ', noch gesperrt"' : 'aria-label="Abschnitt ' + nr + '"'}>${zu ? '<span aria-hidden="true">🔒</span>' : nr}</button>`;
+    return `<button type="button" class="reiter${nr === zeig ? ' aktiv' : ''}" ${nr === zeig ? 'aria-current="true"' : ''} data-act="q-abschnitt" data-n="${nr}" ${zu ? 'disabled aria-label="Abschnitt ' + nr + ', noch gesperrt"' : 'aria-label="Abschnitt ' + nr + '"'}>${zu ? '<span aria-hidden="true">🔒</span>' : nr}</button>`;
   }).join('');
   return `<article class="lesetext abschnitt-text" data-marker-key="${esc(textId + ':a' + zeig)}">
-    <div class="abschnitt-reiter" role="tablist" aria-label="Abschnitte der Geschichte">${reiter}</div>
+    <div class="abschnitt-reiter" role="group" aria-label="Abschnitte der Geschichte">${reiter}</div>
     <div class="abschnitt-kopf">${a.bild ? `<span class="abschnitt-bild" aria-hidden="true">${esc(a.bild)}</span>` : ''}<div><h2>${rich(x.titel || g.titel)}</h2><p class="unter">Abschnitt ${zeig} von ${n}</p></div></div>
     ${(a.absaetze || []).map((p) => `<p class="abschnitt-abs">${rich(p)}</p>`).join('')}
     ${grenze < n && zeig === grenze ? `<p class="abschnitt-hinweis">${icon('schloss')} Die nächsten Abschnitte öffnen sich mit den nächsten Fragen.</p>` : ''}
@@ -143,13 +163,13 @@ function markerVorbereiten(wurzel) {
   const box = wurzel.querySelector('[data-marker-key]');
   if (!box) return;
   const key = box.getAttribute('data-marker-key');
-  const ziele = Array.from(box.querySelectorAll(MARKER_ZIELE)).filter((el) => !el.querySelector(MARKER_ZIELE));
+  const ziele = Array.from(box.querySelectorAll(MARKER_ZIELE)).filter((el) => !el.querySelector(MARKER_ZIELE) && !el.closest('.abschnitt-kopf, .abschnitt-hinweis'));
   // Lose Texte (z. B. in div, strong, small, time, Kästen) einhüllen, damit auch sie markiert werden können.
   const imZiel = (n) => ziele.some((b) => b.contains(n));
   const lose = [];
   const w = document.createTreeWalker(box, NodeFilter.SHOW_TEXT);
   for (let n = w.nextNode(); n; n = w.nextNode()) {
-    if (/\S/.test(n.nodeValue) && !imZiel(n) && !n.parentElement.closest('a[data-ziel]:not(.m-eintrag), a[data-extern], button, .w-menue, .a-reiter, .abs-nr, .vers-nr, .strophe-nr')) lose.push(n);
+    if (/\S/.test(n.nodeValue) && !imZiel(n) && !n.parentElement.closest('a[data-ziel]:not(.m-eintrag), a[data-extern], button, .w-menue, .a-reiter, .abs-nr, .vers-nr, .strophe-nr, .abschnitt-kopf, .abschnitt-hinweis')) lose.push(n);
   }
   for (const n of lose) { const s = document.createElement('span'); n.parentNode.insertBefore(s, n); s.appendChild(n); ziele.push(s); }
   ziele.sort((a, b) => (a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1));
@@ -169,7 +189,7 @@ function markerUmschalten(el) {
 function markerLoeschen() {
   const box = $('.quelle-flaeche [data-marker-key]'); if (!box) return;
   const key = box.getAttribute('data-marker-key');
-  if (SITZ.marker) SITZ.marker[key] = [];
+  if (SITZ.marker) { SITZ.marker[key] = []; const m = key.match(/^(.*):a\d+$/); if (m) for (const k of Object.keys(SITZ.marker)) if (k.startsWith(m[1] + ':a')) SITZ.marker[k] = []; }
   $$('.tm', box).forEach((el) => el.classList.remove('tm'));
   sitzungMerken();
 }

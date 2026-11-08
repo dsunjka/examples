@@ -103,7 +103,7 @@ document.addEventListener('click', async (ev) => {
       starteTraining(ids, `${MODUL[ds.m].titel}: gemischt`, 'training', { name: ds.m }); return;
     }
     case 'training-ids': starteTraining(gruppeSortiert(String(ds.ids).split(',').filter((id) => REG.items[id])), ds.titel || 'Training', 'training', { name: 'start' }); return;
-    case 'pruef-intro': { const cfg = pruefConfig(ds.art); if (cfg && cfg.ids.length) zeige('pruefung-start', cfg); else toast('Für diese Prüfung fehlen noch Aufgaben.'); return; }
+    case 'pruef-intro': { const cfg = pruefConfig(ds.art); if (cfg && ANSICHT.name === 'byles') cfg.herkunft = 'byles'; if (cfg && cfg.ids.length) zeige('pruefung-start', cfg); else toast('Für diese Prüfung fehlen noch Aufgaben.'); return; }
     case 'pruef-los': {
       const cfg = ANSICHT.param; if (!cfg) return;
       const lauf = P() && P().laufend;
@@ -114,10 +114,10 @@ document.addEventListener('click', async (ev) => {
         sitzungVerwerfen();
       }
       const box = $('#uhr-zeigen'); if (box) { E().timerZeigen = box.checked; speichern(); }
-      starteSitzung({ art: 'pruefung', titel: cfg.titel, ids: cfg.ids, pruefArt: cfg.art, zeitMin: cfg.zeitMin, zurueck: { name: cfg.modul || 'start' } });
+      starteSitzung({ art: 'pruefung', titel: cfg.titel, ids: cfg.ids, pruefArt: cfg.art, zeitMin: cfg.zeitMin, zurueck: { name: cfg.herkunft || cfg.modul || 'start' } });
       return;
     }
-    case 'zurueck-modul': zeige(ds.m && MODUL[ds.m] ? ds.m : 'start'); return;
+    case 'zurueck-modul': zeige(ds.m && (MODUL[ds.m] || ds.m === 'byles') ? ds.m : 'start'); return;
     case 'pruefung-ansehen': { const e = P().pruefungen[Number(ds.i)]; if (e) zeige('ergebnis', { eintrag: e }); return; }
 
     /* Tempo */
@@ -126,13 +126,14 @@ document.addEventListener('click', async (ev) => {
     case 'blitz-uebung': blitzUebung(); return;
     case 'blitz-los': blitzLos(); return;
     case 'blitz-wahl': blitzWahl(Number(ds.i)); return;
+    case 'blitz-weiter': blitzWeiter(); return;
     case 'blitz-teil2': blitzTeil2(); return;
     case 'blitz-fertig': blitzFertig(); return;
     case 'blitz-abbruch': blitzAbbruch(); return;
     case 'daumen-start': daumenStart(); return;
     case 'daumen-wahl': daumenWahl(Number(ds.w)); return;
     case 'daumen-weiter': daumenWeiter(); return;
-    case 'daumen-zurueck': if (DAUMEN && DAUMEN.i > 0) { DAUMEN.i--; render(); fokus('.daumen-satz'); } return;
+    case 'daumen-zurueck': if (DAUMEN && DAUMEN.i > 0) { DAUMEN.i--; render(); daumenFokus(); } return;
     case 'tempo-antwort': tempoAntwort(Number(ds.r)); return;
     case 'tempo-los': tempoLos(); return;
     case 'tempo-abbruch': tempoStopp(); TEMPO = null; zeige('tempo'); return;
@@ -234,7 +235,13 @@ document.addEventListener('submit', (ev) => {
 });
 document.addEventListener('keydown', (ev) => {
   if (dialogAufloeser) { if (ev.key === 'Escape') dialogAufloeser('Escape'); else if (ev.repeat) ev.preventDefault(); return; }
-  if (ANSICHT.name === 'blitz-lauf' && BLITZ && BLITZ.phase === 'wahl' && /^[1-4]$/.test(ev.key)) { ev.preventDefault(); blitzWahl(Number(ev.key) - 1); return; }
+  if (ANSICHT.name === 'daumen' && el instanceof Element && el.matches('.daumen-knopf') && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(ev.key)) {
+    ev.preventDefault();
+    const k = $$('.daumen-knopf'), i = k.indexOf(el), n = ev.key === 'Home' ? 0 : ev.key === 'End' ? k.length - 1 : (i + (['ArrowLeft', 'ArrowUp'].includes(ev.key) ? -1 : 1) + k.length) % k.length;
+    daumenWahl(Number(k[n].dataset.w)); k[n].focus();
+    return;
+  }
+  if (ANSICHT.name === 'blitz-lauf' && BLITZ && /^[1-4]$/.test(ev.key)) { ev.preventDefault(); if (!ev.repeat && BLITZ.phase === 'wahl') blitzWahl(Number(ev.key) - 1); return; }
   const el = ev.target;
   if (ev.key === 'Enter' && el instanceof Element && el.matches('input[data-act="eingabe"]')) {
     ev.preventDefault();
@@ -269,6 +276,7 @@ window.addEventListener('popstate', async () => {
   if (n === 'sitzung' && SITZ) { const ok = await sitzungBeenden(); if (ok === false) zurueckLegen(); return; }
   if (n === 'tempo-lauf') { tempoStopp(); TEMPO = null; zeige('tempo'); return; }
   if (n === 'blitz-lauf') { blitzAbbruch(); return; }
+  if (n === 'daumen') { const ziel = location.hash.slice(1); if (HASH_ANSICHTEN.has(ziel) && ziel !== 'byles') { zeige(ziel); return; } if (DAUMEN && !DAUMEN.fertig && DAUMEN.i > 0) { DAUMEN.i--; zurueckLegen(); render(); daumenFokus(); } else zeige('byles'); return; }
   if (n === 'diktat') { zeige('rechtschreibung'); return; }
 });
 window.addEventListener('hashchange', () => {

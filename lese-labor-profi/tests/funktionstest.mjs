@@ -396,7 +396,8 @@ try {
       check(labels.length === 4 && new Set(labels).size === 4, 'Blitz-Lesen: nicht 4 verschiedene Bilder');
       let i = labels.indexOf(x.bild.name); if (!richtig) i = (i + 1) % 4;
       await p.click(`.bild-wahl[data-i="${i}"]`);
-      await p.waitForTimeout(richtig ? 760 : 1820);
+      if (richtig) await p.waitForTimeout(760);
+      else { await p.waitForSelector('[data-act="blitz-weiter"]'); check(await p.$$eval('.bild-wahl.ok, .bild-wahl.nein', (b) => b.length) === 2, 'Blitz-Lesen: Rückmeldung markiert nicht richtig/falsch'); await p.click('[data-act="blitz-weiter"]'); }
     };
     const t0 = Date.now();
     await p.click('[data-act="blitz-uebung"]'); await aufgabe(true); await aufgabe(true);
@@ -411,7 +412,7 @@ try {
     // Tastatur 1–4 wählt Bilder
     await p.waitForSelector('#bl-wort'); await p.waitForSelector('.bild-wahl:not([disabled])');
     await p.keyboard.press('1'); check(await p.isVisible('.blitz-rueck'), 'Blitz-Lesen: Taste 1 wählt kein Bild');
-    await p.waitForTimeout(1820);
+    if (await p.isVisible('[data-act="blitz-weiter"]')) await p.click('[data-act="blitz-weiter"]'); else await p.waitForTimeout(760);
     for (let k = 0; k < 3; k++) await aufgabe(false).catch(() => {});
     await p.waitForSelector('[data-act="blitz-fertig"]', { timeout: 8000 });
     await p.click('[data-act="blitz-fertig"]');

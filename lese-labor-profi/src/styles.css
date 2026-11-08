@@ -348,6 +348,7 @@ p.info-box { display: block; }
 .navi-punkt.s-r { background: rgba(94, 242, 180, .18); border-color: var(--mint); color: var(--mint); }
 .navi-punkt.s-h { background: rgba(255, 211, 107, .16); border-color: var(--gold); color: var(--gold); }
 .navi-punkt.s-f, .navi-punkt.s-t { background: rgba(255, 138, 168, .16); border-color: var(--rose); color: var(--rose); }
+.navi-punkt.gesperrt { color: var(--text-3); border-style: dashed; background: transparent; cursor: not-allowed; opacity: 1; }
 .navi-punkt.markiert::after { content: "✦"; position: absolute; top: -9px; right: -6px; font-size: 14px; color: var(--gold); text-shadow: 0 0 6px var(--gold); }
 .uhr { display: inline-flex; min-height: 44px; align-items: center; gap: 6px; font-family: var(--f-spiel); font-weight: 600; font-size: 1.05rem; font-variant-numeric: tabular-nums; padding: 6px 14px; border-radius: 999px; background: rgba(79, 227, 255, .1); border: 1px solid rgba(79, 227, 255, .5); color: var(--cyan); box-shadow: 0 0 14px rgba(79, 227, 255, .25); }
 .uhr { position: relative; }
@@ -918,16 +919,16 @@ details.karte[open] > summary::before { transform: rotate(90deg); }
 .fahrplan-banner p { color: var(--text-2); font-size: .95rem; }
 
 /* ---------- Blitz-Lesen ---------- */
-.blitz-buehne { flex: 1; width: 100%; max-width: 820px; margin: 0 auto; padding: 24px max(16px, env(safe-area-inset-right, 0px)) 32px max(16px, env(safe-area-inset-left, 0px)); display: grid; align-content: center; justify-items: center; gap: 22px; }
+.blitz-buehne { grid-template-columns: minmax(0, 1fr); flex: 1; width: 100%; max-width: 820px; margin: 0 auto; padding: 24px max(16px, env(safe-area-inset-right, 0px)) 32px max(16px, env(safe-area-inset-left, 0px)); display: grid; align-content: center; justify-items: center; gap: 22px; }
 .blitz-stufen { display: flex; gap: 4px; flex-wrap: wrap; }
 .blitz-stufen i { font-style: normal; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font: 700 .8rem/1 var(--f-spiel); color: var(--text-2); background: rgba(255, 255, 255, .07); border: 1px solid rgba(196, 168, 255, .5); }
 .blitz-stufen i.voll { background: var(--gold); color: var(--dunkel); border-color: var(--gold); box-shadow: 0 0 10px rgba(255, 211, 107, .7); }
 .blitz-stufen i.jetzt { border-color: var(--cyan); color: var(--text); box-shadow: 0 0 0 2px rgba(79, 227, 255, .4), 0 0 12px rgba(79, 227, 255, .6); }
-.blitz-rahmen { width: 100%; min-height: 170px; display: grid; place-items: center; padding: 18px 22px; border-radius: 24px; background: #fffaf2; color: #1b1530; border: 3px solid rgba(255, 178, 94, .8); box-shadow: 0 0 0 6px rgba(255, 178, 94, .15), 0 0 34px rgba(255, 178, 94, .35); text-align: center; }
+.blitz-rahmen { width: 100%; max-width: 100%; min-width: 0; min-height: 170px; display: grid; place-items: center; padding: 18px 22px; border-radius: 24px; background: #fffaf2; color: #1b1530; border: 3px solid rgba(255, 178, 94, .8); box-shadow: 0 0 0 6px rgba(255, 178, 94, .15), 0 0 34px rgba(255, 178, 94, .35); text-align: center; }
 .blitz-rahmen.leer { min-height: 90px; background: rgba(255, 250, 242, .06); color: var(--text); border-style: dashed; box-shadow: none; }
 .blitz-fix { font-size: 2.2rem; color: #d07a14; }
 @media (prefers-reduced-motion: no-preference) { :root:not(.fx-aus) .blitz-fix { animation: puls-glow 1s ease-in-out infinite; } }
-.bl-wort { font-family: var(--f-text); font-weight: 650; color: #1b1530; font-size: clamp(2.2rem, 7vw, 3.4rem); line-height: 1.2; letter-spacing: .01em; }
+.bl-wort { overflow-wrap: anywhere; font-family: var(--f-text); font-weight: 650; color: #1b1530; font-size: clamp(2.2rem, 7vw, 3.4rem); line-height: 1.2; letter-spacing: .01em; }
 .blitz-buehne.saetze .bl-wort { font-size: clamp(1.35rem, 3.6vw, 2rem); line-height: 1.45; max-width: 32ch; }
 .blitz-rueck { font-family: var(--f-spiel); font-weight: 600; font-size: 1.3rem; }
 .blitz-rueck.ok { color: var(--mint); }
@@ -940,6 +941,12 @@ details.karte[open] > summary::before { transform: rotate(90deg); }
 .bild-wahl:disabled { opacity: 1; cursor: default; }
 .bild-wahl.ok { border-color: var(--mint); box-shadow: 0 0 0 4px rgba(94, 242, 180, .45), 0 0 24px rgba(94, 242, 180, .6); }
 .bild-wahl.nein { border-color: var(--rose); box-shadow: 0 0 0 4px rgba(255, 138, 168, .45); }
+.bild-wahl.ok::after, .bild-wahl.nein::after { position: absolute; top: -10px; right: -8px; width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font: 900 1rem/1 var(--f-text); color: var(--dunkel); }
+.bild-wahl.ok::after { content: "✓"; background: var(--mint); }
+.bild-wahl.nein::after { content: "✗"; background: var(--rose); }
+.blitz-rueck-box { display: grid; justify-items: center; gap: 10px; }
+.bild-raster:focus { outline: none; }
+.bild-raster:focus-visible { outline: 3px solid #fff; outline-offset: 6px; border-radius: 22px; }
 .bild-emoji { font-size: clamp(3.4rem, 9vw, 4.6rem); line-height: 1; }
 .blitz-buehne.saetze .bild-emoji { font-size: clamp(1.45rem, 5.2vw, 2.9rem); letter-spacing: .02em; white-space: nowrap; }
 .bild-nr { position: absolute; top: 8px; left: 10px; font: 700 .8rem/1 var(--f-spiel); color: #5b4f78; }
@@ -980,7 +987,7 @@ details.karte[open] > summary::before { transform: rotate(90deg); }
 /* ---------- Geschichte in vier Abschnitten (BYLET-V-Format) ---------- */
 .abschnitt-reiter { display: flex; gap: 8px; margin: 0 0 14px 0; flex-wrap: wrap; }
 .reiter { min-width: 48px; min-height: 44px; padding: 0 12px; border-radius: 12px; border: 2px solid #c9bfe3; background: #fff; color: #2c2347; font: 700 1.05rem/1 var(--f-spiel); }
-.reiter.aktiv { background: #1f8a5b; border-color: #1f8a5b; color: #fff; box-shadow: 0 0 0 3px rgba(31, 138, 91, .25); }
+.reiter.aktiv { background: #17734b; border-color: #17734b; color: #fff; box-shadow: 0 0 0 3px rgba(23, 115, 75, .25); }
 .reiter:disabled { background: #efeaf6; border-color: #d9d1ea; color: #5b4f78; cursor: not-allowed; }
 .abschnitt-kopf { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; }
 .abschnitt-kopf h2, .abschnitt-kopf .unter { padding-left: 0; }
@@ -1043,6 +1050,19 @@ details.karte[open] > summary::before { transform: rotate(90deg); }
   .navi-punkt { flex: none; scroll-snap-align: center; }
   .dialog .aktionen { flex-direction: column; align-items: stretch; }
   .dialog .aktionen .knopf { width: 100%; }
+  .byles-tabelle thead { display: none; }
+  .byles-tabelle, .byles-tabelle tbody, .byles-tabelle tr, .byles-tabelle td { display: block; width: 100%; }
+  .byles-tabelle tr { border: 1px solid var(--rand); border-radius: 14px; padding: 8px 10px; margin-bottom: 10px; }
+  .byles-tabelle td, .byles-tabelle td:first-child { border: 0; padding: 3px 0; white-space: normal; }
+  .byles-tabelle td:nth-child(3)::before { content: "In der App: "; color: var(--text-2); }
+  .daumen-satz-zeile { min-height: 0; }
+  .daumen-sym { font-size: 2.2rem; }
+  .daumen-knopf { min-height: 80px; }
+  .daumen-hand { font-size: 1.8rem; }
+  .daumen-karte { gap: 12px; }
+  .abschnitt-reiter { margin-bottom: 8px; position: sticky; top: 0; background: #fffaf2; z-index: 1; padding: 4px 0; }
+  .reiter { min-height: 40px; }
+  .abschnitt-kopf { display: none; } /* Titel steht schon in der Quellenleiste – mehr Platz für den Text */
   .fahrplan-band { grid-template-columns: auto minmax(0, 1fr); }
   .fahrplan-punkte { grid-column: 1 / -1; justify-content: flex-start; }
   .generalprobe { grid-template-columns: minmax(0, 1fr); }

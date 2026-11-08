@@ -49,9 +49,9 @@ function viewByles() {
   return {
     titel: 'BYLES-Fahrplan',
     html: `<div class="modul-kopf" style="--farbe:var(--gold)"><span class="labor-symbol">${icon('fahne')}</span><div><h1>Dein BYLES-Fahrplan</h1><p>So läuft der Bayerische Lesetest in der 4. Klasse ab – und so übst du jede Station.</p></div></div>
-      <div class="info-box" style="--farbe:var(--gold)"><p><b>BYLES</b> heißt Bayerisches Lesescreening. Du machst es in der Schule am Tablet oder Computer. In der 4. Klasse gibt es <b>vier Stationen</b> – immer in dieser Reihenfolge. Lese-Labor PROFI ist nicht der echte Test: Hier übst du mit eigenen Aufgaben im gleichen Stil.</p></div>
+      <div class="info-box" style="--farbe:var(--gold)"><p><b>BYLES</b> heißt Bayerisches Lesescreening. Du machst es in der Schule am Tablet oder Computer. In der 4. Klasse gibt es <b>vier Teile</b>. Wann und in welcher Reihenfolge ihr sie macht, entscheidet deine Schule. Lese-Labor PROFI ist nicht der echte Test: Hier übst du mit eigenen Aufgaben im gleichen Stil.</p></div>
       <section class="karte generalprobe" aria-label="Generalprobe">
-        <div><h2>Generalprobe ${heuteZahl === 4 ? '🏆' : '🚀'}</h2><p>${heuteZahl === 4 ? 'Stark! Du hast heute alle vier Stationen geschafft – genau wie am echten Testtag.' : 'Schaffst du alle vier Stationen an einem Tag? Dann bist du bereit für den Testtag.'}</p></div>
+        <div><h2>Generalprobe ${heuteZahl === 4 ? '🏆' : '🚀'}</h2><p>${heuteZahl === 4 ? 'Stark! Du hast heute alle vier Stationen geschafft und kennst jetzt alle Aufgabenarten.' : 'Schaffst du alle vier Stationen an einem Tag? Dann kennst du alle Aufgabenarten.'}</p></div>
         <div class="generalprobe-punkte" role="img" aria-label="Heute ${heuteZahl} von 4 Stationen geschafft">${BYLES_STATIONEN.map((s) => `<i class="${heuteGeschafft(s.k, p) ? 'voll' : ''}">${s.nr}</i>`).join('')}</div>
       </section>
       <ol class="stationen">${stationen}</ol>
@@ -62,11 +62,17 @@ function viewByles() {
 /** Hinweis auf Ergebnisseiten der vier Stationen: geschafft – und was als Nächstes kommt. */
 function fahrplanBanner(k) {
   const s = BYLES_STATIONEN.find((x) => x.k === k); if (!s || !P()) return '';
+  if (!heuteGeschafft(k)) {
+    return `<section class="fahrplan-banner" aria-label="BYLES-Fahrplan"><span class="fahrplan-sym" aria-hidden="true">${s.sym}</span>
+      <div><b>BYLES-Fahrplan: Station ${s.nr} zählt noch nicht</b><p>${k === 'f' ? 'Spiele beide Teile bis zum Ergebnis – dann ist die Station geschafft.' : 'Beantworte mindestens drei Viertel der Fragen – dann ist die Station geschafft.'}</p></div>
+      <button type="button" class="knopf knopf-klein knopf-zweit" data-nav="byles">Zum Fahrplan</button></section>`;
+  }
   const offen = BYLES_STATIONEN.filter((x) => !heuteGeschafft(x.k));
   const naechste = offen.find((x) => x.nr > s.nr) || offen[0];
+  const weiterKnopf = naechste && naechste.k !== 'v' ? stationAktion(naechste).replace(/>[^<]*<\/button>$/, `>Weiter: Station ${naechste.nr}</button>`) : '';
   return `<section class="fahrplan-banner" aria-label="BYLES-Fahrplan"><span class="fahrplan-sym" aria-hidden="true">${s.sym}</span>
     <div><b>BYLES-Fahrplan: Station ${s.nr} geschafft!</b><p>${naechste ? `Nächste Station: ${naechste.nr} · ${esc(naechste.name)} (${esc(naechste.modul)})` : 'Alle vier Stationen heute geschafft – Generalprobe bestanden! 🏆'}</p></div>
-    <button type="button" class="knopf knopf-klein knopf-zweit" data-nav="byles">Zum Fahrplan</button></section>`;
+    <span class="zeile">${weiterKnopf}<button type="button" class="knopf knopf-klein knopf-zweit" data-nav="byles">Zum Fahrplan</button></span></section>`;
 }
 
 /* ---------- Blitz-Lesen (Format BYLET-F) ---------- */
@@ -84,7 +90,7 @@ function blitzKarteHTML() {
   return `<section class="karte blitz-karte" style="display:grid;gap:14px;--farbe:var(--m-tempo)">
     <div class="zeile-zwischen"><h2 style="font-size:1.25rem">⚡ Blitz-Lesen</h2><span class="etikett etikett-farbe">wie BYLET-F</span></div>
     <p style="line-height:1.5">Ein Wort oder ein Satz blitzt kurz auf. Dann tippst du das passende Bild an. Jede Stufe blitzt kürzer: <b>7 Wort-Stufen</b> und <b>6 Satz-Stufen</b> mit je 5 Aufgaben.</p>
-    <ul style="margin:0;padding-left:20px;display:grid;gap:4px;line-height:1.5"><li>Für die Bilder hast du keine Zeitvorgabe.</li><li>Bei 3 Fehlern in einer Stufe ist der Teil zu Ende – dann ist das deine Stufe.</li><li>Zuerst kommen 2 Übungsaufgaben.</li></ul>
+    <ul style="margin:0;padding-left:20px;display:grid;gap:4px;line-height:1.5"><li>Für die Bilder hast du keine Zeitvorgabe.</li><li>Bei 3 Fehlern in einer Stufe ist der Teil zu Ende. Dann zählt die letzte Stufe, die du ganz geschafft hast.</li><li>Zuerst kommen 2 Übungsaufgaben.</li></ul>
     <div class="fakten">${bw != null ? `<span class="fakt">Beste Wort-Stufe: ${bw}/7</span><span class="fakt">Beste Satz-Stufe: ${bs}/6</span>` : '<span class="fakt">Noch nicht geübt</span>'}</div>
     ${l.length ? `<div class="tabelle-scroll"><table class="verlauf-tabelle"><thead><tr><th>Datum</th><th>Wörter</th><th>Sätze</th></tr></thead><tbody>${l.slice().reverse().map((x) => `<tr><td>${datumLesbar(x.datum)}</td><td>Stufe ${x.w}/7</td><td>Stufe ${x.s}/6</td></tr>`).join('')}</tbody></table></div>` : ''}
     <button type="button" class="knopf" data-act="blitz-start" ${blitzBereit() ? '' : 'disabled'}>Blitz-Lesen starten</button></section>`;
@@ -105,7 +111,7 @@ function blitzAufgabe(x) {
 }
 function blitzStart() {
   if (!blitzBereit()) { toast('Für das Blitz-Lesen fehlen noch Inhalte.'); return; }
-  BLITZ = { teile: ['woerter', 'saetze'], t: 0, phase: 'bereit', genutzt: new Set(), erg: { woerter: { stufe: 0, richtig: 0, gesamt: 0 }, saetze: { stufe: 0, richtig: 0, gesamt: 0 } }, fehlerListe: [] };
+  BLITZ = { herkunft: ANSICHT.name === 'byles' ? 'byles' : 'tempo', teile: ['woerter', 'saetze'], t: 0, phase: 'bereit', genutzt: new Set(), erg: { woerter: { stufe: 0, richtig: 0, gesamt: 0 }, saetze: { stufe: 0, richtig: 0, gesamt: 0 } }, fehlerListe: [] };
   zeige('blitz-lauf');
 }
 const blitzTeil = () => BLITZ.teile[BLITZ.t];
@@ -131,8 +137,9 @@ function renderBlitzLauf(ganz = true) {
       <div class="blitz-stufen" aria-hidden="true">${stufen}</div></header>
     <div class="blitz-buehne ${teil}" id="blitz-buehne" data-teil="${teil}">${blitzBuehneHTML()}</div></div>`;
   }
-  if (BLITZ.phase === 'wahl') { const b = $('.bild-wahl'); if (b) try { b.focus({ preventScroll: true }); } catch (e) { /* egal */ } }
+  if (BLITZ.phase === 'wahl') blitzFokus('.bild-raster');
 }
+function blitzFokus(sel) { const e = $(sel); if (!e) return; if (!e.matches('button')) e.setAttribute('tabindex', '-1'); try { e.focus({ preventScroll: true }); } catch (x) { /* egal */ } }
 function blitzBuehneHTML() {
   const teil = blitzTeil(), T = BLITZ_TEILE[teil], a = BLITZ.aufgabe;
   switch (BLITZ.phase) {
@@ -145,18 +152,24 @@ function blitzBuehneHTML() {
     case 'zeigen': return `<div class="blitz-rahmen"><p class="bl-wort" id="bl-wort">${esc(blitzText(a.x))}</p></div>`;
     case 'wahl': case 'rueck': {
       const r = BLITZ.phase === 'rueck' ? BLITZ.letzte : null;
-      return `<div class="blitz-rahmen leer">${r ? (r.ok ? '<p class="blitz-rueck ok">✓ Richtig!</p>' : `<p class="blitz-rueck nein">Da stand: <b>${esc(blitzText(a.x))}</b></p>`) : `<p class="leise">Welches Bild passt?</p>`}</div>
-        <div class="bild-raster" role="group" aria-label="Welches Bild passt?">${a.bilder.map((b, i) => `<button type="button" class="bild-wahl${r && b.ok ? ' ok' : ''}${r && r.i === i && !b.ok ? ' nein' : ''}" data-act="blitz-wahl" data-i="${i}" aria-label="${esc(b.name || 'Bild ' + (i + 1))}" ${r ? 'disabled' : ''}><span class="bild-emoji">${esc(b.e)}</span><span class="bild-nr" aria-hidden="true">${i + 1}</span></button>`).join('')}</div>`;
+      return `<div class="blitz-rahmen leer">${r ? (r.ok ? '<p class="blitz-rueck ok">✓ Richtig!</p>' : `<div class="blitz-rueck-box"><p class="blitz-rueck nein">Da stand: <b>${esc(blitzText(a.x))}</b></p><button type="button" class="knopf knopf-klein" data-act="blitz-weiter">Weiter</button></div>`) : `<p class="leise">Welches Bild passt? <span class="unsichtbar">Tasten 1 bis 4 wählen ein Bild.</span></p>`}</div>
+        <div class="bild-raster" role="group" aria-label="Welches Bild passt?" tabindex="-1">${a.bilder.map((b, i) => `<button type="button" class="bild-wahl${r && b.ok ? ' ok' : ''}${r && r.i === i && !b.ok ? ' nein' : ''}" data-act="blitz-wahl" data-i="${i}" aria-keyshortcuts="${i + 1}" aria-label="${esc((b.name || 'Bild ' + (i + 1)) + (r && b.ok ? ', richtig' : r && r.i === i ? ', deine Wahl, falsch' : ''))}" ${r ? 'disabled' : ''}><span class="bild-emoji">${esc(b.e)}</span><span class="bild-nr" aria-hidden="true">${i + 1}</span></button>`).join('')}</div>`;
     }
     case 'stufe': return `<div class="blitz-info"><span class="blitz-gross" aria-hidden="true">⚡</span><h1>Stufe ${BLITZ.stufe} geschafft!</h1><p>Jetzt blitzt es noch ein bisschen kürzer.</p></div>`;
     case 'teil-ende': {
       const e = BLITZ.erg[teil];
       return `<div class="blitz-info"><span class="blitz-gross" aria-hidden="true">${e.stufe === T.stufen.length ? '🏆' : '⭐'}</span><h1>${T.name}: Stufe ${e.stufe} von ${T.stufen.length}</h1>
-        <p>${e.stufe === T.stufen.length ? 'Alle Stufen geschafft – Blitz-Auge!' : e.stufe ? 'Gut gemacht! Bei der nächsten Stufe war es noch zu schnell.' : 'Das war noch sehr schnell. Mit Übung schaffst du die erste Stufe!'}</p>
+        <p>${e.stufe === T.stufen.length ? (teil === 'woerter' ? 'Alle Stufen geschafft – Blitz-Auge!' : 'Alle Stufen geschafft – stark!') : e.stufe ? 'Gut gemacht! Bei der nächsten Stufe war es noch zu schnell.' : 'Das war noch sehr schnell. Mit Übung schaffst du die erste Stufe!'}</p>
         ${BLITZ.t === 0 ? '<button type="button" class="knopf" data-act="blitz-teil2">Weiter mit den Sätzen</button>' : '<button type="button" class="knopf" data-act="blitz-fertig">Zum Ergebnis</button>'}</div>`;
     }
     default: return '';
   }
+}
+function blitzEinpassen() {
+  const el = $('#bl-wort'), box = el && el.parentElement; if (!el || !box) return;
+  const frei = box.clientWidth - 24;
+  let n = 0;
+  while (el.scrollWidth > frei && n++ < 12) el.style.fontSize = (parseFloat(getComputedStyle(el).fontSize) * 0.9) + 'px';
 }
 function blitzUebung() {
   const teil = blitzTeil();
@@ -178,7 +191,7 @@ function blitzNaechste() {
   BLITZ.phase = 'fix'; renderBlitzLauf(false);
   const T = BLITZ_TEILE[blitzTeil()], ms = BLITZ.uebung ? T.uebungMs : T.stufen[BLITZ.stufe];
   blitzSpaeter(() => {
-    BLITZ.phase = 'zeigen'; renderBlitzLauf(false);
+    BLITZ.phase = 'zeigen'; renderBlitzLauf(false); blitzEinpassen();
     blitzSpaeter(() => { BLITZ.phase = 'wahl'; renderBlitzLauf(false); }, ms);
   }, 700);
 }
@@ -188,18 +201,22 @@ function blitzWahl(i) {
   const ok = !!b.ok;
   BLITZ.letzte = { ok, i };
   BLITZ.phase = 'rueck'; renderBlitzLauf(false);
-  if (ok) { const el = $(`.bild-wahl[data-i="${i}"]`); glitzer(el, { anzahl: 12, weite: 90 }); ton('richtig'); } else { wackeln($('.bild-raster')); ton('falsch'); }
+  if (ok) { const el = $(`.bild-wahl[data-i="${i}"]`); glitzer(el, { anzahl: 12, weite: 90 }); ton('richtig'); sagAn('Richtig!'); } else { wackeln($(`.bild-wahl[data-i="${i}"]`)); ton('falsch'); sagAn(`Leider falsch. Da stand: ${blitzText(BLITZ.aufgabe.x)}`); blitzFokus('[data-act="blitz-weiter"]'); }
   if (!BLITZ.uebung) {
     const e = BLITZ.erg[blitzTeil()]; e.gesamt++;
     if (ok) e.richtig++; else { BLITZ.fehler++; BLITZ.fehlerListe.push({ text: blitzText(BLITZ.aufgabe.x), richtig: BLITZ.aufgabe.x.bild, gewaehlt: b }); }
   }
-  blitzSpaeter(() => {
-    BLITZ.k++;
-    if (!BLITZ.uebung && BLITZ.fehler >= 3) { blitzTeilEnde(); return; }
-    if (BLITZ.uebung && BLITZ.k >= BLITZ.uebungItems.length) { BLITZ.phase = 'los'; renderBlitzLauf(false); return; }
-    if (!BLITZ.uebung && BLITZ.k >= 5) { blitzStufeEnde(); return; }
-    blitzNaechste();
-  }, ok ? 650 : 1700);
+  // Richtig: kurz zeigen und weiter. Falsch: das Kind liest in Ruhe nach und tippt selbst auf „Weiter“.
+  if (ok) blitzSpaeter(blitzWeiter, 650);
+}
+function blitzWeiter() {
+  if (!BLITZ || BLITZ.phase !== 'rueck') return;
+  blitzStopp();
+  BLITZ.k++;
+  if (!BLITZ.uebung && BLITZ.fehler >= 3) { blitzTeilEnde(); return; }
+  if (BLITZ.uebung && BLITZ.k >= BLITZ.uebungItems.length) { BLITZ.phase = 'los'; renderBlitzLauf(false); blitzFokus('[data-act="blitz-los"]'); return; }
+  if (!BLITZ.uebung && BLITZ.k >= 5) { blitzStufeEnde(); return; }
+  blitzNaechste();
 }
 function blitzStufeEnde() {
   const T = BLITZ_TEILE[blitzTeil()];
@@ -208,40 +225,60 @@ function blitzStufeEnde() {
   BLITZ.stufe++; BLITZ.k = 0; BLITZ.fehler = 0;
   BLITZ.items = blitzZiehen(blitzTeil(), BLITZ.genutzt);
   BLITZ.phase = 'stufe'; renderBlitzLauf(false);
+  sagAn(`Stufe ${BLITZ.stufe} geschafft.`);
   glitzer($('.blitz-info h1'), { anzahl: 20 });
   blitzSpaeter(blitzNaechste, 1500);
 }
+function blitzEintrag() {
+  const e = BLITZ.erg;
+  return { datum: BLITZ.datum || (BLITZ.datum = Date.now()), w: e.woerter.stufe, s: e.saetze.stufe, richtig: e.woerter.richtig + e.saetze.richtig, gesamt: e.woerter.gesamt + e.saetze.gesamt };
+}
+/** Ergebnis speichern bzw. den Eintrag dieses Durchgangs aktualisieren (Teil 1 wird schon beim Teilende gesichert). */
+function blitzSichern() {
+  const p = P(); if (!p) return null;
+  const x = blitzEintrag(), l = p.blitz || (p.blitz = []);
+  const i = l.findIndex((y) => y.datum === x.datum);
+  if (i >= 0) l[i] = x; else { l.push(x); if (l.length > 60) p.blitz = l.slice(-60); }
+  speichern(true); pruefeAbzeichen();
+  return x;
+}
 function blitzTeilEnde() {
   blitzStopp(); bildschirmWach(false);
+  const T = BLITZ_TEILE[blitzTeil()], e = BLITZ.erg[blitzTeil()];
+  if (BLITZ.t === 0) { BLITZ.bisher = { w: blitzBest(P(), 'w'), s: blitzBest(P(), 's') }; blitzSichern(); }
   BLITZ.phase = 'teil-ende'; renderBlitzLauf(false);
-  if (BLITZ.erg[blitzTeil()].stufe >= 3) glitzer($('.blitz-info h1'), { anzahl: 24, gross: true });
+  sagAn(`${T.name}: Stufe ${e.stufe} von ${T.stufen.length}.`);
+  blitzFokus('.blitz-info .knopf');
+  if (e.stufe >= 3) glitzer($('.blitz-info h1'), { anzahl: 24, gross: true });
 }
-function blitzTeil2() { BLITZ.t = 1; BLITZ.phase = 'bereit'; BLITZ.stufe = 0; renderBlitzLauf(); }
+function blitzTeil2() { BLITZ.t = 1; BLITZ.phase = 'bereit'; BLITZ.stufe = 0; renderBlitzLauf(); blitzFokus('[data-act="blitz-uebung"]'); }
 function blitzFertig() {
   blitzStopp(); bildschirmWach(false);
   if (!BLITZ) { zeige('tempo'); return; }
-  const p = P(), e = BLITZ.erg;
-  const eintrag = { datum: Date.now(), w: e.woerter.stufe, s: e.saetze.stufe, richtig: e.woerter.richtig + e.saetze.richtig, gesamt: e.woerter.gesamt + e.saetze.gesamt };
-  const bisher = { w: blitzBest(p, 'w'), s: blitzBest(p, 's') };
-  if (p) { p.blitz = (p.blitz || []).concat(eintrag).slice(-60); bylesMerke('f'); punkteDazu((eintrag.w + eintrag.s) * 3); merkeTag(); speichern(true); }
-  pruefeAbzeichen();
-  const fehler = BLITZ.fehlerListe.slice(0, 12);
+  const p = P();
+  const bisher = BLITZ.bisher || { w: blitzBest(p, 'w'), s: blitzBest(p, 's') };
+  const eintrag = blitzEintrag();
+  // Station zählt, sobald beide Teile durchgespielt sind – auch Stufe 0 ist ein ehrlicher Versuch
+  const gezaehlt = true;
+  if (p) { if (gezaehlt) bylesMerke('f'); punkteDazu((eintrag.w + eintrag.s) * 3); merkeTag(); }
+  blitzSichern();
+  const fehler = BLITZ.fehlerListe.slice(0, 12), herkunft = BLITZ.herkunft;
   BLITZ = null;
-  zeige('blitz-ergebnis', { eintrag, bisher, fehler });
+  zeige('blitz-ergebnis', { eintrag, bisher, fehler, gezaehlt, herkunft });
 }
-function blitzAbbruch() { blitzStopp(); bildschirmWach(false); BLITZ = null; zeige('tempo'); }
+function blitzAbbruch() { blitzStopp(); bildschirmWach(false); const ziel = (BLITZ && BLITZ.herkunft) || 'tempo'; BLITZ = null; zeige(ziel); }
 function viewBlitzErgebnis(param) {
   if (!param) return viewTempo();
-  const { eintrag: x, bisher, fehler } = param;
+  const { eintrag: x, bisher, fehler } = param, ziel = param.herkunft || 'tempo';
   const neuW = bisher.w != null && x.w > bisher.w, neuS = bisher.s != null && x.s > bisher.s;
   return {
     titel: 'Blitz-Lesen – Ergebnis', schmal: true,
-    html: `<section class="karte ergebnis-kopf">${ringSVG(x.w + x.s, 13)}
-      <div style="display:grid;gap:8px">${sterneHTML((x.w / 7 + x.s / 6) / 2)}<h1 class="titel-urkunde">${neuW || neuS ? 'Neuer Bestwert! ⚡' : 'Blitz-Lesen geschafft!'}</h1>
+    html: `<section class="karte ergebnis-kopf">${ringSVG(x.w + x.s, 13, `Wörter Stufe ${x.w} von 7, Sätze Stufe ${x.s} von 6`)}
+      <div style="display:grid;gap:8px">${sterneHTML((x.w / 7 + x.s / 6) / 2)}<h1 class="titel-urkunde">${neuW || neuS ? 'Neuer Bestwert! ⚡' : x.w + x.s ? 'Blitz-Lesen geschafft!' : 'Blitz-Lesen beendet – übe weiter!'}</h1>
       <p>Wörter: <b>Stufe ${x.w} von 7</b>${neuW ? ' (neu!)' : ''} · Sätze: <b>Stufe ${x.s} von 6</b>${neuS ? ' (neu!)' : ''}</p>
       <p class="leise">${x.richtig} von ${x.gesamt} Bildern richtig gewählt.</p>
-      <div class="zeile"><button type="button" class="knopf" data-act="blitz-start">Nochmal</button><button type="button" class="knopf knopf-zweit" data-nav="tempo">Zur Übersicht</button></div></div></section>
-      ${fahrplanBanner('f')}
+      <div class="zeile"><button type="button" class="knopf" data-act="blitz-start">Nochmal</button><button type="button" class="knopf knopf-zweit" data-nav="${ziel}">${ziel === 'byles' ? 'Zum Fahrplan' : 'Zur Übersicht'}</button></div></div></section>
+      ${ziel === 'byles' || heuteGeschafft('f') || param.gezaehlt === false ? fahrplanBanner('f', param.gezaehlt !== false) : ''}
       ${fehler.length ? `<section class="karte" style="display:grid;gap:10px"><h2 style="font-size:1.15rem">Hier war es zu schnell</h2>
         <ul class="blitz-fehler">${fehler.map((f) => `<li><span>${esc(f.text)}</span><span class="blitz-fehler-bild" role="img" aria-label="richtig: ${esc(f.richtig.name || '')}">${esc(f.richtig.e)}</span><span class="leise klein">du: <span role="img" aria-label="${esc(f.gewaehlt.name || '')}">${esc(f.gewaehlt.e)}</span></span></li>`).join('')}</ul>
         <p class="klein leise">Tipp: Bei ähnlichen Wörtern wie „Biene“ und „Birne“ entscheidet ein einziger Buchstabe. Lies jedes Wort bis zum letzten Buchstaben.</p></section>` : ''}`,
@@ -271,41 +308,37 @@ function viewDaumen() {
   const s = DAUMEN_SAETZE[DAUMEN.i], wahl = DAUMEN.antworten[DAUMEN.i];
   return {
     titel: 'Daumen-Check', schmal: true,
-    html: `<section class="karte daumen-karte" aria-labelledby="daumen-satz">
+    html: `<section class="karte daumen-karte" aria-label="Daumen-Check, Satz ${DAUMEN.i + 1} von ${DAUMEN_SAETZE.length}">
       <div class="zeile-zwischen"><span class="etikett etikett-farbe" style="--farbe:var(--m-schreiben)">Daumen-Check · wie BYLET-P</span><span class="klein leise">Satz ${DAUMEN.i + 1} von ${DAUMEN_SAETZE.length}</span></div>
       <div class="daumen-fort" aria-hidden="true">${DAUMEN_SAETZE.map((_, i) => `<i class="${i < DAUMEN.i ? 'voll' : i === DAUMEN.i ? 'jetzt' : ''}"></i>`).join('')}</div>
       <div class="daumen-satz-zeile"><p class="daumen-satz" id="daumen-satz">${esc(s.t)}</p><span class="daumen-sym" aria-hidden="true">${s.sym}</span></div>
       <div class="daumen-linie" aria-hidden="true"></div>
-      <div class="daumen-wahl" role="radiogroup" aria-labelledby="daumen-satz">${DAUMEN_STUFEN.map((d) => `<button type="button" class="daumen-knopf ${d.cls}" role="radio" aria-checked="${wahl === d.w}" data-act="daumen-wahl" data-w="${d.w}"><span class="daumen-hand" aria-hidden="true">${d.w >= 2 ? '👍' : '👎'}</span><span class="daumen-name">${d.name}</span></button>`).join('')}</div>
+      <div class="daumen-wahl" role="radiogroup" aria-labelledby="daumen-satz">${DAUMEN_STUFEN.map((d) => `<button type="button" class="daumen-knopf ${d.cls}" role="radio" aria-checked="${wahl === d.w}" tabindex="${wahl === d.w || (wahl == null && d.w === 3) ? 0 : -1}" data-act="daumen-wahl" data-w="${d.w}"><span class="daumen-hand" aria-hidden="true">${d.w >= 2 ? '👍' : '👎'}</span><span class="daumen-name">${d.name}</span></button>`).join('')}</div>
       <p class="klein leise" style="text-align:center">Hier gibt es kein Richtig oder Falsch. Antworte so, wie es für dich stimmt.</p>
       <div class="aktionen">${DAUMEN.i ? '<button type="button" class="knopf knopf-zweit" data-act="daumen-zurueck">Zurück</button>' : '<button type="button" class="knopf knopf-zweit" data-nav="byles">Abbrechen</button>'}<span class="rechts"><button type="button" class="knopf" data-act="daumen-weiter" ${wahl == null ? 'disabled' : ''}>Weiter</button></span></div>
     </section>`,
   };
 }
+function daumenFokus() { const e = $('.daumen-satz'); if (e) { e.setAttribute('tabindex', '-1'); try { e.focus({ preventScroll: true }); } catch (x) { /* egal */ } } }
 function daumenWahl(w) {
   if (!DAUMEN || DAUMEN.fertig) return;
   DAUMEN.antworten[DAUMEN.i] = w;
-  $$('.daumen-knopf').forEach((b) => b.setAttribute('aria-checked', String(Number(b.dataset.w) === w)));
-  const weiter = $('[data-act="daumen-weiter"]'); if (weiter) weiter.disabled = false;
+  $$('.daumen-knopf').forEach((b) => { const an = Number(b.dataset.w) === w; b.setAttribute('aria-checked', String(an)); b.tabIndex = an ? 0 : -1; });
+  const weiter = $('[data-act="daumen-weiter"]'); if (weiter) { weiter.disabled = false; if (weiter.scrollIntoView) weiter.scrollIntoView({ block: 'nearest', behavior: sanft() }); }
 }
 function daumenWeiter() {
   if (!DAUMEN || DAUMEN.antworten[DAUMEN.i] == null) return;
-  if (DAUMEN.i < DAUMEN_SAETZE.length - 1) { DAUMEN.i++; render(); fokus('.daumen-satz'); return; }
+  if (DAUMEN.i < DAUMEN_SAETZE.length - 1) { DAUMEN.i++; render(); daumenFokus(); return; }
   DAUMEN.fertig = true;
-  const p = P(); if (p) { bylesMerke('p'); punkteDazu(10); merkeTag(); speichern(true); }
+  const p = P(); if (p) { const schonHeute = heuteGeschafft('p', p); bylesMerke('p'); if (!schonHeute) punkteDazu(10); speichern(true); }
   pruefeAbzeichen();
   render();
   glitzer($('.ergebnis-kopf h1'), { anzahl: 22 });
 }
 function daumenErgebnis() {
   // Die Antworten werden bewusst NICHT gespeichert – sie bleiben nur für diese Rückmeldung im Speicher.
-  const a = DAUMEN.antworten, mittel = (art) => { const w = DAUMEN_SAETZE.map((s, i) => (s.art === art ? a[i] : null)).filter((x) => x != null); return w.length ? sum(w) / w.length : 0; };
-  const lust = mittel('lust'), koennen = mittel('koennen');
-  const tipps = [];
-  if (lust < 1.5) tipps.push('Lesen macht mehr Spaß, wenn das Thema dich interessiert: Comics, Witzebücher, Tierlexika, Rätselhefte oder Zeitschriften zählen auch!');
-  else tipps.push('Schön, dass du gern liest! Probier doch mal etwas Neues aus: ein Sachbuch, ein Gedicht oder eine Geschichte aus einem anderen Land.');
-  if (koennen < 1.5) tipps.push('Lesen ist wie Sport: Jeden Tag ein bisschen macht dich stärker. Die Tagesmission und das Lese-Labor helfen dir dabei.');
-  else tipps.push('Du traust dir beim Lesen viel zu – super! Im Lese-Labor findest du extra knifflige Fragen.');
+  // Alle Kinder bekommen dieselben Ideen – die Antworten werden bewusst nicht bewertet.
+  const tipps = ['Lies, was dich interessiert: Comics, Witzebücher, Tierlexika, Rätselhefte und Zeitschriften zählen auch!', 'Jeden Tag ein bisschen lesen macht dich stärker. Die Tagesmission hilft dir dabei.'];
   return {
     titel: 'Daumen-Check', schmal: true,
     html: `<section class="karte ergebnis-kopf"><span class="daumen-gross" aria-hidden="true">👍</span>

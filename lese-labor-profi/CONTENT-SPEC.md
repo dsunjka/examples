@@ -293,8 +293,11 @@ in einer Stufe endet der Teil. Die Bilder sind Emoji.
 ```
 - Wörter: konkrete Nomen aus dem Grundwortschatz, Bilder genau **ein** Emoji. Mindestens ein
   Ablenker sieht im Schriftbild ähnlich aus (Biene/Birne, Hose/Rose), damit genaues Lesen zählt.
-- Sätze: Emoji-Szenen aus 2–4 Emoji (von links nach rechts lesen). Jeder Ablenker ändert genau
-  ein Detail; mindestens einer erst im hinteren Satzteil.
+- Sätze: Emoji-Szenen aus 2–4 Emoji (von links nach rechts lesen). Die vier Bilder bilden ein
+  **2×2-Schema**: Zwei Details (Position p und q) haben je zwei Varianten, die Bilder sind alle vier
+  Kombinationen – Ziel (X, Y), Ablenker (X′, Y), (X, Y′) und (X′, Y′). So ist das Zielbild nie das
+  „Mehrheitsbild“ und man kann nicht ohne Lesen raten (die Inhaltsprüfung meldet das als Fehler).
+  Bei komplexen Sätzen liegt mindestens eine der beiden Stellen im hinteren Satzteil.
 - `name` beschreibt jedes Bild (für Bildschirmleser). Nur Emoji bis Unicode 12.0, keine Hauttöne.
 - Für 7 bzw. 6 Stufen ohne Wiederholung: mindestens 21 zwei- und 14 dreisilbige Wörter,
   18 einfache und 12 komplexe Sätze (besser deutlich mehr).

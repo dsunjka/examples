@@ -2639,12 +2639,12 @@
      "name": "Eine Oma fährt mit einem Traktor auf ein Getreidefeld."
     },
     {
-     "e": "👴🚲🌾",
-     "name": "Ein Opa fährt mit einem Fahrrad auf ein Getreidefeld."
-    },
-    {
      "e": "👴🚜🌲",
      "name": "Ein Opa fährt mit einem Traktor in einen Wald."
+    },
+    {
+     "e": "👵🚜🌲",
+     "name": "Eine Oma fährt mit einem Traktor in einen Wald."
     }
    ]
   },
@@ -2666,8 +2666,8 @@
      "name": "Ein Mädchen hört auf einem Sofa Musik mit Kopfhörern."
     },
     {
-     "e": "👧🧸🛏️",
-     "name": "Ein Mädchen kuschelt im Bett mit einem Teddy."
+     "e": "👦🎧🛋️",
+     "name": "Ein Junge hört auf einem Sofa Musik mit Kopfhörern."
     }
    ]
   },
@@ -2685,12 +2685,12 @@
      "name": "Eine Katze bringt einem Mann eine Zeitung."
     },
     {
-     "e": "🐕🧦👨",
-     "name": "Ein Hund bringt einem Mann eine Socke."
-    },
-    {
      "e": "🐕📰👩",
      "name": "Ein Hund bringt einer Frau eine Zeitung."
+    },
+    {
+     "e": "🐈📰👩",
+     "name": "Eine Katze bringt einer Frau eine Zeitung."
     }
    ]
   },
@@ -2708,12 +2708,12 @@
      "name": "Ein Mädchen fährt mit dem Fahrrad zur Schule."
     },
     {
-     "e": "👦🛴🏫",
-     "name": "Ein Junge fährt mit dem Roller zur Schule."
-    },
-    {
      "e": "👦🚲🏰",
      "name": "Ein Junge fährt mit dem Fahrrad zu einem Schloss."
+    },
+    {
+     "e": "👧🚲🏰",
+     "name": "Ein Mädchen fährt mit dem Fahrrad zu einem Schloss."
     }
    ]
   },
@@ -2731,12 +2731,12 @@
      "name": "Ein Mädchen isst ein Eis am Strand."
     },
     {
-     "e": "👦🍉🏖️",
-     "name": "Ein Junge isst eine Wassermelone am Strand."
-    },
-    {
      "e": "👦🍦🏰",
      "name": "Ein Junge isst ein Eis vor einem Schloss."
+    },
+    {
+     "e": "👧🍦🏰",
+     "name": "Ein Mädchen isst ein Eis vor einem Schloss."
     }
    ]
   },
@@ -2758,8 +2758,8 @@
      "name": "Eine Oma strickt Handschuhe."
     },
     {
-     "e": "👵🧶🧦",
-     "name": "Eine Oma strickt Socken."
+     "e": "👴🧶🧤",
+     "name": "Ein Opa strickt Handschuhe."
     }
    ]
   },
@@ -2781,8 +2781,8 @@
      "name": "Ein Opa füttert ein Schwein mit Mais."
     },
     {
-     "e": "👴🍞🐔",
-     "name": "Ein Opa füttert ein Huhn mit Brot."
+     "e": "👵🌽🐖",
+     "name": "Eine Oma füttert ein Schwein mit Mais."
     }
    ]
   },
@@ -2804,8 +2804,8 @@
      "name": "Ein Mädchen malt ein Haus."
     },
     {
-     "e": "👧🎨🌳",
-     "name": "Ein Mädchen malt einen Baum."
+     "e": "👦🎨🏠",
+     "name": "Ein Junge malt ein Haus."
     }
    ]
   },
@@ -2823,12 +2823,12 @@
      "name": "Ein Mädchen spielt Gitarre vor einem Zelt."
     },
     {
-     "e": "👦🥁⛺",
-     "name": "Ein Junge trommelt vor einem Zelt."
-    },
-    {
      "e": "👦🎸🏠",
      "name": "Ein Junge spielt Gitarre vor einem Haus."
+    },
+    {
+     "e": "👧🎸🏠",
+     "name": "Ein Mädchen spielt Gitarre vor einem Haus."
     }
    ]
   },
@@ -2846,12 +2846,12 @@
      "name": "Ein Mädchen trinkt Milch zu einer Breze."
     },
     {
-     "e": "👦🍎🥨",
-     "name": "Ein Junge isst einen Apfel und eine Breze."
-    },
-    {
      "e": "👦🥛🥐",
      "name": "Ein Junge trinkt Milch zu einem Croissant."
+    },
+    {
+     "e": "👧🥛🥐",
+     "name": "Ein Mädchen trinkt Milch zu einem Croissant."
     }
    ]
   },
@@ -2873,8 +2873,8 @@
      "name": "Ein Pferd frisst einen Apfel."
     },
     {
-     "e": "🐎🌽",
-     "name": "Ein Pferd frisst einen Maiskolben."
+     "e": "🐄🍎",
+     "name": "Eine Kuh frisst einen Apfel."
     }
    ]
   },
@@ -2896,8 +2896,8 @@
      "name": "Ein Junge fährt auf einem verschneiten Berg Schlitten."
     },
     {
-     "e": "👦🥾🏔️",
-     "name": "Ein Junge wandert auf einem verschneiten Berg."
+     "e": "👧🛷🏔️",
+     "name": "Ein Mädchen fährt auf einem verschneiten Berg Schlitten."
     }
    ]
   },
@@ -2915,12 +2915,12 @@
      "name": "Eine Maus schläft im Laub."
     },
     {
-     "e": "🦔🐛🍂",
-     "name": "Ein Igel frisst eine Raupe im Laub."
-    },
-    {
      "e": "🦔💤🧺",
      "name": "Ein Igel schläft in einem Korb."
+    },
+    {
+     "e": "🐭💤🧺",
+     "name": "Eine Maus schläft in einem Korb."
     }
    ]
   },
@@ -2938,12 +2938,12 @@
      "name": "Ein Mädchen schießt einen Fußball ins Tor."
     },
     {
-     "e": "👦🏀🥅",
-     "name": "Ein Junge wirft einen Basketball ins Tor."
-    },
-    {
      "e": "👦⚽🌳",
      "name": "Ein Junge schießt einen Fußball an einen Baum."
+    },
+    {
+     "e": "👧⚽🌳",
+     "name": "Ein Mädchen schießt einen Fußball an einen Baum."
     }
    ]
   },
@@ -2961,12 +2961,12 @@
      "name": "Ein Junge bekommt ein Geschenk und einen Luftballon."
     },
     {
-     "e": "👧🍦🎈",
-     "name": "Ein Mädchen bekommt ein Eis und einen Luftballon."
-    },
-    {
      "e": "👧🎁🎂",
      "name": "Ein Mädchen bekommt ein Geschenk und einen Kuchen."
+    },
+    {
+     "e": "👦🎁🎂",
+     "name": "Ein Junge bekommt ein Geschenk und einen Kuchen."
     }
    ]
   },
@@ -2988,8 +2988,8 @@
      "name": "Ein Mädchen fährt mit einem Bus auf einen Berg."
     },
     {
-     "e": "👧🚂🏔️",
-     "name": "Ein Mädchen fährt mit einem Zug auf einen Berg."
+     "e": "👦🚌🏔️",
+     "name": "Ein Junge fährt mit einem Bus auf einen Berg."
     }
    ]
   },
@@ -3007,12 +3007,12 @@
      "name": "Ein Mann legt einen Apfel in einen Einkaufswagen."
     },
     {
-     "e": "👩🍌🛒",
-     "name": "Eine Frau legt eine Banane in einen Einkaufswagen."
-    },
-    {
      "e": "👩🍎🧺",
      "name": "Eine Frau legt einen Apfel in einen Korb."
+    },
+    {
+     "e": "👨🍎🧺",
+     "name": "Ein Mann legt einen Apfel in einen Korb."
     }
    ]
   },
@@ -3030,12 +3030,12 @@
      "name": "Eine Frau macht Pfannkuchen für einen Jungen."
     },
     {
-     "e": "👨🧇👦",
-     "name": "Ein Mann macht Waffeln für einen Jungen."
-    },
-    {
      "e": "👨🥞👧",
      "name": "Ein Mann macht Pfannkuchen für ein Mädchen."
+    },
+    {
+     "e": "👩🥞👧",
+     "name": "Eine Frau macht Pfannkuchen für ein Mädchen."
     }
    ]
   },
@@ -3053,12 +3053,12 @@
      "name": "Ein Mädchen lässt an einem Berg einen Drachen steigen."
     },
     {
-     "e": "👦🎈⛰️",
-     "name": "Ein Junge lässt an einem Berg einen Luftballon steigen."
-    },
-    {
      "e": "👦🪁🏖️",
      "name": "Ein Junge lässt am Strand einen Drachen steigen."
+    },
+    {
+     "e": "👧🪁🏖️",
+     "name": "Ein Mädchen lässt am Strand einen Drachen steigen."
     }
    ]
   },
@@ -3076,12 +3076,12 @@
      "name": "Ein Junge spielt mit einem Hund im Schnee."
     },
     {
-     "e": "👧🐈❄️",
-     "name": "Ein Mädchen spielt mit einer Katze im Schnee."
-    },
-    {
      "e": "👧🐕🏖️",
      "name": "Ein Mädchen spielt mit einem Hund am Strand."
+    },
+    {
+     "e": "👦🐕🏖️",
+     "name": "Ein Junge spielt mit einem Hund am Strand."
     }
    ]
   },
@@ -3103,8 +3103,8 @@
      "name": "Eine Biene fliegt zu einer Tulpe."
     },
     {
-     "e": "🐝🍯",
-     "name": "Eine Biene fliegt zu einem Honigtopf."
+     "e": "🦋🌷",
+     "name": "Ein Schmetterling fliegt zu einer Tulpe."
     }
    ]
   },
@@ -3126,8 +3126,8 @@
      "name": "Ein Marienkäfer sitzt auf einem Pilz."
     },
     {
-     "e": "🐞🍓",
-     "name": "Ein Marienkäfer sitzt auf einer Erdbeere."
+     "e": "🐌🍄",
+     "name": "Eine Schnecke sitzt auf einem Pilz."
     }
    ]
   },
@@ -3149,8 +3149,8 @@
      "name": "Eine Maus knabbert an einem Keks."
     },
     {
-     "e": "🐭🍎",
-     "name": "Eine Maus knabbert an einem Apfel."
+     "e": "🐰🍪",
+     "name": "Ein Hase knabbert an einem Keks."
     }
    ]
   },
@@ -3172,8 +3172,8 @@
      "name": "Ein Bär nascht eine Erdbeere."
     },
     {
-     "e": "🐻🐟",
-     "name": "Ein Bär frisst einen Fisch."
+     "e": "🦊🍓",
+     "name": "Ein Fuchs nascht eine Erdbeere."
     }
    ]
   },
@@ -3195,8 +3195,8 @@
      "name": "Ein Affe frisst einen Apfel."
     },
     {
-     "e": "🐒🍇",
-     "name": "Ein Affe frisst Weintrauben."
+     "e": "🐘🍎",
+     "name": "Ein Elefant frisst einen Apfel."
     }
    ]
   },
@@ -3214,12 +3214,12 @@
      "name": "Ein Junge packt ein Buch in einen Schulranzen."
     },
     {
-     "e": "👧🍎🎒",
-     "name": "Ein Mädchen packt einen Apfel in einen Schulranzen."
-    },
-    {
      "e": "👧📕🧺",
      "name": "Ein Mädchen packt ein Buch in einen Korb."
+    },
+    {
+     "e": "👦📕🧺",
+     "name": "Ein Junge packt ein Buch in einen Korb."
     }
    ]
   },
@@ -3241,8 +3241,8 @@
      "name": "Ein Mädchen füttert ein Pferd mit einer Karotte."
     },
     {
-     "e": "👧🍎🐇",
-     "name": "Ein Mädchen füttert einen Hasen mit einem Apfel."
+     "e": "👦🥕🐎",
+     "name": "Ein Junge füttert ein Pferd mit einer Karotte."
     }
    ]
   },
@@ -3260,12 +3260,12 @@
      "name": "Ein Mädchen schläft in einem Zelt."
     },
     {
-     "e": "👦📖⛺",
-     "name": "Ein Junge liest in einem Zelt."
-    },
-    {
      "e": "👦💤🛏️",
      "name": "Ein Junge schläft in einem Bett."
+    },
+    {
+     "e": "👧💤🛏️",
+     "name": "Ein Mädchen schläft in einem Bett."
     }
    ]
   },
@@ -3283,12 +3283,12 @@
      "name": "Ein Opa isst Kuchen zu einer Tasse Kaffee."
     },
     {
-     "e": "👵🍪☕",
-     "name": "Eine Oma isst einen Keks zu einer Tasse Kaffee."
-    },
-    {
      "e": "👵🍰🥛",
      "name": "Eine Oma isst Kuchen zu einem Glas Milch."
+    },
+    {
+     "e": "👴🍰🥛",
+     "name": "Ein Opa isst Kuchen zu einem Glas Milch."
     }
    ]
   },
@@ -3306,12 +3306,12 @@
      "name": "Ein Junge isst eine Pizza mit Mais."
     },
     {
-     "e": "👧🍝🌽",
-     "name": "Ein Mädchen isst Nudeln mit Mais."
-    },
-    {
      "e": "👧🍕🍍",
      "name": "Ein Mädchen isst eine Pizza mit Ananas."
+    },
+    {
+     "e": "👦🍕🍍",
+     "name": "Ein Junge isst eine Pizza mit Ananas."
     }
    ]
   },
@@ -3329,12 +3329,12 @@
      "name": "Ein Mädchen schickt einer Oma einen Brief."
     },
     {
-     "e": "👦🎁👵",
-     "name": "Ein Junge schickt einer Oma ein Geschenk."
-    },
-    {
      "e": "👦✉️👴",
      "name": "Ein Junge schickt einem Opa einen Brief."
+    },
+    {
+     "e": "👧✉️👴",
+     "name": "Ein Mädchen schickt einem Opa einen Brief."
     }
    ]
   },
@@ -3356,8 +3356,8 @@
      "name": "Ein Junge putzt ein Auto mit einem Schwamm."
     },
     {
-     "e": "👦🧹🚲",
-     "name": "Ein Junge putzt ein Fahrrad mit einem Besen."
+     "e": "👧🧽🚗",
+     "name": "Ein Mädchen putzt ein Auto mit einem Schwamm."
     }
    ]
   },
@@ -3379,8 +3379,8 @@
      "name": "Eine Eule sitzt auf einem Schloss."
     },
     {
-     "e": "🦉🌳",
-     "name": "Eine Eule sitzt auf einem Baum."
+     "e": "🕊️🏰",
+     "name": "Eine Taube sitzt auf einem Schloss."
     }
    ]
   },
@@ -3398,12 +3398,12 @@
      "name": "Ein Hahn kräht und ein Junge springt aus dem Bett."
     },
     {
-     "e": "⏰👧🛏️",
-     "name": "Ein Wecker klingelt und ein Mädchen springt aus dem Bett."
-    },
-    {
      "e": "⏰👦🛋️",
      "name": "Ein Wecker klingelt und ein Junge springt vom Sofa auf."
+    },
+    {
+     "e": "🐓👦🛋️",
+     "name": "Ein Hahn kräht und ein Junge springt vom Sofa auf."
     }
    ]
   },
@@ -3421,12 +3421,12 @@
      "name": "Es regnet und ein Junge springt ins Wasser."
     },
     {
-     "e": "☀️👧🌊",
-     "name": "Die Sonne scheint und ein Mädchen springt ins Wasser."
-    },
-    {
      "e": "☀️👦🍦",
      "name": "Die Sonne scheint und ein Junge isst ein Eis."
+    },
+    {
+     "e": "🌧️👦🍦",
+     "name": "Es regnet und ein Junge isst ein Eis."
     }
    ]
   },
@@ -3444,12 +3444,12 @@
      "name": "Ein Junge mit Brille liest ein Buch."
     },
     {
-     "e": "👧🎀📖",
-     "name": "Ein Mädchen mit einer Schleife liest ein Buch."
-    },
-    {
      "e": "👧👓🎨",
      "name": "Ein Mädchen mit Brille malt ein Bild."
+    },
+    {
+     "e": "👦👓🎨",
+     "name": "Ein Junge mit Brille malt ein Bild."
     }
    ]
   },
@@ -3467,12 +3467,12 @@
      "name": "Ein Opa liest ein Buch und eine Oma telefoniert mit einem Handy."
     },
     {
-     "e": "👴📰👩📱",
-     "name": "Ein Opa liest Zeitung und eine junge Frau telefoniert mit einem Handy."
-    },
-    {
      "e": "👴📰👵☕",
      "name": "Ein Opa liest Zeitung und eine Oma trinkt Kaffee."
+    },
+    {
+     "e": "👴📖👵☕",
+     "name": "Ein Opa liest ein Buch und eine Oma trinkt Kaffee."
     }
    ]
   },
@@ -3490,12 +3490,12 @@
      "name": "Ein Junge macht Hausaufgaben und spielt danach Fußball."
     },
     {
-     "e": "👧🍝⚽",
-     "name": "Ein Mädchen isst Nudeln und spielt danach Fußball."
-    },
-    {
      "e": "👧📝🎾",
      "name": "Ein Mädchen macht Hausaufgaben und spielt danach Tennis."
+    },
+    {
+     "e": "👦📝🎾",
+     "name": "Ein Junge macht Hausaufgaben und spielt danach Tennis."
     }
    ]
   },
@@ -3513,12 +3513,12 @@
      "name": "Ein Junge fährt Schlitten und ein Opa baut einen Schneemann."
     },
     {
-     "e": "👧🎿👴⛄",
-     "name": "Ein Mädchen fährt Ski und ein Opa baut einen Schneemann."
-    },
-    {
      "e": "👧🛷👵⛄",
      "name": "Ein Mädchen fährt Schlitten und eine Oma baut einen Schneemann."
+    },
+    {
+     "e": "👦🛷👵⛄",
+     "name": "Ein Junge fährt Schlitten und eine Oma baut einen Schneemann."
     }
    ]
   },
@@ -3536,12 +3536,12 @@
      "name": "Es ist Tag und ein Mann zündet eine Kerze an."
     },
     {
-     "e": "🌙👩🕯️",
-     "name": "Es ist Nacht und eine Frau zündet eine Kerze an."
-    },
-    {
      "e": "🌙👨🔦",
      "name": "Es ist Nacht und ein Mann hat eine Taschenlampe."
+    },
+    {
+     "e": "☀️👨🔦",
+     "name": "Es ist Tag und ein Mann hat eine Taschenlampe."
     }
    ]
   },
@@ -3559,12 +3559,12 @@
      "name": "Eine Katze mit einem Knochen schläft in einem Korb."
     },
     {
-     "e": "🐕⚽💤🧺",
-     "name": "Ein Hund mit einem Ball schläft in einem Korb."
-    },
-    {
      "e": "🐕🦴💤🛋️",
      "name": "Ein Hund mit einem Knochen schläft auf einem Sofa."
+    },
+    {
+     "e": "🐈🦴💤🛋️",
+     "name": "Eine Katze mit einem Knochen schläft auf einem Sofa."
     }
    ]
   },
@@ -3582,12 +3582,12 @@
      "name": "Ein Mann mit Hut hält einen Blumenstrauß."
     },
     {
-     "e": "👩👓💐",
-     "name": "Eine Frau mit Brille hält einen Blumenstrauß."
-    },
-    {
      "e": "👩👒🎈",
      "name": "Eine Frau mit Hut hält einen Luftballon."
+    },
+    {
+     "e": "👨👒🎈",
+     "name": "Ein Mann mit Hut hält einen Luftballon."
     }
    ]
   },
@@ -3605,12 +3605,12 @@
      "name": "Ein Bus kommt an und eine Oma winkt."
     },
     {
-     "e": "🚆👴👋",
-     "name": "Ein Zug kommt an und ein Opa winkt."
-    },
-    {
      "e": "🚆👵📖",
      "name": "Ein Zug kommt an und eine Oma liest ein Buch."
+    },
+    {
+     "e": "🚌👵📖",
+     "name": "Ein Bus kommt an und eine Oma liest ein Buch."
     }
    ]
   },
@@ -3628,12 +3628,12 @@
      "name": "Ein Mädchen kehrt mit einem Besen und schaut danach fern."
     },
     {
-     "e": "👦🛁📺",
-     "name": "Ein Junge badet und schaut danach fern."
-    },
-    {
      "e": "👦🧹🎮",
      "name": "Ein Junge kehrt mit einem Besen und spielt danach ein Videospiel."
+    },
+    {
+     "e": "👧🧹🎮",
+     "name": "Ein Mädchen kehrt mit einem Besen und spielt danach ein Videospiel."
     }
    ]
   },
@@ -3651,12 +3651,12 @@
      "name": "Ein Junge geht im Wald spazieren und sieht einen Fuchs."
     },
     {
-     "e": "👧⛰️🦊",
-     "name": "Ein Mädchen geht auf einem Berg spazieren und sieht einen Fuchs."
-    },
-    {
      "e": "👧🌲🦌",
      "name": "Ein Mädchen geht im Wald spazieren und sieht einen Hirsch."
+    },
+    {
+     "e": "👦🌲🦌",
+     "name": "Ein Junge geht im Wald spazieren und sieht einen Hirsch."
     }
    ]
   },
@@ -3674,12 +3674,12 @@
      "name": "Es ist kalt und ein Junge zieht Handschuhe und einen Schal an."
     },
     {
-     "e": "❄️👧👢🧣",
-     "name": "Es ist kalt und ein Mädchen zieht Stiefel und einen Schal an."
-    },
-    {
      "e": "❄️👧🧤🧦",
      "name": "Es ist kalt und ein Mädchen zieht Handschuhe und Socken an."
+    },
+    {
+     "e": "❄️👦🧤🧦",
+     "name": "Es ist kalt und ein Junge zieht Handschuhe und Socken an."
     }
    ]
   },
@@ -3697,12 +3697,12 @@
      "name": "Eine Ziege steht auf einem Berg und trägt eine Glocke."
     },
     {
-     "e": "🐄🏖️🔔",
-     "name": "Eine Kuh steht am Strand und trägt eine Glocke."
-    },
-    {
      "e": "🐄⛰️🎀",
      "name": "Eine Kuh steht auf einem Berg und trägt eine Schleife."
+    },
+    {
+     "e": "🐐⛰️🎀",
+     "name": "Eine Ziege steht auf einem Berg und trägt eine Schleife."
     }
    ]
   },
@@ -3720,12 +3720,12 @@
      "name": "Ein Mädchen wandert auf einen Berg und isst danach eine Breze."
     },
     {
-     "e": "👦🚲⛰️🥨",
-     "name": "Ein Junge fährt mit dem Fahrrad auf einen Berg und isst danach eine Breze."
-    },
-    {
      "e": "👦🥾⛰️🍎",
      "name": "Ein Junge wandert auf einen Berg und isst danach einen Apfel."
+    },
+    {
+     "e": "👧🥾⛰️🍎",
+     "name": "Ein Mädchen wandert auf einen Berg und isst danach einen Apfel."
     }
    ]
   },
@@ -3743,12 +3743,12 @@
      "name": "Die Sonne scheint und ein Junge macht mit einem Mann ein Puzzle."
     },
     {
-     "e": "🌧️👦👩🧩",
-     "name": "Es regnet und ein Junge macht mit einer Frau ein Puzzle."
-    },
-    {
      "e": "🌧️👦👨🎲",
      "name": "Es regnet und ein Junge würfelt mit einem Mann."
+    },
+    {
+     "e": "☀️👦👨🎲",
+     "name": "Die Sonne scheint und ein Junge würfelt mit einem Mann."
     }
    ]
   },
@@ -3766,12 +3766,12 @@
      "name": "Eine Frau fährt Auto und ein Mädchen schläft."
     },
     {
-     "e": "👨🚌👧💤",
-     "name": "Ein Mann fährt Bus und ein Mädchen schläft."
-    },
-    {
      "e": "👨🚗👧📖",
      "name": "Ein Mann fährt Auto und ein Mädchen liest ein Buch."
+    },
+    {
+     "e": "👩🚗👧📖",
+     "name": "Eine Frau fährt Auto und ein Mädchen liest ein Buch."
     }
    ]
   },
@@ -3789,12 +3789,12 @@
      "name": "Ein Opa hat Geburtstag und ein Mädchen schenkt ihm Blumen."
     },
     {
-     "e": "👵🎂👦💐",
-     "name": "Eine Oma hat Geburtstag und ein Junge schenkt ihr Blumen."
-    },
-    {
      "e": "👵🎂👧🍫",
      "name": "Eine Oma hat Geburtstag und ein Mädchen schenkt ihr Schokolade."
+    },
+    {
+     "e": "👴🎂👧🍫",
+     "name": "Ein Opa hat Geburtstag und ein Mädchen schenkt ihm Schokolade."
     }
    ]
   },
@@ -3816,8 +3816,8 @@
      "name": "Eine Ente mit zwei Küken."
     },
     {
-     "e": "🐔🐤🐤🐤",
-     "name": "Ein Huhn mit drei Küken."
+     "e": "🦢🐤🐤",
+     "name": "Ein Schwan mit zwei Küken."
     }
    ]
   },
@@ -3831,16 +3831,16 @@
    },
    "ablenker": [
     {
-     "e": "👨🎹👧🎤",
-     "name": "Ein Mann spielt Klavier und ein Mädchen singt."
-    },
-    {
      "e": "👩🎸👧🎤",
      "name": "Eine Frau spielt Gitarre und ein Mädchen singt."
     },
     {
      "e": "👨🎸👧🥁",
      "name": "Ein Mann spielt Gitarre und ein Mädchen trommelt."
+    },
+    {
+     "e": "👩🎸👧🥁",
+     "name": "Eine Frau spielt Gitarre und ein Mädchen trommelt."
     }
    ]
   },
@@ -3858,12 +3858,12 @@
      "name": "Ein Mädchen badet, danach liest eine Frau aus einem Buch vor."
     },
     {
-     "e": "👦⚽👩📖",
-     "name": "Ein Junge spielt Fußball, danach liest eine Frau aus einem Buch vor."
-    },
-    {
      "e": "👦🛁👨📖",
      "name": "Ein Junge badet, danach liest ein Mann aus einem Buch vor."
+    },
+    {
+     "e": "👧🛁👨📖",
+     "name": "Ein Mädchen badet, danach liest ein Mann aus einem Buch vor."
     }
    ]
   },
@@ -3881,12 +3881,12 @@
      "name": "Nach dem Schneefall sieht ein Mädchen einen Regenbogen."
     },
     {
-     "e": "🌧️👦🌈",
-     "name": "Nach dem Regen sieht ein Junge einen Regenbogen."
+     "e": "🌧️👧🐦",
+     "name": "Nach dem Regen sieht ein Mädchen einen Vogel."
     },
     {
-     "e": "🌧️👧🐌",
-     "name": "Nach dem Regen sieht ein Mädchen eine Schnecke."
+     "e": "❄️👧🐦",
+     "name": "Nach dem Schneefall sieht ein Mädchen einen Vogel."
     }
    ]
   },
@@ -3904,12 +3904,12 @@
      "name": "Ein Mädchen spielt Geige und ein Junge malt ein Bild."
     },
     {
-     "e": "👧🎹👧🎨",
-     "name": "Ein Mädchen spielt Klavier und ein anderes Mädchen malt ein Bild."
-    },
-    {
      "e": "👧🎹👦📖",
      "name": "Ein Mädchen spielt Klavier und ein Junge liest ein Buch."
+    },
+    {
+     "e": "👧🎻👦📖",
+     "name": "Ein Mädchen spielt Geige und ein Junge liest ein Buch."
     }
    ]
   },
@@ -3927,12 +3927,12 @@
      "name": "Ein Zug kommt und ein Mädchen hat einen Schulranzen."
     },
     {
-     "e": "🚌👦🎒",
-     "name": "Ein Bus kommt und ein Junge hat einen Schulranzen."
-    },
-    {
      "e": "🚌👧🧸",
      "name": "Ein Bus kommt und ein Mädchen hat einen Teddy."
+    },
+    {
+     "e": "🚆👧🧸",
+     "name": "Ein Zug kommt und ein Mädchen hat einen Teddy."
     }
    ]
   },
@@ -3950,12 +3950,12 @@
      "name": "Eine Eule sitzt auf einem Hausdach und sieht einen Vogel."
     },
     {
-     "e": "🐈🌳🐦",
-     "name": "Eine Katze sitzt auf einem Baum und sieht einen Vogel."
-    },
-    {
      "e": "🐈🏠🦋",
      "name": "Eine Katze sitzt auf einem Hausdach und sieht einen Schmetterling."
+    },
+    {
+     "e": "🦉🏠🦋",
+     "name": "Eine Eule sitzt auf einem Hausdach und sieht einen Schmetterling."
     }
    ]
   },
@@ -3973,12 +3973,12 @@
      "name": "Ein Mädchen fährt Riesenrad und isst danach ein Eis."
     },
     {
-     "e": "👦🎢🍦",
-     "name": "Ein Junge fährt Achterbahn und isst danach ein Eis."
-    },
-    {
      "e": "👦🎡🍭",
      "name": "Ein Junge fährt Riesenrad und schleckt danach einen Lutscher."
+    },
+    {
+     "e": "👧🎡🍭",
+     "name": "Ein Mädchen fährt Riesenrad und schleckt danach einen Lutscher."
     }
    ]
   }

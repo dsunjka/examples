@@ -3,7 +3,7 @@ let ANSICHT = { name: 'start', param: null };
 const HASH_ANSICHTEN = new Set(['start', 'digital', 'lesen', 'tempo', 'rechtschreibung', 'grammatik', 'schreiben', 'fortschritt', 'erwachsene', 'info', 'profile', 'byles']);
 let erwachseneOffen = false;
 
-const VERLAUF_ANSICHTEN = new Set(['sitzung', 'tempo-lauf', 'diktat', 'blitz-lauf']);
+const VERLAUF_ANSICHTEN = new Set(['sitzung', 'tempo-lauf', 'diktat', 'blitz-lauf', 'daumen']);
 let verlaufGesetzt = false;
 function zeige(name, param = null) {
   const alt = ANSICHT.name;
@@ -291,11 +291,12 @@ function viewPruefungStart(cfg) {
         <li>Oben siehst du die Nummern aller Aufgaben. Du kannst hin- und herspringen.</li>
         <li>Bist du unsicher? Tippe auf <b>„Später ansehen“</b>. Die Aufgabe bekommt dann einen orangen Punkt.</li>
         <li>Bei <b>Mehrfachauswahl</b> sind mehrere Antworten richtig. Nur die ganz richtige Auswahl bringt einen Punkt.</li>
+        ${cfg.art.startsWith('lesev-') ? '<li>Die Geschichte hat <b>vier Abschnitte</b>. Nach jedem Abschnitt kommen 4 Fragen, am Ende 4 Fragen zur ganzen Geschichte. Die nächsten Abschnitte öffnen sich nacheinander mit „Weiter“.</li>' : ''}
         ${digital ? '<li>In den Internetseiten kannst du Links, Menüs und Reiter antippen. Mit dem Zurück-Pfeil kommst du zurück.</li>' : ''}
         <li>Du kannst die Prüfung unterbrechen. Die Zeit läuft nur, solange sie geöffnet ist.</li>
         <li>Erst am Ende siehst du, was richtig war – mit Erklärungen.</li></ul></div>
       <label class="schalter"><input type="checkbox" id="uhr-zeigen" ${E().timerZeigen ? 'checked' : ''}><span>Uhr während der Prüfung anzeigen</span></label>
-      <div class="aktionen"><button type="button" class="knopf knopf-zweit" data-act="zurueck-modul" data-m="${esc(cfg.modul || 'start')}">Zurück</button><span class="rechts"><button type="button" class="knopf knopf-signal" data-act="pruef-los">Prüfung starten</button></span></div>
+      <div class="aktionen"><button type="button" class="knopf knopf-zweit" data-act="zurueck-modul" data-m="${esc(cfg.herkunft || cfg.modul || 'start')}">Zurück</button><span class="rechts"><button type="button" class="knopf knopf-signal" data-act="pruef-los">Prüfung starten</button></span></div>
     </section>`,
   };
 }
@@ -317,7 +318,7 @@ function viewErgebnis(param) {
         <section class="karte" style="display:grid;gap:12px"><h2 style="font-size:1.15rem">Nach Kompetenzen</h2>${balkenZeilen(ausw.komp)}</section>
         <section class="karte" style="display:grid;gap:12px"><h2 style="font-size:1.15rem">Nach ${e.art === 'digital' ? 'Fällen' : /^lesev-/.test(e.art) ? 'Abschnitten' : 'Bereichen'}</h2>${balkenZeilen(ausw.gruppen)}</section>
       </div>
-      ${heute(new Date(e.datum)) === heute() && (e.art === 'digital' || /^lesev-/.test(e.art)) ? fahrplanBanner(e.art === 'digital' ? 'd' : 'v') : ''}
+      ${heute(new Date(e.datum)) === heute() && (e.art === 'digital' || /^lesev-/.test(e.art)) ? fahrplanBanner(e.art === 'digital' ? 'd' : 'v', e.ids.filter((id) => e.details[id] !== 'leer').length >= Math.ceil(e.ids.length * 0.75)) : ''}
       ${schwach && schwach.ok < schwach.n ? `<section class="info-box" style="--farbe:var(--signal)"><b>Dein nächster Schritt</b><p>Am meisten Übung braucht gerade: <b>${esc(schwach.label)}</b> (${schwach.ok} von ${schwach.n} richtig). Übe die Fehler im Training – dort bekommst du Tipps und Erklärungen.</p></section>` : ''}
       <section class="karte" style="display:grid;gap:12px"><h2 style="font-size:1.15rem">Alle Aufgaben mit Lösung</h2>${reviewListe(e.ids, e.antworten, e.perms, e.details)}</section>`,
   };
@@ -465,14 +466,14 @@ function viewInfo() {
       <p>Lese-Labor PROFI ist ein Übungsprogramm für Deutsch in der 4. Jahrgangsstufe in Bayern. Schwerpunkt ist die anspruchsvolle Vorbereitung auf den Bayerischen Lesetest, besonders auf <b>BYLET-D</b> („Leseverständnis im digitalen Kontext“).</p>
       <h2 style="font-size:1.15rem">Was ist BYLET?</h2>
       <p>Seit dem Schuljahr 2024/2025 steht allen bayerischen Grundschulen das digitale Bayerische Lesescreening (BYLES) zur Verfügung. Es wurde von der Universität Regensburg mit dem Bayerischen Staatsministerium für Unterricht und Kultus entwickelt und läuft über die Plattform eddipuls. Die Schule setzt BYLES als <b>Lernstandserhebung</b> ein; die Teilnahme ist für alle Kinder verpflichtend. In der <b>4. Jahrgangsstufe</b> gibt es vier Module:</p>
-      <div class="tabelle-scroll"><table class="verlauf-tabelle"><thead><tr><th>Modul</th><th>Was das Kind tut</th><th>Übung in dieser App</th></tr></thead><tbody>
+      <div class="tabelle-scroll"><table class="verlauf-tabelle byles-tabelle"><thead><tr><th>Modul</th><th>Was das Kind tut</th><th>Übung in dieser App</th></tr></thead><tbody>
         <tr><td><b>BYLET-P</b> (Prädiktion)</td><td>8 Fragen zur Lesemotivation und zum Selbstbild beim Lesen, Antwort mit vier Daumen – ohne richtig oder falsch</td><td>Daumen-Check</td></tr>
         <tr><td><b>BYLET-F</b> (Leseflüssigkeit)</td><td>Wörter (7 Stufen) und Sätze (6 Stufen) erscheinen für eine festgelegte Zeit; danach wird aus vier Bildern das passende gewählt. Je Stufe 5 Aufgaben (3 einfache, 2 komplexe). Nach zu vielen Fehlern endet der Test.</td><td>Blitz-Lesen</td></tr>
         <tr><td><b>BYLET-V</b> (Leseverstehen)</td><td>Eine Geschichte in vier Abschnitten, nach jedem Abschnitt 4 Fragen mit Auswahlantworten, am Ende 4 Fragen zum Gesamttext</td><td>BYLET-V-Probe im Lese-Labor</td></tr>
         <tr><td><b>BYLET-D</b> (Lesen im digitalen Kontext)</td><td>Anwendungsszenarien aus dem Internet (z. B. Suchmaschinen, soziale Netzwerke) als Bilder, dazu Fragen zu Nutzung und Inhalt</td><td>Digital-Labor und BYLET-D-Prüfung</td></tr></tbody></table></div>
       <p>Der <b>BYLES-Fahrplan</b> in der App führt Ihr Kind in dieser Reihenfolge durch alle vier Stationen („Generalprobe“).</p>
       <h2 style="font-size:1.15rem">Elternbrief und Einwilligung zur Begleitforschung</h2>
-      <p>Zu BYLES erhalten Eltern einen Elternbrief der Universität Regensburg. Die Einwilligung darin betrifft nur die <b>wissenschaftliche Nutzung der pseudonymisierten Testdaten</b> und den zusätzlichen Hintergrundfragebogen (BYLET-H-SuS). Sie ist freiwillig, gilt für ein Schuljahr und kann jederzeit widerrufen werden; eine Nicht-Teilnahme hat keine Nachteile. Fragen dazu beantworten die Lehrkraft und die im Elternbrief genannten Ansprechpersonen.</p>
+      <p>Zu BYLES erhalten Eltern einen Elternbrief der Universität Regensburg. Die Einwilligung darin betrifft die Nutzung der pseudonymisierten Testdaten für <b>Forschung, die Weiterentwicklung von BYLES und ein bayerisches Bildungsmonitoring</b> sowie die Erhebung mit dem zusätzlichen Hintergrundfragebogen (BYLET-H-SuS). Die Testteile selbst sind eine Lernstandserhebung und brauchen keine Einwilligung. Die Einwilligung ist freiwillig, gilt für das Schuljahr und kann jederzeit widerrufen werden; eine Nicht-Teilnahme hat keine Nachteile. Fragen und Widerruf richten Sie an die im Elternbrief genannten Ansprechpersonen der Universität Regensburg.</p>
       <p><b>Lese-Labor PROFI</b> hat damit nichts zu tun: Die App ist kein Teil von BYLES, überträgt keine Daten und braucht deshalb keine Einwilligung. Die Übungsformate folgen den öffentlich beschriebenen Aufgabenbeispielen; die Inhalte sind selbst geschrieben.</p>
       <p class="info-box" style="--farbe:var(--signal)">Lese-Labor PROFI ist <b>kein offizielles Angebot</b> und enthält <b>keine Originalaufgaben</b> des Tests. Alle Fälle, Texte und Aufgaben sind eigene Übungsaufgaben im Stil der Testbereiche. Alle Websites, Apps, Personen und Vereine sind erfunden.</p>
       <h2 style="font-size:1.15rem">Die Labore und der LehrplanPLUS</h2>
