@@ -2,12 +2,16 @@
 
 Eine umfangreiche, kindgerechte Lern-App für Kinder im letzten Kindergartenjahr (5–6 Jahre),
 die **ohne Lesefähigkeit** bedienbar ist: Alle Aufgaben liest Flo, der Fuchs, vor.
-In sechs Lernwelten gibt es **36 Lernspiele** mit jeweils mehreren Schwierigkeitsstufen,
-die sich automatisch an das Kind anpassen.
+In sieben Lernwelten gibt es **36 Lernspiele und 12 Wissensreisen** mit jeweils mehreren
+Schwierigkeitsstufen, die sich automatisch an das Kind anpassen. **Flos Reise** führt
+Schritt für Schritt über einen Lernpfad mit acht Kapitel-Orten, im **Forscherbuch** sammelt
+das Kind Wissenskarten.
 
 - 🔌 **Ohne Installation, ohne Internet:** `index.html` im Browser öffnen – fertig.
 - 🔒 **Ohne Werbung, Tracker, Konten oder Käufe.** Alle Daten bleiben auf dem Gerät.
 - 📱 **Für Tablet, Smartphone und Computer** (Touch, Maus, Stift).
+- 🗺️ **Flos Reise:** ein aufeinander aufbauender Lernpfad (Spiralcurriculum) mit Geschichten und Schatzkisten.
+- 🔭 **Forscherwelt:** Sachwissen über Natur, Körper und Welt als Bildergeschichten zum Mitmachen.
 - 👪 **Elternbereich** mit Lernstand, Empfehlungen, Bildschirmzeit-Einstellungen und Pädagogik-Tipps.
 
 ---
@@ -34,7 +38,29 @@ Dort zuerst den **Namen des Kindes** eintragen – Flo spricht es dann persönli
 
 ---
 
-## Die sechs Lernwelten
+## Flos Reise – Schritt für Schritt lernen 🗺️
+
+Der große orange Knopf auf der Weltkarte öffnet einen geschwungenen Pfad durch **acht Orte**:
+🌳 Zauberwald → 🚜 Bauernhof → 🏖️ Meeresküste → ⛰️ Berge → 🏜️ Wüste → ❄️ Eiswelt →
+🚀 Weltraum → 🏰 Schloss des Wissens. Jeder Ort hat 7–8 Stationen (insgesamt 63).
+
+- **Eine Station = ein Spiel auf einer festen Stufe.** Die leuchtende Station ist die nächste,
+  gesperrte Stationen sind sichtbar, aber mit Schloss verschlossen. Flo steht auf dem Pfad und
+  hüpft nach jeder beendeten Runde zur nächsten Station (Dranbleiben zählt, nicht Fehlerfreiheit).
+- **Kapitel-Einleitung:** Beim ersten Betreten eines Ortes erzählt Flo eine kleine Geschichte
+  („Wir sind im Zauberwald. Hier wohnen kluge Eulen …“).
+- **Schatzkiste:** Am Ende jedes Kapitels öffnet das Kind eine Schatzkiste mit kurzer Geschichte
+  und einem **Bonus-Sticker**; danach wird der nächste Ort enthüllt (vorher hinter Wolken).
+- **Spiralcurriculum:** Jede Fähigkeit wird zuerst leicht eingeführt und kommt später auf
+  höherer Stufe wieder, z. B. Zählen 1 → Zählen 2 → Mengen vergleichen → Zahlenhaus → Rechnen,
+  oder Reime → Silben → Anlaute → Silben verbinden → Buchstaben → erstes Lesen. Jedes Kapitel
+  mischt Zahlen, Sprache, Formen, Denken, Sachwissen und Malen.
+- Die freie Wahl der Inseln und das Tagesabenteuer bleiben erhalten. Spielt das Kind eine
+  Station unter seiner schon erreichten Stufe, bleibt die höhere Stufe gespeichert.
+- Im Elternbereich (Überblick) stehen Fortschritt („Station x von y“), die Lernschwerpunkte je
+  Kapitel und ein Knopf zum Zurücksetzen der Reise.
+
+## Die sieben Lernwelten
 
 ### 🔢 Zahlenland – mathematische Vorläuferfähigkeiten
 | Spiel | Was geübt wird |
@@ -96,6 +122,23 @@ Dort zuerst den **Namen des Kindes** eintragen – Flo spricht es dann persönli
 | ⭐ Punkte verbinden | Zahlenfolge + Stiftführung |
 | 🖍️ Ausmalbilder | Kreatives Gestalten (ohne richtig/falsch) |
 
+### 🔭 Forscherwelt – Sachwissen mit Geschichten
+Zwölf **Wissensreisen** mit je drei Stufen (Grundwissen → vertieft → Experte). Jede Reise läuft
+in vier Schritten ab: 📖 **Entdecken** (Bildergeschichte, bei der das Kind mittippt) →
+❓ **Verstehen** (Bildfragen; nach der richtigen Antwort erklärt Flo das *Warum*) →
+🎲 **Spielen** (Reihenfolge legen, Sortieren oder „Stimmt das?“) → 🃏 **Wissenskarte** fürs
+Forscherbuch.
+
+| Thema | Wissensreisen |
+| --- | --- |
+| 🌿 Natur & Tiere | Vom Ei zum Schmetterling · Wie eine Pflanze wächst · Wer wohnt wo? (Lebensräume) · Tiere und ihre Kinder |
+| 🧒 Mensch & Zusammenleben | Die fünf Sinne · Herz, Lunge, Knochen, Muskeln und Magen · Gesund leben · Berufe und Helfer (mit Notruf 112) |
+| 🌍 Welt & Technik | Wetter und Wasserkreislauf · Sonne, Erde, Mond und Sterne · Umwelt schützen und Müll trennen · Dinosaurier |
+
+**Forscherbuch 📚:** Alle gesammelten Wissenskarten (drei je Reise) in Kapiteln nach Thema.
+Gesammelte Karten sind bunt und werden beim Antippen vorgelesen, fehlende zeigen ein „?“ und
+verraten, in welcher Reise es sie gibt. Erreichbar über die Weltkarte und die Forscherwelt-Insel.
+
 ---
 
 ## Das pädagogische Konzept
@@ -124,14 +167,26 @@ an gut belegten Erkenntnissen der Lernforschung:
    der Denk-Insel spielerisch trainiert – sie sagen den Schulerfolg nachweislich vorher.
 9. **Verteiltes, ausgewogenes Üben.** Das *Tagesabenteuer* schlägt täglich drei Spiele aus
    verschiedenen Welten vor und bevorzugt Neues sowie Spiele mit Übungsbedarf.
-10. **Gesunde Bildschirmzeit.** Kurze Runden (2–4 Minuten), Bewegungspausen mit kleinen
+10. **Mastery-Lernpfad und Spiralcurriculum (Bruner).** *Flos Reise* ordnet die Spiele so,
+    dass Fähigkeiten aufeinander aufbauen: Erst wenn eine Station geschafft ist, öffnet sich die
+    nächste. Inhalte kehren in späteren Kapiteln auf höherer Stufe wieder (Wiederholen mit
+    wachsendem Anspruch), und die Kapitel mischen die Lernbereiche (verschachteltes Üben, das
+    nachhaltiger wirkt als Block-Üben). Kleine Geschichten je Ort geben einen roten Faden.
+11. **Sachwissen mit Geschichten.** Die Wissensreisen knüpfen an die Lebenswelt an („Hast du
+    schon mal …?“), wecken Staunen („Wusstest du …?“), erklären Ursache und Wirkung („…, weil …“)
+    und führen Fachbegriffe ein, die mehrfach wiederkehren (Wortschatz). Der Ablauf Entdecken →
+    Verstehen → Anwenden → Sichern folgt dem Lernzyklus; Stufe 3 enthält Transferfragen
+    („Was passiert, wenn …?“). Die Wissenskarten im Forscherbuch laden zum Wiederholen und
+    Nacherzählen mit den Eltern ein.
+12. **Gesunde Bildschirmzeit.** Kurze Runden (2–4 Minuten), Bewegungspausen mit kleinen
     Übungen und ein optionales Tageslimit. Empfehlung: 10–20 Minuten am Stück, möglichst
     gemeinsam mit einem Erwachsenen.
-11. **Intrinsische Motivation stärken.** Sterne und ein Sticker-Album (56 Sticker) belohnen das
+13. **Intrinsische Motivation stärken.** Sterne und ein Sticker-Album (56 Sticker) belohnen das
     Dranbleiben – ohne Zeitdruck, Ranglisten oder Glücksspielmechaniken.
 
 ### Der Elternbereich
-- **Überblick:** Sterne, Sticker, Lernzeit heute/7 Tage, Wochen-Diagramm, Empfehlungen
+- **Überblick:** Sterne, Sticker, Lernzeit heute/7 Tage, Flos Reise (Station x von y,
+  Lernschwerpunkte je Kapitel, zurücksetzen), Wochen-Diagramm, Empfehlungen
   („gemeinsam üben“, „Stärken“, „noch nicht ausprobiert“), Fortschritt je Lernwelt.
 - **Lernstand:** Stufe, Runden, Quote „auf Anhieb richtig“ und Verlauf je Spiel; Stufe kann
   manuell gesetzt werden.
@@ -153,7 +208,8 @@ vorschul-lernwelt/
 ├── sw.js                   Service Worker (Offline-Cache)
 ├── assets/                 App-Symbol, Schrift „Andika“ (SIL OFL 1.1)
 ├── css/base.css            Design-System (Farben, Kacheln, Buttons, Animationen)
-├── css/games/*.css         Styles der Spielgruppen
+├── css/games/*.css         Styles der Spielgruppen (wissen.css: Forscherwelt & Forscherbuch)
+├── css/reise.css           Styles für Flos Reise
 ├── js/core/
 │   ├── util.js             Zufall, DOM-Helfer, Zeit
 │   ├── storage.js          localStorage mit Fallback
@@ -163,11 +219,13 @@ vorschul-lernwelt/
 │   ├── progress.js         Lernstand, adaptive Stufen, Sterne, Sticker, Zeit
 │   ├── ui.js               Maskottchen Flo, Sprechblase, Lob, Effekte, Kacheln
 │   ├── areas.js            Lernwelten, Spielreihenfolge, Sticker
-│   └── engine.js           Spiel-Schnittstelle & Rundenablauf  ← hier dokumentiert
+│   ├── engine.js           Spiel-Schnittstelle & Rundenablauf  ← hier dokumentiert
+│   └── reise.js            Flos Reise: Kapitel, Stationen, Schatzkisten (Lernpfad)
 ├── js/data/lexikon.js      Bild-Wort-Lexikon (≈ 200 Wörter mit Artikel, Plural, Silben)
 ├── js/games/<gruppe>/      Die Spiele (je Spiel eine Datei)
+├── js/games/wissen/        Forscherwelt: Wissens-Engine (_shared.js), Inhalte (natur/mensch/welt.js), Forscherbuch (buch.js)
 ├── js/voice/             Vorab erzeugte Sprachaufnahmen (index.js + ein Paket je Spiel)
-├── js/app.js               Bildschirme: Start, Weltkarte, Insel, Album, Pause, Eltern
+├── js/app.js               Bildschirme: Start, Weltkarte, Insel, Album, Pause, Eltern (+ Einbindung Reise/Forscherbuch)
 ├── tests/smoke.js          Automatischer Test aller Spiele und Stufen
 └── tools/                  Erzeugen der Sprachaufnahmen (siehe unten)
 ```
@@ -176,13 +234,18 @@ vorschul-lernwelt/
 1. Datei `js/games/<gruppe>/<id>.js` anlegen und `LT.registerGame({...})` aufrufen
    (Schnittstelle siehe Kopfkommentar in `js/core/engine.js`, Vorlage: `js/games/zahlen1/zaehlen.js`).
 2. In `index.html` einbinden und die `id` in `js/core/areas.js` beim passenden Bereich eintragen.
+   Soll das Spiel auf Flos Reise vorkommen, `[id, stufe]` in `js/core/reise.js` beim passenden
+   Kapitel ergänzen (fehlende Spiele werden dort automatisch übersprungen).
 3. Testen: `node tests/smoke.js --game=<id> --repeat=3`.
 
 ### Tests
 ```bash
 cd vorschul-lernwelt
 node tests/smoke.js              # spielt jedes Spiel auf jeder Stufe automatisch durch
-node tests/smoke.js --app        # prüft zusätzlich Weltkarte, Inseln, Album und Elternbereich
+node tests/smoke.js --app        # prüft zusätzlich Weltkarte, Inseln, Flos Reise (Einleitung, Station
+                                 # spielen, Nochmal mit fester Stufe, Wiederholen, Schatzkiste),
+                                 # Forscherbuch (Zähler, Karten, Spielen aus dem Buch, Insel-Knopf),
+                                 # Album und Elternbereich
 node tests/smoke.js --shots=out  # speichert Screenshots
 ```
 Voraussetzung: Node.js und Playwright mit Chromium.
@@ -196,6 +259,8 @@ node tools/build-voice.js jobs --in=said.json --wav=wav --out=jobs.json
 python tools/tts_generate.py --jobs jobs.json --voice juergen   # mehrere Prozesse: --shard 0/2, 1/2
 node tools/build-voice.js pack --in=said.json --wav=wav --voice=juergen
 ```
+Die festen Sätze von Flos Reise liefert `LT.reise.speechTexts()` (Kapitel-Einleitungen,
+Schatzkisten-Geschichten, Hinweise).
 Deutsche Stimmen von Pocket TTS sind z. B. `juergen`, `anna` und `eve`. Bereits vorhandene
 Aufnahmen werden übersprungen.
 

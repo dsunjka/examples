@@ -1,0 +1,354 @@
+/* ==========================================================================
+   Flos Reise – Lernpfad mit Kapitel-Orten, Stationen, Schatzkisten
+   ========================================================================== */
+
+/* ---------- Startseite: Reise- und Forscherbuch-Knöpfe ---------- */
+.home-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--gap);
+  margin-bottom: calc(var(--gap) * 1.3);
+  align-items: stretch;
+}
+.home-top > .daily { margin-bottom: 0; }
+.home-quest { display: flex; gap: var(--gap); min-width: 0; }
+.reise-cta {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: clamp(120px, 20vmin, 180px);
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: clamp(10px, 2vmin, 18px);
+  text-align: left;
+  background:
+    radial-gradient(ellipse 40% 60% at 85% 15%, rgba(255, 255, 255, 0.28), transparent 70%),
+    linear-gradient(135deg, #ff9a3d, #ef6a32 60%, #d9522c);
+  color: #fff;
+  overflow: hidden;
+  border-radius: var(--radius-l);
+  animation: reise-cta-glow 2.6s ease-in-out infinite;
+}
+@keyframes reise-cta-glow {
+  0%, 100% { box-shadow: var(--shadow), 0 0 0 0 rgba(255, 197, 51, 0.0); }
+  50% { box-shadow: var(--shadow), 0 0 0 7px rgba(255, 197, 51, 0.65); }
+}
+.reise-cta .reise-cta-flo { width: clamp(64px, 12vmin, 104px); height: clamp(64px, 12vmin, 104px); flex: 0 0 auto; animation: reise-bob 2.2s ease-in-out infinite; }
+.reise-cta .reise-cta-flo svg { width: 100%; height: 100%; overflow: visible; }
+.reise-cta .reise-cta-text { display: flex; flex-direction: column; gap: 6px; min-width: 0; flex: 1; }
+.reise-cta .reise-cta-title { font-size: clamp(22px, 4.2vmin, 38px); font-weight: 700; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15); display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.reise-cta .reise-cta-places { display: flex; gap: clamp(4px, 1vmin, 10px); align-items: center; flex-wrap: nowrap; overflow: hidden; padding: 12px 6px 4px; margin: -8px -6px 0; }
+.reise-cta .reise-cta-place { font-size: clamp(22px, 4.4vmin, 40px); display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; }
+.reise-cta .reise-cta-place.later { opacity: 0.75; }
+.reise-cta .reise-cta-place.now { font-size: clamp(32px, 6.4vmin, 56px); background: rgba(255, 255, 255, 0.9); padding: 6px; box-shadow: 0 0 0 4px var(--gold); animation: reise-bob 1.6s ease-in-out infinite; }
+.reise-cta .reise-cta-meter { height: 12px; border-radius: 6px; background: rgba(255, 255, 255, 0.35); overflow: hidden; max-width: 260px; }
+.reise-cta .reise-cta-meter > i { display: block; height: 100%; background: #fff; border-radius: 6px; }
+.reise-cta .reise-cta-deco { position: absolute; right: 10px; bottom: 6px; font-size: clamp(34px, 7vmin, 60px); opacity: 0.3; }
+
+.book-cta {
+  flex: 0 0 auto;
+  width: clamp(104px, 17vmin, 150px);
+  min-height: clamp(120px, 20vmin, 180px);
+  background: linear-gradient(160deg, #6f93ff, #4f7cff);
+  color: #fff;
+  border-radius: var(--radius-l);
+}
+.book-cta .emoji { font-size: clamp(44px, 9vmin, 72px); }
+.book-cta span:not(.emoji) { font-size: clamp(15px, 2.4vmin, 20px); font-weight: 700; line-height: 1.1; }
+
+.area-book-btn { margin: 0 auto var(--gap); display: flex; }
+.area-book-row { display: flex; justify-content: center; margin-bottom: var(--gap); }
+
+
+/* ---------- Reise-Bildschirm ---------- */
+.reise-screen {
+  background: linear-gradient(180deg, #fff6e9 0%, #ffeedd 100%);
+  --row: clamp(104px, 15vmin, 136px);
+  --st: clamp(72px, 11vmin, 100px);
+}
+.reise-content { padding-bottom: calc(var(--gap) + 40px); }
+.reise-replay { margin-left: 4px; }
+
+.reise-progress {
+  max-width: 760px;
+  margin: 0 auto calc(var(--gap) * 1.2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: clamp(26px, 4.6vmin, 38px);
+  background: #fff;
+  border-radius: 999px;
+  padding: 8px 18px;
+  box-shadow: var(--shadow);
+}
+.reise-meter { flex: 1; height: 18px; border-radius: 9px; background: #f1e6da; overflow: hidden; box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.08); }
+.reise-meter > i { display: block; height: 100%; border-radius: 9px; background: linear-gradient(90deg, #ffc533, #ef7d32); transition: width 0.6s; }
+.reise-progress-num { font-size: clamp(16px, 2.6vmin, 22px); font-weight: 700; color: var(--ink-soft); }
+
+.reise-map {
+  position: relative;
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--gap) * 1.2);
+}
+
+/* Kapitel-Ort */
+.reise-chapter {
+  position: relative;
+  border-radius: var(--radius-l);
+  background:
+    radial-gradient(ellipse 60% 25% at 50% 0%, rgba(255, 255, 255, 0.55), transparent 70%),
+    linear-gradient(180deg, var(--ch-soft), color-mix(in srgb, var(--ch-soft) 55%, #fff) 100%);
+  box-shadow: var(--shadow), inset 0 0 0 4px color-mix(in srgb, var(--ch) 30%, transparent);
+  padding: 12px 12px 6px;
+  overflow: hidden;
+}
+.reise-chapter.is-current { box-shadow: var(--shadow), inset 0 0 0 5px var(--ch); }
+.reise-chapter.is-dark {
+  background:
+    radial-gradient(circle at 15% 20%, #fff 0 1px, transparent 2px),
+    radial-gradient(circle at 70% 12%, #fff 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 40% 60%, #fff 0 1px, transparent 2px),
+    radial-gradient(circle at 85% 70%, #fff 0 1.5px, transparent 2.5px),
+    radial-gradient(circle at 25% 85%, #fff 0 1px, transparent 2px),
+    linear-gradient(180deg, #2a2c6e, #4b3f9a);
+  background-size: 180px 180px, 220px 220px, 160px 160px, 240px 240px, 200px 200px, 100% 100%;
+}
+.reise-chapter.is-dark .reise-ch-head h2,
+.reise-chapter.is-dark .reise-ch-count { color: #fff; }
+
+.reise-ch-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 6px 0;
+  position: relative;
+  z-index: 2;
+}
+.reise-ch-head h2 { margin: 0; flex: 1; min-width: 0; font-size: clamp(22px, 4vmin, 34px); color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.reise-ch-icon { font-size: clamp(36px, 6.4vmin, 56px); filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.12)); }
+.reise-ch-num {
+  width: 36px; height: 36px; flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--ch);
+  color: #fff;
+  font-weight: 700;
+  font-size: 20px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
+}
+.reise-ch-count { font-size: clamp(16px, 2.6vmin, 22px); font-weight: 700; color: var(--ink-soft); white-space: nowrap; background: rgba(255, 255, 255, 0.7); border-radius: 999px; padding: 4px 10px; }
+.reise-chapter.is-dark .reise-ch-count { background: rgba(255, 255, 255, 0.15); }
+
+.reise-path {
+  position: relative;
+  height: calc(var(--row) * var(--rows));
+}
+.reise-trail { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.reise-trail path { fill: none; vector-effect: non-scaling-stroke; stroke-linecap: round; }
+.reise-trail-bg { stroke: rgba(255, 255, 255, 0.95); stroke-width: 22; filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.08)); }
+.reise-trail-done { stroke: var(--ch); stroke-width: 8; stroke-dasharray: 2 16; opacity: 0.85; }
+.reise-chapter.is-dark .reise-trail-bg { stroke: rgba(255, 255, 255, 0.25); }
+.reise-chapter.is-dark .reise-trail-done { stroke: #ffd75e; }
+
+.reise-deco {
+  position: absolute;
+  font-size: clamp(30px, 5.6vmin, 48px);
+  opacity: 0.55;
+  pointer-events: none;
+  animation: reise-sway 4s ease-in-out infinite;
+}
+.reise-deco:nth-child(odd) { animation-delay: -2s; }
+@keyframes reise-sway { 0%, 100% { transform: rotate(-5deg); } 50% { transform: rotate(5deg) translateY(-4px); } }
+
+/* Station */
+.reise-station, .reise-chest {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: var(--st);
+  height: var(--st);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  z-index: 2;
+}
+.reise-station {
+  background: #fff;
+  box-shadow: 0 0 0 6px var(--world), 0 7px 0 6px rgba(0, 0, 0, 0.12);
+}
+.reise-st-icon { font-size: calc(var(--st) * 0.5); }
+.reise-pips {
+  position: absolute;
+  bottom: calc(var(--st) * -0.2);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 3px;
+  background: #fff;
+  border-radius: 999px;
+  padding: 3px 6px;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.12);
+}
+.reise-pips i { width: 9px; height: 9px; border-radius: 50%; background: var(--gold); box-shadow: inset 0 -1px 0 var(--gold-dark); }
+
+.reise-station.done { background: #fffbe9; }
+.reise-check {
+  position: absolute; right: -8px; top: -8px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--ok); color: #fff;
+  font-size: 20px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2);
+}
+.reise-station.current {
+  box-shadow: 0 0 0 6px var(--gold), 0 7px 0 6px rgba(0, 0, 0, 0.12);
+  animation: reise-pulse 1.5s ease-in-out infinite;
+  z-index: 3;
+}
+@keyframes reise-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 0 6px var(--gold), 0 0 0 6px rgba(255, 197, 51, 0.6), 0 7px 0 6px rgba(0, 0, 0, 0.12); }
+  50% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 0 6px var(--gold), 0 0 0 20px rgba(255, 197, 51, 0), 0 7px 0 6px rgba(0, 0, 0, 0.12); }
+}
+.reise-station.open { box-shadow: 0 0 0 6px var(--world), 0 7px 0 6px rgba(0, 0, 0, 0.12); }
+.reise-station.locked {
+  background: #eceef5;
+  box-shadow: 0 0 0 6px #cfd3e2, 0 6px 0 6px rgba(0, 0, 0, 0.08);
+}
+.reise-station.locked .reise-st-icon { filter: grayscale(1); opacity: 0.4; }
+.reise-station.locked .reise-pips { opacity: 0.5; }
+.reise-lock { position: absolute; right: -6px; top: -8px; font-size: 26px; filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.15)); }
+.reise-station.shake { animation: reise-shake 0.5s; }
+@keyframes reise-shake {
+  0%, 100% { transform: translate(-50%, -50%); }
+  25% { transform: translate(calc(-50% - 8px), -50%) rotate(-6deg); }
+  75% { transform: translate(calc(-50% + 8px), -50%) rotate(6deg); }
+}
+
+/* Schatzkiste */
+.reise-chest {
+  width: calc(var(--st) * 1.1);
+  height: calc(var(--st) * 1.1);
+  background: radial-gradient(circle, #fff7d6, #ffe3a0);
+  box-shadow: 0 0 0 6px var(--gold-dark), 0 7px 0 6px rgba(0, 0, 0, 0.12);
+  font-size: calc(var(--st) * 0.62);
+}
+.reise-chest.locked { filter: grayscale(0.85); opacity: 0.7; }
+.reise-chest.ready { animation: reise-chest-wiggle 1.2s ease-in-out infinite; z-index: 3; }
+@keyframes reise-chest-wiggle {
+  0%, 100% { transform: translate(-50%, -50%) rotate(0) scale(1); box-shadow: 0 0 0 6px var(--gold), 0 0 0 6px rgba(255, 197, 51, 0.7), 0 7px 0 6px rgba(0, 0, 0, 0.12); }
+  25% { transform: translate(-50%, -50%) rotate(-8deg) scale(1.08); }
+  50% { box-shadow: 0 0 0 6px var(--gold), 0 0 0 22px rgba(255, 197, 51, 0), 0 7px 0 6px rgba(0, 0, 0, 0.12); }
+  75% { transform: translate(-50%, -50%) rotate(8deg) scale(1.08); }
+}
+.reise-chest.opened { background: radial-gradient(circle, #fff, #fff1c4); }
+
+/* Verborgener Ort */
+.reise-chapter.is-veiled {
+  min-height: clamp(110px, 18vmin, 150px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  cursor: pointer;
+  background:
+    radial-gradient(ellipse 30% 45% at 18% 80%, rgba(255, 255, 255, 0.85), transparent 70%),
+    radial-gradient(ellipse 35% 50% at 82% 25%, rgba(255, 255, 255, 0.8), transparent 70%),
+    linear-gradient(180deg, color-mix(in srgb, var(--ch) 22%, #e4e8f4), #d3d9ea);
+  box-shadow: var(--shadow), inset 0 0 0 4px rgba(255, 255, 255, 0.6);
+}
+.reise-chapter.is-veiled .reise-ch-num { position: absolute; left: 14px; top: 12px; background: #9aa0bf; }
+.reise-clouds { font-size: clamp(44px, 8vmin, 70px); display: flex; gap: 6px; align-items: center; animation: reise-sway 5s ease-in-out infinite; }
+.reise-clouds .emoji:nth-child(2) { font-size: 0.75em; opacity: 0.7; }
+.reise-veil-lock { position: absolute; right: 16px; top: 12px; font-size: 30px; opacity: 0.8; }
+.reise-chapter.is-veiled.shake { animation: tile-shake 0.5s; }
+
+.reise-later { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+.reise-later-cloud {
+  appearance: none; border: 0; cursor: pointer;
+  position: relative;
+  width: 72px; height: 64px;
+  border-radius: 32px;
+  background: linear-gradient(180deg, #eef1f9, #d5dbec);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.1);
+  font-size: 40px;
+  display: flex; align-items: center; justify-content: center;
+}
+.reise-later-cloud span:not(.emoji) { position: absolute; font: 700 16px var(--font); color: var(--ink-soft); top: 50%; left: 50%; transform: translate(-50%, -30%); }
+.reise-goal { display: flex; flex-direction: column; align-items: center; padding: 6px 0 10px; opacity: 0.9; }
+.reise-goal-icon { font-size: clamp(54px, 10vmin, 84px); }
+.reise-goal p { margin: 0; font-weight: 700; font-size: 20px; color: var(--ink-soft); }
+
+/* Flo, die Reisefigur */
+.reise-flo {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: calc(var(--st) * 0.95);
+  height: calc(var(--st) * 0.95);
+  z-index: 6;
+  cursor: pointer;
+  filter: drop-shadow(0 6px 4px rgba(0, 0, 0, 0.2));
+  will-change: transform;
+}
+.reise-flo svg { width: 100%; height: 100%; overflow: visible; animation: reise-bob 1.8s ease-in-out infinite; transform-origin: 50% 100%; }
+.reise-flo .tail { transform-box: fill-box; transform-origin: 10% 90%; animation: wag 2.4s ease-in-out infinite; }
+.reise-flo .eye { transform-box: fill-box; transform-origin: center; animation: blink 5s infinite; }
+.reise-flo .mouth-open { transform: scaleY(0.15); transform-box: fill-box; transform-origin: center top; }
+.reise-flo.reise-flo-joy svg { animation: reise-joy 0.7s ease-out; }
+@keyframes reise-bob { 0%, 100% { transform: translateY(0) scaleY(1); } 45% { transform: translateY(-8px) scaleY(1.03); } 55% { transform: translateY(-8px); } 90% { transform: translateY(0) scaleY(0.96); } }
+@keyframes reise-joy { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-26px) rotate(-8deg); } 70% { transform: translateY(0) rotate(5deg); } }
+
+/* ---------- Overlays: Kapitel-Einleitung & Schatzkiste ---------- */
+.reise-intro .panel, .reise-chest-overlay .panel {
+  background: linear-gradient(180deg, var(--ch-soft), var(--paper) 70%);
+  box-shadow: var(--shadow), inset 0 0 0 6px var(--ch);
+}
+.reise-intro-place { display: flex; justify-content: center; }
+.reise-intro-icon { font-size: clamp(76px, 16vmin, 130px); animation: reise-bob 2s ease-in-out infinite; }
+.reise-intro h2 { color: var(--ch); }
+.reise-intro-deco { display: flex; justify-content: center; gap: 12px; font-size: clamp(32px, 6vmin, 50px); }
+.reise-intro-deco .emoji { animation: reise-sway 3s ease-in-out infinite; }
+.reise-intro-deco .emoji:nth-child(even) { animation-delay: -1.5s; }
+.reise-story { line-height: 1.4; }
+.reise-chest-big { font-size: clamp(80px, 18vmin, 140px); display: inline-block; animation: reise-chest-wiggle-big 0.5s ease-in-out infinite; }
+.reise-chest-big.open { animation: sticker-pop 0.8s cubic-bezier(0.2, 1.6, 0.4, 1); }
+@keyframes reise-chest-wiggle-big { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(6deg) scale(1.05); } }
+.reise-reward { min-height: 10px; }
+
+/* ---------- Elternbereich ---------- */
+.p-reise-list { list-style: none; padding: 0; margin: 8px 0; }
+.p-reise-list li { display: flex; gap: 10px; align-items: flex-start; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.p-reise-list li b { white-space: nowrap; }
+.p-reise-list .p-muted { display: block; }
+
+/* ---------- Kleine Displays ---------- */
+@media (max-width: 900px) {
+  .home-top .daily { justify-content: center; gap: 10px; }
+  .home-top .daily .daily-title { flex: 1 1 100%; justify-content: center; }
+  .home-top .daily .stations { flex: 0 1 auto; flex-wrap: nowrap; gap: 6px; }
+}
+@media (max-width: 520px) {
+  .reise-cta .reise-cta-place.far { display: none; }
+  .home-top .daily .station { width: 64px; height: 64px; font-size: 32px; }
+  .home-top .daily .station-arrow { font-size: 20px; }
+  .home-top .daily .chest { font-size: 44px; }
+  .reise-screen { --row: 100px; --st: 70px; }
+  .reise-chapter { padding: 10px 8px 4px; }
+  .reise-ch-head h2 { font-size: 21px; }
+  .reise-ch-icon { font-size: 32px; }
+  .reise-ch-num { width: 30px; height: 30px; font-size: 17px; }
+  .reise-progress { padding: 6px 12px; gap: 8px; font-size: 24px; }
+  .reise-deco { font-size: 28px; opacity: 0.45; }
+  .reise-cta { min-height: 112px; }
+  .book-cta { width: 104px; min-height: 112px; }
+}
+@media (max-height: 520px) and (orientation: landscape) {
+  .reise-screen { --row: 96px; --st: 66px; }
+}
+.reise-flo.look-left svg { scale: -1 1; }

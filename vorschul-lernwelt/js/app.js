@@ -1,7 +1,8 @@
 /* ==========================================================================
    LT.app – Bildschirme der Lernwelt:
-   Start → Weltkarte (Tagesabenteuer + Inseln) → Insel (Spiele) → Spiel
-   außerdem: Sticker-Album, Bewegungspause, Tageslimit, Elternbereich.
+   Start → Weltkarte (Flos Reise + Tagesabenteuer + Inseln) → Insel (Spiele) → Spiel
+   außerdem: Flos Reise (Lernpfad, js/core/reise.js), Forscherbuch,
+   Sticker-Album, Bewegungspause, Tageslimit, Elternbereich.
    ========================================================================== */
 (function () {
   'use strict';
@@ -62,6 +63,7 @@
     }
     return true;
   }
+  A.gate = gate;
 
   const MOVES = [
     ['🐸', 'Hüpfe fünfmal wie ein Frosch!'],
@@ -203,7 +205,9 @@
     return adv;
   }
 
-  A.onRoundFinished = function (gameId) {
+  A.onRoundFinished = function (gameId, result) {
+    fixForcedLevel(gameId, result);
+    if (LT.reise) LT.reise.onRoundFinished(gameId, result);
     const adv = P.profile.adventure;
     if (!adv || adv.date !== U.today()) return;
     const i = adv.games.indexOf(gameId);
@@ -212,6 +216,41 @@
       P.save();
     }
   };
+
+  /**
+   * Wurde ein Spiel mit fester Stufe gestartet (Station von Flos Reise), rechnet
+   * LT.progress die Anpassung von der gespeicherten Stufe aus. Hier wird sie
+   * richtiggestellt: gespielt wurde `forced.level`. War das Kind schon weiter,
+   * bleibt seine höhere Stufe erhalten (keine Rückstufung durch die Reise).
+   */
+  let forced = null; // { id, level, saved, savedMax, savedMastered }
+  function fixForcedLevel(gameId, result) {
+    if (!forced || forced.id !== gameId || !result) return;
+    const def = LT.games[gameId] || {};
+    const rec = P.game(gameId);
+    const max = def.levels || 1;
+    const played = forced.level;
+    const score = result.score;
+    let after = played;
+    if (score != null && def.type !== 'free') {
+      if (score >= 0.8 && played < max) after = played + 1;
+      else if (score < 0.5 && played > 1) after = played - 1;
+    }
+    const base = Math.max(forced.saved, played);
+    const final = forced.saved > played ? forced.saved : after;
+    rec.level = final;
+    rec.maxLevelReached = Math.max(forced.savedMax, final, played);
+    rec.mastered = !!(forced.savedMastered || (score === 1 && played === max));
+    const last = rec.history[rec.history.length - 1];
+    if (last) last.level = played;
+    forced.saved = final; // für „Nochmal“
+    forced.savedMax = rec.maxLevelReached;
+    forced.savedMastered = rec.mastered;
+    result.levelBefore = base;
+    result.levelAfter = final;
+    result.levelChange = final - base;
+    P.save(true);
+  }
 
   function renderAdventure() {
     const adv = adventure();
@@ -232,7 +271,7 @@
     });
     const chest = el('span.chest.emoji' + (allDone && !adv.rewarded ? '.open' : ''), adv.rewarded ? '🎉' : '🎁');
     const box = el('div.daily',
-      el('div.daily-title', U.emoji('🗺️'), el('span', 'Tagesabenteuer')),
+      el('div.daily-title', U.emoji('☀️'), el('span', 'Tagesabenteuer')),
       stations,
       el('span.station-arrow', '➜'),
       chest
@@ -262,6 +301,57 @@
   }
 
   /* ------------------------------------------------------------------
+     Flos Reise & Forscherbuch: große Knöpfe auf der Weltkarte
+     ------------------------------------------------------------------ */
+  function hasBook() {
+    return !!(LT.wissen && typeof LT.wissen.showBook === 'function');
+  }
+  function openBook(onBack) {
+    if (!hasBook()) return;
+    LT.sfx.play('click');
+    A.screen = 'book';
+    LT.engine.stop();
+    LT.wissen.showBook({ onBack });
+  }
+  A.openBook = openBook;
+
+  function renderQuest() {
+    const box = el('div.home-quest');
+    if (LT.reise) {
+      const sum = LT.reise.summary();
+      const pct = sum.total ? Math.round((sum.done / sum.total) * 100) : 0;
+      const ch = sum.chapter;
+      const cta = el('button.card-btn.reise-cta', {
+        'aria-label': 'Flos Reise',
+        title: 'Flos Reise',
+        on: { click: () => { LT.sfx.play('click'); LT.reise.show(); } },
+      },
+        el('span.reise-cta-flo', { html: LT.ui.floSVG() }),
+        el('span.reise-cta-text',
+          el('span.reise-cta-title', U.emoji('🗺️'), el('span', 'Flos Reise')),
+          el('span.reise-cta-places', sum.chapters.map((c, i, all) => {
+            const cur = ch ? all.findIndex((x) => x.id === ch.id) : all.length - 1;
+            const far = i < cur - 1 || i > Math.max(cur, 1) + 2 ? '.far' : '';
+            return el('span.reise-cta-place' + (ch && c.id === ch.id ? '.now' : c.opened ? '.past' : '.later') + far, U.emoji(c.unlocked ? c.icon : '☁️'));
+          })),
+          el('span.reise-cta-meter', { title: `${sum.done} von ${sum.total}` }, el('i', { style: { width: pct + '%' } }))
+        ),
+        el('span.reise-cta-deco.emoji', { 'aria-hidden': 'true' }, '🏰')
+      );
+      box.appendChild(cta);
+    }
+    if (hasBook()) {
+      box.appendChild(
+        el('button.card-btn.book-cta', { 'aria-label': 'Forscherbuch', title: 'Forscherbuch', on: { click: () => openBook(A.showHome) } },
+          U.emoji('📚'),
+          el('span', 'Forscher\u00ADbuch')
+        )
+      );
+    }
+    return box.children.length ? box : null;
+  }
+
+  /* ------------------------------------------------------------------
      Weltkarte (Startseite)
      ------------------------------------------------------------------ */
   A.showHome = function (fromSplash) {
@@ -275,12 +365,16 @@
     const content = el('div.content');
     screen.appendChild(content);
     LT.ui.setMascot({ big: true });
-    LT.ui.onMascotTap = () => LT.speech.say('Tippe auf eine Insel! Oder spiel das Tagesabenteuer mit den drei Stationen.');
+    LT.ui.onMascotTap = () => LT.speech.say(LT.reise ? 'Tippe auf eine Insel! Oder spiel das Tagesabenteuer mit den drei Stationen. Auf Flos Reise gehen wir Schritt für Schritt immer weiter.' : 'Tippe auf eine Insel! Oder spiel das Tagesabenteuer mit den drei Stationen.');
 
     const name = P.name();
     content.appendChild(el('div.home-head', el('h1', name ? `Hallo ${name}!` : 'Hallo!')));
+    const top = el('div.home-top');
+    const quest = renderQuest();
+    if (quest) top.appendChild(quest);
     const adv = renderAdventure();
-    if (adv) content.appendChild(adv);
+    if (adv) top.appendChild(adv);
+    content.appendChild(top);
 
     const grid = el('div.areas');
     LT.areas.forEach((a) => {
@@ -328,6 +422,14 @@
     LT.ui.setMascot({ big: false });
     LT.ui.onMascotTap = () => LT.speech.say(a.hello + ' Tippe auf ein Spiel!');
 
+    if (areaId === 'wissen' && hasBook()) {
+      content.appendChild(
+        el('div.area-book-row',
+          LT.ui.button('Mein Forscherbuch', () => openBook(() => A.showArea('wissen')), { icon: '📚', cls: 'btn-primary', big: true })
+        )
+      );
+    }
+
     const grid = el('div.grid');
     LT.gamesOfArea(areaId).forEach((g) => {
       const rec = P.profile.games[g.id];
@@ -355,13 +457,24 @@
     }
   };
 
-  function startGame(id, { from } = {}) {
-    if (!gate(() => startGame(id, { from }))) return;
+  /**
+   * Spiel starten. from: 'home' | 'area' | 'reise'; level: feste Stufe (Station der Reise).
+   */
+  function startGame(id, { from, level } = {}) {
+    if (!gate(() => startGame(id, { from, level }))) return;
     const g = LT.games[id];
     if (!g) return;
     A.screen = 'game';
-    const back = from === 'home' ? A.showHome : () => A.showArea(g.area);
-    LT.engine.start(id, { onExit: () => back() });
+    let back = () => A.showArea(g.area);
+    if (from === 'home') back = A.showHome;
+    else if (from === 'reise' && LT.reise) back = () => LT.reise.onGameExit();
+    const opts = { onExit: () => { forced = null; back(); } };
+    if (level) {
+      const rec = P.game(id);
+      opts.level = U.clamp(level, 1, g.levels || 1);
+      forced = { id, level: opts.level, saved: rec.level || 1, savedMax: rec.maxLevelReached || 1, savedMastered: !!rec.mastered };
+    } else forced = null;
+    LT.engine.start(id, opts);
   }
   A.startGame = startGame;
 
@@ -507,6 +620,7 @@
         kpi(tasks ? Math.round((first / tasks) * 100) + ' %' : '–', 'auf Anhieb richtig')
       )
     );
+    if (LT.reise) body.appendChild(renderReiseCard());
     const maxSec = Math.max(60, ...week.map((w) => w.sec));
     body.appendChild(
       el('div.p-card',
@@ -551,6 +665,44 @@
     });
     areaCard.appendChild(table);
     body.appendChild(areaCard);
+  }
+  function renderReiseCard() {
+    const sum = LT.reise.summary();
+    const card = el('div.p-card', el('h3', '🗺️ Flos Reise – der Lernpfad'));
+    const cur = sum.chapter;
+    card.appendChild(
+      el('p', el('b', `Station ${Math.min(sum.done + (sum.finished ? 0 : 1), sum.total)} von ${sum.total}`),
+        ` · ${sum.done} geschafft · `, sum.finished ? 'Reise abgeschlossen 🏆' : `aktuelles Kapitel: ${cur.icon} ${cur.title}`)
+    );
+    card.appendChild(el('div.p-bar', { style: { height: '14px' } }, el('i', { style: { width: (sum.total ? Math.round((sum.done / sum.total) * 100) : 0) + '%' } })));
+    card.appendChild(el('p.p-muted', 'Acht Kapitel, in denen die Fähigkeiten aufeinander aufbauen (Spiralcurriculum): Jede Fähigkeit kommt zuerst leicht und später auf höherer Stufe wieder. Eine Station gilt nach einer beendeten Runde als geschafft; die Stufe der Station wird fest gespielt, eine bereits höhere Stufe Ihres Kindes bleibt erhalten.'));
+    const list = el('ul.p-reise-list');
+    sum.chapters.forEach((c, i) => {
+      list.appendChild(
+        el('li',
+          el('span', c.opened ? '✅' : c.unlocked ? '🟡' : '⚪'),
+          el('div',
+            el('b', `${i + 1}. ${c.icon} ${c.title}`), ` – ${c.done}/${c.total} Stationen`,
+            el('span.p-muted', c.focus)
+          )
+        )
+      );
+    });
+    card.appendChild(el('details.p-details', el('summary', 'Kapitel und Lernschwerpunkte'), list));
+    if (sum.missing.length) card.appendChild(el('p.p-muted', `Noch nicht vorhandene Spiele werden übersprungen (${sum.missing.length}).`));
+    card.appendChild(
+      el('div.p-row',
+        el('button.p-btn.light', { on: { click: () => { A.screen = null; LT.reise.show({ onBack: A.showHome }); } } }, '🗺️ Reise ansehen'),
+        el('button.p-btn.danger', { on: { click: () => {
+          if (confirm('Flos Reise wirklich zurücksetzen? Sterne, Sticker und Stufen bleiben erhalten.')) {
+            LT.reise.reset();
+            LT.ui.toast('Reise zurückgesetzt');
+            A.showParents('overview');
+          }
+        } } }, '↺ Reise zurücksetzen')
+      )
+    );
+    return card;
   }
   function kpi(value, label) {
     return el('div.p-kpi', el('b', value), el('span', label));
@@ -664,6 +816,7 @@
         el('button.p-btn.danger', { on: { click: () => {
           if (confirm('Wirklich den gesamten Fortschritt (Sterne, Sticker, Stufen) löschen?')) {
             P.reset();
+            if (LT.reise) LT.reise.reset();
             LT.ui.toast('Alles zurückgesetzt');
             A.showParents('settings');
           }
@@ -707,6 +860,8 @@
           el('li', el('b', 'Kurze Einheiten. '), 'Eine Runde dauert 2–4 Minuten. Bewegungspausen und ein optionales Tageslimit helfen bei einem gesunden Umgang mit Bildschirmzeit.'),
           el('li', el('b', 'Konkret – bildlich – symbolisch. '), 'Zahlen und Buchstaben werden immer mit Bildern, Mengen und Lauten verknüpft (EIS-Prinzip nach Bruner).'),
           el('li', el('b', 'Ausgewogen üben. '), 'Das Tagesabenteuer schlägt jeden Tag drei Spiele aus verschiedenen Bereichen vor und bevorzugt Neues sowie Spiele mit Übungsbedarf.'),
+          el('li', el('b', 'Schritt für Schritt: Flos Reise. '), 'Ein Lernpfad mit acht Kapitel-Orten führt durch ein aufeinander aufbauendes Curriculum (Spiralcurriculum nach Bruner): Jede Fähigkeit wird zuerst auf der leichtesten Stufe eingeführt und kommt später auf höherer Stufe wieder. Jedes Kapitel mischt Zahlen, Sprache, Formen, Denken, Sachwissen und Malen (verschachteltes Üben). Eine kleine Geschichte je Ort gibt dem Lernen einen roten Faden.'),
+          el('li', el('b', 'Sachwissen mit Geschichten. '), 'In der Forscherwelt folgt jede Wissensreise dem Ablauf Entdecken (Bildergeschichte zum Mitmachen) – Verstehen (Fragen mit kurzer Begründung) – Anwenden (Mitmachspiel) – Sichern (Wissenskarte fürs Forscherbuch). Das Forscherbuch lädt zum Wiederholen und Erzählen ein.'),
           el('li', el('b', 'Motivation. '), 'Sterne und ein Sticker-Album belohnen das Dranbleiben – ohne Zeitdruck, Werbung oder In-App-Käufe.')
         ),
         el('p', el('b', 'Ihre Rolle: '), 'Kinder lernen am besten im Gespräch. Setzen Sie sich ab und zu dazu, fragen Sie „Wie hast du das herausgefunden?“ und greifen Sie Themen im Alltag auf. Die Tipps zu jedem Spiel finden Sie unten.')
@@ -737,6 +892,8 @@
         el('h3', 'So funktioniert die Lernwelt'),
         el('ul',
           el('li', 'Auf der Weltkarte wählt Ihr Kind eine Insel und dann ein Spiel. Eine Runde hat meist 5 Aufgaben.'),
+          el('li', 'Der große Knopf „Flos Reise“ führt Schritt für Schritt über einen Pfad: Die leuchtende Station ist die nächste, verschlossene Stationen öffnen sich nacheinander. Am Ende jedes Kapitels wartet eine Schatzkiste mit Bonus-Sticker.'),
+          el('li', 'Im Forscherbuch sammelt Ihr Kind die Wissenskarten aus der Forscherwelt.'),
           el('li', 'Die Punkte oben zeigen den Fortschritt der Runde. Gelbe Punkte = auf Anhieb richtig.'),
           el('li', 'Für jede Runde gibt es 1–3 Sterne, für je 4 Sterne einen neuen Sticker im Album.'),
           el('li', '🔊 bzw. ein Tipp auf Flo wiederholt die Aufgabe. ⬅️ führt zurück.'),
