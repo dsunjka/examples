@@ -53,14 +53,15 @@ if (mode === 'jobs') {
   const chars = jobs.reduce((n, j) => n + j[0].length, 0);
   console.log(`${jobs.length} Sätze, ${chars} Zeichen (≈ ${(chars / 14 / 3600).toFixed(1)} h Audio). Fehlend: ${jobs.filter((j) => !fs.existsSync(j[1])).length}`);
 } else if (mode === 'pack') {
-  const kbps = Number(args.kbps || 32);
+  const kbps = Number(args.kbps || 24);
+  const rate = Number(args.rate || 16000);
   const outDir = path.join(ROOT, 'js/voice');
   fs.mkdirSync(outDir, { recursive: true });
   const packs = {};
   const map = {};
   let missing = 0;
   let n = 0;
-  const cache = path.join(WAV, `mp3-${kbps}`);
+  const cache = path.join(WAV, `mp3-${rate}-${kbps}`);
   fs.mkdirSync(cache, { recursive: true });
   for (const [k, e] of sentences) {
     const wav = wavPath(k);
@@ -68,10 +69,15 @@ if (mode === 'jobs') {
     const h = V.hash(k);
     const mp3 = path.join(cache, h + '.mp3');
     if (!fs.existsSync(mp3)) {
-      // Stille am Anfang/Ende kürzen, leicht normalisieren, Mono 24 kHz MP3
+      // Stille am Anfang/Ende kürzen, Mono-MP3 (16 kHz reicht für Sprache)
+      // Lautstärke angleichen: mittlere Lautheit auf −19 dB, Spitzen höchstens −1 dB
+      const det = require('child_process').spawnSync('ffmpeg', ['-hide_banner', '-i', wav, '-af', 'volumedetect', '-f', 'null', '-'], { encoding: 'utf8' }).stderr;
+      const mean = Number((det.match(/mean_volume:\s*(-?[\d.]+)/) || [])[1] || -19);
+      const peak = Number((det.match(/max_volume:\s*(-?[\d.]+)/) || [])[1] || -1);
+      const gain = Math.min(-19 - mean, -1 - peak).toFixed(2);
       execFileSync('ffmpeg', ['-loglevel', 'error', '-y', '-i', wav, '-af',
-        'silenceremove=start_periods=1:start_threshold=-50dB:start_silence=0.05,areverse,silenceremove=start_periods=1:start_threshold=-50dB:start_silence=0.12,areverse,loudnorm=I=-18:TP=-2:LRA=11',
-        '-ac', '1', '-ar', '24000', '-b:a', kbps + 'k', mp3]);
+        `silenceremove=start_periods=1:start_threshold=-50dB:start_silence=0.05,areverse,silenceremove=start_periods=1:start_threshold=-50dB:start_silence=0.12,areverse,volume=${gain}dB`,
+        '-ac', '1', '-ar', String(rate), '-b:a', kbps + 'k', mp3]);
     }
     const p = packOf(e);
     (packs[p] = packs[p] || {})[h] = fs.readFileSync(mp3).toString('base64');
