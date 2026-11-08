@@ -355,6 +355,134 @@ try {
     check((await page.textContent('#inhalt')).includes('Dein Bestwert: 47'), 'Tempo-Rekord geht verloren');
     await page.context().close();
   }
+
+  const doppelteIds = (page) => page.evaluate(() => { const ids = [...document.querySelectorAll('[id]')].map((e) => e.id); return ids.filter((x, i) => ids.indexOf(x) !== i); });
+  async function trainingStarten(page, modul = 'rechtschreibung') {
+    await page.click(`.labor-karte[data-nav="${modul}"]`);
+    await page.click('[data-act="training-gruppe"]');
+    await page.waitForSelector('.frage-text');
+  }
+  async function richtigPruefen(page) {
+    const it = await aktuellesItem(page); await beantworte(page, it, true);
+    await page.click('[data-act="s-pruefen"]');
+  }
+
+  console.log('• Effekte: keine doppelten IDs, Effekt-Stufe im Erwachsenen-Bereich bedienbar');
+  {
+    const page = await seite();
+    await profilAnlegen(page);
+    check((await doppelteIds(page)).length === 0, 'Startseite hat doppelte IDs: ' + (await doppelteIds(page)).join(', '));
+    await erwachseneOeffnen(page);
+    check((await doppelteIds(page)).length === 0, 'Erwachsenen-Bereich hat doppelte IDs: ' + (await doppelteIds(page)).join(', '));
+    const frei = await page.evaluate(() => { const s = document.getElementById('effekte'); const r = s.getBoundingClientRect(); s.scrollIntoView({ block: 'center' }); const r2 = s.getBoundingClientRect(); return getComputedStyle(s).position !== 'fixed' && r.width < 700 && document.elementFromPoint(r2.left + r2.width / 2, r2.top + r2.height / 2) === s; });
+    check(frei, 'Auswahl „Effekte“ ist verdeckt oder als Vollbild-Ebene gestylt');
+    await page.selectOption('#effekte', 'aus');
+    check(await page.evaluate(() => document.documentElement.classList.contains('fx-aus')), 'Effekt-Stufe „aus“ wirkt nicht');
+    await page.selectOption('#effekte', 'sanft');
+    check(await page.evaluate(() => document.documentElement.classList.contains('fx-sanft')), 'Effekt-Stufe „sanft“ wirkt nicht');
+    check(await page.getAttribute('#fx-ebene', 'aria-hidden') === 'true', 'Effekt-Ebene ist für Bildschirmleser nicht verborgen');
+    await page.context().close();
+  }
+
+  console.log('• Effekte: Glitzer und Münzflug im sichtbaren Bereich, Combo, Reise-Leiste, Toast lässt Taps durch');
+  {
+    const page = await seite();
+    await profilAnlegen(page);
+    await trainingStarten(page);
+    check(await page.evaluate(() => document.documentElement.classList.contains('in-sitzung')), 'Sitzung setzt die Klasse in-sitzung nicht');
+    check(await page.isVisible('.sitzung-kopf .reise'), 'Reise-Leiste fehlt im Sitzungskopf');
+    check((await doppelteIds(page)).length === 0, 'Sitzung hat doppelte IDs: ' + (await doppelteIds(page)).join(', '));
+    await richtigPruefen(page);
+    const wolke = await page.waitForSelector('#fx-ebene .glitzer-wolke', { state: 'attached', timeout: 2000 }).catch(() => null);
+    check(!!wolke, 'kein Glitzer nach richtiger Antwort');
+    if (wolke) {
+      const pos = await wolke.evaluate((el) => ({ x: parseFloat(el.style.left), y: parseFloat(el.style.top), w: innerWidth, h: innerHeight }));
+      check(pos.x > 0 && pos.x < pos.w && pos.y > 0 && pos.y < pos.h, `Glitzer außerhalb des Bildschirms (${Math.round(pos.x)}, ${Math.round(pos.y)})`);
+    }
+    check(!!(await page.$('#fx-ebene .punkte-flug.zum-chip')), 'Punkte fliegen nicht zum Punkte-Chip');
+    const abz = await page.waitForSelector('#fx-ebene .abzeichen-neu', { state: 'attached', timeout: 2500 }).catch(() => null);
+    check(!!abz, 'Abzeichen „Erster Versuch“ wird nicht groß gezeigt');
+    await page.waitForTimeout(150);
+    check((await page.textContent('#sr-meldung')).includes('Erster Versuch'), 'Abzeichen wird dem Bildschirmleser nicht angesagt');
+    check(await page.$eval('#toast', (t) => getComputedStyle(t).pointerEvents) === 'none', 'Toast fängt Taps ab');
+    await page.click('[data-act="s-weiter"]');
+    await richtigPruefen(page);
+    await page.waitForTimeout(200);
+    const combo = await page.$('.sitzung-kopf .combo');
+    check(!!combo && (await combo.textContent()).includes('2'), 'Combo-Anzeige nach zwei richtigen Antworten fehlt');
+    await page.waitForTimeout(3500);
+    check(await page.$$eval('#fx-ebene > *', (e) => e.length) === 0, 'Effekt-Ebene wird nicht aufgeräumt');
+    await page.context().close();
+  }
+
+  console.log('• Handy: Belohnungs-Effekte lassen die Seite nie seitlich überstehen (kein Heraus-Zoomen)');
+  {
+    const ctx = await browser.newContext({ ...devices['iPhone 13'] });
+    const page = await ctx.newPage();
+    await page.goto(URL);
+    await profilAnlegen(page);
+    await trainingStarten(page, 'grammatik');
+    let maxBreite = 0, maxScroll = 0;
+    for (let k = 0; k < 3; k++) {
+      await richtigPruefen(page);
+      for (let i = 0; i < 16; i++) {
+        const m = await page.evaluate(() => [window.innerWidth, document.documentElement.scrollWidth]);
+        maxBreite = Math.max(maxBreite, m[0]); maxScroll = Math.max(maxScroll, m[1]);
+        await page.waitForTimeout(100);
+      }
+      const r = await page.$eval('.rueckmeldung', (el) => { const b = el.getBoundingClientRect(); return b.top < innerHeight && b.bottom > 0; });
+      check(r, `Rückmeldung nach dem Prüfen nicht im Bild (Aufgabe ${k + 1})`);
+      await page.click('[data-act="s-weiter"]');
+      await page.waitForTimeout(300);
+    }
+    check(maxBreite <= 390 && maxScroll <= 391, `Seite steht seitlich über (Fensterbreite ${maxBreite}, Inhaltsbreite ${maxScroll})`);
+    await ctx.close();
+  }
+
+  console.log('• Feier-Warteschlange: Level-up und Abzeichen erscheinen nacheinander, nie übereinander');
+  {
+    const page = await seite();
+    await profilAnlegen(page);
+    await page.waitForTimeout(400);
+    await page.evaluate((k) => { const d = JSON.parse(localStorage.getItem(k)); d.profile[d.aktivesProfil].punkte = 148; localStorage.setItem(k, JSON.stringify(d)); }, KEY);
+    await page.reload();
+    await trainingStarten(page);
+    await richtigPruefen(page);
+    let beide = 0, sahLevel = false, sahAbz = false;
+    for (let i = 0; i < 80; i++) {
+      const s = await page.evaluate(() => [!!document.querySelector('#fx-ebene .levelup'), !!document.querySelector('#fx-ebene .abzeichen-neu')]);
+      if (s[0] && s[1]) beide++; if (s[0]) sahLevel = true; if (s[1]) sahAbz = true;
+      await page.waitForTimeout(100);
+    }
+    check(sahLevel && sahAbz, `Level-up (${sahLevel}) oder Abzeichen (${sahAbz}) wurde nicht gezeigt`);
+    check(beide === 0, 'Level-up und Abzeichen liegen übereinander');
+    await page.context().close();
+  }
+
+  console.log('• Effekte „aus“: kein Glitzer, Abzeichen als ruhige Meldung; Dialog pausiert den Hintergrund; Boss-Intro');
+  {
+    const page = await seite();
+    await profilAnlegen(page);
+    await page.waitForTimeout(400);
+    await page.evaluate((k) => { const d = JSON.parse(localStorage.getItem(k)); d.einstellungen.effekte = 'aus'; localStorage.setItem(k, JSON.stringify(d)); }, KEY);
+    await page.reload();
+    await trainingStarten(page);
+    await richtigPruefen(page);
+    await page.waitForTimeout(1600);
+    check(!(await page.$('#fx-ebene .glitzer-wolke, #fx-ebene .abzeichen-neu, #fx-ebene .punkte-flug')), 'Bei „aus“ erscheinen trotzdem Effekte');
+    check((await page.isVisible('#toast')) && (await page.textContent('#toast')).includes('Erster Versuch'), 'Bei „aus“ fehlt die ruhige Abzeichen-Meldung');
+    await page.click('[data-act="s-beenden"]'); if (await page.isVisible('.dialog')) await page.click('.dialog [data-dlg="1"]');
+    await page.click('[data-nav="start"]').catch(() => {});
+    await page.click('.pruefung-band [data-act="pruef-intro"]');
+    check(await page.isVisible('.karte.boss-intro .boss-label'), 'Prüfungsstart ohne Boss-Intro');
+    await page.click('[data-act="pruef-los"]');
+    await page.click('.sitzung-kopf [data-act="s-abgeben"]');
+    await page.waitForSelector('.dialog');
+    check(await page.evaluate(() => document.documentElement.classList.contains('dialog-offen')), 'Dialog pausiert den Hintergrund nicht');
+    await page.click('.dialog [data-dlg="0"]');
+    check(!(await page.evaluate(() => document.documentElement.classList.contains('dialog-offen'))), 'Hintergrund bleibt nach dem Dialog pausiert');
+    await page.context().close();
+  }
 } catch (e) {
   fehler++;
   console.log('  ✗ Testabbruch: ' + (e && e.stack ? e.stack.split('\n').slice(0, 3).join(' | ') : e));

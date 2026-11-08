@@ -273,6 +273,7 @@ function starteApp() {
   baueRegister();
   try { sternenhimmel(); } catch (e) { /* Hintergrund ist nur Schmuck */ }
   wendeEinstellungenAn();
+  try { pruefeLeistung(); } catch (e) { /* nur Schmuck */ }
   if (DB.aktivesProfil && !DB.profile[DB.aktivesProfil]) DB.aktivesProfil = Object.keys(DB.profile)[0] || null;
   const h = location.hash.slice(1);
   zeige(P() ? (HASH_ANSICHTEN.has(h) && h !== 'profile' ? h : 'start') : 'profile');

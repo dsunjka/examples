@@ -92,15 +92,25 @@ function zeichneKopf() {
     let cls = i === SITZ.index ? 'aktuell' : '';
     if (istPruefung()) { if (antwortStand(REG.items[id].it, SITZ.antworten[id]) !== 'leer') cls += ' beantwortet'; if (SITZ.markiert[id]) cls += ' markiert'; }
     else if (SITZ.ergebnis[id]) cls += ' s-' + SITZ.ergebnis[id];
-    return `<button type="button" class="navi-punkt ${cls}" data-act="s-gehe" data-i="${i}" aria-label="Aufgabe ${i + 1}${SITZ.markiert[id] ? ', markiert' : ''}" ${i === SITZ.index ? 'aria-current="step"' : ''}>${i + 1}</button>`;
+    return `<button type="button" class="navi-punkt ${cls}" data-act="s-gehe" data-i="${i}" aria-label="Aufgabe ${i + 1}${istPruefung() ? (cls.includes('beantwortet') ? ', beantwortet' : ', offen') : ({ r: ', richtig', h: ', mit Hilfe richtig', t: ', teilweise richtig', f: ', falsch' }[SITZ.ergebnis[id]] || '')}${SITZ.markiert[id] ? ', markiert' : ''}" ${i === SITZ.index ? 'aria-current="step"' : ''}>${i + 1}</button>`;
   }).join('');
   kopf.innerHTML = `
     <button type="button" class="rund-knopf" data-act="s-beenden" aria-label="${istPruefung() ? 'Prüfung unterbrechen' : 'Training beenden'}">${icon('zurueck')}</button>
     <div class="sitzung-titel"><b>${esc(SITZ.titel)}</b><span>${esc(unter)}</span></div>
     ${istPruefung() && SITZ.zeitLimit ? `<button type="button" class="uhr${SITZ.zeitLimit - SITZ.verbraucht <= 300 ? ' knapp' : ''}" id="uhr" data-act="s-uhr" aria-label="Restzeit">${icon('uhr')}<span>${SITZ.zeitVerborgen ? 'Zeit' : zeitLesbar(SITZ.zeitLimit - SITZ.verbraucht)}</span></button>` : ''}
     <div class="navi-punkte" role="navigation" aria-label="Aufgaben">${punkte}</div>
-    ${istPruefung() ? `<button type="button" class="knopf knopf-klein knopf-signal" data-act="s-abgeben">Abgeben</button>` : `<span class="punkte-chip" title="In diesem Training gesammelt">${icon('kolben')}+${SITZ.punkte}</span>`}`;
+    ${istPruefung() ? `<button type="button" class="knopf knopf-klein knopf-signal" data-act="s-abgeben">Abgeben</button>` : `${(SITZ.serie || 0) >= 2 ? `<span class="combo${SITZ._serieAlt !== SITZ.serie ? ' neu' : ''}" role="img" aria-label="${SITZ.serie} richtig hintereinander">🔥 ${SITZ.serie}</span>` : ''}<span class="punkte-chip" title="In diesem Training gesammelt">${icon('kolben')}+${SITZ.punkte}</span>`}${reiseHTML(n)}`;
   kopf.style.setProperty('--farbe', mod.farbe);
+  // Handy: aktuelle Nummer in der wischbaren Leiste sichtbar halten
+  const akt = $('.navi-punkte .navi-punkt.aktuell', kopf), leiste = akt && akt.parentElement;
+  if (leiste && leiste.scrollWidth > leiste.clientWidth) leiste.scrollLeft = akt.offsetLeft - leiste.clientWidth / 2 + akt.offsetWidth / 2;
+}
+/** Reise-Leiste: Der Avatar fliegt mit jeder erledigten Aufgabe weiter. */
+function reiseHTML(n) {
+  const fertig = SITZ.ids.filter((x) => (istPruefung() ? antwortStand(REG.items[x].it, SITZ.antworten[x]) !== 'leer' : SITZ.ergebnis[x])).length;
+  const nach = Math.round((fertig / n) * 100), von = SITZ._fortAlt != null ? SITZ._fortAlt : nach;
+  SITZ._fortAlt = nach; SITZ._serieAlt = SITZ.serie;
+  return `<div class="reise" aria-hidden="true" style="--von:${von}%;--nach:${nach}%"><i></i><b>${esc(P().avatar)}</b></div>`;
 }
 function zeichneQuelle() {
   const id = aktId(), g = gruppeVon(id);
@@ -227,6 +237,7 @@ function gehe(i) {
     zeichneKopf();
     if (REG.items[aktId()].gruppe !== alteGruppe) zeichneQuelle();
     zeichneAufgabe();
+    const fk = $('.frage-karte'); if (fk && fxStufe() !== 'aus') fk.classList.add('rein');
     const sp = $('#aufgabe-spalte'); if (sp) sp.scrollTop = 0;
     if (window.innerWidth <= 900) { const a = $('#aufgabe-spalte'); if (a && mitQ(neueArt)) a.scrollIntoView({ block: 'start' }); else window.scrollTo(0, 0); }
   }
@@ -256,10 +267,16 @@ function pruefen() {
   // Spiel-Effekte: Glitzer und fliegende Punkte bei Richtig, Wackeln bei Fehlern
   if (erg.status === 'richtig') {
     const pkt = SITZ._letztePunkte && SITZ._letztePunkte.id === id ? SITZ._letztePunkte.n : 0;
-    requestAnimationFrame(() => {
-      glitzer($('.rueckmeldung'), { anzahl: SITZ.versuche[id] === 1 ? 28 : 16 });
-      if (pkt) punkteFlug($('[data-act="s-weiter"]') || $('.rueckmeldung'), `+${pkt} ✦`);
-    });
+    const viel = SITZ.versuche[id] === 1, serieJetzt = SITZ.serie || 0;
+    // erst nach dem sanften Scrollen, sonst entstehen die Effekte außerhalb des Bildschirms
+    setTimeout(() => {
+      const rm = $('.rueckmeldung');
+      if (!SITZ || ANSICHT.name !== 'sitzung' || aktId() !== id || !rm) return;
+      const ursprung = ($('.rueckmeldung > b') || rm).getBoundingClientRect(); // erst lesen, dann schreiben
+      if (pkt) punkteFlug(ursprung, `+${pkt} ✦`, $('.sitzung-kopf .punkte-chip'));
+      glitzer(ursprung, { anzahl: viel ? 28 : 16, weite: 120 });
+      if ([3, 5, 8, 10, 15, 20].includes(serieJetzt)) comboPop(serieJetzt);
+    }, sanft() === 'smooth' ? 420 : 30);
     ton('richtig');
   } else {
     wackeln($('#antwort'));
@@ -269,6 +286,7 @@ function pruefen() {
 function abschliessen(id, status, sauber) {
   if (SITZ.ergebnis[id]) return;
   SITZ.ergebnis[id] = status === 'richtig' ? (sauber ? 'r' : 'h') : status === 'teilweise' ? 't' : 'f';
+  SITZ.serie = SITZ.ergebnis[id] === 'r' ? (SITZ.serie || 0) + 1 : 0;
   const n = notiereErgebnis(id, status, { sauber });
   SITZ.punkte += n;
   SITZ._letztePunkte = { id, n };
@@ -283,7 +301,7 @@ function missionPruefen() {
   punkteDazu(30);
   if (SITZ && SITZ.art === 'mission') SITZ.punkte += 30;
   speichern();
-  toast('Tagesmission geschafft! +30 Laborpunkte');
+  feiern(() => { zeigeAbzeichen({ sym: '🎁', name: 'Mission geschafft!', text: '+30 Laborpunkte – morgen wartet eine neue Mission.' }, 'Tagesmission'); sternenregen(50); ton('fanfare'); }, 3100, 400);
 }
 function loesungZeigen() {
   const id = aktId(), it = aktIt();

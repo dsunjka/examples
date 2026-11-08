@@ -255,4 +255,4 @@ function rueckmeldung(it, erg, { versuch = 1, zeigeLoesung = false } = {}) {
   if (!zeigeLoesung && versuch < 2) text += ' Du hast noch einen Versuch.';
   return { cls: erg.status === 'teilweise' ? 't' : 'f', titel: erg.status === 'teilweise' ? 'Fast!' : 'Das stimmt noch nicht.', text };
 }
-function stufeHTML(n) { return `<span class="stufe" title="Schwierigkeit ${n} von 3" aria-label="Schwierigkeit ${n} von 3">${[1, 2, 3].map((i) => `<i class="${i <= n ? 'voll' : ''}"></i>`).join('')}</span>`; }
+function stufeHTML(n) { return `<span class="stufe" role="img" title="Schwierigkeit ${n} von 3" aria-label="Schwierigkeit ${n} von 3">${[1, 2, 3].map((i) => `<i class="${i <= n ? 'voll' : ''}"></i>`).join('')}</span>`; }

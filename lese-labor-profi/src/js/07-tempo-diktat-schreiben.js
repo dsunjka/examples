@@ -76,7 +76,7 @@ function tempoAntwort(r) {
   TEMPO.i++;
   const s = TEMPO.saetze[TEMPO.i];
   if (!s) { tempoEnde(); return; }
-  const el = $('#tempo-satz'); if (el) el.textContent = s.t;
+  const el = $('#tempo-satz'); if (el) { el.textContent = s.t; if (fxStufe() !== 'aus') { el.classList.remove('neu'); void el.offsetWidth; el.classList.add('neu'); } }
   const kopf = $('.sitzung-titel span'); if (kopf) kopf.textContent = `Satz ${TEMPO.i + 1}`;
 }
 function tempoLos() {
@@ -288,7 +288,7 @@ function viewSchreibauftrag(id) {
     <div class="schreib-raster">
       <div style="display:grid;gap:14px;min-width:0">
         <section class="karte" style="display:grid;gap:10px"><h2 style="font-size:1.1rem">Dein Auftrag</h2>${a.impuls ? `<p class="impuls" aria-hidden="true">${esc(a.impuls)}</p>` : ''}<p style="line-height:1.55">${rich(a.auftrag)}</p></section>
-        <details class="karte" open><summary style="font-weight:800;cursor:pointer;min-height:32px">1. Planen</summary><div style="display:grid;gap:10px;margin-top:10px">${a.planung.map((f, i) => `<div class="feld"><label for="notiz-${i}">${esc(f)}</label><input type="text" class="notiz-feld" id="notiz-${i}" data-notiz="${i}" value="${esc((st.notizen || [])[i] || '')}" autocomplete="off" autocorrect="off" spellcheck="false"></div>`).join('')}</div></details>
+        <details class="karte" open><summary>1. Planen</summary><div style="display:grid;gap:10px;margin-top:10px">${a.planung.map((f, i) => `<div class="feld"><label for="notiz-${i}">${esc(f)}</label><input type="text" class="notiz-feld" id="notiz-${i}" data-notiz="${i}" value="${esc((st.notizen || [])[i] || '')}" autocomplete="off" autocorrect="off" spellcheck="false"></div>`).join('')}</div></details>
         <section class="karte" style="display:grid;gap:10px"><h2 style="font-size:1.1rem">Wortspeicher</h2><p class="klein leise">Tippe ein Wort an, um es an der Schreibstelle einzufügen.</p><div class="wortspeicher">${a.woerter.map((w) => `<button type="button" data-act="wort-einfuegen" data-wort="${esc(w)}">${esc(w)}</button>`).join('')}</div></section>
       </div>
       <div style="display:grid;gap:14px;min-width:0">

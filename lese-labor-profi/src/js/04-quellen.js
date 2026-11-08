@@ -1,5 +1,5 @@
 /* ===== Quellen: simulierter Browser, Lesetexte, Merkkasten, Textmarker ===== */
-const SITE_FARBEN = { gruen: '#277335', blau: '#2559c4', orange: '#a3480c', lila: '#7a4cc2', rot: '#c7364a', grau: '#4b5568', tuerkis: '#087373', gelb: '#8a6700' };
+const SITE_FARBEN = { gruen: '#277335', blau: '#2559c4', orange: '#a3480c', lila: '#7a4cc2', rot: '#b02d42', grau: '#4b5568', tuerkis: '#087373', gelb: '#8a6700' };
 const ERLAUBTE_TAGS = new Set('h1 h2 h3 h4 p ul ol li strong em b i small span div a button br hr table thead tbody tr th td dl dt dd details summary time caption'.split(' '));
 const GEFAEHRLICH = new Set('script style iframe object embed img video audio link meta form input textarea select svg math template noscript'.split(' '));
 const ERLAUBTE_ATTR = new Set(['class', 'data-ziel', 'data-extern', 'open', 'colspan', 'rowspan', 'datetime', 'title', 'aria-label']);

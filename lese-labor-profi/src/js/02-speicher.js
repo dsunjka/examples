@@ -186,7 +186,7 @@ function punkteDazu(n) {
   const vorher = level(p.punkte || 0).nr;
   p.punkte = Math.max(0, (p.punkte || 0) + n);
   const jetzt = level(p.punkte);
-  if (jetzt.nr > vorher) setTimeout(() => zeigeLevelUp(jetzt), 900);
+  if (jetzt.nr > vorher) feiern(() => zeigeLevelUp(jetzt), 3000, 900);
 }
 function merkeTag() {
   const p = P(); if (!p) return;
@@ -273,7 +273,7 @@ function tagesMission() {
 const ABZEICHEN = [
   { id: 'start', sym: '🧪', name: 'Erster Versuch', text: 'Die erste Aufgabe gelöst', test: (p) => Object.keys(p.items).length >= 1 },
   { id: 'fall', sym: '🔎', name: 'Fall gelöst', text: 'Alle 4 Aufgaben eines Falls gemeistert', test: (p) => REG.module.digital.gruppen.some((g) => REG.gruppen[g].items.every((id) => itemStatus(id, p) === 'r')) },
-  { id: 'faelle', sym: '🕵️', name: 'Super-Spürnase', text: 'Alle 20 Digital-Aufgaben gemeistert', test: (p) => { const s = modulStand('digital', p); return s.gesamt > 0 && s.gemeistert === s.gesamt; } },
+  { id: 'faelle', sym: '🕵️', name: 'Super-Spürnase', text: 'Alle 20 Digital-Aufgaben gemeistert', test: (p) => { const s = modulStand('digital', p); return s.gesamt > 0 && s.gemeistert === s.gesamt; }, stand: (p) => { const s = modulStand('digital', p); return [s.gemeistert, s.gesamt]; } },
   { id: 'werbung', sym: '🛡️', name: 'Netz-Profi', text: 'Alle „Bewerten“-Aufgaben im Digital-Labor gemeistert', test: (p) => { const b = REG.module.digital.items.filter((id) => REG.items[id].it.kompetenz === 'bewerten'); return b.length > 0 && b.every((id) => itemStatus(id, p) === 'r'); } },
   { id: 'bylet15', sym: '🏅', name: 'BYLET-D bestanden', text: 'In der BYLET-D-Prüfung mindestens 15 von 20', test: (p) => p.pruefungen.some((x) => x.art === 'digital' && x.punkte >= 15) },
   { id: 'bylet18', sym: '🏆', name: 'PROFI-Prüfung', text: 'In der BYLET-D-Prüfung mindestens 18 von 20', test: (p) => p.pruefungen.some((x) => x.art === 'digital' && x.punkte >= 18) },
@@ -283,8 +283,8 @@ const ABZEICHEN = [
   { id: 'gr', sym: '🧩', name: 'Grammatik-Genie', text: '80 % im Grammatik-Labor gemeistert', test: (p) => { const s = modulStand('grammatik', p); return s.gesamt > 0 && s.gemeistert >= 0.8 * s.gesamt; } },
   { id: 'diktat', sym: '🎧', name: 'Diktat-Krone', text: 'Ein Diktat mit 10 von 10 Wörtern', test: (p) => Object.values(p.diktate).some((d) => d.best >= 10) },
   { id: 'autor', sym: '🖋️', name: 'Schreib-Talent', text: 'Zwei Schreibaufträge fertig geschrieben', test: (p) => Object.values(p.texte).filter((t) => t.fertig).length >= 2 },
-  { id: 'fehler', sym: '🦾', name: 'Fehler-Magie', text: '10 Fehler aus der Fehler-Kiste verbessert', test: (p) => p.fehlerBehoben >= 10 },
-  { id: 'serie5', sym: '🔥', name: 'Dranbleib-Stern', text: 'An 5 Tagen hintereinander geübt', test: (p) => serie(p) >= 5 },
+  { id: 'fehler', sym: '🦾', name: 'Fehler-Magie', text: '10 Fehler aus der Fehler-Kiste verbessert', test: (p) => p.fehlerBehoben >= 10, stand: (p) => [p.fehlerBehoben, 10] },
+  { id: 'serie5', sym: '🔥', name: 'Dranbleib-Stern', text: 'An 5 Tagen hintereinander geübt', test: (p) => serie(p) >= 5, stand: (p) => [serie(p), 5] },
   { id: 'mission', sym: '🎯', name: 'Missions-Stern', text: 'Eine Tagesmission komplett erledigt', test: (p) => !!p.missionGeschafft },
 ];
 DB = ladeSpeicher();
@@ -294,7 +294,7 @@ function pruefeAbzeichen() {
   for (const a of ABZEICHEN) {
     try { if (!p.abzeichen[a.id] && a.test(p)) { p.abzeichen[a.id] = Date.now(); neu.push(a); } } catch (e) { /* Inhalte fehlen */ }
   }
-  if (neu.length) { speichern(); neu.forEach((a, i) => setTimeout(() => toastDanach(`Neues Abzeichen: ${a.sym} ${a.name}`), 700 + i * 2600)); }
+  if (neu.length) { speichern(); neu.forEach((a) => feiern(() => zeigeAbzeichen(a), 3100, 700)); }
   return neu;
 }
 

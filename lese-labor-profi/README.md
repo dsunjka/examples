@@ -34,8 +34,26 @@ Wörter antippen, Zuordnen, Reihenfolge, Eintippen.
 - **Lernfortschritt**: Profile ohne Anmeldung (nur Spitzname), Fehler-Kiste, Tagesmission mit
   Wiederholung, Laborpunkte und Level, 15 Abzeichen, Übungstage, Labor-Buch mit Verlauf.
 - **Für Erwachsene** (Rechenaufgabe als Sperre): Prüfungszeiten, Schriftgröße, Zeilenabstand,
-  Farben, Vorlesestimme, Profile, Übersicht aller Profile, Sichern und Wiederherstellen per Code
+  Effekt-Stufe, Töne, Vorlesestimme, Profile, Übersicht aller Profile, Sichern und Wiederherstellen per Code
   oder Datei, Löschen.
+
+### Gestaltung „Sternen-Labor“
+
+Dunkles Weltall-Design mit Spielgefühl: funkelnder Sternenhimmel, Planeten-Labore, Glitzer-Explosion
+und „+10 ✦“, die bei richtigen Antworten in den Punkte-Chip fliegen, Serien-Anzeige („3er-Serie! 🔥“),
+Reise-Leiste mit dem eigenen Avatar, LEVEL UP und große Abzeichen-Enthüllung (immer nacheinander),
+Sterne-Wertung wie in Spiel-Levels, Sticker-Album mit Fortschritt, Missions-Truhe, BYLET-D als
+„Boss-Level“. Der Avatar bekommt mit steigendem Level Mond, Krone und Aura.
+
+- Alle Effekte laufen als CSS-Animationen auf der Grafikkarte, ohne Dauerschleife in JavaScript.
+  Ein offener Dialog pausiert den Hintergrund; sehr alte Geräte schalten teure Extras selbst ab.
+- **Effekt-Stufen** im Erwachsenen-Bereich: *volle Pracht*, *sanft* (kein Wackeln und Drehen) und
+  *aus* (ruhig, Abzeichen und Level-up nur als kurze Meldung). „Bewegung reduzieren“ in den
+  iPad-Einstellungen wird beachtet. Töne sind standardmäßig aus.
+- Status nie nur über Farbe (✓, ½, ✗ an den Aufgabennummern), Kontraste nach WCAG AA, Bildschirmleser
+  hören Abzeichen und Level-up, aber keinen Glitzer.
+- Schrift: [Fredoka](https://github.com/hafontia/Fredoka-One) (SIL Open Font License 1.1, siehe
+  `src/schrift/OFL-Fredoka.txt`), in die Datei eingebettet – es wird nichts nachgeladen.
 
 ## Benutzen
 
@@ -62,6 +80,7 @@ Internetseiten. Eigene Fälle oder Fragen ersetzen einfach die passende Datei, d
 ```bash
 node tools/build.mjs                    # baut dist/lese-labor-profi.html und dist/artifact.html, prüft alle Inhalte
 node tests/funktionstest.mjs            # klickt alle Funktionen in iPad-Emulation durch (Playwright)
+node tests/regressionstest.mjs          # Regressionstests: Sicherheit, Speichern, Effekte, Handy-Layout
 node tools/build.mjs --mit-test         # Testbuild mit Mini-Testdaten nach tests/build/
 ```
 
@@ -69,8 +88,9 @@ Aufbau des Quellcodes:
 
 ```
 src/kopf.html, src/koerper.html   Seitengerüst und SVG-Symbole
-src/styles.css                    Gestaltung (helles und dunkles Farbschema)
-src/js/01…08-*.js                 App-Logik (ohne Bibliotheken)
+src/styles.css                    Gestaltung „Sternen-Labor“ mit Effekt-Stufen
+src/js/01…08-*.js                 App-Logik (ohne Bibliotheken), 07b-effekte.js = Spezialeffekte
+src/schrift/                      eingebettete Schrift Fredoka (OFL)
 src/inhalte/*.json                Lerninhalte
 tools/                            Build und Inhaltsprüfung
 tests/                            Funktionstest und Testdaten

@@ -27,10 +27,12 @@ function zeige(name, param = null) {
     if (location.hash !== h) { try { history.replaceState(history.state, '', h); } catch (e) { /* Rahmen erlaubt es nicht */ } }
   }
 }
+let letzteAnsicht = null;
 function render() {
   const app = $('#app');
   if (!P() && !['profile', 'info', 'erwachsene'].includes(ANSICHT.name)) ANSICHT = { name: 'profile', param: null };
   const n = ANSICHT.name;
+  document.documentElement.classList.toggle('in-sitzung', (n === 'sitzung' && !!SITZ) || n === 'tempo-lauf');
   if (n === 'sitzung') { if (SITZ) { renderSitzung(); window.scrollTo(0, 0); return; } ANSICHT = { name: 'start', param: null }; }
   if (n === 'tempo-lauf') { renderTempoLauf(); return; }
   const views = {
@@ -42,7 +44,8 @@ function render() {
   };
   const f = views[ANSICHT.name] || viewStart;
   const { titel = '', html = '', schmal = false } = f(ANSICHT.param) || {};
-  app.innerHTML = kopfHTML(titel) + `<main class="seite ${schmal ? 'seite-schmal' : ''}" id="inhalt">${html}</main>`;
+  const neu = ANSICHT.name !== letzteAnsicht; letzteAnsicht = ANSICHT.name; // Einblenden nur beim Wechsel der Ansicht
+  app.innerHTML = kopfHTML(titel) + `<main class="seite ${schmal ? 'seite-schmal' : ''} ${neu ? 'neu' : ''}" id="inhalt">${html}</main>`;
   window.scrollTo(0, 0);
   nachRender();
   const haupt = $('#inhalt');
@@ -133,7 +136,7 @@ function viewStart() {
     <div class="start-raster">
       <section class="karte held" aria-label="Dein Labor">
         <div class="held-oben">
-          <div class="avatar-orb" aria-hidden="true">${esc(p.avatar)}</div>
+          <div class="avatar-orb${lv.nr >= 6 ? ' aura' : ''}" aria-hidden="true">${esc(p.avatar)}${lv.nr >= 2 ? '<span class="orb-mond"></span>' : ''}${lv.nr >= 4 ? '<span class="orb-krone">👑</span>' : ''}</div>
           <div style="min-width:0"><p class="leise">Hallo,</p><h1>${esc(p.name)}</h1>
             <p class="level">Level ${lv.nr} · ${esc(lv.name)}</p></div>
           ${kolbenSVG(g.prozent / 100)}
@@ -150,7 +153,7 @@ function viewStart() {
         ${m && m.ids.length ? `<div class="mission">
           <div class="zeile-zwischen"><h3>🎯 Tagesmission</h3><span class="klein leise">${m.erledigt.length}/${m.ids.length}</span></div>
           <p class="klein">${missionFertig ? 'Geschafft! Morgen wartet eine neue Mission.' : '10 gemischte Aufgaben aus allen Laboren – mit deinen Fehlern von gestern.'}</p>
-          <div class="mission-punkte" aria-hidden="true">${m.ids.map((id) => `<i class="${m.erledigt.includes(id) ? 'voll' : ''}"></i>`).join('')}</div>
+          <div class="mission-punkte" aria-hidden="true">${m.ids.map((id) => `<i class="${m.erledigt.includes(id) ? 'voll' : ''}"></i>`).join('')}<span class="mission-truhe${missionFertig ? ' offen' : ''}">${missionFertig ? '🎉' : '🎁'}</span></div>
           ${missionFertig ? '' : `<button type="button" class="knopf" data-act="mission">${m.erledigt.length ? 'Mission fortsetzen' : 'Mission starten'}</button>`}
         </div>` : ''}
       </section>
@@ -189,7 +192,7 @@ function gruppeKarte(gid, mod) {
   return `<article class="gruppe-karte" style="--farbe:${mod.farbe}">
     <span class="nr">${esc(nr)}</span><h3>${esc(g.titel)}</h3>
     <p>${esc(kurzText.length > 150 ? kurzText.slice(0, 147) + '…' : kurzText)}</p>
-    <div class="zeile-zwischen"><div class="punkte-reihe" aria-label="${geschafft} von ${g.items.length} gemeistert">${g.items.map((id) => `<i class="status-punkt s-${itemStatus(id)}"></i>`).join('')}</div><span class="klein leise">${geschafft}/${g.items.length}</span></div>
+    <div class="zeile-zwischen"><div class="punkte-reihe" role="img" aria-label="${geschafft} von ${g.items.length} gemeistert">${g.items.map((id) => `<i class="status-punkt s-${itemStatus(id)}"></i>`).join('')}</div><span class="klein leise">${geschafft}/${g.items.length}</span></div>
     <button type="button" class="knopf knopf-klein" data-act="training-gruppe" data-g="${esc(gid)}">${geschafft === g.items.length ? 'Wiederholen' : geschafft || g.items.some((id) => itemStatus(id) !== 'neu') ? 'Weiterüben' : 'Trainieren'}</button>
   </article>`;
 }
@@ -271,8 +274,8 @@ function viewPruefungStart(cfg) {
   const digital = cfg.ids.some((id) => REG.items[id] && REG.items[id].modul === 'digital');
   return {
     titel: cfg.titel, schmal: true,
-    html: `<section class="karte" style="display:grid;gap:16px">
-      <div class="modul-kopf" style="--farbe:var(--signal)"><span class="labor-symbol">${icon('uhr')}</span><div><h1>${esc(cfg.titel)}</h1><p>Zeig, was du kannst!</p></div></div>
+    html: `<section class="karte boss-intro" style="display:grid;gap:16px">
+      <div class="modul-kopf" style="--farbe:var(--signal)"><span class="labor-symbol">${icon('uhr')}</span><div><span class="boss-label">BOSS-LEVEL</span><h1>${esc(cfg.titel)}</h1><p>Zeig, was du kannst!</p></div></div>
       <div class="fakten"><span class="fakt">${cfg.ids.length} Aufgaben</span><span class="fakt">${icon('uhr')}${cfg.zeitMin ? cfg.zeitMin + ' Minuten' : 'ohne Zeitlimit'}</span><span class="fakt">keine Tipps</span><span class="fakt">Auswertung am Ende</span></div>
       <div class="info-box"><ul>
         <li>Oben siehst du die Nummern aller Aufgaben. Du kannst hin- und herspringen.</li>
@@ -350,7 +353,7 @@ function viewFortschritt() {
       ${lv.bis ? `<div class="balken"><i style="width:${pct(p.punkte - lv.ab, lv.bis - lv.ab)}%"></i></div>` : ''}</div></section>
       <div class="start-raster" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))">${modKarten}</div>
       <section class="karte" style="display:grid;gap:12px"><h2 style="font-size:1.1rem">Prüfungen</h2>
-        ${pr.length ? `<div class="tabelle-scroll"><table class="verlauf-tabelle"><thead><tr><th>Datum</th><th>Prüfung</th><th>Punkte</th><th>Zeit</th><th></th></tr></thead><tbody>${pr.map((x, i) => `<tr><td>${datumLesbar(x.datum)}</td><td>${esc(x.titel)}</td><td><b>${x.punkte}/${x.max}</b></td><td>${zeitLesbar(x.dauer)}</td><td><button type="button" class="knopf knopf-geist knopf-klein" data-act="pruefung-ansehen" data-i="${p.pruefungen.length - 1 - i}">Ansehen</button></td></tr>`).join('')}</tbody></table></div>` : '<p class="leise">Noch keine Prüfung. Probiere die BYLET-D-Prüfung aus!</p>'}</section>
+        ${pr.length ? `<div class="tabelle-scroll"><table class="verlauf-tabelle pruef-tabelle"><thead><tr><th>Datum</th><th>Prüfung</th><th>Punkte</th><th>Zeit</th><th></th></tr></thead><tbody>${pr.map((x, i) => `<tr><td>${datumLesbar(x.datum)}</td><td>${esc(x.titel)}</td><td><b>${x.punkte}/${x.max}</b></td><td>${zeitLesbar(x.dauer)}</td><td><button type="button" class="knopf knopf-geist knopf-klein" data-act="pruefung-ansehen" data-i="${p.pruefungen.length - 1 - i}">Ansehen</button></td></tr>`).join('')}</tbody></table></div>` : '<p class="leise">Noch keine Prüfung. Probiere die BYLET-D-Prüfung aus!</p>'}</section>
       <div class="start-raster" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))">
         <section class="karte" style="display:grid;gap:12px;--farbe:var(--m-tempo)"><h2 style="font-size:1.1rem">Lese-Tempo (Tempo-Wert)</h2>
           ${tempo.length ? `<div class="mini-diagramm" role="img" aria-label="Letzte Ergebnisse im Lese-Tempo">${tempo.map((t) => `<div style="height:${Math.max(6, pct(tempoWert(t), maxT))}%" title="${datumLesbar(t.datum)}"><span>${tempoWert(t)}</span></div>`).join('')}</div>` : '<p class="leise">Noch kein Tempo-Test.</p>'}</section>
@@ -359,7 +362,7 @@ function viewFortschritt() {
           <p class="klein leise">${plural(serie(), 'Tag', 'Tage')} in Folge · ${plural(p.tage.length, 'Übungstag', 'Übungstage')} insgesamt</p></section>
       </div>
       <section class="karte" style="display:grid;gap:12px"><h2 style="font-size:1.1rem">Abzeichen · ${Object.keys(p.abzeichen).length} von ${ABZEICHEN.length}</h2>
-        <div class="abzeichen-raster">${ABZEICHEN.map((a) => `<div class="abzeichen ${p.abzeichen[a.id] ? 'hat' : ''}"><span class="sym" aria-hidden="true">${a.sym}</span><b>${esc(a.name)}</b><span>${esc(a.text)}</span>${p.abzeichen[a.id] ? `<span>✓ ${datumLesbar(p.abzeichen[a.id])}</span>` : ''}</div>`).join('')}</div></section>`,
+        <div class="abzeichen-raster">${ABZEICHEN.map((a) => `<div class="abzeichen ${p.abzeichen[a.id] ? 'hat' : ''}"><span class="sym" aria-hidden="true">${a.sym}</span><b>${esc(a.name)}</b><span>${esc(a.text)}</span>${p.abzeichen[a.id] ? `<span>✓ ${datumLesbar(p.abzeichen[a.id])}</span>` : a.stand ? (() => { const [ist, soll] = a.stand(p); const wert = Math.min(ist || 0, soll); return `<div class="abz-fort" aria-hidden="true"><i style="width:${pct(wert, soll)}%"></i></div><span>${wert} von ${soll}</span>`; })() : ''}</div>`).join('')}</div></section>`,
   };
 }
 
@@ -474,11 +477,12 @@ function dialog({ titel, text = '', html = '', knoepfe = [{ label: 'OK', wert: t
   return new Promise((resolve) => {
     const wurzel = $('#dialog-wurzel');
     const vorher = document.activeElement;
+    document.documentElement.classList.add('dialog-offen');
     wurzel.innerHTML = `<div class="dialog-huelle"><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg-titel">
       <h2 id="dlg-titel">${esc(titel)}</h2>${text ? `<p>${esc(text)}</p>` : ''}${html}
       <div class="aktionen">${knoepfe.map((k, i) => `<button type="button" class="knopf ${k.stil || ''}" data-dlg="${i}">${esc(k.label)}</button>`).join('')}</div></div></div>`;
     const app = $('#app'); if (app) { app.setAttribute('inert', ''); app.setAttribute('aria-hidden', 'true'); }
-    const fertig = (wert) => { if (dialogSchliessen !== fertig) return; dialogSchliessen = null; wurzel.innerHTML = ''; dialogAufloeser = null; if (app) { app.removeAttribute('inert'); app.removeAttribute('aria-hidden'); } try { if (vorher && vorher.focus) vorher.focus(); } catch (e) { /* egal */ } resolve(wert); };
+    const fertig = (wert) => { if (dialogSchliessen !== fertig) return; dialogSchliessen = null; wurzel.innerHTML = ''; document.documentElement.classList.remove('dialog-offen'); dialogAufloeser = null; if (app) { app.removeAttribute('inert'); app.removeAttribute('aria-hidden'); } try { if (vorher && vorher.focus) vorher.focus(); } catch (e) { /* egal */ } resolve(wert); };
     dialogAufloeser = (taste) => {
       if (taste === 'Escape') { const k = knoepfe.find((x) => x.wert === false || x.wert === null); fertig(k ? k.wert : undefined); }
     };

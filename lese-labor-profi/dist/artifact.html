@@ -76,9 +76,9 @@ body {
 }
 button, input, select, textarea { font: inherit; color: inherit; }
 button { touch-action: manipulation; cursor: pointer; }
-:focus-visible { outline: 3px solid var(--cyan); outline-offset: 2px; border-radius: 8px; }
+:focus-visible { outline: 3px solid #fff; outline-offset: 3px; border-radius: 8px; }
 .app-leiste :focus-visible, .web .w-kopf :focus-visible { outline-color: #fff; }
-.web :focus-visible, .lesetext :focus-visible { outline-color: #1a49b8; }
+.web :focus-visible, .lesetext :focus-visible, .browser-leiste :focus-visible, .geraet :focus-visible, .schreibfeld:focus-visible { outline-color: #1a49b8; }
 #inhalt:focus { outline: none; }
 h1, h2, h3, h4 { font-family: var(--f-spiel); font-weight: 700; line-height: 1.15; margin: 0; text-wrap: balance; letter-spacing: .005em; }
 p { margin: 0; }
@@ -94,15 +94,14 @@ p { margin: 0; }
     linear-gradient(180deg, var(--all-2) 0%, var(--all) 70%);
 }
 .weltall canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-.weltall .nebel { position: absolute; width: 70vmax; height: 70vmax; border-radius: 50%; filter: blur(60px); opacity: .35; }
-.weltall .nebel.n1 { background: radial-gradient(circle, rgba(255, 111, 216, .55), transparent 65%); left: -20vmax; top: 30vh; }
-.weltall .nebel.n2 { background: radial-gradient(circle, rgba(79, 227, 255, .45), transparent 65%); right: -25vmax; top: -10vh; }
+.weltall .nebel { position: absolute; width: 70vmax; height: 70vmax; border-radius: 50%; opacity: .35; }
+.weltall .nebel.n1 { background: radial-gradient(circle closest-side, rgba(255, 111, 216, .50) 0%, rgba(255, 111, 216, .40) 22%, rgba(255, 111, 216, .22) 48%, rgba(255, 111, 216, .08) 72%, rgba(255, 111, 216, 0) 100%); left: -20vmax; top: 30vh; }
+.weltall .nebel.n2 { background: radial-gradient(circle closest-side, rgba(79, 227, 255, .41) 0%, rgba(79, 227, 255, .33) 22%, rgba(79, 227, 255, .18) 48%, rgba(79, 227, 255, .065) 72%, rgba(79, 227, 255, 0) 100%); right: -25vmax; top: -10vh; }
 @media (prefers-reduced-motion: no-preference) {
   :root.fx-voll .weltall .nebel.n1 { animation: treiben 38s ease-in-out infinite alternate; }
   :root.fx-voll .weltall .nebel.n2 { animation: treiben 46s ease-in-out infinite alternate-reverse; }
 }
 @keyframes treiben { from { transform: translate(0, 0) scale(1); } to { transform: translate(8vmax, -6vmax) scale(1.12); } }
-.glitzer-leinwand { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 70; pointer-events: none; }
 
 /* ---------- Kopfleiste ---------- */
 body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 30; background: #120830; }
@@ -148,7 +147,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   padding-right: max(16px, env(safe-area-inset-right, 0px));
   display: grid; gap: 20px;
 }
-@media (prefers-reduced-motion: no-preference) { :root:not(.fx-aus) .seite > * { animation: auftauchen .45s cubic-bezier(.2, .8, .2, 1) both; } :root:not(.fx-aus) .seite > *:nth-child(2) { animation-delay: .05s; } :root:not(.fx-aus) .seite > *:nth-child(3) { animation-delay: .1s; } :root:not(.fx-aus) .seite > *:nth-child(n+4) { animation-delay: .15s; } }
+@media (prefers-reduced-motion: no-preference) { :root:not(.fx-aus) .seite.neu > * { animation: auftauchen .45s cubic-bezier(.2, .8, .2, 1) both; } :root:not(.fx-aus) .seite.neu > *:nth-child(2) { animation-delay: .05s; } :root:not(.fx-aus) .seite.neu > *:nth-child(3) { animation-delay: .1s; } :root:not(.fx-aus) .seite.neu > *:nth-child(n+4) { animation-delay: .15s; } }
 @keyframes auftauchen { from { opacity: .001; transform: translateY(14px) scale(.985); } to { opacity: 1; transform: none; } }
 .seite-schmal { max-width: 860px; }
 .abschnitt-titel { font-family: var(--f-spiel); font-weight: 600; letter-spacing: .14em; text-transform: uppercase; font-size: .85rem; color: var(--text-2); display: flex; align-items: center; gap: 10px; }
@@ -157,7 +156,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .zeile-zwischen { display: flex; gap: 12px; align-items: center; justify-content: space-between; flex-wrap: wrap; }
 .leise { color: var(--text-2); }
 .klein { font-size: .88rem; }
-.karte { background: var(--glas); border: 1px solid var(--rand); border-radius: 24px; padding: 20px; min-width: 0; box-shadow: var(--schatten); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.karte { background: var(--glas); border: 1px solid var(--rand); border-radius: 24px; padding: 20px; min-width: 0; box-shadow: var(--schatten); }
 .karte-flach { background: var(--glas-hell); border: 1px solid var(--rand-hell); border-radius: 16px; padding: 16px; }
 
 /* ---------- Knöpfe (Spiel-Look mit Glanz) ---------- */
@@ -174,7 +173,8 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 @media (prefers-reduced-motion: no-preference) { :root.fx-voll .knopf:not(:disabled):hover::after, :root.fx-voll .knopf:not(:disabled):focus-visible::after { animation: glanz-schnell .9s ease; } }
 @keyframes glanz-schnell { to { transform: translateX(130%); } }
 .knopf:active { transform: translateY(3px); box-shadow: 0 1px 0 #4c1a8f, 0 4px 12px rgba(194, 30, 143, .4), inset 0 1px 0 rgba(255, 255, 255, .3); }
-.knopf:disabled { opacity: .45; cursor: not-allowed; transform: none; filter: grayscale(.3); }
+.knopf:disabled, .knopf-zweit:disabled { opacity: 1; filter: none; transform: none; cursor: not-allowed; background: rgba(255, 255, 255, .07); color: var(--text-3); box-shadow: inset 0 0 0 2px rgba(196, 168, 255, .38); text-shadow: none; }
+.knopf:disabled::after { content: none; }
 .knopf svg { width: 20px; height: 20px; }
 .knopf-signal { background: var(--verlauf-gold); color: #2a1600; box-shadow: 0 4px 0 #a8641a, 0 8px 24px rgba(255, 173, 77, .45), inset 0 1px 0 rgba(255, 255, 255, .6); }
 .knopf-signal:active { box-shadow: 0 1px 0 #a8641a, 0 4px 12px rgba(255, 173, 77, .4); }
@@ -201,7 +201,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .feld { display: grid; gap: 6px; text-align: left; }
 .feld label { font-weight: 700; font-size: .95rem; color: var(--text-2); }
 .feld input[type="text"], .feld input[type="number"], .feld select, .feld textarea {
-  min-height: 50px; border-radius: 16px; border: 1px solid var(--rand); background: rgba(10, 5, 32, .6); padding: 10px 14px; font-size: 1.05rem; width: 100%; color: var(--text);
+  min-height: 50px; border-radius: 16px; border: 1px solid rgba(196, 168, 255, .55); background: rgba(10, 5, 32, .6); padding: 10px 14px; font-size: 1.05rem; width: 100%; color: var(--text);
 }
 .feld input:focus, .feld select:focus, .feld textarea:focus { outline: none; border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(79, 227, 255, .25), 0 0 18px rgba(79, 227, 255, .3); }
 .feld select option { background: #1c1140; color: var(--text); }
@@ -209,13 +209,13 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .hinweis-datenschutz { display: flex; gap: 10px; align-items: flex-start; text-align: left; background: rgba(79, 227, 255, .08); border: 1px solid rgba(79, 227, 255, .3); color: var(--text); border-radius: 16px; padding: 12px 14px; font-size: .92rem; }
 .hinweis-datenschutz svg { width: 22px; height: 22px; flex: none; color: var(--cyan); margin-top: 1px; }
 .schalter { display: flex; gap: 12px; align-items: center; min-height: 44px; font-weight: 700; cursor: pointer; }
-.schalter input { flex: none; width: 24px; height: 24px; margin: 0; accent-color: var(--pink); }
+.schalter input { flex: none; width: 26px; height: 26px; margin: 0; accent-color: var(--pink); }
 .schalter span { flex: 1; min-width: 0; }
 
 /* ---------- Startseite ---------- */
 .start-raster { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 20px; align-items: start; }
 .held { display: grid; gap: 16px; position: relative; overflow: hidden; }
-.held::before { content: ""; position: absolute; inset: -40% -20% auto auto; width: 70%; height: 90%; background: radial-gradient(circle, rgba(255, 111, 216, .22), transparent 65%); pointer-events: none; }
+.held::before { content: ""; position: absolute; inset: -40% -20% auto auto; width: 70%; height: 90%; background: radial-gradient(closest-side, rgba(255, 111, 216, .22), transparent); pointer-events: none; }
 .held-oben { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 14px; align-items: center; position: relative; }
 .held h1 { font-size: clamp(1.7rem, 3.6vw, 2.4rem); }
 .held .level { font-family: var(--f-spiel); font-weight: 600; color: var(--gold); text-shadow: 0 0 12px rgba(255, 211, 107, .5); }
@@ -251,11 +251,13 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .kennzahl { background: var(--glas-hell); border: 1px solid var(--rand-hell); border-radius: 18px; padding: 10px 12px; min-width: 0; }
 .kennzahl b { display: block; font-family: var(--f-spiel); font-size: 1.6rem; font-variant-numeric: tabular-nums; color: var(--text); text-shadow: 0 0 14px rgba(79, 227, 255, .45); }
 .kennzahl span { font-size: .8rem; color: var(--text-2); }
-.mission { position: relative; border-radius: 22px; padding: 16px; display: grid; gap: 10px; background: linear-gradient(var(--all-2), var(--all-2)) padding-box, conic-gradient(from var(--dreh, 0deg), #ffd36b, #ff6fd8, #4fe3ff, #ffd36b) border-box; border: 2px solid transparent; }
-@supports not (background: conic-gradient(red, blue)) { .mission { border-color: var(--gold); } }
+.mission { position: relative; isolation: isolate; overflow: hidden; border-radius: 22px; padding: 18px; display: grid; gap: 10px; background: var(--all-2); }
+.mission::before { content: ""; position: absolute; z-index: -2; left: -25%; top: 50%; width: 150%; height: 0; padding-top: 150%; margin-top: -75%; background: conic-gradient(#ffd36b, #ff6fd8, #4fe3ff, #ffd36b); }
+.mission::after { content: ""; position: absolute; z-index: -1; inset: 2px; border-radius: 20px; background: var(--all-2); }
+@supports not (background: conic-gradient(red, blue)) { .mission::before { background: var(--gold); } }
 .mission h3 { font-size: 1.2rem; color: var(--gold); text-shadow: 0 0 12px rgba(255, 211, 107, .5); }
 .mission-punkte { display: flex; gap: 6px; flex-wrap: wrap; }
-.mission-punkte i { width: 18px; height: 18px; display: inline-block; clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); background: rgba(255, 255, 255, .18); }
+.mission-punkte i { width: 18px; height: 18px; display: inline-block; clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); background: rgba(255, 255, 255, .38); }
 .mission-punkte i.voll { background: var(--gold); filter: drop-shadow(0 0 4px var(--gold)); }
 .labore { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
 .labor-karte {
@@ -269,10 +271,10 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .labor-karte:hover:not(:disabled) { transform: translateY(-3px); border-color: var(--farbe); box-shadow: 0 0 0 1px var(--farbe), 0 0 28px color-mix(in srgb, var(--farbe) 45%, transparent); }
 .labor-karte:active:not(:disabled) { transform: scale(.98); }
 .labor-karte:disabled { opacity: .5; }
-.labor-symbol { position: relative; grid-row: span 3; width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; color: var(--dunkel);
+.labor-symbol { position: relative; isolation: isolate; grid-row: span 3; width: 58px; height: 58px; border-radius: 50%; display: grid; place-items: center; color: var(--dunkel);
   background: radial-gradient(circle at 32% 28%, #fff 0%, var(--farbe) 38%, color-mix(in srgb, var(--farbe) 55%, #12062b) 100%);
   box-shadow: 0 0 20px color-mix(in srgb, var(--farbe) 70%, transparent), inset -6px -8px 14px rgba(18, 6, 43, .35); }
-.labor-symbol::after { content: ""; position: absolute; left: -10px; right: -10px; top: 50%; height: 14px; margin-top: -7px; border-radius: 50%; border: 2px solid color-mix(in srgb, var(--farbe) 70%, #fff); transform: rotate(-18deg); opacity: .75; }
+.labor-symbol::after { content: ""; z-index: -1; position: absolute; left: -10px; right: -10px; top: 50%; height: 14px; margin-top: -7px; border-radius: 50%; border: 2px solid color-mix(in srgb, var(--farbe) 70%, #fff); transform: rotate(-18deg); opacity: .75; }
 .labor-symbol svg { width: 28px; height: 28px; position: relative; z-index: 1; }
 .labor-karte h3 { font-size: 1.22rem; }
 .labor-karte p { font-size: .88rem; color: var(--text-2); }
@@ -295,8 +297,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .zahl-blase { display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 7px; border-radius: 999px; background: var(--kiste-blase); color: var(--dunkel); font-weight: 800; font-size: .8rem; box-shadow: 0 0 10px rgba(255, 211, 107, .7); font-family: var(--f-text); }
 
 @property --dreh { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
-@keyframes dreh-winkel { to { --dreh: 360deg; } }
-@media (prefers-reduced-motion: no-preference) { :root.fx-voll .mission { animation: dreh-winkel 7s linear infinite; } }
+@media (prefers-reduced-motion: no-preference) { :root.fx-voll .mission::before { animation: drehen 7s linear infinite; } }
 
 /* ---------- Labor-Seiten ---------- */
 .modul-kopf { --farbe: var(--cyan); display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 18px; align-items: center; }
@@ -311,11 +312,12 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .gruppe-karte .nr { font-family: var(--f-spiel); font-weight: 600; color: var(--farbe, var(--cyan)); font-size: .82rem; letter-spacing: .12em; text-transform: uppercase; }
 .gruppe-karte p { font-size: .9rem; color: var(--text-2); }
 .punkte-reihe { display: flex; gap: 6px; flex-wrap: wrap; }
-.status-punkt { width: 16px; height: 16px; display: inline-block; clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); background: rgba(255, 255, 255, .2); }
+.status-punkt { width: 16px; height: 16px; display: inline-block; clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); background: rgba(255, 255, 255, .38); }
 .status-punkt.s-r { background: var(--gold); filter: drop-shadow(0 0 4px var(--gold)); }
 .status-punkt.s-h { background: var(--cyan); }
 .status-punkt.s-f, .status-punkt.s-t { background: var(--rose); }
 .info-box { background: var(--glas); border: 1px solid var(--rand); border-left: 4px solid var(--farbe, var(--cyan)); border-radius: 18px; padding: 14px 16px; display: grid; gap: 8px; box-shadow: -6px 0 22px -10px var(--farbe, var(--cyan)); }
+p.info-box { display: block; }
 .info-box ul { margin: 0; padding-left: 20px; display: grid; gap: 4px; }
 .info-box b { color: var(--text); }
 .pruef-karten { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
@@ -332,8 +334,8 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   padding-block: 8px;
   padding-left: max(12px, env(safe-area-inset-left, 0px));
   padding-right: max(12px, env(safe-area-inset-right, 0px));
-  background: rgba(16, 8, 44, .85); border-bottom: 1px solid var(--rand);
-  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  background: rgba(16, 8, 44, .9); border-bottom: 1px solid var(--rand);
+  position: relative; z-index: 3;
 }
 .sitzung-titel { flex: 1; min-width: 140px; }
 .sitzung-titel b { display: block; font-family: var(--f-spiel); font-weight: 600; font-size: 1.12rem; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -341,16 +343,24 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .navi-punkte { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; max-width: 100%; }
 .navi-punkt { min-width: 44px; height: 44px; border-radius: 14px; border: 1px solid var(--rand); background: var(--glas-hell); font-family: var(--f-spiel); font-weight: 600; font-size: .95rem; font-variant-numeric: tabular-nums; padding: 0 4px; position: relative; color: var(--text-2); transition: transform .1s ease, box-shadow .2s ease; }
 .navi-punkt.aktuell { border-color: var(--cyan); color: var(--text); box-shadow: 0 0 0 2px rgba(79, 227, 255, .35), 0 0 16px rgba(79, 227, 255, .5); transform: translateY(-1px); }
-.navi-punkt.beantwortet { background: rgba(79, 227, 255, .16); color: var(--cyan); }
+.navi-punkt.beantwortet { background: rgba(79, 227, 255, .30); border-color: rgba(79, 227, 255, .8); color: #fff; }
+.navi-punkt.beantwortet::before { content: ""; position: absolute; left: 50%; bottom: 4px; width: 6px; height: 6px; margin-left: -3px; border-radius: 50%; background: var(--cyan); }
+.navi-punkt.s-r::before, .navi-punkt.s-h::before, .navi-punkt.s-t::before, .navi-punkt.s-f::before { position: absolute; right: -5px; bottom: -6px; width: 17px; height: 17px; border-radius: 50%; display: grid; place-items: center; font: 900 11px/1 var(--f-text); color: var(--dunkel); }
+.navi-punkt.s-r::before { content: "✓"; background: var(--mint); }
+.navi-punkt.s-h::before { content: "✓"; background: var(--gold); }
+.navi-punkt.s-t::before { content: "½"; background: var(--rose); }
+.navi-punkt.s-f::before { content: "✗"; background: var(--rose); }
 .navi-punkt.s-r { background: rgba(94, 242, 180, .18); border-color: var(--mint); color: var(--mint); }
 .navi-punkt.s-h { background: rgba(255, 211, 107, .16); border-color: var(--gold); color: var(--gold); }
 .navi-punkt.s-f, .navi-punkt.s-t { background: rgba(255, 138, 168, .16); border-color: var(--rose); color: var(--rose); }
 .navi-punkt.markiert::after { content: "✦"; position: absolute; top: -9px; right: -6px; font-size: 14px; color: var(--gold); text-shadow: 0 0 6px var(--gold); }
 .uhr { display: inline-flex; min-height: 44px; align-items: center; gap: 6px; font-family: var(--f-spiel); font-weight: 600; font-size: 1.05rem; font-variant-numeric: tabular-nums; padding: 6px 14px; border-radius: 999px; background: rgba(79, 227, 255, .1); border: 1px solid rgba(79, 227, 255, .5); color: var(--cyan); box-shadow: 0 0 14px rgba(79, 227, 255, .25); }
+.uhr { position: relative; }
 .uhr svg { width: 18px; height: 18px; }
+.uhr.knapp::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: 0 0 26px rgba(255, 138, 168, .9); opacity: 0; pointer-events: none; }
 .uhr.knapp { background: rgba(255, 138, 168, .14); color: var(--rose); border-color: var(--rose); box-shadow: 0 0 16px rgba(255, 138, 168, .5); }
-@media (prefers-reduced-motion: no-preference) { :root:not(.fx-aus) .uhr.knapp { animation: pulsieren 1.2s ease-in-out infinite; } }
-@keyframes pulsieren { 50% { box-shadow: 0 0 26px rgba(255, 138, 168, .9); } }
+@media (prefers-reduced-motion: no-preference) { :root:not(.fx-aus) .uhr.knapp::after { animation: puls-glow 1.2s ease-in-out infinite; } }
+@keyframes puls-glow { 50% { opacity: 1; } }
 .arbeit { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr); }
 .arbeit.ohne-quelle { grid-template-columns: minmax(0, 1fr); }
 .arbeit.quelle-gross { grid-template-columns: minmax(0, 1fr) 0; }
@@ -383,10 +393,10 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .frage-karte { position: relative; background: linear-gradient(160deg, rgba(44, 28, 96, .88), rgba(22, 12, 54, .9)); border: 1px solid color-mix(in srgb, var(--farbe, var(--cyan)) 55%, transparent); border-radius: 26px; padding: 22px; display: grid; gap: 14px;
   box-shadow: 0 0 0 1px rgba(255, 255, 255, .04), 0 0 34px -6px color-mix(in srgb, var(--farbe, var(--cyan)) 45%, transparent), 0 18px 40px rgba(5, 0, 25, .55); }
 .frage-meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
-.etikett { display: inline-flex; align-items: center; gap: 5px; font-size: .78rem; font-weight: 700; letter-spacing: .03em; padding: 4px 10px; border-radius: 999px; background: var(--glas-hell); border: 1px solid var(--rand-hell); color: var(--text-2); }
-.etikett-farbe { background: color-mix(in srgb, var(--farbe, var(--cyan)) 16%, transparent); color: var(--farbe, var(--cyan)); border-color: color-mix(in srgb, var(--farbe, var(--cyan)) 45%, transparent); }
+.etikett { display: inline-flex; align-items: center; gap: 5px; font-size: .82rem; font-weight: 700; letter-spacing: .03em; padding: 4px 10px; border-radius: 999px; background: var(--glas-hell); border: 1px solid var(--rand-hell); color: var(--text-2); }
+.etikett-farbe { background: color-mix(in srgb, var(--farbe, var(--cyan)) 16%, transparent); color: color-mix(in srgb, var(--farbe, var(--cyan)) 70%, #fff); border-color: color-mix(in srgb, var(--farbe, var(--cyan)) 45%, transparent); }
 .stufe { display: inline-flex; gap: 3px; }
-.stufe i { width: 14px; height: 14px; display: inline-block; clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); background: rgba(255, 255, 255, .22); }
+.stufe i { width: 14px; height: 14px; display: inline-block; clip-path: polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); background: rgba(255, 255, 255, .38); }
 .stufe i.voll { background: var(--gold); filter: drop-shadow(0 0 3px var(--gold)); }
 .frage-text { font-size: 1.22rem; font-weight: 700; line-height: 1.4; color: var(--text); }
 .frage-vorgabe { font-size: 1.05rem; background: rgba(10, 5, 32, .55); border-radius: 14px; padding: 10px 14px; border: 1px dashed var(--rand); }
@@ -434,6 +444,8 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .luecke.leer { color: var(--text-3); }
 .luecke.ok { border-color: var(--mint); background-color: rgba(94, 242, 180, .16); }
 .luecke.nein { border-color: var(--rose); background-color: rgba(255, 138, 168, .16); }
+.luecke:disabled { opacity: 1; color: var(--text); -webkit-text-fill-color: var(--text); cursor: default; }
+.luecke.nein:disabled { text-decoration: line-through; text-decoration-color: var(--rose); }
 .luecke-loesung { display: inline-block; font-size: .86rem; font-weight: 800; color: var(--mint); line-height: 1.2; margin-right: 4px; }
 .tok { min-height: 44px; padding: 2px 8px; margin: 2px 0; border-radius: 12px; border: 1px solid transparent; background: rgba(255, 255, 255, .08); font-size: 1.12rem; line-height: 1.3; color: var(--text); }
 .tok[aria-pressed="true"] { background: var(--marker); color: var(--marker-tinte); border-color: transparent; box-shadow: 0 0 14px rgba(255, 224, 102, .55); }
@@ -531,7 +543,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .web.farbe-blau { --site: #2559c4; --site-hell: #e7efff; }
 .web.farbe-orange { --site: #a3480c; --site-hell: #fdeee2; }
 .web.farbe-lila { --site: #7a4cc2; --site-hell: #f0e9fb; }
-.web.farbe-rot { --site: #c7364a; --site-hell: #fbe6e9; }
+.web.farbe-rot { --site: #b02d42; --site-hell: #fbe6e9; }
 .web.farbe-grau { --site: #4b5568; --site-hell: #eef0f4; }
 .web.farbe-tuerkis { --site: #087373; --site-hell: #e0f4f3; }
 .web.farbe-gelb { --site: #8a6700; --site-hell: #fff6d6; }
@@ -646,7 +658,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 
 /* ---------- Ergebnisse ---------- */
 .ergebnis-kopf { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 22px; align-items: center; position: relative; overflow: hidden; }
-.ergebnis-kopf::before { content: ""; position: absolute; inset: -50% auto auto -10%; width: 60%; height: 160%; background: radial-gradient(circle, rgba(255, 211, 107, .18), transparent 60%); pointer-events: none; }
+.ergebnis-kopf::before { content: ""; position: absolute; inset: -50% auto auto -10%; width: 60%; height: 160%; background: radial-gradient(closest-side, rgba(255, 211, 107, .18), transparent); pointer-events: none; }
 .ring { width: 156px; height: 156px; overflow: visible; }
 .ring circle { fill: none; stroke-width: 14; }
 .ring .spur { stroke: rgba(255, 255, 255, .1); }
@@ -656,7 +668,7 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 @keyframes hupf { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 .ring text { font-family: var(--f-spiel); font-weight: 700; fill: var(--text); }
 .sterne-wertung { display: flex; gap: 6px; font-size: 2rem; line-height: 1; }
-.sterne-wertung span { color: rgba(255, 255, 255, .18); }
+.sterne-wertung span { color: rgba(255, 255, 255, .38); }
 .sterne-wertung span.an { color: var(--gold); text-shadow: 0 0 14px rgba(255, 211, 107, .9); }
 @media (prefers-reduced-motion: no-preference) { :root:not(.fx-aus) .sterne-wertung span.an { animation: stern-plopp .5s cubic-bezier(.3, 1.8, .5, 1) both; } :root:not(.fx-aus) .sterne-wertung span.an:nth-child(2) { animation-delay: .25s; } :root:not(.fx-aus) .sterne-wertung span.an:nth-child(3) { animation-delay: .5s; } }
 @keyframes stern-plopp { from { transform: scale(0) rotate(-90deg); opacity: 0; } to { transform: none; opacity: 1; } }
@@ -669,13 +681,14 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .review { background: var(--glas); border: 1px solid var(--rand); border-radius: 18px; }
 .review summary { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 12px 14px; cursor: pointer; list-style: none; min-height: 52px; }
 .review summary::-webkit-details-marker { display: none; }
+.review summary > .klein { max-width: 14ch; text-align: right; }
 .review .inhalt { padding: 0 14px 14px; display: grid; gap: 12px; }
 .status-icon { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-weight: 900; color: var(--dunkel); font-size: .95rem; }
 .status-icon.r { background: var(--mint); box-shadow: 0 0 12px rgba(94, 242, 180, .7); } .status-icon.t { background: var(--gold); } .status-icon.f { background: var(--rose); } .status-icon.leer { background: var(--text-3); }
 .verlauf-tabelle { width: 100%; border-collapse: collapse; font-size: .92rem; font-variant-numeric: tabular-nums; }
 .verlauf-tabelle th, .verlauf-tabelle td { padding: 8px 6px; border-bottom: 1px solid var(--rand); text-align: left; }
 .verlauf-tabelle th { color: var(--text-2); font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; }
-.tabelle-scroll { overflow-x: auto; }
+.tabelle-scroll { overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--pink) transparent; padding-bottom: 4px; }
 .mini-diagramm { display: flex; align-items: flex-end; gap: 6px; height: 96px; padding-top: 8px; }
 .mini-diagramm > div { flex: 1; min-width: 10px; max-width: 34px; background: linear-gradient(180deg, var(--farbe, var(--cyan)), color-mix(in srgb, var(--farbe, var(--cyan)) 40%, transparent)); border-radius: 8px 8px 2px 2px; position: relative; box-shadow: 0 0 12px color-mix(in srgb, var(--farbe, var(--cyan)) 50%, transparent); }
 .mini-diagramm > div span { position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: .72rem; font-weight: 800; color: var(--text-2); font-variant-numeric: tabular-nums; }
@@ -720,14 +733,17 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .wortspeicher button { min-height: 44px; padding: 4px 14px; border-radius: 999px; border: 1px solid var(--rand); background: rgba(124, 196, 255, .12); color: var(--text); font-weight: 700; }
 .check-liste { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .check-liste label { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; align-items: start; padding: 10px 12px; border-radius: 14px; border: 1px solid var(--rand); background: rgba(255, 255, 255, .05); cursor: pointer; min-height: 44px; }
-.check-liste input { width: 24px; height: 24px; margin: 0; accent-color: var(--pink); }
+.check-liste input { width: 26px; height: 26px; margin: 0; accent-color: var(--pink); }
+.schalter input[type="checkbox"], .check-liste input[type="checkbox"] { -webkit-appearance: none; appearance: none; width: 26px; height: 26px; margin: 0; border-radius: 8px; border: 2px solid rgba(196, 168, 255, .55); background: rgba(10, 5, 32, .6) center / 16px no-repeat; box-shadow: inset 0 0 8px rgba(185, 148, 255, .25); transition: background-color .15s, box-shadow .2s; cursor: pointer; }
+.schalter input[type="checkbox"]:checked, .check-liste input[type="checkbox"]:checked { border-color: transparent; background-color: #ff6fd8; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3.2 3L13 4.5' fill='none' stroke='%2312062b' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); box-shadow: 0 0 12px rgba(255, 111, 216, .7); }
+.check-liste label:has(input:checked) { border-color: rgba(255, 111, 216, .6); background: rgba(255, 111, 216, .1); }
 .analyse { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
 .analyse li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; align-items: start; padding: 10px 12px; border-radius: 14px; background: rgba(255, 255, 255, .05); border: 1px solid var(--rand); }
 .analyse li i { font-style: normal; font-weight: 900; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; color: var(--dunkel); font-size: .8rem; }
 .analyse li.gut i { background: var(--mint); } .analyse li.tipp i { background: var(--gold); }
 .zaehler { font-variant-numeric: tabular-nums; font-weight: 800; color: var(--cyan); }
 .impuls { font-size: 2.8rem; letter-spacing: .12em; filter: drop-shadow(0 0 12px rgba(255, 255, 255, .35)); }
-.notiz-feld { width: 100%; min-height: 44px; border-radius: 12px; border: 1px solid var(--rand); background: rgba(10, 5, 32, .6); color: var(--text); padding: 8px 10px; font-size: 1rem; }
+.notiz-feld { width: 100%; min-height: 44px; border-radius: 12px; border: 1px solid rgba(196, 168, 255, .55); background: rgba(10, 5, 32, .6); color: var(--text); padding: 8px 10px; font-size: 1rem; }
 
 /* ---------- Dialog, Meldungen, Banner ---------- */
 .dialog-huelle { position: fixed; inset: 0; z-index: 50; background: rgba(5, 0, 20, .6); -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); display: grid; place-items: center; padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
@@ -736,16 +752,23 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 @keyframes plopp { from { transform: scale(.85); opacity: 0; } to { transform: none; opacity: 1; } }
 .dialog h2 { font-size: 1.45rem; }
 .dialog .aktionen { justify-content: flex-end; }
+::placeholder { color: #a397d0; opacity: 1; }
+.schreibfeld::placeholder { color: #5b4f78; }
 .navi-raster { display: grid; grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); gap: 8px; }
 .navi-raster .navi-punkt { height: 52px; font-size: 1rem; }
-.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); z-index: 60; background: linear-gradient(120deg, #2e1b66, #1a0d40); color: var(--text); padding: 12px 20px; border-radius: 18px; border: 1px solid rgba(255, 211, 107, .55); font-family: var(--f-spiel); font-weight: 600; font-size: 1.05rem; box-shadow: 0 0 30px rgba(255, 211, 107, .3), var(--schatten-hoch); max-width: min(560px, calc(100% - 32px)); text-align: center; }
+.toast { pointer-events: none; position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); z-index: 60; background: linear-gradient(120deg, #2e1b66, #1a0d40); color: var(--text); padding: 12px 20px; border-radius: 18px; border: 1px solid rgba(255, 211, 107, .55); font-family: var(--f-spiel); font-weight: 600; font-size: 1.05rem; box-shadow: 0 0 30px rgba(255, 211, 107, .3), var(--schatten-hoch); max-width: min(560px, calc(100% - 32px)); text-align: center; }
 @media (prefers-reduced-motion: no-preference) { :root:not(.fx-aus) .toast:not([hidden]) { animation: toast-rein .45s cubic-bezier(.3, 1.5, .5, 1) both; } }
 @keyframes toast-rein { from { transform: translate(-50%, 30px) scale(.9); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
+/* In Training und Prüfung oben, damit „Weiter“ und die Rückmeldung frei bleiben */
+:root.in-sitzung .toast { bottom: auto; top: calc(env(safe-area-inset-top, 0px) + 14px); }
+@media (prefers-reduced-motion: no-preference) { :root.in-sitzung:not(.fx-aus) .toast:not([hidden]) { animation-name: toast-rein-oben; } }
+@keyframes toast-rein-oben { from { transform: translate(-50%, -24px) scale(.9); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
 .banner { background: rgba(255, 211, 107, .12); border: 1px solid var(--gold); color: var(--text); border-radius: 16px; padding: 10px 14px; font-size: .92rem; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
 
 /* ---------- Spezialeffekte ---------- */
-.levelup { position: fixed; inset: 0; z-index: 65; display: grid; place-items: center; pointer-events: none; }
-.levelup-box { text-align: center; padding: 26px 34px; border-radius: 30px; background: radial-gradient(circle at 50% 30%, rgba(124, 58, 237, .85), rgba(23, 11, 58, .92)); border: 2px solid rgba(255, 211, 107, .8); box-shadow: 0 0 60px rgba(255, 111, 216, .55), 0 0 120px rgba(79, 227, 255, .3); }
+.levelup { position: fixed; inset: 0; z-index: 65; display: grid; place-items: center; pointer-events: none; background: radial-gradient(circle at 50% 50%, rgba(10, 5, 32, .6), rgba(10, 5, 32, .25) 70%); }
+@media (prefers-reduced-motion: no-preference) { :root:not(.fx-aus) .levelup { animation: einblenden 2.6s ease both; } }
+.levelup-box { max-width: calc(100vw - 32px); text-align: center; padding: 26px 34px; border-radius: 30px; background: radial-gradient(circle at 50% 30%, #6a2fd6, #1d0d49 78%); border: 2px solid rgba(255, 211, 107, .8); box-shadow: 0 0 60px rgba(255, 111, 216, .55), 0 0 120px rgba(79, 227, 255, .3); }
 .levelup-box strong { display: block; font-family: var(--f-spiel); font-weight: 700; font-size: clamp(2.6rem, 8vw, 4.4rem); letter-spacing: .04em; background: linear-gradient(90deg, #ffe08a, #ff6fd8, #4fe3ff); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 16px rgba(255, 211, 107, .6)); }
 .levelup-box span { display: block; font-family: var(--f-spiel); font-size: 1.3rem; color: var(--text); margin-top: 4px; }
 .levelup-box small { display: block; color: var(--text-2); margin-top: 6px; font-size: .95rem; }
@@ -775,18 +798,97 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 @keyframes funkelstern { 0%, 100% { opacity: .15; transform: scale(.45) rotate(0deg); } 50% { opacity: 1; transform: scale(1) rotate(45deg); } }
 @keyframes schnuppe { 0% { opacity: 0; transform: rotate(-28deg) translateX(0); } 2% { opacity: 1; } 8% { opacity: 0; transform: rotate(-28deg) translateX(-520px); } 100% { opacity: 0; transform: rotate(-28deg) translateX(-520px); } }
 /* Glitzer-Explosion und Sternenregen */
-#effekte { position: fixed; inset: 0; z-index: 66; pointer-events: none; overflow: hidden; }
+#fx-ebene { position: fixed; inset: 0; z-index: 66; pointer-events: none; overflow: hidden; contain: strict; }
 .glitzer-wolke { position: absolute; width: 0; height: 0; }
-.glitzer-wolke i { position: absolute; left: 0; top: 0; font-style: normal; font-size: calc(18px * var(--s)); line-height: 1; color: var(--f); text-shadow: 0 0 8px var(--f), 0 0 16px var(--f); transform: translate(-50%, -50%); opacity: 0; }
+.glitzer-wolke i { position: absolute; left: 0; top: 0; font-style: normal; font-size: 18px; contain: layout style; line-height: 1; color: var(--f); text-shadow: 0 0 8px var(--f), 0 0 16px var(--f); transform: translate(-50%, -50%); opacity: 0; }
 .sternenregen { position: absolute; inset: 0; }
-.sternenregen i { position: absolute; top: -40px; font-style: normal; font-size: calc(20px * var(--s)); line-height: 1; color: var(--f); text-shadow: 0 0 10px var(--f); opacity: 0; }
+.sternenregen i { position: absolute; top: -40px; font-style: normal; font-size: 20px; line-height: 1; color: var(--f); text-shadow: 0 0 10px var(--f); opacity: 0; }
 @media (prefers-reduced-motion: no-preference) {
   :root:not(.fx-aus) .glitzer-wolke i { animation: glitzer-flug var(--dauer) cubic-bezier(.15, .7, .3, 1) forwards; }
   :root:not(.fx-aus) .sternenregen i { animation: sternenregen var(--dauer) cubic-bezier(.3, .1, .6, 1) var(--v) forwards; }
 }
-@keyframes glitzer-flug { 0% { opacity: 1; transform: translate(-50%, -50%) scale(.2) rotate(0deg); } 25% { opacity: 1; } 100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy) + 40px)) scale(var(--s)) rotate(var(--rot)); } }
-@keyframes sternenregen { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg); } 10% { opacity: 1; } 85% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx), 105vh) rotate(var(--rot)); } }
+@keyframes glitzer-flug { 0% { opacity: 1; transform: translate(-50%, -50%) scale(calc(.2 * var(--s))) rotate(0deg); } 25% { opacity: 1; } 100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy) + 40px)) scale(calc(var(--s) * var(--s))) rotate(var(--rot)); } }
+@keyframes sternenregen { 0% { opacity: 0; transform: translate(0, 0) rotate(0deg) scale(var(--s)); } 10% { opacity: 1; } 85% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--dx), 105vh) rotate(var(--rot)) scale(var(--s)); } }
 :root.fx-aus *, :root.fx-aus *::before, :root.fx-aus *::after { animation: none !important; transition: none !important; }
+
+/* ---------- Spielgefühl: Münzflug, Lob-Stempel, Combo, Abzeichen-Enthüllung, Avatar, Reise, Album, Truhe, Boss ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  :root:not(.fx-aus) .punkte-flug.zum-chip { animation: muenzflug .95s cubic-bezier(.5, 0, .3, 1) both; }
+  :root:not(.fx-aus) .punkte-chip.hupf { animation: chip-hupf .55s cubic-bezier(.3, 1.8, .5, 1); }
+}
+@keyframes muenzflug { 0% { transform: translate(-50%, 0) scale(.6); opacity: 0; } 18% { transform: translate(-50%, -18px) scale(1.3); opacity: 1; } 100% { transform: translate(calc(-50% + var(--zx)), var(--zy)) scale(.45); opacity: 0; } }
+@keyframes chip-hupf { 45% { transform: scale(1.28); box-shadow: 0 0 26px rgba(255, 211, 107, .95), inset 0 0 12px rgba(255, 211, 107, .4); } }
+.rueckmeldung.r { overflow: hidden; } /* der Stempel darf nie über den Bildschirmrand ragen (sonst zoomt das Handy heraus) */
+.seite, .sitzung, .sitzung-kopf { overflow-x: clip; }
+.rueckmeldung.r > b:first-child { font-size: 1.55rem; display: inline-block; transform-origin: left center; }
+.rueckmeldung.r > b:first-child::before { content: "✦ "; color: var(--gold); text-shadow: 0 0 10px var(--gold); }
+@media (prefers-reduced-motion: no-preference) { :root.fx-voll .rueckmeldung.r > b:first-child { animation: lob-stempel .55s cubic-bezier(.3, 1.8, .5, 1) both; } }
+@keyframes lob-stempel { 0% { transform: scale(1.7) rotate(-6deg); opacity: 0; } 60% { transform: scale(.94) rotate(1deg); opacity: 1; } 100% { transform: none; } }
+.combo { display: inline-flex; align-items: center; gap: 4px; min-height: 44px; padding: 6px 12px; border-radius: 999px; font-family: var(--f-spiel); font-weight: 700; font-size: 1.05rem; color: #fff; background: linear-gradient(135deg, #c2410c, #be185d); box-shadow: 0 0 18px rgba(255, 90, 120, .7); font-variant-numeric: tabular-nums; }
+@media (prefers-reduced-motion: no-preference) { :root:not(.fx-aus) .combo.neu { animation: chip-hupf .55s cubic-bezier(.3, 1.8, .5, 1); } }
+.combo-pop { position: fixed; left: 50%; top: calc(env(safe-area-inset-top, 0px) + 112px); z-index: 67; pointer-events: none; font-family: var(--f-spiel); font-weight: 700; font-size: clamp(2.2rem, 6vw, 3.4rem); white-space: nowrap; background: linear-gradient(90deg, #ffe08a, #ff8a3d, #ff3d8b); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 14px rgba(255, 90, 120, .8)); transform: translate(-50%, -50%); }
+@media (prefers-reduced-motion: no-preference) { :root:not(.fx-aus) .combo-pop { animation: combo-pop 1.3s cubic-bezier(.2, 1.2, .3, 1) both; } }
+@keyframes combo-pop { 0% { transform: translate(-50%, -50%) scale(.3) rotate(-10deg); opacity: 0; } 22% { transform: translate(-50%, -50%) scale(1.12) rotate(3deg); opacity: 1; } 75% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -90%) scale(1.05); opacity: 0; } }
+.abzeichen-neu { position: fixed; inset: 0; z-index: 65; display: grid; place-items: center; pointer-events: none; padding: 16px; background: radial-gradient(circle at 50% 45%, rgba(10, 5, 32, .35), rgba(10, 5, 32, .7)); }
+.abzeichen-neu-box { position: relative; isolation: isolate; display: grid; justify-items: center; gap: 4px; text-align: center; padding: 30px 40px 26px; border-radius: 32px; min-width: min(360px, 100%); max-width: 100%; background: radial-gradient(circle at 50% 25%, #6a2fd6, #1d0d49 80%); border: 2px solid rgba(255, 211, 107, .85); box-shadow: 0 0 60px rgba(255, 211, 107, .45), 0 0 120px rgba(255, 111, 216, .3); }
+.abzeichen-neu-box .strahlen { position: absolute; left: 50%; top: 74px; width: 360px; height: 360px; margin: -180px 0 0 -180px; border-radius: 50%; z-index: -1; background: repeating-conic-gradient(from 0deg, rgba(255, 224, 138, .38) 0 9deg, transparent 9deg 24deg); -webkit-mask: radial-gradient(circle, #000 18%, transparent 68%); mask: radial-gradient(circle, #000 18%, transparent 68%); }
+.abzeichen-neu-box .sym { font-size: 4.6rem; line-height: 1.1; filter: drop-shadow(0 0 18px rgba(255, 255, 255, .7)); }
+.abzeichen-neu-box small { font-family: var(--f-spiel); font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--gold); font-size: .85rem; }
+.abzeichen-neu-box strong { font-family: var(--f-spiel); font-size: 1.9rem; line-height: 1.1; background: var(--verlauf-neon); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.abzeichen-neu-box > span:last-child { color: var(--text-2); font-size: .95rem; max-width: 30ch; }
+@media (prefers-reduced-motion: no-preference) {
+  :root:not(.fx-aus) .abzeichen-neu { animation: einblenden 2.9s ease both; }
+  :root:not(.fx-aus) .abzeichen-neu-box { animation: levelup 2.9s cubic-bezier(.2, 1.2, .3, 1) both; }
+  :root:not(.fx-aus) .abzeichen-neu-box .sym { animation: stern-plopp .6s .25s cubic-bezier(.3, 1.8, .5, 1) both; }
+  :root.fx-voll .abzeichen-neu-box .strahlen { animation: drehen 9s linear infinite; }
+}
+@keyframes einblenden { 0% { opacity: 0; } 10%, 85% { opacity: 1; } 100% { opacity: 0; } }
+.avatar-orb .orb-mond { position: absolute; inset: -14px; border-radius: 50%; pointer-events: none; }
+.avatar-orb .orb-mond::before { content: ""; position: absolute; top: 50%; right: -2px; width: 14px; height: 14px; margin-top: -7px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, #ffd36b 55%, #ff8a3d); box-shadow: 0 0 12px #ffd36b; }
+@media (prefers-reduced-motion: no-preference) { :root.fx-voll .avatar-orb .orb-mond { animation: drehen 5s linear infinite; } }
+.avatar-orb .orb-krone { position: absolute; top: -17px; left: 50%; transform: translateX(-50%) rotate(-8deg); font-size: 1.5rem; line-height: 1; filter: drop-shadow(0 0 8px rgba(255, 211, 107, .9)); }
+.avatar-orb.aura { box-shadow: 0 0 24px rgba(185, 148, 255, .6), 0 0 48px rgba(255, 111, 216, .45), inset 0 0 18px rgba(255, 255, 255, .15); }
+.reise { position: absolute; left: 0; right: 0; bottom: -4px; height: 6px; background: rgba(10, 5, 32, .8); pointer-events: none; }
+.reise > i { position: absolute; inset: 0 auto 0 0; width: var(--nach); background: var(--verlauf-neon); box-shadow: 0 0 12px rgba(255, 111, 216, .8); border-radius: 0 999px 999px 0; }
+.reise > b { position: absolute; top: 50%; left: clamp(12px, var(--nach), calc(100% - 12px)); transform: translate(-50%, -50%); font-size: 22px; line-height: 1; filter: drop-shadow(0 0 6px rgba(255, 255, 255, .8)); }
+@media (prefers-reduced-motion: no-preference) { :root:not(.fx-aus) .reise > i { animation: reise-i .7s cubic-bezier(.3, 1.4, .5, 1) both; } :root:not(.fx-aus) .reise > b { animation: reise-b .7s cubic-bezier(.3, 1.4, .5, 1) both; } }
+@keyframes reise-i { from { width: var(--von); } }
+@keyframes reise-b { from { left: clamp(12px, var(--von), calc(100% - 12px)); } }
+.abzeichen { position: relative; }
+.abzeichen:not(.hat) .sym { filter: grayscale(1) brightness(.85); opacity: .45; }
+.abzeichen:not(.hat)::before { content: "🔒"; position: absolute; top: 8px; right: 10px; font-size: .9rem; opacity: .7; }
+.abz-fort { width: 80%; height: 6px; border-radius: 999px; background: rgba(10, 5, 32, .7); border: 1px solid var(--rand); overflow: hidden; margin-top: 4px; }
+.abz-fort > i { display: block; height: 100%; background: var(--verlauf-gold); box-shadow: 0 0 8px rgba(255, 211, 107, .8); }
+.mission-punkte { align-items: center; }
+.mission-truhe { margin-left: auto; font-size: 1.7rem; line-height: 1; filter: drop-shadow(0 0 8px rgba(255, 211, 107, .85)); transform-origin: 50% 90%; }
+@media (prefers-reduced-motion: no-preference) { :root.fx-voll .mission-truhe:not(.offen) { animation: truhe-wackeln 3s ease-in-out infinite; } }
+@keyframes truhe-wackeln { 0%, 78%, 100% { transform: none; } 82% { transform: rotate(-12deg) scale(1.08); } 86% { transform: rotate(10deg) scale(1.08); } 90% { transform: rotate(-6deg); } 94% { transform: rotate(3deg); } }
+.karte.boss-intro { position: relative; border: 2px solid transparent; background: linear-gradient(var(--all-2), var(--all-2)) padding-box, conic-gradient(from 210deg, #ffd36b, #ff6fd8, #ffad4d, #4fe3ff, #ffd36b) border-box; box-shadow: 0 0 40px rgba(255, 173, 77, .25), var(--schatten); }
+.karte.boss-intro::after { content: ""; position: absolute; inset: -2px; border-radius: inherit; box-shadow: 0 0 34px rgba(255, 211, 107, .55), inset 0 0 22px rgba(255, 111, 216, .2); opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) { :root.fx-voll .karte.boss-intro::after { animation: puls-glow 2.4s ease-in-out infinite; } }
+@media (prefers-reduced-motion: no-preference) { :root:not(.fx-aus) .tempo-satz.neu { animation: satz-rein .2s ease-out both; } }
+@keyframes satz-rein { from { transform: translateX(26px) scale(.97); opacity: .25; } }
+@media (prefers-reduced-motion: no-preference) { :root:not(.fx-aus) .frage-karte.rein { animation: karte-rein .38s cubic-bezier(.2, .9, .25, 1.15) both; } }
+@keyframes karte-rein { from { opacity: .001; transform: translateX(36px) scale(.98); } }
+details.karte > summary { list-style: none; display: flex; align-items: center; gap: 8px; cursor: pointer; font-family: var(--f-spiel); font-weight: 600; font-size: 1.05rem; min-height: 44px; }
+details.karte > summary::-webkit-details-marker { display: none; }
+details.karte > summary::before { content: "▸"; color: var(--pink); text-shadow: 0 0 8px var(--pink); transition: transform .15s ease; }
+details.karte[open] > summary::before { transform: rotate(90deg); }
+
+/* ---------- Effekt-Stufen konsequent: „sanft“ ohne Wackeln und Drehen ---------- */
+:root.fx-sanft .funkelstern { animation-name: funkeln-sanft !important; }
+@keyframes funkeln-sanft { 0%, 100% { opacity: .15; } 50% { opacity: .8; } }
+:root.fx-sanft .wackeln { animation: rand-blitz .6s ease !important; }
+@keyframes rand-blitz { 50% { box-shadow: 0 0 0 3px var(--rose), 0 0 24px rgba(255, 138, 168, .6); } }
+:root.fx-sanft .feier { animation: none !important; }
+:root.fx-sanft .levelup-box, :root.fx-sanft .abzeichen-neu-box, :root.fx-sanft .combo-pop { animation-name: einblenden !important; }
+/* Leistung: Hintergrund ruht, solange ein Dialog offen ist; Nebel ruht in Training und Prüfung */
+:root.dialog-offen .weltall > *, :root.dialog-offen #app *, :root.dialog-offen #app *::before, :root.dialog-offen #app *::after { animation-play-state: paused !important; }
+:root.in-sitzung .weltall .nebel { animation-play-state: paused; }
+/* Sicherheitsnetz für sehr alte Geräte (automatisch, ohne die Einstellung zu ändern) */
+:root.fx-leicht .weltall .nebel { animation: none !important; }
+:root.fx-leicht .kopf { -webkit-backdrop-filter: none; backdrop-filter: none; background: rgba(16, 8, 44, .94); }
+:root.fx-leicht .funkelstern:nth-of-type(2n) { animation: none !important; opacity: .45; }
 
 /* Springen zwischen Quelle und Aufgabe (nur Hochformat) */
 .springen { display: none; }
@@ -828,6 +930,18 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
   .web .w-tabelle th, .web .w-tabelle td { padding: 4px 5px; }
   .web .w-tabelle th { -webkit-hyphens: auto; hyphens: auto; }
   .web .a-reiter { flex-wrap: wrap; }
+  .review summary { grid-template-columns: auto minmax(0, 1fr); row-gap: 2px; }
+  .review summary > .status-icon { grid-row: span 2; }
+  .review summary > .klein { grid-column: 2; justify-self: start; max-width: none; text-align: left; }
+  .verlauf-tabelle th, .verlauf-tabelle td { padding: 8px 5px; }
+  .verlauf-tabelle td:first-child { white-space: nowrap; }
+  .pruef-tabelle th:nth-child(4), .pruef-tabelle td:nth-child(4) { display: none; }
+  .verlauf-tabelle td .knopf-geist { padding-inline: 2px; }
+  .sitzung-kopf .navi-punkte { flex-wrap: nowrap; overflow-x: auto; width: 100%; padding: 10px 6px 8px 2px; scrollbar-width: none; scroll-snap-type: x proximity; }
+  .sitzung-kopf .navi-punkte::-webkit-scrollbar { display: none; }
+  .navi-punkt { flex: none; scroll-snap-align: center; }
+  .dialog .aktionen { flex-direction: column; align-items: stretch; }
+  .dialog .aktionen .knopf { width: 100%; }
 }
 
 </style>
@@ -837,8 +951,8 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 </div>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 <div id="dialog-wurzel"></div>
-<canvas class="glitzer-leinwand" id="glitzer" aria-hidden="true"></canvas>
-<div id="effekte" aria-live="polite"></div>
+<div id="fx-ebene" aria-hidden="true"></div>
+<div id="sr-meldung" class="unsichtbar" role="status" aria-live="polite"></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
     <linearGradient id="ring-verlauf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe08a"/><stop offset=".5" stop-color="#ff6fd8"/><stop offset="1" stop-color="#4fe3ff"/></linearGradient>
@@ -1170,7 +1284,7 @@ function punkteDazu(n) {
   const vorher = level(p.punkte || 0).nr;
   p.punkte = Math.max(0, (p.punkte || 0) + n);
   const jetzt = level(p.punkte);
-  if (jetzt.nr > vorher) setTimeout(() => zeigeLevelUp(jetzt), 900);
+  if (jetzt.nr > vorher) feiern(() => zeigeLevelUp(jetzt), 3000, 900);
 }
 function merkeTag() {
   const p = P(); if (!p) return;
@@ -1257,7 +1371,7 @@ function tagesMission() {
 const ABZEICHEN = [
   { id: 'start', sym: '🧪', name: 'Erster Versuch', text: 'Die erste Aufgabe gelöst', test: (p) => Object.keys(p.items).length >= 1 },
   { id: 'fall', sym: '🔎', name: 'Fall gelöst', text: 'Alle 4 Aufgaben eines Falls gemeistert', test: (p) => REG.module.digital.gruppen.some((g) => REG.gruppen[g].items.every((id) => itemStatus(id, p) === 'r')) },
-  { id: 'faelle', sym: '🕵️', name: 'Super-Spürnase', text: 'Alle 20 Digital-Aufgaben gemeistert', test: (p) => { const s = modulStand('digital', p); return s.gesamt > 0 && s.gemeistert === s.gesamt; } },
+  { id: 'faelle', sym: '🕵️', name: 'Super-Spürnase', text: 'Alle 20 Digital-Aufgaben gemeistert', test: (p) => { const s = modulStand('digital', p); return s.gesamt > 0 && s.gemeistert === s.gesamt; }, stand: (p) => { const s = modulStand('digital', p); return [s.gemeistert, s.gesamt]; } },
   { id: 'werbung', sym: '🛡️', name: 'Netz-Profi', text: 'Alle „Bewerten“-Aufgaben im Digital-Labor gemeistert', test: (p) => { const b = REG.module.digital.items.filter((id) => REG.items[id].it.kompetenz === 'bewerten'); return b.length > 0 && b.every((id) => itemStatus(id, p) === 'r'); } },
   { id: 'bylet15', sym: '🏅', name: 'BYLET-D bestanden', text: 'In der BYLET-D-Prüfung mindestens 15 von 20', test: (p) => p.pruefungen.some((x) => x.art === 'digital' && x.punkte >= 15) },
   { id: 'bylet18', sym: '🏆', name: 'PROFI-Prüfung', text: 'In der BYLET-D-Prüfung mindestens 18 von 20', test: (p) => p.pruefungen.some((x) => x.art === 'digital' && x.punkte >= 18) },
@@ -1267,8 +1381,8 @@ const ABZEICHEN = [
   { id: 'gr', sym: '🧩', name: 'Grammatik-Genie', text: '80 % im Grammatik-Labor gemeistert', test: (p) => { const s = modulStand('grammatik', p); return s.gesamt > 0 && s.gemeistert >= 0.8 * s.gesamt; } },
   { id: 'diktat', sym: '🎧', name: 'Diktat-Krone', text: 'Ein Diktat mit 10 von 10 Wörtern', test: (p) => Object.values(p.diktate).some((d) => d.best >= 10) },
   { id: 'autor', sym: '🖋️', name: 'Schreib-Talent', text: 'Zwei Schreibaufträge fertig geschrieben', test: (p) => Object.values(p.texte).filter((t) => t.fertig).length >= 2 },
-  { id: 'fehler', sym: '🦾', name: 'Fehler-Magie', text: '10 Fehler aus der Fehler-Kiste verbessert', test: (p) => p.fehlerBehoben >= 10 },
-  { id: 'serie5', sym: '🔥', name: 'Dranbleib-Stern', text: 'An 5 Tagen hintereinander geübt', test: (p) => serie(p) >= 5 },
+  { id: 'fehler', sym: '🦾', name: 'Fehler-Magie', text: '10 Fehler aus der Fehler-Kiste verbessert', test: (p) => p.fehlerBehoben >= 10, stand: (p) => [p.fehlerBehoben, 10] },
+  { id: 'serie5', sym: '🔥', name: 'Dranbleib-Stern', text: 'An 5 Tagen hintereinander geübt', test: (p) => serie(p) >= 5, stand: (p) => [serie(p), 5] },
   { id: 'mission', sym: '🎯', name: 'Missions-Stern', text: 'Eine Tagesmission komplett erledigt', test: (p) => !!p.missionGeschafft },
 ];
 DB = ladeSpeicher();
@@ -1278,7 +1392,7 @@ function pruefeAbzeichen() {
   for (const a of ABZEICHEN) {
     try { if (!p.abzeichen[a.id] && a.test(p)) { p.abzeichen[a.id] = Date.now(); neu.push(a); } } catch (e) { /* Inhalte fehlen */ }
   }
-  if (neu.length) { speichern(); neu.forEach((a, i) => setTimeout(() => toastDanach(`Neues Abzeichen: ${a.sym} ${a.name}`), 700 + i * 2600)); }
+  if (neu.length) { speichern(); neu.forEach((a) => feiern(() => zeigeAbzeichen(a), 3100, 700)); }
   return neu;
 }
 
@@ -1577,11 +1691,11 @@ function rueckmeldung(it, erg, { versuch = 1, zeigeLoesung = false } = {}) {
   if (!zeigeLoesung && versuch < 2) text += ' Du hast noch einen Versuch.';
   return { cls: erg.status === 'teilweise' ? 't' : 'f', titel: erg.status === 'teilweise' ? 'Fast!' : 'Das stimmt noch nicht.', text };
 }
-function stufeHTML(n) { return `<span class="stufe" title="Schwierigkeit ${n} von 3" aria-label="Schwierigkeit ${n} von 3">${[1, 2, 3].map((i) => `<i class="${i <= n ? 'voll' : ''}"></i>`).join('')}</span>`; }
+function stufeHTML(n) { return `<span class="stufe" role="img" title="Schwierigkeit ${n} von 3" aria-label="Schwierigkeit ${n} von 3">${[1, 2, 3].map((i) => `<i class="${i <= n ? 'voll' : ''}"></i>`).join('')}</span>`; }
 
 /* ---- 04-quellen.js ---- */
 /* ===== Quellen: simulierter Browser, Lesetexte, Merkkasten, Textmarker ===== */
-const SITE_FARBEN = { gruen: '#277335', blau: '#2559c4', orange: '#a3480c', lila: '#7a4cc2', rot: '#c7364a', grau: '#4b5568', tuerkis: '#087373', gelb: '#8a6700' };
+const SITE_FARBEN = { gruen: '#277335', blau: '#2559c4', orange: '#a3480c', lila: '#7a4cc2', rot: '#b02d42', grau: '#4b5568', tuerkis: '#087373', gelb: '#8a6700' };
 const ERLAUBTE_TAGS = new Set('h1 h2 h3 h4 p ul ol li strong em b i small span div a button br hr table thead tbody tr th td dl dt dd details summary time caption'.split(' '));
 const GEFAEHRLICH = new Set('script style iframe object embed img video audio link meta form input textarea select svg math template noscript'.split(' '));
 const ERLAUBTE_ATTR = new Set(['class', 'data-ziel', 'data-extern', 'open', 'colspan', 'rowspan', 'datetime', 'title', 'aria-label']);
@@ -1819,15 +1933,25 @@ function zeichneKopf() {
     let cls = i === SITZ.index ? 'aktuell' : '';
     if (istPruefung()) { if (antwortStand(REG.items[id].it, SITZ.antworten[id]) !== 'leer') cls += ' beantwortet'; if (SITZ.markiert[id]) cls += ' markiert'; }
     else if (SITZ.ergebnis[id]) cls += ' s-' + SITZ.ergebnis[id];
-    return `<button type="button" class="navi-punkt ${cls}" data-act="s-gehe" data-i="${i}" aria-label="Aufgabe ${i + 1}${SITZ.markiert[id] ? ', markiert' : ''}" ${i === SITZ.index ? 'aria-current="step"' : ''}>${i + 1}</button>`;
+    return `<button type="button" class="navi-punkt ${cls}" data-act="s-gehe" data-i="${i}" aria-label="Aufgabe ${i + 1}${istPruefung() ? (cls.includes('beantwortet') ? ', beantwortet' : ', offen') : ({ r: ', richtig', h: ', mit Hilfe richtig', t: ', teilweise richtig', f: ', falsch' }[SITZ.ergebnis[id]] || '')}${SITZ.markiert[id] ? ', markiert' : ''}" ${i === SITZ.index ? 'aria-current="step"' : ''}>${i + 1}</button>`;
   }).join('');
   kopf.innerHTML = `
     <button type="button" class="rund-knopf" data-act="s-beenden" aria-label="${istPruefung() ? 'Prüfung unterbrechen' : 'Training beenden'}">${icon('zurueck')}</button>
     <div class="sitzung-titel"><b>${esc(SITZ.titel)}</b><span>${esc(unter)}</span></div>
     ${istPruefung() && SITZ.zeitLimit ? `<button type="button" class="uhr${SITZ.zeitLimit - SITZ.verbraucht <= 300 ? ' knapp' : ''}" id="uhr" data-act="s-uhr" aria-label="Restzeit">${icon('uhr')}<span>${SITZ.zeitVerborgen ? 'Zeit' : zeitLesbar(SITZ.zeitLimit - SITZ.verbraucht)}</span></button>` : ''}
     <div class="navi-punkte" role="navigation" aria-label="Aufgaben">${punkte}</div>
-    ${istPruefung() ? `<button type="button" class="knopf knopf-klein knopf-signal" data-act="s-abgeben">Abgeben</button>` : `<span class="punkte-chip" title="In diesem Training gesammelt">${icon('kolben')}+${SITZ.punkte}</span>`}`;
+    ${istPruefung() ? `<button type="button" class="knopf knopf-klein knopf-signal" data-act="s-abgeben">Abgeben</button>` : `${(SITZ.serie || 0) >= 2 ? `<span class="combo${SITZ._serieAlt !== SITZ.serie ? ' neu' : ''}" role="img" aria-label="${SITZ.serie} richtig hintereinander">🔥 ${SITZ.serie}</span>` : ''}<span class="punkte-chip" title="In diesem Training gesammelt">${icon('kolben')}+${SITZ.punkte}</span>`}${reiseHTML(n)}`;
   kopf.style.setProperty('--farbe', mod.farbe);
+  // Handy: aktuelle Nummer in der wischbaren Leiste sichtbar halten
+  const akt = $('.navi-punkte .navi-punkt.aktuell', kopf), leiste = akt && akt.parentElement;
+  if (leiste && leiste.scrollWidth > leiste.clientWidth) leiste.scrollLeft = akt.offsetLeft - leiste.clientWidth / 2 + akt.offsetWidth / 2;
+}
+/** Reise-Leiste: Der Avatar fliegt mit jeder erledigten Aufgabe weiter. */
+function reiseHTML(n) {
+  const fertig = SITZ.ids.filter((x) => (istPruefung() ? antwortStand(REG.items[x].it, SITZ.antworten[x]) !== 'leer' : SITZ.ergebnis[x])).length;
+  const nach = Math.round((fertig / n) * 100), von = SITZ._fortAlt != null ? SITZ._fortAlt : nach;
+  SITZ._fortAlt = nach; SITZ._serieAlt = SITZ.serie;
+  return `<div class="reise" aria-hidden="true" style="--von:${von}%;--nach:${nach}%"><i></i><b>${esc(P().avatar)}</b></div>`;
 }
 function zeichneQuelle() {
   const id = aktId(), g = gruppeVon(id);
@@ -1954,6 +2078,7 @@ function gehe(i) {
     zeichneKopf();
     if (REG.items[aktId()].gruppe !== alteGruppe) zeichneQuelle();
     zeichneAufgabe();
+    const fk = $('.frage-karte'); if (fk && fxStufe() !== 'aus') fk.classList.add('rein');
     const sp = $('#aufgabe-spalte'); if (sp) sp.scrollTop = 0;
     if (window.innerWidth <= 900) { const a = $('#aufgabe-spalte'); if (a && mitQ(neueArt)) a.scrollIntoView({ block: 'start' }); else window.scrollTo(0, 0); }
   }
@@ -1983,10 +2108,16 @@ function pruefen() {
   // Spiel-Effekte: Glitzer und fliegende Punkte bei Richtig, Wackeln bei Fehlern
   if (erg.status === 'richtig') {
     const pkt = SITZ._letztePunkte && SITZ._letztePunkte.id === id ? SITZ._letztePunkte.n : 0;
-    requestAnimationFrame(() => {
-      glitzer($('.rueckmeldung'), { anzahl: SITZ.versuche[id] === 1 ? 28 : 16 });
-      if (pkt) punkteFlug($('[data-act="s-weiter"]') || $('.rueckmeldung'), `+${pkt} ✦`);
-    });
+    const viel = SITZ.versuche[id] === 1, serieJetzt = SITZ.serie || 0;
+    // erst nach dem sanften Scrollen, sonst entstehen die Effekte außerhalb des Bildschirms
+    setTimeout(() => {
+      const rm = $('.rueckmeldung');
+      if (!SITZ || ANSICHT.name !== 'sitzung' || aktId() !== id || !rm) return;
+      const ursprung = ($('.rueckmeldung > b') || rm).getBoundingClientRect(); // erst lesen, dann schreiben
+      if (pkt) punkteFlug(ursprung, `+${pkt} ✦`, $('.sitzung-kopf .punkte-chip'));
+      glitzer(ursprung, { anzahl: viel ? 28 : 16, weite: 120 });
+      if ([3, 5, 8, 10, 15, 20].includes(serieJetzt)) comboPop(serieJetzt);
+    }, sanft() === 'smooth' ? 420 : 30);
     ton('richtig');
   } else {
     wackeln($('#antwort'));
@@ -1996,6 +2127,7 @@ function pruefen() {
 function abschliessen(id, status, sauber) {
   if (SITZ.ergebnis[id]) return;
   SITZ.ergebnis[id] = status === 'richtig' ? (sauber ? 'r' : 'h') : status === 'teilweise' ? 't' : 'f';
+  SITZ.serie = SITZ.ergebnis[id] === 'r' ? (SITZ.serie || 0) + 1 : 0;
   const n = notiereErgebnis(id, status, { sauber });
   SITZ.punkte += n;
   SITZ._letztePunkte = { id, n };
@@ -2010,7 +2142,7 @@ function missionPruefen() {
   punkteDazu(30);
   if (SITZ && SITZ.art === 'mission') SITZ.punkte += 30;
   speichern();
-  toast('Tagesmission geschafft! +30 Laborpunkte');
+  feiern(() => { zeigeAbzeichen({ sym: '🎁', name: 'Mission geschafft!', text: '+30 Laborpunkte – morgen wartet eine neue Mission.' }, 'Tagesmission'); sternenregen(50); ton('fanfare'); }, 3100, 400);
 }
 function loesungZeigen() {
   const id = aktId(), it = aktIt();
@@ -2238,10 +2370,12 @@ function zeige(name, param = null) {
     if (location.hash !== h) { try { history.replaceState(history.state, '', h); } catch (e) { /* Rahmen erlaubt es nicht */ } }
   }
 }
+let letzteAnsicht = null;
 function render() {
   const app = $('#app');
   if (!P() && !['profile', 'info', 'erwachsene'].includes(ANSICHT.name)) ANSICHT = { name: 'profile', param: null };
   const n = ANSICHT.name;
+  document.documentElement.classList.toggle('in-sitzung', (n === 'sitzung' && !!SITZ) || n === 'tempo-lauf');
   if (n === 'sitzung') { if (SITZ) { renderSitzung(); window.scrollTo(0, 0); return; } ANSICHT = { name: 'start', param: null }; }
   if (n === 'tempo-lauf') { renderTempoLauf(); return; }
   const views = {
@@ -2253,7 +2387,8 @@ function render() {
   };
   const f = views[ANSICHT.name] || viewStart;
   const { titel = '', html = '', schmal = false } = f(ANSICHT.param) || {};
-  app.innerHTML = kopfHTML(titel) + `<main class="seite ${schmal ? 'seite-schmal' : ''}" id="inhalt">${html}</main>`;
+  const neu = ANSICHT.name !== letzteAnsicht; letzteAnsicht = ANSICHT.name; // Einblenden nur beim Wechsel der Ansicht
+  app.innerHTML = kopfHTML(titel) + `<main class="seite ${schmal ? 'seite-schmal' : ''} ${neu ? 'neu' : ''}" id="inhalt">${html}</main>`;
   window.scrollTo(0, 0);
   nachRender();
   const haupt = $('#inhalt');
@@ -2344,7 +2479,7 @@ function viewStart() {
     <div class="start-raster">
       <section class="karte held" aria-label="Dein Labor">
         <div class="held-oben">
-          <div class="avatar-orb" aria-hidden="true">${esc(p.avatar)}</div>
+          <div class="avatar-orb${lv.nr >= 6 ? ' aura' : ''}" aria-hidden="true">${esc(p.avatar)}${lv.nr >= 2 ? '<span class="orb-mond"></span>' : ''}${lv.nr >= 4 ? '<span class="orb-krone">👑</span>' : ''}</div>
           <div style="min-width:0"><p class="leise">Hallo,</p><h1>${esc(p.name)}</h1>
             <p class="level">Level ${lv.nr} · ${esc(lv.name)}</p></div>
           ${kolbenSVG(g.prozent / 100)}
@@ -2361,7 +2496,7 @@ function viewStart() {
         ${m && m.ids.length ? `<div class="mission">
           <div class="zeile-zwischen"><h3>🎯 Tagesmission</h3><span class="klein leise">${m.erledigt.length}/${m.ids.length}</span></div>
           <p class="klein">${missionFertig ? 'Geschafft! Morgen wartet eine neue Mission.' : '10 gemischte Aufgaben aus allen Laboren – mit deinen Fehlern von gestern.'}</p>
-          <div class="mission-punkte" aria-hidden="true">${m.ids.map((id) => `<i class="${m.erledigt.includes(id) ? 'voll' : ''}"></i>`).join('')}</div>
+          <div class="mission-punkte" aria-hidden="true">${m.ids.map((id) => `<i class="${m.erledigt.includes(id) ? 'voll' : ''}"></i>`).join('')}<span class="mission-truhe${missionFertig ? ' offen' : ''}">${missionFertig ? '🎉' : '🎁'}</span></div>
           ${missionFertig ? '' : `<button type="button" class="knopf" data-act="mission">${m.erledigt.length ? 'Mission fortsetzen' : 'Mission starten'}</button>`}
         </div>` : ''}
       </section>
@@ -2400,7 +2535,7 @@ function gruppeKarte(gid, mod) {
   return `<article class="gruppe-karte" style="--farbe:${mod.farbe}">
     <span class="nr">${esc(nr)}</span><h3>${esc(g.titel)}</h3>
     <p>${esc(kurzText.length > 150 ? kurzText.slice(0, 147) + '…' : kurzText)}</p>
-    <div class="zeile-zwischen"><div class="punkte-reihe" aria-label="${geschafft} von ${g.items.length} gemeistert">${g.items.map((id) => `<i class="status-punkt s-${itemStatus(id)}"></i>`).join('')}</div><span class="klein leise">${geschafft}/${g.items.length}</span></div>
+    <div class="zeile-zwischen"><div class="punkte-reihe" role="img" aria-label="${geschafft} von ${g.items.length} gemeistert">${g.items.map((id) => `<i class="status-punkt s-${itemStatus(id)}"></i>`).join('')}</div><span class="klein leise">${geschafft}/${g.items.length}</span></div>
     <button type="button" class="knopf knopf-klein" data-act="training-gruppe" data-g="${esc(gid)}">${geschafft === g.items.length ? 'Wiederholen' : geschafft || g.items.some((id) => itemStatus(id) !== 'neu') ? 'Weiterüben' : 'Trainieren'}</button>
   </article>`;
 }
@@ -2482,8 +2617,8 @@ function viewPruefungStart(cfg) {
   const digital = cfg.ids.some((id) => REG.items[id] && REG.items[id].modul === 'digital');
   return {
     titel: cfg.titel, schmal: true,
-    html: `<section class="karte" style="display:grid;gap:16px">
-      <div class="modul-kopf" style="--farbe:var(--signal)"><span class="labor-symbol">${icon('uhr')}</span><div><h1>${esc(cfg.titel)}</h1><p>Zeig, was du kannst!</p></div></div>
+    html: `<section class="karte boss-intro" style="display:grid;gap:16px">
+      <div class="modul-kopf" style="--farbe:var(--signal)"><span class="labor-symbol">${icon('uhr')}</span><div><span class="boss-label">BOSS-LEVEL</span><h1>${esc(cfg.titel)}</h1><p>Zeig, was du kannst!</p></div></div>
       <div class="fakten"><span class="fakt">${cfg.ids.length} Aufgaben</span><span class="fakt">${icon('uhr')}${cfg.zeitMin ? cfg.zeitMin + ' Minuten' : 'ohne Zeitlimit'}</span><span class="fakt">keine Tipps</span><span class="fakt">Auswertung am Ende</span></div>
       <div class="info-box"><ul>
         <li>Oben siehst du die Nummern aller Aufgaben. Du kannst hin- und herspringen.</li>
@@ -2561,7 +2696,7 @@ function viewFortschritt() {
       ${lv.bis ? `<div class="balken"><i style="width:${pct(p.punkte - lv.ab, lv.bis - lv.ab)}%"></i></div>` : ''}</div></section>
       <div class="start-raster" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))">${modKarten}</div>
       <section class="karte" style="display:grid;gap:12px"><h2 style="font-size:1.1rem">Prüfungen</h2>
-        ${pr.length ? `<div class="tabelle-scroll"><table class="verlauf-tabelle"><thead><tr><th>Datum</th><th>Prüfung</th><th>Punkte</th><th>Zeit</th><th></th></tr></thead><tbody>${pr.map((x, i) => `<tr><td>${datumLesbar(x.datum)}</td><td>${esc(x.titel)}</td><td><b>${x.punkte}/${x.max}</b></td><td>${zeitLesbar(x.dauer)}</td><td><button type="button" class="knopf knopf-geist knopf-klein" data-act="pruefung-ansehen" data-i="${p.pruefungen.length - 1 - i}">Ansehen</button></td></tr>`).join('')}</tbody></table></div>` : '<p class="leise">Noch keine Prüfung. Probiere die BYLET-D-Prüfung aus!</p>'}</section>
+        ${pr.length ? `<div class="tabelle-scroll"><table class="verlauf-tabelle pruef-tabelle"><thead><tr><th>Datum</th><th>Prüfung</th><th>Punkte</th><th>Zeit</th><th></th></tr></thead><tbody>${pr.map((x, i) => `<tr><td>${datumLesbar(x.datum)}</td><td>${esc(x.titel)}</td><td><b>${x.punkte}/${x.max}</b></td><td>${zeitLesbar(x.dauer)}</td><td><button type="button" class="knopf knopf-geist knopf-klein" data-act="pruefung-ansehen" data-i="${p.pruefungen.length - 1 - i}">Ansehen</button></td></tr>`).join('')}</tbody></table></div>` : '<p class="leise">Noch keine Prüfung. Probiere die BYLET-D-Prüfung aus!</p>'}</section>
       <div class="start-raster" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))">
         <section class="karte" style="display:grid;gap:12px;--farbe:var(--m-tempo)"><h2 style="font-size:1.1rem">Lese-Tempo (Tempo-Wert)</h2>
           ${tempo.length ? `<div class="mini-diagramm" role="img" aria-label="Letzte Ergebnisse im Lese-Tempo">${tempo.map((t) => `<div style="height:${Math.max(6, pct(tempoWert(t), maxT))}%" title="${datumLesbar(t.datum)}"><span>${tempoWert(t)}</span></div>`).join('')}</div>` : '<p class="leise">Noch kein Tempo-Test.</p>'}</section>
@@ -2570,7 +2705,7 @@ function viewFortschritt() {
           <p class="klein leise">${plural(serie(), 'Tag', 'Tage')} in Folge · ${plural(p.tage.length, 'Übungstag', 'Übungstage')} insgesamt</p></section>
       </div>
       <section class="karte" style="display:grid;gap:12px"><h2 style="font-size:1.1rem">Abzeichen · ${Object.keys(p.abzeichen).length} von ${ABZEICHEN.length}</h2>
-        <div class="abzeichen-raster">${ABZEICHEN.map((a) => `<div class="abzeichen ${p.abzeichen[a.id] ? 'hat' : ''}"><span class="sym" aria-hidden="true">${a.sym}</span><b>${esc(a.name)}</b><span>${esc(a.text)}</span>${p.abzeichen[a.id] ? `<span>✓ ${datumLesbar(p.abzeichen[a.id])}</span>` : ''}</div>`).join('')}</div></section>`,
+        <div class="abzeichen-raster">${ABZEICHEN.map((a) => `<div class="abzeichen ${p.abzeichen[a.id] ? 'hat' : ''}"><span class="sym" aria-hidden="true">${a.sym}</span><b>${esc(a.name)}</b><span>${esc(a.text)}</span>${p.abzeichen[a.id] ? `<span>✓ ${datumLesbar(p.abzeichen[a.id])}</span>` : a.stand ? (() => { const [ist, soll] = a.stand(p); const wert = Math.min(ist || 0, soll); return `<div class="abz-fort" aria-hidden="true"><i style="width:${pct(wert, soll)}%"></i></div><span>${wert} von ${soll}</span>`; })() : ''}</div>`).join('')}</div></section>`,
   };
 }
 
@@ -2685,11 +2820,12 @@ function dialog({ titel, text = '', html = '', knoepfe = [{ label: 'OK', wert: t
   return new Promise((resolve) => {
     const wurzel = $('#dialog-wurzel');
     const vorher = document.activeElement;
+    document.documentElement.classList.add('dialog-offen');
     wurzel.innerHTML = `<div class="dialog-huelle"><div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dlg-titel">
       <h2 id="dlg-titel">${esc(titel)}</h2>${text ? `<p>${esc(text)}</p>` : ''}${html}
       <div class="aktionen">${knoepfe.map((k, i) => `<button type="button" class="knopf ${k.stil || ''}" data-dlg="${i}">${esc(k.label)}</button>`).join('')}</div></div></div>`;
     const app = $('#app'); if (app) { app.setAttribute('inert', ''); app.setAttribute('aria-hidden', 'true'); }
-    const fertig = (wert) => { if (dialogSchliessen !== fertig) return; dialogSchliessen = null; wurzel.innerHTML = ''; dialogAufloeser = null; if (app) { app.removeAttribute('inert'); app.removeAttribute('aria-hidden'); } try { if (vorher && vorher.focus) vorher.focus(); } catch (e) { /* egal */ } resolve(wert); };
+    const fertig = (wert) => { if (dialogSchliessen !== fertig) return; dialogSchliessen = null; wurzel.innerHTML = ''; document.documentElement.classList.remove('dialog-offen'); dialogAufloeser = null; if (app) { app.removeAttribute('inert'); app.removeAttribute('aria-hidden'); } try { if (vorher && vorher.focus) vorher.focus(); } catch (e) { /* egal */ } resolve(wert); };
     dialogAufloeser = (taste) => {
       if (taste === 'Escape') { const k = knoepfe.find((x) => x.wert === false || x.wert === null); fertig(k ? k.wert : undefined); }
     };
@@ -2796,7 +2932,7 @@ function tempoAntwort(r) {
   TEMPO.i++;
   const s = TEMPO.saetze[TEMPO.i];
   if (!s) { tempoEnde(); return; }
-  const el = $('#tempo-satz'); if (el) el.textContent = s.t;
+  const el = $('#tempo-satz'); if (el) { el.textContent = s.t; if (fxStufe() !== 'aus') { el.classList.remove('neu'); void el.offsetWidth; el.classList.add('neu'); } }
   const kopf = $('.sitzung-titel span'); if (kopf) kopf.textContent = `Satz ${TEMPO.i + 1}`;
 }
 function tempoLos() {
@@ -3008,7 +3144,7 @@ function viewSchreibauftrag(id) {
     <div class="schreib-raster">
       <div style="display:grid;gap:14px;min-width:0">
         <section class="karte" style="display:grid;gap:10px"><h2 style="font-size:1.1rem">Dein Auftrag</h2>${a.impuls ? `<p class="impuls" aria-hidden="true">${esc(a.impuls)}</p>` : ''}<p style="line-height:1.55">${rich(a.auftrag)}</p></section>
-        <details class="karte" open><summary style="font-weight:800;cursor:pointer;min-height:32px">1. Planen</summary><div style="display:grid;gap:10px;margin-top:10px">${a.planung.map((f, i) => `<div class="feld"><label for="notiz-${i}">${esc(f)}</label><input type="text" class="notiz-feld" id="notiz-${i}" data-notiz="${i}" value="${esc((st.notizen || [])[i] || '')}" autocomplete="off" autocorrect="off" spellcheck="false"></div>`).join('')}</div></details>
+        <details class="karte" open><summary>1. Planen</summary><div style="display:grid;gap:10px;margin-top:10px">${a.planung.map((f, i) => `<div class="feld"><label for="notiz-${i}">${esc(f)}</label><input type="text" class="notiz-feld" id="notiz-${i}" data-notiz="${i}" value="${esc((st.notizen || [])[i] || '')}" autocomplete="off" autocorrect="off" spellcheck="false"></div>`).join('')}</div></details>
         <section class="karte" style="display:grid;gap:10px"><h2 style="font-size:1.1rem">Wortspeicher</h2><p class="klein leise">Tippe ein Wort an, um es an der Schreibstelle einzufügen.</p><div class="wortspeicher">${a.woerter.map((w) => `<button type="button" data-act="wort-einfuegen" data-wort="${esc(w)}">${esc(w)}</button>`).join('')}</div></section>
       </div>
       <div style="display:grid;gap:14px;min-width:0">
@@ -3149,13 +3285,30 @@ async function sicherungAlsDatei() {
 }
 
 /* ---- 07b-effekte.js ---- */
-/* ===== Spezialeffekte: Sternenhimmel, Glitzer, Level-up, fliegende Punkte, Töne =====
+/* ===== Spezialeffekte: Sternenhimmel, Glitzer, Münzflug, Combo, Feiern, Level-up, Töne =====
    Alles läuft über CSS-Animationen (Grafikkarte) – keine Dauerschleife in JavaScript.
-   Stufen: voll (alles), sanft (wenig Bewegung), aus (ruhig). Systemeinstellung „Bewegung reduzieren“ = höchstens sanft. */
+   Stufen: voll (alles), sanft (wenig Bewegung), aus (ruhig). Systemeinstellung „Bewegung reduzieren“ = höchstens sanft.
+   Die Effekt-Ebene #fx-ebene ist für Bildschirmleser verborgen; wichtige Momente sagt #sr-meldung an. */
 function fxStufe() {
   const e = (DB && DB.einstellungen && DB.einstellungen.effekte) || 'voll';
   if (e === 'voll' && window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return 'sanft';
   return e;
+}
+/** Fliegende Teilchen nur, wenn sie auch animiert werden (sonst bleiben sie unsichtbar und kosten nur Zeit). */
+const bewegungReduziert = () => fxStufe() === 'aus' || !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+const fxEbene = () => document.getElementById('fx-ebene');
+function sagAn(text) {
+  const sr = document.getElementById('sr-meldung'); if (!sr) return;
+  sr.textContent = '';
+  setTimeout(() => { sr.textContent = text; }, 60);
+}
+/** Mittelpunkt eines Elements, eines Rechtecks oder eines {x, y}-Punkts – auf den sichtbaren Bereich begrenzt. */
+function fxMitte(ziel) {
+  let x = window.innerWidth / 2, y = window.innerHeight / 2;
+  if (ziel && ziel.getBoundingClientRect) { const r = ziel.getBoundingClientRect(); x = r.left + r.width / 2; y = r.top + r.height / 2; }
+  else if (ziel && typeof ziel.width === 'number') { x = ziel.left + ziel.width / 2; y = ziel.top + ziel.height / 2; }
+  else if (ziel && typeof ziel.x === 'number') { x = ziel.x; y = ziel.y; }
+  return { x: Math.min(Math.max(x, 40), window.innerWidth - 40), y: Math.min(Math.max(y, 60), window.innerHeight - 60) };
 }
 
 /* ---------- Sternenhimmel: ruhige Sterne auf der Leinwand, funkelnde Sterne und Sternschnuppen per CSS ---------- */
@@ -3164,16 +3317,23 @@ function sternenhimmel() {
   const c = document.getElementById('sterne');
   if (!c || !c.getContext) return;
   const ctx = c.getContext('2d');
+  let zuletzt = { w: 0, h: 0 };
   const zeichnen = () => {
     const dpr = Math.min(2, window.devicePixelRatio || 1), w = window.innerWidth, h = window.innerHeight;
+    // Kleine Höhenänderungen (Safari-Leiste) streckt das CSS – nur bei echten Größenwechseln neu zeichnen.
+    if (Math.abs(w - zuletzt.w) < 2 && Math.abs(h - zuletzt.h) < 120) return;
+    zuletzt = { w, h };
     c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, h);
+    // fester Startwert: Beim Drehen des iPads springen die Sterne nicht an neue Plätze
+    let s = 0x5eed1234;
+    const zz = () => { s = (s + 0x6D2B79F5) | 0; let t = Math.imul(s ^ (s >>> 15), 1 | s); t ^= t + Math.imul(t ^ (t >>> 7), 61 | t); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
     const n = Math.round(Math.min(260, (w * h) / 5200));
     const farben = ['#ffffff', '#ffd9f5', '#d9f7ff', '#fff1c2', '#e8dcff'];
     for (let i = 0; i < n; i++) {
-      const x = Math.random() * w, y = Math.random() * h, r = Math.random() * 1.3 + 0.25;
-      ctx.globalAlpha = 0.35 + Math.random() * 0.6;
+      const x = zz() * w, y = zz() * h, r = zz() * 1.3 + 0.25;
+      ctx.globalAlpha = 0.35 + zz() * 0.6;
       ctx.fillStyle = farben[i % farben.length];
       ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
     }
@@ -3193,80 +3353,124 @@ function sternenhimmel() {
   html += '<i class="schnuppe s1"></i><i class="schnuppe s2"></i>';
   all.insertAdjacentHTML('beforeend', html);
 }
+/** Sicherheitsnetz für sehr alte iPads: Ruckelt es schon im Leerlauf, fallen die teuersten Extras weg (Einstellung bleibt). */
+function pruefeLeistung() {
+  if (fxStufe() !== 'voll' || !window.requestAnimationFrame || !window.performance) return;
+  setTimeout(() => {
+    let n = 0, lang = 0, last = performance.now();
+    const f = (t) => { if (t - last > 34) lang++; last = t; if (++n < 90) requestAnimationFrame(f); else if (lang > 20) document.documentElement.classList.add('fx-leicht'); };
+    requestAnimationFrame(f);
+  }, 1500);
+}
 
 /* ---------- Glitzer-Explosion ---------- */
 const GLITZER_ZEICHEN = ['✦', '★', '✧', '•', '✦', '♥'];
 const GLITZER_FARBEN = ['#ffd36b', '#ff6fd8', '#4fe3ff', '#ffffff', '#b994ff', '#5ef2b4'];
-/** Glitzer aus einem Punkt (x, y in Fensterkoordinaten) oder aus der Mitte eines Elements. */
+/** Glitzer aus einem Punkt ({x, y}), einem Rechteck oder der Mitte eines Elements. */
 function glitzer(ziel, { anzahl = 26, weite = 150, gross = false } = {}) {
-  const stufe = fxStufe();
-  if (stufe === 'aus') return;
-  let x, y;
-  if (ziel && ziel.getBoundingClientRect) { const r = ziel.getBoundingClientRect(); x = r.left + r.width / 2; y = r.top + r.height / 2; }
-  else if (ziel && typeof ziel.x === 'number') { x = ziel.x; y = ziel.y; }
-  else { x = window.innerWidth / 2; y = window.innerHeight / 2; }
-  const wurzel = document.getElementById('effekte'); if (!wurzel) return;
-  const n = stufe === 'sanft' ? Math.min(10, Math.round(anzahl / 3)) : anzahl;
+  if (bewegungReduziert()) return;
+  const wurzel = fxEbene(); if (!wurzel) return;
+  const { x, y } = fxMitte(ziel); // erst lesen, dann schreiben
+  const n = fxStufe() === 'sanft' ? Math.min(10, Math.round(anzahl / 3)) : anzahl;
   const box = document.createElement('div');
   box.className = 'glitzer-wolke';
   box.style.left = x + 'px'; box.style.top = y + 'px';
-  let html = '';
+  let html = '', maxDauer = 0;
   for (let i = 0; i < n; i++) {
     const winkel = (Math.PI * 2 * i) / n + Math.random() * 0.6;
     const w = weite * (0.45 + Math.random() * 0.75) * (gross ? 1.6 : 1);
     const dx = Math.cos(winkel) * w, dy = Math.sin(winkel) * w - (gross ? 40 : 20);
     const z = GLITZER_ZEICHEN[i % GLITZER_ZEICHEN.length], f = GLITZER_FARBEN[(i * 7) % GLITZER_FARBEN.length];
-    html += `<i style="--dx:${dx.toFixed(0)}px;--dy:${dy.toFixed(0)}px;--rot:${(Math.random() * 540 - 270).toFixed(0)}deg;--f:${f};--s:${(0.7 + Math.random() * 0.9).toFixed(2)};--dauer:${(0.8 + Math.random() * 0.6).toFixed(2)}s">${z}</i>`;
+    const dauer = 0.8 + Math.random() * 0.6; maxDauer = Math.max(maxDauer, dauer);
+    html += `<i style="--dx:${dx.toFixed(0)}px;--dy:${dy.toFixed(0)}px;--rot:${(Math.random() * 540 - 270).toFixed(0)}deg;--f:${f};--s:${(0.7 + Math.random() * 0.9).toFixed(2)};--dauer:${dauer.toFixed(2)}s">${z}</i>`;
   }
   box.innerHTML = html;
   wurzel.appendChild(box);
-  setTimeout(() => box.remove(), 1700);
+  setTimeout(() => box.remove(), Math.ceil(maxDauer * 1000) + 100);
 }
 /** Großer Konfetti-Regen von oben (Ergebnisse, Mission, Level-up). */
 function sternenregen(menge = 40) {
+  if (bewegungReduziert()) return;
   if (fxStufe() !== 'voll') { glitzer(null, { anzahl: 18, gross: true }); return; }
-  const wurzel = document.getElementById('effekte'); if (!wurzel) return;
+  const wurzel = fxEbene(); if (!wurzel) return;
   const box = document.createElement('div');
   box.className = 'sternenregen';
-  let html = '';
+  let html = '', maxEnde = 0;
   for (let i = 0; i < menge; i++) {
     const z = GLITZER_ZEICHEN[i % GLITZER_ZEICHEN.length], f = GLITZER_FARBEN[i % GLITZER_FARBEN.length];
-    html += `<i style="left:${(Math.random() * 100).toFixed(1)}%;--f:${f};--s:${(0.8 + Math.random() * 1.1).toFixed(2)};--v:${(Math.random() * 0.8).toFixed(2)}s;--dauer:${(1.8 + Math.random() * 1.4).toFixed(2)}s;--dx:${(Math.random() * 120 - 60).toFixed(0)}px;--rot:${(Math.random() * 720 - 360).toFixed(0)}deg">${z}</i>`;
+    const v = Math.random() * 0.8, d = 1.8 + Math.random() * 1.4; maxEnde = Math.max(maxEnde, v + d);
+    html += `<i style="left:${(Math.random() * 100).toFixed(1)}%;--f:${f};--s:${(0.8 + Math.random() * 1.1).toFixed(2)};--v:${v.toFixed(2)}s;--dauer:${d.toFixed(2)}s;--dx:${(Math.random() * 120 - 60).toFixed(0)}px;--rot:${(Math.random() * 720 - 360).toFixed(0)}deg">${z}</i>`;
   }
   box.innerHTML = html;
   wurzel.appendChild(box);
-  setTimeout(() => box.remove(), 3600);
+  setTimeout(() => box.remove(), Math.ceil(maxEnde * 1000) + 100);
 }
 
-/* ---------- Fliegende Punkte, Wackeln ---------- */
-function punkteFlug(ziel, text) {
-  if (fxStufe() === 'aus' || !ziel) return;
-  const r = ziel.getBoundingClientRect(), wurzel = document.getElementById('effekte'); if (!wurzel) return;
+/* ---------- Münzflug zum Punkte-Chip, Combo, Wackeln ---------- */
+/** „+10 ✦“ steigt aus `ziel` (Element oder Rechteck) auf und fliegt – wenn `nach` angegeben – in den Punkte-Chip. */
+function punkteFlug(ziel, text, nach) {
+  if (bewegungReduziert() || !ziel) return;
+  const wurzel = fxEbene(); if (!wurzel) return;
+  const r = ziel.getBoundingClientRect ? ziel.getBoundingClientRect() : ziel;
+  const z = nach && nach.isConnected ? nach.getBoundingClientRect() : null; // alles lesen, bevor geschrieben wird
+  const x = Math.min(Math.max(r.left + r.width / 2, 50), window.innerWidth - 50);
+  const y = Math.min(Math.max(r.top + 10, 70), window.innerHeight - 50);
   const el = document.createElement('div');
   el.className = 'punkte-flug'; el.textContent = text;
-  el.style.left = (r.left + r.width / 2) + 'px'; el.style.top = (r.top - 6) + 'px';
+  el.style.left = x + 'px'; el.style.top = y + 'px';
+  if (z && z.width) {
+    el.classList.add('zum-chip');
+    el.style.setProperty('--zx', Math.round(z.left + z.width / 2 - x) + 'px');
+    el.style.setProperty('--zy', Math.round(z.top + z.height / 2 - y - 12) + 'px');
+    setTimeout(() => { const chip = $('.sitzung-kopf .punkte-chip'); if (!chip) return; chip.classList.remove('hupf'); void chip.offsetWidth; chip.classList.add('hupf'); }, 900);
+  }
   wurzel.appendChild(el);
   setTimeout(() => el.remove(), 1400);
+}
+function comboPop(n) {
+  if (bewegungReduziert()) return;
+  const w = fxEbene(); if (!w) return;
+  const el = document.createElement('div'); el.className = 'combo-pop'; el.textContent = `${n}er-Serie! 🔥`;
+  w.appendChild(el); setTimeout(() => el.remove(), 1400);
 }
 function wackeln(el) {
   if (!el || fxStufe() === 'aus') return;
   el.classList.remove('wackeln'); void el.offsetWidth; el.classList.add('wackeln');
-  setTimeout(() => el.classList.remove('wackeln'), 600);
+  setTimeout(() => el.classList.remove('wackeln'), 650);
+}
+
+/* ---------- Feier-Warteschlange: Level-up, Abzeichen und Mission nacheinander, nie übereinander ---------- */
+let feierKette = Promise.resolve();
+function feiern(fn, dauer, vorlauf = 0) {
+  feierKette = feierKette.then(() => new Promise((weiter) => setTimeout(() => { try { fn(); } catch (e) { /* nur Schmuck */ } setTimeout(weiter, dauer); }, vorlauf)));
+}
+function zeigeAbzeichen(a, kopf = 'Neues Abzeichen!') {
+  sagAn(`${kopf} ${a.name}. ${a.text}`);
+  ton('abzeichen');
+  if (fxStufe() === 'aus') { toastDanach(`${kopf} ${a.sym} ${a.name}`); return; }
+  const wurzel = fxEbene(); if (!wurzel) return;
+  const el = document.createElement('div');
+  el.className = 'abzeichen-neu';
+  el.innerHTML = `<div class="abzeichen-neu-box"><span class="strahlen"></span><span class="sym">${a.sym}</span><small>${esc(kopf)}</small><strong>${esc(a.name)}</strong><span>${esc(a.text)}</span></div>`;
+  wurzel.appendChild(el);
+  setTimeout(() => glitzer({ x: window.innerWidth / 2, y: window.innerHeight / 2 - 40 }, { anzahl: 30, gross: true }), 250);
+  setTimeout(() => el.remove(), 2950);
 }
 
 /* ---------- Level-up ---------- */
 let levelUpTimer = null;
 function zeigeLevelUp(lv) {
-  const wurzel = document.getElementById('effekte'); if (!wurzel) return;
+  sagAn(`Level up! Level ${lv.nr}: ${lv.name}`);
+  ton('levelup');
+  if (fxStufe() === 'aus') { toastDanach(`⭐ Level up! Level ${lv.nr} · ${lv.name}`); return; }
+  const wurzel = fxEbene(); if (!wurzel) return;
   clearTimeout(levelUpTimer);
   const alt = wurzel.querySelector('.levelup'); if (alt) alt.remove();
   const el = document.createElement('div');
   el.className = 'levelup';
-  el.setAttribute('role', 'status');
   el.innerHTML = `<div class="levelup-box"><strong>LEVEL UP!</strong><span>Level ${lv.nr} · ${esc(lv.name)}</span><small>Weiter so – du sammelst Sternenkraft!</small></div>`;
   wurzel.appendChild(el);
   sternenregen(46);
-  ton('levelup');
   levelUpTimer = setTimeout(() => el.remove(), 2800);
 }
 
@@ -3277,7 +3481,7 @@ function sterneHTML(anteil) {
 }
 
 /* ---------- Töne (Web Audio, nur wenn eingeschaltet) ---------- */
-let audio = null;
+let audio = null, audioPause = null;
 function ton(art) {
   if (!(DB && DB.einstellungen && DB.einstellungen.toene)) return;
   try {
@@ -3295,6 +3499,9 @@ function ton(art) {
       o.connect(g).connect(audio.destination);
       o.start(jetzt + start); o.stop(jetzt + start + 0.3);
     }
+    // Audio-Hardware danach schlafen legen (spart auf dem iPad Akku)
+    clearTimeout(audioPause);
+    audioPause = setTimeout(() => { if (audio && audio.state === 'running') audio.suspend().catch(() => {}); }, 2500);
   } catch (e) { /* kein Ton möglich */ }
 }
 
@@ -3304,7 +3511,7 @@ function effekteNachRender() {
   if (n === 'ergebnis' && ANSICHT.param && ANSICHT.param.eintrag && !ANSICHT.param.gefeiert) {
     ANSICHT.param.gefeiert = true;
     const e = ANSICHT.param.eintrag, anteil = e.max ? e.punkte / e.max : 0;
-    if (anteil >= 0.5) { setTimeout(() => { sternenregen(anteil >= 0.9 ? 60 : 36); glitzer($('.ring'), { anzahl: 30, gross: true }); ton('fanfare'); }, 500); }
+    if (anteil >= 0.5) { setTimeout(() => { glitzer($('.ring'), { anzahl: 30, gross: true }); sternenregen(anteil >= 0.9 ? 60 : 36); ton('fanfare'); }, 500); }
   }
   if (n === 'zusammenfassung' && ANSICHT.param && ANSICHT.param.sitz && !ANSICHT.param.gefeiert) {
     ANSICHT.param.gefeiert = true;
@@ -3594,6 +3801,7 @@ function starteApp() {
   baueRegister();
   try { sternenhimmel(); } catch (e) { /* Hintergrund ist nur Schmuck */ }
   wendeEinstellungenAn();
+  try { pruefeLeistung(); } catch (e) { /* nur Schmuck */ }
   if (DB.aktivesProfil && !DB.profile[DB.aktivesProfil]) DB.aktivesProfil = Object.keys(DB.profile)[0] || null;
   const h = location.hash.slice(1);
   zeige(P() ? (HASH_ANSICHTEN.has(h) && h !== 'profile' ? h : 'start') : 'profile');
