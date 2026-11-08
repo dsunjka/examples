@@ -42,7 +42,8 @@ for (const f of String(args.in || '').split(',').filter(Boolean)) {
 }
 const GAMES = new Set();
 for (const e of sentences.values()) for (const g of e.games) if (g !== 'app' && g !== '?') GAMES.add(g);
-const packOf = (e) => (e.games.size === 1 && !e.games.has('app') ? Array.from(e.games)[0] : 'common');
+// nur in den App-Bildschirmen → kleines Paket „app“ (wird beim Start geladen), nur in einem Spiel → dessen Paket, sonst „common“
+const packOf = (e) => (e.games.size === 1 ? Array.from(e.games)[0] : 'common');
 
 const WAV = path.resolve(args.wav || path.join(ROOT, 'tools/.wav'));
 const wavPath = (k) => path.join(WAV, V.hash(k) + '.wav');

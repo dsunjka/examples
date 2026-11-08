@@ -58,6 +58,8 @@
   LT.voiceIndex = function (data) {
     V.info = data.info || {};
     V.map = data.map || {};
+    // Startbildschirm und Weltkarte sofort, gemeinsame Sätze gleich danach laden
+    if (V.enabled) setTimeout(() => { V.preload('app'); V.preload('common'); }, 0);
   };
   /** Wird von js/voice/<paket>.js aufgerufen. */
   LT.voicePack = function (name, clips) {
@@ -92,12 +94,16 @@
     return p.promise;
   };
 
+  /** Paket laden, falls es existiert. */
+  V.preload = function (name) {
+    if (V.info && V.info.packs && V.info.packs.includes(name)) V.load(name);
+  };
+
   /** Beim Start eines Spiels: dessen Aufnahmen schon vorladen. */
   V.preloadGame = function (id) {
     if (!V.map || !V.enabled) return;
-    const has = (n) => V.info && V.info.packs && V.info.packs.includes(n);
-    if (has('common')) V.load('common');
-    if (has(id)) V.load(id);
+    V.preload('common');
+    V.preload(id);
   };
 
   /** Varianten eines Satzes, falls er den Namen des Kindes enthält („Super, Max!“ → „Super!“). */
@@ -112,7 +118,7 @@
   }
 
   /** Sucht die Aufnahme zu einem Satz. Promise<{ h, b64 } | null> */
-  V.find = async function (sentence, waitMs = 3000) {
+  V.find = async function (sentence, waitMs = 12000) {
     if (!V.map) return null;
     for (const s of variants(sentence)) {
       const h = hash(key(s));
