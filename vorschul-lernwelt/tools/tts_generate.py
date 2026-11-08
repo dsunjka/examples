@@ -18,6 +18,7 @@ p.add_argument('--voice', default='juergen')
 p.add_argument('--language', default='german')
 p.add_argument('--temperature', type=float, default=None)
 p.add_argument('--shard', default='0/1')
+p.add_argument('--reverse', action='store_true', help='von hinten abarbeiten (zweiter Prozess auf demselben Shard)')
 a = p.parse_args()
 torch.set_num_threads(int(os.environ.get('TTS_THREADS', '2')))
 kw = {'language': a.language}
@@ -28,6 +29,7 @@ sr = model.config.mimi.sample_rate
 jobs = json.load(open(a.jobs))
 k, n = map(int, a.shard.split('/'))
 jobs = [j for i, j in enumerate(jobs) if i % n == k]
+if a.reverse: jobs.reverse()
 t0 = time.time(); done = 0; secs = 0.0
 for text, out in jobs:
     if os.path.exists(out): continue

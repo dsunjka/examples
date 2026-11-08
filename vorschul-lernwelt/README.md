@@ -20,10 +20,14 @@ die sich automatisch an das Kind anpassen.
 | **Lokaler Server** (für Offline-App/Installation) | Im Ordner `python3 -m http.server 8000` ausführen und `http://localhost:8000` öffnen. |
 | **Im Netz (z. B. GitHub Pages)** | Ordner veröffentlichen. Über HTTPS lässt sich die Lernwelt auf dem Tablet als App installieren und läuft danach offline (Service Worker). |
 
-**Tipp für die Vorlesestimme:** Microsoft Edge („Katja Online“, „Seraphina“) und Google Chrome
-(„Google Deutsch“) haben sehr natürliche Stimmen. Auf iPad/iPhone unter *Einstellungen →
-Bedienungshilfen → Gesprochene Inhalte → Stimmen → Deutsch* eine erweiterte Stimme laden.
-Die Stimme lässt sich im Elternbereich auswählen.
+**Vorlesestimme:** Flo spricht mit einer natürlichen, neuronalen Stimme. Alle Sätze der App
+wurden vorab mit [Kyutai Pocket TTS](https://github.com/kyutai-labs/pocket-tts) aufgenommen und
+liegen als kleine MP3-Pakete in `js/voice/`. Es braucht also weder Internet noch ein Konto oder
+einen API-Schlüssel. Pro Spiel wird nur das passende Paket geladen. Fehlt für einen Satz eine
+Aufnahme (z. B. bei seltenen Zufallskombinationen), springt die Stimme des Geräts ein. Im
+Elternbereich kann man stattdessen dauerhaft eine Gerätestimme wählen. Am natürlichsten klingen
+Microsoft Edge („Katja Online“, „Seraphina“), Google Chrome („Google Deutsch“) und auf iPad/iPhone
+eine erweiterte Stimme unter *Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen*.
 
 **Elternbereich:** Schloss-Symbol 🔒 oben rechts auf der Weltkarte → kleine Rechenaufgabe lösen.
 Dort zuerst den **Namen des Kindes** eintragen – Flo spricht es dann persönlich an.
@@ -153,7 +157,8 @@ vorschul-lernwelt/
 ├── js/core/
 │   ├── util.js             Zufall, DOM-Helfer, Zeit
 │   ├── storage.js          localStorage mit Fallback
-│   ├── speech.js           Vorlesestimme (Web Speech API, Deutsch)
+│   ├── speech.js           Vorlesen: natürliche Aufnahmen, sonst Web Speech API
+│   ├── voice.js            Aufnahmen finden, nachladen, abspielen (Web Audio)
 │   ├── sound.js            Synthetische Geräusche (Web Audio API)
 │   ├── progress.js         Lernstand, adaptive Stufen, Sterne, Sticker, Zeit
 │   ├── ui.js               Maskottchen Flo, Sprechblase, Lob, Effekte, Kacheln
@@ -161,8 +166,10 @@ vorschul-lernwelt/
 │   └── engine.js           Spiel-Schnittstelle & Rundenablauf  ← hier dokumentiert
 ├── js/data/lexikon.js      Bild-Wort-Lexikon (≈ 200 Wörter mit Artikel, Plural, Silben)
 ├── js/games/<gruppe>/      Die Spiele (je Spiel eine Datei)
+├── js/voice/             Vorab erzeugte Sprachaufnahmen (index.js + ein Paket je Spiel)
 ├── js/app.js               Bildschirme: Start, Weltkarte, Insel, Album, Pause, Eltern
-└── tests/smoke.js          Automatischer Test aller Spiele und Stufen
+├── tests/smoke.js          Automatischer Test aller Spiele und Stufen
+└── tools/                  Erzeugen der Sprachaufnahmen (siehe unten)
 ```
 
 ### Ein neues Spiel hinzufügen
@@ -180,7 +187,20 @@ node tests/smoke.js --shots=out  # speichert Screenshots
 ```
 Voraussetzung: Node.js und Playwright mit Chromium.
 
+### Sprachaufnahmen neu erzeugen
+Nötig, wenn Texte geändert oder Spiele hinzugefügt wurden, oder für eine andere Stimme.
+Voraussetzung sind Python 3.10+ mit `pip install pocket-tts` und ffmpeg.
+```bash
+node tools/collect-speech.js --repeat=15 --out=said.json      # alle gesprochenen Sätze einsammeln
+node tools/build-voice.js jobs --in=said.json --wav=wav --out=jobs.json
+python tools/tts_generate.py --jobs jobs.json --voice juergen   # mehrere Prozesse: --shard 0/2, 1/2
+node tools/build-voice.js pack --in=said.json --wav=wav --voice=juergen
+```
+Deutsche Stimmen von Pocket TTS sind z. B. `juergen`, `anna` und `eve`. Bereits vorhandene
+Aufnahmen werden übersprungen.
+
 ## Lizenz
 Code: Apache License 2.0 (wie dieses Repository).
 Schrift „Andika“: © SIL International, SIL Open Font License 1.1 (`assets/fonts/OFL.txt`).
 Emojis werden von der Systemschrift des Geräts dargestellt.
+Sprachaufnahmen: erzeugt mit Kyutai Pocket TTS (Modell und Stimmen unter CC BY 4.0, © Kyutai).
