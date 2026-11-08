@@ -236,6 +236,7 @@ function gehe(i) {
   else {
     zeichneKopf();
     if (REG.items[aktId()].gruppe !== alteGruppe) zeichneQuelle();
+    else if (abschnittSchluessel() && abschnittSchluessel() !== SITZ._abschnittKey) zeichneQuellinhalt(true);
     zeichneAufgabe();
     const fk = $('.frage-karte'); if (fk && fxStufe() !== 'aus') fk.classList.add('rein');
     const sp = $('#aufgabe-spalte'); if (sp) sp.scrollTop = 0;
@@ -418,6 +419,8 @@ function auswerten() {
   if (p) {
     if (eintrag.art === 'gross') p.grossZaehler = (p.grossZaehler != null ? p.grossZaehler : p.pruefungen.filter((x) => x.art === 'gross').length) + 1;
     p.pruefungen.push(eintrag);
+    if (eintrag.art === 'digital') bylesMerke('d');
+    if (/^lesev-/.test(eintrag.art)) bylesMerke('v');
     if (p.pruefungen.length > 40) p.pruefungen = p.pruefungen.slice(-40);
     punkteDazu(punkte * 3);
     delete p.laufend;
@@ -481,8 +484,9 @@ function auswertungNach(ids, details) {
     const k = info.modul + ':' + (info.it.kompetenz || '-');
     const kk = nachKomp[k] || (nachKomp[k] = { label: info.it.kompetenz ? kompetenzLabel(info.modul, info.it.kompetenz) : MODUL[info.modul].titel, ok: 0, n: 0, farbe: MODUL[info.modul].farbe, modul: info.modul });
     kk.ok += ok; kk.n++;
-    const g = REG.gruppen[info.gruppe];
-    const gg = nachGruppe[info.gruppe] || (nachGruppe[info.gruppe] = { label: g.art === 'fall' ? `Fall ${g.daten.nummer}: ${g.titel}` : g.titel, ok: 0, n: 0, farbe: MODUL[info.modul].farbe });
+    const g = REG.gruppen[info.gruppe], abschnitt = istAbschnittText(g) ? Number(info.it.abschnitt) || 0 : null;
+    const gk = abschnitt == null ? info.gruppe : info.gruppe + ':' + abschnitt;
+    const gg = nachGruppe[gk] || (nachGruppe[gk] = { label: g.art === 'fall' ? `Fall ${g.daten.nummer}: ${g.titel}` : abschnitt == null ? g.titel : abschnitt ? `Abschnitt ${abschnitt}` : 'Ganze Geschichte', ok: 0, n: 0, farbe: MODUL[info.modul].farbe });
     gg.ok += ok; gg.n++;
   }
   return { komp: Object.values(nachKomp), gruppen: Object.values(nachGruppe) };

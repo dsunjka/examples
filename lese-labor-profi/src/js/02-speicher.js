@@ -56,6 +56,9 @@ function bereinigeProfil(p, { mitLaufend = false } = {}) {
   const alleTempo = (Array.isArray(p.tempo) ? p.tempo : []).filter(istObj).map((t) => ({ datum: zahl(t.datum), richtig: zahl(t.richtig, 1000), falsch: zahl(t.falsch, 1000), dauer: zahl(t.dauer, 1e4) || 180, gelesen: zahl(t.gelesen, 1000) }));
   n.tempoRekord = Math.max(zahl(p.tempoRekord, 1000), 0, ...alleTempo.map((t) => Math.max(0, t.richtig - t.falsch)));
   n.tempo = alleTempo.slice(-60);
+  n.blitz = (Array.isArray(p.blitz) ? p.blitz : []).filter(istObj).slice(-60).map((x) => ({ datum: zahl(x.datum), w: zahl(x.w, 7), s: zahl(x.s, 6), richtig: zahl(x.richtig, 100), gesamt: zahl(x.gesamt, 100) }));
+  n.byles = {};
+  if (istObj(p.byles)) for (const k of ['p', 'f', 'v', 'd']) if (p.byles[k]) n.byles[k] = zahl(p.byles[k]);
   n.grossZaehler = Number.isFinite(Number(p.grossZaehler)) && p.grossZaehler != null ? zahl(p.grossZaehler, 1e6) : n.pruefungen.filter((x) => x.art === 'gross').length;
   n.diktate = {};
   if (istObj(p.diktate)) for (const [id, d] of Object.entries(p.diktate)) if (ID_OK.test(id) && istObj(d)) n.diktate[id] = { best: zahl(d.best, 100), letzte: zahl(d.letzte, 100), datum: zahl(d.datum) };
@@ -285,6 +288,8 @@ const ABZEICHEN = [
   { id: 'autor', sym: '🖋️', name: 'Schreib-Talent', text: 'Zwei Schreibaufträge fertig geschrieben', test: (p) => Object.values(p.texte).filter((t) => t.fertig).length >= 2 },
   { id: 'fehler', sym: '🦾', name: 'Fehler-Magie', text: '10 Fehler aus der Fehler-Kiste verbessert', test: (p) => p.fehlerBehoben >= 10, stand: (p) => [p.fehlerBehoben, 10] },
   { id: 'serie5', sym: '🔥', name: 'Dranbleib-Stern', text: 'An 5 Tagen hintereinander geübt', test: (p) => serie(p) >= 5, stand: (p) => [serie(p), 5] },
+  { id: 'blitz', sym: '⚡', name: 'Blitz-Auge', text: 'Beim Blitz-Lesen alle 7 Wort-Stufen geschafft', test: (p) => (p.blitz || []).some((x) => x.w >= 7), stand: (p) => [Math.max(0, ...(p.blitz || []).map((x) => x.w)), 7] },
+  { id: 'byles', sym: '🚀', name: 'Generalprobe', text: 'Alle vier BYLES-Stationen an einem Tag geschafft', test: (p) => ['p', 'f', 'v', 'd'].every((k) => heuteGeschafft(k, p)), stand: (p) => [['p', 'f', 'v', 'd'].filter((k) => heuteGeschafft(k, p)).length, 4] },
   { id: 'mission', sym: '🎯', name: 'Missions-Stern', text: 'Eine Tagesmission komplett erledigt', test: (p) => !!p.missionGeschafft },
 ];
 DB = ladeSpeicher();

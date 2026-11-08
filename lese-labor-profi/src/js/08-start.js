@@ -73,6 +73,7 @@ document.addEventListener('click', async (ev) => {
     case 's-uhr': SITZ.zeitVerborgen = !SITZ.zeitVerborgen; zeichneKopf(); fokus('#uhr'); return;
     case 'q-marker': SITZ.markerAn = !SITZ.markerAn; el.setAttribute('aria-pressed', String(SITZ.markerAn)); $('#quelle').classList.toggle('marker-an', SITZ.markerAn); if (SITZ.markerAn) toast('Textmarker an: Tippe auf Sätze, um sie gelb zu markieren.'); return;
     case 'q-loeschen': markerLoeschen(); return;
+    case 'q-abschnitt': if (SITZ) { SITZ.abschnittZeig = Number(ds.n) || 1; zeichneQuellinhalt(true); const q = $('#quelle'); if (q && q.scrollIntoView && window.innerWidth <= 900) q.scrollIntoView({ block: 'start', behavior: sanft() }); fokus(`.reiter[data-n="${Number(ds.n) || 1}"]`); } return;
     case 'q-gross': SITZ.quelleGross = !SITZ.quelleGross; renderSitzung(); return;
     case 'b-zurueck': case 'b-vor': case 'b-start': { const g = gruppeVon(aktId()); if (g && g.art === 'fall') fallNavigiere(g.id, act.slice(2)); return; }
 
@@ -121,6 +122,17 @@ document.addEventListener('click', async (ev) => {
 
     /* Tempo */
     case 'tempo-start': tempoStart(); return;
+    case 'blitz-start': blitzStart(); return;
+    case 'blitz-uebung': blitzUebung(); return;
+    case 'blitz-los': blitzLos(); return;
+    case 'blitz-wahl': blitzWahl(Number(ds.i)); return;
+    case 'blitz-teil2': blitzTeil2(); return;
+    case 'blitz-fertig': blitzFertig(); return;
+    case 'blitz-abbruch': blitzAbbruch(); return;
+    case 'daumen-start': daumenStart(); return;
+    case 'daumen-wahl': daumenWahl(Number(ds.w)); return;
+    case 'daumen-weiter': daumenWeiter(); return;
+    case 'daumen-zurueck': if (DAUMEN && DAUMEN.i > 0) { DAUMEN.i--; render(); fokus('.daumen-satz'); } return;
     case 'tempo-antwort': tempoAntwort(Number(ds.r)); return;
     case 'tempo-los': tempoLos(); return;
     case 'tempo-abbruch': tempoStopp(); TEMPO = null; zeige('tempo'); return;
@@ -222,6 +234,7 @@ document.addEventListener('submit', (ev) => {
 });
 document.addEventListener('keydown', (ev) => {
   if (dialogAufloeser) { if (ev.key === 'Escape') dialogAufloeser('Escape'); else if (ev.repeat) ev.preventDefault(); return; }
+  if (ANSICHT.name === 'blitz-lauf' && BLITZ && BLITZ.phase === 'wahl' && /^[1-4]$/.test(ev.key)) { ev.preventDefault(); blitzWahl(Number(ev.key) - 1); return; }
   const el = ev.target;
   if (ev.key === 'Enter' && el instanceof Element && el.matches('input[data-act="eingabe"]')) {
     ev.preventDefault();
@@ -255,12 +268,13 @@ window.addEventListener('popstate', async () => {
   if (dialogAufloeser) { zurueckLegen(); return; } // Während eines Dialogs (z. B. „Die Zeit ist um!“) zählt die Zurück-Geste nicht
   if (n === 'sitzung' && SITZ) { const ok = await sitzungBeenden(); if (ok === false) zurueckLegen(); return; }
   if (n === 'tempo-lauf') { tempoStopp(); TEMPO = null; zeige('tempo'); return; }
+  if (n === 'blitz-lauf') { blitzAbbruch(); return; }
   if (n === 'diktat') { zeige('rechtschreibung'); return; }
 });
 window.addEventListener('hashchange', () => {
   const h = location.hash.slice(1);
   if (!HASH_ANSICHTEN.has(h) || h === ANSICHT.name) return;
-  if (ANSICHT.name === 'sitzung' || ANSICHT.name === 'tempo-lauf') return;
+  if (ANSICHT.name === 'sitzung' || ANSICHT.name === 'tempo-lauf' || ANSICHT.name === 'blitz-lauf') return;
   zeige(h);
 });
 

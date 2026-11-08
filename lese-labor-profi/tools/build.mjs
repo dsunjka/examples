@@ -18,7 +18,7 @@ const MIT_TEST = process.argv.includes('--mit-test');
 const testDir = join(ROOT, 'tests', 'fixtures');
 const dateien = (existsSync(inhaltDir) ? readdirSync(inhaltDir).filter((f) => f.endsWith('.json') && !f.startsWith('_')).sort().map((f) => join(inhaltDir, f)) : [])
   .concat(MIT_TEST && existsSync(testDir) ? readdirSync(testDir).filter((f) => f.endsWith('.json')).sort().map((f) => join(testDir, f)) : []);
-const INHALT = { digital: [], lesen: [], rechtschreibung: { themen: [], diktate: [] }, grammatik: { themen: [] }, schreiben: { themen: [], auftraege: [] }, tempo: { saetze: [] } };
+const INHALT = { digital: [], lesen: [], rechtschreibung: { themen: [], diktate: [] }, grammatik: { themen: [] }, schreiben: { themen: [], auftraege: [] }, tempo: { saetze: [] }, blitz: { woerter: [], saetze: [] } };
 const pakete = [];
 for (const pfad of dateien) {
   const f = pfad.split(/[\\/]/).pop();
@@ -32,6 +32,7 @@ for (const pfad of dateien) {
     case 'grammatik': INHALT.grammatik.themen.push(...(d.themen || [])); break;
     case 'schreiben': INHALT.schreiben.themen.push(...(d.themen || [])); INHALT.schreiben.auftraege.push(...(d.auftraege || [])); break;
     case 'tempo': INHALT.tempo.saetze.push(...(d.saetze || [])); break;
+    case 'blitz': INHALT.blitz.woerter.push(...(d.woerter || [])); INHALT.blitz.saetze.push(...(d.saetze || [])); break;
     default: console.error(`✗ ${f}: unbekanntes modul "${d.modul}"`); process.exitCode = 1;
   }
 }
@@ -47,6 +48,7 @@ const zaehl = {
   texte: INHALT.lesen.length, leseFragen: INHALT.lesen.reduce((s, t) => s + (t.items || []).length, 0),
   rsThemen: INHALT.rechtschreibung.themen.length, grThemen: INHALT.grammatik.themen.length, scThemen: INHALT.schreiben.themen.length,
   diktate: INHALT.rechtschreibung.diktate.length, auftraege: INHALT.schreiben.auftraege.length, tempo: INHALT.tempo.saetze.length,
+  blitzW: INHALT.blitz.woerter.length, blitzS: INHALT.blitz.saetze.length, geschichten: INHALT.lesen.filter((t) => t.format === 'bylet-v').length,
 };
 zaehl.aufgaben = zaehl.digitalFragen + zaehl.leseFragen + [INHALT.rechtschreibung, INHALT.grammatik, INHALT.schreiben].reduce((s, m) => s + m.themen.reduce((x, t) => x + (t.items || []).length, 0), 0);
 
@@ -99,4 +101,4 @@ writeFileSync(join(ZIEL, 'lese-labor-profi.html'), standalone);
 writeFileSync(join(ZIEL, 'artifact.html'), fragment);
 const kb = (s) => (Buffer.byteLength(s) / 1024).toFixed(0) + ' KB';
 console.log(`✓ gebaut nach ${ZIEL}${MIT_TEST ? ' (mit Testdaten)' : ''}: lese-labor-profi.html (${kb(standalone)}), artifact.html (${kb(fragment)})`);
-console.log(`  Inhalte: ${zaehl.faelle} Fälle/${zaehl.digitalFragen} Fragen · ${zaehl.texte} Texte/${zaehl.leseFragen} Fragen · Themen RS ${zaehl.rsThemen}, GR ${zaehl.grThemen}, SC ${zaehl.scThemen} · ${zaehl.diktate} Diktate · ${zaehl.auftraege} Schreibaufträge · ${zaehl.tempo} Tempo-Sätze · ${zaehl.aufgaben} Aufgaben insgesamt`);
+console.log(`  Inhalte: ${zaehl.faelle} Fälle/${zaehl.digitalFragen} Fragen · ${zaehl.texte} Texte/${zaehl.leseFragen} Fragen · Themen RS ${zaehl.rsThemen}, GR ${zaehl.grThemen}, SC ${zaehl.scThemen} · ${zaehl.diktate} Diktate · ${zaehl.auftraege} Schreibaufträge · ${zaehl.tempo} Tempo-Sätze · Blitz-Lesen ${zaehl.blitzW} Wörter/${zaehl.blitzS} Sätze · ${zaehl.geschichten} BYLET-V-Geschichten · ${zaehl.aufgaben} Aufgaben insgesamt`);

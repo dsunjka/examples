@@ -51,12 +51,13 @@ in der richtigen) Reihenfolge.
 { "typ": "single", "optionen": [ {"text": "…", "richtig": true}, {"text": "…", "richtig": false} ] }
 ```
 4 Optionen, genau eine mit `"richtig": true`. Ablenker müssen plausibel sein.
+Die App zeigt darunter wie im echten Test: „Hier ist eine Antwort richtig.“
 
 ### 2.2 `multi` – Mehrfachauswahl, mehrere Antworten richtig
 ```json
 { "typ": "multi", "optionen": [ {"text": "…", "richtig": true}, … ] }
 ```
-5–6 Optionen, davon 2–3 richtig. Die App zeigt „Wähle alle richtigen Antworten aus.“
+5–6 Optionen, davon 2–3 richtig. Die App zeigt „Hier sind mehrere Antworten richtig. Wähle alle aus.“
 Gewertet wird nur die vollständig richtige Auswahl.
 
 ### 2.3 `matrix` – Aussagen beurteilen
@@ -220,6 +221,24 @@ Apps:
 - Kompetenzen: `entnehmen` (Informationen finden), `schliessen` (Zusammenhänge,
   Gründe, Gefühle erschließen), `reflektieren` (Absicht, Textsorte, Gestaltung, Meinung).
 
+#### Geschichte in vier Abschnitten (BYLET-V-Format) – `"format": "bylet-v"`
+So läuft BYLET-V: Die Kinder lesen eine Geschichte in **vier Abschnitten**. Nach jedem
+Abschnitt beantworten sie **vier Fragen** mit Auswahlantworten, am Ende **vier Fragen zum
+Gesamttext** – zusammen 20 Fragen. Die App zeigt die Abschnitte als Reiter 1–4. Bei den
+Fragen zu Abschnitt *n* sind nur die Abschnitte 1 bis *n* offen, bei den Gesamtfragen alle.
+Jede Geschichte erscheint im Lese-Labor als eigene „BYLET-V-Probe“ (Prüfung).
+```json
+{ "id": "lv-berg", "titel": "…", "textsorte": "Geschichte", "format": "bylet-v",
+  "einleitung": "…",
+  "text": { "titel": "…", "abschnitte": [
+    { "bild": "🏞️", "absaetze": ["…", "…"] }, { … }, { … }, { … } ] },
+  "items": [ { "id": "lv-berg-1", "typ": "single", "abschnitt": 1, … }, … ] }
+```
+- Genau 4 Abschnitte mit je 120–170 Wörtern; `bild` (1–2 Emoji) ist nur Schmuck.
+- Genau 20 Items, alle `single` mit 4 Optionen, in dieser Reihenfolge: 4 × `"abschnitt": 1`,
+  4 × `2`, 4 × `3`, 4 × `4`, dann 4 × `"abschnitt": 0` (Gesamttext).
+- Tipps verweisen auf „Abschnitt 2“ (es gibt keine Absatznummern).
+
 ### 3.3 Rechtschreib-Labor – `modul: "rechtschreibung"`
 ```json
 { "modul": "rechtschreibung",
@@ -255,4 +274,27 @@ Wie Rechtschreibung, aber ohne `diktate`. `kompetenz`: `wortarten`, `wortbildung
 ```json
 { "modul": "tempo", "saetze": [ {"t": "Ein Fisch kann Fahrrad fahren.", "r": false} ] }
 ```
-Sätze, die ein Kind sofort als wahr (`r: true`) oder falsch beurteilen kann.
+Sätze, die ein Kind sofort als wahr (`r: true`) oder falsch beurteilen kann (Satz-Check).
+
+### 3.7 Blitz-Lesen (BYLET-F-Format) – `modul: "blitz"`
+So läuft BYLET-F: Ein Wort oder Satz erscheint für eine festgelegte Zeit, danach wählt das
+Kind aus vier zufällig angeordneten Bildern das passende (ohne Zeitvorgabe). Wörter haben
+7 Stufen, Sätze 6 Stufen, jede Stufe 5 Aufgaben: 3 einfache (zweisilbiges Wort bzw.
+einfacher Satz) und 2 komplexe (dreisilbiges Wort bzw. Satz mit Nebensatz). Nach 3 Fehlern
+in einer Stufe endet der Teil. Die Bilder sind Emoji.
+```json
+{ "modul": "blitz",
+  "woerter": [ { "id": "bw-biene", "wort": "Biene", "silben": 2,
+    "bild": { "e": "🐝", "name": "Biene" },
+    "ablenker": [ { "e": "🍐", "name": "Birne" }, { "e": "🦋", "name": "Schmetterling" }, { "e": "🌸", "name": "Blüte" } ] } ],
+  "saetze": [ { "id": "bs-katze-sofa", "satz": "Die Katze schläft auf dem Sofa.", "komplex": false,
+    "bild": { "e": "🐈💤🛋️", "name": "Eine Katze schläft auf einem Sofa." },
+    "ablenker": [ { "e": "🐕💤🛋️", "name": "Ein Hund schläft auf einem Sofa." }, … ] } ] }
+```
+- Wörter: konkrete Nomen aus dem Grundwortschatz, Bilder genau **ein** Emoji. Mindestens ein
+  Ablenker sieht im Schriftbild ähnlich aus (Biene/Birne, Hose/Rose), damit genaues Lesen zählt.
+- Sätze: Emoji-Szenen aus 2–4 Emoji (von links nach rechts lesen). Jeder Ablenker ändert genau
+  ein Detail; mindestens einer erst im hinteren Satzteil.
+- `name` beschreibt jedes Bild (für Bildschirmleser). Nur Emoji bis Unicode 12.0, keine Hauttöne.
+- Für 7 bzw. 6 Stufen ohne Wiederholung: mindestens 21 zwei- und 14 dreisilbige Wörter,
+  18 einfache und 12 komplexe Sätze (besser deutlich mehr).

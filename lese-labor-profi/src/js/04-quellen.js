@@ -79,8 +79,40 @@ function fallNavigiere(fallId, wohin) {
 }
 
 /* ---------- Lesetext ---------- */
+const istAbschnittText = (g) => !!(g && g.daten && g.daten.text && Array.isArray(g.daten.text.abschnitte) && g.daten.text.abschnitte.length);
+/** Höchster Abschnitt, den die aktuelle Aufgabe öffnen darf (Fragen zu Abschnitt 2 sehen Abschnitt 1–2; Gesamtfragen alles). */
+function abschnittGrenze(g) {
+  const n = g.daten.text.abschnitte.length, info = SITZ ? REG.items[aktId()] : null;
+  const a = info && info.gruppe === g.id ? Number(info.it.abschnitt) || 0 : 0;
+  return a >= 1 && a <= n ? a : n;
+}
+function abschnittSchluessel() { const g = SITZ ? gruppeVon(aktId()) : null; return istAbschnittText(g) ? g.id + ':' + abschnittGrenze(g) : null; }
+function renderAbschnitte(textId) {
+  const g = REG.gruppen[textId], x = g.daten.text, n = x.abschnitte.length, grenze = abschnittGrenze(g);
+  const schluessel = textId + ':' + grenze;
+  if (!SITZ) return '';
+  if (SITZ._abschnittKey !== schluessel) {
+    // neue Fragengruppe: den passenden Abschnitt aufschlagen (bei Gesamtfragen den ersten)
+    SITZ._abschnittKey = schluessel;
+    const info = REG.items[aktId()];
+    SITZ.abschnittZeig = info && Number(info.it.abschnitt) >= 1 ? grenze : 1;
+  }
+  const zeig = Math.min(Math.max(1, SITZ.abschnittZeig || 1), grenze), a = x.abschnitte[zeig - 1] || {};
+  const reiter = x.abschnitte.map((_, i) => {
+    const nr = i + 1, zu = nr > grenze;
+    return `<button type="button" role="tab" class="reiter${nr === zeig ? ' aktiv' : ''}" aria-selected="${nr === zeig}" data-act="q-abschnitt" data-n="${nr}" ${zu ? 'disabled aria-label="Abschnitt ' + nr + ', noch gesperrt"' : 'aria-label="Abschnitt ' + nr + '"'}>${zu ? '<span aria-hidden="true">🔒</span>' : nr}</button>`;
+  }).join('');
+  return `<article class="lesetext abschnitt-text" data-marker-key="${esc(textId + ':a' + zeig)}">
+    <div class="abschnitt-reiter" role="tablist" aria-label="Abschnitte der Geschichte">${reiter}</div>
+    <div class="abschnitt-kopf">${a.bild ? `<span class="abschnitt-bild" aria-hidden="true">${esc(a.bild)}</span>` : ''}<div><h2>${rich(x.titel || g.titel)}</h2><p class="unter">Abschnitt ${zeig} von ${n}</p></div></div>
+    ${(a.absaetze || []).map((p) => `<p class="abschnitt-abs">${rich(p)}</p>`).join('')}
+    ${grenze < n && zeig === grenze ? `<p class="abschnitt-hinweis">${icon('schloss')} Die nächsten Abschnitte öffnen sich mit den nächsten Fragen.</p>` : ''}
+    ${zeig < grenze ? `<button type="button" class="knopf knopf-klein knopf-zweit abschnitt-weiter" data-act="q-abschnitt" data-n="${zeig + 1}">Weiter zu Abschnitt ${zeig + 1}</button>` : ''}
+  </article>`;
+}
 function renderLesetext(textId) {
   const t = REG.gruppen[textId].daten, x = t.text || {};
+  if (istAbschnittText(REG.gruppen[textId])) return renderAbschnitte(textId);
   let n = 0, v = 0;
   const abs = (x.absaetze || []).map((a) => {
     if (/^##\s/.test(a)) return `<h3>${rich(a.replace(/^##\s*/, ''))}</h3>`;

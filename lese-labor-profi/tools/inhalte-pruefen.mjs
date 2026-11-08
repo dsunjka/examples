@@ -74,7 +74,24 @@ export function pruefeInhalte(pakete) {
     } else if (d.modul === 'lesen') {
       for (const t of d.texte || []) {
         gruppe(datei, t.id);
-        if (!t.text || (!(t.text.absaetze || []).length && !(t.text.strophen || []).length)) add('fehler', datei, t.id, 'Text ohne absaetze/strophen');
+        if (t.format === 'bylet-v') {
+          // Geschichte in vier Abschnitten (BYLET-V-Format): je 4 Fragen nach jedem Abschnitt, 4 zum Gesamttext
+          const ab = (t.text && t.text.abschnitte) || [];
+          if (ab.length !== 4) add('fehler', datei, t.id, `bylet-v: genau 4 Abschnitte nötig (jetzt ${ab.length})`);
+          ab.forEach((a, i) => {
+            if (!(a && (a.absaetze || []).length)) add('fehler', datei, t.id, `Abschnitt ${i + 1} ohne absaetze`);
+            for (const x of (a && a.absaetze) || []) pruefeText(datei, t.id, `Abschnitt ${i + 1}`, x);
+            const w = ((a && a.absaetze) || []).join(' ').split(/\s+/).filter(Boolean).length;
+            if (w < 90 || w > 200) add('hinweis', datei, t.id, `Abschnitt ${i + 1}: ${w} Wörter (empfohlen 120–170)`);
+          });
+          const its = t.items || [];
+          if (its.length !== 20) add('fehler', datei, t.id, `bylet-v: genau 20 Fragen nötig (jetzt ${its.length})`);
+          its.forEach((it, i) => {
+            const soll = i < 16 ? Math.floor(i / 4) + 1 : 0;
+            if (it.abschnitt !== soll) add('fehler', datei, it.id || t.id, `abschnitt muss ${soll} sein (Reihenfolge: 4×A1, 4×A2, 4×A3, 4×A4, 4× gesamt)`);
+            if (it.typ !== 'single' || (it.optionen || []).length !== 4) add('fehler', datei, it.id || t.id, 'bylet-v: nur single mit genau 4 Optionen');
+          });
+        } else if (!t.text || (!(t.text.absaetze || []).length && !(t.text.strophen || []).length)) add('fehler', datei, t.id, 'Text ohne absaetze/strophen');
         for (const a of (t.text && t.text.absaetze) || []) pruefeText(datei, t.id, 'absatz', a);
         for (const it of t.items || []) pruefeItem(datei, 'lesen', it);
       }
@@ -93,6 +110,29 @@ export function pruefeInhalte(pakete) {
         for (const f of ['auftrag', 'planung', 'woerter', 'checkliste']) if (!a[f] || (Array.isArray(a[f]) && !a[f].length)) add('fehler', datei, a.id, `${f} fehlt`);
         if (!(a.minWoerter > 0)) add('fehler', datei, a.id, 'minWoerter fehlt');
       }
+    } else if (d.modul === 'blitz') {
+      // Blitz-Lesen (BYLET-F-Format): Bild + 3 Ablenker, alles Emoji
+      const graph = (s) => { try { return [...new Intl.Segmenter('de', { granularity: 'grapheme' }).segment(String(s))].length; } catch (e) { return [...String(s)].length; } };
+      const pruefeBlitz = (x, art) => {
+        const ort = (x && x.id) || '(ohne id)';
+        if (!x || !x.id || !/^[a-z0-9-]+$/.test(x.id)) add('fehler', datei, ort, 'ungültige ID');
+        if (alleIds.has(x.id)) add('fehler', datei, ort, `ID doppelt (auch in ${alleIds.get(x.id)})`); else alleIds.set(x.id, datei);
+        const text = art === 'wort' ? x.wort : x.satz;
+        if (typeof text !== 'string' || !text.trim()) add('fehler', datei, ort, `${art} fehlt`);
+        const bilder = [x.bild].concat(x.ablenker || []);
+        if ((x.ablenker || []).length !== 3) add('fehler', datei, ort, 'genau 3 Ablenker nötig');
+        if (bilder.some((b) => !b || typeof b.e !== 'string' || !b.e.trim() || typeof b.name !== 'string' || !b.name.trim())) add('fehler', datei, ort, 'Bild ohne e/name');
+        if (new Set(bilder.map((b) => b && b.e)).size !== bilder.length) add('fehler', datei, ort, 'doppeltes Bild in einer Aufgabe');
+        if (art === 'wort') { if (![2, 3, 4].includes(x.silben)) add('fehler', datei, ort, 'silben muss 2, 3 oder 4 sein'); if (bilder.some((b) => b && graph(b.e) !== 1)) add('fehler', datei, ort, 'Wort-Bilder: genau ein Emoji'); }
+        else { if (typeof x.komplex !== 'boolean') add('fehler', datei, ort, 'komplex fehlt'); if (x.komplex && !/,/.test(x.satz || '')) add('hinweis', datei, ort, 'komplexer Satz ohne Komma?'); if (bilder.some((b) => b && (graph(b.e) < 1 || graph(b.e) > 5))) add('fehler', datei, ort, 'Satz-Bilder: 1–5 Emoji'); }
+        for (const b of bilder) if (b && /[\u{1F3FB}-\u{1F3FF}]/u.test(b.e)) add('fehler', datei, ort, 'keine Hauttöne');
+      };
+      for (const w of d.woerter || []) pruefeBlitz(w, 'wort');
+      for (const s of d.saetze || []) pruefeBlitz(s, 'satz');
+      const w2 = (d.woerter || []).filter((x) => x.silben === 2).length, w3 = (d.woerter || []).filter((x) => x.silben >= 3).length;
+      const s1 = (d.saetze || []).filter((x) => !x.komplex).length, s2 = (d.saetze || []).filter((x) => x.komplex).length;
+      if (w2 < 23 || w3 < 16) add('hinweis', datei, 'woerter', `wenig Wörter für 7 Stufen ohne Wiederholung (${w2} zweisilbig, ${w3} dreisilbig)`);
+      if (s1 < 20 || s2 < 14) add('hinweis', datei, 'saetze', `wenig Sätze für 6 Stufen ohne Wiederholung (${s1} einfach, ${s2} komplex)`);
     } else if (d.modul === 'tempo') {
       const s = d.saetze || [];
       if (s.some((x) => typeof x.t !== 'string' || typeof x.r !== 'boolean')) add('fehler', datei, 'saetze', 'Satz ohne t/r');

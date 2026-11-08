@@ -51,8 +51,8 @@ function plural(n, ein, mehr) { return `${n} ${n === 1 ? ein : mehr}`; }
 /* ---------- Module ---------- */
 const MODULE = [
   { id: 'digital', titel: 'Digital-Labor', kurz: 'Internetseiten lesen, prüfen und bedienen – Training für BYLET-D', farbe: 'var(--m-digital)', icon: 'digital', gruppeName: 'Fall' },
-  { id: 'lesen', titel: 'Lese-Labor', kurz: 'Sachtexte, Geschichten und Gedichte genau verstehen – nah an BYLET-V', farbe: 'var(--m-lesen)', icon: 'lesen', gruppeName: 'Text' },
-  { id: 'tempo', titel: 'Lese-Tempo', kurz: 'Schnell und genau lesen: Stimmt der Satz? – nah an BYLET-F', farbe: 'var(--m-tempo)', icon: 'tempo', gruppeName: '' },
+  { id: 'lesen', titel: 'Lese-Labor', kurz: 'Sachtexte, Gedichte und Geschichten in vier Teilen wie im BYLET-V', farbe: 'var(--m-lesen)', icon: 'lesen', gruppeName: 'Text' },
+  { id: 'tempo', titel: 'Lese-Tempo', kurz: 'Blitz-Lesen wie im BYLET-F und Satz-Check: schnell und genau lesen', farbe: 'var(--m-tempo)', icon: 'tempo', gruppeName: '' },
   { id: 'rechtschreibung', titel: 'Rechtschreib-Labor', kurz: 'Strategien: mitsprechen, nachdenken, merken – plus Diktat', farbe: 'var(--m-rechtschreibung)', icon: 'rechtschreibung', gruppeName: 'Thema' },
   { id: 'grammatik', titel: 'Grammatik-Labor', kurz: 'Wortarten, Zeitformen, Satzglieder und die vier Fälle', farbe: 'var(--m-grammatik)', icon: 'grammatik', gruppeName: 'Thema' },
   { id: 'schreiben', titel: 'Schreib-Werkstatt', kurz: 'Texte planen, lebendig formulieren und überarbeiten', farbe: 'var(--m-schreiben)', icon: 'schreiben', gruppeName: 'Thema' },
@@ -67,8 +67,8 @@ const KOMPETENZEN = {
   schreiben: { planen: 'Planen', formulieren: 'Formulieren', ueberarbeiten: 'Überarbeiten' },
 };
 const TYP_HINWEIS = {
-  single: 'Wähle eine Antwort aus.',
-  multi: 'Wähle alle richtigen Antworten aus. Es sind mehrere richtig.',
+  single: 'Hier ist eine Antwort richtig.',
+  multi: 'Hier sind mehrere Antworten richtig. Wähle alle aus.',
   matrix: 'Entscheide bei jeder Aussage.',
   luecke: 'Wähle für jede Lücke das Passende aus.',
   markieren: 'Tippe die passenden Stellen an.',
@@ -106,6 +106,6 @@ const itemInfo = (id) => REG.items[id];
 const gruppeVon = (id) => REG.gruppen[(REG.items[id] || {}).gruppe];
 function kompetenzLabel(modul, k) { return (KOMPETENZEN[modul] || {})[k] || k || 'Sonstiges'; }
 function modulHatInhalt(id) {
-  if (id === 'tempo') return !!(INHALT.tempo && (INHALT.tempo.saetze || []).length);
+  if (id === 'tempo') return !!((INHALT.tempo && (INHALT.tempo.saetze || []).length) || (INHALT.blitz && (INHALT.blitz.woerter || []).length));
   return (REG.module[id] || { items: [] }).items.length > 0;
 }

@@ -348,6 +348,129 @@ try {
     await shot(p, '06-dunkel');
     await ctx.close();
   }
+
+  /* ---------- BYLES-Formate ---------- */
+  schritt('BYLES-Fahrplan und Daumen-Check (BYLET-P-Format)');
+  {
+    const p = await neueSeite();
+    await profilAnlegen(p, 'Fahrplan');
+    check(await p.isVisible('.fahrplan-band'), 'Startseite ohne BYLES-Fahrplan');
+    await p.click('.fahrplan-band');
+    check(await p.$$eval('.station', (s) => s.length) === 4, 'Fahrplan hat nicht 4 Stationen');
+    const reihe = await p.$$eval('.station-nr', (s) => s.map((x) => x.textContent.replace(/.*·\s*/, '').trim()).join(','));
+    check(reihe === 'BYLET-P,BYLET-F,BYLET-V,BYLET-D', 'Stationen nicht in Test-Reihenfolge: ' + reihe);
+    await keinUeberlauf(p, 'Fahrplan');
+    await shot(p, '07-fahrplan');
+    await p.click('[data-act="daumen-start"]');
+    check(await p.isDisabled('[data-act="daumen-weiter"]'), 'Daumen-Check: Weiter ohne Auswahl möglich');
+    check(await p.$$eval('.daumen-knopf', (b) => b.length) === 4, 'Daumen-Check: nicht 4 Daumen');
+    for (let i = 0; i < 8; i++) {
+      await p.click(`.daumen-knopf[data-w="${(i * 3) % 4}"]`);
+      check(await p.getAttribute(`.daumen-knopf[data-w="${(i * 3) % 4}"]`, 'aria-checked') === 'true', `Daumen-Check: Auswahl ${i + 1} nicht markiert`);
+      if (i === 3) { await p.click('[data-act="daumen-zurueck"]'); check((await p.textContent('.zeile-zwischen .klein')).includes('3 von 8'), 'Daumen-Check: Zurück geht nicht'); await p.click('[data-act="daumen-weiter"]'); await p.click(`.daumen-knopf[data-w="${(i * 3) % 4}"]`); }
+      await p.click('[data-act="daumen-weiter"]');
+    }
+    check(await p.isVisible('.fahrplan-banner'), 'Daumen-Check: kein Fahrplan-Hinweis am Ende');
+    const d = await p.evaluate(() => { const x = JSON.parse(localStorage.getItem('lese-labor-profi:v1')); return x.profile[x.aktivesProfil]; });
+    check(d.byles && d.byles.p > 0, 'Daumen-Check wird im Fahrplan nicht vermerkt');
+    check(!JSON.stringify(d).includes('daumen') && !('antworten' in (d.byles || {})), 'Daumen-Check-Antworten werden gespeichert');
+    check(p.fehlerliste.length === 0, 'Fehler (Fahrplan/Daumen): ' + p.fehlerliste.join(' | '));
+    await p.context().close();
+  }
+
+  schritt('Blitz-Lesen (BYLET-F-Format): Übung, Stufen, Abbruch nach 3 Fehlern, Ergebnis');
+  {
+    const p = await neueSeite();
+    await profilAnlegen(p, 'Blitz');
+    await p.click('.labor-karte[data-nav="tempo"]');
+    await p.click('.blitz-karte [data-act="blitz-start"]');
+    const inhalt = await p.evaluate(() => window.LL_INHALT.blitz);
+    const alle = [...inhalt.woerter, ...inhalt.saetze];
+    const aufgabe = async (richtig) => {
+      const el = await p.waitForSelector('#bl-wort', { timeout: 7000 });
+      const text = (await el.textContent()).trim();
+      await p.waitForSelector('.bild-wahl:not([disabled])', { timeout: 9000 });
+      check(!(await p.$('#bl-wort')), 'Blitz-Lesen: Wort bleibt bei der Bildauswahl sichtbar');
+      const x = alle.find((y) => (y.wort || y.satz) === text);
+      const labels = await p.$$eval('.bild-wahl', (bs) => bs.map((b) => b.getAttribute('aria-label')));
+      check(labels.length === 4 && new Set(labels).size === 4, 'Blitz-Lesen: nicht 4 verschiedene Bilder');
+      let i = labels.indexOf(x.bild.name); if (!richtig) i = (i + 1) % 4;
+      await p.click(`.bild-wahl[data-i="${i}"]`);
+      await p.waitForTimeout(richtig ? 760 : 1820);
+    };
+    const t0 = Date.now();
+    await p.click('[data-act="blitz-uebung"]'); await aufgabe(true); await aufgabe(true);
+    await p.click('[data-act="blitz-los"]');
+    for (let s = 0; s < 2; s++) { for (let k = 0; k < 5; k++) await aufgabe(true); await p.waitForTimeout(1600); }
+    await aufgabe(false); await aufgabe(true); await aufgabe(false); await aufgabe(false);
+    await p.waitForSelector('[data-act="blitz-teil2"]', { timeout: 4000 });
+    check((await p.textContent('.blitz-info h1')).includes('Stufe 2 von 7'), 'Blitz-Lesen: Stufe nach 3 Fehlern falsch');
+    await shot(p, '08-blitz-teilende');
+    await p.click('[data-act="blitz-teil2"]'); await p.click('[data-act="blitz-uebung"]'); await aufgabe(true); await aufgabe(true);
+    await p.click('[data-act="blitz-los"]');
+    // Tastatur 1–4 wählt Bilder
+    await p.waitForSelector('#bl-wort'); await p.waitForSelector('.bild-wahl:not([disabled])');
+    await p.keyboard.press('1'); check(await p.isVisible('.blitz-rueck'), 'Blitz-Lesen: Taste 1 wählt kein Bild');
+    await p.waitForTimeout(1820);
+    for (let k = 0; k < 3; k++) await aufgabe(false).catch(() => {});
+    await p.waitForSelector('[data-act="blitz-fertig"]', { timeout: 8000 });
+    await p.click('[data-act="blitz-fertig"]');
+    check((await p.textContent('.ergebnis-kopf')).includes('Stufe 2 von 7'), 'Blitz-Ergebnis zeigt Wort-Stufe nicht');
+    check(await p.isVisible('.fahrplan-banner'), 'Blitz-Ergebnis ohne Fahrplan-Hinweis');
+    const d = await p.evaluate(() => { const x = JSON.parse(localStorage.getItem('lese-labor-profi:v1')); return x.profile[x.aktivesProfil]; });
+    check(d.blitz && d.blitz.length === 1 && d.blitz[0].w === 2 && d.byles.f > 0, 'Blitz-Ergebnis nicht gespeichert');
+    await p.click('[data-nav="tempo"]');
+    check((await p.textContent('.blitz-karte')).includes('Beste Wort-Stufe: 2/7'), 'Lese-Tempo zeigt den Blitz-Bestwert nicht');
+    // Abbrechen mitten im Lauf hinterlässt keine laufenden Zeitgeber
+    await p.click('.blitz-karte [data-act="blitz-start"]'); await p.click('[data-act="blitz-uebung"]');
+    await p.click('[data-act="blitz-abbruch"]'); await p.waitForTimeout(2500);
+    check((await p.evaluate(() => location.hash)) === '#tempo' && await p.isVisible('.blitz-karte'), 'Blitz-Abbruch springt nicht zurück');
+    check(p.fehlerliste.length === 0, 'Fehler (Blitz-Lesen): ' + p.fehlerliste.join(' | '));
+    console.log(`  Blitz-Lauf in ${Math.round((Date.now() - t0) / 1000)} s`);
+    await p.context().close();
+  }
+
+  schritt('BYLET-V-Probe: Abschnitte als Reiter, Sperren, Auswertung nach Abschnitten');
+  {
+    const p = await neueSeite();
+    await profilAnlegen(p, 'Geschichte');
+    await p.click('.labor-karte[data-nav="lesen"]');
+    const karten = await p.$$('[data-act="pruef-intro"][data-art^="lesev-"]');
+    check(karten.length >= 2, 'Lese-Labor ohne BYLET-V-Proben');
+    await karten[0].click(); await p.click('[data-act="pruef-los"]');
+    const reiter = () => p.$$eval('.reiter', (r) => r.map((x) => (x.disabled ? 'x' : x.classList.contains('aktiv') ? '*' : '-')).join(''));
+    check(await reiter() === '*xxx', 'Abschnitt 1: Reiter falsch ' + await reiter());
+    for (let i = 0; i < 20; i++) {
+      const it = await aktuellesItem(p);
+      if (i === 4) check(await reiter() === '-*xx', 'Abschnitt 2: Reiter falsch ' + await reiter());
+      if (i === 12) check(await reiter() === '---*', 'Abschnitt 4: Reiter falsch ' + await reiter());
+      if (i === 16) { check(!(await reiter()).includes('x'), 'Gesamtfragen: Abschnitte gesperrt'); await p.click('.reiter[data-n="2"]'); check((await p.textContent('.abschnitt-kopf .unter')).includes('Abschnitt 2 von 4'), 'Reiter 2 öffnet nicht'); }
+      await beantworte(p, it, i % 4 !== 1);
+      if (i < 19) await p.click('[data-act="s-weiter"]');
+    }
+    await p.click('[data-act="s-gehe"][data-i="1"]');
+    check(await reiter() === '*xxx', 'Zurückspringen zu Frage 2 sperrt Abschnitte nicht wieder');
+    await p.click('.sitzung-kopf [data-act="s-abgeben"]'); await p.click('.dialog [data-dlg="1"]');
+    await p.waitForSelector('.ergebnis-kopf');
+    const t = await p.textContent('#inhalt');
+    check(t.includes('Nach Abschnitten') && t.includes('Ganze Geschichte') && t.includes('15 von 20'), 'Auswertung nach Abschnitten fehlt oder Punkte falsch');
+    check(await p.isVisible('.fahrplan-banner'), 'V-Probe ohne Fahrplan-Hinweis');
+    check(p.fehlerliste.length === 0, 'Fehler (V-Probe): ' + p.fehlerliste.join(' | '));
+    await p.context().close();
+  }
+
+  schritt('BYLES auf dem Handy: Fahrplan, Daumen, Blitz-Bilder ohne Überlauf');
+  {
+    const p = await neueSeite('iPhone 13');
+    await profilAnlegen(p, 'Handy');
+    await p.click('.fahrplan-band'); await keinUeberlauf(p, 'Fahrplan Handy');
+    await p.click('[data-act="daumen-start"]'); await keinUeberlauf(p, 'Daumen Handy');
+    await p.click('.kopf [data-nav="start"]'); await p.click('.labor-karte[data-nav="tempo"]'); await p.click('.blitz-karte [data-act="blitz-start"]'); await p.click('[data-act="blitz-uebung"]');
+    await p.waitForSelector('.bild-wahl:not([disabled])', { timeout: 6000 }); await keinUeberlauf(p, 'Blitz-Bilder Handy');
+    await shot(p, '09-blitz-handy');
+    check(p.fehlerliste.length === 0, 'Fehler (Handy BYLES): ' + p.fehlerliste.join(' | '));
+    await p.context().close();
+  }
 } catch (e) {
   fehler++;
   console.log('  ✗ Testabbruch: ' + (e && e.stack ? e.stack.split('\n').slice(0, 3).join(' | ') : e));

@@ -1,0 +1,3986 @@
+{
+ "modul": "blitz",
+ "woerter": [
+  {
+   "id": "bw-biene",
+   "wort": "Biene",
+   "silben": 2,
+   "bild": {
+    "e": "🐝",
+    "name": "Biene"
+   },
+   "ablenker": [
+    {
+     "e": "🍐",
+     "name": "Birne"
+    },
+    {
+     "e": "🦋",
+     "name": "Schmetterling"
+    },
+    {
+     "e": "🌸",
+     "name": "Blüte"
+    }
+   ]
+  },
+  {
+   "id": "bw-birne",
+   "wort": "Birne",
+   "silben": 2,
+   "bild": {
+    "e": "🍐",
+    "name": "Birne"
+   },
+   "ablenker": [
+    {
+     "e": "🐝",
+     "name": "Biene"
+    },
+    {
+     "e": "🍎",
+     "name": "Apfel"
+    },
+    {
+     "e": "🍌",
+     "name": "Banane"
+    }
+   ]
+  },
+  {
+   "id": "bw-hose",
+   "wort": "Hose",
+   "silben": 2,
+   "bild": {
+    "e": "👖",
+    "name": "Hose"
+   },
+   "ablenker": [
+    {
+     "e": "🌹",
+     "name": "Rose"
+    },
+    {
+     "e": "🥫",
+     "name": "Dose"
+    },
+    {
+     "e": "👗",
+     "name": "Kleid"
+    }
+   ]
+  },
+  {
+   "id": "bw-nase",
+   "wort": "Nase",
+   "silben": 2,
+   "bild": {
+    "e": "👃",
+    "name": "Nase"
+   },
+   "ablenker": [
+    {
+     "e": "🐰",
+     "name": "Hase"
+    },
+    {
+     "e": "👂",
+     "name": "Ohr"
+    },
+    {
+     "e": "👄",
+     "name": "Mund"
+    }
+   ]
+  },
+  {
+   "id": "bw-hase",
+   "wort": "Hase",
+   "silben": 2,
+   "bild": {
+    "e": "🐰",
+    "name": "Hase"
+   },
+   "ablenker": [
+    {
+     "e": "👃",
+     "name": "Nase"
+    },
+    {
+     "e": "👖",
+     "name": "Hose"
+    },
+    {
+     "e": "🦔",
+     "name": "Igel"
+    }
+   ]
+  },
+  {
+   "id": "bw-tanne",
+   "wort": "Tanne",
+   "silben": 2,
+   "bild": {
+    "e": "🌲",
+    "name": "Tanne"
+   },
+   "ablenker": [
+    {
+     "e": "🍳",
+     "name": "Pfanne mit Spiegelei"
+    },
+    {
+     "e": "🛁",
+     "name": "Badewanne"
+    },
+    {
+     "e": "🍄",
+     "name": "Pilz"
+    }
+   ]
+  },
+  {
+   "id": "bw-pfanne",
+   "wort": "Pfanne",
+   "silben": 2,
+   "bild": {
+    "e": "🍳",
+    "name": "Pfanne mit Spiegelei"
+   },
+   "ablenker": [
+    {
+     "e": "🌲",
+     "name": "Tanne"
+    },
+    {
+     "e": "🛁",
+     "name": "Badewanne"
+    },
+    {
+     "e": "🥞",
+     "name": "Pfannkuchen"
+    }
+   ]
+  },
+  {
+   "id": "bw-tasche",
+   "wort": "Tasche",
+   "silben": 2,
+   "bild": {
+    "e": "👜",
+    "name": "Handtasche"
+   },
+   "ablenker": [
+    {
+     "e": "☕",
+     "name": "Tasse"
+    },
+    {
+     "e": "🍼",
+     "name": "Babyflasche"
+    },
+    {
+     "e": "👓",
+     "name": "Brille"
+    }
+   ]
+  },
+  {
+   "id": "bw-tasse",
+   "wort": "Tasse",
+   "silben": 2,
+   "bild": {
+    "e": "☕",
+    "name": "Tasse"
+   },
+   "ablenker": [
+    {
+     "e": "👜",
+     "name": "Handtasche"
+    },
+    {
+     "e": "🥄",
+     "name": "Löffel"
+    },
+    {
+     "e": "🥛",
+     "name": "Glas Milch"
+    }
+   ]
+  },
+  {
+   "id": "bw-kerze",
+   "wort": "Kerze",
+   "silben": 2,
+   "bild": {
+    "e": "🕯️",
+    "name": "Kerze"
+   },
+   "ablenker": [
+    {
+     "e": "🐱",
+     "name": "Katze"
+    },
+    {
+     "e": "❤️",
+     "name": "Herz"
+    },
+    {
+     "e": "⭐",
+     "name": "Stern"
+    }
+   ]
+  },
+  {
+   "id": "bw-katze",
+   "wort": "Katze",
+   "silben": 2,
+   "bild": {
+    "e": "🐱",
+    "name": "Katze"
+   },
+   "ablenker": [
+    {
+     "e": "🕯️",
+     "name": "Kerze"
+    },
+    {
+     "e": "🐶",
+     "name": "Hund"
+    },
+    {
+     "e": "🐭",
+     "name": "Maus"
+    }
+   ]
+  },
+  {
+   "id": "bw-ente",
+   "wort": "Ente",
+   "silben": 2,
+   "bild": {
+    "e": "🦆",
+    "name": "Ente"
+   },
+   "ablenker": [
+    {
+     "e": "🦉",
+     "name": "Eule"
+    },
+    {
+     "e": "🌍",
+     "name": "Erde"
+    },
+    {
+     "e": "🐔",
+     "name": "Huhn"
+    }
+   ]
+  },
+  {
+   "id": "bw-eule",
+   "wort": "Eule",
+   "silben": 2,
+   "bild": {
+    "e": "🦉",
+    "name": "Eule"
+   },
+   "ablenker": [
+    {
+     "e": "🍗",
+     "name": "Hähnchenkeule"
+    },
+    {
+     "e": "🦆",
+     "name": "Ente"
+    },
+    {
+     "e": "🦔",
+     "name": "Igel"
+    }
+   ]
+  },
+  {
+   "id": "bw-igel",
+   "wort": "Igel",
+   "silben": 2,
+   "bild": {
+    "e": "🦔",
+    "name": "Igel"
+   },
+   "ablenker": [
+    {
+     "e": "👼",
+     "name": "Engel"
+    },
+    {
+     "e": "🐦",
+     "name": "Vogel"
+    },
+    {
+     "e": "🦊",
+     "name": "Fuchs"
+    }
+   ]
+  },
+  {
+   "id": "bw-vogel",
+   "wort": "Vogel",
+   "silben": 2,
+   "bild": {
+    "e": "🐦",
+    "name": "Vogel"
+   },
+   "ablenker": [
+    {
+     "e": "🦔",
+     "name": "Igel"
+    },
+    {
+     "e": "⛵",
+     "name": "Segelboot"
+    },
+    {
+     "e": "🐟",
+     "name": "Fisch"
+    }
+   ]
+  },
+  {
+   "id": "bw-apfel",
+   "wort": "Apfel",
+   "silben": 2,
+   "bild": {
+    "e": "🍎",
+    "name": "Apfel"
+   },
+   "ablenker": [
+    {
+     "e": "🚦",
+     "name": "Ampel"
+    },
+    {
+     "e": "🍐",
+     "name": "Birne"
+    },
+    {
+     "e": "🍒",
+     "name": "Kirsche"
+    }
+   ]
+  },
+  {
+   "id": "bw-ampel",
+   "wort": "Ampel",
+   "silben": 2,
+   "bild": {
+    "e": "🚦",
+    "name": "Ampel"
+   },
+   "ablenker": [
+    {
+     "e": "🍎",
+     "name": "Apfel"
+    },
+    {
+     "e": "⚓",
+     "name": "Anker"
+    },
+    {
+     "e": "🚗",
+     "name": "Auto"
+    }
+   ]
+  },
+  {
+   "id": "bw-kirsche",
+   "wort": "Kirsche",
+   "silben": 2,
+   "bild": {
+    "e": "🍒",
+    "name": "Kirsche"
+   },
+   "ablenker": [
+    {
+     "e": "⛪",
+     "name": "Kirche"
+    },
+    {
+     "e": "🍓",
+     "name": "Erdbeere"
+    },
+    {
+     "e": "🍇",
+     "name": "Traube"
+    }
+   ]
+  },
+  {
+   "id": "bw-kirche",
+   "wort": "Kirche",
+   "silben": 2,
+   "bild": {
+    "e": "⛪",
+    "name": "Kirche"
+   },
+   "ablenker": [
+    {
+     "e": "🍒",
+     "name": "Kirsche"
+    },
+    {
+     "e": "🏰",
+     "name": "Schloss"
+    },
+    {
+     "e": "🏠",
+     "name": "Haus"
+    }
+   ]
+  },
+  {
+   "id": "bw-loeffel",
+   "wort": "Löffel",
+   "silben": 2,
+   "bild": {
+    "e": "🥄",
+    "name": "Löffel"
+   },
+   "ablenker": [
+    {
+     "e": "🦁",
+     "name": "Löwe"
+    },
+    {
+     "e": "🍳",
+     "name": "Pfanne mit Spiegelei"
+    },
+    {
+     "e": "🥢",
+     "name": "Essstäbchen"
+    }
+   ]
+  },
+  {
+   "id": "bw-loewe",
+   "wort": "Löwe",
+   "silben": 2,
+   "bild": {
+    "e": "🦁",
+    "name": "Löwe"
+   },
+   "ablenker": [
+    {
+     "e": "🥄",
+     "name": "Löffel"
+    },
+    {
+     "e": "🐘",
+     "name": "Elefant"
+    },
+    {
+     "e": "🦓",
+     "name": "Zebra"
+    }
+   ]
+  },
+  {
+   "id": "bw-wolke",
+   "wort": "Wolke",
+   "silben": 2,
+   "bild": {
+    "e": "☁️",
+    "name": "Wolke"
+   },
+   "ablenker": [
+    {
+     "e": "🧶",
+     "name": "Wollknäuel"
+    },
+    {
+     "e": "☀️",
+     "name": "Sonne"
+    },
+    {
+     "e": "❄️",
+     "name": "Schneeflocke"
+    }
+   ]
+  },
+  {
+   "id": "bw-wolle",
+   "wort": "Wolle",
+   "silben": 2,
+   "bild": {
+    "e": "🧶",
+    "name": "Wollknäuel"
+   },
+   "ablenker": [
+    {
+     "e": "☁️",
+     "name": "Wolke"
+    },
+    {
+     "e": "🐺",
+     "name": "Wolf"
+    },
+    {
+     "e": "✂️",
+     "name": "Schere"
+    }
+   ]
+  },
+  {
+   "id": "bw-socke",
+   "wort": "Socke",
+   "silben": 2,
+   "bild": {
+    "e": "🧦",
+    "name": "Socke"
+   },
+   "ablenker": [
+    {
+     "e": "🔔",
+     "name": "Glocke"
+    },
+    {
+     "e": "👟",
+     "name": "Turnschuh"
+    },
+    {
+     "e": "🧤",
+     "name": "Handschuh"
+    }
+   ]
+  },
+  {
+   "id": "bw-glocke",
+   "wort": "Glocke",
+   "silben": 2,
+   "bild": {
+    "e": "🔔",
+    "name": "Glocke"
+   },
+   "ablenker": [
+    {
+     "e": "🧦",
+     "name": "Socke"
+    },
+    {
+     "e": "🥁",
+     "name": "Trommel"
+    },
+    {
+     "e": "🎻",
+     "name": "Geige"
+    }
+   ]
+  },
+  {
+   "id": "bw-geige",
+   "wort": "Geige",
+   "silben": 2,
+   "bild": {
+    "e": "🎻",
+    "name": "Geige"
+   },
+   "ablenker": [
+    {
+     "e": "🐐",
+     "name": "Ziege"
+    },
+    {
+     "e": "🎸",
+     "name": "Gitarre"
+    },
+    {
+     "e": "🥁",
+     "name": "Trommel"
+    }
+   ]
+  },
+  {
+   "id": "bw-ziege",
+   "wort": "Ziege",
+   "silben": 2,
+   "bild": {
+    "e": "🐐",
+    "name": "Ziege"
+   },
+   "ablenker": [
+    {
+     "e": "🎻",
+     "name": "Geige"
+    },
+    {
+     "e": "🐷",
+     "name": "Schwein"
+    },
+    {
+     "e": "🐮",
+     "name": "Kuh"
+    }
+   ]
+  },
+  {
+   "id": "bw-krone",
+   "wort": "Krone",
+   "silben": 2,
+   "bild": {
+    "e": "👑",
+    "name": "Krone"
+   },
+   "ablenker": [
+    {
+     "e": "🍋",
+     "name": "Zitrone"
+    },
+    {
+     "e": "💍",
+     "name": "Ring"
+    },
+    {
+     "e": "💎",
+     "name": "Edelstein"
+    }
+   ]
+  },
+  {
+   "id": "bw-kuchen",
+   "wort": "Kuchen",
+   "silben": 2,
+   "bild": {
+    "e": "🍰",
+    "name": "Stück Kuchen"
+   },
+   "ablenker": [
+    {
+     "e": "🐤",
+     "name": "Küken"
+    },
+    {
+     "e": "🍪",
+     "name": "Keks"
+    },
+    {
+     "e": "🍦",
+     "name": "Eis"
+    }
+   ]
+  },
+  {
+   "id": "bw-kueken",
+   "wort": "Küken",
+   "silben": 2,
+   "bild": {
+    "e": "🐤",
+    "name": "Küken"
+   },
+   "ablenker": [
+    {
+     "e": "🍰",
+     "name": "Stück Kuchen"
+    },
+    {
+     "e": "🥚",
+     "name": "Ei"
+    },
+    {
+     "e": "🦆",
+     "name": "Ente"
+    }
+   ]
+  },
+  {
+   "id": "bw-brezel",
+   "wort": "Brezel",
+   "silben": 2,
+   "bild": {
+    "e": "🥨",
+    "name": "Brezel"
+   },
+   "ablenker": [
+    {
+     "e": "👓",
+     "name": "Brille"
+    },
+    {
+     "e": "🍞",
+     "name": "Brot"
+    },
+    {
+     "e": "🧀",
+     "name": "Käse"
+    }
+   ]
+  },
+  {
+   "id": "bw-brille",
+   "wort": "Brille",
+   "silben": 2,
+   "bild": {
+    "e": "👓",
+    "name": "Brille"
+   },
+   "ablenker": [
+    {
+     "e": "✉️",
+     "name": "Brief"
+    },
+    {
+     "e": "🥨",
+     "name": "Brezel"
+    },
+    {
+     "e": "⌚",
+     "name": "Armbanduhr"
+    }
+   ]
+  },
+  {
+   "id": "bw-kaese",
+   "wort": "Käse",
+   "silben": 2,
+   "bild": {
+    "e": "🧀",
+    "name": "Käse"
+   },
+   "ablenker": [
+    {
+     "e": "🐰",
+     "name": "Hase"
+    },
+    {
+     "e": "👃",
+     "name": "Nase"
+    },
+    {
+     "e": "🍞",
+     "name": "Brot"
+    }
+   ]
+  },
+  {
+   "id": "bw-pinsel",
+   "wort": "Pinsel",
+   "silben": 2,
+   "bild": {
+    "e": "🖌️",
+    "name": "Pinsel"
+   },
+   "ablenker": [
+    {
+     "e": "🏝️",
+     "name": "Insel"
+    },
+    {
+     "e": "✏️",
+     "name": "Bleistift"
+    },
+    {
+     "e": "✂️",
+     "name": "Schere"
+    }
+   ]
+  },
+  {
+   "id": "bw-insel",
+   "wort": "Insel",
+   "silben": 2,
+   "bild": {
+    "e": "🏝️",
+    "name": "Insel"
+   },
+   "ablenker": [
+    {
+     "e": "🖌️",
+     "name": "Pinsel"
+    },
+    {
+     "e": "🚢",
+     "name": "Schiff"
+    },
+    {
+     "e": "⛰️",
+     "name": "Berg"
+    }
+   ]
+  },
+  {
+   "id": "bw-hammer",
+   "wort": "Hammer",
+   "silben": 2,
+   "bild": {
+    "e": "🔨",
+    "name": "Hammer"
+   },
+   "ablenker": [
+    {
+     "e": "🐹",
+     "name": "Hamster"
+    },
+    {
+     "e": "🦞",
+     "name": "Hummer"
+    },
+    {
+     "e": "🔩",
+     "name": "Schraube"
+    }
+   ]
+  },
+  {
+   "id": "bw-fahrrad",
+   "wort": "Fahrrad",
+   "silben": 2,
+   "bild": {
+    "e": "🚲",
+    "name": "Fahrrad"
+   },
+   "ablenker": [
+    {
+     "e": "🏍️",
+     "name": "Motorrad"
+    },
+    {
+     "e": "🛴",
+     "name": "Roller"
+    },
+    {
+     "e": "🚗",
+     "name": "Auto"
+    }
+   ]
+  },
+  {
+   "id": "bw-roller",
+   "wort": "Roller",
+   "silben": 2,
+   "bild": {
+    "e": "🛴",
+    "name": "Roller"
+   },
+   "ablenker": [
+    {
+     "e": "🧳",
+     "name": "Koffer"
+    },
+    {
+     "e": "🚲",
+     "name": "Fahrrad"
+    },
+    {
+     "e": "🛹",
+     "name": "Skateboard"
+    }
+   ]
+  },
+  {
+   "id": "bw-koffer",
+   "wort": "Koffer",
+   "silben": 2,
+   "bild": {
+    "e": "🧳",
+    "name": "Koffer"
+   },
+   "ablenker": [
+    {
+     "e": "🥄",
+     "name": "Löffel"
+    },
+    {
+     "e": "🧭",
+     "name": "Kompass"
+    },
+    {
+     "e": "✈️",
+     "name": "Flugzeug"
+    }
+   ]
+  },
+  {
+   "id": "bw-auto",
+   "wort": "Auto",
+   "silben": 2,
+   "bild": {
+    "e": "🚗",
+    "name": "Auto"
+   },
+   "ablenker": [
+    {
+     "e": "👁️",
+     "name": "Auge"
+    },
+    {
+     "e": "🚌",
+     "name": "Bus"
+    },
+    {
+     "e": "🚦",
+     "name": "Ampel"
+    }
+   ]
+  },
+  {
+   "id": "bw-auge",
+   "wort": "Auge",
+   "silben": 2,
+   "bild": {
+    "e": "👁️",
+    "name": "Auge"
+   },
+   "ablenker": [
+    {
+     "e": "🚗",
+     "name": "Auto"
+    },
+    {
+     "e": "👂",
+     "name": "Ohr"
+    },
+    {
+     "e": "👃",
+     "name": "Nase"
+    }
+   ]
+  },
+  {
+   "id": "bw-pizza",
+   "wort": "Pizza",
+   "silben": 2,
+   "bild": {
+    "e": "🍕",
+    "name": "Pizza"
+   },
+   "ablenker": [
+    {
+     "e": "🍄",
+     "name": "Pilz"
+    },
+    {
+     "e": "🥨",
+     "name": "Brezel"
+    },
+    {
+     "e": "🎂",
+     "name": "Geburtstagstorte"
+    }
+   ]
+  },
+  {
+   "id": "bw-torte",
+   "wort": "Torte",
+   "silben": 2,
+   "bild": {
+    "e": "🎂",
+    "name": "Geburtstagstorte"
+   },
+   "ablenker": [
+    {
+     "e": "🥅",
+     "name": "Tor"
+    },
+    {
+     "e": "🎁",
+     "name": "Geschenk"
+    },
+    {
+     "e": "🎈",
+     "name": "Luftballon"
+    }
+   ]
+  },
+  {
+   "id": "bw-affe",
+   "wort": "Affe",
+   "silben": 2,
+   "bild": {
+    "e": "🐵",
+    "name": "Affe"
+   },
+   "ablenker": [
+    {
+     "e": "🦒",
+     "name": "Giraffe"
+    },
+    {
+     "e": "🍎",
+     "name": "Apfel"
+    },
+    {
+     "e": "🐘",
+     "name": "Elefant"
+    }
+   ]
+  },
+  {
+   "id": "bw-schnecke",
+   "wort": "Schnecke",
+   "silben": 2,
+   "bild": {
+    "e": "🐌",
+    "name": "Schnecke"
+   },
+   "ablenker": [
+    {
+     "e": "⛄",
+     "name": "Schneemann"
+    },
+    {
+     "e": "🐞",
+     "name": "Marienkäfer"
+    },
+    {
+     "e": "🐛",
+     "name": "Raupe"
+    }
+   ]
+  },
+  {
+   "id": "bw-schneemann",
+   "wort": "Schneemann",
+   "silben": 2,
+   "bild": {
+    "e": "⛄",
+    "name": "Schneemann"
+   },
+   "ablenker": [
+    {
+     "e": "🐌",
+     "name": "Schnecke"
+    },
+    {
+     "e": "❄️",
+     "name": "Schneeflocke"
+    },
+    {
+     "e": "🛷",
+     "name": "Schlitten"
+    }
+   ]
+  },
+  {
+   "id": "bw-schlitten",
+   "wort": "Schlitten",
+   "silben": 2,
+   "bild": {
+    "e": "🛷",
+    "name": "Schlitten"
+   },
+   "ablenker": [
+    {
+     "e": "⛸️",
+     "name": "Schlittschuh"
+    },
+    {
+     "e": "🔑",
+     "name": "Schlüssel"
+    },
+    {
+     "e": "🎿",
+     "name": "Ski"
+    }
+   ]
+  },
+  {
+   "id": "bw-schluessel",
+   "wort": "Schlüssel",
+   "silben": 2,
+   "bild": {
+    "e": "🔑",
+    "name": "Schlüssel"
+   },
+   "ablenker": [
+    {
+     "e": "🥣",
+     "name": "Schüssel"
+    },
+    {
+     "e": "🔒",
+     "name": "Vorhängeschloss"
+    },
+    {
+     "e": "🛷",
+     "name": "Schlitten"
+    }
+   ]
+  },
+  {
+   "id": "bw-einhorn",
+   "wort": "Einhorn",
+   "silben": 2,
+   "bild": {
+    "e": "🦄",
+    "name": "Einhorn"
+   },
+   "ablenker": [
+    {
+     "e": "🦏",
+     "name": "Nashorn"
+    },
+    {
+     "e": "🍦",
+     "name": "Eis"
+    },
+    {
+     "e": "🌈",
+     "name": "Regenbogen"
+    }
+   ]
+  },
+  {
+   "id": "bw-nashorn",
+   "wort": "Nashorn",
+   "silben": 2,
+   "bild": {
+    "e": "🦏",
+    "name": "Nashorn"
+   },
+   "ablenker": [
+    {
+     "e": "🦄",
+     "name": "Einhorn"
+    },
+    {
+     "e": "👃",
+     "name": "Nase"
+    },
+    {
+     "e": "🦓",
+     "name": "Zebra"
+    }
+   ]
+  },
+  {
+   "id": "bw-krake",
+   "wort": "Krake",
+   "silben": 2,
+   "bild": {
+    "e": "🐙",
+    "name": "Krake"
+   },
+   "ablenker": [
+    {
+     "e": "🦀",
+     "name": "Krabbe"
+    },
+    {
+     "e": "🐟",
+     "name": "Fisch"
+    },
+    {
+     "e": "🐚",
+     "name": "Muschel"
+    }
+   ]
+  },
+  {
+   "id": "bw-raupe",
+   "wort": "Raupe",
+   "silben": 2,
+   "bild": {
+    "e": "🐛",
+    "name": "Raupe"
+   },
+   "ablenker": [
+    {
+     "e": "🍇",
+     "name": "Traube"
+    },
+    {
+     "e": "🕊️",
+     "name": "Taube"
+    },
+    {
+     "e": "🐞",
+     "name": "Marienkäfer"
+    }
+   ]
+  },
+  {
+   "id": "bw-traube",
+   "wort": "Traube",
+   "silben": 2,
+   "bild": {
+    "e": "🍇",
+    "name": "Traube"
+   },
+   "ablenker": [
+    {
+     "e": "🕊️",
+     "name": "Taube"
+    },
+    {
+     "e": "🐛",
+     "name": "Raupe"
+    },
+    {
+     "e": "🍒",
+     "name": "Kirsche"
+    }
+   ]
+  },
+  {
+   "id": "bw-taube",
+   "wort": "Taube",
+   "silben": 2,
+   "bild": {
+    "e": "🕊️",
+    "name": "Taube"
+   },
+   "ablenker": [
+    {
+     "e": "🍇",
+     "name": "Traube"
+    },
+    {
+     "e": "🐛",
+     "name": "Raupe"
+    },
+    {
+     "e": "🦉",
+     "name": "Eule"
+    }
+   ]
+  },
+  {
+   "id": "bw-blume",
+   "wort": "Blume",
+   "silben": 2,
+   "bild": {
+    "e": "🌷",
+    "name": "Blume (Tulpe)"
+   },
+   "ablenker": [
+    {
+     "e": "👚",
+     "name": "Bluse"
+    },
+    {
+     "e": "⚡",
+     "name": "Blitz"
+    },
+    {
+     "e": "🌳",
+     "name": "Baum"
+    }
+   ]
+  },
+  {
+   "id": "bw-handschuh",
+   "wort": "Handschuh",
+   "silben": 2,
+   "bild": {
+    "e": "🧤",
+    "name": "Handschuh"
+   },
+   "ablenker": [
+    {
+     "e": "✋",
+     "name": "Hand"
+    },
+    {
+     "e": "👞",
+     "name": "Schuh"
+    },
+    {
+     "e": "🧣",
+     "name": "Schal"
+    }
+   ]
+  },
+  {
+   "id": "bw-wecker",
+   "wort": "Wecker",
+   "silben": 2,
+   "bild": {
+    "e": "⏰",
+    "name": "Wecker"
+   },
+   "ablenker": [
+    {
+     "e": "🥤",
+     "name": "Becher mit Strohhalm"
+    },
+    {
+     "e": "🛏️",
+     "name": "Bett"
+    },
+    {
+     "e": "🔌",
+     "name": "Stecker"
+    }
+   ]
+  },
+  {
+   "id": "bw-lupe",
+   "wort": "Lupe",
+   "silben": 2,
+   "bild": {
+    "e": "🔍",
+    "name": "Lupe"
+   },
+   "ablenker": [
+    {
+     "e": "🐛",
+     "name": "Raupe"
+    },
+    {
+     "e": "👓",
+     "name": "Brille"
+    },
+    {
+     "e": "🔭",
+     "name": "Fernrohr"
+    }
+   ]
+  },
+  {
+   "id": "bw-seife",
+   "wort": "Seife",
+   "silben": 2,
+   "bild": {
+    "e": "🧼",
+    "name": "Seife"
+   },
+   "ablenker": [
+    {
+     "e": "🎀",
+     "name": "Schleife"
+    },
+    {
+     "e": "🚿",
+     "name": "Dusche"
+    },
+    {
+     "e": "🛁",
+     "name": "Badewanne"
+    }
+   ]
+  },
+  {
+   "id": "bw-engel",
+   "wort": "Engel",
+   "silben": 2,
+   "bild": {
+    "e": "👼",
+    "name": "Engel"
+   },
+   "ablenker": [
+    {
+     "e": "🎣",
+     "name": "Angel"
+    },
+    {
+     "e": "🦔",
+     "name": "Igel"
+    },
+    {
+     "e": "⭐",
+     "name": "Stern"
+    }
+   ]
+  },
+  {
+   "id": "bw-angel",
+   "wort": "Angel",
+   "silben": 2,
+   "bild": {
+    "e": "🎣",
+    "name": "Angel"
+   },
+   "ablenker": [
+    {
+     "e": "👼",
+     "name": "Engel"
+    },
+    {
+     "e": "⚓",
+     "name": "Anker"
+    },
+    {
+     "e": "🛶",
+     "name": "Kanu"
+    }
+   ]
+  },
+  {
+   "id": "bw-anker",
+   "wort": "Anker",
+   "silben": 2,
+   "bild": {
+    "e": "⚓",
+    "name": "Anker"
+   },
+   "ablenker": [
+    {
+     "e": "🎣",
+     "name": "Angel"
+    },
+    {
+     "e": "🍍",
+     "name": "Ananas"
+    },
+    {
+     "e": "⛵",
+     "name": "Segelboot"
+    }
+   ]
+  },
+  {
+   "id": "bw-geschenk",
+   "wort": "Geschenk",
+   "silben": 2,
+   "bild": {
+    "e": "🎁",
+    "name": "Geschenk"
+   },
+   "ablenker": [
+    {
+     "e": "⛈️",
+     "name": "Gewitter"
+    },
+    {
+     "e": "🎂",
+     "name": "Geburtstagstorte"
+    },
+    {
+     "e": "🎈",
+     "name": "Luftballon"
+    }
+   ]
+  },
+  {
+   "id": "bw-hamster",
+   "wort": "Hamster",
+   "silben": 2,
+   "bild": {
+    "e": "🐹",
+    "name": "Hamster"
+   },
+   "ablenker": [
+    {
+     "e": "🔨",
+     "name": "Hammer"
+    },
+    {
+     "e": "🐰",
+     "name": "Hase"
+    },
+    {
+     "e": "🌻",
+     "name": "Sonnenblume"
+    }
+   ]
+  },
+  {
+   "id": "bw-kamel",
+   "wort": "Kamel",
+   "silben": 2,
+   "bild": {
+    "e": "🐫",
+    "name": "Kamel"
+   },
+   "ablenker": [
+    {
+     "e": "📷",
+     "name": "Kamera"
+    },
+    {
+     "e": "🌵",
+     "name": "Kaktus"
+    },
+    {
+     "e": "🐴",
+     "name": "Pferd"
+    }
+   ]
+  },
+  {
+   "id": "bw-fussball",
+   "wort": "Fußball",
+   "silben": 2,
+   "bild": {
+    "e": "⚽",
+    "name": "Fußball"
+   },
+   "ablenker": [
+    {
+     "e": "🏸",
+     "name": "Federball"
+    },
+    {
+     "e": "🦶",
+     "name": "Fuß"
+    },
+    {
+     "e": "🏆",
+     "name": "Pokal"
+    }
+   ]
+  },
+  {
+   "id": "bw-kleeblatt",
+   "wort": "Kleeblatt",
+   "silben": 2,
+   "bild": {
+    "e": "🍀",
+    "name": "Kleeblatt"
+   },
+   "ablenker": [
+    {
+     "e": "👗",
+     "name": "Kleid"
+    },
+    {
+     "e": "🍁",
+     "name": "Ahornblatt"
+    },
+    {
+     "e": "🍄",
+     "name": "Pilz"
+    }
+   ]
+  },
+  {
+   "id": "bw-bleistift",
+   "wort": "Bleistift",
+   "silben": 2,
+   "bild": {
+    "e": "✏️",
+    "name": "Bleistift"
+   },
+   "ablenker": [
+    {
+     "e": "⚡",
+     "name": "Blitz"
+    },
+    {
+     "e": "🖌️",
+     "name": "Pinsel"
+    },
+    {
+     "e": "✂️",
+     "name": "Schere"
+    }
+   ]
+  },
+  {
+   "id": "bw-drachen",
+   "wort": "Drachen",
+   "silben": 2,
+   "bild": {
+    "e": "🪁",
+    "name": "Drachen"
+   },
+   "ablenker": [
+    {
+     "e": "🔺",
+     "name": "Dreieck"
+    },
+    {
+     "e": "🎈",
+     "name": "Luftballon"
+    },
+    {
+     "e": "✈️",
+     "name": "Flugzeug"
+    }
+   ]
+  },
+  {
+   "id": "bw-flugzeug",
+   "wort": "Flugzeug",
+   "silben": 2,
+   "bild": {
+    "e": "✈️",
+    "name": "Flugzeug"
+   },
+   "ablenker": [
+    {
+     "e": "🦩",
+     "name": "Flamingo"
+    },
+    {
+     "e": "🚁",
+     "name": "Hubschrauber"
+    },
+    {
+     "e": "🚀",
+     "name": "Rakete"
+    }
+   ]
+  },
+  {
+   "id": "bw-planet",
+   "wort": "Planet",
+   "silben": 2,
+   "bild": {
+    "e": "🪐",
+    "name": "Planet"
+   },
+   "ablenker": [
+    {
+     "e": "📦",
+     "name": "Paket"
+    },
+    {
+     "e": "🚀",
+     "name": "Rakete"
+    },
+    {
+     "e": "🌙",
+     "name": "Mond"
+    }
+   ]
+  },
+  {
+   "id": "bw-sonne",
+   "wort": "Sonne",
+   "silben": 2,
+   "bild": {
+    "e": "☀️",
+    "name": "Sonne"
+   },
+   "ablenker": [
+    {
+     "e": "🌻",
+     "name": "Sonnenblume"
+    },
+    {
+     "e": "☁️",
+     "name": "Wolke"
+    },
+    {
+     "e": "🌙",
+     "name": "Mond"
+    }
+   ]
+  },
+  {
+   "id": "bw-stiefel",
+   "wort": "Stiefel",
+   "silben": 2,
+   "bild": {
+    "e": "👢",
+    "name": "Stiefel"
+   },
+   "ablenker": [
+    {
+     "e": "🐂",
+     "name": "Stier"
+    },
+    {
+     "e": "🧤",
+     "name": "Handschuh"
+    },
+    {
+     "e": "🧦",
+     "name": "Socke"
+    }
+   ]
+  },
+  {
+   "id": "bw-fernrohr",
+   "wort": "Fernrohr",
+   "silben": 2,
+   "bild": {
+    "e": "🔭",
+    "name": "Fernrohr"
+   },
+   "ablenker": [
+    {
+     "e": "📺",
+     "name": "Fernseher"
+    },
+    {
+     "e": "🔍",
+     "name": "Lupe"
+    },
+    {
+     "e": "🌙",
+     "name": "Mond"
+    }
+   ]
+  },
+  {
+   "id": "bw-schere",
+   "wort": "Schere",
+   "silben": 2,
+   "bild": {
+    "e": "✂️",
+    "name": "Schere"
+   },
+   "ablenker": [
+    {
+     "e": "🐑",
+     "name": "Schaf"
+    },
+    {
+     "e": "🥣",
+     "name": "Schüssel"
+    },
+    {
+     "e": "📏",
+     "name": "Lineal"
+    }
+   ]
+  },
+  {
+   "id": "bw-banane",
+   "wort": "Banane",
+   "silben": 3,
+   "bild": {
+    "e": "🍌",
+    "name": "Banane"
+   },
+   "ablenker": [
+    {
+     "e": "🍍",
+     "name": "Ananas"
+    },
+    {
+     "e": "🍉",
+     "name": "Melone"
+    },
+    {
+     "e": "🍐",
+     "name": "Birne"
+    }
+   ]
+  },
+  {
+   "id": "bw-ananas",
+   "wort": "Ananas",
+   "silben": 3,
+   "bild": {
+    "e": "🍍",
+    "name": "Ananas"
+   },
+   "ablenker": [
+    {
+     "e": "🍌",
+     "name": "Banane"
+    },
+    {
+     "e": "⚓",
+     "name": "Anker"
+    },
+    {
+     "e": "🥥",
+     "name": "Kokosnuss"
+    }
+   ]
+  },
+  {
+   "id": "bw-melone",
+   "wort": "Melone",
+   "silben": 3,
+   "bild": {
+    "e": "🍉",
+    "name": "Melone"
+   },
+   "ablenker": [
+    {
+     "e": "🍋",
+     "name": "Zitrone"
+    },
+    {
+     "e": "👑",
+     "name": "Krone"
+    },
+    {
+     "e": "🍒",
+     "name": "Kirsche"
+    }
+   ]
+  },
+  {
+   "id": "bw-zitrone",
+   "wort": "Zitrone",
+   "silben": 3,
+   "bild": {
+    "e": "🍋",
+    "name": "Zitrone"
+   },
+   "ablenker": [
+    {
+     "e": "👑",
+     "name": "Krone"
+    },
+    {
+     "e": "🍉",
+     "name": "Melone"
+    },
+    {
+     "e": "🍌",
+     "name": "Banane"
+    }
+   ]
+  },
+  {
+   "id": "bw-tomate",
+   "wort": "Tomate",
+   "silben": 3,
+   "bild": {
+    "e": "🍅",
+    "name": "Tomate"
+   },
+   "ablenker": [
+    {
+     "e": "🎂",
+     "name": "Geburtstagstorte"
+    },
+    {
+     "e": "🚀",
+     "name": "Rakete"
+    },
+    {
+     "e": "🥒",
+     "name": "Gurke"
+    }
+   ]
+  },
+  {
+   "id": "bw-karotte",
+   "wort": "Karotte",
+   "silben": 3,
+   "bild": {
+    "e": "🥕",
+    "name": "Karotte"
+   },
+   "ablenker": [
+    {
+     "e": "🥔",
+     "name": "Kartoffel"
+    },
+    {
+     "e": "👔",
+     "name": "Hemd mit Krawatte"
+    },
+    {
+     "e": "🥒",
+     "name": "Gurke"
+    }
+   ]
+  },
+  {
+   "id": "bw-kartoffel",
+   "wort": "Kartoffel",
+   "silben": 3,
+   "bild": {
+    "e": "🥔",
+    "name": "Kartoffel"
+   },
+   "ablenker": [
+    {
+     "e": "🥕",
+     "name": "Karotte"
+    },
+    {
+     "e": "🥄",
+     "name": "Löffel"
+    },
+    {
+     "e": "🍄",
+     "name": "Pilz"
+    }
+   ]
+  },
+  {
+   "id": "bw-erdbeere",
+   "wort": "Erdbeere",
+   "silben": 3,
+   "bild": {
+    "e": "🍓",
+    "name": "Erdbeere"
+   },
+   "ablenker": [
+    {
+     "e": "🌍",
+     "name": "Erde"
+    },
+    {
+     "e": "🍒",
+     "name": "Kirsche"
+    },
+    {
+     "e": "🍌",
+     "name": "Banane"
+    }
+   ]
+  },
+  {
+   "id": "bw-kokosnuss",
+   "wort": "Kokosnuss",
+   "silben": 3,
+   "bild": {
+    "e": "🥥",
+    "name": "Kokosnuss"
+   },
+   "ablenker": [
+    {
+     "e": "🧳",
+     "name": "Koffer"
+    },
+    {
+     "e": "🥜",
+     "name": "Erdnuss"
+    },
+    {
+     "e": "🍍",
+     "name": "Ananas"
+    }
+   ]
+  },
+  {
+   "id": "bw-giraffe",
+   "wort": "Giraffe",
+   "silben": 3,
+   "bild": {
+    "e": "🦒",
+    "name": "Giraffe"
+   },
+   "ablenker": [
+    {
+     "e": "🎸",
+     "name": "Gitarre"
+    },
+    {
+     "e": "🐵",
+     "name": "Affe"
+    },
+    {
+     "e": "🦓",
+     "name": "Zebra"
+    }
+   ]
+  },
+  {
+   "id": "bw-gitarre",
+   "wort": "Gitarre",
+   "silben": 3,
+   "bild": {
+    "e": "🎸",
+    "name": "Gitarre"
+   },
+   "ablenker": [
+    {
+     "e": "🦒",
+     "name": "Giraffe"
+    },
+    {
+     "e": "🎻",
+     "name": "Geige"
+    },
+    {
+     "e": "🥁",
+     "name": "Trommel"
+    }
+   ]
+  },
+  {
+   "id": "bw-trompete",
+   "wort": "Trompete",
+   "silben": 3,
+   "bild": {
+    "e": "🎺",
+    "name": "Trompete"
+   },
+   "ablenker": [
+    {
+     "e": "🥁",
+     "name": "Trommel"
+    },
+    {
+     "e": "🚀",
+     "name": "Rakete"
+    },
+    {
+     "e": "🎻",
+     "name": "Geige"
+    }
+   ]
+  },
+  {
+   "id": "bw-rakete",
+   "wort": "Rakete",
+   "silben": 3,
+   "bild": {
+    "e": "🚀",
+    "name": "Rakete"
+   },
+   "ablenker": [
+    {
+     "e": "🎺",
+     "name": "Trompete"
+    },
+    {
+     "e": "📦",
+     "name": "Paket"
+    },
+    {
+     "e": "🪐",
+     "name": "Planet"
+    }
+   ]
+  },
+  {
+   "id": "bw-telefon",
+   "wort": "Telefon",
+   "silben": 3,
+   "bild": {
+    "e": "☎️",
+    "name": "Telefon"
+   },
+   "ablenker": [
+    {
+     "e": "🐘",
+     "name": "Elefant"
+    },
+    {
+     "e": "📻",
+     "name": "Radio"
+    },
+    {
+     "e": "✉️",
+     "name": "Brief"
+    }
+   ]
+  },
+  {
+   "id": "bw-elefant",
+   "wort": "Elefant",
+   "silben": 3,
+   "bild": {
+    "e": "🐘",
+    "name": "Elefant"
+   },
+   "ablenker": [
+    {
+     "e": "☎️",
+     "name": "Telefon"
+    },
+    {
+     "e": "🦁",
+     "name": "Löwe"
+    },
+    {
+     "e": "🦒",
+     "name": "Giraffe"
+    }
+   ]
+  },
+  {
+   "id": "bw-krokodil",
+   "wort": "Krokodil",
+   "silben": 3,
+   "bild": {
+    "e": "🐊",
+    "name": "Krokodil"
+   },
+   "ablenker": [
+    {
+     "e": "👑",
+     "name": "Krone"
+    },
+    {
+     "e": "🐢",
+     "name": "Schildkröte"
+    },
+    {
+     "e": "🐸",
+     "name": "Frosch"
+    }
+   ]
+  },
+  {
+   "id": "bw-pinguin",
+   "wort": "Pinguin",
+   "silben": 3,
+   "bild": {
+    "e": "🐧",
+    "name": "Pinguin"
+   },
+   "ablenker": [
+    {
+     "e": "🖌️",
+     "name": "Pinsel"
+    },
+    {
+     "e": "🍄",
+     "name": "Pilz"
+    },
+    {
+     "e": "🐬",
+     "name": "Delfin"
+    }
+   ]
+  },
+  {
+   "id": "bw-schildkroete",
+   "wort": "Schildkröte",
+   "silben": 3,
+   "bild": {
+    "e": "🐢",
+    "name": "Schildkröte"
+   },
+   "ablenker": [
+    {
+     "e": "🚢",
+     "name": "Schiff"
+    },
+    {
+     "e": "🦋",
+     "name": "Schmetterling"
+    },
+    {
+     "e": "🐸",
+     "name": "Frosch"
+    }
+   ]
+  },
+  {
+   "id": "bw-schmetterling",
+   "wort": "Schmetterling",
+   "silben": 3,
+   "bild": {
+    "e": "🦋",
+    "name": "Schmetterling"
+   },
+   "ablenker": [
+    {
+     "e": "🐌",
+     "name": "Schnecke"
+    },
+    {
+     "e": "⛄",
+     "name": "Schneemann"
+    },
+    {
+     "e": "🐝",
+     "name": "Biene"
+    }
+   ]
+  },
+  {
+   "id": "bw-ameise",
+   "wort": "Ameise",
+   "silben": 3,
+   "bild": {
+    "e": "🐜",
+    "name": "Ameise"
+   },
+   "ablenker": [
+    {
+     "e": "🚦",
+     "name": "Ampel"
+    },
+    {
+     "e": "🐞",
+     "name": "Marienkäfer"
+    },
+    {
+     "e": "🐝",
+     "name": "Biene"
+    }
+   ]
+  },
+  {
+   "id": "bw-flamingo",
+   "wort": "Flamingo",
+   "silben": 3,
+   "bild": {
+    "e": "🦩",
+    "name": "Flamingo"
+   },
+   "ablenker": [
+    {
+     "e": "✈️",
+     "name": "Flugzeug"
+    },
+    {
+     "e": "🍼",
+     "name": "Babyflasche"
+    },
+    {
+     "e": "🦜",
+     "name": "Papagei"
+    }
+   ]
+  },
+  {
+   "id": "bw-gorilla",
+   "wort": "Gorilla",
+   "silben": 3,
+   "bild": {
+    "e": "🦍",
+    "name": "Gorilla"
+   },
+   "ablenker": [
+    {
+     "e": "🦒",
+     "name": "Giraffe"
+    },
+    {
+     "e": "🎸",
+     "name": "Gitarre"
+    },
+    {
+     "e": "🐘",
+     "name": "Elefant"
+    }
+   ]
+  },
+  {
+   "id": "bw-koala",
+   "wort": "Koala",
+   "silben": 3,
+   "bild": {
+    "e": "🐨",
+    "name": "Koala"
+   },
+   "ablenker": [
+    {
+     "e": "🧳",
+     "name": "Koffer"
+    },
+    {
+     "e": "🥥",
+     "name": "Kokosnuss"
+    },
+    {
+     "e": "🦘",
+     "name": "Känguru"
+    }
+   ]
+  },
+  {
+   "id": "bw-kaenguru",
+   "wort": "Känguru",
+   "silben": 3,
+   "bild": {
+    "e": "🦘",
+    "name": "Känguru"
+   },
+   "ablenker": [
+    {
+     "e": "🧀",
+     "name": "Käse"
+    },
+    {
+     "e": "🐫",
+     "name": "Kamel"
+    },
+    {
+     "e": "🐨",
+     "name": "Koala"
+    }
+   ]
+  },
+  {
+   "id": "bw-feuerwehr",
+   "wort": "Feuerwehr",
+   "silben": 3,
+   "bild": {
+    "e": "🚒",
+    "name": "Feuerwehrauto"
+   },
+   "ablenker": [
+    {
+     "e": "🎆",
+     "name": "Feuerwerk"
+    },
+    {
+     "e": "🔥",
+     "name": "Feuer"
+    },
+    {
+     "e": "🚑",
+     "name": "Krankenwagen"
+    }
+   ]
+  },
+  {
+   "id": "bw-feuerwerk",
+   "wort": "Feuerwerk",
+   "silben": 3,
+   "bild": {
+    "e": "🎆",
+    "name": "Feuerwerk"
+   },
+   "ablenker": [
+    {
+     "e": "🚒",
+     "name": "Feuerwehrauto"
+    },
+    {
+     "e": "🔥",
+     "name": "Feuer"
+    },
+    {
+     "e": "🌈",
+     "name": "Regenbogen"
+    }
+   ]
+  },
+  {
+   "id": "bw-hubschrauber",
+   "wort": "Hubschrauber",
+   "silben": 3,
+   "bild": {
+    "e": "🚁",
+    "name": "Hubschrauber"
+   },
+   "ablenker": [
+    {
+     "e": "🔩",
+     "name": "Schraube"
+    },
+    {
+     "e": "🐔",
+     "name": "Huhn"
+    },
+    {
+     "e": "✈️",
+     "name": "Flugzeug"
+    }
+   ]
+  },
+  {
+   "id": "bw-motorrad",
+   "wort": "Motorrad",
+   "silben": 3,
+   "bild": {
+    "e": "🏍️",
+    "name": "Motorrad"
+   },
+   "ablenker": [
+    {
+     "e": "🚤",
+     "name": "Motorboot"
+    },
+    {
+     "e": "🚲",
+     "name": "Fahrrad"
+    },
+    {
+     "e": "🛴",
+     "name": "Roller"
+    }
+   ]
+  },
+  {
+   "id": "bw-regenschirm",
+   "wort": "Regenschirm",
+   "silben": 3,
+   "bild": {
+    "e": "☔",
+    "name": "Regenschirm"
+   },
+   "ablenker": [
+    {
+     "e": "🌈",
+     "name": "Regenbogen"
+    },
+    {
+     "e": "☁️",
+     "name": "Wolke"
+    },
+    {
+     "e": "👢",
+     "name": "Stiefel"
+    }
+   ]
+  },
+  {
+   "id": "bw-schneeflocke",
+   "wort": "Schneeflocke",
+   "silben": 3,
+   "bild": {
+    "e": "❄️",
+    "name": "Schneeflocke"
+   },
+   "ablenker": [
+    {
+     "e": "⛄",
+     "name": "Schneemann"
+    },
+    {
+     "e": "🔔",
+     "name": "Glocke"
+    },
+    {
+     "e": "⭐",
+     "name": "Stern"
+    }
+   ]
+  },
+  {
+   "id": "bw-weihnachtsbaum",
+   "wort": "Weihnachtsbaum",
+   "silben": 3,
+   "bild": {
+    "e": "🎄",
+    "name": "Weihnachtsbaum"
+   },
+   "ablenker": [
+    {
+     "e": "🎅",
+     "name": "Weihnachtsmann"
+    },
+    {
+     "e": "🎁",
+     "name": "Geschenk"
+    },
+    {
+     "e": "🔔",
+     "name": "Glocke"
+    }
+   ]
+  },
+  {
+   "id": "bw-luftballon",
+   "wort": "Luftballon",
+   "silben": 3,
+   "bild": {
+    "e": "🎈",
+    "name": "Luftballon"
+   },
+   "ablenker": [
+    {
+     "e": "⚽",
+     "name": "Fußball"
+    },
+    {
+     "e": "🔍",
+     "name": "Lupe"
+    },
+    {
+     "e": "🎁",
+     "name": "Geschenk"
+    }
+   ]
+  },
+  {
+   "id": "bw-kamera",
+   "wort": "Kamera",
+   "silben": 3,
+   "bild": {
+    "e": "📷",
+    "name": "Kamera"
+   },
+   "ablenker": [
+    {
+     "e": "🐫",
+     "name": "Kamel"
+    },
+    {
+     "e": "🌵",
+     "name": "Kaktus"
+    },
+    {
+     "e": "📺",
+     "name": "Fernseher"
+    }
+   ]
+  },
+  {
+   "id": "bw-fernseher",
+   "wort": "Fernseher",
+   "silben": 3,
+   "bild": {
+    "e": "📺",
+    "name": "Fernseher"
+   },
+   "ablenker": [
+    {
+     "e": "🔭",
+     "name": "Fernrohr"
+    },
+    {
+     "e": "🛋️",
+     "name": "Sofa"
+    },
+    {
+     "e": "🍿",
+     "name": "Popcorn"
+    }
+   ]
+  },
+  {
+   "id": "bw-prinzessin",
+   "wort": "Prinzessin",
+   "silben": 3,
+   "bild": {
+    "e": "👸",
+    "name": "Prinzessin"
+   },
+   "ablenker": [
+    {
+     "e": "🤴",
+     "name": "Prinz"
+    },
+    {
+     "e": "🏰",
+     "name": "Schloss"
+    },
+    {
+     "e": "👼",
+     "name": "Engel"
+    }
+   ]
+  },
+  {
+   "id": "bw-schulranzen",
+   "wort": "Schulranzen",
+   "silben": 3,
+   "bild": {
+    "e": "🎒",
+    "name": "Schulranzen"
+   },
+   "ablenker": [
+    {
+     "e": "👞",
+     "name": "Schuh"
+    },
+    {
+     "e": "🧣",
+     "name": "Schal"
+    },
+    {
+     "e": "🧳",
+     "name": "Koffer"
+    }
+   ]
+  },
+  {
+   "id": "bw-brokkoli",
+   "wort": "Brokkoli",
+   "silben": 3,
+   "bild": {
+    "e": "🥦",
+    "name": "Brokkoli"
+   },
+   "ablenker": [
+    {
+     "e": "🍞",
+     "name": "Brot"
+    },
+    {
+     "e": "🥨",
+     "name": "Brezel"
+    },
+    {
+     "e": "🥒",
+     "name": "Gurke"
+    }
+   ]
+  },
+  {
+   "id": "bw-roboter",
+   "wort": "Roboter",
+   "silben": 3,
+   "bild": {
+    "e": "🤖",
+    "name": "Roboter"
+   },
+   "ablenker": [
+    {
+     "e": "🛴",
+     "name": "Roller"
+    },
+    {
+     "e": "🌹",
+     "name": "Rose"
+    },
+    {
+     "e": "🚀",
+     "name": "Rakete"
+    }
+   ]
+  },
+  {
+   "id": "bw-pfannkuchen",
+   "wort": "Pfannkuchen",
+   "silben": 3,
+   "bild": {
+    "e": "🥞",
+    "name": "Pfannkuchen"
+   },
+   "ablenker": [
+    {
+     "e": "🍳",
+     "name": "Pfanne mit Spiegelei"
+    },
+    {
+     "e": "🍰",
+     "name": "Stück Kuchen"
+    },
+    {
+     "e": "🥨",
+     "name": "Brezel"
+    }
+   ]
+  }
+ ],
+ "saetze": [
+  {
+   "id": "bs-opa-traktor-feld",
+   "satz": "Opa fährt mit dem Traktor aufs Feld.",
+   "komplex": false,
+   "bild": {
+    "e": "👴🚜🌾",
+    "name": "Ein Opa fährt mit einem Traktor auf ein Getreidefeld."
+   },
+   "ablenker": [
+    {
+     "e": "👵🚜🌾",
+     "name": "Eine Oma fährt mit einem Traktor auf ein Getreidefeld."
+    },
+    {
+     "e": "👴🚲🌾",
+     "name": "Ein Opa fährt mit einem Fahrrad auf ein Getreidefeld."
+    },
+    {
+     "e": "👴🚜🌲",
+     "name": "Ein Opa fährt mit einem Traktor in einen Wald."
+    }
+   ]
+  },
+  {
+   "id": "bs-mia-musik-bett",
+   "satz": "Mia hört im Bett Musik.",
+   "komplex": false,
+   "bild": {
+    "e": "👧🎧🛏️",
+    "name": "Ein Mädchen hört im Bett Musik mit Kopfhörern."
+   },
+   "ablenker": [
+    {
+     "e": "👦🎧🛏️",
+     "name": "Ein Junge hört im Bett Musik mit Kopfhörern."
+    },
+    {
+     "e": "👧🎧🛋️",
+     "name": "Ein Mädchen hört auf einem Sofa Musik mit Kopfhörern."
+    },
+    {
+     "e": "👧🧸🛏️",
+     "name": "Ein Mädchen kuschelt im Bett mit einem Teddy."
+    }
+   ]
+  },
+  {
+   "id": "bs-hund-zeitung-papa",
+   "satz": "Der Hund bringt Papa die Zeitung.",
+   "komplex": false,
+   "bild": {
+    "e": "🐕📰👨",
+    "name": "Ein Hund bringt einem Mann eine Zeitung."
+   },
+   "ablenker": [
+    {
+     "e": "🐈📰👨",
+     "name": "Eine Katze bringt einem Mann eine Zeitung."
+    },
+    {
+     "e": "🐕🧦👨",
+     "name": "Ein Hund bringt einem Mann eine Socke."
+    },
+    {
+     "e": "🐕📰👩",
+     "name": "Ein Hund bringt einer Frau eine Zeitung."
+    }
+   ]
+  },
+  {
+   "id": "bs-paul-fahrrad-schule",
+   "satz": "Paul fährt mit dem Fahrrad zur Schule.",
+   "komplex": false,
+   "bild": {
+    "e": "👦🚲🏫",
+    "name": "Ein Junge fährt mit dem Fahrrad zur Schule."
+   },
+   "ablenker": [
+    {
+     "e": "👧🚲🏫",
+     "name": "Ein Mädchen fährt mit dem Fahrrad zur Schule."
+    },
+    {
+     "e": "👦🛴🏫",
+     "name": "Ein Junge fährt mit dem Roller zur Schule."
+    },
+    {
+     "e": "👦🚲🏰",
+     "name": "Ein Junge fährt mit dem Fahrrad zu einem Schloss."
+    }
+   ]
+  },
+  {
+   "id": "bs-ben-eis-strand",
+   "satz": "Ben isst am Strand ein Eis.",
+   "komplex": false,
+   "bild": {
+    "e": "👦🍦🏖️",
+    "name": "Ein Junge isst ein Eis am Strand."
+   },
+   "ablenker": [
+    {
+     "e": "👧🍦🏖️",
+     "name": "Ein Mädchen isst ein Eis am Strand."
+    },
+    {
+     "e": "👦🍉🏖️",
+     "name": "Ein Junge isst eine Wassermelone am Strand."
+    },
+    {
+     "e": "👦🍦🏰",
+     "name": "Ein Junge isst ein Eis vor einem Schloss."
+    }
+   ]
+  },
+  {
+   "id": "bs-oma-strickt-schal",
+   "satz": "Oma strickt einen Schal.",
+   "komplex": false,
+   "bild": {
+    "e": "👵🧶🧣",
+    "name": "Eine Oma strickt einen Schal."
+   },
+   "ablenker": [
+    {
+     "e": "👴🧶🧣",
+     "name": "Ein Opa strickt einen Schal."
+    },
+    {
+     "e": "👵🧶🧤",
+     "name": "Eine Oma strickt Handschuhe."
+    },
+    {
+     "e": "👵🧶🧦",
+     "name": "Eine Oma strickt Socken."
+    }
+   ]
+  },
+  {
+   "id": "bs-opa-huhn-mais",
+   "satz": "Opa füttert das Huhn mit Mais.",
+   "komplex": false,
+   "bild": {
+    "e": "👴🌽🐔",
+    "name": "Ein Opa füttert ein Huhn mit Mais."
+   },
+   "ablenker": [
+    {
+     "e": "👵🌽🐔",
+     "name": "Eine Oma füttert ein Huhn mit Mais."
+    },
+    {
+     "e": "👴🌽🐖",
+     "name": "Ein Opa füttert ein Schwein mit Mais."
+    },
+    {
+     "e": "👴🍞🐔",
+     "name": "Ein Opa füttert ein Huhn mit Brot."
+    }
+   ]
+  },
+  {
+   "id": "bs-lena-malt-blume",
+   "satz": "Lena malt eine Blume.",
+   "komplex": false,
+   "bild": {
+    "e": "👧🎨🌷",
+    "name": "Ein Mädchen malt eine Blume."
+   },
+   "ablenker": [
+    {
+     "e": "👦🎨🌷",
+     "name": "Ein Junge malt eine Blume."
+    },
+    {
+     "e": "👧🎨🏠",
+     "name": "Ein Mädchen malt ein Haus."
+    },
+    {
+     "e": "👧🎨🌳",
+     "name": "Ein Mädchen malt einen Baum."
+    }
+   ]
+  },
+  {
+   "id": "bs-emir-gitarre-zelt",
+   "satz": "Emir spielt vor seinem Zelt Gitarre.",
+   "komplex": false,
+   "bild": {
+    "e": "👦🎸⛺",
+    "name": "Ein Junge spielt Gitarre vor einem Zelt."
+   },
+   "ablenker": [
+    {
+     "e": "👧🎸⛺",
+     "name": "Ein Mädchen spielt Gitarre vor einem Zelt."
+    },
+    {
+     "e": "👦🥁⛺",
+     "name": "Ein Junge trommelt vor einem Zelt."
+    },
+    {
+     "e": "👦🎸🏠",
+     "name": "Ein Junge spielt Gitarre vor einem Haus."
+    }
+   ]
+  },
+  {
+   "id": "bs-felix-breze-milch",
+   "satz": "Felix trinkt Milch zu seiner Breze.",
+   "komplex": false,
+   "bild": {
+    "e": "👦🥛🥨",
+    "name": "Ein Junge trinkt Milch zu einer Breze."
+   },
+   "ablenker": [
+    {
+     "e": "👧🥛🥨",
+     "name": "Ein Mädchen trinkt Milch zu einer Breze."
+    },
+    {
+     "e": "👦🍎🥨",
+     "name": "Ein Junge isst einen Apfel und eine Breze."
+    },
+    {
+     "e": "👦🥛🥐",
+     "name": "Ein Junge trinkt Milch zu einem Croissant."
+    }
+   ]
+  },
+  {
+   "id": "bs-pferd-karotte",
+   "satz": "Das Pferd frisst eine Karotte.",
+   "komplex": false,
+   "bild": {
+    "e": "🐎🥕",
+    "name": "Ein Pferd frisst eine Karotte."
+   },
+   "ablenker": [
+    {
+     "e": "🐄🥕",
+     "name": "Eine Kuh frisst eine Karotte."
+    },
+    {
+     "e": "🐎🍎",
+     "name": "Ein Pferd frisst einen Apfel."
+    },
+    {
+     "e": "🐎🌽",
+     "name": "Ein Pferd frisst einen Maiskolben."
+    }
+   ]
+  },
+  {
+   "id": "bs-lukas-ski-berg",
+   "satz": "Lukas fährt auf dem Berg Ski.",
+   "komplex": false,
+   "bild": {
+    "e": "👦🎿🏔️",
+    "name": "Ein Junge fährt auf einem verschneiten Berg Ski."
+   },
+   "ablenker": [
+    {
+     "e": "👧🎿🏔️",
+     "name": "Ein Mädchen fährt auf einem verschneiten Berg Ski."
+    },
+    {
+     "e": "👦🛷🏔️",
+     "name": "Ein Junge fährt auf einem verschneiten Berg Schlitten."
+    },
+    {
+     "e": "👦🥾🏔️",
+     "name": "Ein Junge wandert auf einem verschneiten Berg."
+    }
+   ]
+  },
+  {
+   "id": "bs-igel-laub",
+   "satz": "Der Igel schläft im Laub.",
+   "komplex": false,
+   "bild": {
+    "e": "🦔💤🍂",
+    "name": "Ein Igel schläft im Laub."
+   },
+   "ablenker": [
+    {
+     "e": "🐭💤🍂",
+     "name": "Eine Maus schläft im Laub."
+    },
+    {
+     "e": "🦔🐛🍂",
+     "name": "Ein Igel frisst eine Raupe im Laub."
+    },
+    {
+     "e": "🦔💤🧺",
+     "name": "Ein Igel schläft in einem Korb."
+    }
+   ]
+  },
+  {
+   "id": "bs-jonas-tor",
+   "satz": "Jonas schießt den Fußball ins Tor.",
+   "komplex": false,
+   "bild": {
+    "e": "👦⚽🥅",
+    "name": "Ein Junge schießt einen Fußball ins Tor."
+   },
+   "ablenker": [
+    {
+     "e": "👧⚽🥅",
+     "name": "Ein Mädchen schießt einen Fußball ins Tor."
+    },
+    {
+     "e": "👦🏀🥅",
+     "name": "Ein Junge wirft einen Basketball ins Tor."
+    },
+    {
+     "e": "👦⚽🌳",
+     "name": "Ein Junge schießt einen Fußball an einen Baum."
+    }
+   ]
+  },
+  {
+   "id": "bs-aylin-geschenk-ballon",
+   "satz": "Aylin bekommt ihr Geschenk und einen Luftballon.",
+   "komplex": false,
+   "bild": {
+    "e": "👧🎁🎈",
+    "name": "Ein Mädchen bekommt ein Geschenk und einen Luftballon."
+   },
+   "ablenker": [
+    {
+     "e": "👦🎁🎈",
+     "name": "Ein Junge bekommt ein Geschenk und einen Luftballon."
+    },
+    {
+     "e": "👧🍦🎈",
+     "name": "Ein Mädchen bekommt ein Eis und einen Luftballon."
+    },
+    {
+     "e": "👧🎁🎂",
+     "name": "Ein Mädchen bekommt ein Geschenk und einen Kuchen."
+    }
+   ]
+  },
+  {
+   "id": "bs-hannah-seilbahn",
+   "satz": "Hannah fährt mit der Seilbahn zum Gipfel.",
+   "komplex": false,
+   "bild": {
+    "e": "👧🚡🏔️",
+    "name": "Ein Mädchen fährt mit einer Seilbahn auf einen Berg."
+   },
+   "ablenker": [
+    {
+     "e": "👦🚡🏔️",
+     "name": "Ein Junge fährt mit einer Seilbahn auf einen Berg."
+    },
+    {
+     "e": "👧🚌🏔️",
+     "name": "Ein Mädchen fährt mit einem Bus auf einen Berg."
+    },
+    {
+     "e": "👧🚂🏔️",
+     "name": "Ein Mädchen fährt mit einem Zug auf einen Berg."
+    }
+   ]
+  },
+  {
+   "id": "bs-mama-apfel-wagen",
+   "satz": "Mama legt einen Apfel in den Einkaufswagen.",
+   "komplex": false,
+   "bild": {
+    "e": "👩🍎🛒",
+    "name": "Eine Frau legt einen Apfel in einen Einkaufswagen."
+   },
+   "ablenker": [
+    {
+     "e": "👨🍎🛒",
+     "name": "Ein Mann legt einen Apfel in einen Einkaufswagen."
+    },
+    {
+     "e": "👩🍌🛒",
+     "name": "Eine Frau legt eine Banane in einen Einkaufswagen."
+    },
+    {
+     "e": "👩🍎🧺",
+     "name": "Eine Frau legt einen Apfel in einen Korb."
+    }
+   ]
+  },
+  {
+   "id": "bs-papa-pfannkuchen",
+   "satz": "Papa macht für Jakob Pfannkuchen.",
+   "komplex": false,
+   "bild": {
+    "e": "👨🥞👦",
+    "name": "Ein Mann macht Pfannkuchen für einen Jungen."
+   },
+   "ablenker": [
+    {
+     "e": "👩🥞👦",
+     "name": "Eine Frau macht Pfannkuchen für einen Jungen."
+    },
+    {
+     "e": "👨🧇👦",
+     "name": "Ein Mann macht Waffeln für einen Jungen."
+    },
+    {
+     "e": "👨🥞👧",
+     "name": "Ein Mann macht Pfannkuchen für ein Mädchen."
+    }
+   ]
+  },
+  {
+   "id": "bs-luca-drachen-berg",
+   "satz": "Luca lässt am Berg seinen Drachen steigen.",
+   "komplex": false,
+   "bild": {
+    "e": "👦🪁⛰️",
+    "name": "Ein Junge lässt an einem Berg einen Drachen steigen."
+   },
+   "ablenker": [
+    {
+     "e": "👧🪁⛰️",
+     "name": "Ein Mädchen lässt an einem Berg einen Drachen steigen."
+    },
+    {
+     "e": "👦🎈⛰️",
+     "name": "Ein Junge lässt an einem Berg einen Luftballon steigen."
+    },
+    {
+     "e": "👦🪁🏖️",
+     "name": "Ein Junge lässt am Strand einen Drachen steigen."
+    }
+   ]
+  },
+  {
+   "id": "bs-sofia-hund-schnee",
+   "satz": "Sofia spielt mit ihrem Hund im Schnee.",
+   "komplex": false,
+   "bild": {
+    "e": "👧🐕❄️",
+    "name": "Ein Mädchen spielt mit einem Hund im Schnee."
+   },
+   "ablenker": [
+    {
+     "e": "👦🐕❄️",
+     "name": "Ein Junge spielt mit einem Hund im Schnee."
+    },
+    {
+     "e": "👧🐈❄️",
+     "name": "Ein Mädchen spielt mit einer Katze im Schnee."
+    },
+    {
+     "e": "👧🐕🏖️",
+     "name": "Ein Mädchen spielt mit einem Hund am Strand."
+    }
+   ]
+  },
+  {
+   "id": "bs-biene-sonnenblume",
+   "satz": "Die Biene fliegt zur Sonnenblume.",
+   "komplex": false,
+   "bild": {
+    "e": "🐝🌻",
+    "name": "Eine Biene fliegt zu einer Sonnenblume."
+   },
+   "ablenker": [
+    {
+     "e": "🦋🌻",
+     "name": "Ein Schmetterling fliegt zu einer Sonnenblume."
+    },
+    {
+     "e": "🐝🌷",
+     "name": "Eine Biene fliegt zu einer Tulpe."
+    },
+    {
+     "e": "🐝🍯",
+     "name": "Eine Biene fliegt zu einem Honigtopf."
+    }
+   ]
+  },
+  {
+   "id": "bs-marienkaefer-klee",
+   "satz": "Der Marienkäfer sitzt auf einem Kleeblatt.",
+   "komplex": false,
+   "bild": {
+    "e": "🐞🍀",
+    "name": "Ein Marienkäfer sitzt auf einem Kleeblatt."
+   },
+   "ablenker": [
+    {
+     "e": "🐌🍀",
+     "name": "Eine Schnecke sitzt auf einem Kleeblatt."
+    },
+    {
+     "e": "🐞🍄",
+     "name": "Ein Marienkäfer sitzt auf einem Pilz."
+    },
+    {
+     "e": "🐞🍓",
+     "name": "Ein Marienkäfer sitzt auf einer Erdbeere."
+    }
+   ]
+  },
+  {
+   "id": "bs-maus-kaese",
+   "satz": "Die Maus knabbert an einem Stück Käse.",
+   "komplex": false,
+   "bild": {
+    "e": "🐭🧀",
+    "name": "Eine Maus knabbert an einem Stück Käse."
+   },
+   "ablenker": [
+    {
+     "e": "🐰🧀",
+     "name": "Ein Hase knabbert an einem Stück Käse."
+    },
+    {
+     "e": "🐭🍪",
+     "name": "Eine Maus knabbert an einem Keks."
+    },
+    {
+     "e": "🐭🍎",
+     "name": "Eine Maus knabbert an einem Apfel."
+    }
+   ]
+  },
+  {
+   "id": "bs-baer-honig",
+   "satz": "Der Bär nascht Honig aus dem Topf.",
+   "komplex": false,
+   "bild": {
+    "e": "🐻🍯",
+    "name": "Ein Bär nascht Honig aus einem Topf."
+   },
+   "ablenker": [
+    {
+     "e": "🦊🍯",
+     "name": "Ein Fuchs nascht Honig aus einem Topf."
+    },
+    {
+     "e": "🐻🍓",
+     "name": "Ein Bär nascht eine Erdbeere."
+    },
+    {
+     "e": "🐻🐟",
+     "name": "Ein Bär frisst einen Fisch."
+    }
+   ]
+  },
+  {
+   "id": "bs-affe-banane",
+   "satz": "Der Affe frisst eine Banane.",
+   "komplex": false,
+   "bild": {
+    "e": "🐒🍌",
+    "name": "Ein Affe frisst eine Banane."
+   },
+   "ablenker": [
+    {
+     "e": "🐘🍌",
+     "name": "Ein Elefant frisst eine Banane."
+    },
+    {
+     "e": "🐒🍎",
+     "name": "Ein Affe frisst einen Apfel."
+    },
+    {
+     "e": "🐒🍇",
+     "name": "Ein Affe frisst Weintrauben."
+    }
+   ]
+  },
+  {
+   "id": "bs-ella-buch-ranzen",
+   "satz": "Ella packt ein Buch in den Schulranzen.",
+   "komplex": false,
+   "bild": {
+    "e": "👧📕🎒",
+    "name": "Ein Mädchen packt ein Buch in einen Schulranzen."
+   },
+   "ablenker": [
+    {
+     "e": "👦📕🎒",
+     "name": "Ein Junge packt ein Buch in einen Schulranzen."
+    },
+    {
+     "e": "👧🍎🎒",
+     "name": "Ein Mädchen packt einen Apfel in einen Schulranzen."
+    },
+    {
+     "e": "👧📕🧺",
+     "name": "Ein Mädchen packt ein Buch in einen Korb."
+    }
+   ]
+  },
+  {
+   "id": "bs-leyla-hase-karotte",
+   "satz": "Leyla füttert ihren Hasen mit einer Karotte.",
+   "komplex": false,
+   "bild": {
+    "e": "👧🥕🐇",
+    "name": "Ein Mädchen füttert einen Hasen mit einer Karotte."
+   },
+   "ablenker": [
+    {
+     "e": "👦🥕🐇",
+     "name": "Ein Junge füttert einen Hasen mit einer Karotte."
+    },
+    {
+     "e": "👧🥕🐎",
+     "name": "Ein Mädchen füttert ein Pferd mit einer Karotte."
+    },
+    {
+     "e": "👧🍎🐇",
+     "name": "Ein Mädchen füttert einen Hasen mit einem Apfel."
+    }
+   ]
+  },
+  {
+   "id": "bs-noah-zelt",
+   "satz": "Noah schläft im Zelt.",
+   "komplex": false,
+   "bild": {
+    "e": "👦💤⛺",
+    "name": "Ein Junge schläft in einem Zelt."
+   },
+   "ablenker": [
+    {
+     "e": "👧💤⛺",
+     "name": "Ein Mädchen schläft in einem Zelt."
+    },
+    {
+     "e": "👦📖⛺",
+     "name": "Ein Junge liest in einem Zelt."
+    },
+    {
+     "e": "👦💤🛏️",
+     "name": "Ein Junge schläft in einem Bett."
+    }
+   ]
+  },
+  {
+   "id": "bs-oma-kaffee-kuchen",
+   "satz": "Oma isst Kuchen zum Kaffee.",
+   "komplex": false,
+   "bild": {
+    "e": "👵🍰☕",
+    "name": "Eine Oma isst Kuchen zu einer Tasse Kaffee."
+   },
+   "ablenker": [
+    {
+     "e": "👴🍰☕",
+     "name": "Ein Opa isst Kuchen zu einer Tasse Kaffee."
+    },
+    {
+     "e": "👵🍪☕",
+     "name": "Eine Oma isst einen Keks zu einer Tasse Kaffee."
+    },
+    {
+     "e": "👵🍰🥛",
+     "name": "Eine Oma isst Kuchen zu einem Glas Milch."
+    }
+   ]
+  },
+  {
+   "id": "bs-leni-pizza-mais",
+   "satz": "Leni isst eine Pizza mit Mais.",
+   "komplex": false,
+   "bild": {
+    "e": "👧🍕🌽",
+    "name": "Ein Mädchen isst eine Pizza mit Mais."
+   },
+   "ablenker": [
+    {
+     "e": "👦🍕🌽",
+     "name": "Ein Junge isst eine Pizza mit Mais."
+    },
+    {
+     "e": "👧🍝🌽",
+     "name": "Ein Mädchen isst Nudeln mit Mais."
+    },
+    {
+     "e": "👧🍕🍍",
+     "name": "Ein Mädchen isst eine Pizza mit Ananas."
+    }
+   ]
+  },
+  {
+   "id": "bs-yusuf-brief-oma",
+   "satz": "Yusuf schickt seiner Oma einen Brief.",
+   "komplex": false,
+   "bild": {
+    "e": "👦✉️👵",
+    "name": "Ein Junge schickt einer Oma einen Brief."
+   },
+   "ablenker": [
+    {
+     "e": "👧✉️👵",
+     "name": "Ein Mädchen schickt einer Oma einen Brief."
+    },
+    {
+     "e": "👦🎁👵",
+     "name": "Ein Junge schickt einer Oma ein Geschenk."
+    },
+    {
+     "e": "👦✉️👴",
+     "name": "Ein Junge schickt einem Opa einen Brief."
+    }
+   ]
+  },
+  {
+   "id": "bs-tim-fahrrad-putzen",
+   "satz": "Tim putzt sein Fahrrad mit einem Schwamm.",
+   "komplex": false,
+   "bild": {
+    "e": "👦🧽🚲",
+    "name": "Ein Junge putzt ein Fahrrad mit einem Schwamm."
+   },
+   "ablenker": [
+    {
+     "e": "👧🧽🚲",
+     "name": "Ein Mädchen putzt ein Fahrrad mit einem Schwamm."
+    },
+    {
+     "e": "👦🧽🚗",
+     "name": "Ein Junge putzt ein Auto mit einem Schwamm."
+    },
+    {
+     "e": "👦🧹🚲",
+     "name": "Ein Junge putzt ein Fahrrad mit einem Besen."
+    }
+   ]
+  },
+  {
+   "id": "bs-eule-kirchturm",
+   "satz": "Die Eule sitzt auf dem Kirchturm.",
+   "komplex": false,
+   "bild": {
+    "e": "🦉⛪",
+    "name": "Eine Eule sitzt auf einem Kirchturm."
+   },
+   "ablenker": [
+    {
+     "e": "🕊️⛪",
+     "name": "Eine Taube sitzt auf einem Kirchturm."
+    },
+    {
+     "e": "🦉🏰",
+     "name": "Eine Eule sitzt auf einem Schloss."
+    },
+    {
+     "e": "🦉🌳",
+     "name": "Eine Eule sitzt auf einem Baum."
+    }
+   ]
+  },
+  {
+   "id": "bs-anton-wecker",
+   "satz": "Als sein Wecker klingelte, sprang Anton aus dem Bett.",
+   "komplex": true,
+   "bild": {
+    "e": "⏰👦🛏️",
+    "name": "Ein Wecker klingelt und ein Junge springt aus dem Bett."
+   },
+   "ablenker": [
+    {
+     "e": "🐓👦🛏️",
+     "name": "Ein Hahn kräht und ein Junge springt aus dem Bett."
+    },
+    {
+     "e": "⏰👧🛏️",
+     "name": "Ein Wecker klingelt und ein Mädchen springt aus dem Bett."
+    },
+    {
+     "e": "⏰👦🛋️",
+     "name": "Ein Wecker klingelt und ein Junge springt vom Sofa auf."
+    }
+   ]
+  },
+  {
+   "id": "bs-hitze-wasser",
+   "satz": "Weil die Sonne so heiß scheint, springt Leon ins Wasser.",
+   "komplex": true,
+   "bild": {
+    "e": "☀️👦🌊",
+    "name": "Die Sonne scheint und ein Junge springt ins Wasser."
+   },
+   "ablenker": [
+    {
+     "e": "🌧️👦🌊",
+     "name": "Es regnet und ein Junge springt ins Wasser."
+    },
+    {
+     "e": "☀️👧🌊",
+     "name": "Die Sonne scheint und ein Mädchen springt ins Wasser."
+    },
+    {
+     "e": "☀️👦🍦",
+     "name": "Die Sonne scheint und ein Junge isst ein Eis."
+    }
+   ]
+  },
+  {
+   "id": "bs-brille-buch",
+   "satz": "Das Mädchen, das eine Brille trägt, liest ein Buch.",
+   "komplex": true,
+   "bild": {
+    "e": "👧👓📖",
+    "name": "Ein Mädchen mit Brille liest ein Buch."
+   },
+   "ablenker": [
+    {
+     "e": "👦👓📖",
+     "name": "Ein Junge mit Brille liest ein Buch."
+    },
+    {
+     "e": "👧🎀📖",
+     "name": "Ein Mädchen mit einer Schleife liest ein Buch."
+    },
+    {
+     "e": "👧👓🎨",
+     "name": "Ein Mädchen mit Brille malt ein Bild."
+    }
+   ]
+  },
+  {
+   "id": "bs-opa-zeitung-oma-handy",
+   "satz": "Während Opa die Zeitung liest, telefoniert Oma mit ihrem Handy.",
+   "komplex": true,
+   "bild": {
+    "e": "👴📰👵📱",
+    "name": "Ein Opa liest Zeitung und eine Oma telefoniert mit einem Handy."
+   },
+   "ablenker": [
+    {
+     "e": "👴📖👵📱",
+     "name": "Ein Opa liest ein Buch und eine Oma telefoniert mit einem Handy."
+    },
+    {
+     "e": "👴📰👩📱",
+     "name": "Ein Opa liest Zeitung und eine junge Frau telefoniert mit einem Handy."
+    },
+    {
+     "e": "👴📰👵☕",
+     "name": "Ein Opa liest Zeitung und eine Oma trinkt Kaffee."
+    }
+   ]
+  },
+  {
+   "id": "bs-hausaufgaben-fussball",
+   "satz": "Nachdem Zeynep ihre Hausaufgaben gemacht hat, spielt sie Fußball.",
+   "komplex": true,
+   "bild": {
+    "e": "👧📝⚽",
+    "name": "Ein Mädchen macht Hausaufgaben und spielt danach Fußball."
+   },
+   "ablenker": [
+    {
+     "e": "👦📝⚽",
+     "name": "Ein Junge macht Hausaufgaben und spielt danach Fußball."
+    },
+    {
+     "e": "👧🍝⚽",
+     "name": "Ein Mädchen isst Nudeln und spielt danach Fußball."
+    },
+    {
+     "e": "👧📝🎾",
+     "name": "Ein Mädchen macht Hausaufgaben und spielt danach Tennis."
+    }
+   ]
+  },
+  {
+   "id": "bs-schlitten-schneemann",
+   "satz": "Während Klara Schlitten fährt, baut Opa einen Schneemann.",
+   "komplex": true,
+   "bild": {
+    "e": "👧🛷👴⛄",
+    "name": "Ein Mädchen fährt Schlitten und ein Opa baut einen Schneemann."
+   },
+   "ablenker": [
+    {
+     "e": "👦🛷👴⛄",
+     "name": "Ein Junge fährt Schlitten und ein Opa baut einen Schneemann."
+    },
+    {
+     "e": "👧🎿👴⛄",
+     "name": "Ein Mädchen fährt Ski und ein Opa baut einen Schneemann."
+    },
+    {
+     "e": "👧🛷👵⛄",
+     "name": "Ein Mädchen fährt Schlitten und eine Oma baut einen Schneemann."
+    }
+   ]
+  },
+  {
+   "id": "bs-dunkel-kerze",
+   "satz": "Als es dunkel wurde, zündete Papa eine Kerze an.",
+   "komplex": true,
+   "bild": {
+    "e": "🌙👨🕯️",
+    "name": "Es ist Nacht und ein Mann zündet eine Kerze an."
+   },
+   "ablenker": [
+    {
+     "e": "☀️👨🕯️",
+     "name": "Es ist Tag und ein Mann zündet eine Kerze an."
+    },
+    {
+     "e": "🌙👩🕯️",
+     "name": "Es ist Nacht und eine Frau zündet eine Kerze an."
+    },
+    {
+     "e": "🌙👨🔦",
+     "name": "Es ist Nacht und ein Mann hat eine Taschenlampe."
+    }
+   ]
+  },
+  {
+   "id": "bs-hund-knochen-korb",
+   "satz": "Der Hund, der einen Knochen hat, schläft im Körbchen.",
+   "komplex": true,
+   "bild": {
+    "e": "🐕🦴💤🧺",
+    "name": "Ein Hund mit einem Knochen schläft in einem Korb."
+   },
+   "ablenker": [
+    {
+     "e": "🐈🦴💤🧺",
+     "name": "Eine Katze mit einem Knochen schläft in einem Korb."
+    },
+    {
+     "e": "🐕⚽💤🧺",
+     "name": "Ein Hund mit einem Ball schläft in einem Korb."
+    },
+    {
+     "e": "🐕🦴💤🛋️",
+     "name": "Ein Hund mit einem Knochen schläft auf einem Sofa."
+    }
+   ]
+  },
+  {
+   "id": "bs-frau-hut-blumen",
+   "satz": "Die Frau, die einen Hut trägt, hält einen Blumenstrauß.",
+   "komplex": true,
+   "bild": {
+    "e": "👩👒💐",
+    "name": "Eine Frau mit Hut hält einen Blumenstrauß."
+   },
+   "ablenker": [
+    {
+     "e": "👨👒💐",
+     "name": "Ein Mann mit Hut hält einen Blumenstrauß."
+    },
+    {
+     "e": "👩👓💐",
+     "name": "Eine Frau mit Brille hält einen Blumenstrauß."
+    },
+    {
+     "e": "👩👒🎈",
+     "name": "Eine Frau mit Hut hält einen Luftballon."
+    }
+   ]
+  },
+  {
+   "id": "bs-zug-oma-winkt",
+   "satz": "Als der Zug in den Bahnhof einfuhr, winkte Oma.",
+   "komplex": true,
+   "bild": {
+    "e": "🚆👵👋",
+    "name": "Ein Zug kommt an und eine Oma winkt."
+   },
+   "ablenker": [
+    {
+     "e": "🚌👵👋",
+     "name": "Ein Bus kommt an und eine Oma winkt."
+    },
+    {
+     "e": "🚆👴👋",
+     "name": "Ein Zug kommt an und ein Opa winkt."
+    },
+    {
+     "e": "🚆👵📖",
+     "name": "Ein Zug kommt an und eine Oma liest ein Buch."
+    }
+   ]
+  },
+  {
+   "id": "bs-kehren-fernsehen",
+   "satz": "Nachdem Samuel den Boden gekehrt hat, darf er fernsehen.",
+   "komplex": true,
+   "bild": {
+    "e": "👦🧹📺",
+    "name": "Ein Junge kehrt mit einem Besen und schaut danach fern."
+   },
+   "ablenker": [
+    {
+     "e": "👧🧹📺",
+     "name": "Ein Mädchen kehrt mit einem Besen und schaut danach fern."
+    },
+    {
+     "e": "👦🛁📺",
+     "name": "Ein Junge badet und schaut danach fern."
+    },
+    {
+     "e": "👦🧹🎮",
+     "name": "Ein Junge kehrt mit einem Besen und spielt danach ein Videospiel."
+    }
+   ]
+  },
+  {
+   "id": "bs-wald-fuchs",
+   "satz": "Als Ida im Wald spazieren ging, sah sie einen Fuchs.",
+   "komplex": true,
+   "bild": {
+    "e": "👧🌲🦊",
+    "name": "Ein Mädchen geht im Wald spazieren und sieht einen Fuchs."
+   },
+   "ablenker": [
+    {
+     "e": "👦🌲🦊",
+     "name": "Ein Junge geht im Wald spazieren und sieht einen Fuchs."
+    },
+    {
+     "e": "👧⛰️🦊",
+     "name": "Ein Mädchen geht auf einem Berg spazieren und sieht einen Fuchs."
+    },
+    {
+     "e": "👧🌲🦌",
+     "name": "Ein Mädchen geht im Wald spazieren und sieht einen Hirsch."
+    }
+   ]
+  },
+  {
+   "id": "bs-kalt-handschuhe-schal",
+   "satz": "Weil es so kalt ist, zieht Nele ihre Handschuhe und einen Schal an.",
+   "komplex": true,
+   "bild": {
+    "e": "❄️👧🧤🧣",
+    "name": "Es ist kalt und ein Mädchen zieht Handschuhe und einen Schal an."
+   },
+   "ablenker": [
+    {
+     "e": "❄️👦🧤🧣",
+     "name": "Es ist kalt und ein Junge zieht Handschuhe und einen Schal an."
+    },
+    {
+     "e": "❄️👧👢🧣",
+     "name": "Es ist kalt und ein Mädchen zieht Stiefel und einen Schal an."
+    },
+    {
+     "e": "❄️👧🧤🧦",
+     "name": "Es ist kalt und ein Mädchen zieht Handschuhe und Socken an."
+    }
+   ]
+  },
+  {
+   "id": "bs-kuh-alm-glocke",
+   "satz": "Die Kuh, die auf der Alm steht, trägt eine große Glocke.",
+   "komplex": true,
+   "bild": {
+    "e": "🐄⛰️🔔",
+    "name": "Eine Kuh steht auf einem Berg und trägt eine Glocke."
+   },
+   "ablenker": [
+    {
+     "e": "🐐⛰️🔔",
+     "name": "Eine Ziege steht auf einem Berg und trägt eine Glocke."
+    },
+    {
+     "e": "🐄🏖️🔔",
+     "name": "Eine Kuh steht am Strand und trägt eine Glocke."
+    },
+    {
+     "e": "🐄⛰️🎀",
+     "name": "Eine Kuh steht auf einem Berg und trägt eine Schleife."
+    }
+   ]
+  },
+  {
+   "id": "bs-wandern-breze",
+   "satz": "Nachdem Mateo auf den Berg gewandert ist, isst er eine Breze.",
+   "komplex": true,
+   "bild": {
+    "e": "👦🥾⛰️🥨",
+    "name": "Ein Junge wandert auf einen Berg und isst danach eine Breze."
+   },
+   "ablenker": [
+    {
+     "e": "👧🥾⛰️🥨",
+     "name": "Ein Mädchen wandert auf einen Berg und isst danach eine Breze."
+    },
+    {
+     "e": "👦🚲⛰️🥨",
+     "name": "Ein Junge fährt mit dem Fahrrad auf einen Berg und isst danach eine Breze."
+    },
+    {
+     "e": "👦🥾⛰️🍎",
+     "name": "Ein Junge wandert auf einen Berg und isst danach einen Apfel."
+    }
+   ]
+  },
+  {
+   "id": "bs-regen-puzzle",
+   "satz": "Wenn es draußen regnet, macht Luis mit Papa ein Puzzle.",
+   "komplex": true,
+   "bild": {
+    "e": "🌧️👦👨🧩",
+    "name": "Es regnet und ein Junge macht mit einem Mann ein Puzzle."
+   },
+   "ablenker": [
+    {
+     "e": "☀️👦👨🧩",
+     "name": "Die Sonne scheint und ein Junge macht mit einem Mann ein Puzzle."
+    },
+    {
+     "e": "🌧️👦👩🧩",
+     "name": "Es regnet und ein Junge macht mit einer Frau ein Puzzle."
+    },
+    {
+     "e": "🌧️👦👨🎲",
+     "name": "Es regnet und ein Junge würfelt mit einem Mann."
+    }
+   ]
+  },
+  {
+   "id": "bs-auto-ruecksitz",
+   "satz": "Während Papa Auto fährt, schläft Marie auf dem Rücksitz.",
+   "komplex": true,
+   "bild": {
+    "e": "👨🚗👧💤",
+    "name": "Ein Mann fährt Auto und ein Mädchen schläft."
+   },
+   "ablenker": [
+    {
+     "e": "👩🚗👧💤",
+     "name": "Eine Frau fährt Auto und ein Mädchen schläft."
+    },
+    {
+     "e": "👨🚌👧💤",
+     "name": "Ein Mann fährt Bus und ein Mädchen schläft."
+    },
+    {
+     "e": "👨🚗👧📖",
+     "name": "Ein Mann fährt Auto und ein Mädchen liest ein Buch."
+    }
+   ]
+  },
+  {
+   "id": "bs-oma-geburtstag-blumen",
+   "satz": "Weil Oma Geburtstag hat, schenkt Sara ihr einen Blumenstrauß.",
+   "komplex": true,
+   "bild": {
+    "e": "👵🎂👧💐",
+    "name": "Eine Oma hat Geburtstag und ein Mädchen schenkt ihr Blumen."
+   },
+   "ablenker": [
+    {
+     "e": "👴🎂👧💐",
+     "name": "Ein Opa hat Geburtstag und ein Mädchen schenkt ihm Blumen."
+    },
+    {
+     "e": "👵🎂👦💐",
+     "name": "Eine Oma hat Geburtstag und ein Junge schenkt ihr Blumen."
+    },
+    {
+     "e": "👵🎂👧🍫",
+     "name": "Eine Oma hat Geburtstag und ein Mädchen schenkt ihr Schokolade."
+    }
+   ]
+  },
+  {
+   "id": "bs-ente-kueken",
+   "satz": "Die Ente, die auf dem Teich schwimmt, hat drei Küken.",
+   "komplex": true,
+   "bild": {
+    "e": "🦆🐤🐤🐤",
+    "name": "Eine Ente mit drei Küken."
+   },
+   "ablenker": [
+    {
+     "e": "🦢🐤🐤🐤",
+     "name": "Ein Schwan mit drei Küken."
+    },
+    {
+     "e": "🦆🐤🐤",
+     "name": "Eine Ente mit zwei Küken."
+    },
+    {
+     "e": "🐔🐤🐤🐤",
+     "name": "Ein Huhn mit drei Küken."
+    }
+   ]
+  },
+  {
+   "id": "bs-gitarre-singen",
+   "satz": "Wenn Papa Gitarre spielt, singt Amira ein Lied dazu.",
+   "komplex": true,
+   "bild": {
+    "e": "👨🎸👧🎤",
+    "name": "Ein Mann spielt Gitarre und ein Mädchen singt."
+   },
+   "ablenker": [
+    {
+     "e": "👨🎹👧🎤",
+     "name": "Ein Mann spielt Klavier und ein Mädchen singt."
+    },
+    {
+     "e": "👩🎸👧🎤",
+     "name": "Eine Frau spielt Gitarre und ein Mädchen singt."
+    },
+    {
+     "e": "👨🎸👧🥁",
+     "name": "Ein Mann spielt Gitarre und ein Mädchen trommelt."
+    }
+   ]
+  },
+  {
+   "id": "bs-baden-vorlesen",
+   "satz": "Nachdem Emil gebadet hat, liest Mama ihm eine Geschichte vor.",
+   "komplex": true,
+   "bild": {
+    "e": "👦🛁👩📖",
+    "name": "Ein Junge badet, danach liest eine Frau aus einem Buch vor."
+   },
+   "ablenker": [
+    {
+     "e": "👧🛁👩📖",
+     "name": "Ein Mädchen badet, danach liest eine Frau aus einem Buch vor."
+    },
+    {
+     "e": "👦⚽👩📖",
+     "name": "Ein Junge spielt Fußball, danach liest eine Frau aus einem Buch vor."
+    },
+    {
+     "e": "👦🛁👨📖",
+     "name": "Ein Junge badet, danach liest ein Mann aus einem Buch vor."
+    }
+   ]
+  },
+  {
+   "id": "bs-regen-regenbogen",
+   "satz": "Nachdem es geregnet hat, sieht Lina einen Regenbogen.",
+   "komplex": true,
+   "bild": {
+    "e": "🌧️👧🌈",
+    "name": "Nach dem Regen sieht ein Mädchen einen Regenbogen."
+   },
+   "ablenker": [
+    {
+     "e": "❄️👧🌈",
+     "name": "Nach dem Schneefall sieht ein Mädchen einen Regenbogen."
+    },
+    {
+     "e": "🌧️👦🌈",
+     "name": "Nach dem Regen sieht ein Junge einen Regenbogen."
+    },
+    {
+     "e": "🌧️👧🐌",
+     "name": "Nach dem Regen sieht ein Mädchen eine Schnecke."
+    }
+   ]
+  },
+  {
+   "id": "bs-klavier-malen",
+   "satz": "Während Elif Klavier übt, malt ihr Bruder ein Bild.",
+   "komplex": true,
+   "bild": {
+    "e": "👧🎹👦🎨",
+    "name": "Ein Mädchen spielt Klavier und ein Junge malt ein Bild."
+   },
+   "ablenker": [
+    {
+     "e": "👧🎻👦🎨",
+     "name": "Ein Mädchen spielt Geige und ein Junge malt ein Bild."
+    },
+    {
+     "e": "👧🎹👧🎨",
+     "name": "Ein Mädchen spielt Klavier und ein anderes Mädchen malt ein Bild."
+    },
+    {
+     "e": "👧🎹👦📖",
+     "name": "Ein Mädchen spielt Klavier und ein Junge liest ein Buch."
+    }
+   ]
+  },
+  {
+   "id": "bs-schulbus-ranzen",
+   "satz": "Als der Schulbus kam, stieg Lotta mit ihrem Schulranzen ein.",
+   "komplex": true,
+   "bild": {
+    "e": "🚌👧🎒",
+    "name": "Ein Bus kommt und ein Mädchen hat einen Schulranzen."
+   },
+   "ablenker": [
+    {
+     "e": "🚆👧🎒",
+     "name": "Ein Zug kommt und ein Mädchen hat einen Schulranzen."
+    },
+    {
+     "e": "🚌👦🎒",
+     "name": "Ein Bus kommt und ein Junge hat einen Schulranzen."
+    },
+    {
+     "e": "🚌👧🧸",
+     "name": "Ein Bus kommt und ein Mädchen hat einen Teddy."
+    }
+   ]
+  },
+  {
+   "id": "bs-katze-dach-vogel",
+   "satz": "Die Katze, die auf dem Dach sitzt, beobachtet einen Vogel.",
+   "komplex": true,
+   "bild": {
+    "e": "🐈🏠🐦",
+    "name": "Eine Katze sitzt auf einem Hausdach und sieht einen Vogel."
+   },
+   "ablenker": [
+    {
+     "e": "🦉🏠🐦",
+     "name": "Eine Eule sitzt auf einem Hausdach und sieht einen Vogel."
+    },
+    {
+     "e": "🐈🌳🐦",
+     "name": "Eine Katze sitzt auf einem Baum und sieht einen Vogel."
+    },
+    {
+     "e": "🐈🏠🦋",
+     "name": "Eine Katze sitzt auf einem Hausdach und sieht einen Schmetterling."
+    }
+   ]
+  },
+  {
+   "id": "bs-riesenrad-eis",
+   "satz": "Nachdem Max mit dem Riesenrad gefahren ist, isst er ein Eis.",
+   "komplex": true,
+   "bild": {
+    "e": "👦🎡🍦",
+    "name": "Ein Junge fährt Riesenrad und isst danach ein Eis."
+   },
+   "ablenker": [
+    {
+     "e": "👧🎡🍦",
+     "name": "Ein Mädchen fährt Riesenrad und isst danach ein Eis."
+    },
+    {
+     "e": "👦🎢🍦",
+     "name": "Ein Junge fährt Achterbahn und isst danach ein Eis."
+    },
+    {
+     "e": "👦🎡🍭",
+     "name": "Ein Junge fährt Riesenrad und schleckt danach einen Lutscher."
+    }
+   ]
+  }
+ ]
+}

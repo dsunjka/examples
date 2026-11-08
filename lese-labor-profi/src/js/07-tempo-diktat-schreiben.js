@@ -10,15 +10,16 @@ function viewTempo() {
   const dauer = E().tempoDauer;
   return {
     titel: 'Lese-Tempo',
-    html: `<div class="modul-kopf" style="--farbe:var(--m-tempo)"><span class="labor-symbol">${icon('tempo')}</span><div><h1>Lese-Tempo</h1><p>Lies jeden Satz so schnell und genau du kannst. Stimmt er? Dann tippe <b>„stimmt“</b>. Ist er Unsinn? Dann tippe <b>„stimmt nicht“</b>.</p></div></div>
+    html: `<div class="modul-kopf" style="--farbe:var(--m-tempo)"><span class="labor-symbol">${icon('tempo')}</span><div><h1>Lese-Tempo</h1><p>Zwei Trainings für flüssiges Lesen: <b>Blitz-Lesen</b> wie im BYLET-F und der <b>Satz-Check</b> gegen die Uhr.</p></div></div>
       <div class="start-raster" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))">
+        ${blitzKarteHTML()}
         <section class="karte" style="display:grid;gap:14px">
-          <h2 style="font-size:1.2rem">So geht’s</h2>
+          <h2 style="font-size:1.25rem">✓ Satz-Check</h2><p style="line-height:1.5">Lies jeden Satz so schnell und genau du kannst. Stimmt er? Dann tippe <b>„stimmt“</b>. Ist er Unsinn? Dann tippe <b>„stimmt nicht“</b>.</p>
           <ul style="margin:0;padding-left:20px;display:grid;gap:4px;line-height:1.5"><li>Du hast <b>${dauer / 60} ${dauer === 60 ? 'Minute' : 'Minuten'}</b> Zeit.</li><li>Die Sätze werden langsam länger.</li><li>Nicht raten! Falsche Antworten werden abgezogen.</li><li>Zuerst kommen 3 Übungssätze.</li></ul>
           <div class="fakten"><span class="fakt">${saetze.length} Sätze im Labor</span>${best != null ? `<span class="fakt">Dein Bestwert: ${best}</span>` : ''}</div>
-          <button type="button" class="knopf" data-act="tempo-start" ${saetze.length ? '' : 'disabled'}>Test starten</button>
+          <button type="button" class="knopf" data-act="tempo-start" ${saetze.length ? '' : 'disabled'}>Satz-Check starten</button>
         </section>
-        <section class="karte" style="display:grid;gap:12px;--farbe:var(--m-tempo)"><h2 style="font-size:1.2rem">Deine letzten Ergebnisse</h2>
+        <section class="karte" style="display:grid;gap:12px;--farbe:var(--m-tempo)"><h2 style="font-size:1.2rem">Satz-Check: deine letzten Ergebnisse</h2>
           ${letzte.length ? `<div class="mini-diagramm" role="img" aria-label="Tempo-Werte der letzten Tests">${letzte.map((t) => `<div style="height:${Math.max(6, pct(tempoWert(t), maxT))}%" title="${datumLesbar(t.datum)}"><span>${tempoWert(t)}</span></div>`).join('')}</div>
           <div class="tabelle-scroll"><table class="verlauf-tabelle"><thead><tr><th>Datum</th><th>Richtig</th><th>Falsch</th><th>Tempo-Wert</th></tr></thead><tbody>${letzte.slice().reverse().map((t) => `<tr><td>${datumLesbar(t.datum)}</td><td>${t.richtig}</td><td>${t.falsch}</td><td><b>${tempoWert(t)}</b></td></tr>`).join('')}</tbody></table></div>` : '<p class="leise">Noch kein Test gemacht. Probiere es aus!</p>'}
           <p class="klein leise">Der Tempo-Wert ist: richtige minus falsche Sätze. Vergleiche dich mit dir selbst – jedes Mal ein bisschen besser!</p></section>

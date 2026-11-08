@@ -1,0 +1,1222 @@
+{
+ "modul": "lesen",
+ "texte": [
+  {
+   "id": "lv-spiegelsee",
+   "titel": "Wo der Berg zweimal steht",
+   "textsorte": "Geschichte",
+   "format": "bylet-v",
+   "einleitung": "Eine fantastische Geschichte von einem See in den bayerischen Bergen, einem alten Rätsel und einer ungewöhnlichen Freundschaft.",
+   "text": {
+    "titel": "Wo der Berg zweimal steht",
+    "abschnitte": [
+     {
+      "bild": "🏞️🐇",
+      "absaetze": [
+       "„Hier ist es so langweilig!“, stöhnte Elif am dritten Tag der Herbstferien. Sie wohnte eine Woche lang bei Oma Resi. Omas altes Bauernhaus stand direkt am Spiegelsee. Hinter dem See ragte der Hirschkopf in den Himmel. Hier gab es keine anderen Kinder. Elif vermisste ihre Freundinnen in der Stadt.",
+       "Oma Resi lächelte. „Weißt du, warum unser See Spiegelsee heißt?“, fragte sie. „Wenn kein Wind weht, wird das Wasser ganz glatt. Dann spiegelt sich der Hirschkopf darin so genau, dass man kaum weiß, welcher Berg der echte ist.“ Elif zuckte mit den Schultern.",
+       "Am Nachmittag sollte sie Brennholz aus dem Schuppen holen. Als sie die Tür öffnete, raschelte es hinter dem Holzstapel. Vorsichtig spähte Elif um die Ecke. Dort saß ein Tier, so groß wie ein Hase. Es hatte lange Ohren, ein kleines Geweih und zwei gefiederte Flügel. Neben ihm lag ein Häufchen Haselnüsse.",
+       "„Bitte nicht schreien!“, piepste das Tier. „Ich heiße Quirin und bin ein Wolpertinger.“ Elif riss die Augen auf. Wolpertinger kannte sie nur aus Omas Geschichten."
+      ]
+     },
+     {
+      "bild": "🌰📜",
+      "absaetze": [
+       "„Ich wohne im Nebeltal, gleich hinter dem Hirschkopf“, erzählte Quirin. „Gestern wollte ich Haselnüsse für den Winter sammeln. Dabei habe ich mich verlaufen.“ Er seufzte tief. „Aus dem Tal kommt man immer heraus, zurück aber nur durch ein Tor. Es öffnet sich nur in Vollmondnächten. Heute Nacht geht es zum letzten Mal vor dem Winter auf. Wenn ich es nicht finde, muss ich bis zum Frühling allein im Wald bleiben.“",
+       "Elif sah, wie seine langen Ohren zitterten. „Weißt du denn nicht, wo das Tor ist?“, fragte sie. Quirin schüttelte den Kopf. „Ich kenne nur einen alten Spruch“, flüsterte er. „<i>Wo der Berg zweimal steht / und kein Wind mehr weht, / da öffnet sich um Mitternacht / das Tor, vom Mondlicht bewacht.</i>“",
+       "„Ich helfe dir“, versprach Elif. Sie dachte angestrengt nach. Plötzlich hatte sie eine Idee. „Der Zwillingsfelsen oben im Wald hat zwei Spitzen!“, rief sie. „Er sieht aus wie ein Berg, der zweimal dasteht. Komm, ich bringe dich hin!“ Zum ersten Mal in diesen Ferien langweilte sich Elif kein bisschen."
+      ]
+     },
+     {
+      "bild": "🏔️🌙",
+      "absaetze": [
+       "Atemlos kamen die beiden am Zwillingsfelsen an. Dort oben pfiff ein kalter Wind durch die Fichten. Sie suchten jede Spalte im Stein ab, doch nirgends fanden sie einen Hinweis auf ein Tor. Langsam sank die Sonne hinter die Berge. Quirin ließ die Ohren hängen. „Es ist hoffnungslos“, murmelte er.",
+       "Enttäuscht setzte sich Elif auf einen Stein. Da legte sich der Wind, und es wurde ganz still. Unten lag der See, glatt wie Glas. Im Wasser stand ein zweiter Hirschkopf, nur kopfüber. Elif sprang auf. „Der Spiegelsee!“, rief sie. „Der Zwillingsfelsen ist ja gar kein Berg. Aber dort unten steht der Hirschkopf zweimal!“",
+       "Oma Resi schlief schon tief und fest. Kurz vor Mitternacht schlich Elif mit einer Taschenlampe aus dem Haus. Quirin hüpfte dicht neben ihr her. Im Dunkeln sah Omas Garten ganz fremd aus, und jeder Ast knackte unheimlich. Elifs Knie wurden weich. Am liebsten wäre sie umgekehrt. Doch dann dachte sie an ihr Versprechen und ging weiter bis zum Steg."
+      ]
+     },
+     {
+      "bild": "🌕✨",
+      "absaetze": [
+       "Genau um Mitternacht stand der Vollmond über dem Hirschkopf. Auch im See leuchtete ein Mond, direkt unter der Spitze des gespiegelten Bergs. Plötzlich zog sich eine silberne Lichtspur über das Wasser. Sie führte vom Steg bis zu einem schimmernden Tor aus Mondlicht.",
+       "„Du hast das Rätsel gelöst!“, jubelte Quirin. Er legte Elif eine Haselnuss in die Hand. Die Nuss glänzte golden. „Danke, Elif. Du bist eine echte Freundin.“ Dann hüpfte er über die Lichtspur davon. Am Tor winkte er ein letztes Mal mit einem Flügel. Einen Augenblick später waren das Tor und die Lichtspur verschwunden.",
+       "Am nächsten Morgen legte Elif die goldene Nuss auf den Frühstückstisch. Oma Resi wurde ganz still. Dann holte sie eine alte Blechdose aus dem Küchenschrank. Darin lag eine Haselnuss, die genauso golden glänzte. „Die habe ich bekommen, als ich so alt war wie du“, sagte Oma und zwinkerte. „Aber nächstes Mal weckst du mich. Dann komme ich mit.“ Elif lachte. Auf einmal freute sie sich schon auf die nächsten Ferien am Spiegelsee."
+      ]
+     }
+    ]
+   },
+   "items": [
+    {
+     "id": "lv-spiegelsee-1",
+     "typ": "single",
+     "stufe": 1,
+     "kompetenz": "entnehmen",
+     "abschnitt": 1,
+     "frage": "Wo verbringt Elif ihre Herbstferien?",
+     "optionen": [
+      {
+       "text": "bei ihrer Oma am Spiegelsee",
+       "richtig": true
+      },
+      {
+       "text": "bei ihren Freundinnen in der Stadt",
+       "richtig": false
+      },
+      {
+       "text": "bei ihrer Oma in der Stadt",
+       "richtig": false
+      },
+      {
+       "text": "in einem Ferienlager am Spiegelsee",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lies die ersten Sätze von Abschnitt 1 genau.",
+     "erklaerung": "Im Text steht: „Sie wohnte eine Woche lang bei Oma Resi.“ Omas altes Bauernhaus steht direkt am Spiegelsee."
+    },
+    {
+     "id": "lv-spiegelsee-2",
+     "typ": "single",
+     "stufe": 1,
+     "kompetenz": "entnehmen",
+     "abschnitt": 1,
+     "frage": "Warum heißt der See Spiegelsee?",
+     "optionen": [
+      {
+       "text": "Bei Windstille spiegelt sich der Hirschkopf darin.",
+       "richtig": true
+      },
+      {
+       "text": "Bei Wind glitzert das Wasser wie ein Spiegel.",
+       "richtig": false
+      },
+      {
+       "text": "Bei Vollmond spiegelt sich der Mond darin.",
+       "richtig": false
+      },
+      {
+       "text": "Bei Sonne spiegelt sich Omas Haus darin.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Oma Resi erklärt den Namen selbst. Lies in Abschnitt 1 genau, was sie über das Wasser sagt.",
+     "erklaerung": "Oma sagt: Wenn kein Wind weht, wird das Wasser ganz glatt, und der Hirschkopf spiegelt sich darin. Bei Windstille sieht man den Berg also im See."
+    },
+    {
+     "id": "lv-spiegelsee-3",
+     "typ": "single",
+     "stufe": 1,
+     "kompetenz": "schliessen",
+     "abschnitt": 1,
+     "frage": "Wie fühlt sich Elif am Anfang der Geschichte?",
+     "optionen": [
+      {
+       "text": "gelangweilt und ein bisschen einsam",
+       "richtig": true
+      },
+      {
+       "text": "neugierig und ein bisschen aufgeregt",
+       "richtig": false
+      },
+      {
+       "text": "fröhlich und ein bisschen müde",
+       "richtig": false
+      },
+      {
+       "text": "wütend und ein bisschen ängstlich",
+       "richtig": false
+      }
+     ],
+     "tipp": "Achte darauf, was Elif ganz am Anfang sagt und an wen sie denkt.",
+     "erklaerung": "Elif stöhnt, dass es langweilig ist, und sie vermisst ihre Freundinnen in der Stadt. Deshalb fühlt sie sich gelangweilt und ein bisschen einsam."
+    },
+    {
+     "id": "lv-spiegelsee-4",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "schliessen",
+     "abschnitt": 1,
+     "frage": "Am Ende von Abschnitt 1 reißt Elif die Augen auf. Warum ist sie so überrascht?",
+     "optionen": [
+      {
+       "text": "Sie dachte, dass es Wolpertinger nicht wirklich gibt.",
+       "richtig": true
+      },
+      {
+       "text": "Sie hat Angst, dass der Wolpertinger sie gleich beißt.",
+       "richtig": false
+      },
+      {
+       "text": "Sie ärgert sich, weil er sich Omas Haselnüsse nimmt.",
+       "richtig": false
+      },
+      {
+       "text": "Sie erschrickt, weil das Tier so riesig und wild ist.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lies den letzten Satz von Abschnitt 1. Woher kannte Elif Wolpertinger bis dahin?",
+     "erklaerung": "Elif kannte Wolpertinger bis dahin nur aus Omas Geschichten. Sie hat also geglaubt, dass es sie gar nicht wirklich gibt – und nun sitzt einer vor ihr und spricht sogar."
+    },
+    {
+     "id": "lv-spiegelsee-5",
+     "typ": "single",
+     "stufe": 1,
+     "kompetenz": "entnehmen",
+     "abschnitt": 2,
+     "frage": "Warum hat Quirin das Nebeltal verlassen?",
+     "optionen": [
+      {
+       "text": "Er wollte Haselnüsse für den Winter sammeln.",
+       "richtig": true
+      },
+      {
+       "text": "Er wollte das Tor zum Nebeltal suchen.",
+       "richtig": false
+      },
+      {
+       "text": "Er wollte den Spiegelsee einmal sehen.",
+       "richtig": false
+      },
+      {
+       "text": "Er wollte Brennholz für den Winter holen.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Quirin erzählt es gleich am Anfang von Abschnitt 2.",
+     "erklaerung": "Quirin sagt: „Gestern wollte ich Haselnüsse für den Winter sammeln.“ Dabei hat er sich verlaufen."
+    },
+    {
+     "id": "lv-spiegelsee-6",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "entnehmen",
+     "abschnitt": 2,
+     "frage": "Wann öffnet sich das Tor zum Nebeltal?",
+     "optionen": [
+      {
+       "text": "in Vollmondnächten um Mitternacht",
+       "richtig": true
+      },
+      {
+       "text": "in jeder Nacht um Mitternacht",
+       "richtig": false
+      },
+      {
+       "text": "in Vollmondnächten bei Sonnenuntergang",
+       "richtig": false
+      },
+      {
+       "text": "in jeder Nacht bei Sonnenuntergang",
+       "richtig": false
+      }
+     ],
+     "tipp": "Du brauchst zwei Stellen aus Abschnitt 2: was Quirin über das Tor erzählt und was im alten Spruch steht.",
+     "erklaerung": "Quirin erzählt, dass sich das Tor nur in Vollmondnächten öffnet. Im Spruch heißt es: „da öffnet sich um Mitternacht / das Tor“."
+    },
+    {
+     "id": "lv-spiegelsee-7",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "schliessen",
+     "abschnitt": 2,
+     "frage": "Elif sieht, wie Quirins lange Ohren zittern. Was zeigt das?",
+     "optionen": [
+      {
+       "text": "Quirin hat Angst, nicht mehr nach Hause zu kommen.",
+       "richtig": true
+      },
+      {
+       "text": "Quirin friert, weil es im Schuppen kalt ist.",
+       "richtig": false
+      },
+      {
+       "text": "Quirin ist wütend, weil Elif ihn entdeckt hat.",
+       "richtig": false
+      },
+      {
+       "text": "Quirin freut sich, weil er Elif getroffen hat.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lies, was Quirin direkt davor erzählt. Was passiert, wenn er das Tor nicht findet?",
+     "erklaerung": "Quirin hat gerade erzählt, dass er sonst bis zum Frühling allein im Wald bleiben muss. Seine zitternden Ohren zeigen, dass er große Angst hat, nicht mehr heimzukommen."
+    },
+    {
+     "id": "lv-spiegelsee-8",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "entnehmen",
+     "abschnitt": 2,
+     "frage": "Warum glaubt Elif, das Tor sei am Zwillingsfelsen?",
+     "optionen": [
+      {
+       "text": "Der Felsen hat zwei Spitzen wie zwei Berge.",
+       "richtig": true
+      },
+      {
+       "text": "Dort hat Quirin die Haselnüsse gesammelt.",
+       "richtig": false
+      },
+      {
+       "text": "Dort oben weht niemals ein Wind.",
+       "richtig": false
+      },
+      {
+       "text": "Oma hat ihr dort einmal ein Tor gezeigt.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Vergleiche, was Elif über den Zwillingsfelsen sagt, mit der ersten Zeile des Spruchs.",
+     "erklaerung": "Im Spruch heißt es: „Wo der Berg zweimal steht“. Elif denkt, damit sei der Zwillingsfelsen gemeint, weil er zwei Spitzen hat und aussieht wie ein Berg, der zweimal dasteht."
+    },
+    {
+     "id": "lv-spiegelsee-9",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "schliessen",
+     "abschnitt": 3,
+     "frage": "Am Zwillingsfelsen murmelt Quirin: „Es ist hoffnungslos.“ Warum denkt er das?",
+     "optionen": [
+      {
+       "text": "Sie finden keinen Hinweis auf das Tor, und die Sonne geht schon unter.",
+       "richtig": true
+      },
+      {
+       "text": "Sie finden keinen Hinweis auf das Tor, und Elif will nach Hause gehen.",
+       "richtig": false
+      },
+      {
+       "text": "Sie haben sich im Wald verlaufen, und es wird schon dunkel.",
+       "richtig": false
+      },
+      {
+       "text": "Der Wind ist zu kalt, und Quirin kann nicht mehr fliegen.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lies den Anfang von Abschnitt 3 genau. Denk daran, bis wann sie das Tor finden müssen.",
+     "erklaerung": "Die beiden suchen jede Spalte im Felsen ab, finden aber keinen Hinweis auf das Tor. Dabei sinkt schon die Sonne – und das Tor öffnet sich nur noch heute Nacht."
+    },
+    {
+     "id": "lv-spiegelsee-10",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "schliessen",
+     "abschnitt": 3,
+     "frage": "Warum ist es so wichtig, dass sich der Wind legt?",
+     "optionen": [
+      {
+       "text": "Nur ohne Wind spiegelt sich der Berg im Wasser.",
+       "richtig": true
+      },
+      {
+       "text": "Nur ohne Wind kann Quirin seine Flügel benutzen.",
+       "richtig": false
+      },
+      {
+       "text": "Nur ohne Wind finden sie den Weg nach Hause.",
+       "richtig": false
+      },
+      {
+       "text": "Nur ohne Wind kann Elif den Mond sehen.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Denk an das, was Oma Resi in Abschnitt 1 über den See erzählt hat.",
+     "erklaerung": "Oma hat erklärt: Nur wenn kein Wind weht, wird das Wasser glatt, und der Hirschkopf spiegelt sich darin. Erst als sich der Wind legt, sieht Elif den Berg zweimal – und versteht den Spruch."
+    },
+    {
+     "id": "lv-spiegelsee-11",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "schliessen",
+     "abschnitt": 3,
+     "frage": "Kurz vor Mitternacht <i>schlich</i> Elif aus dem Haus. Was bedeutet das?",
+     "optionen": [
+      {
+       "text": "Sie ging ganz leise, damit niemand sie hörte.",
+       "richtig": true
+      },
+      {
+       "text": "Sie rannte schnell, weil es schon spät war.",
+       "richtig": false
+      },
+      {
+       "text": "Sie ging langsam, weil sie sehr müde war.",
+       "richtig": false
+      },
+      {
+       "text": "Sie hüpfte fröhlich, weil sie sich freute.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Denk daran, zu welcher Uhrzeit Elif das Haus verlässt und wer dort schläft.",
+     "erklaerung": "„Schleichen“ heißt, ganz leise und vorsichtig zu gehen, damit man nicht bemerkt wird. Oma Resi schläft schon tief und fest, und Elif will sie nicht wecken."
+    },
+    {
+     "id": "lv-spiegelsee-12",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "reflektieren",
+     "abschnitt": 3,
+     "frage": "Am Ende von Abschnitt 3 knackt jeder Ast unheimlich, und Elifs Knie werden weich. Warum erzählt die Geschichte das so genau?",
+     "optionen": [
+      {
+       "text": "Man soll spüren, wie viel Mut Elif jetzt braucht.",
+       "richtig": true
+      },
+      {
+       "text": "Man soll erfahren, wie groß Omas Garten ist.",
+       "richtig": false
+      },
+      {
+       "text": "Man soll merken, dass Elif keine Lust mehr hat.",
+       "richtig": false
+      },
+      {
+       "text": "Man soll ahnen, dass Elif gleich umkehren wird.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Überlege, wie es dir beim Lesen dieser Stelle geht – und was Elif danach trotzdem tut.",
+     "erklaerung": "Die unheimlichen Geräusche und die weichen Knie zeigen, wie viel Angst Elif hat. So merkt man, wie mutig es ist, dass sie trotzdem bis zum Steg weitergeht."
+    },
+    {
+     "id": "lv-spiegelsee-13",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "schliessen",
+     "abschnitt": 4,
+     "frage": "Plötzlich zieht sich eine Lichtspur über das Wasser. Warum gerade in diesem Augenblick?",
+     "optionen": [
+      {
+       "text": "Jetzt ist es Mitternacht, und der Vollmond steht über dem Hirschkopf.",
+       "richtig": true
+      },
+      {
+       "text": "Jetzt leuchtet Elif mit ihrer Taschenlampe auf das Wasser.",
+       "richtig": false
+      },
+      {
+       "text": "Jetzt sagt Quirin den alten Spruch noch einmal laut auf.",
+       "richtig": false
+      },
+      {
+       "text": "Jetzt winkt Quirin Elif zum Abschied mit einem Flügel zu.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lies den ersten Satz von Abschnitt 4. Vergleiche ihn mit dem alten Spruch aus Abschnitt 2.",
+     "erklaerung": "Im Text steht: „Genau um Mitternacht stand der Vollmond über dem Hirschkopf.“ Im alten Spruch heißt es: „da öffnet sich um Mitternacht / das Tor“. Darum erscheint gerade jetzt die Lichtspur."
+    },
+    {
+     "id": "lv-spiegelsee-14",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "entnehmen",
+     "abschnitt": 4,
+     "frage": "Wo erscheint das Tor zum Nebeltal?",
+     "optionen": [
+      {
+       "text": "am Ende einer Lichtspur auf dem See",
+       "richtig": true
+      },
+      {
+       "text": "am Anfang einer Lichtspur direkt am Steg",
+       "richtig": false
+      },
+      {
+       "text": "oben auf der Spitze des Hirschkopfs",
+       "richtig": false
+      },
+      {
+       "text": "zwischen den Spitzen des Zwillingsfelsens",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lies den Anfang von Abschnitt 4 Satz für Satz. Achte darauf, wo das Tor beschrieben wird.",
+     "erklaerung": "Eine silberne Lichtspur führt vom Steg über das Wasser bis zu einem schimmernden Tor aus Mondlicht. Das Tor liegt also am Ende der Lichtspur auf dem See."
+    },
+    {
+     "id": "lv-spiegelsee-15",
+     "typ": "single",
+     "stufe": 1,
+     "kompetenz": "entnehmen",
+     "abschnitt": 4,
+     "frage": "Was schenkt Quirin Elif zum Abschied?",
+     "optionen": [
+      {
+       "text": "eine goldene Haselnuss",
+       "richtig": true
+      },
+      {
+       "text": "eine silberne Haselnuss",
+       "richtig": false
+      },
+      {
+       "text": "eine goldene Feder",
+       "richtig": false
+      },
+      {
+       "text": "eine silberne Feder",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lies in Abschnitt 4, was Quirin Elif in die Hand legt.",
+     "erklaerung": "Quirin legt Elif eine Haselnuss in die Hand. Die Nuss glänzt golden."
+    },
+    {
+     "id": "lv-spiegelsee-16",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "schliessen",
+     "abschnitt": 4,
+     "frage": "Oma Resi zeigt Elif, was in ihrer alten Blechdose liegt, und zwinkert. Was verrät sie Elif damit?",
+     "optionen": [
+      {
+       "text": "Sie hat als Kind auch einem Wolpertinger geholfen.",
+       "richtig": true
+      },
+      {
+       "text": "Sie hat als Kind auch Haselnüsse für den Winter gesammelt.",
+       "richtig": false
+      },
+      {
+       "text": "Sie hat die Nuss für Elif heimlich im Schuppen versteckt.",
+       "richtig": false
+      },
+      {
+       "text": "Sie will Elifs Nuss in ihrer Blechdose aufheben.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lies genau, was Oma über ihre eigene Nuss sagt. Überlege dann, wofür Elif ihre Nuss bekommen hat.",
+     "erklaerung": "Oma hat ihre Nuss bekommen, als sie so alt war wie Elif. Elif hat ihre Nuss von Quirin als Dank für ihre Hilfe bekommen. Mit dem Zwinkern verrät Oma, dass sie als Kind dasselbe erlebt hat."
+    },
+    {
+     "id": "lv-spiegelsee-17",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "reflektieren",
+     "abschnitt": 0,
+     "frage": "Welche andere Überschrift würde auch gut zur ganzen Geschichte passen?",
+     "optionen": [
+      {
+       "text": "Das Rätsel vom Spiegelsee",
+       "richtig": true
+      },
+      {
+       "text": "Langeweile bei Oma Resi",
+       "richtig": false
+      },
+      {
+       "text": "Der Wind am Zwillingsfelsen",
+       "richtig": false
+      },
+      {
+       "text": "Haselnüsse für den Winter",
+       "richtig": false
+      }
+     ],
+     "tipp": "Eine gute Überschrift passt zur ganzen Geschichte, nicht nur zu einem Teil davon.",
+     "erklaerung": "In der ganzen Geschichte geht es darum, das Rätsel des alten Spruchs zu lösen – und die Lösung liegt im Spiegelsee. Die anderen Überschriften passen nur zu einzelnen Stellen."
+    },
+    {
+     "id": "lv-spiegelsee-18",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "schliessen",
+     "abschnitt": 0,
+     "frage": "Wie verändert sich Elif im Lauf der Geschichte?",
+     "optionen": [
+      {
+       "text": "Erst langweilt sie sich, am Ende freut sie sich auf die nächsten Ferien.",
+       "richtig": true
+      },
+      {
+       "text": "Erst langweilt sie sich, am Ende ist sie traurig, weil Quirin fort ist.",
+       "richtig": false
+      },
+      {
+       "text": "Erst ist sie ängstlich, am Ende freut sie sich auf die nächsten Ferien.",
+       "richtig": false
+      },
+      {
+       "text": "Erst ist sie ängstlich, am Ende ist sie traurig, weil Quirin fort ist.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Vergleiche den ersten Satz von Abschnitt 1 mit den letzten Sätzen von Abschnitt 4. Prüfe bei jeder Antwort beide Hälften.",
+     "erklaerung": "Am Anfang stöhnt Elif, dass es am See langweilig ist. Am Ende lacht sie und freut sich schon auf die nächsten Ferien am Spiegelsee."
+    },
+    {
+     "id": "lv-spiegelsee-19",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "reflektieren",
+     "abschnitt": 0,
+     "frage": "Wer erzählt diese Geschichte?",
+     "optionen": [
+      {
+       "text": "Ein Erzähler berichtet, was Elif erlebt.",
+       "richtig": true
+      },
+      {
+       "text": "Elif erzählt selbst, was sie erlebt hat.",
+       "richtig": false
+      },
+      {
+       "text": "Quirin erzählt, was er mit Elif erlebt.",
+       "richtig": false
+      },
+      {
+       "text": "Oma Resi erzählt, was sie als Kind erlebt hat.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lies einen Absatz und lass die wörtliche Rede weg. Mit welchem Wort ist dort von Elif die Rede?",
+     "erklaerung": "Außerhalb der wörtlichen Rede steht für Elif immer „Elif“ oder „sie“, nie „ich“. Ein Erzähler berichtet also, was Elif erlebt. Er verrät auch ihre Gefühle, etwa wenn ihre Knie weich werden."
+    },
+    {
+     "id": "lv-spiegelsee-20",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "reflektieren",
+     "abschnitt": 0,
+     "frage": "Welche Botschaft passt am besten zu der Geschichte?",
+     "optionen": [
+      {
+       "text": "Mut und Freundschaft helfen, schwierige Probleme zu lösen.",
+       "richtig": true
+      },
+      {
+       "text": "Alte Sprüche verraten immer sofort, wo man suchen muss.",
+       "richtig": false
+      },
+      {
+       "text": "Ein schwieriges Rätsel löst man am besten ganz allein.",
+       "richtig": false
+      },
+      {
+       "text": "Wer genau hinschaut, findet die Lösung schon beim ersten Versuch.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Überlege, was Elif und Quirin am Ende ans Ziel gebracht hat.",
+     "erklaerung": "Elif hilft Quirin, obwohl sie ihn gerade erst kennt. Nach dem Irrtum am Zwillingsfelsen gibt sie nicht auf und überwindet später ihre Angst im Dunkeln. Erst mit Mut und Freundschaft finden die beiden das Tor – nicht allein und nicht beim ersten Versuch."
+    }
+   ]
+  },
+  {
+   "id": "lv-staffellauf",
+   "titel": "Die halbe Wahrheit",
+   "textsorte": "Geschichte",
+   "format": "bylet-v",
+   "einleitung": "Zeynep freut sich riesig auf den Staffellauf beim Sommerfest – doch dann kommt alles ganz anders.",
+   "text": {
+    "titel": "Die halbe Wahrheit",
+    "abschnitte": [
+     {
+      "bild": "🏅🩹",
+      "absaetze": [
+       "Noch zwei Wochen bis zum Sommerfest! Zeynep hatte den Tag im Kalender rot umkringelt. Beim Fest der Grundschule am Lindenanger gab es jedes Jahr einen Staffellauf. Aus den vierten Klassen liefen je vier Kinder nacheinander eine Runde um den Sportplatz. Zeynep sollte für die 4b die letzte Runde laufen. Darauf war sie mächtig stolz.",
+       "Seit Wochen übte sie mit ihrer besten Freundin Ronja auf der Wiese hinter dem Feuerwehrhaus. Am wichtigsten war der Wechsel, bei dem Ronja ihr den Staffelstab übergab. Dabei durfte keine von beiden langsamer werden. „Nicht zurückschauen!“, erklärte Zeynep. „Man streckt die Hand nach hinten und vertraut darauf, dass der Stab kommt.“",
+       "Doch am Montag knickte Zeynep auf der Schultreppe um. Die Ärztin legte ihr eine Schiene um den Knöchel und sagte: „Drei Wochen kein Sport.“ Zeynep schluckte. Drei Wochen – das hieß: kein Staffellauf.",
+       "Am nächsten Morgen bestimmte Frau Lindner, dass Valentin die letzte Runde laufen sollte. Zeynep starrte auf ihre Krücken. Ronja drückte Zeynep unter dem Tisch die Hand. „Wir finden eine Lösung“, flüsterte sie."
+      ]
+     },
+     {
+      "bild": "🤫👂",
+      "absaetze": [
+       "In den nächsten Tagen benahm sich Ronja seltsam. Nach der Schule hatte sie es plötzlich immer eilig. Am Dienstag musste sie angeblich zum Zahnarzt. Am Mittwoch wollte sie ihrer Tante beim Umzug helfen. Am Donnerstag hatte sie grüne Farbe an den Fingern. „Kunst-Hausaufgabe“, murmelte sie. Dabei hatte Frau Lindner in Kunst gar keine Hausaufgabe gegeben.",
+       "Auch in der Pause war etwas anders. Ronja stand oft mit Valentin am Klettergerüst. Die beiden steckten die Köpfe zusammen und tuschelten. Sobald Zeynep auf ihren Krücken herankam, verstummten sie. Valentin wurde rot und lief weg.",
+       "Am Freitag holte Zeynep ihre Jacke von der Garderobe im Flur. Durch die halb offene Tür des Klassenzimmers sah sie Ronja und Valentin. „Zeynep darf auf keinen Fall etwas merken“, sagte Ronja gerade. „Sonst …“ In diesem Moment schrillte die Schulglocke, und der Rest ging im Lärm unter.",
+       "Zeynep stand wie angewurzelt da. Ihr wurde heiß und kalt. Ronja hatte ein Geheimnis mit Valentin, und ausgerechnet Zeynep durfte nichts davon wissen. Wollte Ronja jetzt lieber mit ihm befreundet sein?"
+      ]
+     },
+     {
+      "bild": "👵🍵",
+      "absaetze": [
+       "In der nächsten Woche ging Zeynep ihrer Freundin aus dem Weg. In der Pause setzte sie sich allein auf die Bank am Schulgarten. Ihre Brotzeit rührte sie kaum an. Als Ronja sich zu ihr setzen wollte, drehte Zeynep den Kopf weg. „Geh doch zu Valentin!“, sagte sie spitz. Ronja öffnete den Mund, dann ging sie wortlos davon. Ihre Augen glänzten.",
+       "Am Abend saß Zeynep bei Oma Gül in der Küche und erzählte alles. Oma hörte zu und nippte an ihrem Tee. „Weißt du“, sagte sie schließlich, „wer nur den Anfang eines Satzes hört, kennt höchstens die halbe Wahrheit. Frag Ronja doch einfach!“",
+       "Zeynep verschränkte die Arme. Fragen? Dann würde Ronja ja merken, dass sie gelauscht hatte! Außerdem war Ronja schuld, fand Zeynep. Ronja sollte sich zuerst entschuldigen!",
+       "Dann kam der Samstag des Sommerfests. Zeynep wäre am liebsten zu Hause geblieben. Aber Mama meinte, die Klasse zähle auf sie. Also humpelte Zeynep zum Sportplatz und setzte sich an den Rand der Zuschauerbank. Von Ronja und Valentin war nichts zu sehen."
+      ]
+     },
+     {
+      "bild": "🏁🎉",
+      "absaetze": [
+       "Vor dem Start klopfte Frau Lindner ans Mikrofon. „Die 4b hat eine Überraschung“, sagte sie. Ronja und Valentin rollten ein riesiges Plakat aus. Darauf stand in grünen Buchstaben: „Zeynep – unsere beste Trainerin!“",
+       "„Du hast mir den Wechsel beigebracht, ich habe ihn Valentin gezeigt“, rief Ronja. „Deshalb darfst du heute das Startsignal geben.“ Valentin reichte Zeynep eine rote Fahne. „Das Plakat haben wir in Papas Garage gemalt“, verriet er grinsend.",
+       "Zeyneps Gesicht glühte. Auf einmal passte alles zusammen: die grüne Farbe, das Tuscheln, der halbe Satz an der Tür. Sie schwenkte die Fahne, und die Läufer stürmten los. Beim letzten Wechsel streckte Valentin die Hand nach hinten, ohne zurückzuschauen. Ronja drückte ihm den Stab in die Hand. Die 4b gewann knapp.",
+       "Danach humpelte Zeynep zu Ronja. „Es tut mir leid“, flüsterte sie. „Ich habe dich an der Tür gehört und gedacht, du willst nicht mehr meine Freundin sein.“ Ronja staunte und lachte. „Ich habe gesagt: ‚Sonst ist die Überraschung kaputt!‘“ Die beiden umarmten sich so fest, dass eine Krücke umfiel."
+      ]
+     }
+    ]
+   },
+   "items": [
+    {
+     "id": "lv-staffellauf-1",
+     "typ": "single",
+     "stufe": 1,
+     "kompetenz": "entnehmen",
+     "abschnitt": 1,
+     "frage": "Welche Runde sollte Zeynep eigentlich für die 4b laufen?",
+     "optionen": [
+      {
+       "text": "die letzte Runde",
+       "richtig": true
+      },
+      {
+       "text": "die erste Runde",
+       "richtig": false
+      },
+      {
+       "text": "die zweite Runde",
+       "richtig": false
+      },
+      {
+       "text": "die dritte Runde",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lies den Anfang von Abschnitt 1. Dort steht, worauf Zeynep so stolz ist.",
+     "erklaerung": "Im Text steht: „Zeynep sollte für die 4b die letzte Runde laufen.“ Darauf ist sie mächtig stolz."
+    },
+    {
+     "id": "lv-staffellauf-2",
+     "typ": "single",
+     "stufe": 1,
+     "kompetenz": "entnehmen",
+     "abschnitt": 1,
+     "frage": "Was ist beim Training von Zeynep und Ronja am wichtigsten?",
+     "optionen": [
+      {
+       "text": "der Wechsel mit dem Staffelstab",
+       "richtig": true
+      },
+      {
+       "text": "der schnelle Start am Feuerwehrhaus",
+       "richtig": false
+      },
+      {
+       "text": "das Laufen in der letzten Runde",
+       "richtig": false
+      },
+      {
+       "text": "das Tempo auf der ganzen Runde",
+       "richtig": false
+      }
+     ],
+     "tipp": "Suche in Abschnitt 1 das Wort „wichtigsten“.",
+     "erklaerung": "Im Text steht: „Am wichtigsten war der Wechsel, bei dem Ronja ihr den Staffelstab übergab.“"
+    },
+    {
+     "id": "lv-staffellauf-3",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "schliessen",
+     "abschnitt": 1,
+     "frage": "Warum schluckt Zeynep, nachdem die Ärztin mit ihr gesprochen hat?",
+     "optionen": [
+      {
+       "text": "Sie begreift, dass der Staffellauf für sie ausfällt.",
+       "richtig": true
+      },
+      {
+       "text": "Die Schiene an ihrem Knöchel drückt beim Anlegen.",
+       "richtig": false
+      },
+      {
+       "text": "Sie hat Angst, wieder auf der Schultreppe umzuknicken.",
+       "richtig": false
+      },
+      {
+       "text": "Sie ist erleichtert, dass es nur drei Wochen sind.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Denke an den Anfang von Abschnitt 1: Wie lange dauert es noch bis zum Sommerfest? Vergleiche das mit dem, was die Ärztin sagt.",
+     "erklaerung": "Gleich danach steht: „Drei Wochen – das hieß: kein Staffellauf.“ Das Sommerfest findet statt, bevor die drei Wochen um sind. Darum darf Zeynep nicht mitlaufen und ist enttäuscht."
+    },
+    {
+     "id": "lv-staffellauf-4",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "schliessen",
+     "abschnitt": 1,
+     "frage": "Ronja flüstert: „Wir finden eine Lösung.“ Was will sie Zeynep damit zeigen?",
+     "optionen": [
+      {
+       "text": "Sie hält zu Zeynep und will ihr helfen.",
+       "richtig": true
+      },
+      {
+       "text": "Sie glaubt, dass Zeyneps Fuß bis zum Fest heilt.",
+       "richtig": false
+      },
+      {
+       "text": "Sie findet, dass Valentin ein guter Ersatz ist.",
+       "richtig": false
+      },
+      {
+       "text": "Sie möchte selbst die letzte Runde laufen.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lies das Ende von Abschnitt 1. Wie geht es Zeynep gerade, und was tut Ronja, bevor sie flüstert?",
+     "erklaerung": "Zeynep starrt traurig auf ihre Krücken. Ronja drückt ihr die Hand und macht ihr Mut: Sie steht ihrer Freundin bei und will mit ihr einen Ausweg suchen. Dass Zeynep doch laufen kann, glaubt Ronja nicht – die Ärztin hat ja drei Wochen Sport verboten."
+    },
+    {
+     "id": "lv-staffellauf-5",
+     "typ": "single",
+     "stufe": 1,
+     "kompetenz": "entnehmen",
+     "abschnitt": 2,
+     "frage": "Was hat Ronja am Donnerstag an den Fingern?",
+     "optionen": [
+      {
+       "text": "grüne Farbe",
+       "richtig": true
+      },
+      {
+       "text": "rote Farbe",
+       "richtig": false
+      },
+      {
+       "text": "rote Kreide",
+       "richtig": false
+      },
+      {
+       "text": "grüne Kreide",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lies den ersten Teil von Abschnitt 2. Dort werden die Tage nacheinander genannt.",
+     "erklaerung": "Im Text steht: „Am Donnerstag hatte sie grüne Farbe an den Fingern.“"
+    },
+    {
+     "id": "lv-staffellauf-6",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "schliessen",
+     "abschnitt": 2,
+     "frage": "Ronja murmelt: „Kunst-Hausaufgabe.“ Was zeigt dir der nächste Satz im Text?",
+     "optionen": [
+      {
+       "text": "Ronjas Erklärung mit der Hausaufgabe stimmt nicht.",
+       "richtig": true
+      },
+      {
+       "text": "Ronja hat die Hausaufgabe in Kunst vergessen.",
+       "richtig": false
+      },
+      {
+       "text": "In Kunst sollten alle mit grüner Farbe malen.",
+       "richtig": false
+      },
+      {
+       "text": "Frau Lindner hat die Hausaufgabe schon eingesammelt.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Suche in Abschnitt 2 die Stelle mit der grünen Farbe. Was erfährst du im Satz nach „murmelte sie“ über Hausaufgaben in Kunst?",
+     "erklaerung": "Im nächsten Satz steht, dass Frau Lindner in Kunst gar keine Hausaufgabe gegeben hat. Also kann die Farbe nicht von einer Hausaufgabe kommen – Ronjas Erklärung stimmt nicht, sie verschweigt etwas."
+    },
+    {
+     "id": "lv-staffellauf-7",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "entnehmen",
+     "abschnitt": 2,
+     "frage": "Was passiert in der Pause, wenn Zeynep zu Ronja und Valentin kommt?",
+     "optionen": [
+      {
+       "text": "Die beiden hören auf zu reden.",
+       "richtig": true
+      },
+      {
+       "text": "Valentin hilft ihr mit den Krücken.",
+       "richtig": false
+      },
+      {
+       "text": "Ronja winkt sie zum Klettergerüst.",
+       "richtig": false
+      },
+      {
+       "text": "Die beiden laufen zusammen weg.",
+       "richtig": false
+      }
+     ],
+     "tipp": "In Abschnitt 2 geht es in einem Teil um die Pause. Lies dort genau, was die beiden tun, sobald Zeynep herankommt.",
+     "erklaerung": "Im Text steht: „Sobald Zeynep auf ihren Krücken herankam, verstummten sie.“ Verstummen heißt: aufhören zu reden. Nur Valentin läuft danach weg, Ronja nicht."
+    },
+    {
+     "id": "lv-staffellauf-8",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "schliessen",
+     "abschnitt": 2,
+     "frage": "Zeynep steht „wie angewurzelt“ da, und ihr wird „heiß und kalt“. Was bedeutet das?",
+     "optionen": [
+      {
+       "text": "Sie ist so erschrocken, dass sie sich nicht rühren kann.",
+       "richtig": true
+      },
+      {
+       "text": "Sie friert, weil sie ihre Jacke noch nicht angezogen hat.",
+       "richtig": false
+      },
+      {
+       "text": "Sie hat sich an ihrem Knöchel wieder wehgetan.",
+       "richtig": false
+      },
+      {
+       "text": "Sie ärgert sich, weil die Schulglocke so laut ist.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Die Wörter sind nicht wörtlich gemeint. Überlege, was Zeynep am Ende von Abschnitt 2 gerade gehört hat.",
+     "erklaerung": "Zeynep hat gehört, dass sie von Ronjas Geheimnis nichts merken darf. Sie erschrickt so sehr, dass sie sich nicht bewegen kann. Dass ihr heiß und kalt wird, zeigt, wie aufgewühlt sie ist – mit Frieren hat das nichts zu tun."
+    },
+    {
+     "id": "lv-staffellauf-9",
+     "typ": "single",
+     "stufe": 1,
+     "kompetenz": "entnehmen",
+     "abschnitt": 3,
+     "frage": "Wo verbringt Zeynep in der nächsten Woche die Pause?",
+     "optionen": [
+      {
+       "text": "allein auf der Bank am Schulgarten",
+       "richtig": true
+      },
+      {
+       "text": "mit Ronja auf der Bank am Schulgarten",
+       "richtig": false
+      },
+      {
+       "text": "allein am Klettergerüst",
+       "richtig": false
+      },
+      {
+       "text": "mit Valentin am Klettergerüst",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lies den Anfang von Abschnitt 3.",
+     "erklaerung": "Im Text steht: „In der Pause setzte sie sich allein auf die Bank am Schulgarten.“ Als Ronja sich dazusetzen will, dreht Zeynep den Kopf weg."
+    },
+    {
+     "id": "lv-staffellauf-10",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "schliessen",
+     "abschnitt": 3,
+     "frage": "Warum sagt Zeynep spitz zu Ronja: „Geh doch zu Valentin!“?",
+     "optionen": [
+      {
+       "text": "Sie ist gekränkt wegen Ronjas Geheimnis.",
+       "richtig": true
+      },
+      {
+       "text": "Sie möchte, dass Ronja mit Valentin trainiert.",
+       "richtig": false
+      },
+      {
+       "text": "Sie will in Ruhe ihre Brotzeit essen.",
+       "richtig": false
+      },
+      {
+       "text": "Sie hat gesehen, dass Valentin Ronja sucht.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Denke an das Ende von Abschnitt 2. Was glaubt Zeynep seitdem über Ronja und Valentin?",
+     "erklaerung": "Zeynep glaubt, dass Ronja lieber mit Valentin befreundet sein will. Darum ist sie verletzt und schickt Ronja mit spitzen Worten weg."
+    },
+    {
+     "id": "lv-staffellauf-11",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "schliessen",
+     "abschnitt": 3,
+     "frage": "Ronja geht wortlos davon, und ihre Augen glänzen. Wie fühlt sie sich?",
+     "optionen": [
+      {
+       "text": "Sie ist traurig über Zeyneps harte Worte.",
+       "richtig": true
+      },
+      {
+       "text": "Sie ist erleichtert, weil Zeynep nichts gemerkt hat.",
+       "richtig": false
+      },
+      {
+       "text": "Sie ist wütend, weil Zeynep gelauscht hat.",
+       "richtig": false
+      },
+      {
+       "text": "Sie freut sich, weil sie jetzt zu Valentin gehen kann.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lies den ersten Teil von Abschnitt 3. Überlege, was gerade passiert ist und was glänzende Augen hier bedeuten.",
+     "erklaerung": "Zeynep hat Ronja spitz weggeschickt. Ronja geht ohne ein Wort, und ihre Augen glänzen, weil sie mit den Tränen kämpft. Dass Zeynep gelauscht hat, weiß Ronja gar nicht."
+    },
+    {
+     "id": "lv-staffellauf-12",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "reflektieren",
+     "abschnitt": 3,
+     "frage": "Zeynep findet, Ronja solle sich zuerst entschuldigen. Welche Meinung dazu kannst du mit dem Text am besten begründen?",
+     "optionen": [
+      {
+       "text": "Das ist ungerecht, denn Zeynep weiß nicht, ob Ronja etwas falsch gemacht hat.",
+       "richtig": true
+      },
+      {
+       "text": "Das ist gerecht, denn Ronja hat zugegeben, dass sie Valentin lieber mag.",
+       "richtig": false
+      },
+      {
+       "text": "Das ist gerecht, denn Ronja wollte sich nicht mehr zu Zeynep auf die Bank setzen.",
+       "richtig": false
+      },
+      {
+       "text": "Das ist ungerecht, denn Ronja hat sich schon bei Zeynep entschuldigt.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Prüfe bei jeder Antwort, ob die Begründung wirklich in Abschnitt 2 oder 3 steht. Was weiß Zeynep sicher, und was vermutet sie nur?",
+     "erklaerung": "Zeynep hat nur den Anfang von Ronjas Satz gehört und vermutet bloß, dass Ronja sie nicht mehr mag. Sie weiß also gar nicht, ob Ronja etwas falsch gemacht hat. Ronja hat nichts zugegeben und wollte sich sogar zu Zeynep setzen – entschuldigt hat sie sich aber nicht, sie ging wortlos davon."
+    },
+    {
+     "id": "lv-staffellauf-13",
+     "typ": "single",
+     "stufe": 1,
+     "kompetenz": "entnehmen",
+     "abschnitt": 4,
+     "frage": "Welche Aufgabe bekommt Zeynep beim Staffellauf?",
+     "optionen": [
+      {
+       "text": "Sie gibt mit einer Fahne das Startsignal.",
+       "richtig": true
+      },
+      {
+       "text": "Sie läuft trotz Schiene die letzte Runde.",
+       "richtig": false
+      },
+      {
+       "text": "Sie hält am Ziel das große Plakat hoch.",
+       "richtig": false
+      },
+      {
+       "text": "Sie sagt die Läufer am Mikrofon an.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lies in Abschnitt 4, was Ronja und Valentin zu Zeynep sagen und was Valentin ihr reicht.",
+     "erklaerung": "Ronja sagt: „Deshalb darfst du heute das Startsignal geben.“ Valentin reicht Zeynep dafür eine rote Fahne, und sie schwenkt sie zum Start."
+    },
+    {
+     "id": "lv-staffellauf-14",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "schliessen",
+     "abschnitt": 4,
+     "frage": "Woher hatte Ronja die grüne Farbe an den Fingern?",
+     "optionen": [
+      {
+       "text": "Sie hatte mit Valentin das Plakat gemalt.",
+       "richtig": true
+      },
+      {
+       "text": "Sie hatte ihrer Tante beim Umzug geholfen.",
+       "richtig": false
+      },
+      {
+       "text": "Sie hatte eine Kunst-Hausaufgabe gemacht.",
+       "richtig": false
+      },
+      {
+       "text": "Sie hatte die Fahne für den Start bemalt.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Vergleiche Abschnitt 2 mit Abschnitt 4. Achte in Abschnitt 4 darauf, welche Farben vorkommen und wozu sie gehören.",
+     "erklaerung": "Auf dem Plakat stehen grüne Buchstaben, und Valentin verrät, dass sie es in der Garage gemalt haben. Die Fahne ist rot, und eine Kunst-Hausaufgabe gab es gar nicht."
+    },
+    {
+     "id": "lv-staffellauf-15",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "schliessen",
+     "abschnitt": 4,
+     "frage": "Als Zeynep von der Überraschung erfährt, glüht ihr Gesicht. Wie fühlt sie sich?",
+     "optionen": [
+      {
+       "text": "Sie ist gerührt und schämt sich für ihren Verdacht.",
+       "richtig": true
+      },
+      {
+       "text": "Sie ist wütend und fühlt sich von Ronja ausgeschlossen.",
+       "richtig": false
+      },
+      {
+       "text": "Sie ist enttäuscht und wäre lieber selbst gelaufen.",
+       "richtig": false
+      },
+      {
+       "text": "Sie ist erschöpft und hat vom Humpeln Schmerzen.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Lies in Abschnitt 4, was Zeynep „auf einmal“ versteht. Achte auch darauf, was sie nach dem Lauf zu Ronja sagt.",
+     "erklaerung": "Zeynep merkt, dass ihre Freunde heimlich etwas Schönes für sie vorbereitet haben. Das rührt sie, und gleichzeitig schämt sie sich für ihren Verdacht – darum entschuldigt sie sich später bei Ronja. Mit Wut, Enttäuschung oder Schmerzen hat das Glühen nichts zu tun."
+    },
+    {
+     "id": "lv-staffellauf-16",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "reflektieren",
+     "abschnitt": 4,
+     "frage": "Beim letzten Wechsel streckt Valentin die Hand nach hinten, ohne zurückzuschauen. Warum wird diese Einzelheit erzählt?",
+     "optionen": [
+      {
+       "text": "Sie zeigt, dass Zeyneps Tipp beim Sieg der 4b hilft.",
+       "richtig": true
+      },
+      {
+       "text": "Sie zeigt, dass Valentin Ronja beim Wechsel nicht vertraut.",
+       "richtig": false
+      },
+      {
+       "text": "Sie erklärt, warum die 4b beinahe verloren hätte.",
+       "richtig": false
+      },
+      {
+       "text": "Sie zeigt, dass Valentin lieber allein trainiert hat.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Erinnere dich an das Training in Abschnitt 1. Was hat Zeynep Ronja dort erklärt?",
+     "erklaerung": "In Abschnitt 1 erklärt Zeynep: „Nicht zurückschauen!“ Ronja hat das an Valentin weitergegeben. So wird klar, dass Zeynep als Trainerin zum Sieg beigetragen hat, obwohl sie nicht mitlaufen konnte."
+    },
+    {
+     "id": "lv-staffellauf-17",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "reflektieren",
+     "abschnitt": 0,
+     "frage": "Warum passt der Titel „Die halbe Wahrheit“ am besten zu dieser Geschichte?",
+     "optionen": [
+      {
+       "text": "Zeynep hört nur einen halben Satz, doch dahinter steckt eine Überraschung für sie.",
+       "richtig": true
+      },
+      {
+       "text": "Zeynep hört nur einen halben Satz, und dahinter steckt, dass Ronja sie nicht mehr mag.",
+       "richtig": false
+      },
+      {
+       "text": "Zeynep erzählt Oma Gül nur die Hälfte von dem, was in der Schule passiert ist.",
+       "richtig": false
+      },
+      {
+       "text": "Valentin hat den Wechsel für den Staffellauf nur zur Hälfte gelernt.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Denke an den Satz, den Zeynep in Abschnitt 2 an der Tür hört, und daran, wie er in Abschnitt 4 weitergeht.",
+     "erklaerung": "An der Tür hört Zeynep nur: „Zeynep darf auf keinen Fall etwas merken. Sonst …“ Erst in Abschnitt 4 erfährt sie den Rest: „Sonst ist die Überraschung kaputt!“ Weil sie nur die halbe Wahrheit kannte, hat sie Ronja zu Unrecht verdächtigt."
+    },
+    {
+     "id": "lv-staffellauf-18",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "entnehmen",
+     "abschnitt": 0,
+     "frage": "In welcher Reihenfolge passieren die Ereignisse in der Geschichte?",
+     "optionen": [
+      {
+       "text": "Valentin wird als Läufer bestimmt → Valentin wird rot und läuft weg → Ronja geht wortlos davon → Zeynep bekommt eine Fahne",
+       "richtig": true
+      },
+      {
+       "text": "Valentin wird rot und läuft weg → Valentin wird als Läufer bestimmt → Ronja geht wortlos davon → Zeynep bekommt eine Fahne",
+       "richtig": false
+      },
+      {
+       "text": "Valentin wird als Läufer bestimmt → Valentin wird rot und läuft weg → Zeynep bekommt eine Fahne → Ronja geht wortlos davon",
+       "richtig": false
+      },
+      {
+       "text": "Valentin wird rot und läuft weg → Valentin wird als Läufer bestimmt → Zeynep bekommt eine Fahne → Ronja geht wortlos davon",
+       "richtig": false
+      }
+     ],
+     "tipp": "Suche jedes Ereignis in der Geschichte und merke dir, in welchem Abschnitt es steht.",
+     "erklaerung": "In Abschnitt 1 bestimmt Frau Lindner Valentin als Läufer. In Abschnitt 2 wird Valentin in der Pause rot und läuft weg. In Abschnitt 3 geht Ronja wortlos davon, in Abschnitt 4 reicht Valentin Zeynep die Fahne."
+    },
+    {
+     "id": "lv-staffellauf-19",
+     "typ": "single",
+     "stufe": 3,
+     "kompetenz": "reflektieren",
+     "abschnitt": 0,
+     "frage": "Aus wessen Sicht wird die Geschichte erzählt?",
+     "optionen": [
+      {
+       "text": "Ein Erzähler berichtet vor allem, was Zeynep denkt und fühlt.",
+       "richtig": true
+      },
+      {
+       "text": "Zeynep erzählt selbst in der Ich-Form, was sie erlebt.",
+       "richtig": false
+      },
+      {
+       "text": "Ronja erzählt in der Ich-Form, weil sie das Geheimnis kennt.",
+       "richtig": false
+      },
+      {
+       "text": "Ein Erzähler berichtet vor allem, was Ronja denkt und fühlt.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Prüfe, ob außerhalb der wörtlichen Rede jemand „ich“ sagt. Überlege dann, wessen Gedanken du in den Abschnitten 2 und 3 erfährst.",
+     "erklaerung": "Außerhalb der wörtlichen Rede sagt niemand „ich“. Du erfährst, was Zeynep denkt, zum Beispiel: „Außerdem war Ronja schuld, fand Zeynep.“ Was Ronja denkt, erfährst du nicht – darum weißt du lange so wenig wie Zeynep."
+    },
+    {
+     "id": "lv-staffellauf-20",
+     "typ": "single",
+     "stufe": 2,
+     "kompetenz": "reflektieren",
+     "abschnitt": 0,
+     "frage": "Was kann man aus dieser Geschichte lernen?",
+     "optionen": [
+      {
+       "text": "Bei einem Verdacht ist es besser, den anderen zu fragen.",
+       "richtig": true
+      },
+      {
+       "text": "Hat eine Freundin ein Geheimnis, geht man ihr besser aus dem Weg.",
+       "richtig": false
+      },
+      {
+       "text": "Wenn Freunde tuscheln, wollen sie einen ausschließen.",
+       "richtig": false
+      },
+      {
+       "text": "Wer gekränkt ist, sollte warten, bis der andere sich entschuldigt.",
+       "richtig": false
+      }
+     ],
+     "tipp": "Überlege, wodurch der Streit zwischen Zeynep und Ronja entstanden ist und wie er sich in Abschnitt 4 auflöst.",
+     "erklaerung": "Zeynep hätte Ronja einfach fragen können, wie Oma Gül es ihr geraten hat. Stattdessen ist sie Ronja aus dem Weg gegangen und hat auf eine Entschuldigung gewartet – das hat den Streit nur verlängert. Dabei wollten Ronja und Valentin Zeynep gar nicht ausschließen, sondern haben heimlich eine Überraschung für sie vorbereitet."
+    }
+   ]
+  }
+ ]
+}

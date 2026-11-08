@@ -1,14 +1,15 @@
 /* ===== Ansichten: Profile, Start, Labore, Prüfungen, Ergebnisse, Labor-Buch ===== */
 let ANSICHT = { name: 'start', param: null };
-const HASH_ANSICHTEN = new Set(['start', 'digital', 'lesen', 'tempo', 'rechtschreibung', 'grammatik', 'schreiben', 'fortschritt', 'erwachsene', 'info', 'profile']);
+const HASH_ANSICHTEN = new Set(['start', 'digital', 'lesen', 'tempo', 'rechtschreibung', 'grammatik', 'schreiben', 'fortschritt', 'erwachsene', 'info', 'profile', 'byles']);
 let erwachseneOffen = false;
 
-const VERLAUF_ANSICHTEN = new Set(['sitzung', 'tempo-lauf', 'diktat']);
+const VERLAUF_ANSICHTEN = new Set(['sitzung', 'tempo-lauf', 'diktat', 'blitz-lauf']);
 let verlaufGesetzt = false;
 function zeige(name, param = null) {
   const alt = ANSICHT.name;
   if (alt === 'sitzung' && name !== 'sitzung') stoppeUhr();
   if (alt === 'tempo-lauf' && name !== 'tempo-lauf') tempoStopp();
+  if (alt === 'blitz-lauf' && name !== 'blitz-lauf') { blitzStopp(); bildschirmWach(false); }
   if (alt === 'schreibauftrag') schreibVerlassen();
   if (alt === 'diktat' && name !== 'diktat') diktatVerlassen();
   if (!['erwachsene', 'info'].includes(name)) erwachseneOffen = false;
@@ -32,15 +33,16 @@ function render() {
   const app = $('#app');
   if (!P() && !['profile', 'info', 'erwachsene'].includes(ANSICHT.name)) ANSICHT = { name: 'profile', param: null };
   const n = ANSICHT.name;
-  document.documentElement.classList.toggle('in-sitzung', (n === 'sitzung' && !!SITZ) || n === 'tempo-lauf');
+  document.documentElement.classList.toggle('in-sitzung', (n === 'sitzung' && !!SITZ) || n === 'tempo-lauf' || n === 'blitz-lauf');
   if (n === 'sitzung') { if (SITZ) { renderSitzung(); window.scrollTo(0, 0); return; } ANSICHT = { name: 'start', param: null }; }
   if (n === 'tempo-lauf') { renderTempoLauf(); return; }
+  if (n === 'blitz-lauf') { letzteAnsicht = n; renderBlitzLauf(); window.scrollTo(0, 0); return; }
   const views = {
     profile: viewProfile, start: viewStart, digital: () => viewModul('digital'), lesen: () => viewModul('lesen'),
     rechtschreibung: () => viewModul('rechtschreibung'), grammatik: () => viewModul('grammatik'), schreiben: () => viewModul('schreiben'),
     tempo: viewTempo, 'pruefung-start': viewPruefungStart, ergebnis: viewErgebnis, zusammenfassung: viewZusammenfassung,
     fortschritt: viewFortschritt, erwachsene: viewErwachsene, info: viewInfo, diktat: viewDiktat, schreibauftrag: viewSchreibauftrag,
-    'tempo-ergebnis': viewTempoErgebnis,
+    'tempo-ergebnis': viewTempoErgebnis, byles: viewByles, daumen: viewDaumen, 'blitz-ergebnis': viewBlitzErgebnis,
   };
   const f = views[ANSICHT.name] || viewStart;
   const { titel = '', html = '', schmal = false } = f(ANSICHT.param) || {};
@@ -112,6 +114,12 @@ function laufendBanner() {
   return `<div class="banner" role="status"><span>⏸️ Du hast „${esc(l.titel)}“ angefangen: ${beantw} von ${ids.length} beantwortet${l.zeitLimit ? `, noch ${zeitLesbar(Number(l.zeitLimit) - Number(l.verbraucht || 0))} Minuten` : ''}.</span>
     <span class="zeile" style="margin-left:auto"><button type="button" class="knopf knopf-klein" data-act="laufend-weiter">Weitermachen</button><button type="button" class="knopf knopf-klein knopf-zweit" data-act="laufend-verwerfen">Verwerfen</button></span></div>`;
 }
+function fahrplanBand() {
+  const n = BYLES_STATIONEN.filter((s) => heuteGeschafft(s.k)).length;
+  return `<button type="button" class="fahrplan-band" data-nav="byles"><span class="fahrplan-raketen" aria-hidden="true">🚀</span>
+    <span class="fahrplan-text"><b>Dein BYLES-Fahrplan</b><span class="klein">4 Stationen wie im echten Test: Daumen-Check, Blitz-Lesen, Geschichte, Internet</span></span>
+    <span class="fahrplan-punkte" role="img" aria-label="Heute ${n} von 4 Stationen geschafft">${BYLES_STATIONEN.map((s) => `<i class="${heuteGeschafft(s.k) ? 'voll' : ''}">${s.sym}</i>`).join('')}</span></button>`;
+}
 function viewStart() {
   const p = P(), g = gesamtStand(), lv = level(p.punkte), m = tagesMission();
   const missionFertig = m && m.erledigt.length >= m.ids.length;
@@ -161,6 +169,7 @@ function viewStart() {
         ${modulHatInhalt('digital') ? `<div class="pruefung-band"><span class="labor-symbol">${icon('uhr')}</span>
           <div><span class="boss-label">BOSS-LEVEL</span><h3>BYLET-D-Prüfung</h3><p class="klein leise">${REG.module.digital.gruppen.length} Fälle · ${REG.module.digital.items.length} Fragen · ${E().zeitDigital ? E().zeitDigital + ' Minuten' : 'ohne Zeitlimit'}${besteBylet != null ? ` · Bestwert ${besteBylet}/${REG.module.digital.items.length}` : ''}</p></div>
           <button type="button" class="knopf knopf-signal" data-act="pruef-intro" data-art="digital">Prüfung</button></div>` : ''}
+        ${fahrplanBand()}
         <div class="labore">${karten}</div>
         <div class="schnell-liste">
           <button type="button" class="schnell" data-act="fehler-kiste" ${kiste ? '' : 'disabled'}><b>${icon('kiste', '')} Fehler-Kiste ${kiste ? `<span class="zahl-blase">${kiste}</span>` : ''}</b><span>${kiste ? 'Übe die Aufgaben, die noch nicht geklappt haben.' : 'Leer – super!'}</span></button>
@@ -178,14 +187,14 @@ const MODUL_INFO = {
   digital: `<p><b>BYLET-D</b> heißt „Leseverständnis im digitalen Kontext“. In der 4. Klasse schaust du dir Internetseiten an – Suchmaschinen, Websites, Chats, Mails und Apps – und beantwortest Fragen dazu.</p>
     <ul><li>Lies zuerst den <b>Auftrag</b> genau. Wonach suchst du?</li><li>Tippe Links, Menüs und Reiter an. Mit dem Zurück-Pfeil kommst du zurück.</li><li>Achte auf <b>Anzeige</b> oder <b>Werbung</b>, auf Datum, Absender und Quelle.</li><li>Bei <b>Mehrfachauswahl</b> prüfst du jede Antwort einzeln: stimmt sie oder nicht?</li><li>Mit dem <b>Textmarker</b> kannst du wichtige Stellen markieren.</li></ul>`,
   lesen: `<p>Hier liest du Sachtexte, Geschichten, Gedichte, Anleitungen und Meinungstexte. Die Fragen sind wie im Lesetest: Manche Antworten stehen direkt im Text, für andere musst du mitdenken.</p>
-    <ul><li>Lies die Frage zuerst, dann den Text.</li><li>Die kleinen Zahlen zeigen die Absätze. Fragen beziehen sich manchmal darauf.</li><li>Markiere Schlüsselwörter mit dem Textmarker.</li></ul>`,
+    <ul><li>Lies die Frage zuerst, dann den Text.</li><li>Die kleinen Zahlen zeigen die Absätze. Fragen beziehen sich manchmal darauf.</li><li>Markiere Schlüsselwörter mit dem Textmarker.</li><li><b>Geschichten in vier Teilen</b> laufen wie im BYLET-V: Nach jedem Abschnitt kommen 4 Fragen, am Ende 4 Fragen zur ganzen Geschichte.</li></ul>`,
   rechtschreibung: `<p>Rechtschreib-Profis kennen Strategien: <b>Mitsprechen</b> (Silben schwingen), <b>Nachdenken</b> (verlängern, ableiten, Artikelprobe) und <b>Merken</b> (Merkwörter). Jedes Thema beginnt mit einem Merkkasten.</p>`,
   grammatik: `<p>Hier untersuchst du Sprache wie im Labor: Wortarten bestimmen, Zeitformen bilden, Satzglieder umstellen und die vier Fälle erfragen.</p>`,
   schreiben: `<p>Gute Texte werden geplant, geschrieben und überarbeitet. Übe die einzelnen Schritte und schreibe dann eigene Texte mit Schreib-Check.</p>`,
 };
 function gruppeKarte(gid, mod) {
   const g = REG.gruppen[gid], d = g.daten;
-  const nr = g.art === 'fall' ? `Fall ${d.nummer} · ${d.quellenart || ''}` : g.art === 'text' ? d.textsorte || 'Text' : (KOMPETENZEN[mod.id] || {})[d.kompetenz] || 'Thema';
+  const nr = g.art === 'fall' ? `Fall ${d.nummer} · ${d.quellenart || ''}` : g.art === 'text' ? (istAbschnittText(g) ? `${d.textsorte || 'Geschichte'} in 4 Teilen · wie BYLET-V` : d.textsorte || 'Text') : (KOMPETENZEN[mod.id] || {})[d.kompetenz] || 'Thema';
   const beschr = g.art === 'thema' ? d.kurz : g.art === 'fall' ? d.einleitung : d.einleitung;
   const kurzText = String(beschr || '').replace(/<[^>]+>/g, '');
   const geschafft = g.items.filter((id) => itemStatus(id) === 'r').length;
@@ -208,7 +217,7 @@ function viewModul(id) {
   const gruppen = REG.module[id].gruppen;
   let pruef = '';
   if (id === 'digital') pruef = pruefKarte('digital', 'BYLET-D-Prüfung', REG.module.digital.items.length, E().zeitDigital, 'Alle Fälle hintereinander, ohne Tipps, mit Zeit – wie im echten Test.');
-  if (id === 'lesen') { const c = leseChecks(); pruef = c.map((x) => pruefKarte(x.art, x.titel, x.ids.length, E().zeitLesen, x.beschr)).join(''); }
+  if (id === 'lesen') { const c = leseChecks(); pruef = vGeschichten().map((gid) => pruefKarte('lesev-' + gid, 'BYLET-V-Probe: ' + REG.gruppen[gid].titel, REG.gruppen[gid].items.length, E().zeitLesen, 'Eine Geschichte in vier Abschnitten: nach jedem Abschnitt 4 Fragen, am Ende 4 Fragen zur ganzen Geschichte – wie im echten Test.')).join('') + c.map((x) => pruefKarte(x.art, x.titel, x.ids.length, E().zeitLesen, x.beschr)).join(''); }
   if (['rechtschreibung', 'grammatik', 'schreiben'].includes(id)) { const t = modulTest(id); pruef = pruefKarte('test-' + id, mod.titel.replace('-Labor', '').replace('Schreib-Werkstatt', 'Schreib') + '-Test', t.length, E().zeitTest, 'Gemischte Aufgaben aus allen Themen, jedes Mal neu zusammengestellt.'); }
   let extra = '';
   if (id === 'rechtschreibung' && ((INHALT.rechtschreibung || {}).diktate || []).length) {
@@ -237,7 +246,7 @@ function viewModul(id) {
 
 /* ---------- Prüfungen definieren ---------- */
 function leseChecks() {
-  const g = REG.module.lesen.gruppen;
+  const g = REG.module.lesen.gruppen.filter((gid) => !istAbschnittText(REG.gruppen[gid]));
   if (!g.length) return [];
   const halb = Math.ceil(g.length / 2);
   const teile = g.length > 3 ? [g.slice(0, halb), g.slice(halb)] : [g];
@@ -250,14 +259,14 @@ function modulTest(modul, proThema = 2) {
 }
 function grosserCheckAnzahl() {
   const n = (m, k) => Math.min(k, REG.module[m].items.length);
-  const erste = (m) => (REG.module[m].gruppen.length ? REG.gruppen[REG.module[m].gruppen[0]].items.length : 0);
+  const erste = (m) => { const g = REG.module[m].gruppen.filter((gid) => !istAbschnittText(REG.gruppen[gid])); return g.length ? REG.gruppen[g[0]].items.length : 0; };
   return erste('digital') + erste('lesen') + n('rechtschreibung', 4) + n('grammatik', 4) + n('schreiben', 3);
 }
 function grosserCheck() {
   const p = P(), anz = p.grossZaehler != null ? p.grossZaehler : p.pruefungen.filter((x) => x.art === 'gross').length;
   const ids = [];
   const fg = REG.module.digital.gruppen; if (fg.length) ids.push(...REG.gruppen[fg[anz % fg.length]].items);
-  const tg = REG.module.lesen.gruppen; if (tg.length) ids.push(...REG.gruppen[tg[anz % tg.length]].items);
+  const tg = REG.module.lesen.gruppen.filter((gid) => !istAbschnittText(REG.gruppen[gid])); if (tg.length) ids.push(...REG.gruppen[tg[anz % tg.length]].items);
   const zieh = (m, n) => mische(REG.module[m].items).slice(0, n);
   ids.push(...zieh('rechtschreibung', 4), ...zieh('grammatik', 4), ...zieh('schreiben', 3));
   return ids;
@@ -265,6 +274,7 @@ function grosserCheck() {
 function pruefConfig(art) {
   if (art === 'digital') return { art, titel: 'BYLET-D-Prüfung', ids: REG.module.digital.items.slice(), zeitMin: E().zeitDigital, modul: 'digital' };
   if (art === 'lesen-a' || art === 'lesen-b') { const c = leseChecks().find((x) => x.art === art); return c ? { art, titel: c.titel, ids: c.ids, zeitMin: E().zeitLesen, modul: 'lesen' } : null; }
+  if (art.startsWith('lesev-')) { const g = REG.gruppen[art.slice(6)]; return istAbschnittText(g) ? { art, titel: 'BYLET-V-Probe: ' + g.titel, ids: g.items.slice(), zeitMin: E().zeitLesen, modul: 'lesen' } : null; }
   if (art.startsWith('test-')) { const m = art.slice(5); return { art, titel: MODUL[m].titel.replace('-Labor', '').replace('Schreib-Werkstatt', 'Schreib') + '-Test', ids: modulTest(m), zeitMin: E().zeitTest, modul: m }; }
   if (art === 'gross') return { art, titel: 'Großer Deutsch-Check', ids: grosserCheck(), zeitMin: E().zeitGross, modul: null };
   return null;
@@ -305,8 +315,9 @@ function viewErgebnis(param) {
         <div class="zeile">${falsch.length ? `<button type="button" class="knopf" data-act="training-ids" data-ids="${esc(falsch.join(','))}" data-titel="Fehler aus der Prüfung">Fehler üben</button>` : ''}<button type="button" class="knopf knopf-zweit" data-act="pruef-intro" data-art="${esc(e.art)}">Nochmal</button><button type="button" class="knopf knopf-geist" data-nav="start">Zur Übersicht</button></div></div></section>
       <div class="start-raster" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr))">
         <section class="karte" style="display:grid;gap:12px"><h2 style="font-size:1.15rem">Nach Kompetenzen</h2>${balkenZeilen(ausw.komp)}</section>
-        <section class="karte" style="display:grid;gap:12px"><h2 style="font-size:1.15rem">Nach ${e.art === 'digital' ? 'Fällen' : 'Bereichen'}</h2>${balkenZeilen(ausw.gruppen)}</section>
+        <section class="karte" style="display:grid;gap:12px"><h2 style="font-size:1.15rem">Nach ${e.art === 'digital' ? 'Fällen' : /^lesev-/.test(e.art) ? 'Abschnitten' : 'Bereichen'}</h2>${balkenZeilen(ausw.gruppen)}</section>
       </div>
+      ${heute(new Date(e.datum)) === heute() && (e.art === 'digital' || /^lesev-/.test(e.art)) ? fahrplanBanner(e.art === 'digital' ? 'd' : 'v') : ''}
       ${schwach && schwach.ok < schwach.n ? `<section class="info-box" style="--farbe:var(--signal)"><b>Dein nächster Schritt</b><p>Am meisten Übung braucht gerade: <b>${esc(schwach.label)}</b> (${schwach.ok} von ${schwach.n} richtig). Übe die Fehler im Training – dort bekommst du Tipps und Erklärungen.</p></section>` : ''}
       <section class="karte" style="display:grid;gap:12px"><h2 style="font-size:1.15rem">Alle Aufgaben mit Lösung</h2>${reviewListe(e.ids, e.antworten, e.perms, e.details)}</section>`,
   };
@@ -355,7 +366,9 @@ function viewFortschritt() {
       <section class="karte" style="display:grid;gap:12px"><h2 style="font-size:1.1rem">Prüfungen</h2>
         ${pr.length ? `<div class="tabelle-scroll"><table class="verlauf-tabelle pruef-tabelle"><thead><tr><th>Datum</th><th>Prüfung</th><th>Punkte</th><th>Zeit</th><th></th></tr></thead><tbody>${pr.map((x, i) => `<tr><td>${datumLesbar(x.datum)}</td><td>${esc(x.titel)}</td><td><b>${x.punkte}/${x.max}</b></td><td>${zeitLesbar(x.dauer)}</td><td><button type="button" class="knopf knopf-geist knopf-klein" data-act="pruefung-ansehen" data-i="${p.pruefungen.length - 1 - i}">Ansehen</button></td></tr>`).join('')}</tbody></table></div>` : '<p class="leise">Noch keine Prüfung. Probiere die BYLET-D-Prüfung aus!</p>'}</section>
       <div class="start-raster" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr))">
-        <section class="karte" style="display:grid;gap:12px;--farbe:var(--m-tempo)"><h2 style="font-size:1.1rem">Lese-Tempo (Tempo-Wert)</h2>
+        <section class="karte" style="display:grid;gap:12px;--farbe:var(--m-tempo)"><h2 style="font-size:1.1rem">Lese-Tempo</h2>
+          ${(p.blitz || []).length ? `<p>⚡ Blitz-Lesen: beste Wort-Stufe <b>${blitzBest(p, 'w')}/7</b>, beste Satz-Stufe <b>${blitzBest(p, 's')}/6</b></p>` : '<p class="leise">⚡ Blitz-Lesen: noch nicht geübt.</p>'}
+          <p class="klein leise">Satz-Check (Tempo-Wert):</p>
           ${tempo.length ? `<div class="mini-diagramm" role="img" aria-label="Letzte Ergebnisse im Lese-Tempo">${tempo.map((t) => `<div style="height:${Math.max(6, pct(tempoWert(t), maxT))}%" title="${datumLesbar(t.datum)}"><span>${tempoWert(t)}</span></div>`).join('')}</div>` : '<p class="leise">Noch kein Tempo-Test.</p>'}</section>
         <section class="karte" style="display:grid;gap:12px"><h2 style="font-size:1.1rem">Übungstage (letzte 4 Wochen)</h2>
           <div class="kalender" role="img" aria-label="${p.tage.filter((t) => tage.includes(t)).length} Übungstage in den letzten 4 Wochen">${tage.map((t) => `<i class="${p.tage.includes(t) ? 'an' : ''}" title="${t}"></i>`).join('')}</div>
@@ -388,7 +401,7 @@ function viewErwachsene() {
     html: `<div class="start-raster" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr))">
       <section class="karte" style="display:grid;gap:14px"><h2 style="font-size:1.2rem">Prüfungen</h2>
         <div class="feld"><label for="zeitDigital">BYLET-D-Prüfung</label>${sel('zeitDigital', [30, 40, 50, 60, 0], e.zeitDigital, min)}</div>
-        <div class="feld"><label for="zeitLesen">Lese-Check</label>${sel('zeitLesen', [20, 30, 40, 0], e.zeitLesen, min)}</div>
+        <div class="feld"><label for="zeitLesen">Lese-Check und BYLET-V-Probe</label>${sel('zeitLesen', [20, 30, 40, 0], e.zeitLesen, min)}</div>
         <div class="feld"><label for="zeitTest">Rechtschreib-, Grammatik-, Schreib-Test</label>${sel('zeitTest', [15, 20, 30, 0], e.zeitTest, min)}</div>
         <div class="feld"><label for="zeitGross">Großer Deutsch-Check</label>${sel('zeitGross', [30, 45, 60, 0], e.zeitGross, min)}</div>
         ${schalter('timerZeigen', 'Uhr während Prüfungen anzeigen', e.timerZeigen)}
@@ -451,7 +464,16 @@ function viewInfo() {
       <h1 style="font-size:1.6rem">Über Lese-Labor PROFI</h1>
       <p>Lese-Labor PROFI ist ein Übungsprogramm für Deutsch in der 4. Jahrgangsstufe in Bayern. Schwerpunkt ist die anspruchsvolle Vorbereitung auf den Bayerischen Lesetest, besonders auf <b>BYLET-D</b> („Leseverständnis im digitalen Kontext“).</p>
       <h2 style="font-size:1.15rem">Was ist BYLET?</h2>
-      <p>Seit dem Schuljahr 2024/2025 können bayerische Grundschulen das digitale Bayerische Lesescreening (BYLES) über die Plattform eddipuls nutzen. Dabei kommt der Bayerische Lesetest (BYLET) zum Einsatz: BYLET-F prüft die Leseflüssigkeit, BYLET-V das Leseverständnis und BYLET-D das Leseverständnis im digitalen Kontext. In der 4. Klasse kommen alle diese Teile vor. Bei BYLET-D sehen die Kinder Bilder von Internetseiten, etwa Suchmaschinen und sozialen Netzwerken, und beantworten Fragen dazu, wie man die Seiten nutzt und was darauf steht.</p>
+      <p>Seit dem Schuljahr 2024/2025 steht allen bayerischen Grundschulen das digitale Bayerische Lesescreening (BYLES) zur Verfügung. Es wurde von der Universität Regensburg mit dem Bayerischen Staatsministerium für Unterricht und Kultus entwickelt und läuft über die Plattform eddipuls. Die Schule setzt BYLES als <b>Lernstandserhebung</b> ein; die Teilnahme ist für alle Kinder verpflichtend. In der <b>4. Jahrgangsstufe</b> gibt es vier Module:</p>
+      <div class="tabelle-scroll"><table class="verlauf-tabelle"><thead><tr><th>Modul</th><th>Was das Kind tut</th><th>Übung in dieser App</th></tr></thead><tbody>
+        <tr><td><b>BYLET-P</b> (Prädiktion)</td><td>8 Fragen zur Lesemotivation und zum Selbstbild beim Lesen, Antwort mit vier Daumen – ohne richtig oder falsch</td><td>Daumen-Check</td></tr>
+        <tr><td><b>BYLET-F</b> (Leseflüssigkeit)</td><td>Wörter (7 Stufen) und Sätze (6 Stufen) erscheinen für eine festgelegte Zeit; danach wird aus vier Bildern das passende gewählt. Je Stufe 5 Aufgaben (3 einfache, 2 komplexe). Nach zu vielen Fehlern endet der Test.</td><td>Blitz-Lesen</td></tr>
+        <tr><td><b>BYLET-V</b> (Leseverstehen)</td><td>Eine Geschichte in vier Abschnitten, nach jedem Abschnitt 4 Fragen mit Auswahlantworten, am Ende 4 Fragen zum Gesamttext</td><td>BYLET-V-Probe im Lese-Labor</td></tr>
+        <tr><td><b>BYLET-D</b> (Lesen im digitalen Kontext)</td><td>Anwendungsszenarien aus dem Internet (z. B. Suchmaschinen, soziale Netzwerke) als Bilder, dazu Fragen zu Nutzung und Inhalt</td><td>Digital-Labor und BYLET-D-Prüfung</td></tr></tbody></table></div>
+      <p>Der <b>BYLES-Fahrplan</b> in der App führt Ihr Kind in dieser Reihenfolge durch alle vier Stationen („Generalprobe“).</p>
+      <h2 style="font-size:1.15rem">Elternbrief und Einwilligung zur Begleitforschung</h2>
+      <p>Zu BYLES erhalten Eltern einen Elternbrief der Universität Regensburg. Die Einwilligung darin betrifft nur die <b>wissenschaftliche Nutzung der pseudonymisierten Testdaten</b> und den zusätzlichen Hintergrundfragebogen (BYLET-H-SuS). Sie ist freiwillig, gilt für ein Schuljahr und kann jederzeit widerrufen werden; eine Nicht-Teilnahme hat keine Nachteile. Fragen dazu beantworten die Lehrkraft und die im Elternbrief genannten Ansprechpersonen.</p>
+      <p><b>Lese-Labor PROFI</b> hat damit nichts zu tun: Die App ist kein Teil von BYLES, überträgt keine Daten und braucht deshalb keine Einwilligung. Die Übungsformate folgen den öffentlich beschriebenen Aufgabenbeispielen; die Inhalte sind selbst geschrieben.</p>
       <p class="info-box" style="--farbe:var(--signal)">Lese-Labor PROFI ist <b>kein offizielles Angebot</b> und enthält <b>keine Originalaufgaben</b> des Tests. Alle Fälle, Texte und Aufgaben sind eigene Übungsaufgaben im Stil der Testbereiche. Alle Websites, Apps, Personen und Vereine sind erfunden.</p>
       <h2 style="font-size:1.15rem">Die Labore und der LehrplanPLUS</h2>
       <div class="tabelle-scroll"><table class="verlauf-tabelle"><thead><tr><th>Labor</th><th>Bezug LehrplanPLUS Deutsch 3/4</th></tr></thead><tbody>

@@ -13,11 +13,29 @@ Anmeldung und ohne externe Server.
 | Labor | Inhalt | Bezug |
 |---|---|---|
 | **Digital-Labor** | 5 Fälle mit simulierten, anklickbaren Internetseiten (Suchmaschine, Website mit Menü, Klassenchat und soziales Netzwerk, E-Mail-Postfach, Wetter- und Fahrplan-App), 20 Fragen zu den Kompetenzen *finden, navigieren, verknüpfen, bewerten* | BYLET-D, LehrplanPLUS Lernbereich 2 |
-| **Lese-Labor** | 6 Texte (Sachtext, Erzählung, Gedicht, Sachtext mit Tabelle, Anleitung, Meinungsartikel) mit je 5 Fragen | BYLET-V-nah, Lernbereich 2 |
-| **Lese-Tempo** | 90 Sätze „stimmt / stimmt nicht“ auf Zeit | BYLET-F-nah |
+| **Lese-Labor** | 6 Texte (Sachtext, Erzählung, Gedicht, Sachtext mit Tabelle, Anleitung, Meinungsartikel) mit je 5 Fragen, dazu 2 **Geschichten in vier Abschnitten** mit je 20 Fragen (BYLET-V-Probe) | BYLET-V, Lernbereich 2 |
+| **Lese-Tempo** | **Blitz-Lesen** (114 Wörter, 59 Sätze, 7 + 6 Stufen) und Satz-Check mit 90 Sätzen „stimmt / stimmt nicht“ auf Zeit | BYLET-F |
 | **Rechtschreib-Labor** | 8 Themen zu den Strategien *mitsprechen, nachdenken, merken* und zur Zeichensetzung, plus Hör- und Blitz-Diktat | Lernbereich 3 |
 | **Grammatik-Labor** | 8 Themen: Wortarten, Wortbildung, Zeitformen, Satzglieder, die vier Fälle | Lernbereich 4 |
 | **Schreib-Werkstatt** | 6 Themen zu Planen, Formulieren und Überarbeiten, 4 Schreibaufträge mit automatischem Schreib-Check | Lernbereich 3 |
+
+### BYLES-Fahrplan (nach der Elterninformation zu BYLES 2026/27)
+
+Die Elterninformation der Universität Regensburg beschreibt die vier BYLES-Module der
+4. Jahrgangsstufe. Die App übt jedes davon im passenden Format – mit eigenen Inhalten, nicht mit
+Originalaufgaben:
+
+| Station | Format im Test | In der App |
+|---|---|---|
+| 1 · BYLET-P | 8 Aussagen zu Lesemotivation und Selbstbild, Antwort mit vier Daumen | **Daumen-Check** (kein Richtig/Falsch, Antworten werden nicht gespeichert) |
+| 2 · BYLET-F | Wort bzw. Satz erscheint für eine festgelegte Zeit, dann aus vier Bildern das passende wählen; 7 Wort- und 6 Satz-Stufen à 5 Aufgaben (3 einfach, 2 komplex); Ende nach zu vielen Fehlern | **Blitz-Lesen** (Bilder als Emoji, Ende nach 3 Fehlern in einer Stufe) |
+| 3 · BYLET-V | Geschichte in vier Abschnitten, je 4 Fragen, am Ende 4 Fragen zum Gesamttext | **BYLET-V-Probe** im Lese-Labor (Abschnitte als Reiter, spätere Abschnitte gesperrt) |
+| 4 · BYLET-D | Internet-Szenarien (Suchmaschine, soziale Netzwerke …) mit Fragen zu Nutzung und Inhalt | **Digital-Labor** und BYLET-D-Prüfung |
+
+Der Fahrplan führt in dieser Reihenfolge durch alle Stationen; wer alle vier an einem Tag schafft,
+bekommt das Abzeichen „Generalprobe“. Unter den Fragen steht wie im Test „Hier ist eine Antwort
+richtig.“ bzw. „Hier sind mehrere Antworten richtig.“. Die Einwilligung aus dem Elternbrief betrifft
+nur die Forschungsnutzung der BYLES-Daten – die App überträgt keine Daten und braucht keine.
 
 Aufgabentypen: Einfachauswahl, **Mehrfachauswahl**, Aussagen beurteilen (Matrix), Lückentext,
 Wörter antippen, Zuordnen, Reihenfolge, Eintippen.
@@ -32,7 +50,7 @@ Wörter antippen, Zuordnen, Reihenfolge, Eintippen.
 - **Ergebnisauswertung**: Punkte, Auswertung nach Kompetenzen und nach Fällen/Texten/Themen,
   nächster Lernschritt, alle Aufgaben mit Lösung und Erklärung, „Fehler üben“.
 - **Lernfortschritt**: Profile ohne Anmeldung (nur Spitzname), Fehler-Kiste, Tagesmission mit
-  Wiederholung, Laborpunkte und Level, 15 Abzeichen, Übungstage, Labor-Buch mit Verlauf.
+  Wiederholung, Laborpunkte und Level, 17 Abzeichen, Übungstage, Labor-Buch mit Verlauf.
 - **Für Erwachsene** (Rechenaufgabe als Sperre): Prüfungszeiten, Schriftgröße, Zeilenabstand,
   Effekt-Stufe, Töne, Vorlesestimme, Profile, Übersicht aller Profile, Sichern und Wiederherstellen per Code
   oder Datei, Löschen.
