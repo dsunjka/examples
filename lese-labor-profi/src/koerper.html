@@ -1,10 +1,15 @@
+<div class="weltall" aria-hidden="true"><div class="nebel n1"></div><div class="nebel n2"></div><canvas id="sterne"></canvas></div>
 <div id="app" class="app" aria-live="off">
   <noscript><p style="padding:24px">Lese-Labor PROFI braucht JavaScript. Bitte JavaScript im Browser erlauben.</p></noscript>
 </div>
 <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 <div id="dialog-wurzel"></div>
+<canvas class="glitzer-leinwand" id="glitzer" aria-hidden="true"></canvas>
+<div id="effekte" aria-live="polite"></div>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
+    <linearGradient id="ring-verlauf" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe08a"/><stop offset=".5" stop-color="#ff6fd8"/><stop offset="1" stop-color="#4fe3ff"/></linearGradient>
+    <linearGradient id="trank-verlauf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff6fd8"/><stop offset=".55" stop-color="#b994ff"/><stop offset="1" stop-color="#4fe3ff"/></linearGradient>
     <symbol id="i-digital" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="15" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M2.5 8.5h19" stroke="currentColor" stroke-width="1.8"/><circle cx="5.5" cy="6.3" r=".9" fill="currentColor"/><circle cx="8.2" cy="6.3" r=".9" fill="currentColor"/><path d="M7 13h10M7 16h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
     <symbol id="i-lesen" viewBox="0 0 24 24"><path d="M12 6.5C10 5 7 4.5 3.5 5v13c3.5-.5 6.5 0 8.5 1.5 2-1.5 5-2 8.5-1.5V5C17 4.5 14 5 12 6.5Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 6.5v13" stroke="currentColor" stroke-width="1.8"/></symbol>
     <symbol id="i-tempo" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 13.5 15.5 10M10 3h4M12 3v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>

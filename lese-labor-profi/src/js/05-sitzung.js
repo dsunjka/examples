@@ -253,6 +253,18 @@ function pruefen() {
   const zeile = $('.frage-karte .aktionen') || $('.rueckmeldung');
   if (zeile && zeile.scrollIntoView) zeile.scrollIntoView({ block: 'nearest', behavior: sanft() });
   fokus('.rueckmeldung');
+  // Spiel-Effekte: Glitzer und fliegende Punkte bei Richtig, Wackeln bei Fehlern
+  if (erg.status === 'richtig') {
+    const pkt = SITZ._letztePunkte && SITZ._letztePunkte.id === id ? SITZ._letztePunkte.n : 0;
+    requestAnimationFrame(() => {
+      glitzer($('.rueckmeldung'), { anzahl: SITZ.versuche[id] === 1 ? 28 : 16 });
+      if (pkt) punkteFlug($('[data-act="s-weiter"]') || $('.rueckmeldung'), `+${pkt} ✦`);
+    });
+    ton('richtig');
+  } else {
+    wackeln($('#antwort'));
+    ton('falsch');
+  }
 }
 function abschliessen(id, status, sauber) {
   if (SITZ.ergebnis[id]) return;
@@ -429,9 +441,9 @@ async function sitzungBeenden() {
 }
 
 /* ---------- Ergebnisansichten ---------- */
-function ringSVG(wert, max, farbe = 'var(--akzent)') {
+function ringSVG(wert, max) {
   const r = 60, u = 2 * Math.PI * r, anteil = max ? wert / max : 0;
-  return `<svg class="ring" viewBox="0 0 150 150" role="img" aria-label="${wert} von ${max} Punkten"><circle class="spur" cx="75" cy="75" r="${r}"/><circle class="wert" cx="75" cy="75" r="${r}" style="stroke:${farbe}" stroke-dasharray="${u.toFixed(1)}" stroke-dashoffset="${(u * (1 - anteil)).toFixed(1)}"/><text x="75" y="72" text-anchor="middle" font-size="34">${wert}</text><text x="75" y="98" text-anchor="middle" font-size="15" style="fill:var(--tinte-2)">von ${max}</text></svg>`;
+  return `<svg class="ring" viewBox="0 0 150 150" role="img" aria-label="${wert} von ${max} Punkten"><circle class="spur" cx="75" cy="75" r="${r}"/><circle class="wert" cx="75" cy="75" r="${r}" style="--umfang:${u.toFixed(1)}" stroke-dasharray="${u.toFixed(1)}" stroke-dashoffset="${(u * (1 - anteil)).toFixed(1)}"/><text x="75" y="72" text-anchor="middle" font-size="34">${wert}</text><text x="75" y="98" text-anchor="middle" font-size="15" style="fill:var(--tinte-2)">von ${max}</text></svg>`;
 }
 function urteil(anteil) {
   if (anteil >= 0.9) return 'Lese-Labor-PROFI! Hervorragend gearbeitet.';

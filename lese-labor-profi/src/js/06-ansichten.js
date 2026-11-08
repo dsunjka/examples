@@ -52,6 +52,7 @@ function nachRender() {
   if (ANSICHT.name === 'diktat') diktatNachRender();
   if (ANSICHT.name === 'schreibauftrag') schreibNachRender();
   if (ANSICHT.name === 'erwachsene') erwachseneNachRender();
+  effekteNachRender();
 }
 function kopfHTML(titel) {
   const p = P();
@@ -95,7 +96,10 @@ function kolbenSVG(anteil) {
     <g clip-path="url(#kolben-innen)"><rect class="fluessig" x="0" y="${yTop.toFixed(1)}" width="128" height="${(150 - yTop).toFixed(1)}"/>
       <circle class="blase" cx="50" cy="128" r="3.5"/><circle class="blase" cx="70" cy="131" r="2.5"/><circle class="blase" cx="84" cy="127" r="3"/></g>
     <path class="glas" d="M49 9 H79 M55 9 V52 L16.5 127 Q12 138 25 140.5 H103 Q116 138 111.5 127 L73 52 V9"/>
-    <path class="skala" d="M44 84 h9 M36 100 h9 M28 116 h9"/></svg>`;
+    <path class="skala" d="M44 84 h9 M36 100 h9 M28 116 h9"/>
+    <path class="funkeln" d="M0 -7 L1.8 -1.8 L7 0 L1.8 1.8 L0 7 L-1.8 1.8 L-7 0 L-1.8 -1.8 Z" transform="translate(16 46)"/>
+    <path class="funkeln" d="M0 -7 L1.8 -1.8 L7 0 L1.8 1.8 L0 7 L-1.8 1.8 L-7 0 L-1.8 -1.8 Z" transform="translate(112 70)"/>
+    <path class="funkeln" d="M0 -7 L1.8 -1.8 L7 0 L1.8 1.8 L0 7 L-1.8 1.8 L-7 0 L-1.8 -1.8 Z" transform="translate(98 22)"/></svg>`;
 }
 function laufendBanner() {
   const p = P(); if (!p || !p.laufend) return '';
@@ -129,10 +133,14 @@ function viewStart() {
     <div class="start-raster">
       <section class="karte held" aria-label="Dein Labor">
         <div class="held-oben">
-          <div><p class="leise">Hallo,</p><h1>${esc(p.name)} ${esc(p.avatar)}</h1>
-            <p class="level">Level ${lv.nr}: ${esc(lv.name)}</p>
-            ${lv.bis ? `<p class="klein leise">Noch ${plural(lv.bis - p.punkte, 'Laborpunkt', 'Laborpunkte')} bis „${esc(lv.naechsterName)}“</p>` : '<p class="klein leise">Höchstes Level erreicht!</p>'}</div>
+          <div class="avatar-orb" aria-hidden="true">${esc(p.avatar)}</div>
+          <div style="min-width:0"><p class="leise">Hallo,</p><h1>${esc(p.name)}</h1>
+            <p class="level">Level ${lv.nr} · ${esc(lv.name)}</p></div>
           ${kolbenSVG(g.prozent / 100)}
+        </div>
+        <div class="xp">
+          <div class="xp-zeile"><span>${plural(p.punkte, 'Laborpunkt', 'Laborpunkte')}</span><span>${lv.bis ? `Noch ${plural(lv.bis - p.punkte, 'Laborpunkt', 'Laborpunkte')} bis „${esc(lv.naechsterName)}“` : 'Höchstes Level erreicht!'}</span></div>
+          <div class="xp-balken" role="img" aria-label="Fortschritt zum nächsten Level: ${lv.bis ? pct(p.punkte - lv.ab, lv.bis - lv.ab) : 100} Prozent"><i style="width:${lv.bis ? Math.max(3, pct(p.punkte - lv.ab, lv.bis - lv.ab)) : 100}%"></i></div>
         </div>
         <div class="kennzahlen">
           <div class="kennzahl"><b>${g.gemeistert}</b><span>von ${g.gesamt} gemeistert</span></div>
@@ -148,7 +156,7 @@ function viewStart() {
       </section>
       <div style="display:grid;gap:14px;min-width:0">
         ${modulHatInhalt('digital') ? `<div class="pruefung-band"><span class="labor-symbol">${icon('uhr')}</span>
-          <div><h3>BYLET-D-Prüfung</h3><p class="klein leise">${REG.module.digital.gruppen.length} Fälle · ${REG.module.digital.items.length} Fragen · ${E().zeitDigital ? E().zeitDigital + ' Minuten' : 'ohne Zeitlimit'}${besteBylet != null ? ` · Bestwert ${besteBylet}/${REG.module.digital.items.length}` : ''}</p></div>
+          <div><span class="boss-label">BOSS-LEVEL</span><h3>BYLET-D-Prüfung</h3><p class="klein leise">${REG.module.digital.gruppen.length} Fälle · ${REG.module.digital.items.length} Fragen · ${E().zeitDigital ? E().zeitDigital + ' Minuten' : 'ohne Zeitlimit'}${besteBylet != null ? ` · Bestwert ${besteBylet}/${REG.module.digital.items.length}` : ''}</p></div>
           <button type="button" class="knopf knopf-signal" data-act="pruef-intro" data-art="digital">Prüfung</button></div>` : ''}
         <div class="labore">${karten}</div>
         <div class="schnell-liste">
@@ -288,8 +296,8 @@ function viewErgebnis(param) {
   const falsch = e.ids.filter((id) => e.details[id] !== 'r' && REG.items[id]);
   return {
     titel: 'Auswertung',
-    html: `<section class="karte ergebnis-kopf">${ringSVG(e.punkte, e.max, anteil >= 0.75 ? 'var(--ok)' : anteil >= 0.5 ? 'var(--akzent)' : 'var(--signal)')}
-      <div style="display:grid;gap:8px;min-width:0"><p class="leise">${esc(e.titel)} · ${datumLesbar(e.datum)}</p><h1 class="titel-urkunde">${esc(urteil(anteil))}</h1>
+    html: `<section class="karte ergebnis-kopf">${ringSVG(e.punkte, e.max)}
+      <div style="display:grid;gap:8px;min-width:0"><p class="leise">${esc(e.titel)} · ${datumLesbar(e.datum)}</p>${sterneHTML(anteil)}<h1 class="titel-urkunde">${esc(urteil(anteil))}</h1>
         <p>${e.punkte} von ${e.max} Aufgaben ganz richtig (${pct(e.punkte, e.max)} %) · Zeit: ${zeitLesbar(e.dauer)}${e.zeitLimit ? ` von ${zeitLesbar(e.zeitLimit)}` : ''}</p>
         <div class="zeile">${falsch.length ? `<button type="button" class="knopf" data-act="training-ids" data-ids="${esc(falsch.join(','))}" data-titel="Fehler aus der Prüfung">Fehler üben</button>` : ''}<button type="button" class="knopf knopf-zweit" data-act="pruef-intro" data-art="${esc(e.art)}">Nochmal</button><button type="button" class="knopf knopf-geist" data-nav="start">Zur Übersicht</button></div></div></section>
       <div class="start-raster" style="grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr))">
@@ -309,8 +317,8 @@ function viewZusammenfassung(param) {
   const z = s.zurueck || { name: 'start' };
   return {
     titel: 'Training geschafft',
-    html: `<section class="karte ergebnis-kopf">${ringSVG(r, s.ids.length, 'var(--ok)')}
-      <div style="display:grid;gap:8px;min-width:0"><p class="leise">${esc(s.titel)}</p><h1 class="titel-urkunde">${r === s.ids.length ? 'Alles sofort richtig – Profi-Arbeit!' : 'Training geschafft!'}</h1>
+    html: `<section class="karte ergebnis-kopf">${ringSVG(r, s.ids.length)}
+      <div style="display:grid;gap:8px;min-width:0"><p class="leise">${esc(s.titel)}</p>${sterneHTML(s.ids.length ? (r + h) / s.ids.length : 0)}<h1 class="titel-urkunde">${r === s.ids.length ? 'Alles sofort richtig – Profi-Arbeit!' : 'Training geschafft!'}</h1>
         <p>${r} sofort richtig · ${h} mit Hilfe · ${f} noch üben · <b>+${s.punkte} Laborpunkte</b></p>
         <div class="zeile">${nochmal.length ? `<button type="button" class="knopf" data-act="training-ids" data-ids="${esc(nochmal.join(','))}" data-titel="${esc(s.titel)} – Wiederholung">Diese ${nochmal.length} nochmal</button>` : ''}
           <button type="button" class="knopf knopf-zweit" data-nav="${esc(z.name)}">Weiter</button></div></div></section>
@@ -386,9 +394,9 @@ function viewErwachsene() {
       </section>
       <section class="karte" style="display:grid;gap:14px"><h2 style="font-size:1.2rem">Darstellung & Vorlesen</h2>
         <div class="feld"><label for="schrift">Schriftgröße</label>${sel('schrift', ['normal', 'gross', 'sehrgross'], e.schrift, (w) => ({ normal: 'Normal', gross: 'Groß', sehrgross: 'Sehr groß' })[w])}</div>
-        <div class="feld"><label for="thema">Farben</label>${sel('thema', ['auto', 'light', 'dark'], e.thema, (w) => ({ auto: 'Automatisch (wie das Gerät)', light: 'Hell', dark: 'Dunkel' })[w])}</div>
+        <div class="feld"><label for="effekte">Effekte und Animationen</label>${sel('effekte', ['voll', 'sanft', 'aus'], e.effekte, (w) => ({ voll: 'Volle Pracht (Glitzer, Sternschnuppen)', sanft: 'Sanft (wenig Bewegung)', aus: 'Aus (ganz ruhig)' })[w])}</div>
+        ${schalter('toene', 'Töne bei richtigen Antworten und Level-up', e.toene)}
         ${schalter('weit', 'Weiter Zeilenabstand in Lesetexten (Lesehilfe)', e.weit)}
-        ${schalter('ruhig', 'Animationen ausschalten', e.ruhig)}
         <div class="feld"><label for="stimme">Vorlesestimme für das Diktat</label><select id="stimme" data-einst="stimme"><option value="">Automatisch (Deutsch)</option></select></div>
         <div class="feld"><label for="sprechTempo">Vorlesetempo</label>${sel('sprechTempo', [0.7, 0.85, 1], e.sprechTempo, (w) => ({ 0.7: 'Langsam', 0.85: 'Ruhig', 1: 'Normal' })[w])}</div>
         <button type="button" class="knopf knopf-zweit knopf-klein" data-act="stimme-test">${icon('lautsprecher')}Stimme testen</button>
@@ -484,7 +492,7 @@ function dialog({ titel, text = '', html = '', knoepfe = [{ label: 'OK', wert: t
 }
 let toastTimer = null;
 let toastEnde = 0;
-const sanft = () => (E().ruhig || (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) ? 'auto' : 'smooth');
+const sanft = () => (fxStufe() !== 'voll' ? 'auto' : 'smooth');
 /** Meldung erst zeigen, wenn die aktuelle fertig ist (für Abzeichen). */
 function toastDanach(text) {
   const rest = toastEnde - Date.now();

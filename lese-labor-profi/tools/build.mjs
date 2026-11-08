@@ -54,7 +54,11 @@ zaehl.aufgaben = zaehl.digitalFragen + zaehl.leseFragen + [INHALT.rechtschreibun
 const jsDir = src('js');
 const js = readdirSync(jsDir).filter((f) => f.endsWith('.js')).sort().map((f) => `/* ---- ${f} ---- */\n` + lies(join(jsDir, f))).join('\n');
 const sicherJSON = JSON.stringify(INHALT).replace(/<\//g, '<\\/').replace(/\u2028/g, '\\u2028').replace(/\u2029/g, '\\u2029');
-const css = lies(src('styles.css'));
+const schriftDatei = src('schrift/fredoka-latin.woff2');
+const schriftCSS = existsSync(schriftDatei)
+  ? `/* Fredoka – Copyright 2016 The Fredoka Project Authors, SIL Open Font License 1.1 (src/schrift/OFL-Fredoka.txt) */\n@font-face { font-family: "Fredoka"; font-style: normal; font-weight: 300 700; font-display: swap; src: url(data:font/woff2;base64,${readFileSync(schriftDatei).toString('base64')}) format("woff2"); }`
+  : '';
+const css = lies(src('styles.css')).replace('/*@SCHRIFT@*/', schriftCSS);
 const kopf = lies(src('kopf.html')).trim();
 const koerper = lies(src('koerper.html')).trim();
 const skripte = `<script>window.LL_INHALT=${sicherJSON};</script>\n<script>\n(function(){'use strict';\n${js}\n})();\n</script>`;
@@ -62,7 +66,7 @@ const skripte = `<script>window.LL_INHALT=${sicherJSON};</script>\n<script>\n(fu
 const fragment = `${kopf}\n<style>\n${css}\n</style>\n${koerper}\n${skripte}\n`;
 const iconPng = existsSync(src('icon-180.png')) ? readFileSync(src('icon-180.png')).toString('base64') : '';
 const iconSvg = existsSync(src('icon.svg')) ? encodeURIComponent(lies(src('icon.svg')).trim()) : '';
-const reset = ':root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}';
+const reset = ':root{color-scheme:dark;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,-apple-system,sans-serif}img{max-width:100%}[hidden]{display:none!important}';
 const standalone = `<!doctype html>
 <html lang="de">
 <head>
@@ -71,11 +75,11 @@ const standalone = `<!doctype html>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Lese-Labor">
-<meta name="theme-color" content="#0b6f7a">
+<meta name="theme-color" content="#170b3a">
 <meta name="robots" content="noindex">
 ${iconPng ? `<link rel="apple-touch-icon" href="data:image/png;base64,${iconPng}">` : ''}
 ${iconSvg ? `<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,${iconSvg}">` : ''}
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; font-src 'none'; form-action 'none'; base-uri 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src 'none'; font-src data:; form-action 'none'; base-uri 'none'">
 <style>${reset}</style>
 ${kopf}
 <style>

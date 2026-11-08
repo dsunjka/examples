@@ -112,7 +112,7 @@ function viewTempoErgebnis(param) {
   const wert = tempoWert(erg), proMin = (erg.richtig / (Math.max(1, erg.dauer) / 60)).toFixed(1).replace('.', ',');
   return {
     titel: 'Lese-Tempo – Ergebnis', schmal: true,
-    html: `<section class="karte ergebnis-kopf">${ringSVG(erg.richtig, Math.max(erg.gelesen, 1), 'var(--m-tempo)')}
+    html: `<section class="karte ergebnis-kopf">${ringSVG(erg.richtig, Math.max(erg.gelesen, 1))}
       <div style="display:grid;gap:8px"><h1 class="titel-urkunde">${best != null && wert > best ? 'Neuer Bestwert! 🚀' : 'Geschafft!'}</h1>
       <p>Du hast <b>${erg.gelesen}</b> Sätze gelesen: <b>${erg.richtig}</b> richtig, <b>${erg.falsch}</b> falsch.</p>
       <p>Tempo-Wert: <b>${wert}</b> · ${proMin} richtige Sätze pro Minute${best != null ? ` · bisheriger Bestwert: ${best}` : ''}</p>
@@ -164,7 +164,7 @@ function viewDiktat() {
     const falsch = D.ergebnisse.filter((x) => !x.ok);
     return {
       titel: 'Diktat – Ergebnis', schmal: true,
-      html: `<section class="karte ergebnis-kopf">${ringSVG(ok, n, farbe)}<div style="display:grid;gap:8px"><h1 class="titel-urkunde">${ok === n ? 'Fehlerfrei – Diktat-Meister!' : 'Diktat geschafft!'}</h1><p>${ok} von ${n} Wörtern sofort richtig geschrieben.</p>
+      html: `<section class="karte ergebnis-kopf">${ringSVG(ok, n)}<div style="display:grid;gap:8px"><h1 class="titel-urkunde">${ok === n ? 'Fehlerfrei – Diktat-Meister!' : 'Diktat geschafft!'}</h1><p>${ok} von ${n} Wörtern sofort richtig geschrieben.</p>
         <div class="zeile">${D.id !== '__fehler' || P().fehlerwoerter.length ? `<button type="button" class="knopf" data-act="diktat" data-id="${esc(D.id)}">Nochmal</button>` : '<span class="leise">Keine Fehlerwörter mehr – super!</span>'}<button type="button" class="knopf knopf-zweit" data-nav="rechtschreibung">Zum Rechtschreib-Labor</button></div></div></section>
         ${falsch.length ? `<section class="karte" style="display:grid;gap:10px"><h2 style="font-size:1.15rem">Übe diese Wörter</h2><div class="beispiele">${falsch.map((x) => `<span><b>${esc(x.wort)}</b> (du: ${esc(x.eingabe)})</span>`).join('')}</div></section>` : ''}`,
     };
@@ -228,6 +228,7 @@ function diktatPruefen(wert) {
   }
   merkeTag(); speichern();
   zeige('diktat');
+  if (ok) { glitzer($('.rueckmeldung') || $('#diktat-eingabe'), { anzahl: 20 }); ton('richtig'); } else { wackeln($('.diktat-karte')); ton('falsch'); }
 }
 function diktatWeiter() {
   const D = DIKTAT;
@@ -388,6 +389,7 @@ function schreibFertig() {
   if (neu) punkteDazu(40);
   merkeTag(); speichern(true);
   pruefeAbzeichen();
+  if (neu) { sternenregen(36); ton('fanfare'); }
   toast(neu ? 'Super! Dein Text ist fertig. +40 Laborpunkte' : 'Gespeichert.');
 }
 async function textKopieren(text) {

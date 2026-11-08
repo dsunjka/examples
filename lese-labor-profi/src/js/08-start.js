@@ -4,9 +4,10 @@ function wendeEinstellungenAn() {
   const e = E(), root = document.documentElement;
   root.style.setProperty('--gross', { normal: 1, gross: 1.12, sehrgross: 1.25 }[e.schrift] || 1);
   root.style.setProperty('--zeilen', e.weit ? 1.95 : 1.55);
-  root.classList.toggle('ruhig', !!e.ruhig);
-  if (e.thema === 'light' || e.thema === 'dark') { root.setAttribute('data-theme', e.thema); themaGesetzt = true; }
-  else if (themaGesetzt) { root.removeAttribute('data-theme'); themaGesetzt = false; }
+  const stufe = fxStufe();
+  root.classList.toggle('fx-voll', stufe === 'voll');
+  root.classList.toggle('fx-sanft', stufe === 'sanft');
+  root.classList.toggle('fx-aus', stufe === 'aus');
 }
 function gruppeSortiert(ids) {
   const reihenfolge = Object.keys(REG.gruppen);
@@ -270,6 +271,7 @@ function starteApp() {
   try { if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {}); } catch (e) { /* egal */ }
   try { document.documentElement.lang = 'de'; } catch (e) { /* egal */ }
   baueRegister();
+  try { sternenhimmel(); } catch (e) { /* Hintergrund ist nur Schmuck */ }
   wendeEinstellungenAn();
   if (DB.aktivesProfil && !DB.profile[DB.aktivesProfil]) DB.aktivesProfil = Object.keys(DB.profile)[0] || null;
   const h = location.hash.slice(1);

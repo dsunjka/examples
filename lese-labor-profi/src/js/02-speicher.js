@@ -2,7 +2,7 @@
 const SPEICHER_KEY = 'lese-labor-profi:v1';
 const EINST_STANDARD = {
   zeitDigital: 40, zeitLesen: 30, zeitTest: 20, zeitGross: 45, timerZeigen: true,
-  schrift: 'normal', weit: false, ruhig: false, thema: 'auto',
+  schrift: 'normal', weit: false, ruhig: false, thema: 'auto', effekte: 'voll', toene: false,
   stimme: '', sprechTempo: 0.85, tempoDauer: 180, blitzSek: 3,
 };
 const AVATARE = ['🦊', '🦉', '🐢', '🐙', '🦔', '🐝', '🐧', '🦁', '🐼', '🐸', '🦄', '🐳'];
@@ -76,6 +76,7 @@ function bereinigeProfil(p, { mitLaufend = false } = {}) {
 const EINST_ERLAUBT = {
   zeitDigital: [30, 40, 50, 60, 0], zeitLesen: [20, 30, 40, 0], zeitTest: [15, 20, 30, 0], zeitGross: [30, 45, 60, 0], timerZeigen: [true, false],
   schrift: ['normal', 'gross', 'sehrgross'], weit: [true, false], ruhig: [true, false], thema: ['auto', 'light', 'dark'],
+  effekte: ['voll', 'sanft', 'aus'], toene: [true, false],
   sprechTempo: [0.7, 0.85, 1], tempoDauer: [60, 120, 180], blitzSek: [2, 3, 5],
 };
 function pruefeEinstellungen(e) {
@@ -83,6 +84,7 @@ function pruefeEinstellungen(e) {
   if (!istObj(e)) return out;
   for (const [k, werte] of Object.entries(EINST_ERLAUBT)) if (werte.includes(e[k])) out[k] = e[k];
   if (typeof e.stimme === 'string') out.stimme = e.stimme.slice(0, 120);
+  if (e.ruhig === true && !EINST_ERLAUBT.effekte.includes(e.effekte)) out.effekte = 'aus'; // alte Einstellung „Animationen aus“
   return out;
 }
 function normalisiereProfil(p) {
@@ -179,7 +181,13 @@ function notiereErgebnis(id, status, { sauber = false } = {}) {
   speichern();
   return punkte;
 }
-function punkteDazu(n) { const p = P(); if (p) p.punkte = Math.max(0, (p.punkte || 0) + n); }
+function punkteDazu(n) {
+  const p = P(); if (!p) return;
+  const vorher = level(p.punkte || 0).nr;
+  p.punkte = Math.max(0, (p.punkte || 0) + n);
+  const jetzt = level(p.punkte);
+  if (jetzt.nr > vorher) setTimeout(() => zeigeLevelUp(jetzt), 900);
+}
 function merkeTag() {
   const p = P(); if (!p) return;
   const t = heute();
@@ -220,8 +228,8 @@ function faelligeWiederholungen(p = P()) {
 
 /* ---------- Level ---------- */
 const LEVEL = [
-  [0, 'Labor-Neuling'], [150, 'Lese-Entdecker'], [400, 'Wort-Forscher'], [800, 'Text-Detektiv'],
-  [1400, 'Sprach-Experte'], [2200, 'Lese-Labor-PROFI'], [3200, 'Labor-Legende'],
+  [0, 'Sternenstaub'], [150, 'Funkelstern'], [400, 'Komet'], [800, 'Polarlicht'],
+  [1400, 'Supernova'], [2200, 'Galaxie-PROFI'], [3200, 'Universums-Legende'],
 ];
 function level(punkte) {
   let i = 0; while (i + 1 < LEVEL.length && punkte >= LEVEL[i + 1][0]) i++;
@@ -265,7 +273,7 @@ function tagesMission() {
 const ABZEICHEN = [
   { id: 'start', sym: '🧪', name: 'Erster Versuch', text: 'Die erste Aufgabe gelöst', test: (p) => Object.keys(p.items).length >= 1 },
   { id: 'fall', sym: '🔎', name: 'Fall gelöst', text: 'Alle 4 Aufgaben eines Falls gemeistert', test: (p) => REG.module.digital.gruppen.some((g) => REG.gruppen[g].items.every((id) => itemStatus(id, p) === 'r')) },
-  { id: 'faelle', sym: '🕵️', name: 'Meisterdetektiv', text: 'Alle 20 Digital-Aufgaben gemeistert', test: (p) => { const s = modulStand('digital', p); return s.gesamt > 0 && s.gemeistert === s.gesamt; } },
+  { id: 'faelle', sym: '🕵️', name: 'Super-Spürnase', text: 'Alle 20 Digital-Aufgaben gemeistert', test: (p) => { const s = modulStand('digital', p); return s.gesamt > 0 && s.gemeistert === s.gesamt; } },
   { id: 'werbung', sym: '🛡️', name: 'Netz-Profi', text: 'Alle „Bewerten“-Aufgaben im Digital-Labor gemeistert', test: (p) => { const b = REG.module.digital.items.filter((id) => REG.items[id].it.kompetenz === 'bewerten'); return b.length > 0 && b.every((id) => itemStatus(id, p) === 'r'); } },
   { id: 'bylet15', sym: '🏅', name: 'BYLET-D bestanden', text: 'In der BYLET-D-Prüfung mindestens 15 von 20', test: (p) => p.pruefungen.some((x) => x.art === 'digital' && x.punkte >= 15) },
   { id: 'bylet18', sym: '🏆', name: 'PROFI-Prüfung', text: 'In der BYLET-D-Prüfung mindestens 18 von 20', test: (p) => p.pruefungen.some((x) => x.art === 'digital' && x.punkte >= 18) },
@@ -273,11 +281,11 @@ const ABZEICHEN = [
   { id: 'tempo30', sym: '🚀', name: 'Tempo-Rakete', text: 'Im Lese-Tempo einen Tempo-Wert von mindestens 30', test: (p) => p.tempo.some((x) => x.richtig - x.falsch >= 30) },
   { id: 'rs', sym: '✍️', name: 'Rechtschreib-Ass', text: '80 % im Rechtschreib-Labor gemeistert', test: (p) => { const s = modulStand('rechtschreibung', p); return s.gesamt > 0 && s.gemeistert >= 0.8 * s.gesamt; } },
   { id: 'gr', sym: '🧩', name: 'Grammatik-Genie', text: '80 % im Grammatik-Labor gemeistert', test: (p) => { const s = modulStand('grammatik', p); return s.gesamt > 0 && s.gemeistert >= 0.8 * s.gesamt; } },
-  { id: 'diktat', sym: '🎧', name: 'Diktat-Meister', text: 'Ein Diktat mit 10 von 10 Wörtern', test: (p) => Object.values(p.diktate).some((d) => d.best >= 10) },
+  { id: 'diktat', sym: '🎧', name: 'Diktat-Krone', text: 'Ein Diktat mit 10 von 10 Wörtern', test: (p) => Object.values(p.diktate).some((d) => d.best >= 10) },
   { id: 'autor', sym: '🖋️', name: 'Schreib-Talent', text: 'Zwei Schreibaufträge fertig geschrieben', test: (p) => Object.values(p.texte).filter((t) => t.fertig).length >= 2 },
-  { id: 'fehler', sym: '🦾', name: 'Fehler-Fresser', text: '10 Fehler aus der Fehler-Kiste verbessert', test: (p) => p.fehlerBehoben >= 10 },
-  { id: 'serie5', sym: '🔥', name: 'Dranbleiber', text: 'An 5 Tagen hintereinander geübt', test: (p) => serie(p) >= 5 },
-  { id: 'mission', sym: '🎯', name: 'Missionserfüller', text: 'Eine Tagesmission komplett erledigt', test: (p) => !!p.missionGeschafft },
+  { id: 'fehler', sym: '🦾', name: 'Fehler-Magie', text: '10 Fehler aus der Fehler-Kiste verbessert', test: (p) => p.fehlerBehoben >= 10 },
+  { id: 'serie5', sym: '🔥', name: 'Dranbleib-Stern', text: 'An 5 Tagen hintereinander geübt', test: (p) => serie(p) >= 5 },
+  { id: 'mission', sym: '🎯', name: 'Missions-Stern', text: 'Eine Tagesmission komplett erledigt', test: (p) => !!p.missionGeschafft },
 ];
 DB = ladeSpeicher();
 function pruefeAbzeichen() {
