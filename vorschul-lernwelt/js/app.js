@@ -618,7 +618,12 @@
       if (V) V.setEnabled(false);
       LT.speech.setVoiceByName(sel.value);
     });
-    voice.appendChild(row('Vorlesestimme', sel, el('button.p-btn.light', { on: { click: () => LT.speech.say('Hallo! Ich bin Flo, der Fuchs. So klinge ich.') } }, '▶ Testen')));
+    voice.appendChild(row('Vorlesestimme', sel, el('button.p-btn.light', { on: { click: () => LT.speech.say('Hallo! Ich bin Flo, der Fuchs. So klinge ich.').then(showStatus) } }, '▶ Testen')));
+    // Diagnose: hilft herauszufinden, warum ggf. die Gerätestimme spricht
+    const statusLine = el('p.p-muted', { style: 'font-size:13px;margin:4px 0 8px' }, '');
+    const showStatus = () => { if (natural) statusLine.textContent = 'Stimmen-Check: ' + V.status(); };
+    showStatus();
+    if (natural) voice.appendChild(statusLine);
     const rate = el('input', { type: 'range', min: '0.6', max: '1.2', step: '0.05', value: String(s.speechRate) });
     const rateLabel = el('span.p-muted', Math.round(s.speechRate * 100) + ' %');
     rate.addEventListener('input', () => { rateLabel.textContent = Math.round(rate.value * 100) + ' %'; });

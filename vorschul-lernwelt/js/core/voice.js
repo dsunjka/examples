@@ -44,11 +44,20 @@
   }
 
   const V = {
-    enabled: LT.store ? LT.store.get('naturalVoice', true) !== false : true,
+    enabled: LT.store ? LT.store.get('naturalVoiceOn', true) !== false : true,
     info: null, // { voice, model, packs: [...], count }
     map: null, // hash → Paketname
     packs: {}, // name → { promise, clips }
-    base: 'js/voice/',
+    // Ordner der Pakete relativ zu dieser Datei (…/js/core/voice.js → …/js/voice/)
+    base: (function () {
+      try {
+        const src = document.currentScript && document.currentScript.getAttribute('src');
+        if (src && /core\/voice\.js/.test(src)) return src.replace(/core\/voice\.js.*$/, 'voice/');
+      } catch (e) { /* ignore */ }
+      return 'js/voice/';
+    })(),
+    // Diagnose für den Elternbereich
+    stats: { rec: 0, dev: 0, missing: [], errors: [] },
     split,
     hash,
     key,
@@ -72,9 +81,26 @@
     return !!(V.enabled && V.map && LT.sfx && LT.sfx.context && LT.sfx.context());
   };
 
+  /** Kurzer Statustext für den Elternbereich. */
+  V.status = function () {
+    const st = V.stats;
+    const loaded = Object.keys(V.packs).filter((k) => V.packs[k].clips).length;
+    const ctx = LT.sfx && LT.sfx.context && LT.sfx.context();
+    const parts = [
+      `${(V.info && V.info.count) || 0} Aufnahmen`,
+      `${loaded}/${(V.info && V.info.packs && V.info.packs.length) || 0} Pakete geladen`,
+      `vorgelesen: ${st.rec} Aufnahme, ${st.dev} Gerätestimme`,
+      `Audio: ${ctx ? ctx.state : 'nicht verfügbar'}`,
+    ];
+    if (!V.enabled) parts.unshift('AUS (Gerätestimme gewählt)');
+    if (st.errors.length) parts.push('Ladefehler: ' + st.errors.join(', '));
+    if (st.missing.length) parts.push('zuletzt ohne Aufnahme: „' + st.missing.slice(-3).join('“, „') + '“');
+    return parts.join(' · ');
+  };
+
   V.setEnabled = function (on) {
     V.enabled = !!on;
-    if (LT.store) LT.store.set('naturalVoice', V.enabled);
+    if (LT.store) LT.store.set('naturalVoiceOn', V.enabled);
   };
 
   /** Paket laden (einmalig). Promise<boolean> */
@@ -88,7 +114,8 @@
       const s = document.createElement('script');
       s.src = V.base + name + '.js';
       s.async = true;
-      s.onerror = () => { p.failed = true; resolve(false); };
+      s.charset = 'utf-8';
+      s.onerror = () => { p.failed = true; p.promise = null; V.stats.errors.push(name); resolve(false); };
       document.head.appendChild(s);
     });
     return p.promise;
@@ -133,6 +160,25 @@
       if (b64) return { h, b64 };
     }
     return null;
+  };
+
+  /** Ersatz für Sätze ohne eigene Aufnahme, z. B. Reimpaare „Haus – Maus.“:
+   *  Teile einzeln suchen (mit/ohne Satzzeichen). Promise<[clip] | null> */
+  V.findParts = async function (sentence) {
+    const parts = sentence.split(/\s+[–-]\s+|,\s*/).map((x) => x.trim()).filter(Boolean);
+    if (parts.length < 2) return null;
+    const out = [];
+    for (const part of parts) {
+      const bare = part.replace(/[.!?…:;]+$/, '');
+      let clip = null;
+      for (const c of [part, bare, bare + '.', bare + '!', bare + '?']) {
+        const h = hash(key(c));
+        if (V.map[h]) { clip = await V.find(c); if (clip) break; }
+      }
+      if (!clip) return null;
+      out.push(clip);
+    }
+    return out;
   };
 
   // ---- Wiedergabe (Web Audio) ----
