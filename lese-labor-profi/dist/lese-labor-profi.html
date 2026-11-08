@@ -4412,13 +4412,16 @@ window.addEventListener('popstate', async () => {
   if (n === 'sitzung' && SITZ) { const ok = await sitzungBeenden(); if (ok === false) zurueckLegen(); return; }
   if (n === 'tempo-lauf') { tempoStopp(); TEMPO = null; zeige('tempo'); return; }
   if (n === 'blitz-lauf') { blitzAbbruch(); return; }
-  if (n === 'daumen') { if (DAUMEN && !DAUMEN.fertig && DAUMEN.i > 0) { DAUMEN.i--; zurueckLegen(); render(); daumenFokus(); } else zeige('byles'); return; }
+  if (n === 'daumen') {
+    if (DAUMEN && !DAUMEN.fertig && DAUMEN.i > 0) { DAUMEN.i--; try { history.pushState({ lese: n }, '', '#byles'); verlaufGesetzt = true; } catch (e) { /* egal */ } render(); daumenFokus(); } else zeige('byles');
+    return;
+  }
   if (n === 'diktat') { zeige('rechtschreibung'); return; }
 });
 window.addEventListener('hashchange', () => {
   const h = location.hash.slice(1);
   if (!HASH_ANSICHTEN.has(h) || h === ANSICHT.name) return;
-  if (ANSICHT.name === 'sitzung' || ANSICHT.name === 'tempo-lauf' || ANSICHT.name === 'blitz-lauf') return;
+  if (['sitzung', 'tempo-lauf', 'blitz-lauf', 'daumen'].includes(ANSICHT.name)) return;
   zeige(h);
 });
 
