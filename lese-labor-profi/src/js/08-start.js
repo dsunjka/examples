@@ -235,6 +235,7 @@ document.addEventListener('submit', (ev) => {
 });
 document.addEventListener('keydown', (ev) => {
   if (dialogAufloeser) { if (ev.key === 'Escape') dialogAufloeser('Escape'); else if (ev.repeat) ev.preventDefault(); return; }
+  const el = ev.target;
   if (ANSICHT.name === 'daumen' && el instanceof Element && el.matches('.daumen-knopf') && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(ev.key)) {
     ev.preventDefault();
     const k = $$('.daumen-knopf'), i = k.indexOf(el), n = ev.key === 'Home' ? 0 : ev.key === 'End' ? k.length - 1 : (i + (['ArrowLeft', 'ArrowUp'].includes(ev.key) ? -1 : 1) + k.length) % k.length;
@@ -242,7 +243,6 @@ document.addEventListener('keydown', (ev) => {
     return;
   }
   if (ANSICHT.name === 'blitz-lauf' && BLITZ && /^[1-4]$/.test(ev.key)) { ev.preventDefault(); if (!ev.repeat && BLITZ.phase === 'wahl') blitzWahl(Number(ev.key) - 1); return; }
-  const el = ev.target;
   if (ev.key === 'Enter' && el instanceof Element && el.matches('input[data-act="eingabe"]')) {
     ev.preventDefault();
     if (!SITZ || ANSICHT.name !== 'sitzung') return;
