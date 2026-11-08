@@ -96,6 +96,7 @@
    * opts: { level (erzwingen), onExit(result|null), onAgain, exitLabel }
    */
   E.start = function (gameId, opts = {}) {
+    if (LT.voice) LT.voice.preloadGame(gameId);
     const def = LT.games[gameId];
     if (!def) {
       LT.ui.toast('Dieses Spiel gibt es noch nicht.');

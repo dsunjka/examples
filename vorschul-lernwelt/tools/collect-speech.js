@@ -31,10 +31,18 @@ const HOOK = () => {
   const page = await (await browser.newContext({ viewport: { width: 1180, height: 820 } })).newPage();
   const load = async () => { await page.goto(URL); await page.waitForFunction(() => window.LT && window.LT.test && window.LT.games); await page.evaluate(HOOK); };
   await load();
-  const all = new Set(JSON.parse(fs.existsSync(OUT) && args.merge ? fs.readFileSync(OUT, 'utf8') : '[]'));
+  // Ergebnis: { "Text": ["spiel-id", ...] } – damit die Aufnahmen später je Spiel gepackt werden können
+  const all = new Map(Object.entries(fs.existsSync(OUT) && args.merge ? JSON.parse(fs.readFileSync(OUT, 'utf8')) : {}));
+  const save = () => fs.writeFileSync(OUT, JSON.stringify(Object.fromEntries(Array.from(all.entries()).sort())));
   const games = await page.evaluate(() => window.LT.gameOrder.map((id) => ({ id, levels: window.LT.games[id].levels })));
   const wanted = args.game ? String(args.game).split(',') : null;
-  const flush = async () => { (await page.evaluate(() => Array.from(window.__said))).forEach((t) => all.add(t)); };
+  const flush = async (tag) => {
+    for (const t of await page.evaluate(() => { const a = Array.from(window.__said); window.__said.clear(); return a; })) {
+      const g = all.get(t) || [];
+      if (!g.includes(tag)) g.push(tag);
+      all.set(t, g);
+    }
+  };
   for (const g of games.filter((x) => !wanted || wanted.includes(x.id))) {
     const before = all.size;
     for (let lv = 1; lv <= g.levels; lv++) {
@@ -68,17 +76,32 @@ const HOOK = () => {
         } catch (e) { await load(); }
       }
     }
-    await flush();
+    await flush(g.id);
     console.log(`${g.id.padEnd(18)} +${all.size - before} (gesamt ${all.size})`);
-    fs.writeFileSync(OUT, JSON.stringify(Array.from(all).sort(), null, 0));
+    save();
   }
   // App-Bildschirme (Start, Welten, Album, Pause …)
   await page.evaluate(() => { window.LT.app.showHome(); });
   for (const a of await page.evaluate(() => window.LT.areas.map((x) => x.id))) { await page.evaluate((id) => window.LT.app.showArea(id), a); await page.waitForTimeout(80); }
   await page.evaluate(() => { window.LT.app.showAlbum(); });
   await page.waitForTimeout(80);
-  await flush();
-  fs.writeFileSync(OUT, JSON.stringify(Array.from(all).sort(), null, 0));
-  console.log('Gesamt:', all.size, 'Zeichen:', Array.from(all).join(' ').length);
+  // Bewegungspausen (zufällige Übung) mehrfach, Zeitlimit, Startbildschirm
+  for (let i = 0; i < 40; i++) { await page.evaluate(() => { window.LT.app.showPause(() => {}); document.querySelectorAll('.overlay').forEach((o) => o.remove()); }); }
+  await page.evaluate(() => { try { window.LT.app.showLimit(); } catch (e) {} document.querySelectorAll('.overlay').forEach((o) => o.remove()); });
+  await page.evaluate(() => {
+    const LT = window.LT;
+    const say = (t) => LT.speech.say(t);
+    // Texte aus app.js mit Platzhaltern – für alle möglichen Werte
+    for (let n = 1; n <= LT.stickers.length + 10; n++) say(`Du hast schon ${n} Sticker gesammelt!`);
+    LT.stickers.forEach((st) => { say(st.name); say(`Hurra! Du hast das Tagesabenteuer geschafft! Du bekommst einen Bonus-Sticker: ${st.name}!`); });
+    LT.areas.forEach((a) => { say(a.hello); say(a.hello + ' Tippe auf ein Spiel!'); });
+    say('Hallo! Ich bin Flo, der Fuchs. Schön, dass du da bist! Wohin wollen wir heute reisen?');
+    say('Hurra! Du hast das Tagesabenteuer geschafft!');
+  });
+  await page.evaluate(() => { const b = document.querySelector('.splash .btn'); if (b) b.click(); });
+  await page.waitForTimeout(80);
+  await flush('app');
+  save();
+  console.log('Gesamt:', all.size, 'Zeichen:', Array.from(all.keys()).join(' ').length);
   await browser.close();
 })();
