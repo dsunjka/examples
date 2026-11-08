@@ -29,7 +29,7 @@ const V = sandbox.window.LT.voice;
 const sentences = new Map();
 for (const f of String(args.in || '').split(',').filter(Boolean)) {
   const data = JSON.parse(fs.readFileSync(f, 'utf8'));
-  const entries = Array.isArray(data) ? data.map((t) => [t, ['?']]) : Object.entries(data);
+  const entries = Array.isArray(data) ? data.map((t) => [t, []]) : Object.entries(data);
   for (const [utt, games] of entries) {
     for (const s of V.split(utt)) {
       if (!/[A-Za-zÄÖÜäöüß0-9]/.test(s)) continue;
@@ -42,7 +42,7 @@ for (const f of String(args.in || '').split(',').filter(Boolean)) {
 }
 const GAMES = new Set();
 for (const e of sentences.values()) for (const g of e.games) if (g !== 'app' && g !== '?') GAMES.add(g);
-const packOf = (e) => (e.games.size === 1 && !e.games.has('app') && !e.games.has('?') ? Array.from(e.games)[0] : 'common');
+const packOf = (e) => (e.games.size === 1 && !e.games.has('app') ? Array.from(e.games)[0] : 'common');
 
 const WAV = path.resolve(args.wav || path.join(ROOT, 'tools/.wav'));
 const wavPath = (k) => path.join(WAV, V.hash(k) + '.wav');
