@@ -82,6 +82,9 @@
     })();
   }
 
+  /* Alle festen Sätze des Buchs (für die Sprachaufnahmen) */
+  W.bookTexts = () => [...LEVEL_SAY, ...Object.values(TEXT), ...W.units.map((u) => u.title), ...W.units.flatMap((u) => u.facts.map((f) => f.text))];
+
   W.showBook = function (opts = {}) {
     const onBack = opts.onBack || (() => (LT.app && LT.app.showHome ? LT.app.showHome() : null));
     const reopen = () => W.showBook(opts);

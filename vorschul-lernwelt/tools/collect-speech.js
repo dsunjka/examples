@@ -97,6 +97,9 @@ const HOOK = () => {
     LT.areas.forEach((a) => { say(a.hello); say(a.hello + ' Tippe auf ein Spiel!'); });
     say('Hallo! Ich bin Flo, der Fuchs. Schön, dass du da bist! Wohin wollen wir heute reisen?');
     say('Hurra! Du hast das Tagesabenteuer geschafft!');
+    // Flos Reise und Forscherbuch
+    if (LT.reise && LT.reise.speechTexts) LT.reise.speechTexts().forEach(say);
+    if (LT.wissen && LT.wissen.bookTexts) LT.wissen.bookTexts().forEach(say);
   });
   await page.evaluate(() => { const b = document.querySelector('.splash .btn'); if (b) b.click(); });
   await page.waitForTimeout(80);
