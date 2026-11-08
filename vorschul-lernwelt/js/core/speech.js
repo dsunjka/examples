@@ -118,16 +118,29 @@
     try {
       if (LT.config.test) {
         await new Promise((r) => setTimeout(r, 5));
-      } else if (!S.enabled || !S.supported || opts.silent) {
+      } else if (!S.enabled || opts.silent || (!S.supported && !(LT.voice && LT.voice.available()))) {
         await new Promise((r) => setTimeout(r, S.enabled && S.supported ? 300 : Math.min(2500, 500 + text.length * 30)));
       } else {
         if (opts.interrupt !== false) {
-          try { synth.cancel(); } catch (e) { /* ignore */ }
+          if (LT.voice) LT.voice.stop();
+          if (S.supported) { try { synth.cancel(); } catch (e) { /* ignore */ } }
           await new Promise((r) => setTimeout(r, 40));
         }
-        for (const part of chunks(text)) {
-          if (token !== S._token) break;
-          await speakOne(part, opts, token);
+        const V = LT.voice;
+        if (V && V.available()) {
+          // Natürliche Stimme: Satz für Satz die Aufnahme abspielen, sonst Gerätestimme
+          for (const sentence of V.split(text)) {
+            if (token !== S._token) break;
+            const clip = await V.find(sentence);
+            if (token !== S._token) break;
+            const ok = clip && (await V.play(clip, () => token === S._token));
+            if (!ok && token === S._token && S.supported) await speakOne(sentence, opts, token);
+          }
+        } else if (S.supported) {
+          for (const part of chunks(text)) {
+            if (token !== S._token) break;
+            await speakOne(part, opts, token);
+          }
         }
       }
     } finally {
@@ -142,6 +155,7 @@
   S.stop = function () {
     S._token++;
     S.speaking = false;
+    if (LT.voice) LT.voice.stop();
     if (S.supported) {
       try { synth.cancel(); } catch (e) { /* ignore */ }
     }

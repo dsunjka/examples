@@ -29,6 +29,8 @@
   const F = {
     enabled: true,
     NOTES,
+    /** Gemeinsamer AudioContext (auch für die Vorlesestimme). */
+    context: () => ensure(),
     /** Einmal bei der ersten Berührung aufrufen (Autoplay-Regeln der Browser). */
     unlock() {
       const c = ensure();

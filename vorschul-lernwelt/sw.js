@@ -3,7 +3,7 @@
    http(s) ausgeliefert wird, z. B. GitHub Pages). Beim Installieren wird
    index.html gelesen und alle darin verlinkten Dateien werden gespeichert.
    ========================================================================== */
-const CACHE = 'lernwelt-v1';
+const CACHE = 'lernwelt-v2';
 const BASE = ['./', './index.html', './manifest.webmanifest', './assets/icon.svg', './assets/icon-192.png', './assets/icon-512.png', './assets/fonts/andika-400.woff2', './assets/fonts/andika-700.woff2'];
 
 self.addEventListener('install', (event) => {

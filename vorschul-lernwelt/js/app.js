@@ -607,10 +607,17 @@
     const voice = el('div.p-card', el('h3', 'Stimme & Ton'));
     const sel = el('select');
     const voices = LT.speech.voices;
-    if (!LT.speech.supported) sel.appendChild(el('option', 'Sprachausgabe wird von diesem Browser nicht unterstützt'));
-    else if (!voices.length) sel.appendChild(el('option', 'Keine deutsche Stimme gefunden'));
-    voices.forEach((v) => sel.appendChild(el('option', { value: v.name, selected: LT.speech.voice && LT.speech.voice.name === v.name }, `${v.name} (${v.lang})`)));
-    sel.addEventListener('change', () => LT.speech.setVoiceByName(sel.value));
+    const V = LT.voice;
+    const natural = !!(V && V.map);
+    if (natural) sel.appendChild(el('option', { value: '__flo', selected: V.enabled }, 'Flo – natürliche Stimme (empfohlen)'));
+    if (!LT.speech.supported && !natural) sel.appendChild(el('option', 'Sprachausgabe wird von diesem Browser nicht unterstützt'));
+    else if (!voices.length && !natural) sel.appendChild(el('option', 'Keine deutsche Stimme gefunden'));
+    voices.forEach((v) => sel.appendChild(el('option', { value: v.name, selected: !(natural && V.enabled) && LT.speech.voice && LT.speech.voice.name === v.name }, `Gerätestimme: ${v.name} (${v.lang})`)));
+    sel.addEventListener('change', () => {
+      if (sel.value === '__flo') { V.setEnabled(true); return; }
+      if (V) V.setEnabled(false);
+      LT.speech.setVoiceByName(sel.value);
+    });
     voice.appendChild(row('Vorlesestimme', sel, el('button.p-btn.light', { on: { click: () => LT.speech.say('Hallo! Ich bin Flo, der Fuchs. So klinge ich.') } }, '▶ Testen')));
     const rate = el('input', { type: 'range', min: '0.6', max: '1.2', step: '0.05', value: String(s.speechRate) });
     const rateLabel = el('span.p-muted', Math.round(s.speechRate * 100) + ' %');
@@ -620,7 +627,8 @@
     voice.appendChild(row('Vorlesen', toggle(s.speech, (v) => P.setSetting('speech', v))));
     voice.appendChild(row('Geräusche', toggle(s.sound, (v) => P.setSetting('sound', v))));
     voice.appendChild(row('Text in Sprechblase zeigen', toggle(s.showText, (v) => P.setSetting('showText', v))));
-    voice.appendChild(el('p.p-muted', 'Tipp: Die natürlichsten Stimmen bieten meist Microsoft Edge („Katja Online“, „Seraphina“) und Google Chrome („Google Deutsch“). Auf iPad/iPhone: Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen → Deutsch → „Anna (Erweitert)“ laden.'));
+    if (natural) voice.appendChild(el('p.p-muted', `Flos Stimme wurde vorab mit dem neuronalen Sprachmodell ${(V.info && V.info.model) || 'Pocket TTS'} aufgenommen (${(V.info && V.info.count) || 'tausende'} Sätze) und funktioniert auch ohne Internet. Das Sprechtempo gilt nur für Gerätestimmen. Sätze ohne Aufnahme liest die Gerätestimme vor.`));
+    voice.appendChild(el('p.p-muted', 'Tipp für Gerätestimmen: Die natürlichsten bieten meist Microsoft Edge („Katja Online“, „Seraphina“) und Google Chrome („Google Deutsch“). Auf iPad/iPhone: Einstellungen → Bedienungshilfen → Gesprochene Inhalte → Stimmen → Deutsch → „Anna (Erweitert)“ laden.'));
     body.appendChild(voice);
 
     const time = el('div.p-card', el('h3', 'Bildschirmzeit'));
