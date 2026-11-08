@@ -276,7 +276,7 @@ window.addEventListener('popstate', async () => {
   if (n === 'sitzung' && SITZ) { const ok = await sitzungBeenden(); if (ok === false) zurueckLegen(); return; }
   if (n === 'tempo-lauf') { tempoStopp(); TEMPO = null; zeige('tempo'); return; }
   if (n === 'blitz-lauf') { blitzAbbruch(); return; }
-  if (n === 'daumen') { const ziel = location.hash.slice(1); if (HASH_ANSICHTEN.has(ziel) && ziel !== 'byles') { zeige(ziel); return; } if (DAUMEN && !DAUMEN.fertig && DAUMEN.i > 0) { DAUMEN.i--; zurueckLegen(); render(); daumenFokus(); } else zeige('byles'); return; }
+  if (n === 'daumen') { if (DAUMEN && !DAUMEN.fertig && DAUMEN.i > 0) { DAUMEN.i--; zurueckLegen(); render(); daumenFokus(); } else zeige('byles'); return; }
   if (n === 'diktat') { zeige('rechtschreibung'); return; }
 });
 window.addEventListener('hashchange', () => {
