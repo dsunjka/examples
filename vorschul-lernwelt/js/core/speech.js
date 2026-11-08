@@ -133,8 +133,18 @@
             if (token !== S._token) break;
             const clip = await V.find(sentence);
             if (token !== S._token) break;
-            const ok = clip && (await V.play(clip, () => token === S._token));
-            if (!ok && token === S._token && S.supported) await speakOne(sentence, opts, token);
+            let ok = clip && (await V.play(clip, () => token === S._token));
+            if (!clip && token === S._token) {
+              const parts = await V.findParts(sentence);
+              if (parts) { ok = true; for (const c of parts) { if (token !== S._token || !(await V.play(c, () => token === S._token))) { ok = false; break; } } }
+            }
+            if (ok) V.stats.rec++;
+            else if (token === S._token) {
+              V.stats.dev++;
+              V.stats.missing.push(sentence + (clip ? ' (Abspielfehler)' : ''));
+              if (V.stats.missing.length > 20) V.stats.missing.shift();
+              if (S.supported) await speakOne(sentence, opts, token);
+            }
           }
         } else if (S.supported) {
           for (const part of chunks(text)) {
