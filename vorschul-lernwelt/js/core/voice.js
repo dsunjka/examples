@@ -162,23 +162,79 @@
     return null;
   };
 
-  /** Ersatz für Sätze ohne eigene Aufnahme, z. B. Reimpaare „Haus – Maus.“:
-   *  Teile einzeln suchen (mit/ohne Satzzeichen). Promise<[clip] | null> */
-  V.findParts = async function (sentence) {
-    const parts = sentence.split(/\s+[–-]\s+|,\s*/).map((x) => x.trim()).filter(Boolean);
-    if (parts.length < 2) return null;
-    const out = [];
-    for (const part of parts) {
-      const bare = part.replace(/[.!?…:;]+$/, '');
-      let clip = null;
-      for (const c of [part, bare, bare + '.', bare + '!', bare + '?']) {
-        const h = hash(key(c));
-        if (V.map[h]) { clip = await V.find(c); if (clip) break; }
+  /* ---- Zusammensetzen aus Teilaufnahmen ----
+     Viele Sätze entstehen erst im Spiel („Die letzte Zahl sagt uns, wie viele
+     es sind: fünf Frösche.“). Für sie gibt es keine eigene Aufnahme, wohl aber
+     aufgenommene Satzteile und Wörter in derselben natürlichen Stimme.
+     findChunks zerlegt den Satz so, dass möglichst wenige und möglichst lange
+     Aufnahmen gebraucht werden (bevorzugt an Kommas/Doppelpunkten). */
+  const ONES = ['null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn', 'elf', 'zwölf', 'dreizehn', 'vierzehn', 'fünfzehn', 'sechzehn', 'siebzehn', 'achtzehn', 'neunzehn'];
+  const TENS = ['', '', 'zwanzig', 'dreißig', 'vierzig', 'fünfzig', 'sechzig', 'siebzig', 'achtzig', 'neunzig'];
+  function numWord(n) {
+    if (n < 20) return ONES[n];
+    if (n < 100) { const o = n % 10, t = TENS[Math.floor(n / 10)]; return o ? (o === 1 ? 'ein' : ONES[o]) + 'und' + t : t; }
+    if (n === 100) return 'hundert';
+    return String(n);
+  }
+  V.numWord = numWord;
+  const PUNCT_END = /[.!?…,:;]+$/;
+  const QUOTES = /^[„“"»«(]+|[“”"»«)]+$/g;
+  /** Gibt es eine Aufnahme für dieses Stück (mit beliebigem Satzzeichen am Ende)? */
+  function lookup(piece) {
+    const p = piece.replace(QUOTES, '').trim();
+    if (!p) return null;
+    const bare = p.replace(PUNCT_END, '').replace(QUOTES, '').trim();
+    for (const c of [p, bare, bare + '.', bare + ',', bare + '!', bare + '?', bare + ':']) {
+      if (c && V.map[hash(key(c))]) return c;
+    }
+    return null;
+  }
+  V.lookup = lookup;
+
+  /** Promise<[{ clip, gap }] | null> – null nur, wenn ein Wort gar nicht aufgenommen ist. */
+  V.findChunks = async function (sentence) {
+    if (!V.map) return null;
+    let words = [];
+    for (const s of variants(sentence)) {
+      words = s.replace(/\s+[–-]\s+/g, ', ').replace(/(\d+)/g, (m) => numWord(Number(m))).split(/\s+/).filter((w) => w.replace(/[^\wÄÖÜäöüß]/g, ''));
+      if (words.length) break;
+    }
+    const n = words.length;
+    if (!n || n > 60) return null;
+    const MAXLEN = 14;
+    // best[i] = günstigste Zerlegung der ersten i Wörter
+    const best = new Array(n + 1).fill(null);
+    best[0] = { cost: 0, prev: -1, text: null };
+    for (let i = 1; i <= n; i++) {
+      for (let j = Math.max(0, i - MAXLEN); j < i; j++) {
+        if (!best[j]) continue;
+        const text = lookup(words.slice(j, i).join(' '));
+        if (!text) continue;
+        // Schnitt mitten im Satzteil (ohne Satzzeichen davor) kostet mehr als an einem Komma
+        const cut = j > 0 && !/[,:;.!?…]$/.test(words[j - 1]) ? 0.6 : 0;
+        const cost = best[j].cost + 1 + cut;
+        if (!best[i] || cost < best[i].cost) best[i] = { cost, prev: j, text };
       }
+    }
+    if (!best[n]) return null;
+    const pieces = [];
+    for (let i = n; i > 0; i = best[i].prev) pieces.unshift({ text: best[i].text, end: words[i - 1] });
+    const out = [];
+    for (let k = 0; k < pieces.length; k++) {
+      const pc = pieces[k];
+      const clip = await V.find(pc.text);
       if (!clip) return null;
-      out.push(clip);
+      // kurze Atempause an Satzzeichen, zwischen Wörtern keine
+      const last = k === pieces.length - 1;
+      out.push({ clip, gap: last ? 0 : /[,:;]$/.test(pc.end) ? 140 : /[.!?…]$/.test(pc.end) ? 220 : 0 });
     }
     return out;
+  };
+
+  /** Ältere Schnittstelle: nur die Aufnahmen. */
+  V.findParts = async function (sentence) {
+    const c = await V.findChunks(sentence);
+    return c && c.length > 1 ? c.map((x) => x.clip) : null;
   };
 
   // ---- Wiedergabe (Web Audio) ----

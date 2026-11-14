@@ -135,8 +135,15 @@
             if (token !== S._token) break;
             let ok = clip && (await V.play(clip, () => token === S._token));
             if (!clip && token === S._token) {
-              const parts = await V.findParts(sentence);
-              if (parts) { ok = true; for (const c of parts) { if (token !== S._token || !(await V.play(c, () => token === S._token))) { ok = false; break; } } }
+              const parts = await V.findChunks(sentence);
+              if (parts) {
+                ok = true;
+                for (const c of parts) {
+                  if (token !== S._token || !(await V.play(c.clip, () => token === S._token))) { ok = false; break; }
+                  if (c.gap) await new Promise((r) => setTimeout(r, c.gap));
+                }
+                if (ok) V.stats.joined = (V.stats.joined || 0) + 1;
+              }
             }
             if (ok) V.stats.rec++;
             else if (token === S._token) {
