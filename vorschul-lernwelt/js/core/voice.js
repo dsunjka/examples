@@ -68,7 +68,12 @@
     V.info = data.info || {};
     V.map = data.map || {};
     // Startbildschirm und Weltkarte sofort, gemeinsame Sätze gleich danach laden
-    if (V.enabled) setTimeout(() => { V.preload('app'); V.preload('common'); }, 0);
+    // danach im Hintergrund die Satzteile/Wörter zum Zusammensetzen
+    if (V.enabled) setTimeout(() => {
+      V.preload('app');
+      const c = V.preload('common');
+      Promise.resolve(c).then(() => { V.preload('fill'); return V.preload('parts'); });
+    }, 0);
   };
   /** Wird von js/voice/<paket>.js aufgerufen. */
   LT.voicePack = function (name, clips) {
@@ -89,7 +94,7 @@
     const parts = [
       `${(V.info && V.info.count) || 0} Aufnahmen`,
       `${loaded}/${(V.info && V.info.packs && V.info.packs.length) || 0} Pakete geladen`,
-      `vorgelesen: ${st.rec} Aufnahme, ${st.dev} Gerätestimme`,
+      `vorgelesen: ${st.rec} Aufnahme (davon ${st.joined || 0} zusammengesetzt), ${st.dev} Gerätestimme`,
       `Audio: ${ctx ? ctx.state : 'nicht verfügbar'}`,
     ];
     if (!V.enabled) parts.unshift('AUS (Gerätestimme gewählt)');
@@ -123,7 +128,8 @@
 
   /** Paket laden, falls es existiert. */
   V.preload = function (name) {
-    if (V.info && V.info.packs && V.info.packs.includes(name)) V.load(name);
+    if (V.info && V.info.packs && V.info.packs.includes(name)) return V.load(name);
+    return Promise.resolve(false);
   };
 
   /** Beim Start eines Spiels: dessen Aufnahmen schon vorladen. */
