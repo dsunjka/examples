@@ -128,8 +128,11 @@
 
   /** Paket laden, falls es existiert. */
   V.preload = function (name) {
-    if (V.info && V.info.packs && V.info.packs.includes(name)) return V.load(name);
-    return Promise.resolve(false);
+    // große Pakete sind in Teile aufgeteilt („parts“, „parts-2“, …) – nacheinander laden
+    const all = (V.info && V.info.packs) || [];
+    const names = all.filter((p) => p === name || p.startsWith(name + '-') && /^\d+$/.test(p.slice(name.length + 1)));
+    if (!names.length) return Promise.resolve(false);
+    return names.reduce((pr, n) => pr.then(() => V.load(n)), Promise.resolve()).then(() => true);
   };
 
   /** Beim Start eines Spiels: dessen Aufnahmen schon vorladen. */

@@ -87,6 +87,19 @@ if (mode === 'jobs') {
   }
   for (const f of fs.readdirSync(outDir)) if (f.endsWith('.js')) fs.unlinkSync(path.join(outDir, f));
   let total = 0;
+  // Pakete über ~14 MB aufteilen (Datei-Grenze beim Veröffentlichen 16 MB): „parts“, „parts-2“, …
+  const LIMIT = Number(args.maxmb || 14) * 1048576;
+  for (const [p, clips] of Object.entries(packs)) {
+    let size = 0; let part = 1;
+    for (const [h, b64] of Object.entries(clips)) {
+      size += b64.length + 40;
+      if (size > LIMIT) { part++; size = b64.length + 40; }
+      if (part > 1) {
+        const q = `${p}-${part}`;
+        (packs[q] = packs[q] || {})[h] = b64; delete clips[h]; map[h] = q;
+      }
+    }
+  }
   for (const [p, clips] of Object.entries(packs)) {
     const js = `/* Aufnahmen „${p}“ – erzeugt von tools/build-voice.js (Stimme: ${args.voice || 'juergen'}, Kyutai Pocket TTS, CC-BY-4.0) */\nLT.voicePack(${JSON.stringify(p)}, ${JSON.stringify(clips)});\n`;
     fs.writeFileSync(path.join(outDir, p + '.js'), js);
