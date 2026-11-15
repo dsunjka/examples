@@ -1,0 +1,249 @@
+/* Müll-Profi (muell) – Präfix .mue- */
+:root {
+  --mue-gelb: #ffd43b; --mue-gelb-d: #e0a800;
+  --mue-papier: #1c7ed6; --mue-papier-d: #13589a;
+  --mue-bio: #8d5a2b; --mue-bio-d: #5f3a18;
+  --mue-glas: #2f9e44; --mue-glas-d: #1f6e2f;
+  --mue-rest: #495057; --mue-rest-d: #212529;
+}
+
+/* ---------- Frage-Karte mit Ding ---------- */
+.prompt-box.mue-ask {
+  flex-wrap: nowrap;
+  gap: clamp(10px, 2.6vmin, 26px);
+  max-width: min(100%, 720px);
+  min-height: 0;
+  padding: clamp(10px, 2.2vmin, 22px) clamp(16px, 3.4vmin, 32px);
+  border: 4px solid #d3f9d8;
+}
+.mue-ask-pic { flex: none; display: inline-flex; align-items: center; justify-content: center; will-change: transform; }
+.mue-ask-e.emoji, .mue-ask-pic .emoji { font-size: clamp(60px, 12vmin, 112px); line-height: 1; }
+.mue-ask-pic .mue-svg { width: clamp(52px, 10vmin, 92px); height: clamp(104px, 20vmin, 184px); }
+.mue-ask-col { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.mue-ask-l { margin: 0; font-size: clamp(22px, 4.2vmin, 38px); font-weight: 800; line-height: 1.15; color: var(--ink); }
+.mue-ask-q { margin: 0; font-size: clamp(16px, 2.8vmin, 24px); font-weight: 700; color: var(--ink-soft); }
+.mue-avq .mue-ask-l { font-size: clamp(19px, 3.4vmin, 30px); line-height: 1.25; }
+
+.mue-svg { display: inline-block; line-height: 0; }
+.mue-svg svg { width: 100%; height: 100%; display: block; overflow: visible; }
+
+/* ---------- Tonnen-Reihe ---------- */
+.choices.mue-bins, .mue-bins {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(8px, 1.8vmin, 18px);
+  max-width: min(100%, 980px);
+}
+.tile.mue-bintile {
+  width: clamp(98px, 26vw, 156px);
+  height: auto;
+  min-height: 0;
+  padding: 10px 6px 8px;
+  border-radius: 22px;
+  font-size: 16px;
+  background: #fbfcff;
+}
+.mue-bins-3 .tile.mue-bintile { width: clamp(100px, 28vw, 170px); }
+.mue-bins-4 .tile.mue-bintile { width: clamp(80px, 21vw, 160px); }
+.tile.mue-bintile.mue-over { box-shadow: 0 0 0 6px var(--area), var(--shadow); transform: scale(1.06); }
+
+/* Tonne aus CSS-Formen */
+.mue-bin {
+  --c: var(--mue-rest); --cd: var(--mue-rest-d);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  pointer-events: none;
+}
+.mue-lid {
+  display: block;
+  width: 84%;
+  height: clamp(10px, 2vmin, 16px);
+  border-radius: 10px 10px 4px 4px;
+  background: var(--cd);
+  transform-origin: 8% 100%;
+  transition: transform .25s ease-out;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .18);
+}
+.mue-body {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72%;
+  aspect-ratio: 1 / 1.08;
+  margin-top: 2px;
+  background:
+    linear-gradient(90deg, transparent 18%, rgba(255, 255, 255, .22) 18% 24%, transparent 24%),
+    var(--c);
+  clip-path: polygon(0 0, 100% 0, 92% 100%, 8% 100%);
+  border-radius: 4px;
+}
+.mue-sym {
+  display: flex; align-items: center; justify-content: center;
+  width: 58%; aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .92);
+  font-size: clamp(22px, 4.6vmin, 40px);
+  line-height: 1;
+}
+.mue-wheels { display: flex; justify-content: space-between; width: 66%; height: 0; }
+.mue-wheels i {
+  display: block; width: clamp(10px, 2vmin, 15px); aspect-ratio: 1;
+  margin-top: -6px; border-radius: 50%; background: #2b2d42; border: 2px solid #868e96;
+}
+.mue-name {
+  margin-top: clamp(6px, 1.2vmin, 10px);
+  font-size: clamp(15px, 2.6vmin, 21px);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--ink);
+  text-align: center;
+}
+.mue-b-gelb { --c: var(--mue-gelb); --cd: var(--mue-gelb-d); }
+.mue-b-papier { --c: var(--mue-papier); --cd: var(--mue-papier-d); }
+.mue-b-bio { --c: var(--mue-bio); --cd: var(--mue-bio-d); }
+.mue-b-rest { --c: var(--mue-rest); --cd: var(--mue-rest-d); }
+.mue-open .mue-lid { transform: rotate(-28deg) translateY(-4px); }
+
+/* Glascontainer: Kuppel mit Einwurf-Loch */
+.mue-dome .mue-body {
+  width: 80%;
+  aspect-ratio: 1 / 1.05;
+  clip-path: none;
+  border-radius: 48% 48% 10px 10px / 40% 40% 10px 10px;
+  border: 3px solid var(--cd);
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 16%;
+  gap: 8%;
+}
+.mue-hole {
+  display: block; width: 34%; aspect-ratio: 1; border-radius: 50%;
+  background: #1a1b29; box-shadow: inset 0 3px 0 rgba(255, 255, 255, .15), 0 0 0 4px rgba(255, 255, 255, .5);
+  transition: transform .25s;
+}
+.mue-dome .mue-sym { width: 46%; font-size: clamp(18px, 3.6vmin, 30px); }
+.mue-glasdot {
+  display: block; width: 46%; aspect-ratio: 1; border-radius: 50%;
+  background: var(--g, #fff); border: 3px solid rgba(255, 255, 255, .9);
+  box-shadow: inset 4px 4px 0 rgba(255, 255, 255, .45);
+}
+.mue-b-glas { --c: var(--mue-glas); --cd: var(--mue-glas-d); }
+.mue-g-weiss { --c: #dbe4ea; --cd: #8fa3b1; --g: #f4fbfd; }
+.mue-g-weiss .mue-glasdot { border-color: #8fa3b1; }
+.mue-g-gruen { --c: #2b9348; --cd: #1b5e2f; --g: #51cf66; }
+.mue-g-braun { --c: #8a4b14; --cd: #5a300b; --g: #c07a3a; }
+.mue-open .mue-hole { transform: scale(1.25); }
+
+/* Pfand-Automat */
+.mue-automat .mue-body {
+  width: 76%;
+  aspect-ratio: 1 / 1.15;
+  clip-path: none;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #adb5bd, #868e96);
+  border: 3px solid #495057;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+.mue-screen {
+  display: flex; align-items: center; justify-content: center;
+  width: 70%; height: 26%;
+  border-radius: 6px; background: #f1f3f5;
+}
+.mue-screen .mue-pfandsign { height: 86%; aspect-ratio: 1; }
+.mue-slot { display: block; width: 40%; aspect-ratio: 1; border-radius: 50%; background: #1a1b29; box-shadow: 0 0 0 4px #ced4da; }
+.mue-coin { font-size: clamp(14px, 2.6vmin, 22px); line-height: 1; }
+
+/* ---------- Sortier-Band ---------- */
+.mue-bandtitle {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 6px 16px; border-radius: 999px;
+  background: var(--card); box-shadow: var(--shadow-press);
+  font-size: clamp(17px, 3vmin, 26px); font-weight: 800; color: var(--ink);
+}
+.mue-bandtitle-e { font-size: 1.3em; }
+.mue-band {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(8px, 1.8vmin, 16px);
+  max-width: min(100%, 900px);
+  padding: clamp(10px, 2vmin, 18px) clamp(10px, 2vmin, 20px) clamp(16px, 2.8vmin, 24px);
+  border-radius: 22px;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 34px, rgba(0, 0, 0, .1) 34px 38px) bottom / 100% 12px no-repeat,
+    linear-gradient(180deg, #5c6070, #3d4050);
+  box-shadow: inset 0 -12px 0 #2b2d42, var(--shadow);
+}
+.mue-band.mue-nudge { animation: mue-nudge .45s; }
+.mue-thing {
+  appearance: none; border: 0; cursor: pointer;
+  position: relative;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  width: clamp(84px, 20vw, 140px);
+  min-height: clamp(92px, 18vmin, 140px);
+  padding: 8px 4px;
+  border-radius: 18px;
+  background: var(--card);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, .25);
+  color: var(--ink);
+  font-family: inherit;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: transform .12s, box-shadow .12s;
+}
+.mue-thing .emoji { font-size: clamp(40px, 8vmin, 70px); line-height: 1; pointer-events: none; }
+.mue-thing .mue-svg { width: clamp(30px, 5.6vmin, 46px); height: clamp(60px, 11vmin, 92px); pointer-events: none; }
+.mue-thing-l {
+  max-width: 100%;
+  font-size: clamp(14px, 2.2vmin, 18px); font-weight: 800; line-height: 1.1; text-align: center; pointer-events: none;
+  hyphens: manual; overflow-wrap: anywhere;
+}
+.mue-thing.mue-sel { box-shadow: 0 0 0 5px var(--gold), 0 4px 0 rgba(0, 0, 0, .25); transform: translateY(-6px); }
+.mue-thing.mue-drag { z-index: 20; transition: none; box-shadow: 0 0 0 5px var(--gold), 0 14px 24px rgba(0, 0, 0, .3); pointer-events: none; }
+.mue-thing.mue-gone { visibility: hidden; pointer-events: none; }
+
+/* ---------- Vermeiden-Karten ---------- */
+.choices.mue-avs { gap: clamp(10px, 2vmin, 20px); max-width: min(100%, 940px); }
+.tile.mue-avtile {
+  width: clamp(150px, 28vw, 240px);
+  height: auto;
+  min-height: clamp(120px, 22vmin, 190px);
+  padding: 12px 8px;
+  font-size: 16px;
+}
+.mue-av { display: flex; flex-direction: column; align-items: center; gap: 8px; pointer-events: none; }
+.mue-av-pics { display: flex; align-items: center; justify-content: center; gap: 4px; min-height: clamp(56px, 10vmin, 84px); }
+.mue-av-e.emoji { font-size: clamp(40px, 8vmin, 66px); line-height: 1; }
+.mue-av-e2.emoji { font-size: clamp(28px, 5.4vmin, 46px); line-height: 1; }
+.mue-av-pics .mue-svg { width: clamp(28px, 5vmin, 40px); height: clamp(56px, 10vmin, 80px); }
+.mue-av-pics .mue-svg.mue-svg-wide { width: clamp(60px, 11vmin, 92px); height: clamp(52px, 9.5vmin, 80px); }
+.mue-av-again { font-size: clamp(22px, 4vmin, 34px); line-height: 1; }
+.mue-av-arrow { font-size: clamp(20px, 3.6vmin, 30px); color: var(--ink-soft); font-weight: 800; }
+.mue-av-bin { width: clamp(46px, 8vmin, 66px); display: inline-flex; }
+.mue-av-bin .mue-sym { font-size: clamp(12px, 2.2vmin, 18px); }
+.mue-av-bin .mue-wheels i { width: 8px; }
+.mue-av-l { font-size: clamp(15px, 2.5vmin, 21px); font-weight: 800; line-height: 1.2; text-align: center; color: var(--ink); }
+
+@keyframes mue-nudge {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+@media (max-width: 480px) {
+  /* Sortier-Band: drei Karten pro Reihe, damit lange Wörter Platz haben */
+  .mue-band { width: 100%; box-sizing: border-box; }
+  .mue-thing { width: calc((100% - 2 * clamp(8px, 1.8vmin, 16px)) / 3); padding: 8px 5px; }
+  .tile.mue-avtile { width: min(100%, 320px); min-height: 0; flex-direction: row; }
+  .mue-av { flex-direction: row; gap: 10px; text-align: left; width: 100%; justify-content: flex-start; }
+  .mue-av-pics { flex: none; width: 124px; }
+  .mue-av-l { text-align: left; }
+  .choices.mue-avs { flex-direction: column; align-items: center; }
+}

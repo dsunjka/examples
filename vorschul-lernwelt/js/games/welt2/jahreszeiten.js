@@ -15,8 +15,10 @@
      als anschaulicher Stütze: Welcher Tag kommt nach Montag?
    - Stufe 5: Wochentage ohne direkte Hilfe: vor, gestern/morgen, Wochenende,
      auch über den Wochenwechsel (nach Sonntag kommt wieder Montag).
-   - Hilfe nach 2 Fehlversuchen: Flo sagt die Reihe (Jahreszeiten/Wochentage)
-     vor und zeigt dabei mit – danach wird die Lösung hervorgehoben.
+   - Hilfe-Leiter: Erklärung zum Gewählten → Denkanstoß (Bäume/Himmel
+     vergleichen, Reihe aufsagen, im Wochenzug nachschauen) → Flo sagt die
+     Wochentage vor bzw. zeigt die Lösung und begründet sie.
+   - Lerninhalte („Kastanie – Herbst“, „nach Sommer“, „vor Freitag“) über ctx.item.
    ========================================================================== */
 (function () {
   'use strict';
@@ -55,6 +57,14 @@
     sommer: 'Dann ist es warm und die Sonne scheint lange.',
     herbst: 'Dann werden die Blätter bunt.',
     winter: 'Dann wird es kalt, und manchmal schneit es.',
+  };
+
+  /** Woran man die Jahreszeit am Baum erkennt (Denkanstoß in der Rückrichtung). */
+  const SEASON_TREE = {
+    fruehling: 'Der Baum blüht, und es wird wärmer.',
+    sommer: 'Der Baum ist ganz grün, und die Sonne scheint heiß.',
+    herbst: 'Die Blätter am Baum werden bunt und fallen herunter.',
+    winter: 'Der Baum ist kahl, und es liegt Schnee.',
   };
 
   /* ------------------------------------------------------------------
@@ -113,7 +123,8 @@
   async function taskSeasons(ctx) {
     const reverse = ctx.index % 2 === 1;
     if (!reverse) {
-      const it = U.pickFresh('w2-jz-item', SEASON_ITEMS, 6, (x) => x.e);
+      // Lerninhalt = Bild und Jahreszeit („Kastanie – Herbst“)
+      const it = ctx.item(SEASON_ITEMS, (x) => `${x.say} – ${W.season(x.s).name}`, { avoid: 6 });
       ctx.stage.appendChild(el('div.prompt-box.w2-prompt.w2-prompt-sm', U.emoji(it.e, 'big-emoji')));
       ctx.instruct(it.q);
       await ctx.choices(W.SEASONS.map((s) => seasonItem(s.id, s.id === it.s)), {
@@ -121,12 +132,16 @@
         shuffle: false,
         sayButton: true,
         nameFirst: ctx.index === 0,
-        correctSay: `Richtig! ${it.a}`,
-        wrongSay: (c) => `Das ist der ${W.season(c.value).name}. ${SEASON_FACT[c.value]} Hör noch mal: ${it.q}`,
-        hintSay: `${it.a} Schau, hier!`,
+        hintAfter: W.hintAfter(ctx, 4),
+        correctSay: () => (ctx.modelShown ? 'Genau!' : `Richtig! ${it.a}`),
+        explain: (c) => `Das ist der ${W.season(c.value).name}. ${SEASON_FACT[c.value]} Hör noch mal: ${it.q}`,
+        // Strategie: die vier Bäume vergleichen
+        hintSay: 'Schau dir die Bäume an: Blüten, grüne Blätter, bunte Blätter oder Schnee. Was passt dazu?',
+        modelSay: () => `Schau: ${it.a}`,
       });
     } else {
-      const s = U.pickFresh('w2-jz-rev', W.SEASONS, 2, (x) => x.id);
+      // Lerninhalt = die Jahreszeit („Herbst“)
+      const s = ctx.item(W.SEASONS, (x) => x.name, { avoid: 2 });
       const right = U.pick(SEASON_REV.filter((x) => x.s === s.id));
       const others = W.SEASONS.filter((x) => x.id !== s.id).map((o) => U.pick(SEASON_REV.filter((x) => x.s === o.id)));
       const wrong = U.sample(others, 2);
@@ -136,12 +151,15 @@
       await ctx.choices(items, {
         nameFirst: true,
         sayButton: true,
-        correctSay: `Richtig! ${right.a}`,
-        wrongSay: (it) => {
+        hintAfter: W.hintAfter(ctx, items.length),
+        correctSay: () => (ctx.modelShown ? 'Genau!' : `Richtig! ${right.a}`),
+        // 1. Hilfe: Wann gehört das gewählte Bild hin?
+        explain: (it) => {
           const x = SEASON_ITEMS.find((y) => y.e === it.content);
-          return x ? `Hmm. ${x.a} Probier es noch einmal!` : undefined;
+          return x ? `${x.a} Wir suchen etwas für den ${s.name}.` : undefined;
         },
-        hintSay: `${right.a} Schau, hier!`,
+        hintSay: () => `Schau dir den Baum an. ${SEASON_TREE[s.id]} Was passt dazu?`,
+        modelSay: () => `Schau: ${right.a}`,
       });
     }
   }
@@ -150,7 +168,8 @@
   async function taskDay(ctx) {
     const reverse = ctx.index % 2 === 1;
     if (!reverse) {
-      const it = U.pickFresh('w2-jz-tag', DAY_ITEMS.filter((x) => x.fwd !== false), 6, (x) => x.e);
+      // Lerninhalt = Bild und Tageszeit („Wecker – Morgen“)
+      const it = ctx.item(DAY_ITEMS.filter((x) => x.fwd !== false), (x) => `${x.say} – ${W.daytime(x.d).name}`, { avoid: 6 });
       ctx.stage.appendChild(el('div.prompt-box.w2-prompt.w2-prompt-sm', U.emoji(it.e, 'big-emoji')));
       ctx.instruct(it.q);
       await ctx.choices(W.DAYTIMES.map((d) => dayItem(d.id, d.id === it.d)), {
@@ -158,13 +177,16 @@
         shuffle: false,
         sayButton: true,
         nameFirst: ctx.index === 0,
-        correctSay: `Richtig! ${it.a}`,
-        wrongSay: (c) => `Das ist ${c.value === 'nacht' ? 'die' : 'der'} ${W.daytime(c.value).name}. ${DAY_FACT[c.value]} Hör noch mal: ${it.q}`,
-        hintSay: `${it.a} Schau, hier!`,
+        hintAfter: W.hintAfter(ctx, 4),
+        correctSay: () => (ctx.modelShown ? 'Genau!' : `Richtig! ${it.a}`),
+        explain: (c) => `Das ist ${c.value === 'nacht' ? 'die' : 'der'} ${W.daytime(c.value).name}. ${DAY_FACT[c.value]} Hör noch mal: ${it.q}`,
+        // Strategie: auf den Himmel achten
+        hintSay: 'Schau dir den Himmel auf den Bildern an: Wo ist die Sonne, oder ist es dunkel? Was passt dazu?',
+        modelSay: () => `Schau: ${it.a}`,
       });
     } else {
       const acts = DAY_ITEMS.filter((x) => x.act);
-      const right = U.pickFresh('w2-jz-act', acts, 3, (x) => x.e);
+      const right = ctx.item(acts, (x) => `${x.say} – ${W.daytime(x.d).name}`, { avoid: 3 });
       const d = W.daytime(right.d);
       const wrong = U.sample(U.uniqueBy(U.shuffle(acts.filter((x) => x.d !== right.d)), (x) => x.d), 2);
       ctx.stage.appendChild(el('div.prompt-box.w2-prompt.w2-prompt-scene', W.sceneTile(W.dayScene(d.id), d.name)));
@@ -173,9 +195,12 @@
       await ctx.choices(items, {
         nameFirst: true,
         sayButton: true,
-        correctSay: `Richtig! ${right.a}`,
-        wrongSay: (it) => `Hmm. ${it.value.a} Probier es noch einmal!`,
-        hintSay: `${right.a} Schau, hier!`,
+        hintAfter: W.hintAfter(ctx, items.length),
+        correctSay: () => (ctx.modelShown ? 'Genau!' : `Richtig! ${right.a}`),
+        explain: (it) => `${it.value.a} Was machst du ${d.dat}?`,
+        // Strategie: an den eigenen Tag denken
+        hintSay: () => `Denk an deinen eigenen Tag. Was machst du immer ${d.dat}?`,
+        modelSay: () => `Schau: ${right.a}`,
       });
     }
   }
@@ -184,7 +209,8 @@
   async function taskCycle(ctx) {
     const ids = W.SEASONS.map((s) => s.id);
     const before = ctx.index === 3 || (ctx.index > 1 && U.chance(0.3));
-    const i = U.pickFresh('w2-jz-cyc', [0, 1, 2, 3], 2);
+    // Lerninhalt = der Schritt im Kreislauf („nach Sommer“, „vor Frühling“)
+    const i = ctx.item([0, 1, 2, 3], (k) => `${before ? 'vor' : 'nach'} ${W.SEASONS[k].name}`, { avoid: 2 });
     const given = W.SEASONS[i];
     const ans = W.SEASONS[before ? (i + 3) % 4 : (i + 1) % 4];
     const q = el('div.w2-q-scene', U.emoji('❓', 'big-emoji'));
@@ -196,15 +222,21 @@
       : `Gerade ist ${given.name}. Welche Jahreszeit kommt nach dem ${given.name}?`;
     ctx.instruct(text);
     const items = ids.filter((id) => id !== given.id).map((id) => seasonItem(id, id === ans.id));
+    const seasonBefore = (id) => W.SEASONS[(ids.indexOf(id) + 3) % 4];
+    const seasonAfter = (id) => W.SEASONS[(ids.indexOf(id) + 1) % 4];
     await ctx.choices(items, {
       sayButton: true,
-      correctSay: before
-        ? `Richtig! Vor dem ${given.name} kommt der ${ans.name}.`
-        : `Richtig! Nach dem ${given.name} kommt der ${ans.name}. ${SEASON_FACT[ans.id]}`,
-      wrongSay: (it) => `Der ${W.season(it.value).name} kommt nicht direkt ${before ? 'vor' : 'nach'} dem ${given.name}.`,
-      onWrong: async (item, tile, n) => {
-        if (n === 2) await ctx.say('Hör gut zu: Frühling, Sommer, Herbst, Winter. Und dann fängt es wieder von vorne an mit dem Frühling.');
-      },
+      hintAfter: W.hintAfter(ctx, items.length),
+      correctSay: () => (ctx.modelShown ? 'Genau!'
+        : before ? `Richtig! Vor dem ${given.name} kommt der ${ans.name}.`
+          : `Richtig! Nach dem ${given.name} kommt der ${ans.name}. ${SEASON_FACT[ans.id]}`),
+      // 1. Hilfe: Wo steht die gewählte Jahreszeit im Kreislauf?
+      explain: (it) => (before
+        ? `Der ${W.season(it.value).name} kommt vor dem ${seasonAfter(it.value).name}. Wir suchen die Jahreszeit vor dem ${given.name}.`
+        : `Der ${W.season(it.value).name} kommt nach dem ${seasonBefore(it.value).name}. Wir suchen die Jahreszeit nach dem ${given.name}.`),
+      // 2. Hilfe: die Reihe aufsagen
+      hintSay: 'Hör gut zu: Frühling, Sommer, Herbst, Winter. Und dann fängt es wieder von vorne an mit dem Frühling.',
+      modelSay: () => (before ? `Schau: Vor dem ${given.name} kommt der ${ans.name}.` : `Schau: Nach dem ${given.name} kommt der ${ans.name}.`),
     });
   }
 
@@ -240,31 +272,37 @@
 
   async function taskWeek(ctx) {
     let mode = 'nach';
-    if (ctx.level >= 5) mode = U.pickFresh('w2-jz-wmode', ['vor', 'morgen', 'gestern', 'wochenende', 'nach'], 2);
+    const lv5 = ctx.taskLevel >= 5;
+    if (lv5) mode = U.pickFresh('w2-jz-wmode', ['vor', 'morgen', 'gestern', 'wochenende', 'nach'], 2);
     let d;
     let ans;
     let text;
     let say;
     if (mode === 'wochenende') {
       ans = U.pick([5, 6]);
+      ctx.track('Wochenende');
       const wrong = U.sample([0, 1, 2, 3, 4], 2);
       ctx.stage.appendChild(el('div.prompt-box.w2-prompt.w2-prompt-sm', U.emoji('🎈', 'big-emoji'), U.emoji('😊', 'big-emoji')));
       ctx.instruct('Am Wochenende haben viele Kinder frei. Welcher Tag gehört zum Wochenende?');
       await ctx.choices([dayChoice(ans, true), ...wrong.map((k) => dayChoice(k, false))], {
         nameFirst: true,
         sayButton: true,
-        correctSay: `Richtig! ${DAYS[ans]} gehört zum Wochenende. Das Wochenende sind Samstag und Sonntag.`,
-        wrongSay: (it) => `Am ${DAYS[it.value]} gehen viele Kinder in den Kindergarten. ${DAYS[it.value]} gehört nicht zum Wochenende.`,
-        hintSay: 'Das Wochenende sind die beiden letzten Tage der Woche: Samstag und Sonntag.',
+        hintAfter: W.hintAfter(ctx, 3),
+        correctSay: () => (ctx.modelShown ? 'Genau!' : `Richtig! ${DAYS[ans]} gehört zum Wochenende. Das Wochenende sind Samstag und Sonntag.`),
+        explain: (it) => `Am ${DAYS[it.value]} gehen viele Kinder in den Kindergarten. ${DAYS[it.value]} gehört nicht zum Wochenende.`,
+        hintSay: 'Ein Tipp: Das Wochenende sind die beiden letzten Tage der Woche.',
+        modelSay: () => `Schau: ${DAYS[ans]} ist ein Tag vom Wochenende. Das Wochenende sind Samstag und Sonntag.`,
       });
       return;
     }
     // Ausgangstag wählen (Stufe 4: kein Wochenwechsel, damit der Zug passt)
-    if (mode === 'nach' || mode === 'morgen') {
-      d = U.pickFresh('w2-jz-wd', ctx.level >= 5 ? U.range(0, 6) : U.range(0, 5), 3);
+    // Lerninhalt = der Schritt in der Woche („nach Montag“, „vor Freitag“); morgen/gestern üben dasselbe
+    const fwd = mode === 'nach' || mode === 'morgen';
+    if (fwd) {
+      d = ctx.item(lv5 ? U.range(0, 6) : U.range(0, 5), (k) => `nach ${DAYS[k]}`, { avoid: 3 });
       ans = mod7(d + 1);
     } else {
-      d = U.pickFresh('w2-jz-wd', U.range(0, 6), 3);
+      d = ctx.item(U.range(0, 6), (k) => `vor ${DAYS[k]}`, { avoid: 3 });
       ans = mod7(d - 1);
     }
     if (mode === 'nach') { text = `Welcher Tag kommt nach ${DAYS[d]}?`; say = `Richtig! Nach ${DAYS[d]} kommt ${DAYS[ans]}.`; }
@@ -275,16 +313,24 @@
     if (d === 0 && ans === 6) say += ' Der Sonntag ist der letzte Tag der Woche davor.';
 
     // Stufe 4: Zug zeigt Fragezeichen am Zielplatz; Stufe 5: nur der Ausgangstag ist markiert
-    const train = weekTrain(d, ans, ctx.level < 5);
+    const train = weekTrain(d, ans, !lv5);
     ctx.stage.appendChild(train);
     ctx.instruct(text);
     const wrongPool = U.shuffle([mod7(d + 2), mod7(d - 1), mod7(d + 1), mod7(d - 2), mod7(d + 3)].filter((k) => k !== ans && k !== d));
     const wrong = U.uniqueBy(wrongPool, (k) => k).slice(0, 2);
+    const ha = W.hintAfter(ctx, 3);
     await ctx.choices([dayChoice(ans, true), ...wrong.map((k) => dayChoice(k, false))], {
       nameFirst: true,
       sayButton: true,
-      correctSay: say,
-      wrongSay: (it) => (mode === 'nach' || mode === 'morgen'
+      hintAfter: ha,
+      correctSay: () => (ctx.modelShown ? 'Genau!' : say),
+      // 2. Hilfe: Strategie – im Zug nachschauen bzw. die Tage aufsagen
+      hintSay: () => (!lv5
+        ? `Schau auf den Zug. Welcher Waggon steht direkt ${fwd ? 'hinter' : 'vor'} ${DAYS[d]}?`
+        : `Sag die Wochentage leise auf, von Montag bis Sonntag. Welcher Tag kommt direkt ${fwd ? 'nach' : 'vor'} ${DAYS[d]}?`),
+      // 3. Hilfe: Flo sagt die Tage auf (onWrong) und begründet
+      modelSay: () => (fwd ? `Nach ${DAYS[d]} kommt ${DAYS[ans]}.` : `Vor ${DAYS[d]} kommt ${DAYS[ans]}.`),
+      explain: (it) => (fwd
         ? `${DAYS[it.value]} kommt nach ${DAYS[mod7(it.value - 1)]}. Wir suchen den Tag nach ${DAYS[d]}.`
         : `${DAYS[it.value]} kommt vor ${DAYS[mod7(it.value + 1)]}. Wir suchen den Tag vor ${DAYS[d]}.`),
       onCorrect: () => {
@@ -294,8 +340,8 @@
         car.firstChild.textContent = SHORT[ans];
       },
       onWrong: async (item, tile, n) => {
-        if (n === 2) {
-          await singWeek(ctx, train, mode === 'nach' || mode === 'morgen' ? d : ans);
+        if (n === ha + 1) {
+          await singWeek(ctx, train, fwd ? d : ans);
           train._cars[ans].classList.add('hint-glow');
         }
       },
@@ -322,9 +368,9 @@
       tip: 'Sprechen Sie morgens über den Tag: „Heute ist Dienstag – morgen ist Mittwoch, da ist Turnen.“ Ein Wochenplan mit Bildern an der Kühlschranktür und ein Jahreszeiten-Baum, den Sie gemeinsam immer wieder anschauen, machen Zeit greifbar.',
     },
     async task(ctx) {
-      if (ctx.level === 1) return taskSeasons(ctx);
-      if (ctx.level === 2) return taskDay(ctx);
-      if (ctx.level === 3) return taskCycle(ctx);
+      if (ctx.taskLevel === 1) return taskSeasons(ctx);
+      if (ctx.taskLevel === 2) return taskDay(ctx);
+      if (ctx.taskLevel === 3) return taskCycle(ctx);
       return taskWeek(ctx);
     },
   });

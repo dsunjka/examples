@@ -16,6 +16,24 @@
    Stufe 3: Wissenskarten wiederholen (verteiltes Lernen) · Experten- und Denkfragen
    Gewertet wird (für Sterne/Stufe), was beim ERSTEN Versuch gelingt.
 
+   Adaptiv lernen (Typ 'single' → eigene Steuerung, siehe engine.js):
+   - Verteiltes Wiederholen: Jede Forscherfrage (Schlüssel = Fragetext),
+     jede Stimmt-Aussage (Satz), jedes Sortier-Bild („Frisst Blätter – Raupe“),
+     jede Reihenfolge („Reihenfolge: Ei bis Schmetterling“) und das Bild der
+     Weißt-du-noch-Station wird mit ctx.track(key, ok) gemeldet. Fällige
+     Inhalte früherer Tage werden bevorzugt ausgewählt (höchstens 2 je Station).
+   - In der Runde: Eine falsch beantwortete Frage/Aussage kommt am Ende der
+     Station noch einmal. Nach einem Fehler wird die nächste Frage mit vier
+     Antworten leichter (eine Antwort weniger); alles auf Anhieb gewusst
+     (Stufe 1/2) → eine Knobel-Frage der nächsten Stufe (zählt nicht zur Wertung).
+   - Hilfe-Leiter: 1. Fehler → das Gewählte wird benannt („Mit den Ohren?
+     Das passt hier nicht.“); dann Denkanstoß passend zum Fragewort (Warum →
+     Grund überlegen, Wo → Ort …) + Frage wiederholen; dann vormachen mit
+     Begründung aus dem why-Text. Optional je Frage: hint (Denkanstoß) und
+     explain ({ Antwortindex: 'Satz' }) in den Inhaltsdaten. Stimmt-Aussagen:
+     Fehler → Begründung aus dem why-Text. Reihenfolge/Sortieren/Antippen:
+     gleichwertige Leiter (benennen → Tipp → zeigen).
+
    Alle gesprochenen Sätze sind feste Strings (vorab aufgenommene Stimme).
 
    API:
@@ -57,7 +75,7 @@
       soft: '#e1e9ff',
       hello: 'Willkommen in der Forscherwelt! Hier entdecken wir spannendes Wissen über Tiere, Natur, unseren Körper und die Welt.',
       parent:
-        'Sachwissen und naturwissenschaftliches Grundverständnis in kleinen Lernreisen: Entdecken (Bildergeschichte zum Mitmachen), Verstehen (Fragen mit Begründung), Anwenden (Reihenfolgen, Sortieren, Aussagen prüfen) und Sichern (Wissenskarte für das Forscherbuch). Fachbegriffe werden eingeführt und wiederholt, Stufe 3 enthält Transfer- und Denkfragen.',
+        'Sachwissen und naturwissenschaftliches Grundverständnis in kleinen Lernreisen: Entdecken (Bildergeschichte zum Mitmachen), Verstehen (Fragen mit Begründung), Anwenden (Reihenfolgen, Sortieren, Aussagen prüfen) und Sichern (Wissenskarte für das Forscherbuch). Fachbegriffe werden eingeführt und wiederholt, Stufe 3 enthält Transfer- und Denkfragen. Nicht gewusste Fragen kommen am Ende der Station und an späteren Tagen wieder; nach Fehlern helfen gestufte Tipps (Denkanstoß, dann Erklärung).',
       games: ORDER.slice(),
     });
   }
@@ -107,8 +125,95 @@
     cardNew: ['Kommt ins Forscherbuch!'],
     cardOld: ['Diese Karte hast du schon. Super, du weißt es noch!'],
     expert: ['Jetzt kommen die kniffligen Fragen!'],
+    // Hilfe-Leiter und erklärendes Feedback
+    tapHint: 'Ich helfe dir. Schau, wo es leuchtet.',
+    recallExplain: 'Dieses Bild passt zu einem anderen Satz.',
+    recallHint: 'Wir suchen das Bild zu diesem Satz.',
+    recallModel: 'Schau, hier. Dieses Bild passt zu dem Satz.',
+    notHere: 'Das passt hier nicht.',
+    modelLead: 'Schau, hier:',
+    thought: ['Gut überlegt!', 'Super, du hast nachgedacht!'],
+    afterHelp: ['Genau! Jetzt weißt du es.', 'Richtig! Das merkst du dir bestimmt.'],
+    again: ['Diese Frage kommt noch einmal. Weißt du es jetzt?'],
+    tfAgain: ['Diesen Satz hören wir noch einmal. Stimmt er oder stimmt er nicht?'],
+    bonus: ['Du weißt ja schon richtig viel! Hier ist eine Knobel-Frage.'],
+    tfSo: 'Darum stimmt das.',
+    tfSoNot: 'Darum stimmt das nicht.',
+    orderLater: 'Das kommt erst später.',
+    orderTip0: 'Ein Tipp: Womit fängt alles an?',
+    orderTip: 'Ein Tipp: Was muss zuerst passieren, damit es weitergeht?',
+    sortOther: 'Das gehört in einen anderen Korb.',
+    sortTip: 'Ein Tipp: Hör dir die Körbe noch einmal an.',
+    // Denkanstöße je Fragewort (verraten nicht die Lösung)
+    qWhy: 'Überleg mal, was der Grund dafür sein kann.',
+    qWhere: 'Überleg mal, an welchem Ort das sein kann.',
+    qFrom: 'Überleg mal, wo das herkommt.',
+    qWho: 'Überleg mal, wer das sein kann.',
+    qWhen: 'Überleg mal, wann das passiert.',
+    qWith: 'Überleg mal, was man dafür braucht.',
+    qOf: 'Überleg mal, woraus es besteht.',
+    qCount: 'Zähle in Gedanken nach.',
+    qImagine: 'Stell dir das ganz genau vor.',
+    qStory: 'Denk an unsere Geschichte.',
+    qKnow: 'Denk an das, was du schon weißt.',
   };
   const pick = (k) => U.pickFresh('wz-' + k, T[k], 1);
+
+  /** Satzzeichen am Ende sicherstellen (Beschriftungen werden als Satz gesprochen). */
+  const sentence = (s) => { s = String(s || '').trim(); return !s ? '' : /[.!?]$/.test(s) ? s : s + '.'; };
+  /** Begründung aus einem why-Text: Lob-/Antwortwort am Anfang entfernen („Genau! Aus dem Ei …“ → „Aus dem Ei …“). */
+  function reasonOf(why, answerWords) {
+    const re = answerWords
+      ? /^(Stimmt nicht|Stimmt|Richtig|Genau|Super gedacht|Super|Toll|Prima|Nein|Ja)\s*[!.,]\s*/
+      : /^(Richtig|Genau|Super gedacht|Super|Toll|Prima|Stimmt)\s*[!.]\s*/;
+    const r = String(why || '').trim().replace(re, '');
+    return r ? U.cap(r) : '';
+  }
+  /** Kurzer, lesbarer Schlüssel für den Elternbereich (erster Satz, gekürzt). */
+  function shortKey(s) {
+    s = String(s || '').trim();
+    const m = s.match(/^[^.!?]*[.!?]/);
+    s = m ? m[0] : s;
+    return s.length > 70 ? s.slice(0, 67).replace(/\s+\S*$/, '') + ' …' : s;
+  }
+  /**
+   * Inhalte für eine Station wählen: fällige Wiederholungen früherer Tage zuerst
+   * (höchstens budget.reviews je Runde), sonst abwechslungsreich zufällig.
+   */
+  function pickSome(ctx, tag, list, n, keyFn, budget) {
+    let rest = list.slice();
+    const out = [];
+    const due = LT.progress && LT.progress.dueItems ? LT.progress.dueItems(ctx.id) : [];
+    for (const k of due) {
+      if (out.length >= n || !budget || budget.reviews <= 0) break;
+      const x = rest.find((y) => keyFn(y) === k);
+      if (!x) continue;
+      out.push(x);
+      rest = rest.filter((y) => y !== x);
+      budget.reviews--;
+    }
+    while (out.length < n && rest.length) {
+      const x = U.pickFresh('wz-' + ctx.id + '-' + tag, rest, rest.length, keyFn);
+      out.push(x);
+      rest = rest.filter((y) => y !== x);
+    }
+    return out;
+  }
+  /** Denkanstoß je Fragewort – verrät nicht die Lösung. */
+  function questionTip(q, level) {
+    if (q.hint) return q.hint;
+    const t = q.q;
+    if (/^Warum\b/.test(t)) return T.qWhy;
+    if (/^Woher\b/.test(t)) return T.qFrom;
+    if (/^(Wo|Wohin)\b/.test(t)) return T.qWhere;
+    if (/^(Wer|Zu wem)\b/.test(t)) return T.qWho;
+    if (/^Wann\b/.test(t)) return T.qWhen;
+    if (/^Womit\b/.test(t)) return T.qWith;
+    if (/^Woraus\b/.test(t)) return T.qOf;
+    if (/^Wie viele\b/.test(t)) return T.qCount;
+    if (/^(Du|Dein|Ein|Eine|Es|Auf|Im|Bei|Beim|Nach|Der|Die|Das|Wasser|Papier|Auch|Treffen)\b/.test(t)) return T.qImagine;
+    return level === 1 ? T.qStory : T.qKnow;
+  }
 
   /* ------------------------------------------------------------------
      Kartenspeicher (Forscherbuch)
@@ -289,6 +394,8 @@
     const body = el('div.wz-body');
     stage.append(trail, body);
     const score = { sum: 0, n: 0, add(v) { this.sum += v; this.n++; } };
+    // höchstens zwei fällige Wiederholungen früherer Tage je Station (sonst zu viel Altes)
+    score.budget = () => ({ reviews: 2 });
     const clear = () => { U.clear(body); body.className = 'wz-body'; };
 
     // --- Titelkarte ---
@@ -391,8 +498,12 @@
           misses++;
           LT.sfx.play('tap');
           LT.ui.think();
-          ctx.say(pick('tapWrong'));
-          if (misses >= 2) target.classList.add('wz-lens-hint');
+          // Hilfe-Leiter: 1. Aufforderung wiederholen, ab 2. Fehler leuchtet das gesuchte Bild
+          if (misses === 1) ctx.say(pick('tapWrong') + (tap.say ? ' ' + tap.say : ''), { interrupt: true });
+          else {
+            target.classList.add('wz-lens-hint');
+            if (misses === 2) ctx.say(T.tapHint, { interrupt: true });
+          }
         };
         s.addEventListener('click', h);
         handlers.push([s, h]);
@@ -419,7 +530,8 @@
     await ctx.say(pick('step1b'));
     await ctx.sleep(cards.length ? 900 : 100);
     if (cards.length < 2) return;
-    const target = U.pick(cards);
+    const keyOf = (c) => 'Bild: ' + shortKey(c.say);
+    const target = pickSome(ctx, 'recall', cards, 1, keyOf, score.budget())[0];
     const others = U.sample(cards.filter((c) => c !== target), Math.min(2, cards.length - 1));
     U.clear(body);
     const box = el('div.prompt-box.wz-prompt', U.emoji('👂', 'mid-emoji wz-ear'), el('span.wz-q-text', target.say));
@@ -427,13 +539,27 @@
     body.append(box, choices);
     await ctx.instruct(T.recallQ + ' ' + target.say);
     const before = ctx.wrongCount;
+    ctx.modelShown = false;
     await ctx.choices([target, ...others].map((c) => ({
       content: W.scene(c.scene, 'wz-scene-tile'),
       correct: c === target,
       className: 'wz-scene-choice',
       aria: 'Bild',
-    })), { container: choices, size: 'wide', correctSay: pick('recallRight'), wrongSay: pick('recallWrong'), hintSay: T.hint });
-    score.add(ctx.wrongCount === before ? 1 : 0);
+      card: c,
+    })), {
+      container: choices,
+      size: 'wide',
+      hintAfter: 1,
+      correctSay: () => (ctx.wrongCount === before ? pick('recallRight') : pick('afterHelp')),
+      // 1. Fehler: sagen, zu welchem Satz das gewählte Bild gehört
+      explain: (chosen) => T.recallExplain + ' ' + chosen.card.say,
+      // Denkanstoß: den gesuchten Satz noch einmal hören
+      hintSay: () => T.recallHint + ' ' + target.say,
+      modelSay: T.recallModel,
+    });
+    const ok = ctx.wrongCount === before;
+    ctx.track(keyOf(target), ok);
+    score.add(ok ? 1 : 0);
   }
 
   /* ------------------------------------------------------------------
@@ -469,55 +595,114 @@
   /* ------------------------------------------------------------------
      Station 2: Forscherfragen
      ------------------------------------------------------------------ */
-  function selectQuestions(unit, level) {
+  const qKey = (q) => q.key || q.q;
+
+  function selectQuestions(ctx, unit, level, budget) {
     const L = (n) => unit.quiz.filter((q) => q.level === n);
+    const some = (list, n) => pickSome(ctx, 'quiz', list, n, qKey, budget);
     let list;
-    if (level === 1) list = U.sample(L(1), 3);
+    if (level === 1) list = some(L(1), 3);
     else if (level === 2) {
-      list = U.sample(L(2), 2);
-      list = list.concat(U.sample(L(1).concat(L(2)).filter((q) => !list.includes(q)), 3 - list.length));
+      list = some(L(2), 2);
+      list = list.concat(some(L(1).concat(L(2)).filter((q) => !list.includes(q)), 3 - list.length));
     } else {
-      list = U.sample(L(3), 3);
-      list = list.concat(U.sample(L(2), 3 - list.length));
+      list = some(L(3), 3);
+      list = list.concat(some(L(2), 3 - list.length));
     }
     // Rückfall: zu wenige Fragen in der gewünschten Stufe → irgendwelche
     if (list.length < 3) list = list.concat(U.sample(unit.quiz.filter((q) => !list.includes(q)), 3 - list.length));
     return U.shuffle(list).sort((a, b) => a.level - b.level);
   }
 
+  /**
+   * Eine Forscherfrage stellen (mit Hilfe-Leiter). Rückgabe: true = auf Anhieb gewusst.
+   * opts.ease → bei vier Antworten eine falsche weniger (nach Fehlern in der Runde).
+   */
+  async function askQuestion(ctx, q, body, dots, opts = {}) {
+    U.clear(body);
+    const box = el('div.prompt-box.wz-prompt', U.emoji('🔍', 'mid-emoji wz-lupe'), el('span.wz-q-text', q.q));
+    const choices = el('div.choices.wz-choices');
+    let items = q.answers.map((a, k) => ({
+      content: Array.isArray(a) ? a[0] : String(a),
+      label: Array.isArray(a) ? a[1] : '',
+      say: Array.isArray(a) ? a[1] || a[0] : String(a),
+      correct: k === q.correct,
+      k,
+    }));
+    if (opts.ease && items.length >= 4) {
+      const wrongs = items.filter((x) => !x.correct);
+      const drop = U.pick(wrongs);
+      items = items.filter((x) => x !== drop);
+    }
+    if (items.length === 4) choices.classList.add('four');
+    body.append(dots, box, choices);
+    if (opts.lead) await ctx.say(opts.lead);
+    await ctx.instruct(q.q);
+    const before = ctx.wrongCount;
+    const reason = reasonOf(q.why);
+    const two = items.length <= 2;
+    const ha = items.length <= 3 ? 1 : 2;
+    const named = (it) => (it.label ? it.label + '?' : '');
+    ctx.modelShown = false;
+    await ctx.choices(items, {
+      container: choices,
+      size: 'large',
+      nameFirst: true,
+      sayButton: true,
+      hintAfter: ha,
+      // auf Anhieb: Begründung; nach Denkanstoß: Prozess-Lob + Begründung; nach dem Vormachen: kurz bestätigen
+      correctSay: () => {
+        const wrongs = ctx.wrongCount - before;
+        if (!wrongs) return q.why || undefined;
+        if (ctx.modelShown) return pick('afterHelp');
+        return reason ? pick('thought') + ' ' + reason : pick('thought');
+      },
+      // 1. Fehler: das GEWÄHLTE benennen (bei nur zwei Antworten gleich mit Begründung)
+      explain: (chosen) => {
+        const own = q.explain && q.explain[chosen.k];
+        if (own) return own;
+        const base = [named(chosen), T.notHere].filter(Boolean).join(' ');
+        return two && reason ? base + ' ' + reason : base;
+      },
+      // Denkanstoß passend zum Fragewort + Frage wiederholen
+      hintSay: two ? undefined : () => questionTip(q, ctx.level) + ' ' + q.q,
+      // vormachen und begründen
+      modelSay: (right) => [T.modelLead, sentence(right.label || ''), reason].filter(Boolean).join(' '),
+    });
+    const first = ctx.wrongCount === before;
+    ctx.track(qKey(q), first);
+    return first;
+  }
+
   async function stationQuiz(ctx, unit, body, score) {
-    const qs = selectQuestions(unit, ctx.level);
+    const level = ctx.level;
+    const qs = selectQuestions(ctx, unit, level, score.budget());
     if (!qs.length) return;
-    await ctx.say(ctx.level === 3 ? pick('expert') : pick('step2'));
+    await ctx.say(level === 3 ? pick('expert') : pick('step2'));
     const dots = miniDots(qs.length);
+    const missed = [];
+    let ease = false;
     for (let i = 0; i < qs.length; i++) {
-      const q = qs[i];
-      U.clear(body);
       dots.set(i, 'current');
-      const box = el('div.prompt-box.wz-prompt', U.emoji('🔍', 'mid-emoji wz-lupe'), el('span.wz-q-text', q.q));
-      const choices = el('div.choices.wz-choices');
-      if (q.answers.length === 4) choices.classList.add('four');
-      body.append(dots, box, choices);
-      await ctx.instruct(q.q);
-      const before = ctx.wrongCount;
-      const items = q.answers.map((a, k) => ({
-        content: Array.isArray(a) ? a[0] : String(a),
-        label: Array.isArray(a) ? a[1] : '',
-        say: Array.isArray(a) ? a[1] || a[0] : String(a),
-        correct: k === q.correct,
-      }));
-      await ctx.choices(items, {
-        container: choices,
-        size: 'large',
-        nameFirst: true,
-        sayButton: true,
-        correctSay: q.why || undefined,
-        hintSay: T.hint,
-      });
-      const first = ctx.wrongCount === before;
+      const first = await askQuestion(ctx, qs[i], body, dots, { ease });
       score.add(first ? 1 : 0);
       dots.set(i, first ? 'star' : 'done');
+      if (!first) missed.push(qs[i]);
+      ease = !first; // nach einem Fehler: nächste Frage mit vier Antworten etwas leichter
       await ctx.sleep(250);
+    }
+    if (missed.length) {
+      // Zwillingsaufgabe: eine nicht gewusste Frage kommt noch einmal (zählt nicht zur Wertung)
+      await askQuestion(ctx, missed[0], body, dots, { lead: pick('again') });
+      await ctx.sleep(250);
+    } else if (level < 3) {
+      // alles auf Anhieb gewusst → eine Knobel-Frage der nächsten Stufe (zählt nicht zur Wertung)
+      const pool = unit.quiz.filter((q) => q.level === level + 1 && !qs.includes(q));
+      const bonus = pool.length ? pickSome(ctx, 'bonus', pool, 1, qKey, score.budget())[0] : null;
+      if (bonus) {
+        await askQuestion(ctx, bonus, body, dots, { lead: pick('bonus') });
+        await ctx.sleep(250);
+      }
     }
   }
 
@@ -582,17 +767,23 @@
           busy = false;
           if (step >= items.length) resolve();
         } else {
+          // Hilfe-Leiter: 1. das Gewählte einordnen → 2. Denkanstoß → 3. zeigen
           stepWrong++;
-          await ctx.wrong(t, { keep: true, say: pick('orderWrong') });
-          if (stepWrong >= 2) {
-            const right = tiles.find((x) => !x._placed && x._it.k === step);
-            if (right) { ctx.hint(right); if (stepWrong === 2) ctx.say(T.orderHint); }
-          }
+          const right = tiles.find((x) => !x._placed && x._it.k === step);
+          let say;
+          if (stepWrong === 1) say = t._it.label ? sentence(t._it.label) + ' ' + T.orderLater : pick('orderWrong');
+          else if (stepWrong === 2) say = p.hint || (step === 0 ? T.orderTip0 : T.orderTip);
+          else if (stepWrong === 3) say = T.orderHint + (right && right._it.label ? ' ' + sentence(right._it.label) : '');
+          else say = '';
+          await ctx.wrong(t, { keep: true, say });
+          if (stepWrong >= 3 && right) ctx.hint(right);
           busy = false;
         }
       }));
     });
     score.add(firstTry / items.length);
+    const ends = [items[0].label, items[items.length - 1].label].filter(Boolean);
+    ctx.track(p.key || 'Reihenfolge: ' + (ends.length === 2 ? ends.join(' bis ') : items.map((x) => x.e).join(' ')), firstTry === items.length);
     LT.sfx.play('correct');
     LT.ui.cheer();
     row.classList.add('complete');
@@ -665,6 +856,7 @@
         t.classList.remove('picked');
         baskets.forEach((x) => ctx.unhint(x));
         if (!t._wrong) firstTry++;
+        ctx.track(p.key ? p.key + ': ' + t._it.label : (t._it.label || t._it.e) + ' – ' + (groups[t._it.g][1] || groups[t._it.g][0]), !t._wrong);
         selected = null;
         const chip = el('span.wz-chip.emoji', { title: t._it.label }, t._it.e);
         t.classList.add('gone');
@@ -683,13 +875,20 @@
         selected = null;
         t.classList.remove('picked');
         markState();
-        await ctx.wrong(b, { keep: true, say: pick('sortWrong') });
-        if (t._wrong >= 2) {
+        // Hilfe-Leiter je Bild: 1. benennen → (bei drei Körben) 2. Körbe noch einmal hören → zeigen
+        const tipAt = groups.length > 2 ? 2 : 0;
+        let say;
+        if (t._wrong === 1) say = t._it.label ? sentence(t._it.label) + ' ' + T.sortOther : pick('sortWrong');
+        else if (t._wrong === tipAt) say = T.sortTip + ' ' + groups.map((g) => sentence(g[1])).filter(Boolean).join(' ');
+        else say = '';
+        const model = t._wrong >= (tipAt ? 3 : 2);
+        await ctx.wrong(b, { keep: true, say: model ? '' : say });
+        if (model && ctx.active) {
           ctx.hint(baskets[t._it.g]);
           selected = t;
           t.classList.add('picked');
           markState();
-          ctx.say(T.sortHint);
+          if (t._wrong === (tipAt ? 3 : 2)) ctx.say(T.sortHint);
         }
         busy = false;
       }
@@ -759,45 +958,64 @@
   }
 
   /* --- Stimmt oder stimmt nicht? --- */
+  const tfKey = (x) => x.key || x.s;
+
+  async function askStatement(ctx, it, body, dots, lead) {
+    U.clear(body);
+    const card = el('div.wz-tf-card', U.emoji(it.e || '❓', 'wz-tf-e'), el('p.wz-tf-text', it.s));
+    const choices = el('div.choices.wz-tf-choices');
+    body.append(dots, card, choices);
+    if (lead) await ctx.say(lead);
+    await ctx.instruct(it.s);
+    const before = ctx.wrongCount;
+    const reason = reasonOf(it.why, true);
+    ctx.modelShown = false;
+    await ctx.choices([
+      { content: '👍', label: 'Stimmt', say: 'Stimmt', correct: !!it.ok, className: 'wz-yes' },
+      { content: '👎', label: 'Stimmt nicht', say: 'Stimmt nicht', correct: !it.ok, className: 'wz-no' },
+    ], {
+      container: choices,
+      shuffle: false,
+      size: 'wide',
+      hintAfter: 1,
+      // auf Anhieb: Begründung; nach einem Fehler wurde sie schon erklärt → kurz bestätigen
+      correctSay: () => (ctx.wrongCount === before ? it.why || pick('tfRight') : pick('afterHelp')),
+      // Fehler: Begründung aus dem why-Text, danach leuchtet die richtige Antwort
+      explain: () => (reason ? reason + ' ' + (it.ok ? T.tfSo : T.tfSoNot) : pick('tfWrong')),
+    });
+    const ok = ctx.wrongCount === before;
+    ctx.track(tfKey(it), ok);
+    return ok;
+  }
+
   async function playTrueFalse(ctx, p, body, score) {
     const all = asArr(p.items).filter((x) => x && x.s);
     if (!all.length) return;
-    let list = U.sample(all, Math.min(all.length, 4));
+    let list = pickSome(ctx, 'tf', all, Math.min(all.length, 4), tfKey, score.budget ? score.budget() : null);
     // möglichst beide Antworten vorkommen lassen
     if (list.every((x) => x.ok) || list.every((x) => !x.ok)) {
       const other = all.find((x) => !list.includes(x) && x.ok !== list[0].ok);
       if (other) list[list.length - 1] = other;
-      list = U.shuffle(list);
     }
+    list = U.shuffle(list);
     const dots = miniDots(list.length);
     if (p.say) await ctx.say(p.say);
     let first = 0;
+    const missed = [];
     for (let i = 0; i < list.length; i++) {
-      const it = list[i];
-      U.clear(body);
       dots.set(i, 'current');
-      const card = el('div.wz-tf-card', U.emoji(it.e || '❓', 'wz-tf-e'), el('p.wz-tf-text', it.s));
-      const choices = el('div.choices.wz-tf-choices');
-      body.append(dots, card, choices);
-      await ctx.instruct(it.s);
-      const before = ctx.wrongCount;
-      await ctx.choices([
-        { content: '👍', label: 'Stimmt', say: 'Stimmt', correct: !!it.ok, className: 'wz-yes' },
-        { content: '👎', label: 'Stimmt nicht', say: 'Stimmt nicht', correct: !it.ok, className: 'wz-no' },
-      ], {
-        container: choices,
-        shuffle: false,
-        size: 'wide',
-        hintAfter: 1,
-        correctSay: it.why || pick('tfRight'),
-        wrongSay: pick('tfWrong'),
-      });
-      const ok = ctx.wrongCount === before;
+      const ok = await askStatement(ctx, list[i], body, dots);
       if (ok) first++;
+      else missed.push(list[i]);
       dots.set(i, ok ? 'star' : 'done');
       await ctx.sleep(200);
     }
     score.add(first / list.length);
+    // Zwillingsaufgabe: eine nicht gewusste Aussage noch einmal (zählt nicht zur Wertung)
+    if (missed.length) {
+      await askStatement(ctx, missed[0], body, dots, pick('tfAgain'));
+      await ctx.sleep(200);
+    }
   }
 
   /* ------------------------------------------------------------------

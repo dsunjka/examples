@@ -1,0 +1,189 @@
+/* ==========================================================================
+   Blitzwörter (deutsch1/blitzwoerter) – Präfix .bli-
+   ========================================================================== */
+
+.stage.bli-stage { gap: clamp(12px, 2.6vmin, 26px); }
+
+/* ---------- Blitzkarte ---------- */
+.bli-top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 2vmin, 18px);
+  max-width: 100%;
+}
+.bli-card {
+  position: relative;
+  overflow: hidden;
+  flex-wrap: nowrap;
+  width: min(calc(100vw - 112px), 560px);
+  min-height: clamp(110px, 20vmin, 180px);
+  padding: clamp(12px, 2.4vmin, 24px) clamp(16px, 3vmin, 30px);
+  background-color: #fffef7;
+  background-image: linear-gradient(180deg, transparent 74%, rgba(66, 133, 244, 0.25) 74%, rgba(66, 133, 244, 0.25) calc(74% + 2px), transparent calc(74% + 2px));
+  box-shadow: var(--shadow), inset 0 0 0 3px #e4e9f5;
+}
+.bli-word {
+  font: 700 clamp(48px, 11vmin, 104px)/1.1 var(--font);
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.12s;
+}
+.bli-wl { display: inline-block; border-radius: 10px; transition: background 0.2s, transform 0.2s; }
+.bli-wl.bli-lit { background: #fff1b8; box-shadow: 0 0 0 4px var(--gold); transform: translateY(-4px); }
+.bli-cover {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  border-radius: inherit;
+  color: #fff;
+  background:
+    radial-gradient(circle at 22% 30%, rgba(255, 255, 255, 0.28), transparent 40%),
+    linear-gradient(135deg, #7048e8, #4dabf7);
+  transition: opacity 0.12s, transform 0.12s;
+}
+.bli-bolt { font-size: clamp(46px, 9vmin, 84px); line-height: 1; filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.18)); animation: bli-zap 2s ease-in-out infinite; }
+.bli-cover-lbl { font: 700 clamp(22px, 4.2vmin, 38px)/1 var(--font); text-shadow: 0 2px 0 rgba(0, 0, 0, 0.18); }
+.bli-card.bli-show .bli-word { opacity: 1; }
+.bli-card.bli-show .bli-cover { opacity: 0; transform: scale(1.06); pointer-events: none; }
+.bli-card.bli-show { box-shadow: 0 0 0 6px var(--gold), var(--shadow); }
+.bli-card.bli-done { box-shadow: 0 0 0 6px var(--ok), var(--shadow); }
+@keyframes bli-zap { 0%, 100% { transform: rotate(-8deg) scale(1); } 50% { transform: rotate(8deg) scale(1.12); } }
+
+.btn-round.bli-again {
+  width: clamp(60px, 9vmin, 76px);
+  height: clamp(60px, 9vmin, 76px);
+  /* gleiche Farbe wie die Abdeckung der Blitzkarte → „Karte nochmal aufblitzen“ */
+  background:
+    radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.3), transparent 45%),
+    linear-gradient(135deg, #7048e8, #4dabf7);
+  box-shadow: 0 4px 0 #4b2db3;
+}
+.btn-round.bli-again .emoji {
+  font-size: clamp(28px, 4.6vmin, 38px);
+  filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.25));
+}
+
+/* ---------- Wort-Kacheln ---------- */
+.bli-choices { gap: clamp(10px, 2vmin, 20px); }
+.tile.bli-wtile {
+  width: auto;
+  min-width: clamp(120px, 22vmin, 200px);
+  height: clamp(76px, 13vmin, 116px);
+  padding: 0 clamp(14px, 2.6vmin, 26px);
+}
+.bli-tword {
+  font: 700 clamp(34px, 6.6vmin, 60px)/1 var(--font);
+  color: var(--ink);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+/* ---------- Schatzkiste ---------- */
+.bli-chest {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 6px;
+  max-width: 100%;
+  overflow: hidden;
+  padding: 6px 14px 6px 8px;
+  border-radius: 999px;
+  background: #fff6d6;
+  box-shadow: inset 0 0 0 3px rgba(224, 155, 0, 0.35);
+}
+.bli-chest-ico .emoji { font-size: clamp(24px, 4vmin, 32px); }
+.bli-chest-empty { font: 700 clamp(15px, 2.4vmin, 20px)/1 var(--font); color: var(--gold-dark); }
+.bli-gem {
+  flex: 0 0 auto;
+  padding: 4px 10px;
+  border-radius: 12px;
+  background: #fff;
+  font: 700 clamp(15px, 2.6vmin, 22px)/1.1 var(--font);
+  color: #7048e8;
+  box-shadow: 0 2px 0 rgba(112, 72, 232, 0.25);
+}
+.bli-gem.bli-new { animation: bli-gem-in 0.5s ease-out; }
+@keyframes bli-gem-in { 0% { transform: translateY(-30px) scale(0.5); opacity: 0; } 100% { transform: none; opacity: 1; } }
+
+/* ---------- Stufe 4: Merk-Schreiben ---------- */
+.bli-line {
+  --cell: clamp(48px, 9.6vmin, 84px);
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: clamp(5px, 1.2vmin, 12px);
+  max-width: 100%;
+  padding: clamp(8px, 1.6vmin, 14px) clamp(10px, 2vmin, 18px);
+  border-radius: var(--radius);
+  background: #fffef7;
+  box-shadow: var(--shadow), inset 0 0 0 3px #e4e9f5;
+  transition: box-shadow 0.25s;
+}
+@media (max-width: 600px) {
+  .bli-line { --cell: min(52px, calc((100vw - 72px - (var(--n) - 1) * 5px) / var(--n))); }
+}
+.bli-slot {
+  width: var(--cell);
+  height: calc(var(--cell) * 1.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  border: 3px dashed rgba(112, 72, 232, 0.4);
+  background: rgba(112, 72, 232, 0.06);
+  font: 700 calc(var(--cell) * 0.74)/1 var(--font);
+  color: var(--ink);
+}
+.bli-slot.bli-filled { border: 3px solid #7048e8; background: #fff; animation: bli-drop 0.22s ease-out; }
+.bli-line.bli-line-ok { box-shadow: 0 0 0 6px var(--ok), var(--shadow); }
+.bli-line.bli-line-ok .bli-slot { border-color: var(--ok); background: var(--ok-soft); }
+@keyframes bli-drop { 0% { transform: translateY(-16px) scale(0.7); opacity: 0; } 100% { transform: none; opacity: 1; } }
+
+.bli-kb {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(8px, 1.6vmin, 14px);
+  max-width: min(100%, 720px);
+}
+.tile.bli-key {
+  --tile: clamp(58px, 10.5vmin, 92px);
+  width: var(--tile);
+  height: var(--tile);
+}
+.bli-key-txt { font: 700 calc(var(--tile) * 0.58)/1 var(--font); color: var(--ink); }
+.tile.bli-key.bli-used { opacity: 0.2; transform: scale(0.86); pointer-events: none; box-shadow: none; }
+
+/* ---------- Stufe 5: Lückensatz ---------- */
+.bli-sent {
+  display: block;
+  min-height: 0;
+  max-width: min(94vw, 820px);
+  font: 700 clamp(30px, 5.8vmin, 54px)/1.45 var(--font);
+  color: var(--ink);
+  text-align: center;
+  background-color: #fffef7;
+}
+.bli-gap {
+  display: inline-block;
+  min-width: 3.2em;
+  padding: 0 0.25em;
+  border-radius: 12px;
+  border-bottom: 5px solid #7048e8;
+  background: rgba(112, 72, 232, 0.1);
+  text-align: center;
+  animation: bli-gap-pulse 1.6s ease-in-out infinite;
+}
+.bli-gap.bli-gap-ok { animation: none; border-bottom-color: var(--ok); background: var(--ok-soft); color: #1b7a4b; }
+@keyframes bli-gap-pulse { 0%, 100% { background: rgba(112, 72, 232, 0.08); } 50% { background: rgba(112, 72, 232, 0.2); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .bli-bolt, .bli-gap { animation: none; }
+}

@@ -13,8 +13,10 @@
      Flo, was dieses Tier macht („Die Katze macht Miau.“) bzw. erklärt
      typische Denkfallen („Der Pinguin ist ein Vogel, kann aber nicht fliegen.“
      „Der Wal lebt im Wasser, ist aber kein Fisch.“).
-   - Nach 2 Fehlversuchen wird die richtige Kachel hervorgehoben und Flo gibt
-     einen Hinweis – jede Aufgabe endet mit einem Erfolg.
+   - Hilfe-Leiter: Erklärung zum gewählten Tier → Denkanstoß (Merkmal des
+     gesuchten Tieres bzw. des Lebensraums) → Flo zeigt und begründet.
+     Lerninhalte („Kuh: Muh“, „Fohlen“, „Pinguin – Eis und Schnee“,
+     „kann fliegen“) über ctx.item – jede Aufgabe endet mit einem Erfolg.
    - Datensätze sind bewusst so gewählt, dass es immer GENAU EINE richtige
      Antwort gibt (z. B. nie Ente und Frosch zusammen bei „Quak“, nie Ente als
      Ablenker beim Küken, weil Entenkinder auch Küken heißen).
@@ -50,6 +52,17 @@
   const word = (id) => A[id][1].replace(/^\S+\s/, ''); // „Kuh“
   const Nom = (id) => U.cap(nom(id));                 // „Die Kuh“
 
+  /** Denkanstoß: ein Merkmal des Tieres (verrät nicht den Namen). */
+  const CLUE = {
+    kuh: 'Das Tier gibt uns Milch.', schaf: 'Das Tier hat ganz viel Wolle.', hund: 'Das Tier wedelt mit dem Schwanz und bewacht das Haus.',
+    katze: 'Das Tier schnurrt und fängt Mäuse.', schwein: 'Das Tier wälzt sich gern im Schlamm.', hahn: 'Das Tier weckt morgens den ganzen Bauernhof.',
+    huhn: 'Das Tier legt Eier.', ente: 'Das Tier schwimmt auf dem Teich und hat Federn.', frosch: 'Das Tier ist grün und hüpft.',
+    eule: 'Das Tier ist nachts wach und hat große Augen.', biene: 'Das Tier macht Honig.', maus: 'Das Tier ist ganz klein und hat einen langen, dünnen Schwanz.',
+    kueken: 'Das Tier ist ein kleines, gelbes Vogelkind.', elefant: 'Das Tier hat einen langen Rüssel.', schlange: 'Das Tier hat gar keine Beine.',
+    taube: 'Das Tier ist ein Vogel und sitzt oft auf Dächern in der Stadt.', wolf: 'Das Tier sieht aus wie ein großer, wilder Hund und lebt im Rudel.', loewe: 'Das Tier hat eine große Mähne.',
+    pferd: 'Auf dem Tier kann man reiten.', ziege: 'Das Tier hat Hörner und einen kleinen Bart.', wildschwein: 'Das Tier lebt im Wald und hat borstiges Fell.',
+    schmetterling: 'Das Tier hat bunte Flügel.',
+  };
   /** Kachel für ein Tier. */
   const animalItem = (id, correct, extra) => Object.assign({ content: emo(id), say: word(id), correct, value: id, size: 'large' }, extra || {});
 
@@ -78,17 +91,21 @@
   ];
 
   async function taskSounds(ctx) {
-    const t = U.pickFresh('w2-tiere-laut', SOUNDS, 6, (x) => x.id);
+    // Lerninhalt = Tier und Laut („Kuh: Muh“)
+    const t = ctx.item(SOUNDS, (x) => `${word(x.id)}: ${x.s}`, { avoid: 6 });
     const pool = SOUNDS.filter((x) => x.key !== t.key && !(t.not || []).includes(x.id) && !(x.not || []).includes(t.id));
-    const others = U.sample(pool, 2);
+    // nach Fehlern in der Runde nur zwei Tiere zur Auswahl
+    const others = U.sample(pool, ctx.flow < 0 ? 1 : 2);
     ctx.stage.appendChild(el('div.prompt-box.w2-prompt', U.emoji('💬', 'mid-emoji'), el('span.prompt-text', `„${t.s}!“`)));
     ctx.instruct(`Welches Tier macht ${t.s}?`);
     const bySound = Object.fromEntries(SOUNDS.map((x) => [x.id, x.s]));
     await ctx.choices([animalItem(t.id, true), ...others.map((o) => animalItem(o.id, false))], {
       sayButton: true,
-      correctSay: () => `Richtig! ${Nom(t.id)} macht ${t.s}.`,
-      wrongSay: (it) => `${Nom(it.value)} macht ${bySound[it.value]}. Hör noch mal: Wer macht ${t.s}?`,
-      hintSay: `Schau, das ist ${nom(t.id)}.`,
+      hintAfter: W.hintAfter(ctx, others.length + 1),
+      correctSay: () => (ctx.modelShown ? `Genau, ${nom(t.id)}.` : `Richtig! ${Nom(t.id)} macht ${t.s}.`),
+      explain: (it) => `${Nom(it.value)} macht ${bySound[it.value]}. Hör noch mal: Wer macht ${t.s}?`,
+      hintSay: () => `Ein Tipp: ${CLUE[t.id]}`,
+      modelSay: () => `Schau: ${Nom(t.id)} macht ${t.s}.`,
     });
   }
 
@@ -122,7 +139,8 @@
   }
 
   async function taskBabies(ctx) {
-    const b = U.pickFresh('w2-tiere-kind', BABIES, 5, (x) => x.w);
+    // Lerninhalt = das Tierkind („Fohlen“)
+    const b = ctx.item(BABIES, (x) => x.w, { avoid: 5 });
     const pool = Object.keys(ADULTS).filter((id) => id !== b.adult && !(b.not || []).includes(id));
     const others = U.sample(pool, 2);
     const pic = b.svg ? kaulquappeSVG() : U.emoji(b.e || '🍼', 'mid-emoji');
@@ -140,14 +158,22 @@
     ctx.instruct(q);
     await ctx.choices([animalItem(b.adult, true), ...others.map((id) => animalItem(id, false))], {
       sayButton: true,
-      correctSay: right,
-      wrongSay: (it) => {
+      hintAfter: W.hintAfter(ctx, 3),
+      correctSay: () => (ctx.modelShown ? `Genau, ${nom(b.adult)}.` : right),
+      // 1. Hilfe: Wie heißt das Kind des gewählten Tieres?
+      explain: (it) => {
         const kid = babyOf(it.value);
-        if (!kid) return `Nein, ${b.a} ${b.w} ist nicht das Kind ${ADULTS[it.value]}. Probier ein anderes Tier!`;
-        if (kid.change) return `Nein, ${nom(it.value)} war vorher eine ${kid.w}.`;
-        return `Nein, das Kind ${ADULTS[it.value]} heißt ${kid.w}.`;
+        if (!kid) return `${U.cap(b.a)} ${b.w} ist nicht das Kind ${ADULTS[it.value]}. Probier ein anderes Tier!`;
+        const ask = b.change ? `Was wird aus der ${b.w}?` : `Zu welchem Tier gehört ${b.a} ${b.w}?`;
+        if (kid.change) return `${Nom(it.value)} war vorher eine ${kid.w}. ${ask}`;
+        return `Das Kind ${ADULTS[it.value]} heißt ${kid.w}. ${ask}`;
       },
-      hintSay: b.change ? `Schau mal genau: In dieses Tier verwandelt sich ${b.a === 'die' ? 'die' : 'das'} ${b.w}.` : `Schau, zu diesem Tier gehört ${b.a} ${b.w}.`,
+      // 2. Hilfe: Merkmal des gesuchten Tieres
+      hintSay: () => `Ein Tipp: ${CLUE[b.adult]}`,
+      // 3. Hilfe: zeigen und begründen
+      modelSay: () => (b.change
+        ? `Schau: Aus der ${b.w} wird ${b.adult === 'frosch' ? 'ein Frosch' : 'ein Schmetterling'}.`
+        : `Schau: ${U.cap(b.a)} ${b.w} ist das Kind ${ADULTS[b.adult]}.`),
     });
   }
 
@@ -169,10 +195,17 @@
     { id: 'pinguin', h: 'eis', not: ['meer'] /* Pinguine jagen im Meer */, fact: 'Pinguine können nicht fliegen, aber super schwimmen.' },
   ];
 
+  /** Wie ist es im Lebensraum? (Denkanstoß, ohne den Namen zu nennen) */
+  const HOME_CLUE = {
+    hof: 'der Bauer die Tiere füttert', wald: 'viele Bäume wachsen und Pilze stehen', meer: 'es ganz viel salziges Wasser gibt',
+    dschungel: 'es heiß und feucht ist und riesige Pflanzen wachsen', wueste: 'es heiß und trocken ist und viel Sand gibt',
+    eis: 'es das ganze Jahr ganz kalt ist',
+  };
   async function taskHomes(ctx) {
-    const t = U.pickFresh('w2-tiere-heim', HOMES, 8, (x) => x.id);
+    // Lerninhalt = Tier und Lebensraum („Pinguin – Eis und Schnee“)
+    const t = ctx.item(HOMES, (x) => `${word(x.id)} – ${W.habitat(x.h).name}`, { avoid: 8 });
     const home = W.habitat(t.h);
-    const others = U.sample(W.HABITATS.filter((h) => h.id !== t.h && !(t.not || []).includes(h.id)), ctx.level >= 4 ? 3 : 2);
+    const others = U.sample(W.HABITATS.filter((h) => h.id !== t.h && !(t.not || []).includes(h.id)), ctx.taskLevel >= 4 ? 3 : 2);
     ctx.stage.appendChild(el('div.prompt-box.w2-prompt', U.emoji(emo(t.id), 'big-emoji')));
     ctx.instruct(`Wo lebt ${nom(t.id)}?`);
     const items = [home, ...others].map((h) => ({
@@ -185,9 +218,13 @@
     await ctx.choices(items, {
       sayButton: true,
       nameFirst: ctx.index === 0,
-      correctSay: `Richtig! ${Nom(t.id)} lebt ${home.dat}.${t.fact ? ' ' + t.fact : ''}`,
-      wrongSay: (it) => `Das ist ${it.value.nom}. Da lebt ${nom(t.id)} nicht.`,
-      hintSay: `${Nom(t.id)} lebt ${home.dat}. Schau, hier!`,
+      hintAfter: W.hintAfter(ctx, items.length),
+      correctSay: () => (ctx.modelShown ? `Genau, ${home.dat}.${t.fact ? ' ' + t.fact : ''}`
+        : `Richtig! ${Nom(t.id)} lebt ${home.dat}.${t.fact ? ' ' + t.fact : ''}`),
+      explain: (it) => `Das ist ${it.value.nom}. Da lebt ${nom(t.id)} nicht.`,
+      // Denkanstoß: Wie ist es dort, wo das Tier lebt?
+      hintSay: () => `Ein Tipp: ${Nom(t.id)} lebt dort, wo ${HOME_CLUE[t.h]}.`,
+      modelSay: () => `Schau: ${Nom(t.id)} lebt ${home.dat}.`,
     });
   }
 
@@ -273,18 +310,34 @@
   ];
 
   async function taskProps(ctx) {
-    const p = U.pickFresh('w2-tiere-prop', PROPS, 4, (x) => x.id);
+    // Lerninhalt = das Merkmal („kann fliegen“)
+    const p = ctx.item(PROPS, (x) => x.phrase, { avoid: 4 });
     const t = U.pick(p.yes);
     const others = U.sample(p.no, 3);
     ctx.stage.appendChild(el('div.prompt-box.w2-prompt.w2-prop', PROP_ICON[p.id] ? U.emoji(PROP_ICON[p.id], 'big-emoji') : null, U.emoji('❓', 'big-emoji')));
     ctx.instruct(`Welches Tier ${p.phrase}?`);
     await ctx.choices([animalItem(t, true), ...others.map((id) => animalItem(id, false))], {
       sayButton: true,
-      correctSay: `Richtig! ${Nom(t)} ${p.phrase}.${p.facts[t] ? ' ' + p.facts[t] : ''}`,
-      wrongSay: (it) => p.explain[it.value] || `Nein, ${nom(it.value)} ${p.neg}.`,
-      hintSay: `Schau, ${nom(t)} ${p.phrase}.`,
+      hintAfter: W.hintAfter(ctx, 4),
+      correctSay: () => (ctx.modelShown ? `Genau!${p.facts[t] ? ' ' + p.facts[t] : ''}` : `Richtig! ${Nom(t)} ${p.phrase}.${p.facts[t] ? ' ' + p.facts[t] : ''}`),
+      // 1. Hilfe: was für das gewählte Tier stimmt (typische Denkfallen erklärt)
+      explain: (it) => p.explain[it.value] || `${Nom(it.value)} ${p.neg}.`,
+      hintSay: () => `Ein Tipp: ${PROP_CLUE[p.id]}`,
+      modelSay: () => `Schau: ${Nom(t)} ${p.phrase}.`,
     });
   }
+  /** Denkanstoß je Merkmal (Strategie, nicht die Lösung). */
+  const PROP_CLUE = {
+    fliegen: 'Das Tier fliegt mit seinen Flügeln hoch durch die Luft.',
+    eier: 'Tiere, die ihren Babys Milch geben, legen keine Eier.',
+    panzer: 'Ein Panzer ist hart wie ein Helm und schützt den Körper.',
+    wasser: 'Wer im Wasser lebt, hat oft Flossen statt Beinen.',
+    stacheln: 'Stacheln sind spitz und pieksen.',
+    ruessel: 'Ein Rüssel ist eine ganz lange Nase.',
+    hals: 'Mit einem ganz langen Hals kommt man an die Blätter oben im Baum.',
+    achtbeine: 'Insekten haben sechs Beine. Wir suchen ein Tier mit mehr Beinen.',
+    federn: 'Alle Vögel haben Federn.',
+  };
   /** Symbol für die Eigenschaft im Aufgabenkasten (zeigt die Frage, nicht die Antwort). */
   const PROP_ICON = { fliegen: '✈️', eier: '🥚', panzer: '🛡️', wasser: '🌊', stacheln: '🌵', ruessel: '👃', hals: '📏', achtbeine: '8️⃣', federn: '🪶' };
 
@@ -307,9 +360,9 @@
       tip: 'Im Zoo, auf dem Bauernhof oder beim Bilderbuch: Fragen Sie „Wie heißt das Tierbaby?“ oder „Wo wohnt dieses Tier?“. Ein Ausflug zum Teich im Frühling zeigt echte Kaulquappen!',
     },
     async task(ctx) {
-      if (ctx.level === 1) return taskSounds(ctx);
-      if (ctx.level === 2) return taskBabies(ctx);
-      if (ctx.level === 3) return taskHomes(ctx);
+      if (ctx.taskLevel === 1) return taskSounds(ctx);
+      if (ctx.taskLevel === 2) return taskBabies(ctx);
+      if (ctx.taskLevel === 3) return taskHomes(ctx);
       // Stufe 4: meist Merkmale, ab und zu Lebensraum mit 4 Szenen (Wiederholung)
       if (ctx.index === 2) return taskHomes(ctx);
       return taskProps(ctx);

@@ -1,0 +1,83 @@
+{
+  "id": "silben",
+  "title": "Silben *schwingen*",
+  "icon": "🌈",
+  "subject": "deutsch1",
+  "related": ["silbenlesen"],
+  "parent": "Silben als Lesehilfe: Wörter klatschen und in Silben gliedern (To-ma-te), Silbenbögen, in jeder Silbe steckt ein Selbstlaut (Silbenkönig), lange Wörter Silbe für Silbe lesen und dann zum ganzen Wort zusammenziehen.",
+  "intro": "Schau mal, Flo findet ein ganz langes Wort!",
+  "accent": "#8e6cef",
+  "beats": [
+    {
+      "say": "Hallo! Ich bin Flo. Heute schwingen wir Silben.",
+      "visual": {"type": "title", "subtitle": "Lesen mit Flo"}
+    },
+    {
+      "say": "Schau mal, ein Glas! Da steht ein langes Wort drauf. Das ist mir zu lang. Wie lese ich das nur?",
+      "caption": "So ein langes Wort!",
+      "visual": {"type": "flo", "emotion": "think", "gesture": "point", "bubble": "Wie lese ich das?", "think": true, "bubbleAt": 0.72, "items": [{"e": "🫙", "label": "Schokolade", "at": 0.05}]}
+    },
+    {
+      "say": "Mein Trick: Ich teile das Wort in Stücke. Die Stücke heißen Silben. Klatsch mit mir: To, ma, te.",
+      "caption": "To-ma-te",
+      "visual": {"type": "silben", "word": "Tomate", "syllables": ["To", "ma", "te"], "at": [0.72, 0.84, 0.95], "clap": true, "picture": "🍅", "pictureAt": 0.05}
+    },
+    {
+      "say": "Drei Mal geklatscht. Also hat Tomate drei Silben. Unter jeder Silbe schwingt ein Bogen.",
+      "caption": "Tomate: *3 Silben*",
+      "visual": {"type": "silben", "continue": true, "word": "Tomate", "syllables": ["To", "ma", "te"], "at": [-0.1, -0.1, -0.1], "picture": "🍅", "pictureAt": -0.1, "count": "3 Silben", "countAt": 0.35}
+    },
+    {
+      "say": "In jeder Silbe wohnt ein König. Das ist ein Selbstlaut. Zum Beispiel a, e, i, o oder u.",
+      "caption": "Silbenkönige: a e i o u",
+      "visual": {"type": "silben", "continue": true, "word": "Tomate", "syllables": ["To", "ma", "te"], "at": [-0.1, -0.1, -0.1], "picture": "🍅", "pictureAt": -0.1, "count": "3 Silben", "countAt": -0.1, "vowels": true, "vowelsAt": 0.3, "floGesture": "point"}
+    },
+    {
+      "say": "Silben helfen beim Lesen. Ich lese erst Ba, dann na, dann ne. Ba, na, ne. Banane!",
+      "caption": "Ba-na-ne → *Banane*",
+      "visual": {"type": "silben", "word": "Banane", "syllables": ["Ba", "na", "ne"], "at": [0.3, 0.42, 0.55], "picture": "🍌", "pictureAt": 0.9, "merge": 0.85, "floEmotion": "happy"}
+    },
+    {
+      "say": "Jetzt du! Klatsch mit: Flo, ri, an. Wie viele Silben hat Florian? Was meinst du?",
+      "caption": "Flo-ri-an: wie viele?",
+      "pause": 2.5,
+      "visual": {"type": "silben", "word": "Florian", "syllables": ["Flo", "ri", "an"], "at": [0.22, 0.32, 0.42], "clap": true, "picture": "👦", "pictureAt": 0, "floEmotion": "think"}
+    },
+    {
+      "say": "Flo, ri, an. Drei Mal geklatscht. Drei Silben! Super gemacht!",
+      "caption": "Florian: *3 Silben*",
+      "visual": {"type": "silben", "continue": true, "word": "Florian", "syllables": ["Flo", "ri", "an"], "at": [-0.1, -0.1, -0.1], "picture": "👦", "pictureAt": -0.1, "count": "3 Silben", "countAt": 0.5, "floEmotion": "happy", "floGesture": "cheer"}
+    },
+    {
+      "say": "Jetzt lese ich mein langes Wort. Scho, ko, la, de. Schokolade! Lecker!",
+      "caption": "Scho-ko-la-de → *Schokolade*",
+      "visual": {"type": "silben", "word": "Schokolade", "syllables": ["Scho", "ko", "la", "de"], "at": [0.3, 0.42, 0.54, 0.66], "picture": "🍫", "pictureAt": 0.85, "merge": 0.78, "floEmotion": "happy"}
+    },
+    {
+      "say": "Mein Tipp: Klatsch die Silben. Lies Silbe für Silbe. Dann sag das ganze Wort. Probier es gleich im Quiz!",
+      "visual": {"type": "merke", "title": "Mein Tipp:", "lines": ["Klatsch die *Silben*.", "Lies Silbe für Silbe.", "Sag das *ganze Wort*!"], "at": [0.12, 0.32, 0.52], "icon": "🌈"}
+    }
+  ],
+  "quiz": [
+    {"q": "Wie viele Silben hat das Wort Sonne?", "options": [
+      {"text": "1", "say": "eine", "correct": false},
+      {"text": "2", "say": "zwei", "correct": true},
+      {"text": "3", "say": "drei", "correct": false}],
+     "explain": "Klatsch das Wort ganz langsam. Wie oft klatschst du?", "model": "Son, ne. Zwei Mal geklatscht. Zwei Silben.", "key": "Silben zählen", "beat": 3},
+    {"q": "Welcher Buchstabe ist ein Silbenkönig?", "options": [
+      {"text": "m", "say": "M", "correct": false},
+      {"text": "a", "say": "a", "correct": true},
+      {"text": "t", "say": "t", "correct": false}],
+     "explain": "Denk an die Tomate. Welche Buchstaben haben dort gelb geleuchtet?", "model": "Das a ist ein Selbstlaut. A, e, i, o und u sind Silbenkönige.", "key": "Selbstlaut", "beat": 4},
+    {"q": "Ro, se. Welches Wort ist das?", "options": [
+      {"text": "🌹 Rose", "say": "Rose", "correct": true},
+      {"text": "👃 Nase", "say": "Nase", "correct": false},
+      {"text": "🐦 Rabe", "say": "Rabe", "correct": false}],
+     "explain": "Fast! Sag die zwei Silben schnell hintereinander.", "model": "Ro, se. Zusammen: Rose.", "key": "Silben zusammenziehen", "beat": 5},
+    {"q": "Wie liest Flo ein langes Wort?", "options": [
+      {"text": "🐌 Silbe für Silbe", "say": "Silbe für Silbe", "correct": true},
+      {"text": "⚡ ganz schnell auf einmal", "say": "ganz schnell auf einmal", "correct": false},
+      {"text": "🙈 gar nicht", "say": "gar nicht", "correct": false}],
+     "explain": "Denk an die Schokolade. Wie hat Flo das Wort gelesen?", "model": "Silbe für Silbe. Scho, ko, la, de. Dann das ganze Wort: Schokolade.", "key": "Lesestrategie", "beat": 8}
+  ]
+}

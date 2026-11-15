@@ -290,5 +290,17 @@
   /** „der“ → „Der“ usw. für Satzanfänge. */
   S2.Art = (a) => U.cap(a);
 
+  /**
+   * Stufe DIESER Aufgabe (adaptiv, siehe js/core/engine.js): ctx.taskLevel, aber nur
+   * wenn die Aufgabenart gleich bleibt (kindOf(stufe)); sonst ctx.level – die Spiele
+   * passen dann innerhalb der Aufgabenart über ctx.flow an. Die Bedienung wechselt
+   * so innerhalb einer Runde nie.
+   */
+  S2.lv = (ctx, kindOf) => (kindOf(ctx.taskLevel) === kindOf(ctx.level) ? ctx.taskLevel : ctx.level);
+  /** Einen von mehreren Sätzen (Abwechslung, z. B. gelegentliches Prozess-Lob). */
+  /** Gelegentliches Prozess-Lob: nur auf Anhieb und etwa jedes dritte Mal, sonst normal. */
+  S2.proc = (ctx, normal, process) => (ctx.wrongCount === 0 && U.chance(0.3) ? process : normal);
+  S2.vary = (key, list) => U.pickFresh('s2-' + key, list, Math.min(2, list.length - 1));
+
   LT.s2 = S2;
 })();

@@ -149,9 +149,19 @@
     document.head.appendChild(s);
   };
 
-  /** Zahlwörter 0–20 (für Sprache & Anzeige). */
+  /** Zahlwörter (für Sprache & Anzeige). */
   const NUM = ['null', 'eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn', 'elf', 'zwölf', 'dreizehn', 'vierzehn', 'fünfzehn', 'sechzehn', 'siebzehn', 'achtzehn', 'neunzehn', 'zwanzig'];
-  U.numberWord = (n) => NUM[n] || String(n);
+  const TENS = ['', '', 'zwanzig', 'dreißig', 'vierzig', 'fünfzig', 'sechzig', 'siebzig', 'achtzig', 'neunzig'];
+  /** Zahlwörter 0–100 („einundzwanzig“, „hundert“). */
+  U.numberWord = (n) => {
+    if (n >= 0 && n <= 20 && NUM[n]) return NUM[n];
+    if (n === 100) return 'hundert';
+    if (Number.isInteger(n) && n > 20 && n < 100) {
+      const t = TENS[Math.floor(n / 10)], e = n % 10;
+      return e ? (e === 1 ? 'ein' : NUM[e]) + 'und' + t : t;
+    }
+    return String(n);
+  };
 
   /** Heutiges Datum als 'YYYY-MM-DD' (lokal). */
   U.today = (d = new Date()) => {

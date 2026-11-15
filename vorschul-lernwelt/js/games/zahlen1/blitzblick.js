@@ -13,8 +13,14 @@
      einmal pro Aufgabe genutzt werden und zählt NICHT als Fehler.
    - Nach jeder Antwort wird die Karte aufgedeckt und die Struktur benannt
      („Vier Ecken und einer in der Mitte – vier und eins sind fünf“).
-   - Hilfe nach 2 Fehlversuchen: Karte bleibt offen, Flo zählt jeden Punkt
-     mit, benennt die Struktur und hebt die richtige Zahl hervor.
+   - Lerninhalt = Bildart + Zahl (Schlüssel 'Würfel 5', 'Zehnerfeld 7',
+     'Finger 8', 'Punkte 4') über ctx.item → verteiltes Wiederholen.
+   - Hilfe-Leiter: 1. Fehler → „Drei passt nicht. Es waren mehr als drei.“
+     und Hinweis auf „Nochmal zeigen“; 2. Fehler → Karte bleibt offen,
+     Denkanstoß zur Struktur („Eine ganze Hand sind fünf Finger.“);
+     3. Fehler → Flo zählt jeden Punkt mit und benennt die Struktur.
+   - Innerhalb der Runde: ctx.taskLevel; bei ctx.flow < 0 bleibt das Bild
+     etwas länger sichtbar, bei ctx.flow > 0 auf der Höchststufe kürzer.
    ========================================================================== */
 (function () {
   'use strict';
@@ -76,6 +82,15 @@
     return `Hier ${Z.nwPron(a)} und da ${Z.nwPron(b)}. ${Z.NW(a)} und ${nw(b)} sind ${nw(n)}.`;
   }
 
+  /** Denkanstoß (2. Hilfe): Struktur ansprechen, ohne die Zahl zu verraten */
+  const HINT_SAY = {
+    dice: 'Die Karte bleibt jetzt offen. Schau dir das Würfelbild genau an.',
+    frame: 'Die Karte bleibt jetzt offen. Denk dran: Oben passen genau fünf hin.',
+    hands: 'Die Karte bleibt jetzt offen. Denk dran: Eine ganze Hand sind fünf Finger.',
+    scatter: 'Die Karte bleibt jetzt offen. Schau dir jede Gruppe einzeln an.',
+  };
+  const KIND_NAME = { dice: 'Würfel', frame: 'Zehnerfeld', hands: 'Finger', scatter: 'Punkte' };
+
   /** Bild bauen: { node, unit (Punkte/Finger), say (Struktur) } */
   function buildPattern(kind, n) {
     if (kind === 'dice') return { node: Z.dice(n), unit: 'Punkte', say: DICE_SAY[n] };
@@ -114,14 +129,21 @@
     },
 
     async task(ctx) {
-      const cfg = LEVELS[ctx.level] || LEVELS[1];
-      const kind = cfg.kinds.length > 1 ? U.pickFresh('bb-kind', cfg.kinds, 1) : cfg.kinds[0];
-      const [lo, hi] = rangeFor(kind, ctx.level);
-      // keine direkte Wiederholung, aber auch keine vorhersagbare Reihenfolge:
-      // nur etwa die Hälfte der möglichen Zahlen sperren (bei 1–4 also 2, nicht 3).
-      const n = U.pickFresh(`bb-n-${ctx.level}-${kind}`, U.range(lo, hi), Math.min(3, Math.floor((hi - lo + 1) / 2)));
+      const lv = ctx.taskLevel;
+      const cfg = LEVELS[lv] || LEVELS[1];
+      // Lerninhalt: Bildart + Zahl (bei gemischter Stufe aus allen Bildarten)
+      const pool = [];
+      for (const k of cfg.kinds) {
+        const [a, b] = rangeFor(k, lv);
+        for (let x = a; x <= b; x++) pool.push({ kind: k, n: x });
+      }
+      const pick = ctx.item(pool, (p) => `${KIND_NAME[p.kind]} ${p.n}`, { avoid: 2 });
+      const kind = pick.kind;
+      const n = pick.n;
+      const [lo, hi] = rangeFor(kind, lv);
       const pat = buildPattern(kind, n);
-      const showMs = cfg.show;
+      // Anpassung innerhalb der Runde: etwas mehr bzw. weniger Zeit zum Hinsehen
+      const showMs = cfg.show + (ctx.flow < 0 ? 500 : ctx.flow > 0 && lv === ctx.maxLevel ? -200 : 0);
 
       // ---------- Aufbau: Blitzkarte, „Nochmal zeigen“, Zahlen ----------
       const coverIcon = el('span.bb-cover-icon.emoji', '⚡');
@@ -172,7 +194,7 @@
       // ---------- Ablauf: Ansage → Countdown → Blitz → Frage ----------
       const question = `Wie viele ${pat.unit} waren es?`;
       ctx.setInstruction(question);
-      await ctx.instruct(ctx.index === 0 ? introFor(ctx.level, kind) : U.pick(['Schau genau hin!', 'Achtung, gleich blitzt es!', 'Augen auf!', 'Bereit? Schau genau hin!']));
+      await ctx.instruct(ctx.index === 0 ? introFor(lv, kind) : U.pick(['Schau genau hin!', 'Achtung, gleich blitzt es!', 'Augen auf!', 'Bereit? Schau genau hin!']));
       if (!ctx.active) return;
       coverIcon.style.display = 'none';
       for (const k of [3, 2, 1]) {
@@ -195,33 +217,43 @@
       ctx.say(full);
 
       // ---------- Antworten ----------
-      const values = ctx.level === 1 ? [1, 2, 3, 4] : Z.numberChoices(n, cfg.choices, Math.max(1, lo - 1), Math.min(10, hi + 1));
+      const values = lv === 1 ? [1, 2, 3, 4] : Z.numberChoices(n, cfg.choices, Math.max(1, lo - 1), Math.min(10, hi + 1));
       const items = values.map((k) => ({ content: String(k), text: true, correct: k === n, say: nw(k), value: k, className: 'bb-num' }));
+      const ha = Z.hintAfterFor(ctx, items.length);
       await ctx.choices(items, {
         container: choiceBox,
         shuffle: false,
         size: 'small',
-        sayButton: ctx.level <= 2,
-        hintAfter: 2,
+        sayButton: lv <= 2,
+        hintAfter: ha,
         onCorrect: () => {
           finished = true;
           openForGood();
         },
-        correctSay: () => (ctx.wrongCount >= 2 ? `Richtig, ${nw(n)}!` : `Richtig, ${nw(n)}! ${pat.say}`),
+        correctSay: () => {
+          if (ctx.wrongCount >= 2) return `Richtig, ${nw(n)}!`;
+          if (ctx.wrongCount === 0 && U.chance(0.3)) return `Richtig, du hast es auf einen Blick gesehen: ${nw(n)}! ${pat.say}`;
+          return `Richtig, ${nw(n)}! ${pat.say}`;
+        },
+        // 1. Hilfe: Richtung angeben (die Karte ist noch verdeckt)
+        explain: (item) => `${Z.NW(item.value)} passt nicht. Es waren ${item.value > n ? 'weniger' : 'mehr'} als ${nw(item.value)}.`,
+        // 2. Hilfe: Karte bleibt offen (onWrong) + Denkanstoß zur Struktur
+        hintSay: () => HINT_SAY[kind],
+        // 3. Hilfe: Flo zählt mit (onWrong) und benennt die Struktur
+        modelSay: () => pat.say,
         onWrong: async (item, tile, wrongs) => {
-          if (wrongs === 1 && !againUsed && !opened) {
+          if (wrongs === 1 && ha > 1 && !againUsed && !opened) {
             // Hinweis auf das Werkzeug „Nochmal zeigen“
             ctx.hint(againBtn);
             await ctx.say('Du darfst nochmal gucken: Tippe auf die Augen!');
             ctx.timeout(() => ctx.unhint(againBtn), 2600);
-          } else if (wrongs === 2) {
-            // echte Hilfe: aufdecken, gemeinsam zählen, Struktur benennen
+          }
+          if (wrongs === ha) {
             ctx.unhint(againBtn);
             openForGood();
-            await ctx.say('Ich decke die Karte auf. Wir zählen zusammen!');
+          } else if (wrongs === ha + 1) {
+            await ctx.say('Wir zählen zusammen!');
             await Z.countAlong(ctx, pat.node._units);
-            if (!ctx.active) return;
-            await ctx.say(pat.say);
           }
         },
       });

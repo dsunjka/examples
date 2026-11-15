@@ -1,0 +1,384 @@
+{
+  "id": "schwimmen-sinken",
+  "title": "Schwimmt das oder *sinkt* das?",
+  "icon": "🛁",
+  "subject": "sach1",
+  "related": [
+    "schwimmen-sinken"
+  ],
+  "parent": "Stoffe und ihre Eigenschaften: Ob etwas schwimmt oder sinkt, hängt vom Material ab, nicht von Größe oder Gewicht (ein großer Holzstamm schwimmt, eine winzige Schraube sinkt). Holz, Kork und viele Kunststoffe schwimmen, Metall und Stein sinken. Dazu der Forscher-Ablauf: vermuten, ausprobieren, beobachten. Tipp: zu Hause in der Badewanne mit Alltagsdingen nachmachen.",
+  "intro": "Schau mal, Flo forscht in der Badewanne!",
+  "accent": "#3dbe6b",
+  "beats": [
+    {
+      "say": "Hallo! Ich bin Flo. Heute forschen wir mit Wasser.",
+      "visual": {
+        "type": "title",
+        "subtitle": "Sachkunde mit Flo"
+      }
+    },
+    {
+      "say": "Ich spiele in der Wanne. Manches schwimmt, manches geht unter. Warum nur?",
+      "caption": "Warum geht das *unter*?",
+      "visual": {
+        "type": "wasser",
+        "floEmotion": "surprised",
+        "results": false,
+        "items": [
+          {
+            "e": "🦆",
+            "result": "float",
+            "at": 0.25
+          },
+          {
+            "e": "🥄",
+            "result": "sink",
+            "at": 0.45
+          },
+          {
+            "e": "🪵",
+            "result": "float",
+            "at": 0.6
+          }
+        ]
+      },
+      "pause": 1.2
+    },
+    {
+      "say": "Forscher machen das so: Erst vermuten. Dann ausprobieren. Dann genau schauen.",
+      "caption": "*Forscher*-Plan",
+      "visual": {
+        "type": "liste",
+        "title": "Forscher-Plan",
+        "items": [
+          {
+            "e": "🤔",
+            "text": "1. vermuten",
+            "at": 0.15
+          },
+          {
+            "e": "🛁",
+            "text": "2. ausprobieren",
+            "at": 0.45
+          },
+          {
+            "e": "👀",
+            "text": "3. genau schauen",
+            "at": 0.75
+          }
+        ]
+      }
+    },
+    {
+      "say": "Ein Korken und ein Stein. Schwimmt das oder sinkt das? Was meinst du?",
+      "caption": "Korken? Stein?",
+      "pause": 2.4,
+      "visual": {
+        "type": "wasser",
+        "guess": true,
+        "floEmotion": "think",
+        "items": [
+          {
+            "e": "🍾",
+            "result": "float",
+            "at": 9
+          },
+          {
+            "e": "🪨",
+            "result": "sink",
+            "at": 9
+          }
+        ]
+      }
+    },
+    {
+      "say": "Plumps! Der Korken schwimmt. Der Stein sinkt. Das war leicht!",
+      "caption": "Korken *schwimmt*, Stein *sinkt*",
+      "visual": {
+        "type": "wasser",
+        "continue": true,
+        "floEmotion": "happy",
+        "items": [
+          {
+            "e": "🍾",
+            "result": "float",
+            "at": 0.1
+          },
+          {
+            "e": "🪨",
+            "result": "sink",
+            "at": 0.35
+          }
+        ]
+      }
+    },
+    {
+      "say": "Jetzt ein riesiger Baumstamm und eine winzige Schraube. Was meinst du?",
+      "caption": "groß oder klein?",
+      "pause": 2.6,
+      "visual": {
+        "type": "wasser",
+        "guess": true,
+        "floEmotion": "think",
+        "items": [
+          {
+            "e": "🪵",
+            "result": "float",
+            "at": 9,
+            "size": 124
+          },
+          {
+            "e": "🔩",
+            "result": "sink",
+            "at": 9,
+            "size": 56
+          }
+        ]
+      }
+    },
+    {
+      "say": "Oh! Der große Stamm schwimmt. Die kleine Schraube sinkt. Die Größe ist nicht wichtig.",
+      "caption": "Größe ist *nicht* wichtig",
+      "visual": {
+        "type": "wasser",
+        "continue": true,
+        "floEmotion": "surprised",
+        "items": [
+          {
+            "e": "🪵",
+            "result": "float",
+            "at": 0.05,
+            "size": 124
+          },
+          {
+            "e": "🔩",
+            "result": "sink",
+            "at": 0.25,
+            "size": 56
+          }
+        ]
+      }
+    },
+    {
+      "say": "Wichtig ist das Material. Woraus ist es gemacht? Holz, Kork und Plastik schwimmen meistens. Metall und Stein gehen meistens unter.",
+      "caption": "*Material*: Woraus ist es?",
+      "visual": {
+        "type": "vergleich",
+        "left": {
+          "items": [
+            "🪵",
+            "🍾",
+            "🦆"
+          ],
+          "label": "schwimmt",
+          "at": 0.35,
+          "color": "green"
+        },
+        "right": {
+          "items": [
+            "🔩",
+            "🪨",
+            "🥄"
+          ],
+          "label": "sinkt",
+          "at": 0.7,
+          "color": "blue"
+        }
+      }
+    },
+    {
+      "say": "Mein Bleistift ist aus Holz. Ich vermute: Er schwimmt. Stimmt!",
+      "caption": "Holz → *schwimmt*",
+      "visual": {
+        "type": "wasser",
+        "floGesture": "point",
+        "items": [
+          {
+            "e": "✏️",
+            "result": "float",
+            "at": 0.72,
+            "size": 100,
+            "label": "Holz: schwimmt"
+          }
+        ],
+        "guess": true
+      },
+      "pause": 1.0
+    },
+    {
+      "say": "Jetzt du! Ein Schlüssel. Woraus ist er? Was meinst du: Schwimmt er oder sinkt er?",
+      "caption": "Und der *Schlüssel*?",
+      "pause": 2.8,
+      "visual": {
+        "type": "wasser",
+        "guess": true,
+        "floEmotion": "think",
+        "items": [
+          {
+            "e": "🔑",
+            "result": "sink",
+            "at": 9,
+            "size": 100
+          }
+        ]
+      }
+    },
+    {
+      "say": "Der Schlüssel ist aus Metall. Darum sinkt er. Super geforscht!",
+      "caption": "Metall → *sinkt*",
+      "visual": {
+        "type": "wasser",
+        "continue": true,
+        "floEmotion": "happy",
+        "floGesture": "cheer",
+        "items": [
+          {
+            "e": "🔑",
+            "result": "sink",
+            "at": 0.1,
+            "size": 100,
+            "label": "Metall: sinkt"
+          }
+        ]
+      }
+    },
+    {
+      "say": "Merke: Wichtig ist das Material. Holz schwimmt. Metall sinkt.",
+      "visual": {
+        "type": "merke",
+        "icon": "🛁",
+        "lines": [
+          "Wichtig ist das *Material*.",
+          "Holz: *schwimmt*",
+          "Metall: *sinkt*"
+        ],
+        "at": [
+          0.05,
+          0.55,
+          0.8
+        ]
+      }
+    },
+    {
+      "say": "Probier es mit einem Erwachsenen in der Badewanne aus! Jetzt kommt das Quiz.",
+      "caption": "Erst *vermuten*, dann schauen!",
+      "visual": {
+        "type": "flo",
+        "emotion": "happy",
+        "gesture": "cheer",
+        "bubble": "Quiz! 🛁",
+        "bubbleAt": 0.75,
+        "items": [
+          {
+            "e": "🤔",
+            "label": "vermuten",
+            "at": 0.35
+          },
+          {
+            "e": "👀",
+            "label": "schauen",
+            "at": 0.5
+          }
+        ]
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Was macht der Korken im Wasser?",
+      "options": [
+        {
+          "text": "🌊 schwimmt",
+          "say": "Er schwimmt.",
+          "correct": true
+        },
+        {
+          "text": "⬇️ sinkt",
+          "say": "Er sinkt.",
+          "correct": false
+        },
+        {
+          "text": "🫠 schmilzt",
+          "say": "Er schmilzt.",
+          "correct": false
+        }
+      ],
+      "explain": "Denk an den ersten Versuch. Wo blieb der Korken?",
+      "model": "Der Korken bleibt oben auf dem Wasser. Er schwimmt.",
+      "key": "Korken",
+      "beat": 4
+    },
+    {
+      "q": "Ein riesiger Baumstamm kommt ins Wasser. Was passiert?",
+      "options": [
+        {
+          "text": "⬇️ sinkt",
+          "say": "Er sinkt.",
+          "correct": false
+        },
+        {
+          "text": "🌊 schwimmt",
+          "say": "Er schwimmt.",
+          "correct": true
+        },
+        {
+          "text": "💥 geht kaputt",
+          "say": "Er geht kaputt.",
+          "correct": false
+        }
+      ],
+      "explain": "Groß und schwer ist nicht der Grund. Woraus ist der Baumstamm gemacht?",
+      "model": "Der Baumstamm ist aus Holz. Holz schwimmt. Also schwimmt auch der große Stamm.",
+      "key": "Baumstamm",
+      "beat": 6
+    },
+    {
+      "q": "Was sinkt im Wasser?",
+      "options": [
+        {
+          "text": "✏️ Bleistift",
+          "say": "der Bleistift",
+          "correct": false
+        },
+        {
+          "text": "🔑 Schlüssel",
+          "say": "der Schlüssel",
+          "correct": true
+        },
+        {
+          "text": "🍾 Korken",
+          "say": "der Korken",
+          "correct": false
+        }
+      ],
+      "explain": "Schau mal auf das Material. Welches Material sinkt?",
+      "model": "Der Schlüssel ist aus Metall. Metall sinkt. Holz und Kork schwimmen.",
+      "key": "Material Metall",
+      "beat": 10
+    },
+    {
+      "q": "Was macht ein Forscher zuerst?",
+      "options": [
+        {
+          "text": "🤔 vermuten",
+          "say": "vermuten",
+          "correct": true
+        },
+        {
+          "text": "🧹 aufräumen",
+          "say": "aufräumen",
+          "correct": false
+        },
+        {
+          "text": "🏃 weglaufen",
+          "say": "weglaufen",
+          "correct": false
+        }
+      ],
+      "explain": "Bevor Flo etwas ins Wasser legt, überlegt er. Wie heißt das?",
+      "model": "Erst vermuten, dann ausprobieren, dann genau schauen.",
+      "key": "Forscher-Plan",
+      "beat": 2
+    }
+  ]
+}

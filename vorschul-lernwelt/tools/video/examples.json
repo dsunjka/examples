@@ -1,0 +1,436 @@
+{
+ "title": {
+  "say": "Hallo! Ich bin Flo. Heute zeige ich dir einen Rechen-Trick.",
+  "visual": {
+   "type": "title",
+   "subtitle": "Rechnen mit Flo"
+  }
+ },
+ "flo": {
+  "say": "Schau mal, ich habe einen Zauberspiegel!",
+  "visual": {
+   "type": "flo",
+   "emotion": "surprised",
+   "gesture": "point",
+   "bubble": "🪞",
+   "items": [
+    {
+     "e": "🍎",
+     "label": "3 Äpfel"
+    }
+   ]
+  }
+ },
+ "scene": {
+  "say": "Der Igel frisst sich im Herbst dick. Dann schläft er im Laubhaufen.",
+  "caption": "Winterschlaf",
+  "visual": {
+   "type": "scene",
+   "bg": "forest",
+   "actors": [
+    {
+     "e": "🦔",
+     "x": 40,
+     "size": 110,
+     "enter": "left",
+     "moves": [
+      {
+       "x": 62,
+       "at": 0.3,
+       "until": 0.6
+      }
+     ],
+     "anim": "sleep",
+     "label": "Igel",
+     "labelAt": 0.7
+    },
+    {
+     "e": "🍂🍂🍂",
+     "x": 66,
+     "size": 80,
+     "at": 0.55,
+     "enter": "drop",
+     "z": 1
+    },
+    {
+     "e": "🐞",
+     "x": 30,
+     "y": 60,
+     "size": 54,
+     "anim": "fly",
+     "exit": {
+      "at": 0.5,
+      "to": "up"
+     }
+    },
+    {
+     "e": "🐿️",
+     "x": 86,
+     "size": 90,
+     "at": 0.2,
+     "bubble": "🌰",
+     "bubbleAt": 0.4
+    }
+   ]
+  }
+ },
+ "zehnerfeld": {
+  "say": "Ich lege immer zehn in eine Schachtel. Drei bleiben übrig.",
+  "caption": "1 Zehner und 3 Einer",
+  "visual": {
+   "type": "zehnerfeld",
+   "size": 10,
+   "boxes": 2,
+   "style": "schachtel",
+   "emoji": "🌰",
+   "groups": [
+    {
+     "n": 13,
+     "from": "scatter",
+     "at": 0.15,
+     "until": 0.7
+    }
+   ],
+   "marks": [
+    {
+     "from": 1,
+     "to": 10,
+     "at": 0.8,
+     "label": "10"
+    }
+   ]
+  }
+ },
+ "zahlenstrahl": {
+  "say": "Acht plus fünf. Erst hüpfe ich zwei bis zur Zehn. Dann noch drei.",
+  "caption": "8 + 5 = 13",
+  "visual": {
+   "type": "zahlenstrahl",
+   "from": 0,
+   "to": 20,
+   "bridge": 10,
+   "start": 8,
+   "jumps": [
+    {
+     "to": 10,
+     "label": "+2",
+     "at": 0.3,
+     "hops": true
+    },
+    {
+     "to": 13,
+     "label": "+3",
+     "at": 0.7,
+     "hops": true,
+     "color": "blue"
+    }
+   ]
+  }
+ },
+ "rechnung": {
+  "say": "Acht plus fünf. Die Fünf zerlege ich in zwei und drei. Das ergibt dreizehn.",
+  "visual": {
+   "type": "rechnung",
+   "parts": [
+    "8",
+    "+",
+    "5",
+    "=",
+    "13"
+   ],
+   "at": [
+    0,
+    0.05,
+    0.1,
+    0.75,
+    0.85
+   ],
+   "box": true,
+   "split": {
+    "part": 2,
+    "into": [
+     "2",
+     "3"
+    ],
+    "at": 0.35
+   },
+   "highlight": [
+    {
+     "part": 0,
+     "at": 0.5
+    }
+   ]
+  }
+ },
+ "stellenwert": {
+  "say": "Wir sagen zuerst die Drei, aber wir schreiben zuerst die Eins für den Zehner.",
+  "visual": {
+   "type": "stellenwert",
+   "number": 13,
+   "at": [
+    0.55,
+    0.1
+   ],
+   "labels": {
+    "tens": "zuerst schreiben",
+    "ones": "zuerst sagen",
+    "at": 0.6
+   }
+  }
+ },
+ "uhr": {
+  "say": "Der lange Zeiger wandert nach unten zur Sechs. Es ist halb acht.",
+  "visual": {
+   "type": "uhr",
+   "from": "7:00",
+   "to": "7:30",
+   "at": [
+    0.1,
+    0.6
+   ],
+   "digital": true,
+   "highlight": "minute",
+   "icon": "🥣",
+   "text": "halb acht",
+   "textAt": 0.7
+  }
+ },
+ "geld": {
+  "say": "Der Ball kostet sieben Euro. Ich lege fünf Euro und zwei Euro. Zusammen sieben Euro.",
+  "visual": {
+   "type": "geld",
+   "price": {
+    "e": "⚽",
+    "v": 7
+   },
+   "items": [
+    {
+     "v": 5,
+     "at": 0.3
+    },
+    {
+     "v": 2,
+     "at": 0.5
+    }
+   ],
+   "sum": true,
+   "sumAt": 0.8
+  }
+ },
+ "silben": {
+  "say": "Klatsch mit mir: To, ma, te. Drei Silben!",
+  "visual": {
+   "type": "silben",
+   "word": "Tomate",
+   "syllables": [
+    "To",
+    "ma",
+    "te"
+   ],
+   "at": [
+    0.15,
+    0.3,
+    0.45
+   ],
+   "clap": true,
+   "vowels": true,
+   "vowelsAt": 0.6,
+   "picture": "🍅",
+   "count": "3 Silben",
+   "countAt": 0.8
+  }
+ },
+ "buchstaben": {
+  "say": "M wie Mond, au wie Auto, s wie Sonne. Fertig: Maus!",
+  "visual": {
+   "type": "buchstaben",
+   "letters": [
+    {
+     "l": "M",
+     "pic": "🌙",
+     "word": "Mond"
+    },
+    {
+     "l": "au",
+     "pic": "🚗",
+     "word": "Auto"
+    },
+    {
+     "l": "s",
+     "pic": "☀️",
+     "word": "Sonne"
+    }
+   ],
+   "word": "Maus",
+   "blendAt": 0.8,
+   "picture": "🐭",
+   "boxes": true
+  }
+ },
+ "satz": {
+  "say": "Vorne fährt die Lok mit dem großen Buchstaben. Am Ende kommt der Punkt.",
+  "visual": {
+   "type": "satz",
+   "words": [
+    "Flo",
+    "spielt",
+    "Ball"
+   ],
+   "end": ".",
+   "capitalAt": 0.2,
+   "endAt": 0.75,
+   "highlight": [
+    2
+   ],
+   "highlightAt": 0.5,
+   "labels": {
+    "start": "groß",
+    "end": "Punkt"
+   }
+  }
+ },
+ "strasse": {
+  "say": "Am Zebrastreifen bleibe ich stehen und schaue: links, rechts, und nochmal links.",
+  "visual": {
+   "type": "strasse",
+   "light": [
+    {
+     "state": "red",
+     "at": 0
+    },
+    {
+     "state": "green",
+     "at": 0.85
+    }
+   ],
+   "look": [
+    "left",
+    "right",
+    "left"
+   ],
+   "lookAt": [
+    0.45,
+    0.62,
+    0.8
+   ],
+   "cars": [
+    {
+     "lane": "near",
+     "at": 0.05,
+     "stop": true
+    },
+    {
+     "lane": "far",
+     "at": 0.2,
+     "e": "🚌"
+    }
+   ]
+  }
+ },
+ "wasser": {
+  "say": "Der Korken schwimmt. Der Stein sinkt. Und der Holzklotz schwimmt auch!",
+  "visual": {
+   "type": "wasser",
+   "guess": true,
+   "items": [
+    {
+     "e": "🍾",
+     "result": "float",
+     "label": "Korken: schwimmt",
+     "at": 0.05
+    },
+    {
+     "e": "🪨",
+     "result": "sink",
+     "at": 0.3
+    },
+    {
+     "e": "🪵",
+     "result": "float",
+     "at": 0.6
+    }
+   ]
+  }
+ },
+ "zahn": {
+  "say": "A wie Außenflächen: kleine Kreise, wie eine Schnecke.",
+  "visual": {
+   "type": "zahn",
+   "area": "aussen",
+   "dirt": true,
+   "clean": 0.9,
+   "timer": "2 Minuten"
+  }
+ },
+ "liste": {
+  "say": "Was hilft im Dunkeln? Helle Kleidung und Leuchtstreifen. Eine schwarze Jacke nicht.",
+  "visual": {
+   "type": "liste",
+   "title": "Im Dunkeln",
+   "items": [
+    {
+     "e": "👕",
+     "text": "helle Kleidung",
+     "mark": "yes"
+    },
+    {
+     "e": "🦺",
+     "text": "Leuchtstreifen",
+     "mark": "yes"
+    },
+    {
+     "e": "🧥",
+     "text": "schwarze Jacke",
+     "mark": "no"
+    }
+   ]
+  }
+ },
+ "vergleich": {
+  "say": "Drei Äpfel und im Spiegel noch drei. Das sind sechs.",
+  "caption": "3 + 3 = 6",
+  "visual": {
+   "type": "vergleich",
+   "mid": "mirror",
+   "left": {
+    "e": "🍎",
+    "n": 3,
+    "label": "3"
+   },
+   "right": {
+    "e": "🍎",
+    "n": 3,
+    "label": "noch 3",
+    "at": 0.4
+   }
+  }
+ },
+ "bild": {
+  "say": "Der Storch fliegt in den warmen Süden.",
+  "visual": {
+   "type": "bild",
+   "bg": "south",
+   "items": [
+    {
+     "e": "🪿",
+     "label": "Storch"
+    },
+    {
+     "e": "☀️",
+     "label": "Süden",
+     "at": 0.5
+    }
+   ]
+  }
+ },
+ "merke": {
+  "say": "Mein Trick: Erst bis zur Zehn, dann den Rest!",
+  "visual": {
+   "type": "merke",
+   "lines": [
+    "Erst bis zur *10*,",
+    "dann den Rest."
+   ]
+  }
+ }
+}

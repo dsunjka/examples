@@ -1,0 +1,115 @@
+{
+  "id": "verdoppeln",
+  "title": "Verdoppeln wie im *Spiegel*",
+  "icon": "🪞",
+  "subject": "mathe1",
+  "related": ["verdoppeln"],
+  "parent": "Verdoppeln als „gleich viele noch einmal“ (nicht „zwei dazu“) und Halbieren als gerechtes Teilen in zwei gleiche Teile; Verdopplungen bis 5 + 5.",
+  "intro": "Schau mal, Flo hat einen Zauberspiegel!",
+  "accent": "#ff8a3d",
+  "beats": [
+    {
+      "say": "Hallo! Ich bin Flo. Heute zaubern wir mit einem Spiegel.",
+      "visual": {"type": "title", "subtitle": "Verdoppeln und Halbieren"}
+    },
+    {
+      "say": "Eule kommt zu Besuch. Ich habe drei Äpfel. Ich möchte doppelt so viele. Wie geht das?",
+      "caption": "Doppelt so viele?",
+      "visual": {"type": "scene", "bg": "meadow", "actors": [
+        {"e": "flo", "x": 22, "size": 200, "emotion": "think", "bubble": "❓", "think": true, "bubbleAt": 0.7},
+        {"e": "🍎🍎🍎", "x": 52, "y": 76, "size": 70, "at": 0.25, "enter": "drop", "label": "3 Äpfel", "labelAt": 0.4},
+        {"e": "🦉", "x": 84, "size": 110, "enter": "right", "anim": "bounce", "label": "Eule", "labelAt": 0.15}
+      ]}
+    },
+    {
+      "say": "Mein Zauberspiegel hilft! Drei Äpfel davor. Im Spiegel noch einmal drei.",
+      "caption": "3 und noch einmal 3",
+      "visual": {"type": "vergleich", "mid": "mirror", "midAt": 0.1,
+        "left": {"e": "🍎", "n": 3, "label": "3", "at": 0.3},
+        "right": {"e": "🍎", "n": 3, "label": "noch 3", "at": 0.7}, "floEmotion": "happy", "floGesture": "point"}
+    },
+    {
+      "say": "Drei und drei sind sechs. Gleich viele noch einmal. Das heißt verdoppeln.",
+      "caption": "Das Doppelte von 3 ist *6*",
+      "visual": {"type": "rechnung", "parts": ["3", "+", "3", "=", "6"], "at": [0, 0.08, 0.16, 0.25, 0.3], "box": true,
+        "highlight": [{"part": 0, "at": 0.45}, {"part": 2, "at": 0.5}]}
+    },
+    {
+      "say": "Jetzt vier Sterne. Vier und noch einmal vier sind acht.",
+      "caption": "4 + 4 = *8*",
+      "pause": 1.2,
+      "visual": {"type": "vergleich", "mid": "mirror", "midAt": 0,
+        "left": {"e": "⭐", "n": 4, "label": "4", "at": 0.2},
+        "right": {"e": "⭐", "n": 4, "label": "noch 4", "at": 0.45}}
+    },
+    {
+      "say": "Achtung! Verdoppeln heißt nicht zwei dazu. Es kommen immer gleich viele dazu.",
+      "caption": "gleich viele dazu!",
+      "visual": {"type": "vergleich", "mid": "≠", "midAt": 0.62,
+        "left": {"text": "4 + 4", "label": "doppelt", "mark": "yes", "at": 0.55},
+        "right": {"text": "4 + 2", "label": "nur 2 dazu", "mark": "no", "at": 0.3}, "floEmotion": "think"}
+    },
+    {
+      "say": "Jetzt du! Fünf Finger, und im Spiegel noch fünf. Wie viele sind das? Was meinst du?",
+      "caption": "5 + 5 = ?",
+      "pause": 2.5,
+      "visual": {"type": "vergleich", "mid": "mirror", "midAt": 0,
+        "left": {"e": "✋", "n": 1, "label": "5 Finger", "at": 0.15},
+        "right": {"e": "✋", "n": 1, "label": "noch 5", "at": 0.4}, "floEmotion": "think"}
+    },
+    {
+      "say": "Genau, zehn! Fünf und fünf sind zehn. Zwei Hände, zehn Finger.",
+      "caption": "5 + 5 = *10*",
+      "visual": {"type": "rechnung", "parts": ["5", "+", "5", "=", "10"], "at": [-0.05, 0, 0.05, 0.1, 0.15], "box": true,
+        "floEmotion": "happy", "floGesture": "cheer"}
+    },
+    {
+      "say": "Jetzt andersherum. Ich habe acht Kekse. Ich teile gerecht mit Eule.",
+      "caption": "8 Kekse teilen",
+      "visual": {"type": "scene", "bg": "meadow", "actors": [
+        {"e": "flo", "x": 20, "size": 190, "emotion": "happy"},
+        {"e": "🍪🍪🍪🍪", "x": 50, "y": 70, "size": 62, "at": 0.25, "enter": "drop"},
+        {"e": "🍪🍪🍪🍪", "x": 50, "y": 80, "size": 62, "at": 0.32, "enter": "drop"},
+        {"e": "🦉", "x": 82, "size": 120, "at": 0.6, "enter": "right", "bubble": "😋", "bubbleAt": 0.75}
+      ]}
+    },
+    {
+      "say": "Einer für dich, einer für mich. Jeder bekommt vier. Das heißt halbieren.",
+      "caption": "Die Hälfte von 8 ist *4*",
+      "visual": {"type": "vergleich", "mid": "=", "midAt": 0.6,
+        "left": {"e": "🍪", "n": 4, "label": "Flo: 4", "at": 0.05},
+        "right": {"e": "🍪", "n": 4, "label": "Eule: 4", "at": 0.12}, "floGesture": "point"}
+    },
+    {
+      "say": "Merke dir: Verdoppeln heißt gleich viele noch einmal. Halbieren heißt gerecht in zwei gleiche Teile.",
+      "visual": {"type": "merke", "lines": ["*Verdoppeln*:", "gleich viele noch einmal", "*Halbieren*:", "gerecht in 2 gleiche Teile"], "at": [0.08, 0.2, 0.55, 0.68]}
+    },
+    {
+      "say": "Jetzt habe ich sechs Äpfel für Eule. Kommst du mit zum Quiz?",
+      "visual": {"type": "flo", "emotion": "happy", "gesture": "cheer", "side": "left", "bubble": "Quiz! 🪞", "bubbleAt": 0.6,
+        "items": [{"e": "🪞", "label": "3 + 3", "at": 0.05}, {"e": "🧺", "label": "6 Äpfel", "at": 0.25}]}
+    }
+  ],
+  "quiz": [
+    {"q": "Was ist das Doppelte von vier?",
+     "options": [{"text": "6", "say": "sechs", "correct": false}, {"text": "8", "say": "acht", "correct": true}, {"text": "5", "say": "fünf", "correct": false}],
+     "explain": "Schau mal in den Spiegel. Beim Verdoppeln kommen gleich viele dazu, nicht nur zwei.",
+     "model": "Vier und noch einmal vier. Vier und vier sind acht.",
+     "key": "Doppelte von 4", "beat": 4},
+    {"q": "Was ist die Hälfte von zehn?",
+     "options": [{"text": "5", "say": "fünf", "correct": true}, {"text": "2", "say": "zwei", "correct": false}, {"text": "20", "say": "zwanzig", "correct": false}],
+     "explain": "Fast! Teile zehn Kekse gerecht auf zwei Teller. Wie viele liegen dann auf jedem Teller?",
+     "model": "Fünf für dich und fünf für mich. Die Hälfte von zehn ist fünf.",
+     "key": "Hälfte von 10", "beat": 9},
+    {"q": "Wann ist gerecht geteilt?",
+     "options": [{"text": "🍪🍪 | 🍪🍪", "say": "Beide haben gleich viel.", "correct": true}, {"text": "🍪🍪🍪 | 🍪", "say": "Einer hat mehr.", "correct": false}, {"text": "🍪🍪🍪🍪 | 0", "say": "Einer hat nichts.", "correct": false}],
+     "explain": "Denk an Flo und Eule. Keiner soll traurig sein. Wie viele bekommt jeder?",
+     "model": "Gerecht teilen heißt: Beide haben gleich viel.",
+     "key": "gerecht teilen", "beat": 9},
+    {"q": "Flo verdoppelt sechs. Wie viele sind das?",
+     "options": [{"text": "8", "say": "acht", "correct": false}, {"text": "12", "say": "zwölf", "correct": true}, {"text": "7", "say": "sieben", "correct": false}],
+     "explain": "Schau mal: Beim Verdoppeln kommen nicht nur eins oder zwei dazu. Es kommen gleich viele dazu.",
+     "model": "Sechs und noch einmal sechs. Sechs und sechs sind zwölf.",
+     "key": "Doppelte von 6", "beat": 5}
+  ]
+}

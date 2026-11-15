@@ -190,6 +190,60 @@ const TIMEOUT = Number(args.timeout || 45000);
       check(await page.$('.reise-intro'), 'Reise: neues Kapitel nicht enthüllt');
       await tap('.reise-intro [data-test-station]');
       await page.evaluate(() => window.LT.reise.reset());
+      // Teil 2 „Schulabenteuer“: nach Teil 1 frei, eigener Bildschirm, Umschalter
+      check(await page.evaluate(() => !window.LT.reise.schoolUnlocked() && window.LT.reise.defaultJourney() === 'reise'), 'Reise: Teil 2 ohne Freischaltung offen');
+      await page.evaluate(() => { window.LT.reise.test.completePart1(); window.LT.reise.show({ journey: 'schule' }); });
+      await page.waitForTimeout(300);
+      check(await page.evaluate(() => window.LT.reise.schoolUnlocked() && window.LT.reise.defaultJourney() === 'schule'), 'Reise: Teil 2 nach Teil 1 nicht frei');
+      check(await page.$('.reise-screen.is-schule .reise-parts'), 'Reise: Teil-2-Bildschirm oder Umschalter fehlt');
+      await tap('.reise-intro [data-test-station]');
+      await page.waitForTimeout(150);
+      await snap('reise-teil2');
+      check(await tap('.reise-part[data-journey="reise"]'), 'Reise: Umschalter Teil 1 fehlt');
+      await page.waitForTimeout(200);
+      check(await page.evaluate(() => document.querySelector('.reise-screen').dataset.journey === 'reise'), 'Reise: Umschalten auf Teil 1 klappt nicht');
+      // Teil 2: alle Stationen vorhanden, 8–9 je Kapitel; Film-Station spielen, dann Schul-Station starten
+      const t2 = await page.evaluate(() => { const s = window.LT.reise.summary('schule'); return { missing: s.missing, sizes: s.chapters.map((c) => c.total) }; });
+      check(!t2.missing.length, 'Reise Teil 2: fehlende Spiele ' + t2.missing.join(', '));
+      check(t2.sizes.every((n) => n >= 8 && n <= 9), 'Reise Teil 2: Kapitelgrößen ' + t2.sizes.join('/'));
+      await page.evaluate(() => window.LT.reise.show({ journey: 'schule' }));
+      await page.waitForTimeout(300);
+      await tap('.reise-intro [data-test-station]');
+      await page.waitForTimeout(150);
+      const filmKey = await page.evaluate(() => { const n = document.querySelector('.reise-screen.is-schule .reise-station.current'); return n ? n.dataset.key : null; });
+      check(filmKey && filmKey.startsWith('film-'), 'Reise Teil 2: erste Station ist kein Film (' + filmKey + ')');
+      await tap('.reise-station.current');
+      await page.waitForFunction(() => window.LT.test.state().game, null, { timeout: 5000 }).catch(() => {});
+      check(await page.evaluate(() => (window.LT.test.state().game || '').startsWith('film-') && !!document.querySelector('.kino-player')), 'Reise Teil 2: Film-Station startet keinen Film');
+      check(await playToEnd(), 'Reise Teil 2: Film-Station hängt');
+      await tap('.round-end .btn:not(.btn-primary)');
+      await page.waitForTimeout(300);
+      check(await page.evaluate((k) => window.LT.app.screen === 'reise' && !!document.querySelector(`.reise-station.done[data-key="${k}"]`), filmKey), 'Reise Teil 2: Film-Station nicht geschafft oder nicht zurück');
+      const k1Key = await page.evaluate(() => { const n = document.querySelector('.reise-station.current'); return n ? n.dataset.key : null; });
+      await tap('.reise-station.current');
+      await page.waitForFunction(() => window.LT.test.state().game, null, { timeout: 5000 }).catch(() => {});
+      check(await page.evaluate((k) => { const st = window.LT.test.state(); const [g, lv] = k.split('@'); return st.game === g && window.LT.engine.current.level === Number(lv); }, k1Key || '@'), 'Reise Teil 2: Schul-Station startet nicht auf ihrer Stufe (' + k1Key + ')');
+      await page.evaluate(() => window.LT.engine.stop());
+      await page.evaluate(() => { window.LT.reise.reset(); window.LT.app.showHome(); });
+    }
+    // Flos Kino: Insel mit Kinokarten
+    if (await page.evaluate(() => !!(window.LT.kino && window.LT.areaById('kino') && window.LT.kino.list().length))) {
+      await page.evaluate(() => window.LT.app.showArea('kino'));
+      await page.waitForTimeout(150);
+      if (!(await page.$('.kino-ticket'))) errors.push({ type: 'kino', text: 'Kino: keine Kinokarten auf der Insel' });
+      if (await page.evaluate(() => /\*/.test(document.querySelector('.kino-ticket').textContent))) errors.push({ type: 'kino', text: 'Kino: Sternchen im Filmtitel sichtbar' });
+      await page.evaluate(() => document.querySelector('.kino-ticket').dispatchEvent(new MouseEvent('click', { bubbles: true })));
+      await page.waitForFunction(() => window.LT.test.state().game, null, { timeout: 5000 }).catch(() => {});
+      if (!(await page.evaluate(() => (window.LT.test.state().game || '').startsWith('film-') && !!document.querySelector('.kino-player')))) errors.push({ type: 'kino', text: 'Kino: Kinokarte startet keinen Film' });
+      await page.evaluate(() => { window.LT.engine.stop(); window.LT.app.showHome(); });
+    }
+    // Startseite: Schul-Reihe sichtbar; Tagesabenteuer ohne Schulspiele/Filme, solange die Schule nicht frei ist
+    if (await page.evaluate(() => !!window.LT.areaById('mathe1'))) {
+      await page.evaluate(() => { window.LT.progress.profile.adventure = null; window.LT.app.showHome(); });
+      await page.waitForTimeout(150);
+      if (!(await page.$('.school-section'))) errors.push({ type: 'schule', text: 'Startseite: Schul-Reihe fehlt' });
+      const bad = await page.evaluate(() => { const LT = window.LT; if (LT.app.schoolUnlocked()) return []; return (LT.progress.profile.adventure || { games: [] }).games.filter((id) => { const a = LT.areaById(LT.games[id].area); return a && (a.grade === 1 || a.id === 'kino'); }); });
+      if (bad.length) errors.push({ type: 'schule', text: 'Tagesabenteuer enthält Schulspiele für Vorschulkinder: ' + bad.join(', ') });
     }
     // Forscherbuch (Startseite und Forscherwelt-Insel)
     if (await page.evaluate(() => !!(window.LT.wissen && window.LT.wissen.showBook))) {
@@ -254,7 +308,7 @@ const TIMEOUT = Number(args.timeout || 45000);
     }
     const errs = errors.slice(errStart).filter((e) => !/favicon/.test(e.text));
     results.push({ id: 'app-screens', level: 0, ok: errs.length === 0, reason: errs.length ? 'Fehler in der Konsole' : '', errors: errs });
-    console.log(`${errs.length ? '❌' : '✅'} App-Bildschirme (Start, Inseln, Flos Reise, Forscherbuch, Album, Elternbereich)`);
+    console.log(`${errs.length ? '❌' : '✅'} App-Bildschirme (Start, Inseln, Flos Reise Teil 1 und 2, Kino, Forscherbuch, Album, Elternbereich)`);
     errs.slice(0, 8).forEach((e) => console.log('     ↳', e.type, e.text.split('\n').slice(0, 3).join(' | ')));
   }
 

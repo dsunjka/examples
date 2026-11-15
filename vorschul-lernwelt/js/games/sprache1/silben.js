@@ -11,9 +11,11 @@
      erscheinen die Bögen unter dem Wort (Silben abwechselnd blau/rot wie in
      der Silbenmethode) und Flo spricht die Silben deutlich getrennt vor:
      „Ba – na – ne“. Damit wird die Erkenntnis benannt.
-   - Fehler: Rückmeldung „zu wenig / zu viel“, dann noch einmal langsam
-     mitsprechen. Nach 2 Fehlversuchen klatscht Flo vor; danach zeigen
+   - Hilfe-Leiter: 1. Fehler → „Du hast viermal geklatscht. Banane hat weniger
+     Silben.“ + langsam mitsprechen, 2. → Denkanstoß Hand unters Kinn (bei jeder
+     Silbe geht das Kinn nach unten), 3. → Flo klatscht vor; danach zeigen
      gestrichelte Bögen, wie oft geklatscht wird (Hilfe bis zum Erfolg).
+   - Wörter wählt ctx.item (Schlüssel = Wort), schwierige Wörter kommen wieder.
    - Stufen:
        1  Klatschen: Wörter mit 1–2 Silben
        2  Klatschen: Wörter mit bis zu 3 Silben
@@ -64,6 +66,18 @@
     4: { mode: 'count', counts: [1, 2, 2, 3, 3, 4, 5] },
     5: { mode: 'pick' },
   };
+  const kindOf = (lv) => (LV[lv] || LV[1]).mode;
+
+  /**
+   * Wort der Aufgabe: Silbenzahl zufällig nach Stufe gewichtet, das Wort selbst
+   * wählt ctx.item (Wiederholung schwieriger Wörter; fällige Wörter mit einer
+   * anderen erlaubten Silbenzahl bleiben im Pool).
+   */
+  function chooseWord(ctx, counts) {
+    const n = U.pick(counts);
+    const allowed = pool().filter((x) => counts.includes(x.s.length));
+    return ctx.item(S.poolWithDue(ctx, allowed, (x) => x.w, (x) => x.s.length === n), (x) => x.w, { avoid: 14 });
+  }
 
   /* ------------------------------------------------------------------
      Klatsch-Werkzeug: großer Klatsch-Knopf + Ablage für Silbenbögen
@@ -198,22 +212,32 @@
       if (taps === n) {
         finished = true;
         update();
-        await ctx.correct(clapper.tray, { say: n === 1 ? `Richtig! ${word.w} hat nur eine Silbe.` : `Richtig! ${U.cap(S.silben(n))}!` });
+        await ctx.correct(clapper.tray, {
+          say: n === 1 ? `Richtig! ${word.w} hat nur eine Silbe.` : S.proc(ctx,
+            `Richtig! ${U.cap(S.silben(n))}!`,
+            `Richtig, du hast bei jeder Silbe geklatscht: ${S.silben(n)}.`),
+        });
         await consolidate(ctx, card, word, Array.from(clapper.tray.children));
         finish();
         return;
       }
-      let say;
-      if (taps < n) say = n - taps === 1 ? 'Fast! Da fehlt noch eine Silbe.' : 'Fast! Da fehlen noch Silben.';
-      else say = taps - n === 1 ? 'Fast! Das war einmal zu viel.' : 'Hoppla, das war zu oft geklatscht.';
-      const k = await ctx.wrong(clapper.tray, { say });
+      // Hilfe-Leiter: 1 erklären (zu wenig / zu viel) → 2 Denkanstoß (Hand unters Kinn) → 3 vorklatschen
+      const say = `Du hast ${S.times(taps)} geklatscht. ${word.w} hat ${taps < n ? 'mehr' : 'weniger'} Silben.`;
+      await ctx.wrong(clapper.tray, { say });
       if (!ctx.active) return;
-      if (k >= 2 && !guided) {
+      const step = ctx.helpStep;
+      if (step >= 3 && !guided) {
         guided = true;
+        ctx.modelShown = true;
         await ctx.say('Pass auf, ich klatsche es dir vor!');
         await demonstrate(ctx, card, word, clapper);
         await ctx.say(`${U.cap(S.silben(n))}. Jetzt du! Klatsch mit und tippe dann auf den Haken.`);
         clapper.setGhosts(n);
+      } else if (step === 2) {
+        clapper.reset();
+        await ctx.say('Leg deine Hand unter das Kinn und sprich ganz langsam mit.');
+        await ctx.say(word.w, { rate: 0.6 });
+        await ctx.say('Bei jeder Silbe geht dein Kinn nach unten. Klatsch dazu!');
       } else {
         clapper.reset();
         await ctx.say(`Sprich ganz langsam mit: ${word.w}.`, { rate: 0.65 });
@@ -255,15 +279,20 @@
       shuffle: false,
       size: 'small',
       hintAfter: 2,
-      correctSay: () => `Richtig! ${word.w} hat ${S.silben(n)}.`,
-      // informativ: zu wenig oder zu viel?
-      wrongSay: (it) => `${word.w} hat ${it.k < n ? 'mehr' : 'weniger'} als ${S.silben(it.k)}. ` + S.vary('silben-wrong', ['Klatsch noch mal mit!', 'Sprich langsam mit und klatsche!']),
+      correctSay: () => S.proc(ctx,
+        `Richtig! ${word.w} hat ${S.silben(n)}.`,
+        `Richtig, du hast die Silben genau gezählt: ${word.w} hat ${S.silben(n)}.`),
+      // Hilfe-Leiter: 1 zu wenig oder zu viel? → 2 Denkanstoß (Kinn) → 3 Flo klatscht vor
+      // (beim 3. Fehler klatscht gleich Flo vor – dann keine Aufforderung zum Selberklatschen)
+      explain: (it) => `${word.w} hat ${it.k < n ? 'mehr' : 'weniger'} als ${S.silben(it.k)}.` + (ctx.wrongCount >= 2 ? '' : ' ' + S.vary('silben-wrong', ['Klatsch noch mal mit!', 'Sprich langsam mit und klatsche!'])),
+      hintSay: () => 'Leg deine Hand unter das Kinn und sprich das Wort langsam. Zähl, wie oft dein Kinn nach unten geht.',
       onWrong: async (it, tile, k) => {
-        if (k === 2) {
+        if (k === 3) {
           await ctx.say('Hör mal, ich klatsche es dir vor:');
           await demonstrate(ctx, card, word, clapper);
         }
       },
+      modelSay: () => (n === 1 ? 'Das war nur eine Silbe. Tipp auf die Eins.' : `Das waren ${S.silben(n)}. Tipp auf die ${U.cap(U.numberWord(n))}.`),
     });
     if (ctx.index === 0) await ctx.say('Wie viele Silben hat das Wort? Du kannst zuerst klatschen. Dann tippe auf die richtige Zahl.');
     await ctx.instruct(`Wie viele Silben hat ${word.w}?`);
@@ -277,10 +306,18 @@
      Stufe 5: Welches Wort hat … Silben?
      ------------------------------------------------------------------ */
   async function pickTask(ctx) {
-    const counts = U.sample([1, 2, 3, 4, 5], 3);
-    const n = U.pick(counts);
-    const words = [];
-    counts.forEach((c) => words.push(pickWord(c, words.map((w) => w.e))));
+    // Zielwort über ctx.item; die anderen Bilder haben andere Silbenzahlen
+    const all = pool().filter((x) => x.s.length <= 5);
+    const nRand = U.randInt(1, 5);
+    const goal = ctx.item(S.poolWithDue(ctx, all, (x) => x.w, (x) => x.s.length === nRand), (x) => x.w, { avoid: 14 });
+    const n = goal.s.length;
+    // Knobel-Aufgabe: vier Bilder; leichter: Silbenzahlen liegen weit auseinander
+    const nOpts = ctx.flow > 0 && ctx.level === 5 ? 4 : 3;
+    const rest = U.shuffle([1, 2, 3, 4, 5].filter((c) => c !== n));
+    if (ctx.flow < 0) rest.sort((a, b) => Math.abs(b - n) - Math.abs(a - n));
+    const counts = [n].concat(rest.slice(0, nOpts - 1));
+    const words = [goal];
+    counts.slice(1).forEach((c) => words.push(pickWord(c, words.map((w) => w.e))));
     const target = el('div.prompt-box.s1-target', S.arcRow(n, 'big'), el('b', String(n)));
     const box = el('div.choices.s1-choices');
     ctx.stage.append(target, box);
@@ -291,8 +328,9 @@
       sayButton: true,
       size: 'large',
       correctSay: (it) => (n === 1 ? `Richtig! ${it.x.w} hat nur eine Silbe.` : `Richtig! ${S.joinSyl(it.x.s)}. ${it.x.w} hat ${S.silben(n)}.`),
-      wrongSay: (it) => `${S.joinSyl(it.x.s)}: ${it.x.w} hat ${S.silben(it.x.s.length)}. Wir suchen ein Wort ${S.mitSilben(n)}.`,
-      hintSay: (it) => `Hör mal: ${S.joinSyl(it.x.s)}.`,
+      explain: (it) => `${it.x.s.length > 1 ? S.joinSyl(it.x.s) + ': ' : ''}${it.x.w} hat ${S.silben(it.x.s.length)}. Wir suchen ein Wort ${S.mitSilben(n)}.`,
+      hintSay: () => 'Klatsch bei jedem Bild leise mit und zähl die Silben.',
+      modelSay: (it) => (n === 1 ? `Schau: ${it.x.w} hat nur eine Silbe.` : `Schau: ${S.joinSyl(it.x.s)}. ${it.x.w} hat ${S.silben(n)}.`),
     });
     const q = `Welches Wort hat ${S.silben(n)}?`;
     if (ctx.index === 0) await ctx.say('Jetzt suchen wir Wörter mit einer bestimmten Anzahl Silben. Klatsch leise mit!');
@@ -324,9 +362,15 @@
     },
 
     async task(ctx) {
-      const cfg = LV[ctx.level] || LV[1];
+      const lv = S.lv(ctx, kindOf);
+      const cfg = LV[lv] || LV[1];
       if (cfg.mode === 'pick') return pickTask(ctx);
-      const word = pickWord(U.pick(cfg.counts));
+      // Anpassung innerhalb der Aufgabenart (wenn ctx.taskLevel die Art wechseln würde)
+      let counts = cfg.counts;
+      if (lv === ctx.level && ctx.flow < 0 && lv === 1) counts = [1, 2];
+      if (lv === ctx.level && ctx.flow > 0 && lv === 3) counts = [4, 4, 5];
+      if (lv === ctx.level && ctx.flow > 0 && lv === 4) counts = [3, 4, 5];
+      const word = chooseWord(ctx, counts);
       if (cfg.mode === 'count') return countTask(ctx, word);
       return clapTask(ctx, word);
     },

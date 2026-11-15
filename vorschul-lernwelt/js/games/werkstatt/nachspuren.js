@@ -10,9 +10,16 @@
      Startpunkt mit Strich-Nummer, ein Pfeil zeigt laufend die Richtung,
      Kontrollpunkte müssen je Strich in der richtigen Reihenfolge erreicht werden.
    - Kein Frust: sehr großzügige Toleranz (die gelbe „Straße“), Absetzen ist
-     erlaubt – es geht an derselben Stelle weiter. Wer zweimal danebenmalt,
-     bekommt die Bewegung vorgemacht (Finger fährt den Weg vor) und die Toleranz
-     wird noch größer. Der 💡-Knopf zeigt den Weg jederzeit.
+     erlaubt – es geht an derselben Stelle weiter. Der 💡-Knopf zeigt den Weg
+     jederzeit.
+   - Hilfe-Leiter (ctx.helpStep): 1. Danebenmalen → Flo erklärt, was nicht
+     geklappt hat („Fang beim grünen Punkt an.“ bzw. „Fahr in Pfeilrichtung.“);
+     2. → Denkanstoß: langsam auf der gelben Straße bleiben, der Startpunkt
+     pulsiert und die Toleranz wird größer; 3. → vormachen: ein Finger fährt
+     den Weg vor.
+   - Lerninhalt = das Zeichen (Schlüssel 'Welle', '3', 'M', 'm', 'MAMA'):
+     über ctx.item gewählt, damit schwierige Zeichen wiederkommen. Die Stufe
+     folgt ctx.taskLevel; auf Stufe 1 bei ctx.flow < 0 einfachere Schwünge.
    - Stufen: 1 Schwungübungen (Linie, Welle, Zickzack, Bögen, Girlanden,
      Schleifen, Kreis, Spirale) → 2 Ziffern 0–9 → 3 Großbuchstaben (Druckschrift)
      → 4 Kleinbuchstaben in der Lineatur → 5 Mein Name / kurze Wörter.
@@ -118,6 +125,12 @@
     }
     return out;
   }
+
+  /** lesbare Schlüssel der Schwungübungen (Elternbereich) */
+  const SCHWUNG_NAME = {
+    linie: 'Gerade Linie', senkrecht: 'Linie nach unten', welle: 'Welle', zickzack: 'Zickzack', girlande: 'Girlande',
+    boegen: 'Bögen', schleifen: 'Schleifen', kreis: 'Kreis', spirale: 'Spirale',
+  };
 
   const SCHWUNG = [
     { id: 'linie', grp: 0, strokes: [L(12, 50, 88, 50)], walker: '🐛', goal: '🍏',
@@ -515,12 +528,12 @@
       gesture = null;
       if (!g || finished) return;
       // Viel gemalt, aber (fast) kein Fortschritt – z. B. falsche Richtung oder daneben
-      if (g.progressed && g.gained < 2 && g.len > 24) opts.onMiss && opts.onMiss();
+      if (g.progressed && g.gained < 2 && g.len > 24) opts.onMiss && opts.onMiss('dir');
       if (!g.progressed) {
         // Tinte, die nichts nachgespurt hat, sanft ausblenden
         g.path.classList.add('fade');
         ctx.timeout(() => g.path.remove(), 700);
-        if (g.len > 16) opts.onMiss && opts.onMiss();
+        if (g.len > 16) opts.onMiss && opts.onMiss('off');
         else pulseStart();
       }
     }
@@ -604,16 +617,23 @@
     U.clear(ui.area);
     let tracer = null;
     let wrongBusy = false;
+    let misses = 0;       // Fehlversuche bei DIESEM Zeichen (Stufe 5: je Buchstabe neu)
+    let shown = false;    // bei diesem Zeichen schon vorgemacht?
     tracer = createTracer(ctx, strokes, Object.assign({}, opts, {
-      onMiss: async () => {
+      // Hilfe-Leiter: 1 erklären · 2 Denkanstoß (Straße breiter, Start pulsiert) · 3 vormachen
+      onMiss: async (why) => {
         if (wrongBusy || tracer.finished) return;
         wrongBusy = true;
-        const n = await ctx.wrong(null, { say: ctx.wrongCount === 0 ? 'Fast! Fang beim grünen Punkt an und fahr in Pfeilrichtung.' : 'Schau, ich zeige es dir.' });
-        if (n >= 2 && ctx.active) {
-          tracer.widen();
-          tracer.hintStart();
-          await tracer.demo();
-        }
+        misses++;
+        const step = Math.min(3, misses);
+        let say;
+        if (step === 1) say = why === 'dir' ? 'Fast! Fahr in Pfeilrichtung weiter.' : 'Fast! Fang beim grünen Punkt an.';
+        else if (step === 2) say = 'Tipp: Fahr ganz langsam und bleib auf der gelben Straße. Der Pfeil zeigt dir den Weg.';
+        else say = shown ? 'Schau nochmal genau hin.' : 'Schau, ich zeige es dir. Dann machst du es nach.';
+        await ctx.wrong(null, { say });
+        if (!ctx.active) { wrongBusy = false; return; }
+        if (step >= 2) { tracer.widen(); tracer.hintStart(); }
+        if (step === 3) { shown = true; ctx.modelShown = true; await tracer.demo(); }
         wrongBusy = false;
       },
     }));
@@ -650,10 +670,11 @@
 
     async task(ctx) {
       const ui = layout(ctx);
-      if (ctx.level === 1) return taskSchwung(ctx, ui);
-      if (ctx.level === 2) return taskDigit(ctx, ui);
-      if (ctx.level === 3) return taskLetter(ctx, ui, false);
-      if (ctx.level === 4) return taskLetter(ctx, ui, true);
+      const lv = ctx.taskLevel;
+      if (lv === 1) return taskSchwung(ctx, ui);
+      if (lv === 2) return taskDigit(ctx, ui);
+      if (lv === 3) return taskLetter(ctx, ui, false);
+      if (lv === 4) return taskLetter(ctx, ui, true);
       return taskWord(ctx, ui);
     },
   });
@@ -661,19 +682,20 @@
   /* --- Stufe 1 --- */
   async function taskSchwung(ctx, ui) {
     // Fortschritt innerhalb der Runde: leicht → mittel → schwer
-    const grp = [0, 1, U.pick([1, 2]), 2][ctx.index] ?? U.rand(3);
+    // nach Fehlern in der Runde (ctx.flow < 0) eine Gruppe leichter
+    const grp = U.clamp(([0, 1, U.pick([1, 2]), 2][ctx.index] ?? U.rand(3)) + Math.min(0, ctx.flow), 0, 2);
     const pool = SCHWUNG.filter((s) => s.grp === grp);
-    const shape = U.pickFresh('spur-schwung-' + grp, pool, 2, (s) => s.id);
+    const shape = ctx.item(pool, (s) => SCHWUNG_NAME[s.id] || s.id, { fresh: 'spur-schwung-' + grp, avoid: 2 });
     ui.head.appendChild(el('span.spur-walk', U.emoji(shape.walker), shape.goal ? el('span.spur-arrow-txt', '➜') : null, shape.goal ? U.emoji(shape.goal) : null));
     ctx.instruct(shape.say + ' Fang beim grünen Punkt an.');
     const tr = await traceOne(ctx, ui, shape.strokes, { walker: shape.walker, goal: shape.goal, guides: 'none', label: shape.id });
     if (!ctx.active) return;
-    await ctx.correct(tr.svg, { say: shape.done });
+    await ctx.correct(tr.svg, { say: ctx.wrongCount === 0 && U.chance(0.3) ? 'Super, du bist genau auf der Straße geblieben!' : shape.done });
   }
 
   /* --- Stufe 2 --- */
   async function taskDigit(ctx, ui) {
-    const d = U.pickFresh('spur-digit', U.range(0, 9), 6);
+    const d = ctx.item(U.range(0, 9), (k) => String(k), { fresh: 'spur-digit', avoid: 6 });
     const name = DIGIT_NAMES[d];
     const big = el('span.spur-glyph', String(d));
     const dots = el('span.spur-dots');
@@ -693,7 +715,7 @@
   /* --- Stufe 3 und 4 --- */
   async function taskLetter(ctx, ui, lower) {
     const keys = Object.keys(lower ? LOWER : CAPS).filter((k) => /^[A-Za-z]$/.test(k));
-    const ch = U.pickFresh(lower ? 'spur-lower' : 'spur-caps', keys, 8);
+    const ch = ctx.item(keys, (k) => k, { fresh: lower ? 'spur-lower' : 'spur-caps', avoid: 8 });
     const up = ch.toUpperCase();
     const anc = ANCHOR[up];
     const nm = LETTER_NAME[up];
@@ -712,15 +734,17 @@
     ctx.instruct(text);
     const tr = await traceOne(ctx, ui, strokes, { guides: lower ? 'lower' : 'caps', label: 'Buchstabe ' + ch });
     if (!ctx.active) return;
-    await ctx.correct(tr.svg, { say: `Toll! ${wie}!` });
+    await ctx.correct(tr.svg, { say: ctx.wrongCount === 0 && U.chance(0.3) ? `Toll, in der richtigen Richtung! ${wie}!` : `Toll! ${wie}!` });
   }
 
   /* --- Stufe 5: Name oder Wort, Buchstabe für Buchstabe --- */
   async function taskWord(ctx, ui) {
     const nm = nameLetters(ctx.name);
     let item;
-    if (nm && ctx.index === 0) item = { w: nm, s: ctx.name.trim().split(/[\s-]+/)[0], e: '🧒', isName: true };
-    else item = U.pickFresh('spur-words', WORDS, 6, (x) => x.w);
+    if (nm && ctx.index === 0) {
+      item = { w: nm, s: ctx.name.trim().split(/[\s-]+/)[0], e: '🧒', isName: true };
+      ctx.track('Eigener Name');
+    } else item = ctx.item(WORDS, (x) => x.w, { fresh: 'spur-words', avoid: 6 });
     const letters = Array.from(item.w);
     const strip = el('span.spur-strip', letters.map((c) => el('span.spur-letter', c)));
     ui.head.append(U.emoji(item.e, 'spur-anchor'), strip);

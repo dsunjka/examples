@@ -1,0 +1,319 @@
+/* ==========================================================================
+   Spiel „Sicher zur Schule“ 🚸 (sach1/schulweg) – alle Klassen mit .swg- (eigenes Präfix; .sch- nutzen andere Spiele)
+   ========================================================================== */
+
+.stage.swg-stage { gap: clamp(10px, 2vmin, 20px); }
+
+/* ---------- Grundlayout: Frage + Bild | Antworten ---------- */
+.swg-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(10px, 2vmin, 20px);
+  width: 100%;
+  max-width: 1100px;
+  min-height: 0;
+}
+.swg-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(8px, 1.6vmin, 16px);
+  width: 100%;
+  max-width: 620px;
+  min-height: 0;
+}
+.swg-q {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  max-width: 100%;
+  padding: clamp(8px, 1.6vmin, 14px) clamp(12px, 2.4vmin, 22px);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: var(--shadow);
+  color: var(--ink);
+  font-size: clamp(17px, 2.9vmin, 26px);
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+}
+.swg-fig {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 0;
+}
+.swg-scene {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: 30vh;
+  border-radius: var(--radius-s);
+  box-shadow: var(--shadow);
+  background: #cdeeff;
+}
+.swg-sign { display: block; width: 100%; height: 100%; }
+.swg-sign-big { width: clamp(110px, 22vmin, 190px); height: auto; filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.15)); }
+.swg-figemoji { font-size: clamp(56px, 12vmin, 110px); line-height: 1; }
+
+/* ---------- Textkarten ---------- */
+.choices.swg-cardopts {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  width: min(100%, 470px);
+  gap: clamp(8px, 1.5vmin, 14px);
+}
+.tile.swg-card {
+  width: 100%;
+  height: auto;
+  min-height: 64px;
+  flex-direction: row;
+  justify-content: flex-start;
+  padding: 10px 46px 10px 14px;
+  border-radius: var(--radius-s);
+  font-size: clamp(17px, 2.6vmin, 22px);
+  line-height: 1.2;
+  text-align: left;
+}
+.tile.swg-card .say-btn { top: 50%; right: 6px; transform: translateY(-50%); width: 36px; height: 36px; font-size: 18px; }
+.swg-ci { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.swg-ce { font-size: clamp(28px, 4.4vmin, 38px); flex: 0 0 auto; }
+.swg-ct { font-size: clamp(17px, 2.6vmin, 22px); font-weight: 700; overflow-wrap: anywhere; }
+.tile.swg-card.swg-short { min-height: 72px; justify-content: center; padding-right: 14px; }
+.tile.swg-card.swg-short .swg-ct { font-size: clamp(22px, 3.4vmin, 30px); }
+
+/* Notrufnummern */
+.swg-numcard { gap: 14px; }
+.swg-big {
+  flex: 0 0 auto;
+  min-width: 2.7em;
+  padding: 4px 8px;
+  border-radius: 12px;
+  background: #e53935;
+  color: #fff;
+  font-size: clamp(24px, 4vmin, 34px);
+  font-weight: 800;
+  text-align: center;
+  letter-spacing: 1px;
+}
+.swg-big.swg-big-none { background: #e4e7f2; }
+
+/* ---------- Bild-Antworten (Ampeln, Schilder, Mini-Szenen) ---------- */
+.choices.swg-picopts { flex-wrap: nowrap; gap: clamp(10px, 2vmin, 20px); }
+.tile.swg-pic {
+  --tile: clamp(100px, 21vmin, 180px);
+  width: var(--tile);
+  height: auto;
+  min-height: var(--tile);
+  padding: 8px;
+}
+.tile.swg-pic .label { margin-top: 2px; }
+.tile.swg-signtile { height: var(--tile); }
+.swg-light { height: calc(var(--tile) * 0.95); width: auto; max-width: 100%; }
+.swg-carlight { height: calc(var(--tile) * 0.95); }
+.swg-mini { display: block; width: 100%; height: auto; border-radius: 10px; }
+.swg-night { max-height: calc(var(--tile) * 1.1); width: auto; max-width: 100%; }
+.choices.swg-picopts.swg-four .tile.swg-pic { --tile: clamp(76px, 19vmin, 160px); }
+.choices.swg-picopts.swg-minis { flex-wrap: wrap; }
+.tile.swg-pic.swg-minitile { width: clamp(150px, 30vmin, 250px); min-height: 0; }
+
+/* ---------- Links – rechts – links ---------- */
+.choices.swg-lookbox { flex-direction: column; align-items: center; flex-wrap: nowrap; gap: clamp(10px, 2vmin, 18px); }
+.swg-slots { display: flex; gap: 10px; }
+.swg-slot {
+  width: clamp(56px, 11vmin, 84px);
+  height: clamp(56px, 11vmin, 84px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  border: 3px dashed var(--ink-faint);
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--ink-faint);
+  font-size: clamp(26px, 5vmin, 40px);
+  font-weight: 800;
+  font-family: var(--emoji), var(--font);
+}
+.swg-slot.swg-slot-ok { border-style: solid; border-color: var(--ok); background: var(--ok-soft); color: var(--ink); }
+.swg-dirs { display: flex; gap: clamp(12px, 3vmin, 28px); }
+.tile.swg-dir { --tile: clamp(96px, 18vmin, 150px); font-size: calc(var(--tile) * 0.42); }
+.swg-dirs.swg-done { opacity: 0.4; pointer-events: none; }
+.swg-car { transition: transform 1s; }
+
+/* ---------- Wimmelbild / Querungsstelle ---------- */
+.swg-huntwrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(8px, 1.6vmin, 16px);
+  width: 100%;
+  max-width: 980px;
+}
+.swg-count {
+  flex: 0 0 auto;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--soft-wrong-bg);
+  color: var(--ink);
+  font-size: 0.9em;
+  white-space: nowrap;
+}
+.swg-rows { display: flex; flex-direction: column; align-items: center; gap: 12px; width: 100%; }
+.swg-pic-wrap { position: relative; width: 100%; line-height: 0; }
+.swg-pic-wrap .swg-scene.swg-wimmel { max-height: none; width: 100%; }
+.swg-hot {
+  position: absolute;
+  top: 18%;
+  height: 82%;
+  min-height: 56px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 18px;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.swg-hot:active { background: rgba(255, 255, 255, 0.18); }
+.swg-hot.swg-found { box-shadow: inset 0 0 0 5px #ff5a4f; background: rgba(255, 90, 79, 0.12); }
+.swg-hot.swg-safe { box-shadow: inset 0 0 0 4px var(--ok); background: rgba(34, 178, 107, 0.1); }
+.swg-hot.hint-glow { outline-offset: -6px; }
+.swg-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  font-size: clamp(22px, 4vmin, 34px);
+  line-height: 1;
+  font-family: var(--emoji);
+  filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.2));
+}
+.choices.swg-spotbox { position: absolute; inset: 0; display: block; pointer-events: none; }
+.tile.swg-spot {
+  --tile: clamp(56px, 10vmin, 76px);
+  position: absolute;
+  bottom: 4%;
+  margin-left: calc(var(--tile) / -2);
+  border-radius: 50%;
+  border: 4px solid var(--area);
+  pointer-events: auto;
+}
+.tile.swg-spot .tile-text { font-size: calc(var(--tile) * 0.48); }
+
+/* ---------- Sichtbar im Dunkeln (Mehrfachauswahl) ---------- */
+.choices.swg-multiopts { display: grid; grid-template-columns: repeat(3, auto); justify-content: center; gap: clamp(8px, 1.6vmin, 16px); }
+.tile.swg-mtile { --tile: clamp(96px, 17vmin, 150px); font-size: calc(var(--tile) * 0.38); }
+.tile.swg-mtile .swg-mpic { display: block; width: calc(var(--tile) * 0.62); height: auto; }
+.tile.swg-mtile .label { font-size: clamp(13px, 2vmin, 18px); line-height: 1.1; text-align: center; padding: 0 2px; }
+
+/* ---------- Notruf ---------- */
+.swg-callwrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(10px, 2vmin, 18px);
+  width: 100%;
+  max-width: 1000px;
+}
+.swg-story { max-width: 640px; text-align: left; font-size: clamp(16px, 2.6vmin, 23px); }
+.swg-storyemoji { font-size: clamp(36px, 7vmin, 60px); flex: 0 0 auto; }
+.swg-story.swg-story-small { font-size: clamp(14px, 2.1vmin, 18px); padding: 6px 12px; }
+.swg-story.swg-story-small .swg-storyemoji { font-size: clamp(26px, 4.6vmin, 40px); }
+.swg-phone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 30px;
+  background: #2b2d42;
+  box-shadow: var(--shadow);
+}
+.swg-display {
+  width: 100%;
+  min-width: 200px;
+  min-height: 48px;
+  padding: 6px 12px;
+  border-radius: 14px;
+  background: #d9f7e6;
+  color: var(--ink);
+  font-size: clamp(26px, 5vmin, 38px);
+  font-weight: 800;
+  letter-spacing: 4px;
+  text-align: center;
+  line-height: 36px;
+}
+.swg-pad { display: grid; grid-template-columns: repeat(3, auto); gap: 8px; }
+.swg-key {
+  width: clamp(58px, 9vmin, 76px);
+  height: clamp(58px, 9vmin, 76px);
+  border: 0;
+  border-radius: 50%;
+  background: #f4f5fb;
+  color: var(--ink);
+  font: 800 clamp(24px, 4vmin, 32px) var(--font);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+.swg-key:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0, 0, 0, 0.3); }
+.swg-callbtn {
+  width: clamp(64px, 10vmin, 84px);
+  height: clamp(64px, 10vmin, 84px);
+  border: 0;
+  border-radius: 50%;
+  background: #8a8f9c;
+  font-size: clamp(28px, 5vmin, 40px);
+  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+.swg-callbtn.swg-ready { background: var(--ok); animation: tile-hint 1.1s ease-in-out infinite; }
+.swg-phone.swg-ringing { animation: tile-shake 0.6s ease-in-out 2; }
+.swg-phone.swg-talk { width: min(100%, 560px); background: #3a3d5c; padding: 14px 12px; }
+.swg-bubble {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 18px;
+  background: #fff;
+  color: var(--ink);
+  font-size: clamp(17px, 2.7vmin, 23px);
+  font-weight: 700;
+  line-height: 1.25;
+}
+.swg-who { font-size: clamp(26px, 4.6vmin, 36px); flex: 0 0 auto; }
+.swg-phone .choices.swg-cardopts { width: 100%; }
+.swg-helpcoming { padding: 10px; animation: tile-joy 0.8s ease-out 2; }
+
+/* ---------- Tablet / Querformat: Bild links, Antworten rechts ---------- */
+@media (min-aspect-ratio: 5/4) and (min-width: 700px) {
+  .swg-wrap { flex-direction: row; align-items: center; justify-content: center; gap: clamp(16px, 3vmin, 34px); }
+  .swg-left { flex: 1 1 56%; }
+  .swg-wrap > .choices { flex: 1 1 40%; }
+  .swg-scene { max-height: 52vh; }
+  .choices.swg-picopts { flex-wrap: wrap; }
+  .swg-callwrap { flex-direction: row; align-items: center; justify-content: center; }
+  .swg-callwrap .swg-story { flex: 1 1 40%; }
+  .swg-wrap.swg-nofig { flex-direction: column; }
+  .swg-wrap.swg-nofig > .choices { flex: 0 0 auto; }
+}
+
+/* ---------- Kleine Telefone ---------- */
+@media (max-width: 420px) {
+  .tile.swg-pic { --tile: clamp(96px, 27vw, 120px); }
+  .choices.swg-picopts.swg-four { flex-wrap: wrap; max-width: 300px; }
+  .choices.swg-picopts.swg-four .tile.swg-pic { --tile: 124px; }
+  .tile.swg-pic.swg-minitile { width: 170px; }
+  .choices.swg-multiopts { grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; }
+  .tile.swg-mtile { --tile: 100px; width: 100%; }
+  .swg-q { font-size: 17px; }
+}
+@media (max-height: 700px) {
+  .swg-scene { max-height: 26vh; }
+  .swg-key { width: 54px; height: 54px; }
+}

@@ -703,3 +703,7 @@ body.mascot-big .content { padding-bottom: calc(var(--gap) + clamp(130px, 25vmin
   .mascot { width: 64px; height: 64px; }
   .bubble { left: 82px; bottom: 30px; }
 }
+
+/* Hilfe-Leiter: ausgeblendete falsche Kachel; Knobel-Aufgabe im Fortschritt */
+.tile.is-out { opacity: .18; transform: scale(.86); pointer-events: none; filter: grayscale(1); transition: opacity .35s, transform .35s; }
+.dots .dot.stretch { box-shadow: 0 0 0 3px var(--gold); }

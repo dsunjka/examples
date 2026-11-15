@@ -9,9 +9,14 @@
      (Bauernhof, Zoo, Fahrzeuge, Kleidung …) vernetzen den Wortschatz.
    - Nicht-Paare sind normal und werden NICHT als Fehler gewertet: Die Karten
      drehen sich nur ruhig wieder um. Beim ersten Mal erklärt Flo die Regel.
-   - Echte Hilfe: Nach zwei Fehlzügen in Folge zeigt Flo die passende Karte,
-     wenn das Kind sie schon einmal gesehen hat („Den anderen Hund hast du
-     schon gesehen – schau, hier!“). So endet jedes Spiel mit Erfolg.
+   - Gestufte Hilfe (nur wenn die passende Karte schon einmal aufgedeckt war):
+     nach zwei Fehlzügen in Folge ein Denkanstoß („Den anderen Hund hast du
+     schon einmal aufgedeckt. Weißt du noch, wo?“), ab drei Fehlzügen in
+     Folge zeigt Flo die Karte („Schau, hier!“). So endet jedes Spiel mit Erfolg.
+   - Stufe 5: Die Zahlen sind der Lerninhalt (Schlüssel '7', Ziffer ↔ Menge).
+     Fällige Zahlen früherer Tage kommen bevorzugt ins Spiel; eine Zahl gilt
+     als unsicher, wenn ihr Partner schon aufgedeckt war und trotzdem eine
+     falsche Karte gewählt wurde.
    - Stufen: 3 → 4 → 6 → 8 Paare; Stufe 5 „Zahl & Menge“: Ziffer ↔ Punktebild
      (Würfelbild bis 6, darüber „Kraft der Fünf“: oben 5, unten der Rest).
    - Wertung fair aus den Zügen: Ein Kind mit gutem Gedächtnis braucht etwa
@@ -96,7 +101,7 @@
     },
 
     async play(ctx) {
-      const cfg = LEVELS[ctx.level] || LEVELS[1];
+      const cfg = LEVELS[ctx.taskLevel] || LEVELS[1];
       const zahl = cfg.mode === 'zahl';
       const n = cfg.pairs;
 
@@ -104,7 +109,10 @@
       let theme = null;
       const specs = [];
       if (zahl) {
-        U.sample(U.range(1, 10), n).forEach((k) => {
+        // fällige Zahlen früherer Tage (höchstens zwei) bevorzugen, Rest zufällig
+        const due = LT.progress.dueItems(ctx.id).map(Number).filter((k) => k >= 1 && k <= 10).slice(0, 2);
+        const nums = due.concat(U.sample(U.range(1, 10).filter((k) => !due.includes(k)), n - due.length));
+        nums.forEach((k) => {
           specs.push({ key: 'n' + k, value: k, kind: 'digit' });
           specs.push({ key: 'n' + k, value: k, kind: 'dots' });
         });
@@ -180,6 +188,7 @@
       let missStreak = 0;
       let explained = false; // Regel „passt nicht → umdrehen“ einmal erklären
       let hinted = null;
+      const unsure = new Set(); // Stufe 5: Zahlen, deren Partner bekannt war, aber verfehlt wurde
       let finish;
       const done = new Promise((r) => { finish = r; });
       ctx.onCleanup(() => finish(null));
@@ -207,11 +216,18 @@
         const spoken = name ? ctx.say(name) : Promise.resolve();
         if (!first) {
           first = c;
-          // Echte Hilfe nach zwei Fehlzügen in Folge: passende Karte zeigen, wenn schon gesehen
+          // Gestufte Hilfe, wenn die passende Karte schon einmal aufgedeckt war:
+          // 2 Fehlzüge in Folge → Denkanstoß (erinnern), ab 3 → Karte zeigen
           const partner = partnerOf(c);
           if (missStreak >= 2 && partner.seen && !partner.matched) {
             spoken.then(() => {
               if (!ctx.active || first !== c) return;
+              if (missStreak === 2) {
+                ctx.say(c.word
+                  ? `${U.cap(D.denAnderen(c.word))} hast du schon einmal aufgedeckt. Weißt du noch, wo?`
+                  : 'Die passende Karte hast du schon einmal aufgedeckt. Weißt du noch, wo?');
+                return;
+              }
               hinted = partner;
               ctx.hint(partner.el);
               ctx.say(c.word ? `${U.cap(D.denAnderen(c.word))} hast du schon gesehen. Schau, hier!` : 'Die passende Karte hast du schon gesehen. Schau, hier!');
@@ -223,6 +239,8 @@
         first = null;
         busy = true;
         moves++;
+        // Stufe 5: Partner war schon bekannt, trotzdem daneben → Zahl ist noch unsicher
+        if (zahl && a.key !== c.key && partnerOf(a).seen) unsure.add(a.value);
         evaluate(a, c, spoken).catch((e) => console.error(e));
       }
 
@@ -272,6 +290,7 @@
         if (!ctx.active) return;
         // fair: ca. 2 Züge pro Paar = volle Punktzahl (3 Sterne bis 2,5 Züge/Paar, 2 Sterne bis 4)
         const score = Math.min(1, (2 * n + 1) / Math.max(1, moves));
+        if (zahl) cards.filter((c) => c.kind === 'digit').forEach((c) => ctx.track(String(c.value), !unsure.has(c.value)));
         await ctx.say(`Geschafft! Du hast alle ${U.numberWord(n)} Paare gefunden!`);
         finish({ score });
       }

@@ -14,9 +14,14 @@
        4  Ausschnitte und Nachbarzahlen bis 20 (nicht mehr vorgelesen)
        5  Rückwärts zählen: Raketen-Countdown 10 … 0
    - Typische Fehler sind gezielte Ablenker (z. B. bei „vor der 7“ die 8).
-   - Hilfe nach 2 Fehlversuchen: Flo zählt gemeinsam bis zur Lücke („… und
-     dann?“) bzw. zeigt die Zahl am Zahlenstrahl. Danach wird die richtige
-     Kachel hervorgehoben – jede Aufgabe endet mit einem Erfolg.
+   - Lerninhalt = die konkrete Zahlenfolge (Schlüssel '3 4 ? 6 7', 'vor 7',
+     'nach 12', '9 8 ? 6 5') über ctx.item → verteiltes Wiederholen.
+   - Hilfe-Leiter: 1. Fehler → informative Rückmeldung zur GEWÄHLTEN Zahl
+     („Die Acht kommt nach der Sieben. Wir suchen die Zahl davor.“);
+     2. Fehler → Denkanstoß („Zähle von vorne mit bis zur Lücke.“, ab Stufe 3
+     erscheint der Zahlenstrahl) und eine Zahl verschwindet; 3. Fehler → Flo
+     zählt gemeinsam bis zur Lücke bzw. am Zahlenstrahl und nennt die Lösung.
+     Jede Aufgabe endet mit einem Erfolg.
    ========================================================================== */
 (function () {
   'use strict';
@@ -119,13 +124,40 @@
     5: poolCountdown(),
   };
 
-  function makeTask(level) {
-    let key = String(level);
-    if (level === 4) key = U.chance(0.3) ? '4n' : '4g';
-    const t = Object.assign({}, U.pickFresh('zr-' + key, POOLS[key], 8, (x) => x.key));
+  /** Lesbarer, stabiler Schlüssel für den Elternbereich: '3 4 ? 6 7', 'vor 7', 'nach 12' */
+  function readableKey(t) {
+    if (t.kind === 'neighbor') return `${t.dir} ${t.n}`;
+    return t.seq.map((n, i) => (i === t.gap ? '?' : String(n))).join(' ');
+  }
+
+  function makeTask(ctx, level) {
+    let pool = level === 4 ? POOLS['4g'].concat(POOLS['4n']) : POOLS[level];
+    // Stufe 1, wenn es gerade hakt: nur Reihen, die bei eins beginnen
+    if (level === 1 && ctx.flow < 0) pool = pool.filter((x) => x.seq[0] === 1);
+    const t = Object.assign({}, ctx.item(pool, readableKey, { avoid: 8 }));
     t.ans = t.seq[t.gap];
     return t;
   }
+
+  /** Denkanstoß (2. Hilfe): Strategie nennen, nicht die Lösung. */
+  function hintText(t) {
+    const W = Z.Word;
+    if (t.kind === 'neighbor') return `Zähle bis zur ${W(t.n)}. Welche Zahl sagst du ${t.dir === 'vor' ? 'kurz davor' : 'gleich danach'}?`;
+    if (t.kind === 'countdown') return 'Zähle rückwärts mit. Jede Zahl ist eins weniger.';
+    if (t.gap === 0) return `Welche Zahl sagst du kurz vor der ${W(t.seq[1])}?`;
+    return 'Zähle von vorne mit, bis zur Lücke.';
+  }
+  /** Vormachen (3. Hilfe): Lösung nennen und begründen. */
+  function modelText(t) {
+    const W = Z.Word;
+    if (t.kind === 'neighbor') return `${t.dir === 'vor' ? 'Vor' : 'Nach'} der ${W(t.n)} kommt die ${W(t.ans)}.`;
+    if (t.gap === 0) return `Vor der ${W(t.seq[1])} kommt die ${W(t.ans)}.`;
+    if (t.kind === 'countdown') return `Rückwärts kommt nach der ${W(t.seq[t.gap - 1])} die ${W(t.ans)}.`;
+    return `Nach der ${W(t.seq[t.gap - 1])} kommt die ${W(t.ans)}.`;
+  }
+
+  // Einführung je Aufgabenart: zu Rundenbeginn und wenn eine andere Stufe drankommt
+  let introduced = new Set();
 
   /**
    * Informative Rückmeldung zu einer falschen Zahl k (statt nur „falsch“):
@@ -275,9 +307,9 @@
     },
 
     async task(ctx) {
-      const level = ctx.level;
+      const level = ctx.taskLevel;
       const cfg = LV[level] || LV[1];
-      const t = makeTask(level);
+      const t = makeTask(ctx, level);
       const d = describe(t, level);
 
       const view = t.kind === 'countdown' ? buildRocket(ctx, t, d.q) : buildTrain(ctx, t, cfg, d.q);
@@ -290,7 +322,11 @@
       const choicesBox = el('div.choices.zr-choices');
       ctx.stage.appendChild(choicesBox);
 
-      if (ctx.index === 0) await ctx.say(INTRO[level]);
+      if (ctx.index === 0) introduced = new Set();
+      if (!introduced.has(level)) {
+        introduced.add(level);
+        await ctx.say(INTRO[level]);
+      }
       if (!ctx.active) return;
       ctx.instruct(d.q);
 
@@ -301,27 +337,26 @@
         await Z.countAlong(ctx, before, { badge: false, words: t.seq.slice(0, t.gap).map(Z.Word) });
         if (!ctx.active) return;
         ctx.hint(view.gapEl);
-        await ctx.say('Und welche Zahl kommt dann?');
       }
 
       /* --- Hilfe 2: Zahlenstrahl (Stufe 3/4) --- */
       let line = null;
-      async function lineHint() {
+      function showLine() {
         if (!line) {
           line = buildLine(cfg.line[0], cfg.line[1]);
           ctx.stage.insertBefore(line.node, choicesBox);
         }
+      }
+      async function lineHint() {
+        showLine();
         let from;
         let to;
-        let msg;
         if (t.kind === 'neighbor') {
-          to = t.n;
-          from = Math.max(cfg.line[0], t.n - (t.dir === 'vor' ? 3 : 2));
-          msg = t.dir === 'vor' ? `Schau, diese Zahl steht direkt vor der ${Z.Word(t.n)}.` : 'Und welche Zahl kommt gleich danach? Schau, hier!';
+          to = t.dir === 'vor' ? t.n - 1 : t.n;
+          from = Math.max(cfg.line[0], t.n - 3);
         } else {
           to = t.ans - 1;
           from = t.gap > 0 ? t.seq[0] : Math.max(cfg.line[0], t.ans - 3);
-          msg = 'Und welche Zahl kommt dann? Schau, hier!';
         }
         await ctx.say('Komm, wir zählen zusammen!');
         const nodes = U.range(from, to).map((n) => line.cells[n]);
@@ -330,7 +365,6 @@
         nodes.forEach((n) => n.classList.add('zr-seen'));
         line.cells[t.ans].classList.add('zr-target');
         ctx.hint(line.cells[t.ans]);
-        await ctx.say(msg);
       }
 
       const options = Z.options(t.ans, cfg.opts, cfg.lo, cfg.hi, d.prefer).map((k) => ({
@@ -341,14 +375,19 @@
         value: k,
       }));
 
+      const ha = Z.hintAfterFor(ctx, options.length);
       await ctx.choices(options, {
         container: choicesBox,
         shuffle: false,
         size: 'small',
         sayButton: !!cfg.sayButton,
-        hintAfter: 3,
-        correctSay: d.ok,
-        wrongSay: (item) => wrongFeedback(t, item.value),
+        hintAfter: ha,
+        correctSay: () => (ctx.wrongCount === 0 && U.chance(0.25) ? d.ok.replace('Richtig!', 'Richtig, du hast gut mitgezählt!') : d.ok),
+        // 1. Hilfe: was an der GEWÄHLTEN Zahl nicht passt
+        explain: (item) => wrongFeedback(t, item.value),
+        // 2. Hilfe: Denkanstoß (ab Stufe 3 mit Zahlenstrahl), 3. Hilfe: vormachen
+        hintSay: () => hintText(t),
+        modelSay: () => modelText(t),
         onCorrect: (item, tile) => {
           ctx.unhint(view.gapEl);
           if (line) ctx.unhint(line.cells[t.ans]);
@@ -362,7 +401,8 @@
           });
         },
         onWrong: async (item, tile, wrongs) => {
-          if (wrongs === 2) {
+          if (wrongs === ha && cfg.line) showLine();
+          else if (wrongs === ha + 1) {
             if (cfg.line) await lineHint();
             else await countToGap();
           }

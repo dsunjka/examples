@@ -5,7 +5,8 @@
    - LT.w1.svg(viewBox, inner, cls)  → SVG-Element aus Markup-String
    - LT.w1.emo(e, x, bottom, size)   → Emoji als SVG-<text>, unten bündig
    - LT.w1.tapTask(ctx, opts)        → Antipp-Aufgabe auf eigenen Trefferzonen
-     (sanftes Feedback, Hilfe nach 2 Fehlversuchen, Auto-Löser für den Testmodus)
+     (Hilfe-Leiter: erklären → Denkanstoß → vormachen, Auto-Löser für den Testmodus)
+   - LT.w1.hintAfter(ctx, n)         → hintAfter für ctx.choices je nach Kachelzahl
    ========================================================================== */
 (function () {
   'use strict';
@@ -31,14 +32,22 @@
   /** Kleine Hilfe: Zahl auf 1 Nachkommastelle (kompaktes SVG-Markup). */
   W.n = (v) => Math.round(v * 10) / 10;
 
+  /** Hilfe-Leiter für ctx.choices: bei bis zu 3 Kacheln gleich beim 1. Fehler ein Denkanstoß
+      (sonst bliebe nach 2 Fehlern nichts mehr zum Nachdenken), bei mehr Kacheln nach 2 Fehlern. */
+  W.hintAfter = (ctx, count) => ((ctx.flow < 0 && count >= 4 ? count - 1 : count) <= 3 ? 1 : 2);
+
   /**
-   * Antipp-Aufgabe auf beliebigen Elementen (z. B. SVG-Trefferzonen).
+   * Antipp-Aufgabe auf beliebigen Elementen (z. B. SVG-Trefferzonen) mit Hilfe-Leiter
+   * wie bei ctx.choices:
+   *   1. Fehler            → wrongSay(zone, n): erklärt, was angetippt wurde
+   *   hintAfter Fehler     → zusätzlich Denkanstoß hintSay (ohne Lösung)
+   *   danach               → richtige Stelle leuchtet, modelSay (Lösung zeigen und begründen)
    * opts: {
    *   root: Element, auf dem Klicks abgehört werden,
    *   find(target) → Zonen-Element oder null,
    *   isCorrect(zone) → boolean,
    *   correctNode(): Element, das als Hilfe hervorgehoben wird,
-   *   correctSay(zone), wrongSay(zone), hintSay,
+   *   correctSay(zone), wrongSay(zone, n), hintSay, modelSay, hintAfter (Std. 2),
    *   onCorrect(zone), onWrong(zone, n) (async)
    * }
    * Promise wird nach dem Erfolgserlebnis aufgelöst.
@@ -48,6 +57,8 @@
       let busy = false;
       let done = false;
       const hintAfter = o.hintAfter || 2;
+      ctx._hintAfter = hintAfter; // für ctx.helpStep
+      const fnOr = (v, ...a) => (typeof v === 'function' ? v(...a) : v);
       async function handle(zone) {
         if (busy || done || !ctx.active || !zone) return;
         if (o.isCorrect(zone)) {
@@ -63,14 +74,21 @@
             zone.classList.add('w1-wrong');
             ctx.timeout(() => zone.classList.remove('w1-wrong'), 700);
           }
-          const n = await ctx.wrong(null, { say: o.wrongSay ? o.wrongSay(zone) : undefined });
+          const n = await ctx.wrong(null, { say: o.wrongSay ? o.wrongSay(zone, ctx.wrongCount + 1) : undefined });
           if (o.onWrong) {
             try { await o.onWrong(zone, n); } catch (e) { console.error(e); }
           }
-          if (n >= hintAfter) {
-            const hn = o.correctNode();
-            if (hn) hn.classList.add('w1-hint');
-            if (n === hintAfter && o.hintSay) await ctx.say(typeof o.hintSay === 'function' ? o.hintSay() : o.hintSay);
+          if (ctx.active) {
+            if (n === hintAfter && o.hintSay) {
+              await ctx.say(fnOr(o.hintSay));
+            } else if (n > hintAfter || (n === hintAfter && !o.hintSay)) {
+              const hn = o.correctNode();
+              if (hn) hn.classList.add('w1-hint');
+              if (!ctx.modelShown) {
+                ctx.modelShown = true;
+                if (o.modelSay) await ctx.say(fnOr(o.modelSay));
+              }
+            }
           }
           busy = false;
         }

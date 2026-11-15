@@ -17,8 +17,9 @@
    - Stufe 5: Uhr selbst stellen – Zahl antippen oder Stundenzeiger drehen
      (rastet auf volle Stunden ein). Flo sagt bei Fehlern, welche Uhrzeit
      gerade eingestellt ist.
-   - Hilfe nach 2 Fehlversuchen: Flo lenkt den Blick auf den kleinen Zeiger,
-     der Zeiger bzw. die Zahl leuchtet, die Lösung wird hervorgehoben.
+   - Hilfe-Leiter: Erklärung zur gewählten Uhrzeit („Bei vier Uhr zeigt der
+     kleine Zeiger auf die Vier.“) → Blick auf den kleinen Zeiger (leuchtet) →
+     Flo liest die Uhr vor. Lerninhalt = die Uhrzeit ('3 Uhr', 'halb 4') über ctx.item.
    ========================================================================== */
 (function () {
   'use strict';
@@ -47,23 +48,15 @@
   const EXPLAIN_FULL = 'Der kleine Zeiger zeigt die Stunde, der große Zeiger die Minuten. Bei einer vollen Stunde zeigt der große Zeiger immer nach oben auf die Zwölf.';
   const EXPLAIN_HALF = 'Bei halb zeigt der große Zeiger nach unten auf die Sechs. Der kleine Zeiger steht dann zwischen zwei Zahlen. Halb vier heißt: Es ist schon halb auf dem Weg zu vier Uhr.';
 
-  /** Zuletzt gefragte Stunden (gemeinsam für Zufallsstunden UND Tagesbezug → keine direkten Wiederholungen). */
-  const recentHours = [];
-  function remember(h) {
-    recentHours.push(h);
-    while (recentHours.length > 4) recentHours.shift();
-    return h;
+  /** Lerninhalt = die Uhrzeit (Schlüssel „3 Uhr“, „halb 4“): über ctx.item gewählt, damit
+      schwierige Uhrzeiten in der Runde und an späteren Tagen wiederkommen. */
+  function pickTime(ctx, m) {
+    return ctx.item(U.range(1, 12), (h) => tw(h, m).text, { fresh: 'uhr-' + m, avoid: 4 });
   }
-  function hourTime() {
-    return remember(U.pick(U.range(1, 12).filter((h) => !recentHours.includes(h))));
-  }
-  /** Tagesbezug, dessen Stunde nicht gerade erst dran war (oder null). */
-  function freshDaily() {
-    const pool = DAILY.filter((x) => !recentHours.includes(x.h));
-    if (!pool.length) return null;
-    const d = U.pick(pool);
-    remember(d.h);
-    return d;
+  /** Tagesbezug zu dieser Stunde (falls vorhanden) – mit Wahrscheinlichkeit p. */
+  function dailyFor(h, p) {
+    const d = DAILY.find((x) => x.h === h);
+    return d && U.chance(p) ? d : null;
   }
 
   /** Hinweis zum Ablesen einer Uhrzeit. */
@@ -84,9 +77,9 @@
 
   /* ---------------- Stufe 1 + 3: Welche Uhr zeigt …? ---------------- */
   async function taskFind(ctx) {
-    const half = ctx.level === 3 && ctx.index !== 4; // Stufe 3: halbe Stunden, zur Sicherheit eine volle
-    const h = hourTime();
+    const half = ctx.taskLevel === 3 && ctx.index !== 4; // Stufe 3: halbe Stunden, zur Sicherheit eine volle
     const m = half ? 30 : 0;
+    const h = pickTime(ctx, m);
     let others;
     if (half) {
       // klassische Verwechslungen: eine Stunde später/früher halb, oder die volle Stunde
@@ -94,7 +87,8 @@
       if (U.chance(0.4)) others[0] = [norm(h - 1), 30];
     } else {
       const pool = U.range(1, 12).filter((x) => Math.min(Math.abs(x - h), 12 - Math.abs(x - h)) >= 2);
-      others = U.sample(pool, 2).map((x) => [x, 0]);
+      // Stufe 1, nach Fehlern in der Runde: nur zwei Uhren
+      others = U.sample(pool, ctx.taskLevel === 1 && ctx.flow < 0 ? 1 : 2).map((x) => [x, 0]);
     }
     const words = tw(h, m);
     // kein 🕐-Emoji: es zeigt selbst eine (andere) Uhrzeit und würde verwirren
@@ -110,25 +104,33 @@
     ctx.stage.appendChild(box);
     await ctx.choices(items, {
       container: box,
-      correctSay: `Richtig! Diese Uhr zeigt ${words.say}.`,
-      wrongSay: (it) => `Diese Uhr zeigt ${tw(it.value[0], it.value[1]).say}. Probier es noch einmal!`,
+      hintAfter: W.hintAfter(ctx, items.length),
+      correctSay: () => (ctx.modelShown ? 'Genau, diese Uhr.'
+        : ctx.wrongCount === 0 && U.chance(0.3) ? `Richtig, du hast auf den kleinen Zeiger geschaut. Diese Uhr zeigt ${words.say}.`
+          : `Richtig! Diese Uhr zeigt ${words.say}.`),
+      // 1. Hilfe: was die gewählte Uhr zeigt
+      explain: (it) => `Diese Uhr zeigt ${tw(it.value[0], it.value[1]).say}. Wir suchen ${words.say}.`,
+      // 2. Hilfe: Regel, wo die Zeiger stehen müssen
       hintSay: half
-        ? `Bei ${words.say} zeigt der große Zeiger nach unten, und der kleine Zeiger steht zwischen der ${Z(h)} und der ${Z(h + 1)}.`
-        : `Bei ${words.say} zeigt der kleine Zeiger auf die ${Z(h)}, und der große Zeiger zeigt nach oben.`,
+        ? `Ein Tipp: Bei ${words.say} zeigt der große Zeiger nach unten, und der kleine Zeiger steht zwischen der ${Z(h)} und der ${Z(h + 1)}.`
+        : `Ein Tipp: Bei ${words.say} zeigt der kleine Zeiger auf die ${Z(h)}, und der große Zeiger zeigt nach oben.`,
+      // 3. Hilfe: an der richtigen Uhr zeigen
+      modelSay: () => readHint(h, m),
     });
   }
 
   /* ---------------- Stufe 2 + 4: Wie spät ist es? ---------------- */
   async function taskRead(ctx) {
-    const level4 = ctx.level >= 4;
+    const level4 = ctx.taskLevel >= 4;
     const half = level4 && ctx.index % 2 === 0 ? true : level4 ? U.chance(0.3) : false;
-    const daily = !half && U.chance(0.45) ? freshDaily() : null;
-    const h = daily ? daily.h : hourTime();
     const m = half ? 30 : 0;
+    const h = pickTime(ctx, m);
+    const daily = !half ? dailyFor(h, 0.6) : null;
     const right = tw(h, m);
+    const T = (a, b) => Object.assign(tw(a, b), { h: norm(a), m: b });
     const cand = half
-      ? [tw(h - 1, 30) /* „halb drei“ statt „halb vier“ */, tw(h, 0), tw(h + 1, 0), tw(h + 1, 30)]
-      : [tw(12, 0) /* großer Zeiger gelesen */, tw(h + 1, 0), tw(h - 1, 0), tw(h + 2, 0)];
+      ? [T(h - 1, 30) /* „halb drei“ statt „halb vier“ */, T(h, 0), T(h + 1, 0), T(h + 1, 30)]
+      : [T(12, 0) /* großer Zeiger gelesen */, T(h + 1, 0), T(h - 1, 0), T(h + 2, 0)];
     const wrong = U.uniqueBy(cand.filter((c) => c.text !== right.text), (c) => c.text);
     // wichtigsten Ablenker meistens behalten, zweiten zufällig
     const picks = [wrong[0], U.pick(wrong.slice(1))];
@@ -139,28 +141,35 @@
     if (!ctx.active) return;
     ctx.instruct('Wie spät ist es?');
     const items = [right, ...picks].map((w) => ({
-      content: w.text, text: true, say: w.say, correct: w === right, className: 'w2-time-tile',
+      content: w.text, text: true, say: w.say, correct: w === right, className: 'w2-time-tile', value: w,
     }));
+    const ha = W.hintAfter(ctx, items.length);
     await ctx.choices(items, {
       nameFirst: true,
       sayButton: true,
-      hintAfter: 3,
-      // 1. Fehler: Blick lenken · 2. Fehler: ausführliche Hilfe (onWrong) statt Standard-Spruch
-      wrongSay: () => (ctx.wrongCount === 0 ? 'Das ist es noch nicht. Schau zuerst auf den kleinen, dicken Zeiger.' : ctx.wrongCount === 1 ? '' : undefined),
-      correctSay: `Richtig! Es ist ${right.say}.${daily ? ' ' + daily.t : ''}`,
+      hintAfter: ha,
+      correctSay: () => (ctx.modelShown ? `Genau, ${right.say}.${daily ? ' ' + daily.t : ''}` : `Richtig! Es ist ${right.say}.${daily ? ' ' + daily.t : ''}`),
+      // 1. Hilfe: Wie sähe die Uhr bei der gewählten Zeit aus?
+      explain: (it) => {
+        const c = it.value;
+        if (c.m !== m) return `Bei ${c.say} zeigt der große Zeiger nach ${c.m === 30 ? 'unten' : 'oben'}. Hier zeigt er nach ${m === 30 ? 'unten' : 'oben'}.`;
+        if (m === 30) return `Bei ${c.say} steht der kleine Zeiger zwischen der ${Z(c.h)} und der ${Z(c.h + 1)}.`;
+        return `Bei ${c.say} zeigt der kleine Zeiger auf die ${Z(c.h)}.`;
+      },
+      // 2. Hilfe: Blick auf den kleinen Zeiger lenken (er leuchtet)
+      hintSay: 'Schau zuerst auf den kleinen, dicken Zeiger. Wohin zeigt er?',
+      // 3. Hilfe: vorlesen, wie man die Uhr abliest
+      modelSay: () => readHint(h, m),
       onWrong: async (item, tile, n) => {
-        if (n === 2) {
-          clock.classList.add('w2-hint-hour');
-          await ctx.say(readHint(h, m));
-        }
+        if (n === ha) clock.classList.add('w2-hint-hour');
       },
     });
   }
 
   /* ---------------- Stufe 5: Uhr stellen ---------------- */
   async function taskSet(ctx) {
-    const daily = U.chance(0.5) ? freshDaily() : null;
-    const target = daily ? daily.h : hourTime();
+    const target = pickTime(ctx, 0);
+    const daily = dailyFor(target, 0.6);
     const start = U.pick(U.range(1, 11).filter((x) => x !== target));
     const words = tw(target, 0);
     ctx.stage.appendChild(el('div.prompt-box.w2-prompt.w2-prompt-sm',
@@ -201,12 +210,18 @@
           return;
         }
         busy = true;
-        const n = await ctx.wrong(wrap, { say: `Jetzt zeigt die Uhr ${tw(h, 0).say}. Wir brauchen ${words.say}.` });
-        busy = false;
-        if (n >= 2 && ctx.active) {
+        // Hilfe-Leiter über ctx.helpStep: 1 erklären, 2 Denkanstoß, 3 vormachen
+        await ctx.wrong(wrap, { say: `Jetzt zeigt die Uhr ${tw(h, 0).say}. Wir brauchen ${words.say}.` });
+        if (ctx.active && ctx.helpStep === 2) {
+          await ctx.say(`Ein Tipp: Der kleine Zeiger zeigt die Stunde. Such die Zahl für ${words.say}.`);
+        } else if (ctx.active && ctx.helpStep >= 3) {
           targetHit.classList.add('is-hint');
-          if (n === 2) ctx.say(`Der kleine Zeiger muss auf die ${Z(target)} zeigen. Tippe die ${Z(target)} an.`);
+          if (!ctx.modelShown) {
+            ctx.modelShown = true;
+            await ctx.say(`Schau, hier leuchtet die ${Z(target)}. Tippe sie an. Dann zeigt der kleine Zeiger auf die ${Z(target)}.`);
+          }
         }
+        busy = false;
       }
 
       ctx.listen(clock, 'pointerdown', (e) => {
@@ -269,8 +284,9 @@
       tip: 'Eine echte Zeigeruhr im Kinderzimmer hilft sehr. Verknüpfen Sie Uhrzeiten mit festen Ereignissen: „Wenn der kleine Zeiger auf der 7 ist, frühstücken wir.“ Bei „halb“ hilft der Satz: „Halb vier – schon halb auf dem Weg zur Vier.“',
     },
     async task(ctx) {
-      if (ctx.level === 1 || ctx.level === 3) return taskFind(ctx);
-      if (ctx.level === 2 || ctx.level === 4) return taskRead(ctx);
+      // Wiederholung im Gedächtnis: Lerninhalt = die Uhrzeit (ctx.item)
+      if (ctx.taskLevel === 1 || ctx.taskLevel === 3) return taskFind(ctx);
+      if (ctx.taskLevel === 2 || ctx.taskLevel === 4) return taskRead(ctx);
       return taskSet(ctx);
     },
   });

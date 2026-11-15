@@ -16,10 +16,14 @@
      Kategorie (Hund oder Katze?). Stufe 5: zusätzlich „Was ist neu?“.
    - Antworten sind gemischt: das fehlende Ding, ein Ding, das noch auf dem
      Tisch liegt (genau hinschauen!), und Dinge, die nie da waren.
-   - Hilfe: 1. Fehler → genaue Rückmeldung („Der Ball liegt noch auf dem
-     Tisch.“) plus Kategorie-Tipp („Es ist ein Tier.“). 2. Fehler → Flo
-     öffnet den Vorhang zum „Vorher-Bild“, das gesuchte Ding leuchtet; dann
-     wird die Lösung hervorgehoben. Jede Aufgabe endet mit Erfolg.
+   - Hilfe-Leiter: 1. Fehler → genaue Rückmeldung („Der Ball liegt noch auf
+     dem Tisch.“); 2. Fehler → Denkanstoß mit Kategorie-Tipp („Was fehlt,
+     ist ein Tier.“), eine Antwort verschwindet; 3. Fehler → Flo öffnet den
+     Vorhang zum „Vorher-Bild“, das gesuchte Ding leuchtet, dann wird die
+     Lösung hervorgehoben. Bei nur drei Antworten rückt die Leiter eine
+     Stufe vor (Tipp schon nach dem 1. Fehler). Jede Aufgabe endet mit Erfolg.
+   - Kein einzelner Lerninhalt (die Dinge sind zufällig): protokolliert wird
+     die Merkspanne ('4 Dinge', 'neu, 6 Dinge'). Stufe aus ctx.taskLevel.
    - Damit der Kategorie-Tipp eindeutig ist, liegt von jeder Kategorie
      höchstens ein Ding auf dem Tisch.
    ========================================================================== */
@@ -97,9 +101,12 @@
     },
 
     async task(ctx) {
-      const cfg = LEVELS[ctx.level] || LEVELS[1];
+      const lv = ctx.taskLevel;
+      const cfg = LEVELS[lv] || LEVELS[1];
       const mode = cfg.modes.length > 1 ? U.pickFresh('wf-mode', cfg.modes, 1) : cfg.modes[0];
       const n = cfg.n;
+      // Merkspanne protokollieren (auf Anhieb gelöst = gewusst)
+      ctx.track(mode === 'neu' ? `neu, ${n} Dinge` : `${n} Dinge`);
       const table = pickTable(n);
       const maxItems = mode === 'neu' ? n + 1 : n;
 
@@ -206,7 +213,7 @@
       ready.disabled = false;
       ready.classList.add('wf-pulse');
       ctx.markTest(ready);
-      const readyText = mode === 'neu' || ctx.level === 5
+      const readyText = mode === 'neu' || lv === 5
         ? 'Wenn du dir alles gemerkt hast, tippe auf den grünen Knopf. Dann zaubere ich!'
         : 'Wenn du dir alles gemerkt hast, tippe auf den grünen Knopf. Dann zaubere ich etwas weg!';
       ctx.instruct(ctx.index === 0 ? `Lass dir ruhig Zeit. ${readyText}` : 'Tippe auf den grünen Knopf, wenn du bereit bist.');
@@ -287,25 +294,32 @@
         ctx.setInstruction(q);
         ctx.say(ctx.index === 0 ? q : 'Was fehlt?');
 
+        // bei nur drei Antworten: Tipp schon nach dem 1. Fehler, damit das Vorher-Bild erreichbar bleibt
+        const shown = options.length - (ctx.flow < 0 && options.length >= 4 ? 1 : 0); // ctx.choices entfernt bei flow < 0 eine falsche Antwort
+        const ha = shown <= 3 ? 1 : 2;
         await ctx.choices(options, {
           container: bottom,
           className: 'wf-options',
           sayButton: true,
-          hintAfter: 2,
-          wrongSay: (it) => {
-            if (ctx.wrongCount >= 1) return '';
-            const tip = TIPS[missing.cat] ? ` Tipp: Es ist ${TIPS[missing.cat]}.` : '';
-            if (it.thing === visible) return `${D.Art(it.thing.word)} liegt noch auf dem Tisch. Schau mal genau hin!${tip}`;
-            // Verwechsler aus derselben Kategorie: Der Tipp „Es ist …“ würde hier nur verwirren
+          hintAfter: ha,
+          // 1. Hilfe: genau sagen, was mit dem angetippten Ding ist
+          explain: (it) => {
+            if (it.thing === visible) return `${D.Art(it.thing.word)} liegt noch auf dem Tisch. Schau mal genau hin!`;
+            // Verwechsler aus derselben Kategorie: nah dran
             if (it.thing.cat === missing.cat && TIPS[missing.cat]) {
-              return `${D.Art(it.thing.word)} war gar nicht auf dem Tisch. Aber du bist nah dran: Was fehlt, ist auch ${TIPS[missing.cat]}.`;
+              return `${D.Art(it.thing.word)} war gar nicht auf dem Tisch. Aber du bist nah dran!`;
             }
-            return `${D.Art(it.thing.word)} war gar nicht auf dem Tisch.${tip}`;
+            return `${D.Art(it.thing.word)} war gar nicht auf dem Tisch.`;
           },
+          // 2. Hilfe: Kategorie-Tipp bzw. Merkstrategie
+          hintSay: () => (TIPS[missing.cat]
+            ? `Ein Tipp: Was fehlt, ist ${TIPS[missing.cat]}.`
+            : 'Ein Tipp: Sag leise alle Dinge auf, die du dir gemerkt hast. Welches liegt nicht mehr da?'),
+          // 3. Hilfe: Vorher-Bild zeigen (in onWrong), dann die Lösung nennen
           onWrong: async (it, tile, wrongs) => {
-            if (wrongs === 2) await showBefore();
+            if (wrongs === ha + 1) await showBefore();
           },
-          hintSay: 'Weißt du es jetzt? Tippe es an!',
+          modelSay: () => `${D.Art(missing.word)} fehlt. Tippe ${D.den(missing.word)} an!`,
           onCorrect: () => {
             // das fehlende Ding kommt zurück auf den Tisch
             const back = el('div.wf-slot.wf-back', { 'aria-label': missing.word.w }, U.emoji(missing.word.e));
@@ -313,7 +327,9 @@
             if (gap) grid.replaceChild(back, gap);
             else grid.appendChild(back);
           },
-          correctSay: () => `Richtig! ${D.Art(missing.word)} hat gefehlt.`,
+          correctSay: () => (!ctx.modelShown && ctx.wrongCount === 0 && U.chance(0.3)
+            ? `Richtig, du hast dir alles gut gemerkt! ${D.Art(missing.word)} hat gefehlt.`
+            : `Richtig! ${D.Art(missing.word)} hat gefehlt.`),
         });
       } else {
         const done = ctx.say('Simsalabim!');
@@ -323,16 +339,19 @@
         const choosing = ctx.choices(items, {
           container: grid,
           shuffle: false,
+          ease: false, // die Kacheln sind die Dinge auf dem Tisch – keins darf verschwinden
           hintAfter: 2,
-          wrongSay: (it) => {
-            if (ctx.wrongCount >= 1) return '';
-            const tip = TIPS[added.cat] ? ` Tipp: Das Neue ist ${TIPS[added.cat]}.` : '';
-            return `${D.Art(it.thing.word)} war schon vorher da.${tip}`;
-          },
+          // 1. Hilfe: das angetippte Ding war schon da
+          explain: (it) => `${D.Art(it.thing.word)} war schon vorher da.`,
+          // 2. Hilfe: Kategorie-Tipp bzw. Merkstrategie
+          hintSay: () => (TIPS[added.cat]
+            ? `Ein Tipp: Das Neue ist ${TIPS[added.cat]}.`
+            : 'Ein Tipp: Sag leise alle Dinge auf, die du dir gemerkt hast. Was ist dazugekommen?'),
+          // 3. Hilfe: Vorher-Bild zeigen (in onWrong), dann die Lösung nennen
           onWrong: async (it, tile, wrongs) => {
-            if (wrongs === 2) await showBefore();
+            if (wrongs === 3) await showBefore();
           },
-          hintSay: 'Das hier ist neu. Tippe es an!',
+          modelSay: () => `${D.Art(added.word)} ist neu. Tippe ${D.den(added.word)} an!`,
           correctSay: () => `Richtig! ${D.Art(added.word)} ist neu dazugekommen.`,
         });
         await openCurtain();

@@ -12,9 +12,14 @@
      entscheidend ist aber die Anzahl. Damit das Kind keine Faustregel
      („die kürzere Reihe“) lernt, sind auch ehrliche Aufgaben gemischt.
      Letzte Stufe: zwei Ziffern vergleichen mit Zahlenstrahl-Hilfe.
-   - Hilfe nach 2 Fehlversuchen: Eins-zu-eins-Zuordnung – Flo bildet Paare
+   - Lerninhalt = das Zahlenpaar bzw. die Art der Falle (Schlüssel
+     'Teller 3 und 5', 'Groß und klein: Falle', '4 oder 7') über ctx.item.
+   - Hilfe-Leiter: Erst wird erklärt, was am GEWÄHLTEN Teller / an der
+     gewählten Reihe nicht passt („Diese Reihe ist nur länger. Es kommt auf
+     die Anzahl an.“); danach Eins-zu-eins-Zuordnung – Flo bildet Paare
      (gleiche Farbe bzw. Verbindungslinien); was übrig bleibt, zeigt, wo
      mehr sind. Bei Ziffern: erst Zahlenstrahl, dann Punkte als Menge.
+     Bei nur zwei Antworten kommt die Paar-Hilfe gleich nach dem 1. Fehler.
    - Nach der Antwort werden die Anzahlen gezeigt und die Erkenntnis
      benannt („6 Mäuse sind mehr als 4 Elefanten – auch wenn die Elefanten
      viel größer sind“).
@@ -72,7 +77,6 @@
     for (let a = 3; a <= 9; a++) for (const d of [1, 2, 3]) if (a + d <= 10) out.push([a, a + d]);
     return out;
   }
-  const key = (p) => p.join('-');
 
   const cnt = (n, w) => Z.count(n, w);
   const verb = (n) => (n === 1 ? 'ist' : 'sind');
@@ -115,6 +119,9 @@
     container.querySelectorAll('.mv-plate-tile.is-wrong, .mv-row-tile.is-wrong').forEach((t) => {
       t.classList.remove('is-wrong');
       t.classList.add('mv-was-wrong');
+      // wieder sichtbar (zum Paare-Bilden), aber nicht noch einmal als Fehler antippbar
+      t.style.pointerEvents = 'none';
+      t.setAttribute('aria-disabled', 'true');
     });
   }
 
@@ -168,7 +175,7 @@
     },
 
     async task(ctx) {
-      const cfg = LEVELS[ctx.level] || LEVELS[1];
+      const cfg = LEVELS[ctx.taskLevel] || LEVELS[1];
       if (cfg.mode === 'digits') return digitsTask(ctx, cfg);
       if (cfg.mode === 'rows') return rowsTask(ctx, cfg);
       return platesTask(ctx, cfg);
@@ -181,15 +188,13 @@
   async function platesTask(ctx, cfg) {
     // Auf Teller gehört Essen – keine Bäume, Tiere oder Autos
     const thing = Z.pickFood('mv-food');
-    let a;
-    let b;
-    if (cfg.equal && U.chance(0.34)) {
-      a = b = U.pickFresh('mv-eq', U.range(3, 9), 3);
-    } else {
-      const list = ctx.level === 1 ? pairsL1() : ctx.level === 2 ? pairsL2() : pairsL3();
-      const p = U.pickFresh('mv-pair-' + ctx.level, list, 3, key);
-      [a, b] = U.chance(0.5) ? p : [p[1], p[0]];
-    }
+    const lv = ctx.taskLevel;
+    // Lerninhalt: das Zahlenpaar (auf Stufe 3 auch „gleich viele“, etwa jede vierte Aufgabe)
+    let list = lv === 1 ? pairsL1() : lv === 2 ? pairsL2() : pairsL3();
+    if (lv === 1 && ctx.flow < 0) list = list.filter((p) => p[1] - p[0] >= 3);
+    if (cfg.equal) list = list.concat(U.range(3, 9).map((x) => [x, x]));
+    const p = ctx.item(list, (x) => `Teller ${x[0]} und ${x[1]}`, { avoid: 3 });
+    const [a, b] = U.chance(0.5) ? p : [p[1], p[0]];
     const ask = U.chance(cfg.less) ? 'less' : 'more';
     const word = ask === 'more' ? 'mehr' : 'weniger';
     const answer = a === b ? 'eq' : (ask === 'more') === a > b ? 'left' : 'right';
@@ -221,12 +226,19 @@
       shuffle: false,
       // Nur zwei Teller: nach einem Fehler bleibt nur noch die Lösung übrig → Hilfe sofort.
       hintAfter: helpAt,
+      // 1. Hilfe: sagen, was am GEWÄHLTEN Teller nicht passt
+      explain: (item) => {
+        if (item.side === 'eq') return `Es sind nicht gleich viele. Auf einem Teller sind ${word} ${thing.p}.`;
+        // gleich viele: nicht gleich verraten, sondern zum Zählen beider Teller lenken
+        if (answer === 'eq') return `Auf diesem Teller sind nicht ${word} ${thing.p}. Zähle beide Teller genau.`;
+        return `Auf diesem Teller sind ${ask === 'more' ? 'weniger' : 'mehr'} ${thing.p}.`;
+      },
+      // danach: Paare bilden (onWrong) – Flo macht die Vergleichsstrategie vor
+      hintSay: '',
       onWrong: async (item, tile, wrongs) => {
         if (wrongs === helpAt) {
           undim(board);
           await pairUp(ctx, L._units, R._units, null, ask, 'Teller');
-        } else if (wrongs === 1) {
-          await ctx.say('Schau genau hin. Du kannst auch zählen!');
         }
       },
       onCorrect: () => {
@@ -238,6 +250,7 @@
         if (a === b) return `Richtig! Auf beiden Tellern sind ${cnt(a, thing)}. Das sind gleich viele.`;
         const big = Math.max(a, b);
         const small = Math.min(a, b);
+        if (ctx.wrongCount === 0 && U.chance(0.3)) return `Richtig, du hast genau verglichen: ${cnt(big, thing)} und ${cnt(small, thing)}.`;
         if (ask === 'more') return `Richtig! ${U.cap(cnt(big, thing))} ${verb(big)} mehr als ${cnt(small, thing)}.`;
         return `Richtig! ${U.cap(cnt(small, thing))} ${verb(small)} weniger als ${cnt(big, thing)}.`;
       },
@@ -249,9 +262,14 @@
      Stufe 4: Mengeninvarianz – zwei Reihen (oben/unten)
      ================================================================== */
   async function rowsTask(ctx, cfg) {
-    const type = U.pickFresh('mv-trap-type', ['size', 'spread'], 1);
     // trap: die „größer wirkende“ Reihe hat WENIGER; equal: gleich viele; honest: wirkt größer UND hat mehr
-    const variant = U.pickFresh('mv-variant', ['trap', 'trap', 'equal', 'honest'], 2);
+    // Lerninhalt: Art der Täuschung × Variante (Fallen doppelt im Pool → kommen öfter)
+    const VNAME = { trap: 'Falle', equal: 'gleich viele', honest: 'ehrlich' };
+    const combos = [];
+    for (const ty of ['size', 'spread']) for (const va of ['trap', 'trap', 'equal', 'honest']) combos.push({ type: ty, variant: va });
+    const pick = ctx.item(combos, (c) => `${c.type === 'size' ? 'Groß und klein' : 'Lang und kurz'}: ${VNAME[c.variant]}`, { avoid: 2 });
+    const type = pick.type;
+    const variant = pick.variant;
 
     // vis = Reihe, die größer wirkt (große Dinge bzw. weit auseinander); oth = die andere
     let vis;
@@ -299,7 +317,7 @@
 
     const q = `Wo sind ${word} ${groupWord} – oben oder unten? Oder sind es gleich viele?`;
     ctx.setInstruction(q);
-    ctx.say(ctx.index === 0 ? `Achtung, jetzt wird es knifflig! ${q}` : q);
+    ctx.say(ctx.index === 0 || ctx.stretch ? `Achtung, jetzt wird es knifflig! ${q}` : q);
 
     // Linien für die Paarbildung
     const svgNS = 'http://www.w3.org/2000/svg';
@@ -324,14 +342,25 @@
       svg.appendChild(line);
     }
 
+    const ha = 2; // drei Antworten: 1. Fehler erklären, 2. Fehler Paare bilden
     await ctx.choices(items, {
       container: box,
       shuffle: false,
-      hintAfter: 2,
+      hintAfter: ha,
+      // 1. Hilfe: die Täuschung an der GEWÄHLTEN Reihe benennen
+      explain: (item) => {
+        if (item.className === 'mv-eq') return 'Es sind nicht gleich viele. Es kommt nur auf die Anzahl an.';
+        const chosen = item.content === top.row ? top : bot;
+        if (chosen.row === visRow) {
+          return type === 'size'
+            ? `Die ${thingVis.p} sind nur größer. Es kommt aber auf die Anzahl an.`
+            : 'Diese Reihe ist nur länger. Es kommt aber auf die Anzahl an.';
+        }
+        return 'Lass dich nicht reinlegen! Es kommt nur auf die Anzahl an.';
+      },
+      hintSay: '',
       onWrong: async (item, tile, wrongs) => {
-        if (wrongs === 1) {
-          await ctx.say('Lass dich nicht reinlegen! Groß oder klein, lang oder kurz – es kommt nur auf die Anzahl an.');
-        } else if (wrongs === 2) {
+        if (wrongs === ha) {
           undim(box);
           await pairUp(ctx, top.row._units, bot.row._units, drawLine, ask, 'Reihe');
         }
@@ -374,7 +403,7 @@
   async function digitsTask(ctx, cfg) {
     const all = [];
     for (let x = 0; x <= 10; x++) for (let y = x + 1; y <= 10; y++) if (y - x <= 5 && (x > 0 || U.chance(0.3))) all.push([x, y]);
-    const p = U.pickFresh('mv-dig', all, 6, key);
+    const p = ctx.item(all, (x) => `${x[0]} oder ${x[1]}`, { avoid: 4 });
     const [a, b] = U.chance(0.5) ? p : [p[1], p[0]];
     const ask = U.chance(cfg.less) ? 'less' : 'more';
     const word = ask === 'more' ? 'größer' : 'kleiner';
@@ -410,10 +439,14 @@
       // Nur zwei Zahlen: nach dem ersten Fehler ist nur noch die Lösung übrig →
       // Hilfe sofort: Zahlenstrahl markieren UND die Mengen als Punkte zeigen.
       hintAfter: 1,
+      explain: (item) => `Die ${NW(item.value)} ist ${item.value === big ? 'größer' : 'kleiner'}. Wir suchen die ${word === 'größer' ? 'größere' : 'kleinere'} Zahl.`,
+      hintSay: '',
       onWrong: async (item, tile, wrongs) => {
         if (wrongs !== 1) return;
         tile.classList.remove('is-wrong');
         tile.classList.add('mv-was-wrong');
+        tile.style.pointerEvents = 'none'; // nicht noch einmal als Fehler antippbar
+        tile.setAttribute('aria-disabled', 'true');
         colorize();
         await ctx.say(`Schau auf den Zahlenstrahl: Die ${NW(small)} kommt zuerst, die ${NW(big)} kommt später. Je weiter rechts eine Zahl steht, desto größer ist sie.`);
         if (!ctx.active) return;

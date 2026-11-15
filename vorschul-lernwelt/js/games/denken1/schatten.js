@@ -14,9 +14,14 @@
        4  Spiegel-Schatten als Ablenker (nur asymmetrische Motive): Die
           Richtung muss stimmen – Raumlage-Wahrnehmung (Vorläufer für die
           Unterscheidung von b/d, p/q, 3/ε).
-   - Hilfe: Nach dem 1. Fehler nennt Flo das entscheidende Merkmal als
-     Frage („Schau genau: Wer hat einen langen Rüssel?“), nach dem 2. Fehler
-     zeigt Flo die Lösung. Danach wird die Erkenntnis benannt („Richtig!
+   - Hilfe-Leiter: 1. Fehler → Flo sagt, was das Angetippte ist bzw. wem der
+     Schatten gehört („Das ist ein Nashorn.“ / „Dieser Schatten ist wie im
+     Spiegel verdreht.“); 2. Fehler → Denkanstoß mit dem entscheidenden
+     Merkmal als Frage („Schau genau: Wer hat einen langen Rüssel?“), ein
+     Bild verschwindet; 3. Fehler → Flo zeigt die Lösung und begründet sie.
+   - Lerninhalt = das Motiv (Schlüssel 'Elefant', auf der Spiegel-Stufe
+     'Elefant, Richtung') über ctx.item; Stufe je Aufgabe aus ctx.taskLevel.
+     Danach wird die Erkenntnis benannt („Richtig!
      Der Schatten gehört zum Elefanten. Er hat einen Rüssel und große Ohren.“)
      und der Schatten färbt sich ein (Aha-Effekt).
    - Daten geprüft: Alle Motive wurden als Silhouette (Noto Color Emoji)
@@ -154,10 +159,12 @@
     },
 
     async task(ctx) {
-      const cfg = LEVELS[ctx.level] || LEVELS[1];
+      const lv = ctx.taskLevel;
+      const cfg = LEVELS[lv] || LEVELS[1];
       const mirrorMode = cfg.dir === 'mirror';
       const pool = mirrorMode ? ITEMS.filter((x) => x.asym) : ITEMS;
-      const target = U.pickFresh('sch-t-' + ctx.level, pool, 10, (x) => x.id);
+      // Lerninhalt: das Motiv (auf der Spiegel-Stufe zusätzlich die Richtung)
+      const target = ctx.item(pool, (x) => (mirrorMode ? `${x.word.w}, Richtung` : x.word.w), { fresh: 'sch-t-' + lv, avoid: 10 });
       const w = target.word;
 
       /* ---------- Antwortmöglichkeiten ---------- */
@@ -219,14 +226,20 @@
         className: 'sch-choices n' + items.length,
         sayButton: showShadow,
         hintAfter: 2,
-        wrongSay: (it) => {
-          if (ctx.wrongCount >= 1) return ''; // beim 2. Fehler übernimmt die Hilfe (hintSay)
-          if (it.flipped) return 'Fast! Dieser Schatten ist wie im Spiegel verdreht. Schau genau, in welche Richtung das Bild zeigt.';
-          // informativ: sagen, was das Angetippte ist, und das Merkmal des Ziels nennen
-          if (showShadow) return `Hmm, das ist ${D.ein(it.motif.word)}. Schau genau: ${question(target)}`;
-          return `Hmm, dieser Schatten gehört ${it.motif.zu}. ${D.Art(w)} ${target.f}.`;
+        // 1. Hilfe: sagen, was das Angetippte ist (bzw. wem der Schatten gehört)
+        explain: (it) => {
+          if (it.flipped) return 'Fast! Dieser Schatten ist wie im Spiegel verdreht.';
+          if (showShadow) return `Hmm, das ist ${D.ein(it.motif.word)}. Das passt nicht zum Schatten.`;
+          return `Hmm, dieser Schatten gehört ${it.motif.zu}.`;
         },
+        // 2. Hilfe: das entscheidende Merkmal als Denkanstoß
         hintSay: () => {
+          if (mirrorMode) return 'Schau genau, in welche Richtung das Bild zeigt. Der Schatten muss genauso zeigen.';
+          if (showShadow) return `Schau genau: ${question(target)}`;
+          return `Schau genau: ${D.Art(w)} ${target.f}. Welcher Schatten zeigt das?`;
+        },
+        // 3. Hilfe: zeigen und begründen
+        modelSay: () => {
           if (showShadow) return `Schau, hier! Das ist ${D.art(w)}. ${insight(target)}`;
           if (mirrorMode) return 'Schau, hier! Dieser Schatten zeigt in dieselbe Richtung wie das Bild.';
           return `Schau, hier! Dieser Schatten gehört ${target.zu}.`;
@@ -237,6 +250,7 @@
           else tile.classList.add('sch-reveal');
         },
         correctSay: () => {
+          if (ctx.modelShown) return showShadow ? `Richtig! Der Schatten gehört ${target.zu}.` : 'Richtig! Das ist der passende Schatten.';
           if (mirrorMode) {
             return U.pick([
               'Richtig! Dieser Schatten passt genau, sogar die Richtung stimmt!',

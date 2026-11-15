@@ -304,6 +304,78 @@
 @keyframes reise-bob { 0%, 100% { transform: translateY(0) scaleY(1); } 45% { transform: translateY(-8px) scaleY(1.03); } 55% { transform: translateY(-8px); } 90% { transform: translateY(0) scaleY(0.96); } }
 @keyframes reise-joy { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-26px) rotate(-8deg); } 70% { transform: translateY(0) rotate(5deg); } }
 
+/* ---------- Flos Tipp: persönliche Extra-Stationen ---------- */
+.reise-tips {
+  position: sticky;
+  top: 0;
+  z-index: 8;
+  max-width: 760px;
+  margin: 0 auto calc(var(--gap) * 1.2);
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 2vmin, 16px);
+  padding: 8px clamp(10px, 2vmin, 16px) 10px;
+  border-radius: var(--radius-l);
+  background: linear-gradient(180deg, #fffdf6, #fff4dc);
+  box-shadow: var(--shadow), inset 0 0 0 3px #ffd98a;
+}
+.reise-tips-flo {
+  appearance: none; border: 0; background: transparent; cursor: pointer; padding: 0;
+  position: relative;
+  flex: 0 0 auto;
+  width: clamp(58px, 9vmin, 78px);
+  height: clamp(58px, 9vmin, 78px);
+}
+.reise-tips-face { display: block; width: 100%; height: 100%; }
+.reise-tips-face svg { width: 100%; height: 100%; overflow: visible; }
+.reise-tips-flo.reise-flo-joy .reise-tips-face svg { animation: reise-joy 0.7s ease-out; }
+.reise-tips-bulb {
+  position: absolute; right: -8px; top: -6px;
+  font-size: clamp(24px, 4vmin, 32px);
+  animation: reise-bob 2s ease-in-out infinite;
+}
+.reise-tips-row { flex: 1 1 auto; min-width: 0; display: flex; justify-content: space-evenly; gap: clamp(8px, 2vmin, 18px); }
+.reise-tip {
+  appearance: none; border: 0; cursor: pointer;
+  position: relative;
+  flex: 0 0 auto;
+  width: var(--st);
+  height: var(--st);
+  margin-bottom: 24px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 6px var(--tip), 0 7px 0 6px rgba(0, 0, 0, 0.12);
+  display: flex; align-items: center; justify-content: center;
+  padding: 0;
+  animation: reise-tip-glow 2.4s ease-in-out infinite;
+}
+.reise-tip:nth-child(2) { animation-delay: -0.8s; }
+.reise-tip:nth-child(3) { animation-delay: -1.6s; }
+@keyframes reise-tip-glow {
+  0%, 100% { box-shadow: 0 0 0 6px var(--tip), 0 0 0 6px color-mix(in srgb, var(--tip) 45%, transparent), 0 7px 0 6px rgba(0, 0, 0, 0.12); }
+  50% { box-shadow: 0 0 0 6px var(--tip), 0 0 0 14px color-mix(in srgb, var(--tip) 0%, transparent), 0 7px 0 6px rgba(0, 0, 0, 0.12); }
+}
+.reise-tip.done { animation: none; background: #fffbe9; }
+.reise-tip.bump { animation: bump 0.5s; }
+.reise-tip-icon { font-size: calc(var(--st) * 0.48); }
+.reise-tip-badge {
+  position: absolute; left: -8px; top: -8px;
+  width: 34px; height: 34px; border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 3px var(--tip), 0 2px 0 3px rgba(0, 0, 0, 0.1);
+  font-size: 19px;
+  display: flex; align-items: center; justify-content: center;
+}
+.reise-tip-label {
+  position: absolute; left: 50%; bottom: -30px; transform: translateX(-50%);
+  font: 700 13px/1 var(--font);
+  color: var(--ink-soft);
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+  padding: 3px 8px;
+}
+
 /* ---------- Overlays: Kapitel-Einleitung & Schatzkiste ---------- */
 .reise-intro .panel, .reise-chest-overlay .panel {
   background: linear-gradient(180deg, var(--ch-soft), var(--paper) 70%);
@@ -345,10 +417,124 @@
   .reise-ch-num { width: 30px; height: 30px; font-size: 17px; }
   .reise-progress { padding: 6px 12px; gap: 8px; font-size: 24px; }
   .reise-deco { font-size: 28px; opacity: 0.45; }
+  .reise-tips { gap: 8px; padding: 8px 8px 10px; }
+  .reise-tips-flo { width: 52px; height: 52px; }
+  .reise-tip { --st: 64px; }
+  .reise-tip-badge { width: 28px; height: 28px; font-size: 16px; left: -6px; top: -6px; }
+  .reise-tip-label { font-size: 12px; padding: 2px 6px; }
   .reise-cta { min-height: 112px; }
   .book-cta { width: 104px; min-height: 112px; }
 }
 @media (max-height: 520px) and (orientation: landscape) {
   .reise-screen { --row: 96px; --st: 66px; }
+  .reise-tips { position: relative; }
 }
+/* Startseite: Hinweis auf Flos Tipps */
+.reise-cta .reise-cta-tip {
+  position: absolute; left: 8px; top: 8px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #fff; box-shadow: 0 0 0 3px var(--gold);
+  font-size: 19px; display: flex; align-items: center; justify-content: center;
+  animation: reise-bob 2s ease-in-out infinite;
+}
+/* Elternbereich: Lerninhalte je Spiel */
+.p-items-row td { padding-top: 0; }
+.p-progress tr:has(+ .p-items-row) > td { border-bottom: 0; }
+.p-items { display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 14px; color: var(--ink-soft); padding: 0 0 4px 4px; }
+.p-items b { color: var(--ink); font-weight: 600; }
+.p-items span { overflow-wrap: anywhere; }
+.p-table-wrap { overflow-x: auto; max-width: 100%; }
+@media (max-width: 640px) {
+  .p-progress th, .p-progress td { padding: 6px 3px; font-size: 14px; }
+  .p-progress td:first-child { overflow-wrap: anywhere; }
+  .parents .p-card:has(.p-progress) { padding-left: 12px; padding-right: 12px; }
+  .p-progress th { font-size: 11px; letter-spacing: 0; }
+  .p-progress th:nth-child(5), .p-progress tr:not(.p-items-row) > td:nth-child(5) { display: none; }
+  .p-progress select { max-width: 60px; padding-left: 2px; padding-right: 2px; }
+  .p-progress .p-badge { font-size: 12px; padding: 2px 7px; white-space: normal; }
+  .p-items { font-size: 13px; }
+}
+.p-due-list { margin: 6px 0 0; padding-left: 20px; }
+.p-due-list li { overflow-wrap: anywhere; }
 .reise-flo.look-left svg { scale: -1 1; }
+
+/* ---------- Teil 1 / Teil 2 ---------- */
+.reise-parts {
+  max-width: 760px;
+  margin: 0 auto calc(var(--gap) * 0.9);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: var(--shadow);
+}
+.reise-part {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  position: relative;
+  min-height: 56px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-soft);
+  font: 700 clamp(14px, 2.5vmin, 20px) var(--font);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  line-height: 1.1;
+}
+.reise-part-icon { font-size: 1.4em; }
+.reise-part.active { background: var(--area); color: #fff; box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.15); }
+.reise-part-lock { font-size: 12px; background: #fff; color: #4a4e69; border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
+.reise-part.active .reise-part-lock { text-shadow: none; }
+.reise-part.locked:not(.active) { opacity: 0.85; }
+
+/* Teil 2: eigene Farbwelt (Schulheft, Kreide-Blau) */
+.reise-screen.is-schule {
+  background-color: #eef5ff;
+  background-image:
+    linear-gradient(rgba(28, 126, 214, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(28, 126, 214, 0.07) 1px, transparent 1px),
+    linear-gradient(180deg, #f3f8ff 0%, #e3efff 100%);
+  background-size: 26px 26px, 26px 26px, 100% 100%;
+}
+.reise-screen.is-schule .reise-meter { background: #dce8f8; }
+.reise-screen.is-schule .reise-meter > i { background: linear-gradient(90deg, #74c0fc, #1c7ed6); }
+.reise-screen.is-schule .reise-chapter {
+  background:
+    repeating-linear-gradient(180deg, transparent 0 29px, rgba(66, 133, 244, 0.12) 29px 30px),
+    linear-gradient(180deg, var(--ch-soft), color-mix(in srgb, var(--ch-soft) 45%, #fff) 100%);
+}
+.reise-screen.is-schule .reise-chapter.is-veiled { background: linear-gradient(180deg, #e8eef8, #f5f8fd); }
+.reise-intro.is-schule .panel { background-image: repeating-linear-gradient(180deg, transparent 0 31px, rgba(66, 133, 244, 0.12) 31px 32px); }
+
+/* Film-Station: Filmstreifen-Rand + 🎬 */
+.reise-station.is-film {
+  background:
+    radial-gradient(circle, #fff 58%, transparent 59%),
+    repeating-conic-gradient(#2b2840 0 12deg, #fff 12deg 24deg);
+}
+.reise-station.is-film.done { background: radial-gradient(circle, #fffbe9 58%, transparent 59%), repeating-conic-gradient(#2b2840 0 12deg, #fff 12deg 24deg); }
+.reise-film-badge {
+  position: absolute;
+  left: 50%;
+  bottom: -12px;
+  transform: translateX(-50%);
+  font-size: calc(var(--st) * 0.3);
+  filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.15));
+}
+
+.reise-empty { display: flex; flex-direction: column; align-items: center; padding: 30px 10px; text-align: center; font-weight: 700; color: var(--ink-soft); }
+.reise-empty-icon { font-size: 64px; }
+
+/* Startseite: Reise-Knopf für Teil 2 */
+.reise-cta.is-schule {
+  background:
+    radial-gradient(ellipse 40% 60% at 85% 15%, rgba(255, 255, 255, 0.28), transparent 70%),
+    linear-gradient(135deg, #4dabf7, #1c7ed6 60%, #1864ab);
+}

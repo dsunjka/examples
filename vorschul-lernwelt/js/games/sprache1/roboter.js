@@ -20,7 +20,9 @@
           (Bilder werden benannt; Ablenker beginnen mit anderen Lauten)
        5  Erste Silbe – alle Wörter beginnen mit demselben Laut, nur der
           Vokal unterscheidet sich (Kü … → Küken, Kiwi oder Katze?)
-   - Nach 2 Fehlversuchen wird das richtige Bild hervorgehoben.
+   - Hilfe-Leiter: gewähltes Bild benennen + Robo wiederholt → Denkanstoß
+     („Sprich Robo leise nach und schieb die Silben zusammen.“) → Flo setzt die
+     Silben vor und zeigt das Bild. Zielwörter über ctx.item (Schlüssel = Wort).
    ========================================================================== */
 (function () {
   'use strict';
@@ -97,27 +99,36 @@
   /* ------------------------------------------------------------------
      Aufgabe
      ------------------------------------------------------------------ */
-  function buildTask(level) {
+  const kindOf = (lv) => (lv <= 3 ? 'whole' : 'start');
+  const W2 = WORDS.filter((x) => x.s.length === 2);
+  const W3 = WORDS.filter((x) => x.s.length === 3);
+  const L3_WORDS = Array.from(new Set(START_GROUPS.flat()));
+  const key = (x) => x.w;
+
+  /** Zielwort über ctx.item (Wiederholung schwieriger Wörter), Ablenker passend zur Stufe. */
+  function buildTask(ctx, level) {
+    const more = ctx.flow > 0 && level === ctx.level ? 1 : 0; // Knobel-Aufgabe innerhalb der Aufgabenart
     if (level === 1) {
-      const t = U.pickFresh('robo-2', WORDS.filter((x) => x.s.length === 2), 12, (x) => x.w);
-      return { t, dis: otherStarts(t, 2, (y) => y.s.length <= 3), mode: 'whole' };
+      const t = ctx.item(W2, key, { avoid: 12 });
+      // leichter: nur zwei Bilder
+      return { t, dis: otherStarts(t, ctx.flow < 0 ? 1 : 2, (y) => y.s.length <= 3), mode: 'whole' };
     }
     if (level === 2) {
-      const t = U.pickFresh('robo-3', WORDS.filter((x) => x.s.length === 3), 12, (x) => x.w);
+      const t = ctx.item(W3, key, { avoid: 12 });
       return { t, dis: otherStarts(t, 3, (y) => y.s.length >= 2 && y.s.length <= 4), mode: 'whole' };
     }
     if (level === 3) {
-      const g = U.pickFresh('robo-grp', START_GROUPS, 6);
-      const t = U.pickFresh('robo-sim', g, 3, (x) => x.w);
+      const t = ctx.item(L3_WORDS, key, { avoid: 10 });
+      const g = U.pick(START_GROUPS.filter((gr) => gr.includes(t)));
       const dis = U.sample(g.filter((x) => x !== t && x.e !== t.e), 3);
       return { t, dis, mode: 'whole' };
     }
     if (level === 4) {
-      const t = U.pickFresh('robo-start', START_TARGETS, 12, (x) => x.w);
-      return { t, dis: otherStarts(t, 2, () => true), mode: 'start' };
+      const t = ctx.item(START_TARGETS, key, { avoid: 12 });
+      return { t, dis: otherStarts(t, 2 + more, () => true), mode: 'start' };
     }
-    const t = U.pickFresh('robo-start5', L5_TARGETS, 10, (x) => x.w);
-    return { t, dis: U.sample(sameOnsetOthers(t), 2), mode: 'start' };
+    const t = ctx.item(L5_TARGETS, key, { avoid: 10 });
+    return { t, dis: U.sample(sameOnsetOthers(t), 2 + more), mode: 'start' };
   }
 
   LT.registerGame({
@@ -141,7 +152,7 @@
     },
 
     async task(ctx) {
-      const { t, dis, mode } = buildTask(ctx.level);
+      const { t, dis, mode } = buildTask(ctx, S.lv(ctx, kindOf));
       const syls = mode === 'start' ? [t.s[0]] : t.s;
       const shown = mode === 'start' ? `${t.s[0]} …` : syls.join(' … '); // Anzeige
       const voiced = S.spokenSyls(t.s); // Sprechform aller Silben
@@ -197,14 +208,27 @@
         size: items.length <= 3 ? 'large' : undefined,
         className: items.length === 4 ? 's1-grid4' : '',
         correctSay: mode === 'start'
-          ? () => `Richtig! ${t.w} fängt mit ${startOf(t)} an.`
-          : () => S.vary('robo-ok', [`Richtig! ${S.joinSyl(t.s)}: ${t.w}!`, `Genau! Robo meint ${S.withArticleAcc(t)}.`]),
-        wrongSay: mode === 'start'
-          ? (it) => `${it.x.w} fängt mit ${startOf(it.x)} an. Hör noch mal, was Robo sagt.`
-          : (it) => `Das ist ${S.withArticle(it.x)}. Hör noch mal, was Robo sagt.`,
-        hintSay: mode === 'start' ? () => `${startOf(t)} … ${t.w}!` : null,
-        onWrong: async () => {
+          ? () => S.proc(ctx,
+            `Richtig! ${t.w} fängt mit ${startOf(t)} an.`,
+            `Genau, du hast gut auf den Anfang gehört: ${t.w}.`)
+          : () => S.proc(ctx, S.vary('robo-ok', [
+            `Richtig! ${S.joinSyl(t.s)}: ${t.w}!`,
+            `Genau! Robo meint ${S.withArticleAcc(t)}.`,
+          ]), `Richtig, du hast die Silben zusammengesetzt: ${t.w}!`),
+        // Hilfe-Leiter: 1 gewähltes Bild benennen + Robo wiederholt → 2 Denkanstoß → 3 vormachen
+        explain: (it) => {
+          const again = ctx.wrongCount + 1 < 3 ? ' Hör noch mal, was Robo sagt.' : '';
+          return (mode === 'start' ? `${it.x.w} fängt mit ${startOf(it.x)} an.` : `Das ist ${S.withArticle(it.x)}.`) + again;
+        },
+        hintSay: mode === 'start'
+          ? () => 'Sprich jedes Wort leise und hör genau auf den Anfang.'
+          : () => 'Sprich Robo leise nach und schieb die Silben zusammen.',
+        modelSay: mode === 'start'
+          ? () => `Schau: ${t.w} fängt mit ${startOf(t)} an.`
+          : () => `Schau: ${S.joinSyl(t.s)}. Zusammen heißt das ${t.w}.`,
+        onWrong: async (it, tile, k) => {
           robo.classList.add('confused');
+          if (k >= 3) return; // beim Vormachen spricht Flo
           await ctx.sleep(300);
           await roboSpeak();
         },

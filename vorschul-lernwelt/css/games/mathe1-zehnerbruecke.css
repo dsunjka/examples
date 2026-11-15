@@ -1,0 +1,208 @@
+/* ==========================================================================
+   Über die Zehner-Brücke (mathe1/zehnerbruecke) – Präfix .zbr-
+   ========================================================================== */
+
+/* etwas mehr Platz unten für Flos Sprechblase (zwei Zeilen), Inhalt rückt nach oben */
+.stage.zbr-stage { justify-content: flex-start; padding-top: clamp(6px, 1.6vmin, 16px); --bubble-safe: clamp(80px, 15vh, 128px); }
+
+.zbr-main {
+  width: 100%; max-width: 860px; flex: 1 1 auto; min-height: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: clamp(6px, 1.6vmin, 16px);
+}
+.zbr-hidden { display: none !important; }
+.zbr-pop { animation: zbr-pop .45s cubic-bezier(.3, 1.5, .5, 1); }
+@keyframes zbr-pop { from { transform: scale(.7); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* ---------- Gleichung ---------- */
+.zbr-eqbox {
+  position: relative;
+  background: var(--card); border-radius: var(--radius-l); box-shadow: var(--shadow);
+  padding: clamp(8px, 1.6vmin, 14px) clamp(18px, 4vmin, 34px);
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.zbr-eq {
+  display: flex; align-items: center; gap: .22em;
+  font-size: clamp(36px, min(9vw, 6.4vh), 60px); font-weight: 700; line-height: 1.1;
+}
+.zbr-op { color: var(--ink-soft); }
+.zbr-b { color: #1d64d8; }
+.zbr-slot {
+  min-width: 1.4em; height: 1.2em; display: inline-flex; align-items: center; justify-content: center;
+  border: 4px dashed #b8bfd8; border-radius: 14px; color: var(--ink-faint); background: #fbfcff; font-size: .9em;
+}
+.zbr-slot.zbr-done { border-style: solid; border-color: var(--ok); background: var(--ok-soft); color: var(--ink); }
+.zbr-steps {
+  display: flex; align-items: center; gap: .25em;
+  font-size: clamp(22px, min(5.4vw, 4vh), 34px); font-weight: 700; color: var(--ink-soft);
+}
+.zbr-to { color: #fff; background: #ff8a3d; border-radius: 10px; padding: 0 .3em; }
+.zbr-rest { color: #fff; background: #1d64d8; border-radius: 10px; padding: 0 .3em; }
+.zbr-bolt {
+  position: absolute; top: -12px; right: -10px;
+  background: #fff3b0; border-radius: 999px; padding: 2px 8px;
+  font-size: 18px; box-shadow: 0 3px 0 rgba(224, 155, 0, .35);
+}
+
+/* ---------- Zahlenstrahl ---------- */
+.zbr-linebox {
+  width: 100%; max-width: 820px;
+  background: linear-gradient(180deg, #e8f7ff, #fff);
+  border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 0 clamp(16px, 3vw, 30px);
+  height: clamp(124px, 16vh, 170px);
+  position: relative; flex-shrink: 0;
+}
+.zbr-track { position: absolute; left: clamp(16px, 3vw, 30px); right: clamp(16px, 3vw, 30px); top: 0; bottom: 0; }
+.zbr-track::before {
+  content: ''; position: absolute; left: -8px; right: -8px; bottom: 40px; height: 5px;
+  background: var(--ink-soft); border-radius: 3px;
+}
+.zbr-tick { position: absolute; bottom: 34px; width: 3px; height: 16px; margin-left: -1.5px; background: var(--ink-soft); border-radius: 2px; }
+.zbr-tick.zbr-five { height: 22px; bottom: 31px; }
+.zbr-tick.zbr-ten { width: 8px; margin-left: -4px; height: 40px; bottom: 30px; background: var(--gold-dark); }
+.zbr-lbl {
+  position: absolute; bottom: 8px; transform: translateX(-50%);
+  font-size: clamp(11px, 2.6vw, 18px); font-weight: 700; color: var(--ink-soft); line-height: 1;
+}
+.zbr-lbl-ten {
+  background: var(--gold); color: #5a3d00; border-radius: 8px; padding: 2px 5px; bottom: 6px;
+}
+.zbr-linebox.zbr-tenglow .zbr-lbl-ten { animation: zbr-glow 1.2s ease-in-out infinite; }
+.zbr-linebox.zbr-tenglow .zbr-tick.zbr-ten { box-shadow: 0 0 0 4px rgba(255, 197, 51, .55); }
+@keyframes zbr-glow { 50% { box-shadow: 0 0 0 6px rgba(255, 197, 51, .55); } }
+.zbr-bridge {
+  position: absolute; top: 4px; transform: translateX(-50%);
+  font-size: clamp(22px, 4.6vw, 32px); line-height: 1; pointer-events: none;
+}
+
+.zbr-flo {
+  position: absolute; bottom: 44px; width: clamp(34px, 7vw, 50px); height: clamp(34px, 7vw, 50px);
+  transform: translateX(-50%); transition: left .25s ease-out; z-index: 2;
+}
+.zbr-flo svg { width: 100%; height: 100%; display: block; }
+.zbr-flo.zbr-back svg { transform: scaleX(-1); }
+.zbr-flo.zbr-jump { animation: zbr-jump .3s ease-out; }
+@keyframes zbr-jump { 40% { bottom: 64px; } 100% { bottom: 44px; } }
+.zbr-dir {
+  position: absolute; top: -8px; right: -10px;
+  font-size: 13px; color: #fff; background: var(--area); border-radius: 999px;
+  width: 20px; height: 20px; display: flex; align-items: center; justify-content: center;
+}
+.zbr-flo.zbr-back .zbr-dir { right: auto; left: -10px; background: #e8505b; }
+
+.zbr-arc {
+  position: absolute; bottom: 44px; height: clamp(40px, 7vh, 58px);
+  border: 4px solid #ff8a3d; border-bottom: none;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0; box-sizing: border-box; pointer-events: none; z-index: 3;
+}
+.zbr-arc.zbr-arc-rest { border-color: #1d64d8; height: clamp(34px, 6vh, 48px); }
+.zbr-arc.zbr-ghost { border-style: dashed; border-color: #ffb27a; }
+.zbr-arclbl {
+  position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+  background: #ff8a3d; color: #fff; font-weight: 700; font-size: clamp(12px, 2.8vw, 17px);
+  border-radius: 999px; padding: 0 6px; line-height: 1.4; white-space: nowrap;
+}
+.zbr-arc-rest .zbr-arclbl { background: #1d64d8; }
+.zbr-ghost .zbr-arclbl { background: #ffb27a; }
+
+/* ---------- Zwanzigerfeld ---------- */
+.zbr-frame {
+  display: flex; gap: clamp(8px, 2vw, 18px);
+  background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: clamp(6px, 1.4vmin, 12px);
+}
+.zbr-half {
+  --cs: clamp(24px, 5.6vw, 38px);
+  display: grid; grid-template-columns: repeat(5, var(--cs)); grid-auto-rows: var(--cs); gap: 3px;
+  background: #f1f3fa; border: 3px solid #b8bfd8; border-radius: 12px; padding: 4px;
+}
+.zbr-cell { display: block; border-radius: 50%; background: #fff; box-shadow: inset 0 0 0 2px #dfe3ef; position: relative; }
+.zbr-cell:nth-child(5n) { margin-right: 0; }
+.zbr-cell.zbr-a { background: #e8505b; box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .15); }
+.zbr-cell.zbr-p { background: #ffc9a3; box-shadow: inset 0 0 0 3px #ff8a3d; }
+.zbr-cell.zbr-to { background: #ff8a3d; box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .15); }
+.zbr-cell.zbr-r { background: #1d64d8; box-shadow: inset 0 -3px 0 rgba(0, 0, 0, .15); }
+.zbr-cell.zbr-x { opacity: .35; }
+.zbr-cell.zbr-x::after {
+  content: ''; position: absolute; left: 8%; right: 8%; top: 46%; height: 3px; background: #2b2d42;
+  transform: rotate(-35deg); border-radius: 2px;
+}
+.zbr-cell.zbr-x.zbr-xr::after { background: #1d64d8; }
+.zbr-cell.zbr-glow { animation: zbr-cellglow 1s ease-in-out infinite; }
+@keyframes zbr-cellglow { 50% { box-shadow: inset 0 0 0 3px var(--gold-dark), 0 0 0 4px rgba(255, 197, 51, .6); } }
+
+/* ---------- Arbeitsbereich: Punkte zum Zerlegen + Antworten ---------- */
+.zbr-work { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; min-height: 0; }
+.zbr-tray {
+  background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: clamp(8px, 1.6vmin, 14px) clamp(10px, 2vmin, 18px);
+  display: flex; flex-direction: column; align-items: center; gap: 8px; max-width: 100%;
+}
+.zbr-trayhead { display: flex; align-items: center; gap: 10px; font-weight: 700; }
+.zbr-traynum {
+  font-size: clamp(24px, 5vmin, 34px); color: #fff; background: #1d64d8;
+  border-radius: 12px; padding: 0 12px; line-height: 1.3;
+}
+.zbr-trayhint { font-size: clamp(16px, 3.4vmin, 22px); color: var(--ink-soft); }
+.zbr-traybody { display: flex; align-items: center; gap: clamp(10px, 2.4vmin, 20px); flex-wrap: wrap; justify-content: center; }
+.zbr-dots { display: flex; flex-direction: column; gap: 8px; }
+.zbr-dotrow { display: flex; gap: 6px; }
+.zbr-dot {
+  /* nach Höhe begrenzt: zwei Punktreihen dürfen nicht unter Flos Sprechblase rutschen */
+  --d: clamp(50px, min(9vmin, 7vh), 70px);
+  width: var(--d); height: var(--d); border-radius: 50%; border: none; padding: 0; cursor: pointer;
+  background: #1d64d8; box-shadow: inset 0 -5px 0 rgba(0, 0, 0, .2), 0 4px 0 rgba(43, 45, 66, .15);
+  transition: transform .15s, background .15s;
+}
+.zbr-dot:active { transform: translateY(3px); }
+.zbr-dot.zbr-sel { background: #ff8a3d; transform: translateY(-4px); }
+.zbr-dot:focus-visible, .zbr-okbtn:focus-visible { outline: 4px solid #2b7bff; outline-offset: 3px; }
+.zbr-okbtn {
+  min-width: 72px; min-height: 72px; border-radius: 22px; border: none; cursor: pointer;
+  background: var(--ok); color: #fff; font-size: 38px; font-weight: 700; font-family: inherit;
+  box-shadow: 0 5px 0 #168a51;
+}
+.zbr-okbtn:active { transform: translateY(4px); box-shadow: 0 1px 0 #168a51; }
+.zbr-okbtn[disabled] { opacity: .45; }
+.zbr-tray.zbr-split .zbr-dot { cursor: default; }
+.zbr-tray.zbr-split .zbr-dot.zbr-sel { transform: none; }
+.zbr-tray.zbr-split .zbr-dot.zbr-restdot { background: #1d64d8; opacity: .55; }
+.zbr-dot.is-hint, .zbr-okbtn.is-hint, .zbr-dot.hint-glow, .zbr-okbtn.hint-glow { animation: zbr-hintpulse 1s ease-in-out infinite; }
+@keyframes zbr-hintpulse { 50% { box-shadow: 0 0 0 6px rgba(255, 197, 51, .8); } }
+
+.zbr-choices { margin: 0; }
+.zbr-choices .tile.zbr-num { font-size: clamp(30px, 6vmin, 46px); font-weight: 700; }
+
+/* kleine Höhen (Handy quer): kein Zwanzigerfeld (die Tipps zeigen dann auf den
+   Zahlenstrahl), kompakter Zahlenstrahl, Punkte in einer Reihe neben dem Kopf */
+@media (max-height: 560px) {
+  .zbr-main { gap: 6px; justify-content: flex-start; }
+  .zbr-frame { display: none; }
+  .zbr-eqbox { padding: 2px 18px; gap: 0; }
+  .zbr-eq { font-size: 30px; }
+  .zbr-steps { font-size: 20px; }
+  .zbr-linebox { height: 92px; }
+  .zbr-track::before { bottom: 34px; }
+  .zbr-tick { bottom: 28px; }
+  .zbr-tick.zbr-five { bottom: 25px; }
+  .zbr-tick.zbr-ten { bottom: 24px; height: 34px; }
+  .zbr-lbl { bottom: 6px; font-size: 14px; }
+  .zbr-lbl-ten { bottom: 4px; padding: 1px 4px; }
+  .zbr-bridge { top: 2px; font-size: 22px; }
+  .zbr-flo { width: 32px; height: 32px; bottom: 37px; }
+  .zbr-flo.zbr-jump { animation-name: zbr-jump-s; }
+  .zbr-dir { width: 16px; height: 16px; font-size: 10px; top: -4px; right: -8px; }
+  .zbr-flo.zbr-back .zbr-dir { left: -8px; }
+  .zbr-arc { bottom: 37px; height: 34px; }
+  .zbr-arc.zbr-arc-rest { height: 28px; }
+  .zbr-arclbl { font-size: 12px; top: -10px; }
+  .zbr-tray { flex-direction: row; padding: 6px 10px; gap: 10px; }
+  .zbr-traybody { flex-wrap: nowrap; gap: 10px; }
+  .zbr-dots { flex-direction: row; gap: 12px; }
+  .zbr-dot { --d: 44px; }
+  .zbr-okbtn { min-width: 56px; min-height: 52px; font-size: 30px; border-radius: 16px; }
+  .zbr-traynum { font-size: 22px; padding: 0 9px; }
+  .zbr-trayhint { font-size: 15px; }
+}
+@keyframes zbr-jump-s { 40% { bottom: 52px; } 100% { bottom: 37px; } }

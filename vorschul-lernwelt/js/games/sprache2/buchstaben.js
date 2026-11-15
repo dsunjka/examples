@@ -14,8 +14,10 @@
           (Hilfe: Vergleich mit dem Bildwort der Anlauttabelle)
        5  der eigene Name (Lücke füllen) – abwechselnd mit leicht
           verwechselbaren Buchstaben (b/d/p/q, M/W, E/F …) inkl. Formtipps
-   - Hilfen: nach dem 1. Fehler ein gezielter Tipp (Form, langsames Vorsprechen),
-     nach dem 2. Fehler wird die Lösung hervorgehoben und benannt.
+   - Hilfe-Leiter: 1. Fehler → gewählten Buchstaben benennen („Das ist das B wie
+     Banane. Wir suchen …“), 2. → Denkanstoß (Formtipp bzw. Anlauttabelle),
+     3. → Lösung zeigen und benennen. Lerninhalte über ctx.item: Buchstabe
+     („M“, „b“), Paar („M – m“), Anlautwort („Mond“).
    ========================================================================== */
 (function () {
   'use strict';
@@ -114,7 +116,22 @@
     j: 'Das kleine J hat einen Punkt und unten einen Haken.',
     l: 'Das kleine L ist ein langer Strich ohne Punkt.',
     t: 'Das kleine T hat einen Querstrich, wie ein Kreuz.',
+    // übrige Großbuchstaben (Denkanstoß in Stufe 1/2: worauf muss ich schauen?)
+    A: 'Das A sieht aus wie ein spitzes Dach mit einem Strich in der Mitte.',
+    I: 'Das I ist ein gerader Strich.',
+    J: 'Das J hat unten einen Haken.',
+    K: 'Das K hat einen langen Strich und zwei schräge Arme.',
+    S: 'Das S ist eine Schlangenlinie.',
+    T: 'Das T hat oben einen Querstrich.',
+    U: 'Das U ist unten rund und oben offen.',
+    X: 'Das X hat zwei Striche, die sich kreuzen.',
+    Y: 'Das Y sieht aus wie ein V mit einem Bein.',
+    Z: 'Das Z hat oben und unten einen Strich und dazwischen eine schräge Linie.',
   };
+  /** Aufgabenart je Stufe (die Bedienung wechselt innerhalb einer Runde nie, s. S2.lv) */
+  const kindOf = (lv) => (lv <= 2 ? 'find' : lv === 3 ? 'case' : lv === 4 ? 'anlaut' : 'name');
+  /** Alle Buchstaben der Verwechsel-Gruppen (Lerninhalt in Stufe 5, Schlüssel z. B. „b“) */
+  const CONFUSE_ITEMS = CONFUSE.flatMap((set) => set.letters.map((ch) => ({ ch, set })));
 
   let abcIntroDone = false; // ABC-Knopf nur einmal pro Sitzung vorstellen
 
@@ -153,26 +170,37 @@
   // Stufe 1 + 2: „Wo ist das M wie Maus?“
   async function findLetter(ctx, level) {
     const pool = level === 1 ? FREQ : S2.LETTERS;
-    const L = U.pickFresh('abc-find-' + level, pool, Math.min(6, pool.length - 1));
+    const L = ctx.item(pool, (x) => x, { avoid: Math.min(6, pool.length - 1) });
     const entry = S2.abc(L);
     const { slot } = promptCard(ctx, entry);
-    const others = level === 1
-      ? S2.distract(L, FREQ, 2, { avoid: FREQ_AVOID[L] || [] })
-      : S2.distract(L, S2.LETTERS, 3, { prefer: LOOK_UP[L] || [] });
+    let others;
+    if (level === 1) {
+      // leichter (Anpassung innerhalb der Runde): nur zwei Buchstaben zur Wahl
+      others = S2.distract(L, FREQ, ctx.flow < 0 ? 1 : 2, { avoid: FREQ_AVOID[L] || [] });
+    } else if (ctx.flow > 0 && level === ctx.level) {
+      // Knobel-Aufgabe: zwei ähnlich aussehende Buchstaben
+      const sims = U.shuffle(LOOK_UP[L] || []).slice(0, 2);
+      others = sims.concat(S2.distract(L, S2.LETTERS, 3 - sims.length, { avoid: sims }));
+    } else {
+      others = S2.distract(L, S2.LETTERS, 3, { prefer: LOOK_UP[L] || [] });
+    }
     ctx.instruct(`Wo ist das ${L} wie ${entry.w}?`);
     await ctx.choices([letterItem(L, true), ...others.map((x) => letterItem(x, false))], {
       hintAfter: 2,
-      // informativ: den gewählten Buchstaben benennen und das Ziel wiederholen
-      wrongSay: (item) => `Das ist das ${item.value} wie ${S2.abc(item.value).w}. Wir suchen das ${L} wie ${entry.w}.`,
-      hintSay: `Hier ist das ${L}. ${L} wie ${entry.w}.`,
-      correctSay: `Richtig! ${L} wie ${entry.w}.`,
+      // Hilfe-Leiter: gewählten Buchstaben benennen → Formtipp → vormachen
+      explain: (item) => `Das ist das ${item.value} wie ${S2.abc(item.value).w}. Wir suchen das ${L} wie ${entry.w}.`,
+      hintSay: SHAPE[L] || `Schau genau auf die Form. ${L} wie ${entry.w}.`,
+      modelSay: `Schau, hier ist das ${L}. ${L} wie ${entry.w}.`,
+      correctSay: () => S2.proc(ctx,
+        `Richtig! ${L} wie ${entry.w}.`,
+        `Richtig, du hast genau auf die Form geschaut: ${L} wie ${entry.w}.`),
       onCorrect: () => fillSlot(slot, L),
     });
   }
 
   // Stufe 3: Groß- und Kleinbuchstaben zuordnen
   async function matchCase(ctx) {
-    const L = U.pickFresh('abc-case', S2.LETTERS, 8);
+    const L = ctx.item(S2.LETTERS, (x) => `${x} – ${S2.lower(x)}`, { avoid: 8 });
     const entry = S2.abc(L);
     const toLower = ctx.index % 2 === 0 ? U.chance(0.75) : U.chance(0.4);
     const shown = toLower ? L : S2.lower(L);
@@ -191,8 +219,10 @@
     ctx.instruct(`Das ist das ${shownWord} ${L} wie ${entry.w}. Wo ist das ${sizeWord} ${L}?`);
     await ctx.choices([letterItem(target, true), ...others.map((x) => letterItem(x, false))], {
       hintAfter: 2,
-      wrongSay: (item) => `Das ist das ${S2.isLower(item.value) ? 'kleine' : 'große'} ${S2.upper(item.value)}. Wir suchen das ${sizeWord} ${L}.`,
-      hintSay: `Hier ist das ${sizeWord} ${L}.`,
+      explain: (item) => `Das ist das ${S2.isLower(item.value) ? 'kleine' : 'große'} ${S2.upper(item.value)}. Wir suchen das ${sizeWord} ${L}.`,
+      // Denkanstoß: Formtipp, sonst das ABC als Nachschlage-Werkzeug
+      hintSay: SHAPE[target] || 'Schau in dein ABC. Dort steht neben jedem großen Buchstaben der kleine.',
+      modelSay: `Schau, hier ist das ${sizeWord} ${L}. Es gehört zum ${shownWord}n ${L}.`,
       correctSay: `Richtig! Das große ${L} und das kleine ${L} gehören zusammen.`,
       onCorrect: () => {
         big.appendChild(S2.letter(target, 'abc-case-letter partner'));
@@ -203,7 +233,7 @@
 
   // Stufe 4: Anlaut hören → Buchstabe
   async function hearAnlaut(ctx) {
-    const word = U.pickFresh('abc-anlaut', ANLAUT_WORDS, 10, (x) => x.w);
+    const word = ctx.item(ANLAUT_WORDS, (x) => x.w, { avoid: 10 });
     const L = word.L;
     const table = S2.abc(L);
     const ear = el('button.btn-round.abc-ear', { type: 'button', 'aria-label': 'Wort nochmal hören', on: { click: () => ctx.say(word.w, { rate: 0.7 }) } }, U.emoji('👂'));
@@ -214,20 +244,23 @@
     ctx.instruct(`Hör gut zu: ${word.w}. Mit welchem Buchstaben fängt ${word.w} an?`);
     await ctx.choices([letterItem(L, true), ...others.map((x) => letterItem(x, false))], {
       hintAfter: 2,
-      wrongSay: (item) => `Das ist das ${item.value} wie ${S2.abc(item.value).w}.`,
-      correctSay: `Richtig! ${word.w} fängt mit ${L} an.`,
+      // Hilfe-Leiter: 1 gewählten Buchstaben benennen + Wort langsam → 2 Denkanstoß (ABC) → 3 Anlauttabelle zeigen
+      explain: (item) => `Das ist das ${item.value} wie ${S2.abc(item.value).w}. ${word.w} fängt anders an.`,
+      hintSay: `Schau in dein ABC. Welches Bild fängt so an wie ${word.w}?`,
+      modelSay: table.w === word.w ? `Schau: ${L} wie ${table.w}!` : `${word.w} fängt an wie ${table.w}. ${L} wie ${table.w}!`,
+      correctSay: () => S2.proc(ctx,
+        `Richtig! ${word.w} fängt mit ${L} an.`,
+        `Genau, du hast gut auf den Anfang gehört: ${word.w} fängt mit ${L} an.`),
       onWrong: async (item, tile, n) => {
         if (n === 1) {
           await ctx.say('Hör ganz genau auf den Anfang:');
           await ctx.say(word.w, { rate: 0.55 });
-        } else if (n === 2) {
-          // Hilfe mit der Anlauttabelle: gleiches Anfangsgeräusch wie das Tabellenwort
+        } else if (n === 3) {
+          // Vormachen mit der Anlauttabelle: gleiches Anfangsgeräusch wie das Tabellenwort
           U.clear(helper);
           helper.appendChild(S2.letter(L, 'abc-helper-letter'));
           helper.appendChild(S2.pic(table, 'abc-helper-pic'));
           helper.classList.add('show');
-          if (table.w === word.w) await ctx.say(`Schau in dein ABC: ${L} wie ${table.w}!`);
-          else await ctx.say(`${word.w} fängt an wie ${table.w}. ${L} wie ${table.w}!`);
         }
       },
     });
@@ -252,15 +285,17 @@
     const card = el('div.prompt-box.abc-name-card', el('div.abc-name-label', U.emoji('🏷️'), ' Dein Name'), row);
     ctx.stage.appendChild(card);
 
+    ctx.track(missing);
+    const missingLabel = `das ${lowerCase ? 'kleine ' : ''}${S2.sayLetter(missing)}`;
     ctx.instruct(`Hier steht dein Name: ${name}! Ein Buchstabe fehlt. Welcher Buchstabe fehlt?`);
     await ctx.choices([letterItem(missing, true), ...others.map((x) => letterItem(x, false))], {
       hintAfter: 2,
-      hintSay: `Hier ist das ${S2.sayLetter(missing)}.`,
+      // Hilfe-Leiter: gewählten Buchstaben benennen → sagen, welcher fehlt (+ Formtipp) → zeigen
+      explain: (item) => `Das ist das ${S2.isLower(item.value) ? 'kleine ' : ''}${S2.sayLetter(item.value)}. Das kommt in deinem Namen nicht vor.`,
+      hintSay: `Es fehlt ${missingLabel}. ${SHAPE[missing] || ''}`.trim(),
+      modelSay: `Schau, hier ist ${missingLabel}.`,
       praise: false,
       correctSay: 'Richtig!',
-      onWrong: async (item, tile, n) => {
-        if (n === 1) await ctx.say(`Es fehlt das ${lowerCase ? 'kleine ' : ''}${S2.sayLetter(missing)}.`);
-      },
       onCorrect: () => {
         const b = boxes[pos];
         U.clear(b);
@@ -284,8 +319,7 @@
 
   // Stufe 5b: leicht verwechselbare Buchstaben
   async function confuseTask(ctx) {
-    const set = U.pickFresh('abc-confuse', CONFUSE, 3, (s) => s.id);
-    const target = U.pick(set.letters);
+    const { set, ch: target } = ctx.item(CONFUSE_ITEMS, (x) => x.ch, { avoid: 6 });
     const L = S2.upper(target);
     const entry = S2.abc(L);
     const small = S2.isLower(target);
@@ -294,12 +328,13 @@
     ctx.instruct(`Wo ist ${label} wie ${entry.w}?`);
     await ctx.choices(set.letters.map((x) => letterItem(x, x === target)), {
       hintAfter: 2,
-      wrongSay: (item) => `Das ist ${S2.isLower(item.value) ? 'das kleine' : 'das'} ${S2.upper(item.value)}.`,
-      hintSay: `Hier ist ${label}.`,
-      correctSay: `Richtig! ${U.cap(label)} wie ${entry.w}.`,
-      onWrong: async (item, tile, n) => {
-        if (n === 1 && SHAPE[target]) await ctx.say(SHAPE[target]);
-      },
+      // Hilfe-Leiter: gewählten Buchstaben benennen und seine Form beschreiben → Formtipp zum gesuchten → zeigen
+      explain: (item) => `Das ist ${S2.isLower(item.value) ? 'das kleine' : 'das'} ${S2.upper(item.value)}. ${SHAPE[item.value] || ''}`.trim(),
+      hintSay: SHAPE[target] || `Schau genau auf die Form. ${U.cap(label)} wie ${entry.w}.`,
+      modelSay: `Schau, hier ist ${label} wie ${entry.w}.`,
+      correctSay: () => S2.proc(ctx,
+        `Richtig! ${U.cap(label)} wie ${entry.w}.`,
+        `Richtig, du hast genau auf die Form geschaut: ${label} wie ${entry.w}.`),
       onCorrect: () => fillSlot(slot, target),
     });
   }
@@ -338,7 +373,7 @@
         await ctx.say('Schau mal, der Knopf, der jetzt leuchtet, ist dein ABC. Da kannst du alle Buchstaben entdecken.');
         if (!ctx.active) return;
       }
-      const lv = ctx.level;
+      const lv = S2.lv(ctx, kindOf);
       if (lv <= 2) return findLetter(ctx, lv);
       if (lv === 3) return matchCase(ctx);
       if (lv === 4) return hearAnlaut(ctx);

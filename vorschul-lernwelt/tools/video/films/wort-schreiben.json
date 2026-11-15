@@ -1,0 +1,105 @@
+{
+  "id": "wort-schreiben",
+  "title": "So schreibst du *ein Wort*",
+  "icon": "✏️",
+  "subject": "deutsch1",
+  "related": ["schreibwerkstatt"],
+  "parent": "Lautierendes Schreiben: das Wort langsam dehnend sprechen, die Laute der Reihe nach heraushören, für jeden Laut den Buchstaben in der Anlauttabelle suchen (M wie Mond), und wissen, dass manche Laute aus mehreren Buchstaben bestehen (au, ei, sch).",
+  "intro": "Schau mal, Flo will ein Wort schreiben!",
+  "accent": "#8e6cef",
+  "beats": [
+    {
+      "say": "Hallo! Ich bin Flo. Heute schreiben wir ein Wort.",
+      "visual": {"type": "title", "subtitle": "Schreiben mit Flo"}
+    },
+    {
+      "say": "Schau mal, ich habe eine Maus gemalt. Darunter will ich Maus schreiben. Aber wie geht das nur?",
+      "caption": "Wie schreibe ich das?",
+      "visual": {"type": "scene", "bg": "classroom", "actors": [
+        {"e": "flo", "x": 22, "size": 190, "emotion": "think", "bubble": "❓", "think": true, "bubbleAt": 0.75},
+        {"e": "🐭", "x": 55, "size": 130, "at": 0.05, "enter": "pop", "anim": "bounce", "label": "gemalt", "labelAt": 0.2},
+        {"e": "📝", "x": 78, "size": 110, "at": 0.42, "enter": "drop"}
+      ]}
+    },
+    {
+      "say": "Mein Trick: Ich spreche das Wort ganz langsam. So langsam wie eine Schnecke. Mmm, au, sss.",
+      "caption": "Ganz langsam: Mmm-au-sss",
+      "visual": {"type": "scene", "bg": "meadow", "actors": [
+        {"e": "flo", "x": 20, "size": 180, "emotion": "happy", "bubble": "Mmm … au … sss", "bubbleAt": 0.72},
+        {"e": "🐌", "x": 42, "size": 90, "at": 0.25, "enter": "fade", "flip": true, "moves": [{"x": 82, "at": 0.35, "until": 1.2}]}
+      ]}
+    },
+    {
+      "say": "Hör gut hin. Wie viele Laute hörst du? Was meinst du?",
+      "caption": "Wie viele Laute?",
+      "pause": 2.5,
+      "visual": {"type": "flo", "emotion": "think", "side": "left", "bubble": "👂", "think": true, "items": [{"e": "🐭", "label": "Mmm-au-sss", "at": 0.1}]}
+    },
+    {
+      "say": "Ich höre drei Laute: Mmm, au, sss. Für jeden Laut male ich ein Kästchen.",
+      "caption": "3 Laute = *3 Kästchen*",
+      "visual": {"type": "buchstaben", "boxes": true, "floGesture": "point",
+        "letters": [{"l": "M", "pic": "🌙", "word": "Mond", "at": 9}, {"l": "au", "pic": "🚗", "word": "Auto", "at": 9}, {"l": "s", "pic": "☀️", "word": "Sonne", "at": 9}]}
+    },
+    {
+      "say": "Jetzt suche ich jeden Laut in meiner Anlauttabelle. Mmm wie Mond. Au wie Auto. Sss wie Sonne.",
+      "caption": "M · au · s",
+      "visual": {"type": "buchstaben", "boxes": true, "continue": true,
+        "letters": [{"l": "M", "pic": "🌙", "word": "Mond", "at": 0.45}, {"l": "au", "pic": "🚗", "word": "Auto", "at": 0.66}, {"l": "s", "pic": "☀️", "word": "Sonne", "at": 0.86}]}
+    },
+    {
+      "say": "Jetzt lese ich alles zusammen. Mmm, au, sss. Maus! Fertig!",
+      "caption": "M-au-s → *Maus*",
+      "visual": {"type": "buchstaben", "boxes": true, "continue": true, "word": "Maus", "blendAt": 0.6, "picture": "🐭", "floEmotion": "happy", "floGesture": "cheer",
+        "letters": [{"l": "M", "pic": "🌙", "word": "Mond", "at": -0.1}, {"l": "au", "pic": "🚗", "word": "Auto", "at": -0.1}, {"l": "s", "pic": "☀️", "word": "Sonne", "at": -0.1}]}
+    },
+    {
+      "say": "Schau mal genau hin. Au, das sind zwei Buchstaben, aber nur ein Laut. Bei ei ist das auch so. Und sch hat sogar drei Buchstaben.",
+      "caption": "au, ei, sch: je *1 Laut*",
+      "visual": {"type": "liste", "title": "Ein Laut", "floGesture": "point",
+        "items": [{"e": "🚗", "text": "au: 2 Buchstaben", "at": 0.25}, {"e": "🥚", "text": "ei: 2 Buchstaben", "at": 0.55}, {"e": "🐑", "text": "sch: 3 Buchstaben", "at": 0.78}]}
+    },
+    {
+      "say": "Jetzt du! Wir schreiben Sofa. Sprich langsam mit: Sss, ooo, fff, aaa. Wie viele Laute hörst du? Was meinst du?",
+      "caption": "Sofa: wie viele Laute?",
+      "pause": 2.5,
+      "visual": {"type": "scene", "bg": "classroom", "actors": [
+        {"e": "flo", "x": 22, "size": 180, "emotion": "think", "bubble": "👂", "think": true, "bubbleAt": 0.75},
+        {"e": "🛋️", "x": 62, "size": 150, "at": 0.08, "enter": "drop"},
+        {"e": "🐌", "x": 36, "y": 79, "size": 64, "at": 0.3, "enter": "fade", "flip": true, "moves": [{"x": 50, "y": 79, "at": 0.32, "until": 0.7}], "z": 6}
+      ]}
+    },
+    {
+      "say": "Vier Laute! Sss wie Sonne. Ooo wie Ohr. Fff wie Fisch. Aaa wie Affe. Zusammen: Sofa! Super gemacht!",
+      "caption": "S-o-f-a → *Sofa*",
+      "visual": {"type": "buchstaben", "boxes": true, "word": "Sofa", "blendAt": 0.8, "picture": "🛋️", "floEmotion": "happy",
+        "letters": [{"l": "S", "pic": "☀️", "word": "Sonne", "at": 0.12}, {"l": "o", "pic": "👂", "word": "Ohr", "at": 0.3}, {"l": "f", "pic": "🐟", "word": "Fisch", "at": 0.47}, {"l": "a", "pic": "🐒", "word": "Affe", "at": 0.63}]}
+    },
+    {
+      "say": "Mein Tipp: Sprich das Wort ganz langsam. Hör genau hin. Schreib jeden Laut der Reihe nach auf. Probier es gleich im Quiz!",
+      "visual": {"type": "merke", "title": "Mein Tipp:", "icon": "✏️", "lines": ["*Langsam* sprechen.", "Genau *hinhören*.", "Jeden *Laut* schreiben."], "at": [0.05, 0.3, 0.5]}
+    }
+  ],
+  "quiz": [
+    {"q": "Wie spricht Flo ein Wort, bevor er es schreibt?", "options": [
+      {"text": "⚡ ganz schnell", "say": "ganz schnell", "correct": false},
+      {"text": "🐌 ganz langsam", "say": "ganz langsam", "correct": true},
+      {"text": "🤐 gar nicht", "say": "gar nicht", "correct": false}],
+     "explain": "Denk an die Schnecke. Wie hat Flo Maus gesprochen?", "model": "Ganz langsam, wie eine Schnecke. Mmm, au, sss. So hört man jeden Laut.", "key": "Wort dehnen", "beat": 2},
+    {"q": "Welchen Laut hörst du ganz am Anfang von Fisch?", "options": [
+      {"text": "M", "say": "mmm", "correct": false},
+      {"text": "F", "say": "fff", "correct": true},
+      {"text": "A", "say": "aaa", "correct": false}],
+     "explain": "Sprich das Wort ganz langsam. Was hörst du zuerst?", "model": "Fffisch. Ganz am Anfang hörst du fff. Den Laut schreibe ich mit F.", "key": "Anlaut", "beat": 9},
+    {"q": "Wie viele Buchstaben braucht der Laut sch?", "options": [
+      {"text": "1", "say": "einen", "correct": false},
+      {"text": "2", "say": "zwei", "correct": false},
+      {"text": "3", "say": "drei", "correct": true}],
+     "explain": "Schau mal genau hin. Ein Laut kann aus mehreren Buchstaben bestehen.", "model": "S, c, h. Drei Buchstaben, aber nur ein Laut: sch, wie bei Schaf.", "key": "sch", "beat": 7},
+    {"q": "Wie viele Laute hörst du bei Eis?", "options": [
+      {"text": "1", "say": "einen", "correct": false},
+      {"text": "2", "say": "zwei", "correct": true},
+      {"text": "3", "say": "drei", "correct": false}],
+     "explain": "Sprich ganz langsam und zähl mit den Fingern. Denk an das au bei Maus.", "model": "Ei, sss. Zwei Laute. Das ei schreibe ich mit zwei Buchstaben.", "key": "Laute zählen", "beat": 7}
+  ]
+}

@@ -1,0 +1,108 @@
+{
+  "id": "satz-zug",
+  "title": "Der *Satz-Zug*",
+  "icon": "🚂",
+  "subject": "deutsch1",
+  "related": ["satzbaumeister"],
+  "parent": "Was ist ein Satz? Wörter gehören zusammen wie Wagen eines Zuges: Satzanfang groß, Namenwörter (Nomen) groß, am Ende Punkt oder bei einer Frage Fragezeichen.",
+  "intro": "Schau mal, Flos Satz-Zug fährt noch nicht richtig!",
+  "accent": "#8e6cef",
+  "beats": [
+    {
+      "say": "Hallo! Ich bin Flo. Heute fahren wir mit dem Satz-Zug.",
+      "visual": {"type": "title", "subtitle": "Schreiben mit Flo"}
+    },
+    {
+      "say": "Ich habe einen Satz geschrieben. Aber mein Zug sieht komisch aus. Was fehlt da? Was meinst du?",
+      "caption": "Was fehlt hier?",
+      "pause": 2,
+      "visual": {"type": "satz", "words": ["ich", "esse", "eis"], "at": [0.05, 0.12, 0.19], "capital": false, "endAt": 9, "floEmotion": "think"}
+    },
+    {
+      "say": "Ein Satz ist wie ein Zug. Jedes Wort sitzt in einem Wagen.",
+      "caption": "Ein Wort, ein Wagen",
+      "visual": {"type": "satz", "words": ["ich", "esse", "eis"], "at": [0.25, 0.4, 0.55], "capital": false, "endAt": 9, "floGesture": "point"}
+    },
+    {
+      "say": "Vorne fährt die Lok. Das erste Wort beginnt immer mit einem großen Buchstaben.",
+      "caption": "Satzanfang: *groß*",
+      "visual": {"type": "satz", "continue": true, "words": ["ich", "esse", "eis"], "at": [-0.1, -0.1, -0.1], "capitalAt": 0.6, "endAt": 9, "labels": {"start": "groß"}, "floGesture": "point"}
+    },
+    {
+      "say": "Hier muss also ein großes I hin.",
+      "caption": "*I*ch esse eis",
+      "visual": {"type": "satz", "continue": true, "words": ["Ich", "esse", "eis"], "at": [-0.1, -0.1, -0.1], "capitalAt": -0.1, "endAt": 9, "labels": {"start": "groß"}}
+    },
+    {
+      "say": "Ganz hinten hängt der Schlusswagen. Da kommt der Punkt hin. Der Punkt sagt: Hier ist der Satz zu Ende.",
+      "caption": "Am Ende: Punkt *.*",
+      "visual": {"type": "satz", "continue": true, "words": ["Ich", "esse", "eis"], "at": [-0.1, -0.1, -0.1], "capitalAt": -0.1, "endAt": 0.4, "labels": {"start": "groß", "end": "Punkt"}}
+    },
+    {
+      "say": "Namen für Menschen, Tiere, Pflanzen und Dinge schreiben wir auch groß. Das sind Namenwörter. Eis ist ein Ding.",
+      "caption": "Namenwörter: *groß*",
+      "visual": {"type": "satz", "continue": true, "words": ["Ich", "esse", "eis"], "at": [-0.1, -0.1, -0.1], "capitalAt": -0.1, "endAt": -0.1, "highlight": [2], "highlightAt": 0.82, "labels": {"start": "groß", "end": "Punkt"}, "floGesture": "point"}
+    },
+    {
+      "say": "Also kommt auch hier ein großes E.",
+      "caption": "Ich esse *E*is.",
+      "visual": {"type": "satz", "continue": true, "words": ["Ich", "esse", "Eis"], "at": [-0.1, -0.1, -0.1], "capitalAt": -0.1, "endAt": -0.1, "highlight": [2], "highlightAt": -0.1, "labels": {"start": "groß", "end": "Punkt"}}
+    },
+    {
+      "say": "Jetzt fährt mein Satz-Zug richtig. Ich esse Eis. Lecker!",
+      "caption": "*I*ch esse *E*is*.*",
+      "visual": {"type": "scene", "bg": "meadow", "actors": [
+        {"e": "🚂", "x": 110, "y": 58, "size": 100, "at": 0, "enter": "none", "z": 0, "moves": [{"x": -12, "y": 58, "at": 0, "until": 0.42}]},
+        {"e": "flo", "x": 30, "size": 180, "enter": "fade", "emotion": "happy", "gesture": "cheer", "z": 2},
+        {"e": "🍦", "x": 56, "size": 130, "at": 0.45, "enter": "pop", "anim": "bounce", "z": 2}
+      ]}
+    },
+    {
+      "say": "Und bei einer Frage? Dann hängt hinten ein Fragezeichen. Spielst du mit? Meine Stimme geht hoch.",
+      "caption": "Spielst du mit*?*",
+      "visual": {"type": "satz", "words": ["Spielst", "du", "mit"], "end": "?", "at": [0.3, 0.38, 0.46], "capitalAt": -0.1, "endAt": 0.3, "labels": {"end": "Frage"}}
+    },
+    {
+      "say": "Jetzt du! Welche Buchstaben müssen groß sein? Und was fehlt hinten? Was meinst du?",
+      "caption": "der hund bellt …",
+      "pause": 3,
+      "visual": {"type": "satz", "words": ["der", "hund", "bellt"], "at": [0.1, 0.16, 0.22], "capital": false, "endAt": 9, "floEmotion": "think"}
+    },
+    {
+      "say": "Vorne in der Lok kommt ein großes D.",
+      "caption": "*D*er hund bellt",
+      "visual": {"type": "satz", "continue": true, "words": ["Der", "hund", "bellt"], "at": [-0.1, -0.1, -0.1], "capitalAt": 0.3, "endAt": 9, "labels": {"start": "groß"}, "floGesture": "point"}
+    },
+    {
+      "say": "Hund ist ein Tier, also auch groß. Und hinten kommt der Punkt. Super gemacht!",
+      "caption": "*D*er *H*und bellt*.*",
+      "visual": {"type": "satz", "continue": true, "words": ["Der", "Hund", "bellt"], "at": [-0.1, -0.1, -0.1], "capitalAt": -0.1, "highlight": [1], "highlightAt": 0.0, "endAt": 0.6, "labels": {"start": "groß", "end": "Punkt"}, "floEmotion": "happy", "floGesture": "cheer"}
+    },
+    {
+      "say": "Merk dir: Vorne groß anfangen. Namenwörter auch groß. Hinten kommt ein Punkt oder ein Fragezeichen. Ab ins Quiz!",
+      "visual": {"type": "merke", "lines": ["Vorne *groß* anfangen.", "Namenwörter *groß*.", "Hinten: Punkt *.* oder *?*"], "at": [0.05, 0.25, 0.48], "icon": "🚂"}
+    }
+  ],
+  "quiz": [
+    {"q": "Wie beginnt ein Satz?", "options": [
+      {"text": "A  groß", "say": "mit einem großen Buchstaben", "correct": true},
+      {"text": ".  Punkt", "say": "mit einem Punkt", "correct": false},
+      {"text": "a  klein", "say": "mit einem kleinen Buchstaben", "correct": false}],
+     "explain": "Schau mal auf die Lok ganz vorne. Wie sieht der erste Buchstabe aus?", "model": "Ein Satz beginnt immer mit einem großen Buchstaben. Wie die Lok vorne im Zug.", "key": "Satzanfang groß", "beat": 3},
+    {"q": "Was sagt der Punkt am Ende?", "options": [
+      {"text": "🏁 Ende", "say": "Hier ist der Satz zu Ende.", "correct": true},
+      {"text": "▶️ Anfang", "say": "Hier fängt der Satz an.", "correct": false},
+      {"text": "❓ Frage", "say": "Das ist eine Frage.", "correct": false}],
+     "explain": "Schau mal, wo der Punkt steht. Er hängt ganz hinten im Zug.", "model": "Der Punkt steht im Schlusswagen. Er sagt: Hier ist der Satz zu Ende.", "key": "Punkt am Satzende", "beat": 5},
+    {"q": "Wie heißt du? Das ist eine Frage. Was kommt in den Schlusswagen?", "options": [
+      {"text": ".", "say": "ein Punkt", "correct": false},
+      {"text": "?", "say": "ein Fragezeichen", "correct": true},
+      {"text": "nichts", "say": "gar nichts", "correct": false}],
+     "explain": "Hör mal genau hin. Bei einer Frage geht die Stimme hoch.", "model": "Wie heißt du? Das ist eine Frage. Also kommt hinten ein Fragezeichen.", "key": "Fragezeichen", "beat": 9},
+    {"q": "Welches Wort schreiben wir groß?", "options": [
+      {"text": "SPIELT", "say": "spielt", "correct": false},
+      {"text": "HUND", "say": "Hund", "correct": true},
+      {"text": "SCHNELL", "say": "schnell", "correct": false}],
+     "explain": "Fast! Frag dich: Ist es ein Ding, ein Tier oder ein Mensch?", "model": "Hund ist ein Tier. Namen für Tiere schreiben wir groß.", "key": "Namenwörter groß", "beat": 6}
+  ]
+}

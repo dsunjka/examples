@@ -359,5 +359,13 @@
     return w;
   };
 
+  /**
+   * hintAfter für ctx.choices passend zur Anzahl der SICHTBAREN Kacheln
+   * (bei ctx.flow < 0 nimmt die Engine ab 4 Kacheln eine falsche weg):
+   * bei höchstens drei Kacheln kommt der Denkanstoß schon nach dem 1. Fehler,
+   * sonst bliebe für das Vormachen keine falsche Kachel mehr übrig.
+   */
+  Z.hintAfterFor = (ctx, count) => ((ctx.flow < 0 && count >= 4 ? count - 1 : count) <= 3 ? 1 : 2);
+
   LT.z1 = Z;
 })();

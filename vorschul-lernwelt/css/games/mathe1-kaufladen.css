@@ -1,0 +1,237 @@
+/* ==========================================================================
+   Flos Kaufladen (mathe1/kaufladen) – Präfix .kau-
+   ========================================================================== */
+
+.stage.kau-stage { gap: clamp(10px, 2vmin, 20px); }
+
+/* ---------- Geld ---------- */
+.kau-m {
+  --u: clamp(52px, 8.4vmin, 76px);
+  position: relative; flex: 0 0 auto;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-family: var(--font); font-weight: 700; line-height: 1;
+  user-select: none; -webkit-user-select: none;
+}
+.kau-m b { position: relative; z-index: 1; white-space: nowrap; }
+
+.kau-coin { width: calc(var(--u) * 0.9); height: calc(var(--u) * 0.9); border-radius: 50%; color: #3a3d5c; }
+.kau-coin.kau-v2 { width: var(--u); height: var(--u); }
+.kau-coin b { font-size: calc(var(--u) * 0.3); text-shadow: 0 1px 0 rgba(255, 255, 255, 0.7); }
+/* 1 €: silberne Mitte, goldener Ring */
+.kau-v1 {
+  background: radial-gradient(circle at 50% 50%, #eef1f6 0 50%, #a3abb8 51% 54%, #f4cf5d 55% 88%, #c99a17 89%);
+  box-shadow: 0 3px 0 rgba(43, 45, 66, 0.22);
+}
+/* 2 €: goldene Mitte, silberner Ring */
+.kau-v2 {
+  background: radial-gradient(circle at 50% 50%, #f8da78 0 50%, #c99a17 51% 54%, #e3e7ee 55% 88%, #959dab 89%);
+  box-shadow: 0 3px 0 rgba(43, 45, 66, 0.22);
+}
+
+.kau-bill {
+  height: calc(var(--u) * 0.88); width: calc(var(--u) * 1.62);
+  border-radius: calc(var(--u) * 0.1); color: #fff; overflow: hidden;
+  justify-content: flex-start; padding-left: calc(var(--u) * 0.14);
+  box-shadow: inset 0 0 0 3px rgba(255, 255, 255, 0.5), 0 3px 0 rgba(43, 45, 66, 0.22);
+}
+.kau-bill::before { /* „Wasserzeichen“-Kreis */
+  content: ''; position: absolute; right: 10%; top: 50%;
+  width: calc(var(--u) * 0.48); height: calc(var(--u) * 0.48); border-radius: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.28); box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.14);
+}
+.kau-bill b { font-size: calc(var(--u) * 0.38); text-shadow: 0 2px 0 rgba(0, 0, 0, 0.2); }
+.kau-bill i {
+  position: absolute; left: calc(var(--u) * 0.15); bottom: 9%;
+  font-style: normal; font-size: calc(var(--u) * 0.13); letter-spacing: 0.08em; opacity: 0.8;
+}
+.kau-v5 { background: linear-gradient(135deg, #a9bdb2, #6f8f80); }
+.kau-v10 { background: linear-gradient(135deg, #f19292, #c64848); }
+.kau-v20 { background: linear-gradient(135deg, #86aaea, #3c6cc2); }
+
+.kau-p { position: relative; display: inline-flex; flex: 0 0 auto; }
+.kau-p.kau-in { animation: kau-drop 0.28s ease-out; }
+@keyframes kau-drop { 0% { transform: translateY(-24px) scale(0.7); opacity: 0; } 100% { transform: none; opacity: 1; } }
+.kau-badge {
+  position: absolute; top: -12px; right: -10px; z-index: 2;
+  min-width: 34px; height: 28px; padding: 0 6px; border-radius: 14px;
+  background: var(--gold); color: #5a3d00; font: 700 16px/28px var(--font); text-align: center;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.18);
+  animation: kau-pop 0.25s ease-out;
+}
+@keyframes kau-pop { 0% { transform: scale(0.3); } 70% { transform: scale(1.15); } 100% { transform: scale(1); } }
+
+.kau-row {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: clamp(6px, 1.4vmin, 12px); max-width: 100%;
+}
+.kau-small { font-size: clamp(16px, 2.6vmin, 22px); font-weight: 700; color: var(--ink-soft); }
+
+/* ---------- Stufen-Intro ---------- */
+.kau-intro { display: flex; flex-wrap: wrap; justify-content: center; gap: clamp(16px, 4vmin, 40px); }
+.kau-intro-item {
+  background: var(--card); border-radius: var(--radius-l); box-shadow: var(--shadow);
+  padding: clamp(16px, 3vmin, 30px); animation: kau-pop 0.4s ease-out;
+}
+.kau-intro .kau-m { --u: clamp(90px, 18vmin, 160px); }
+
+/* ---------- Ware / Preis ---------- */
+.kau-top, .kau-scene {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: clamp(10px, 2.4vmin, 24px); max-width: 100%; flex: 0 0 auto;
+}
+.kau-good {
+  position: relative; display: flex; flex-direction: column; align-items: center;
+  background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: clamp(8px, 1.6vmin, 14px) clamp(16px, 3vmin, 26px) clamp(10px, 1.8vmin, 16px);
+}
+.kau-good-emoji { font-size: clamp(52px, 10vmin, 92px); line-height: 1.1; }
+.kau-tag {
+  margin-top: 4px; padding: 4px 14px 4px 22px; position: relative;
+  background: #fff3c4; color: #7a4d00; border: 3px solid var(--gold-dark); border-radius: 10px 999px 999px 10px;
+  font: 700 clamp(24px, 4.4vmin, 38px)/1.1 var(--font); white-space: nowrap;
+}
+.kau-tag::before { /* Loch im Preisschild */
+  content: ''; position: absolute; left: 7px; top: 50%; width: 9px; height: 9px; margin-top: -4.5px;
+  border-radius: 50%; background: #fff; box-shadow: inset 0 0 0 2px var(--gold-dark);
+}
+.kau-op { font: 700 clamp(36px, 7vmin, 60px)/1 var(--font); color: var(--area); }
+.kau-paid, .kau-flo {
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: clamp(8px, 1.6vmin, 14px) clamp(12px, 2.4vmin, 20px);
+}
+.kau-paid { flex-direction: row; flex-wrap: wrap; justify-content: center; }
+.kau-who-emoji .emoji { font-size: clamp(38px, 7vmin, 60px); }
+.kau-flo .kau-m { --u: clamp(42px, 6.6vmin, 60px); }
+.kau-flo .kau-row { max-width: min(80vw, 420px); }
+
+/* ---------- Zahlteller ---------- */
+.kau-tray {
+  position: relative; flex: 0 0 auto;
+  width: min(100%, 680px); min-height: clamp(104px, 17vmin, 150px);
+  display: flex; align-items: center; justify-content: center;
+  padding: clamp(22px, 3.4vmin, 30px) clamp(12px, 2.4vmin, 22px) clamp(12px, 2vmin, 18px);
+  background: radial-gradient(ellipse at 50% 40%, #fffaf0, #f3e3c4);
+  border: 4px solid #d9b77c; border-radius: 56px;
+  box-shadow: inset 0 4px 10px rgba(122, 77, 0, 0.12), 0 4px 0 rgba(43, 45, 66, 0.12);
+  transition: box-shadow 0.3s, border-color 0.3s;
+}
+.kau-tray.is-done { border-color: var(--ok); box-shadow: 0 0 0 5px var(--ok-soft), inset 0 4px 10px rgba(0, 0, 0, 0.06); }
+.kau-tray-lbl {
+  position: absolute; top: 4px; left: 50%; transform: translateX(-50%);
+  font-size: clamp(14px, 2.2vmin, 18px); font-weight: 700; color: #a57b30; letter-spacing: 0.04em;
+}
+.kau-tray-row { min-height: calc(clamp(52px, 8.4vmin, 76px) * 0.9); }
+.kau-tray-row .kau-p { cursor: pointer; }
+.kau-sum {
+  position: absolute; right: clamp(8px, 2vmin, 20px); bottom: -14px;
+  padding: 4px 12px; border-radius: 999px; background: var(--area); color: #fff;
+  font: 700 clamp(18px, 3vmin, 24px)/1.2 var(--font);
+  opacity: 0; transform: scale(0.6); transition: opacity 0.25s, transform 0.25s; pointer-events: none;
+}
+.kau-sum.is-on { opacity: 1; transform: scale(1); }
+
+/* ---------- Geldbeutel ---------- */
+.kau-bottom {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: clamp(10px, 2vmin, 20px); max-width: 100%; flex: 0 0 auto;
+}
+.kau-wallet {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: clamp(6px, 1.4vmin, 12px);
+  background: linear-gradient(180deg, #b5835a, #8f603c); border-radius: 22px;
+  padding: clamp(8px, 1.4vmin, 12px); box-shadow: 0 4px 0 rgba(43, 45, 66, 0.2);
+  max-width: 100%;
+}
+.kau-wgrp { display: flex; align-items: center; justify-content: center; gap: inherit; }
+.kau-wb {
+  appearance: none; border: 0; margin: 0; cursor: pointer; font: inherit;
+  min-width: 64px; min-height: 64px; padding: 6px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(255, 255, 255, 0.16); border-radius: 16px;
+  -webkit-tap-highlight-color: transparent; transition: transform 0.1s;
+}
+.kau-wb:active { transform: translateY(3px) scale(0.96); }
+.kau-wb:focus-visible { outline: 4px solid #2b7bff; outline-offset: 2px; }
+.kau-wb.hint-glow { background: rgba(255, 236, 160, 0.6); }
+
+.kau-actions { display: flex; align-items: center; gap: clamp(8px, 1.6vmin, 14px); }
+.kau-tool, .kau-pay {
+  min-height: 64px; min-width: 64px; padding: 8px 14px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-size: clamp(20px, 3.2vmin, 28px);
+}
+.kau-tool { background: var(--card); color: var(--ink); }
+.kau-tool .emoji { font-size: 28px; }
+.kau-pay { padding: 8px 22px; }
+.kau-pay-mark { font-size: 1.2em; }
+
+/* ---------- Zählen ---------- */
+.kau-countcard { max-width: min(100%, 720px); padding: clamp(22px, 3.6vmin, 34px) clamp(16px, 3vmin, 30px); }
+.kau-count { gap: clamp(10px, 2vmin, 18px); }
+.kau-count .kau-m { --u: clamp(58px, 10vmin, 92px); }
+.kau-num .tile-text { font-size: clamp(28px, 5vmin, 44px); white-space: nowrap; }
+.tile.small.kau-num { --tile: clamp(76px, 13vmin, 116px); }
+
+/* ---------- Vergleichen ---------- */
+.kau-purses { align-items: stretch; }
+.tile.kau-purse-tile {
+  width: auto; height: auto; min-width: min(100%, 150px); max-width: min(100%, 440px);
+  min-height: 96px; padding: 12px 16px;
+}
+.kau-purse { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.kau-purse-who { display: flex; align-items: center; gap: 6px; }
+.kau-purse-who .emoji { font-size: clamp(34px, 6vmin, 52px); }
+.kau-purse-name { font-size: clamp(20px, 3.2vmin, 28px); font-weight: 700; color: var(--ink); }
+.kau-purse-row { padding-top: 6px; }
+.kau-purse-row .kau-m { --u: clamp(44px, 7vmin, 66px); }
+.kau-equal .emoji { font-size: clamp(36px, 6vmin, 54px); }
+.tile.kau-equal-tile { justify-content: center; }
+
+/* ---------- Rückgeld ---------- */
+.kau-backbox {
+  display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px;
+  min-height: 84px; min-width: min(100%, 260px); padding: 10px 18px;
+  background: var(--card); border: 3px dashed var(--line); border-radius: var(--radius);
+}
+.kau-backbox.is-done { border-style: solid; border-color: var(--ok); background: var(--ok-soft); }
+.kau-backbox .kau-m { --u: clamp(46px, 7.4vmin, 66px); }
+.kau-q { font: 700 clamp(36px, 6vmin, 52px)/1 var(--font); color: var(--area); }
+.kau-steps { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px; max-width: min(100%, 640px); }
+.kau-steps:empty { display: none; }
+.kau-step {
+  min-width: 34px; height: 34px; padding: 0 4px; border-radius: 8px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--card); color: var(--ink-faint); font: 700 18px/1 var(--font);
+  box-shadow: 0 2px 0 rgba(43, 45, 66, 0.12); transition: background 0.2s, color 0.2s;
+}
+.kau-step.is-start { background: #fff3c4; color: #7a4d00; }
+.kau-step.is-on { background: var(--area); color: #fff; }
+.kau-steps { padding-top: 10px; row-gap: 12px; }
+.kau-step { position: relative; }
+/* Schritt-Nummer (1, 2, 3 …): gezählt werden die Sprünge, nicht die Startzahl */
+.kau-hop {
+  position: absolute; top: -9px; right: -5px; min-width: 18px; height: 18px; padding: 0 3px;
+  border-radius: 9px; background: #fff3c4; color: #7a4d00; font: 800 12px/18px var(--font);
+  font-style: normal; text-align: center; box-shadow: 0 1px 0 rgba(43, 45, 66, 0.18);
+  opacity: 0; transform: scale(0.6); transition: opacity 0.2s, transform 0.2s;
+}
+.kau-step.is-on .kau-hop { opacity: 1; transform: none; }
+
+/* ---------- kleine Bildschirme ---------- */
+@media (max-width: 480px) {
+  .kau-m { --u: 54px; }
+  .kau-good-emoji { font-size: 50px; }
+  .kau-tag { font-size: 24px; }
+  .kau-wallet { gap: 4px; padding: 6px; }
+  .kau-wb { padding: 4px; }
+  .kau-tray { border-radius: 36px; }
+  .kau-count .kau-m { --u: 60px; }
+  .kau-purse-row .kau-m { --u: 42px; }
+  .kau-flo .kau-m { --u: 40px; }
+}
+@media (max-height: 640px) {
+  .kau-good-emoji { font-size: 44px; }
+  .kau-tray { min-height: 92px; }
+}

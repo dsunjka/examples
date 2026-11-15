@@ -9,8 +9,14 @@
      („Richtig, das ist das Dreieck! Es hat drei Ecken.“). Tippt das Kind
      daneben, sagt Flo, was es angetippt hat („Das ist ein Oval.“) – so wird
      auch der Fehler zum Lernanlass.
-   - Hilfe nach 2 Fehlversuchen: Flo beschreibt die Eigenschaften der Form
-     (Ecken, Seiten, rund/länglich) und hebt die richtige Form hervor.
+   - Hilfe-Leiter: 1. Fehler → Flo benennt die angetippte Form mit ihrem
+     Merkmal („Das ist ein Oval. Es ist rund, aber länglich.“); 2. Fehler →
+     Denkanstoß mit den Eigenschaften der gesuchten Form (Ecken, Seiten,
+     rund/länglich), eine falsche Form verschwindet; 3. Fehler → Flo zeigt
+     die Form und nennt ihr Merkmal.
+   - Lerninhalt = die gesuchte Form (Schlüssel 'Kreis'), auf Stufe 4 das
+     Alltagsding ('Keks'), über ctx.item – unsichere Formen kommen wieder.
+     Stufe je Aufgabe aus ctx.taskLevel (Knobel-/Entlastungsaufgaben).
    - Progression (konkret → bildlich → abstrakt):
        1  drei Grundformen (Kreis, Dreieck, Quadrat)
        2  sieben Formen, mit ähnlichen Paaren (Quadrat ↔ Rechteck, Kreis ↔ Oval)
@@ -75,7 +81,7 @@
     { e: '🌕', w: 'Vollmond', a: 'der', shape: 'kreis', say: 'Der Vollmond sieht aus wie ein Kreis.' },
     { svg: 'teller', w: 'Teller', a: 'der', shape: 'kreis', say: 'Der Teller ist rund wie ein Kreis.' },
     // Dreieck
-    { e: '🍕', w: 'Pizzastück', a: 'das', shape: 'dreieck', rot: 180, say: 'Das Pizzastück hat drei Ecken – wie ein Dreieck.' },
+    { e: '🍕', w: 'Pizzastück', a: 'das', shape: 'dreieck', rot: 180, say: 'Das Pizzastück hat drei Ecken wie ein Dreieck.' },
     { e: '⚠️', w: 'Warnschild', a: 'das', shape: 'dreieck', say: 'Das Warnschild ist ein Dreieck.' },
     { e: '⛺', w: 'Zelt', a: 'das', shape: 'dreieck', say: 'Das Zelt sieht aus wie ein Dreieck.' },
     { e: '🚩', w: 'Fähnchen', a: 'das', shape: 'dreieck', rot: 90, sc: 0.6, say: 'Das Fähnchen ist ein Dreieck.' },
@@ -307,9 +313,9 @@
 
   /** Stufen 1–3: „Tippe auf den Kreis!“ */
   async function tapShape(ctx) {
-    const lv = ctx.level;
+    const lv = ctx.taskLevel;
     const pool = lv === 1 ? L1 : lv === 2 ? L2 : L3;
-    const target = U.pickFresh('formen-target-' + lv, pool, lv === 1 ? 1 : 3);
+    const target = ctx.item(pool, (k) => FM.SHAPES[k].name, { avoid: lv === 1 ? 1 : 3 });
     let kinds;
     if (lv === 1) kinds = L1.slice();
     else {
@@ -345,22 +351,26 @@
       className: 'formen-choices',
       size: 'large',
       correctSay: (it) => {
+        // nach dem Vormachen kurz bestätigen (das Merkmal wurde gerade genannt)
+        if (ctx.modelShown) return `Richtig, das ist ${FM.def(target)}!`;
         let s = `Richtig, das ist ${FM.def(target)}! ${FM.SHAPES[target].fact}`;
         if (lv === 3 && it.v.turned) s += ` Auch gedreht bleibt ${FM.indef(target)} ${FM.indef(target)}!`;
-        else if (lv === 3 && it.v.odd) s += ' Jedes Dreieck hat drei Ecken – egal, wie es aussieht.';
-        else if (lv === 3 && it.v.sized) s += ' Ob groß oder klein – die Form bleibt gleich.';
+        else if (lv === 3 && it.v.odd) s += ' Jedes Dreieck hat drei Ecken, egal, wie es aussieht.';
+        else if (lv === 3 && it.v.sized) s += ' Ob groß oder klein, die Form bleibt gleich.';
         return s;
       },
-      wrongSay: (it) => `Das ist ${FM.indef(it.kind)}. Wo ist ${FM.def(target)}?`,
-      onWrong: async (it, tile, n) => {
-        if (n === 2) await ctx.say(FM.SHAPES[target].hint);
-      },
+      // 1. Hilfe: die angetippte Form benennen und ihr Merkmal nennen
+      explain: (it) => `Das ist ${FM.indef(it.kind)}. ${FM.SHAPES[it.kind].fact} Wir suchen ${FM.acc(target)}.`,
+      // 2. Hilfe: Eigenschaften der gesuchten Form als Denkanstoß
+      hintSay: () => FM.SHAPES[target].hint,
+      // 3. Hilfe: zeigen und begründen
+      modelSay: () => `Schau, hier ist ${FM.def(target)}. ${FM.SHAPES[target].fact}`,
     });
   }
 
   /** Stufe 4: Formen im Alltag – „Welche Form hat das Fenster?“ */
   async function everyday(ctx) {
-    const thing = U.pickFresh('formen-thing', THINGS, 8, (t) => t.w);
+    const thing = ctx.item(THINGS, (t) => t.w, { avoid: 8 });
     const target = thing.shape;
     // Ablenker: alle Formen, die das Ding NICHT ist (ein quadratisches Fenster ist
     // auch ein Rechteck → „Rechteck“ wird dann nicht als falsche Antwort angeboten)
@@ -385,23 +395,28 @@
     await ctx.choices(items, {
       sayButton: true,
       className: 'formen-choices',
-      correctSay: `Richtig! ${thing.say}`,
-      wrongSay: (it) => `Das ist ${FM.indef(it.kind)}. Schau dir ${defAcc(thing)} noch mal genau an.`,
-      onWrong: async (it, tile, n) => {
-        if (n === 2) {
-          // Hilfe: Flo „malt“ die Form gestrichelt um das Ding herum
-          const ol = FM.shape(target, null, { outline: true, rot: thing.rot || 0, scale: thing.sc || 1, variant: thing.variant, stroke: '#ff5fa2', strokeWidth: 5, cls: 'formen-outline' });
-          view.appendChild(ol);
-          await ctx.say(`Schau, ich male die Form nach. ${FM.SHAPES[target].hint}`);
+      correctSay: () => (ctx.modelShown ? `Richtig, ${FM.def(target)}!` : `Richtig! ${thing.say}`),
+      // 1. Hilfe: angetippte Form mit Merkmal benennen, zurück zum Ding lenken
+      explain: (it) => `Das ist ${FM.indef(it.kind)}. ${FM.SHAPES[it.kind].fact} Schau dir ${defAcc(thing)} noch mal genau an.`,
+      // 2. Hilfe: Flo „malt“ die Form gestrichelt um das Ding herum (Denkanstoß, noch ohne Namen)
+      hintSay: () => {
+        if (!view.querySelector('.formen-outline')) {
+          view.appendChild(FM.shape(target, null, { outline: true, rot: thing.rot || 0, scale: thing.sc || 1, variant: thing.variant, stroke: '#ff5fa2', strokeWidth: 5, cls: 'formen-outline' }));
         }
+        return target === 'kreis' || target === 'oval'
+          ? 'Schau, ich male die Form nach. Ist sie ganz rund oder länglich?'
+          : 'Schau, ich male die Form nach. Zähl die Ecken und schau dir die Seiten an.';
       },
+      // 3. Hilfe: Lösung zeigen und begründen
+      modelSay: () => `Schau: ${thing.say}`,
     });
   }
 
   /** Stufe 5: „Finde alle Dreiecke!“ im Formen-Bild. */
   async function findAll(ctx) {
     const pic = U.pickFresh('formen-pic', PICTURES, 2, (p) => p.id);
-    const target = U.pickFresh('formen-pic-target-' + pic.id, targetsOf(pic), 1);
+    // Lerninhalt: die gesuchte Form (gleiche Schlüssel wie auf Stufe 1–3)
+    const target = ctx.item(targetsOf(pic), (k) => FM.SHAPES[k].name, { fresh: 'formen-pic-target-' + pic.id, avoid: 1 });
     const n = pic.parts.filter((p) => p.k === target).length;
 
     // Zähler: ein Feld je gesuchter Form
@@ -432,7 +447,6 @@
     const targets = nodes.filter((g) => g._part.k === target);
     let found = 0;
     let busy = false;
-    let errors = 0;
 
     const markNext = () => {
       nodes.forEach((g) => ctx.markTest(g, false));
@@ -467,15 +481,18 @@
             }
           } else {
             busy = true;
-            errors++;
             g.classList.remove('formen-shake');
             void g.getBoundingClientRect();
             g.classList.add('formen-shake');
-            await ctx.wrong(null, { say: `Das ist ${FM.indef(g._part.k)}. Wir suchen ${pluralWord}.` });
-            if (errors >= 2) {
+            // Hilfe-Leiter über ctx.helpStep: 1 erklären, 2 Denkanstoß, 3 zeigen
+            await ctx.wrong(null, { say: `Das ist ${FM.indef(g._part.k)}. ${FM.SHAPES[g._part.k].fact} Wir suchen ${pluralWord}.` });
+            if (!ctx.active) return;
+            if (ctx.helpStep === 2) await ctx.say(FM.SHAPES[target].hint);
+            else if (ctx.helpStep >= 3) {
               const next = targets.find((x) => !x._found);
               if (next && !next.classList.contains('formen-hint')) {
                 next.classList.add('formen-hint');
+                ctx.modelShown = true;
                 await ctx.say(`Schau, hier ist noch ${FM.indef(target)}.`);
               }
             }
@@ -508,8 +525,8 @@
     },
 
     async task(ctx) {
-      if (ctx.level <= 3) return tapShape(ctx);
-      if (ctx.level === 4) return everyday(ctx);
+      if (ctx.taskLevel <= 3) return tapShape(ctx);
+      if (ctx.taskLevel === 4) return everyday(ctx);
       return findAll(ctx);
     },
   });

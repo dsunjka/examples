@@ -1,11 +1,12 @@
-# 🦊 Lernwelt mit Flo – interaktives Lerntool für Vorschulkinder
+# 🦊 Lernwelt mit Flo – interaktives Lerntool für Vorschul- und Schulkinder
 
-Eine umfangreiche, kindgerechte Lern-App für Kinder im letzten Kindergartenjahr (5–6 Jahre),
-die **ohne Lesefähigkeit** bedienbar ist: Alle Aufgaben liest Flo, der Fuchs, vor.
+Eine umfangreiche, kindgerechte Lern-App für Kinder im letzten Kindergartenjahr (5–6 Jahre)
+bis zum Ende der ersten Klasse, die **ohne Lesefähigkeit** bedienbar ist: Alle Aufgaben liest Flo, der Fuchs, vor.
 In sieben Lernwelten gibt es **36 Lernspiele und 12 Wissensreisen** mit jeweils mehreren
 Schwierigkeitsstufen, die sich automatisch an das Kind anpassen. **Flos Reise** führt
 Schritt für Schritt über einen Lernpfad mit acht Kapitel-Orten, im **Forscherbuch** sammelt
-das Kind Wissenskarten.
+das Kind Wissenskarten. Für Schulkinder gibt es **drei Schul-Inseln mit 20 weiteren Spielen**,
+**Flos Kino mit 12 Erklärfilmen** und **Flos Reise Teil 2**.
 
 - 🔌 **Ohne Installation, ohne Internet:** `index.html` im Browser öffnen – fertig.
 - 🔒 **Ohne Werbung, Tracker, Konten oder Käufe.** Alle Daten bleiben auf dem Gerät.
@@ -140,6 +141,42 @@ Gesammelte Karten sind bunt und werden beim Antippen vorgelesen, fehlende zeigen
 verraten, in welcher Reise es sie gibt. Erreichbar über die Weltkarte und die Forscherwelt-Insel.
 
 ---
+
+## 🎒 Schule – Brücke von der Vorschule bis Ende Klasse 1
+
+Für Kinder, die die Kita-Inhalte sicher beherrschen, gibt es auf der Weltkarte eine eigene Reihe
+**„Schule – für Schulkinder“** mit drei Schul-Inseln, Flos Kino und **Flos Reise Teil 2**.
+Alle Spiele haben fünf Stufen (Stufe 1 knüpft an die Vorschule an, Stufe 5 entspricht dem Stand
+am Ende von Klasse 1, orientiert an den KMK-Bildungsstandards und den Lehrplänen der Länder) und
+nutzen die adaptive Hilfe-Leiter und die Wiederholung nach Lernkartei-Prinzip.
+
+| Insel | Spiele |
+| --- | --- |
+| 🧮 **Rechenschule** | Zehnerfeld-Blitz (Kraft der Fünf), Zahlen-Nachbarn (Zahlenraum 20, Ausblick 100), Rechenrakete (Analogie 3+4 → 13+4), Über die Zehner-Brücke (Zehnerübergang), Zauberspiegel (Verdoppeln/Halbieren), Aufgabenfamilie (Tausch-/Umkehraufgaben), Zahlenmauer (inkl. Rechendreieck, schöne Päckchen), Rechen-Theater (Sachaufgaben), Flos Kaufladen (Geld bis 20 €) |
+| 📚 **Leseschule** | Silben-Lesen (Silbenmethode), Schreibwerkstatt (Anlauttabelle, lautgetreues Schreiben), Hörkönig (An-/In-/Auslaut, Laute zählen und tauschen), Blitzwörter (Grundwortschatz), Satzbaumeister (Satzanfang groß, Punkt/Fragezeichen), Lesedetektiv (Leseverständnis), Wörter-Sortierer (Namen-, Tun-, Wiewort, Einzahl/Mehrzahl) |
+| 🔬 **Sachkunde-Schule** | Sicher zur Schule (Verkehrszeichen, Notruf 112), Körper-Labor (Sinne, Zähne/KAI, Ernährung), Schwimmt oder sinkt? (Vermuten – Versuch – Erklären), Müll-Profi (Trennen und Vermeiden) |
+
+### 🎬 Flos Kino – Erklärfilme
+
+Zwölf kurze Erklärfilme (je 1–1,5 Minuten), in denen Flo ein Thema anschaulich erklärt – mit
+derselben natürlichen Stimme wie in der App: Die Kraft der Zehn, Flo hüpft über die Zehn,
+Verdoppeln wie im Spiegel, Wie spät ist es?, Flos Geldbeutel, Silben schwingen, So schreibst du
+ein Wort, Der Satz-Zug, Sicher über die Straße, Warum schlafen Igel im Winter?, Schwimmt das oder
+sinkt das?, Zähne putzen mit KAI. Nach jedem Film stellt Flo 3–4 Verständnisfragen (mit
+„Nochmal ansehen“ an der passenden Stelle) und bietet das passende Übungsspiel an.
+
+Die Filme liegen als kleine MP4-Dateien (je ≈ 1,5–2 MB) in `videos/`. Sie werden lokal mit
+[Remotion](https://www.remotion.dev/) aus JSON-Drehbüchern erzeugt (`tools/video/`, Anleitung
+in `tools/video/README.md`): `cd tools/video && npm install && node render.mjs <film-id>`, danach
+`node build-films-data.mjs` (schreibt `js/data/films.js`).
+
+### 🗺️ Flos Reise Teil 2 – „Flos Schulabenteuer“
+
+Sieben neue Kapitel (Erster Schultag, Bücherei, Marktplatz, Forscherlabor, Schulgarten,
+Klassenausflug, Schulfest) mit je neun Stationen: Filmstationen direkt vor dem passenden
+Übungsspiel, die neuen Schulspiele mit von Kapitel zu Kapitel steigender Stufe und einige
+Kita-Spiele auf höherer Stufe. Teil 2 öffnet sich automatisch, wenn Teil 1 abgeschlossen ist,
+oder über die Einstellung **Lernstufe: Klasse 1** im Elternbereich.
 
 ## Das pädagogische Konzept
 

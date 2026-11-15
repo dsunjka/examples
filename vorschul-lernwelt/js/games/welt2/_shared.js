@@ -13,6 +13,7 @@
    LT.w2.sceneTile(node, label)      → Kachel-Inhalt (Szene + Beschriftung)
    LT.w2.clock(h, m, opts)           → analoge Uhr (SVG) mit setTime()
    LT.w2.timeWords(h, m)             → { say: 'halb vier', text: 'halb 4' }
+   LT.w2.hintAfter(ctx, n)           → hintAfter für ctx.choices je nach Kachelzahl
    ========================================================================== */
 (function () {
   'use strict';
@@ -229,6 +230,10 @@
       el('span.w2-leg', el('i.w2-leg-h'), el('span', 'Stunde')),
       el('span.w2-leg', el('i.w2-leg-m'), el('span', 'Minuten')));
   };
+
+  /** Hilfe-Leiter für ctx.choices: bei bis zu 3 Kacheln gleich beim 1. Fehler ein Denkanstoß
+      (sonst bliebe nach 2 Fehlern nichts mehr zum Nachdenken), bei mehr Kacheln nach 2 Fehlern. */
+  W.hintAfter = (ctx, count) => ((ctx.flow < 0 && count >= 4 ? count - 1 : count) <= 3 ? 1 : 2);
 
   LT.w2 = W;
 })();

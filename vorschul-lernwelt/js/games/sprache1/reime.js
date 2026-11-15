@@ -9,9 +9,11 @@
      Kind nicht, ob 🐰 „Hase“ oder „Kaninchen“ heißen soll). Jede Kachel hat
      zusätzlich einen 🔊-Knopf.
    - Nach jeder Antwort wird die Erkenntnis ausgesprochen: „Maus reimt sich
-     auf Haus.“ Bei Fehlern hört das Kind den direkten Klangvergleich
-     („Maus – Kuh. Das reimt sich nicht.“), nach 2 Fehlversuchen wird die
-     Lösung hervorgehoben und vorgesprochen.
+     auf Haus.“ Hilfe-Leiter: 1. Fehler → Klangvergleich mit dem gewählten
+     Wort („Maus – Kuh. Das klingt am Ende anders.“), 2. → Denkanstoß („Sprich
+     die Wörter leise nach und hör genau auf das Ende …“), 3. → Flo zeigt und
+     begründet die Lösung. Reimpaare/-gruppen sind Lerninhalte für ctx.item
+     (Schlüssel „Haus – Maus“) und kommen nach Fehlern wieder.
    - Kuratierte Reimgruppen (Standardaussprache geprüft: gleicher betonter
      Vokal inkl. Länge und gleicher Auslaut). Ablenker stammen immer aus einer
      Gruppe mit ANDEREM Vokal – so entstehen keine „Fast-Reime“ (Mais/Hai),
@@ -78,6 +80,26 @@
     });
   });
   const groupIdx = GROUPS.map((g, i) => i);
+  const groupKey = (gi) => GROUPS[gi].items.map((x) => x.w).join(' – ');
+
+  /* Reimpaare (ungeordnet) als Lerninhalte für ctx.item – Schlüssel „Haus – Maus“.
+     MONO: beide Wörter einsilbig (Stufen 1–2), MULTI: mindestens ein längeres Wort (Stufe 4). */
+  const MONO_PAIRS = [];
+  const MULTI_PAIRS = [];
+  GROUPS.forEach((g) => {
+    for (let i = 0; i < g.items.length; i++) {
+      for (let k = i + 1; k < g.items.length; k++) {
+        const pair = [g.items[i], g.items[k]];
+        if (pair.every((x) => x.n === 1)) MONO_PAIRS.push(pair);
+        else MULTI_PAIRS.push(pair);
+      }
+    }
+  });
+  const pairKey = (p) => p.map((x) => x.w).join(' – ');
+
+  /** Aufgabenart je Stufe (die Bedienung wechselt innerhalb einer Runde nie, s. S.lv) */
+  const KIND = { 1: 'what', 2: 'what', 3: 'odd', 4: 'what', 5: 'pairs' };
+  const kindOf = (lv) => KIND[lv];
 
   const INTRO = {
     1: 'Wir suchen Reime! Wörter reimen sich, wenn sie am Ende gleich klingen – wie Maus und Haus.',
@@ -122,34 +144,40 @@
   /* ------------------------------------------------------------------
      Stufen 1, 2, 4: Was reimt sich auf …?
      ------------------------------------------------------------------ */
-  async function whatRhymes(ctx, multi) {
+  async function whatRhymes(ctx, lv) {
+    const multi = lv === 4;
+    // Knobel-Aufgabe innerhalb der Aufgabenart: ein Ablenker mehr; leichter: einer weniger
+    const extra = ctx.flow > 0 && lv === ctx.level ? 1 : 0;
     let target, rhyme, dis;
     if (!multi) {
-      const monoGroups = groupIdx.filter((i) => GROUPS[i].items.filter((x) => x.n === 1).length >= 2);
-      const gi = U.pickFresh('reime-mono', monoGroups, 6);
-      [target, rhyme] = U.sample(GROUPS[gi].items.filter((x) => x.n === 1), 2);
-      dis = distractors(target.v, ctx.level === 1 ? 1 : 2, (y) => y.n === 1);
+      const pair = ctx.item(MONO_PAIRS, pairKey);
+      [target, rhyme] = U.shuffle(pair);
+      dis = distractors(target.v, (lv === 1 ? 1 : 2) + extra, (y) => y.n === 1);
     } else {
-      const targets = ALL.filter((x) => x.n >= 2);
-      target = U.pickFresh('reime-multi', targets, 8, (x) => x.w);
-      const partners = GROUPS[target.g].items.filter((x) => x !== target);
-      rhyme = U.pick(partners.filter((x) => x.n >= 2).length && U.chance(0.75) ? partners.filter((x) => x.n >= 2) : partners);
+      const pair = ctx.item(MULTI_PAIRS, pairKey);
+      // Zielwort ist (wie im Bild gezeigt) ein längeres Wort
+      const longs = pair.filter((x) => x.n >= 2);
+      target = U.pick(longs);
+      rhyme = pair.find((x) => x !== target);
       // Ein Ablenker hat die gleiche Länge wie das Reimwort (keine Längen-Abkürzung)
       const d1 = distractors(target.v, 1, (y) => y.n === rhyme.n, [target.g]);
-      const d2 = distractors(target.v, 1, (y) => y.n >= 2, [target.g].concat(d1.map((d) => d.g)));
+      const n2 = (ctx.flow < 0 ? 0 : 1) + extra;
+      const d2 = distractors(target.v, n2, (y) => y.n >= 2, [target.g].concat(d1.map((d) => d.g)));
       dis = d1.concat(d2);
     }
     const card = S.card(target);
     ctx.stage.appendChild(card);
     const items = [rhyme].concat(dis).map((x) => ({ content: x.e, say: x.w, correct: x === rhyme, x }));
     await askChoices(ctx, items, `Was reimt sich auf ${target.w}?`, {
-      correctSay: (it) => S.vary('reime-ok', [
+      correctSay: (it) => S.proc(ctx, S.vary('reime-ok', [
         `Richtig! ${target.w} reimt sich auf ${it.x.w}.`,
         `Genau! ${target.w} – ${it.x.w}. Das reimt sich!`,
         `Super! ${target.w} und ${it.x.w} klingen am Ende gleich.`,
-      ]),
-      wrongSay: (it) => `${target.w} – ${it.x.w}. Das reimt sich nicht. Hör noch mal genau hin!`,
-      hintSay: () => `Hör mal: ${target.w} – ${rhyme.w}. Das klingt am Ende gleich!`,
+      ]), `Richtig, du hast genau auf das Ende gehört: ${target.w} – ${it.x.w}.`),
+      // Hilfe-Leiter: Klangvergleich → Denkanstoß (aufs Ende hören) → vormachen
+      explain: (it) => `${target.w} – ${it.x.w}. Das klingt am Ende anders.`,
+      hintSay: () => `Sprich die Wörter leise nach und hör genau auf das Ende: ${target.w}.`,
+      modelSay: () => `Schau: ${target.w} – ${rhyme.w}. Beide klingen am Ende gleich. Das reimt sich!`,
       onCorrect: () => LT.ui.animate(card, 'joy'),
     });
   }
@@ -158,9 +186,10 @@
      Stufe 3: Welches Wort reimt sich nicht?
      ------------------------------------------------------------------ */
   async function oddOneOut(ctx) {
-    const gi = U.pickFresh('reime-odd', groupIdx, 8);
+    const gi = ctx.item(groupIdx, groupKey);
     const g = GROUPS[gi];
-    const k = g.items.length >= 3 && U.chance(0.6) ? 3 : 2;
+    // leichter: nur zwei Reimwörter; Knobel-Aufgabe: möglichst drei
+    const k = g.items.length >= 3 && ctx.flow >= 0 && (ctx.flow > 0 || U.chance(0.6)) ? 3 : 2;
     const rhymers = U.sample(g.items, k);
     const len = rhymers[0].n;
     let odd = distractors(g.v, 1, (y) => y.n === len, [gi])[0] || distractors(g.v, 1, () => true, [gi])[0];
@@ -168,12 +197,16 @@
     ctx.stage.appendChild(el('div.s1-head', U.emoji('👂'), el('span', 'Was reimt sich nicht?')));
     const names = rhymers.map((x) => x.w);
     await askChoices(ctx, items, 'Hör gut zu! Welches Wort reimt sich nicht?', {
-      correctSay: () => `Richtig! ${join(names)} reimen sich – ${odd.w} nicht.`,
-      wrongSay: (it) => {
+      correctSay: () => S.proc(ctx, S.vary('reime-odd-ok', [
+        `Richtig! ${join(names)} reimen sich – ${odd.w} nicht.`,
+        `Genau! ${odd.w} klingt am Ende anders.`,
+      ]), `Richtig, du hast genau auf das Ende gehört: ${odd.w} reimt sich nicht.`),
+      explain: (it) => {
         const other = rhymers.find((x) => x !== it.x);
-        return `${it.x.w} – ${other.w}. Die reimen sich doch! Welches Wort klingt am Ende anders?`;
+        return `${it.x.w} – ${other.w}. Die zwei reimen sich. Wir suchen das Wort, das am Ende anders klingt.`;
       },
-      hintSay: () => `Hör mal: ${join(names)}. Und ${odd.w}?`,
+      hintSay: () => 'Sprich jedes Wort leise nach. Welches klingt am Ende anders als die anderen?',
+      modelSay: () => `Schau: ${join(names)} reimen sich. ${odd.w} klingt am Ende anders.`,
     });
   }
 
@@ -181,13 +214,15 @@
      Stufe 5: Reimpaare finden (eigene Bedienung)
      ------------------------------------------------------------------ */
   async function pairs(ctx) {
-    // drei Gruppen mit verschiedenen Vokalen → keine Verwechslungsgefahr
-    const chosen = [];
+    // drei Gruppen mit verschiedenen Vokalen → keine Verwechslungsgefahr;
+    // die erste Gruppe wählt ctx.item (Wiederholung früherer Fehler)
+    const chosen = [ctx.item(groupIdx, groupKey)];
     for (const gi of U.shuffle(groupIdx)) {
       if (chosen.length >= 3) break;
       if (chosen.some((c) => GROUPS[c].v === GROUPS[gi].v)) continue;
       chosen.push(gi);
     }
+    const missed = new Set(); // Gruppen, bei denen etwas schiefging
     const cards = U.shuffle(chosen.flatMap((gi) => U.sample(GROUPS[gi].items, 2)));
     const head = el('div.s1-head', U.emoji('🎵'), el('span', 'Finde die Reimpaare!'));
     const grid = el('div.s1-pairs');
@@ -218,7 +253,8 @@
       if (next) ctx.markTest(next, true);
     }
 
-    async function help() {
+    /** Hilfe-Stufe 3: Flo wählt ein Bild aus und zeigt den Reimpartner. */
+    async function model() {
       const a = sel || open()[0];
       const b = partnerOf(a);
       if (!a || !b) return;
@@ -226,7 +262,8 @@
       sel = a;
       a.classList.add('s1-sel');
       ctx.hint(b);
-      await ctx.say(`Ich helfe dir: Was reimt sich auf ${a._c.w}?`);
+      ctx.modelShown = true;
+      await ctx.say(`Schau: ${a._c.w} – ${b._c.w}. Beide klingen am Ende gleich. Tippe ${b._c.w} an!`);
     }
 
     tiles.forEach((t) => {
@@ -262,6 +299,7 @@
           });
           sel = null;
           found++;
+          ctx.track(groupKey(a._c.g), !missed.has(a._c.g));
           await ctx.correct(b, { say: `${a._c.w} – ${b._c.w}. Das reimt sich!` });
           a.classList.add('is-correct');
           if (found >= 3) {
@@ -270,13 +308,21 @@
             return;
           }
         } else {
-          await ctx.wrong(null, { say: `${a._c.w} – ${b._c.w}. Das reimt sich nicht.` });
+          missed.add(a._c.g);
+          missed.add(b._c.g);
+          // Stufe 1: Klangvergleich
+          await ctx.wrong(null, { say: `${a._c.w} – ${b._c.w}. Das klingt am Ende anders.` });
           LT.ui.animate(a, 'shake');
           LT.ui.animate(b, 'shake');
           a.classList.remove('s1-sel');
           b.classList.remove('s1-sel');
           sel = null;
-          if (ctx.wrongCount >= 2) await help();
+          if (ctx.helpStep === 2) {
+            // Stufe 2: Denkanstoß (Strategie, nicht die Lösung)
+            await ctx.say('Tippe ein Bild an und sprich das Wort leise nach. Dann such ein Wort, das am Ende genauso klingt.');
+          } else if (ctx.helpStep >= 3) {
+            await model();
+          }
         }
         busy = false;
         updateMark();
@@ -320,9 +366,10 @@
     },
 
     async task(ctx) {
-      if (ctx.level === 5) return pairs(ctx);
-      if (ctx.level === 3) return oddOneOut(ctx);
-      return whatRhymes(ctx, ctx.level === 4);
+      const lv = S.lv(ctx, kindOf);
+      if (lv === 5) return pairs(ctx);
+      if (lv === 3) return oddOneOut(ctx);
+      return whatRhymes(ctx, lv);
     },
   });
 })();

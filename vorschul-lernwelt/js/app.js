@@ -174,9 +174,13 @@
     let adv = P.profile.adventure;
     const valid = adv && adv.date === today && adv.games.every((id) => LT.games[id]);
     if (!valid) {
+      // Schulspiele (Klasse 1) nur, wenn die Schul-Reihe frei ist; Erklärfilme nie
+      // (die stehen in Flos Kino und auf Flos Reise Teil 2).
+      const school = schoolUnlocked();
+      const k1 = P.settings().stage === 'klasse1';
       const scored = LT.gameOrder
         .map((id) => LT.games[id])
-        .filter((g) => g.type !== 'free')
+        .filter((g) => g.type !== 'free' && g.area !== 'kino' && (school || !isSchool(LT.areaById(g.area))))
         .map((g) => {
           const rec = P.profile.games[g.id];
           const st = P.status(g.id);
@@ -187,6 +191,8 @@
           if (rec && rec.lastPlayed) w += Math.min(4, (Date.now() - rec.lastPlayed) / 86400000);
           // Bereiche mit Basiskompetenzen etwas häufiger
           if (g.area === 'zahlen' || g.area === 'sprache') w += 1;
+          // Schulkinder: Schulstoff bevorzugen
+          if (k1 && isSchool(LT.areaById(g.area))) w += 3;
           return { g, w };
         })
         .sort((a, b) => b.w - a.w);
@@ -315,20 +321,40 @@
   }
   A.openBook = openBook;
 
+  /* ------------------------------------------------------------------
+     Schule (Klasse 1): Lernstufe und Freischaltung
+     ------------------------------------------------------------------ */
+  const isSchool = (a) => !!(a && a.grade === 1);
+  /** Schul-Reihe frei: Lernstufe „Klasse 1“ oder Flos Reise Teil 1 geschafft. */
+  function schoolUnlocked() {
+    if (LT.reise && LT.reise.schoolUnlocked) return LT.reise.schoolUnlocked();
+    return P.settings().stage === 'klasse1';
+  }
+  A.schoolUnlocked = schoolUnlocked;
+  /** Inseln gruppiert: Kita-Inseln und „Klasse 1“ (für den Elternbereich). */
+  function areaGroups() {
+    return [
+      { title: null, areas: LT.areas.filter((a) => !isSchool(a)) },
+      { title: '🎒 Klasse 1', areas: LT.areas.filter(isSchool) },
+    ].filter((g) => g.areas.some((a) => LT.gamesOfArea(a.id).length));
+  }
+
   function renderQuest() {
     const box = el('div.home-quest');
     if (LT.reise) {
-      const sum = LT.reise.summary();
+      const jid = LT.reise.defaultJourney ? LT.reise.defaultJourney() : 'reise';
+      const sum = LT.reise.summary(jid);
       const pct = sum.total ? Math.round((sum.done / sum.total) * 100) : 0;
       const ch = sum.chapter;
-      const cta = el('button.card-btn.reise-cta', {
-        'aria-label': 'Flos Reise',
-        title: 'Flos Reise',
-        on: { click: () => { LT.sfx.play('click'); LT.reise.show(); } },
+      const title = sum.title || 'Flos Reise';
+      const cta = el('button.card-btn.reise-cta' + (jid === 'schule' ? '.is-schule' : ''), {
+        'aria-label': title,
+        title,
+        on: { click: () => { LT.sfx.play('click'); LT.reise.show({ journey: jid }); } },
       },
         el('span.reise-cta-flo', { html: LT.ui.floSVG() }),
         el('span.reise-cta-text',
-          el('span.reise-cta-title', U.emoji('🗺️'), el('span', 'Flos Reise')),
+          el('span.reise-cta-title', U.emoji(sum.icon || '🗺️'), el('span', title)),
           el('span.reise-cta-places', sum.chapters.map((c, i, all) => {
             const cur = ch ? all.findIndex((x) => x.id === ch.id) : all.length - 1;
             const far = i < cur - 1 || i > Math.max(cur, 1) + 2 ? '.far' : '';
@@ -336,7 +362,9 @@
           })),
           el('span.reise-cta-meter', { title: `${sum.done} von ${sum.total}` }, el('i', { style: { width: pct + '%' } }))
         ),
-        el('span.reise-cta-deco.emoji', { 'aria-hidden': 'true' }, '🏰')
+        el('span.reise-cta-deco.emoji', { 'aria-hidden': 'true' }, sum.goal || '🏰'),
+        // Hinweis: Flo hat heute persönliche Tipps (Extra-Stationen auf der Reise)
+        LT.reise.tips && LT.reise.tips().some((t) => !t.done) ? el('span.reise-cta-tip.emoji', { 'aria-hidden': 'true', title: 'Flos Tipps' }, '💡') : null
       );
       box.appendChild(cta);
     }
@@ -377,9 +405,12 @@
     content.appendChild(top);
 
     const grid = el('div.areas');
+    const schoolOpen = schoolUnlocked();
+    const schoolGrid = el('div.areas.school-areas');
     LT.areas.forEach((a) => {
       const games = LT.gamesOfArea(a.id);
       if (!games.length) return;
+      const school = isSchool(a);
       const reached = U.sum(games.map((g) => (P.profile.games[g.id] ? P.profile.games[g.id].maxLevelReached || 1 : 0)));
       const possible = U.sum(games.map((g) => g.levels));
       const pct = possible ? Math.round((reached / possible) * 100) : 0;
@@ -393,12 +424,29 @@
         el('span.area-deco.emoji', { style: { right: '10%', bottom: '12%' } }, a.deco[3]),
         U.emoji(a.icon, 'area-icon'),
         el('span.area-title', a.title),
-        el('span.area-meter', { title: 'Fortschritt' }, el('i', { style: { width: pct + '%' } }))
+        el('span.area-meter', { title: 'Fortschritt' }, el('i', { style: { width: pct + '%' } })),
+        school && !schoolOpen ? el('span.school-lock', U.emoji('🔒'), ' ab Schulkind-Stufe') : null
       );
       LT.ui.applyArea(card, a);
-      grid.appendChild(card);
+      if (school) card.classList.add('school-card');
+      (school ? schoolGrid : grid).appendChild(card);
     });
     content.appendChild(grid);
+    if (schoolGrid.children.length) {
+      content.appendChild(
+        el('section.school-section' + (schoolOpen ? '' : '.is-locked'), { 'aria-label': 'Schule – für Schulkinder' },
+          el('header.school-banner',
+            U.emoji('🎒', 'school-banner-icon'),
+            el('div.school-banner-text',
+              el('h2', 'Schule'),
+              el('p', 'für Schulkinder · Klasse 1')
+            ),
+            schoolOpen ? U.emoji('⭐', 'school-banner-star') : el('span.school-lock.is-banner', U.emoji('🔒'), ' ab Schulkind-Stufe')
+          ),
+          schoolGrid
+        )
+      );
+    }
 
     const adv2 = P.profile.adventure;
     if (!fromSplash && adv2 && adv2.done.every(Boolean) && !adv2.rewarded) {
@@ -428,6 +476,15 @@
           LT.ui.button('Mein Forscherbuch', () => openBook(() => A.showArea('wissen')), { icon: '📚', cls: 'btn-primary', big: true })
         )
       );
+    }
+
+    if (isSchool(a) && !schoolUnlocked()) {
+      content.appendChild(el('p.school-note', U.emoji('🎒'), ' Das ist schon Schulstoff. Probier ruhig mal aus!'));
+    }
+    if (areaId === 'kino' && LT.kino && LT.kino.renderIsland) {
+      LT.kino.renderIsland(content, { onPlay: (id) => startGame(id, { from: 'area' }) });
+      if (!A.greeted[areaId]) { A.greeted[areaId] = true; LT.speech.say(a.hello); } else LT.speech.say('Welchen Film möchtest du sehen?');
+      return;
     }
 
     const grid = el('div.grid');
@@ -465,10 +522,17 @@
     const g = LT.games[id];
     if (!g) return;
     A.screen = 'game';
+    A.gameFrom = from || 'area';
     let back = () => A.showArea(g.area);
     if (from === 'home') back = A.showHome;
     else if (from === 'reise' && LT.reise) back = () => LT.reise.onGameExit();
-    const opts = { onExit: () => { forced = null; back(); } };
+    const opts = { onExit: (result) => {
+      forced = null;
+      // Flos Kino: nach dem Film direkt das gewählte Übungsspiel („Jetzt üben“)
+      const practice = result && g.area === 'kino' && LT.kino && LT.kino.takePractice ? LT.kino.takePractice() : null;
+      if (practice && from !== 'reise') startGame(practice, { from: from === 'home' ? 'home' : 'area' });
+      else back();
+    } };
     if (level) {
       const rec = P.game(id);
       opts.level = U.clamp(level, 1, g.levels || 1);
@@ -646,7 +710,9 @@
     // Bereiche
     const areaCard = el('div.p-card', el('h3', 'Fortschritt nach Bereichen'));
     const table = el('table.p-table', el('tr', el('th', 'Bereich'), el('th', 'Stufen erreicht'), el('th', 'Auf Anhieb richtig'), el('th', 'Runden')));
-    LT.areas.forEach((a) => {
+    areaGroups().forEach((grp) => {
+      if (grp.title) table.appendChild(el('tr.p-group-row', el('th', { colSpan: 4 }, grp.title)));
+      grp.areas.forEach((a) => {
       const gs = LT.gamesOfArea(a.id);
       if (!gs.length) return;
       const recs = gs.map((g) => prof.games[g.id]).filter(Boolean);
@@ -662,46 +728,61 @@
           el('td', String(U.sum(recs.map((r) => r.rounds || 0))))
         )
       );
+      });
     });
     areaCard.appendChild(table);
     body.appendChild(areaCard);
   }
   function renderReiseCard() {
-    const sum = LT.reise.summary();
+    const R = LT.reise;
     const card = el('div.p-card', el('h3', '🗺️ Flos Reise – der Lernpfad'));
-    const cur = sum.chapter;
-    card.appendChild(
-      el('p', el('b', `Station ${Math.min(sum.done + (sum.finished ? 0 : 1), sum.total)} von ${sum.total}`),
-        ` · ${sum.done} geschafft · `, sum.finished ? 'Reise abgeschlossen 🏆' : `aktuelles Kapitel: ${cur.icon} ${cur.title}`)
-    );
-    card.appendChild(el('div.p-bar', { style: { height: '14px' } }, el('i', { style: { width: (sum.total ? Math.round((sum.done / sum.total) * 100) : 0) + '%' } })));
-    card.appendChild(el('p.p-muted', 'Acht Kapitel, in denen die Fähigkeiten aufeinander aufbauen (Spiralcurriculum): Jede Fähigkeit kommt zuerst leicht und später auf höherer Stufe wieder. Eine Station gilt nach einer beendeten Runde als geschafft; die Stufe der Station wird fest gespielt, eine bereits höhere Stufe Ihres Kindes bleibt erhalten.'));
-    const list = el('ul.p-reise-list');
-    sum.chapters.forEach((c, i) => {
-      list.appendChild(
-        el('li',
-          el('span', c.opened ? '✅' : c.unlocked ? '🟡' : '⚪'),
-          el('div',
-            el('b', `${i + 1}. ${c.icon} ${c.title}`), ` – ${c.done}/${c.total} Stationen`,
-            el('span.p-muted', c.focus)
+    const list = R.journeyList ? R.journeyList() : [{ id: 'reise', part: 1, title: 'Flos Reise', icon: '🗺️' }];
+    list.forEach((jr) => {
+      const sum = R.summary(jr.id);
+      const cur = sum.chapter;
+      const box = el('div.p-journey');
+      box.appendChild(el('h4', `${jr.icon} Teil ${jr.part}: ${jr.title}`, jr.part === 2 && !sum.unlocked ? el('span.p-badge.new', ' noch nicht freigeschaltet') : null));
+      box.appendChild(
+        el('p', el('b', `Station ${Math.min(sum.done + (sum.finished ? 0 : 1), sum.total)} von ${sum.total}`),
+          ` · ${sum.done} geschafft · `, !sum.total ? 'Stationen folgen' : sum.finished ? 'Teil abgeschlossen 🏆' : `aktuelles Kapitel: ${cur.icon} ${cur.title}`)
+      );
+      box.appendChild(el('div.p-bar', { style: { height: '14px' } }, el('i', { style: { width: (sum.total ? Math.round((sum.done / sum.total) * 100) : 0) + '%' } })));
+      box.appendChild(el('p.p-muted', jr.part === 1
+        ? `${sum.chapters.length} Kapitel, in denen die Fähigkeiten aufeinander aufbauen (Spiralcurriculum): Jede Fähigkeit kommt zuerst leicht und später auf höherer Stufe wieder. Eine Station gilt nach einer beendeten Runde als geschafft; die Stufe der Station wird fest gespielt, eine bereits höhere Stufe Ihres Kindes bleibt erhalten.`
+        : `${jr.chapters.length} Kapitel rund um den Schulalltag (Klassenzimmer, Bücherei, Markt, Labor, Schulgarten, Ausflug, Schulfest) mit den Schulspielen der Klasse 1. Die Stufen steigen von Kapitel zu Kapitel; vor neuen Themen steht ein kurzer Erklärfilm aus Flos Kino 🎬. Freigeschaltet durch die Lernstufe „Klasse 1“ oder sobald Teil 1 geschafft ist.`));
+      const ul = el('ul.p-reise-list');
+      sum.chapters.forEach((c, i) => {
+        ul.appendChild(
+          el('li',
+            el('span', c.opened ? '✅' : c.unlocked ? '🟡' : '⚪'),
+            el('div',
+              el('b', `${i + 1}. ${c.icon} ${c.title}`), ` – ${c.done}/${c.total} Stationen`,
+              el('span.p-muted', c.focus)
+            )
           )
+        );
+      });
+      box.appendChild(el('details.p-details', el('summary', 'Kapitel und Lernschwerpunkte'), ul));
+      if (sum.missing.length) box.appendChild(el('p.p-muted', `Noch nicht vorhandene Spiele oder Filme werden übersprungen (${sum.missing.length}).`));
+      box.appendChild(
+        el('div.p-row',
+          el('button.p-btn.light', { on: { click: () => { A.screen = null; R.show({ onBack: A.showHome, journey: jr.id }); } } }, `${jr.icon} Teil ${jr.part} ansehen`),
+          el('button.p-btn.danger', { on: { click: () => {
+            if (confirm(`Teil ${jr.part} („${jr.title}“) wirklich zurücksetzen? Sterne, Sticker und Stufen bleiben erhalten.`)) {
+              R.reset(jr.id);
+              LT.ui.toast('Reise zurückgesetzt');
+              A.showParents('overview');
+            }
+          } } }, `↺ Teil ${jr.part} zurücksetzen`)
         )
       );
+      card.appendChild(box);
     });
-    card.appendChild(el('details.p-details', el('summary', 'Kapitel und Lernschwerpunkte'), list));
-    if (sum.missing.length) card.appendChild(el('p.p-muted', `Noch nicht vorhandene Spiele werden übersprungen (${sum.missing.length}).`));
-    card.appendChild(
-      el('div.p-row',
-        el('button.p-btn.light', { on: { click: () => { A.screen = null; LT.reise.show({ onBack: A.showHome }); } } }, '🗺️ Reise ansehen'),
-        el('button.p-btn.danger', { on: { click: () => {
-          if (confirm('Flos Reise wirklich zurücksetzen? Sterne, Sticker und Stufen bleiben erhalten.')) {
-            LT.reise.reset();
-            LT.ui.toast('Reise zurückgesetzt');
-            A.showParents('overview');
-          }
-        } } }, '↺ Reise zurücksetzen')
-      )
-    );
+    const tipList = R.tips ? R.tips() : [];
+    card.appendChild(el('p', el('b', '💡 Flos Tipps heute: '), tipList.length
+      ? tipList.map((t) => `${t.label}: ${t.def.title}${t.done ? ' ✓' : ''}`).join(' · ')
+      : 'erscheinen, sobald Ihr Kind die ersten Spiele gespielt hat.'));
+    card.appendChild(el('p.p-muted', 'Bis zu drei freiwillige Extra-Stationen (in beiden Teilen), berechnet aus dem Lernstand: Wiederholen (Spiel mit den meisten fälligen Inhalten), Üben (schwächster Bereich, aktuelle Stufe) und Stärke (ein sicher gekonntes Spiel für ein Erfolgserlebnis). Sie blockieren die Reise nicht.'));
     return card;
   }
   function kpi(value, label) {
@@ -715,12 +796,51 @@
     solid: ['solid', 'sicher'],
   };
 
+  /** Lerninhalte eines Spiels für die Eltern: sicher gelernt, fällig, übt gerade (lesbare Schlüssel). */
+  function itemInfo(id) {
+    const sum = P.itemSummary(id);
+    if (!sum.total) return null;
+    const items = P.items(id);
+    const learned = Object.keys(items).filter((k) => items[k].b >= 4);
+    const due = P.dueItems(id);
+    const list = (keys, n = 8) => keys.slice(0, n).join(', ') + (keys.length > n ? ' …' : '');
+    return { sum, learned, due, list };
+  }
+
   function renderProgress(body) {
     body.appendChild(el('p.p-muted', 'Die Stufe passt sich automatisch an (≥ 80 % auf Anhieb → höher, < 50 % → leichter). Sie können sie hier auch selbst festlegen.'));
-    LT.areas.forEach((a) => {
+    body.appendChild(
+      el('details.p-card.p-details',
+        el('summary', 'So passt sich die Lernwelt an Ihr Kind an'),
+        el('ul',
+          el('li', el('b', 'Innerhalb der Runde: '), 'Nach drei Aufgaben in Folge auf Anhieb kommt eine Knobel-Aufgabe der nächsten Stufe; nach Fehlern wird die nächste Aufgabe etwas leichter.'),
+          el('li', el('b', 'Hilfe-Leiter: '), 'Nach einem Fehler erklärt Flo kurz, warum es nicht passt. Danach gibt es einen Denkanstoß, dann macht Flo es vor. Später in der Runde kommt eine ähnliche Aufgabe noch einmal.'),
+          el('li', el('b', 'Verteiltes Wiederholen: '), 'Jeder Lerninhalt (z. B. ein Buchstabe oder eine Zahl) wandert nach dem Leitner-Prinzip durch Kästchen: Richtig gelöste Inhalte kommen nach 1, 2, 4, 8 und 16 Tagen wieder, bei einem Fehler geht es von vorn los. Fällige Inhalte werden in die Runden eingestreut.')
+        )
+      )
+    );
+    // Heute fällige Wiederholungen
+    const dueGames = LT.gameOrder.map((id) => LT.games[id])
+      .filter((g) => g && P.profile.games[g.id] && P.profile.games[g.id].rounds)
+      .map((g) => ({ g, info: itemInfo(g.id) }))
+      .filter((x) => x.info && x.info.due.length)
+      .sort((a, b) => b.info.due.length - a.info.due.length);
+    const dueCard = el('div.p-card', el('h3', '🔁 Heute zum Wiederholen fällig'));
+    if (dueGames.length) {
+      dueCard.appendChild(el('ul.p-due-list', dueGames.slice(0, 8).map(({ g, info }) => el('li', el('b', `${g.icon} ${g.title}`), ` (${info.due.length}): ${info.list(info.due, 6)}`))));
+      if (dueGames.length > 8) dueCard.appendChild(el('p.p-muted', `… und ${dueGames.length - 8} weitere Spiele.`));
+      dueCard.appendChild(el('p.p-muted', 'Fällige Inhalte kommen beim nächsten Spielen automatisch dran; Flos Reise schlägt außerdem das Spiel mit den meisten fälligen Inhalten als Tipp vor.'));
+    } else dueCard.appendChild(el('p', 'Heute ist nichts fällig.'));
+    body.appendChild(dueCard);
+    areaGroups().forEach((grp) => {
+    if (grp.title) {
+      body.appendChild(el('h2.p-group-head', grp.title));
+      body.appendChild(el('p.p-muted', 'Schulstoff der ersten Klasse (Brücke von der Vorschule bis zum Ende von Klasse 1): Rechenschule, Leseschule, Sachkunde-Schule und Flos Kino mit Erklärfilmen.'));
+    }
+    grp.areas.forEach((a) => {
       const gs = LT.gamesOfArea(a.id);
       if (!gs.length) return;
-      const table = el('table.p-table', el('tr', el('th', 'Spiel'), el('th', 'Stufe'), el('th', 'Runden'), el('th', 'Auf Anhieb'), el('th', 'Verlauf'), el('th', 'Status')));
+      const table = el('table.p-table.p-progress', el('tr', el('th', 'Spiel'), el('th', 'Stufe'), el('th', 'Runden'), el('th', 'Auf Anhieb'), el('th', 'Verlauf'), el('th', 'Status')));
       gs.forEach((g) => {
         const rec = P.profile.games[g.id];
         const acc = P.accuracy(g.id);
@@ -742,8 +862,23 @@
             el('td', el('span.p-badge.' + st[0], st[1]))
           )
         );
+        const info = rec && rec.rounds ? itemInfo(g.id) : null;
+        if (info) {
+          table.appendChild(
+            el('tr.p-items-row',
+              el('td', { colSpan: 6 },
+                el('div.p-items',
+                  el('span', el('b', '✅ sicher: '), info.learned.length ? `${info.learned.length} (${info.list(info.learned)})` : '–'),
+                  el('span', el('b', '🔁 fällig: '), info.due.length ? `${info.due.length} (${info.list(info.due)})` : '–'),
+                  info.sum.tricky.length ? el('span', el('b', '🎯 übt gerade: '), info.sum.tricky.join(', ')) : null
+                )
+              )
+            )
+          );
+        }
       });
-      body.appendChild(el('div.p-card', el('h3', `${a.icon} ${a.title}`), table));
+      body.appendChild(el('div.p-card', el('h3', `${a.icon} ${a.title}`), el('div.p-table-wrap', table)));
+    });
     });
   }
 
@@ -755,6 +890,18 @@
     card.appendChild(row('Name (wird vorgelesen)', nameInput));
     card.appendChild(row('Name beim Loben verwenden', toggle(s.praiseName, (v) => P.setSetting('praiseName', v))));
     body.appendChild(card);
+
+    const stage = el('div.p-card', el('h3', '🎒 Lernstufe'));
+    const stageSel = el('select', { 'aria-label': 'Lernstufe' });
+    [['vorschule', 'Vorschule (Kita)'], ['klasse1', 'Klasse 1 (Schulkind)']].forEach(([v, l]) => stageSel.appendChild(el('option', { value: v, selected: (s.stage || 'vorschule') === v }, l)));
+    stageSel.addEventListener('change', () => { P.setSetting('stage', stageSel.value); P.save(true); LT.ui.toast('Lernstufe gespeichert'); A.showParents('settings'); });
+    stage.appendChild(row('Lernstufe', stageSel));
+    const p1 = LT.reise && LT.reise.part1Done ? LT.reise.part1Done() : false;
+    stage.appendChild(el('p', el('b', 'Schul-Bereich: '), schoolUnlocked()
+      ? (s.stage === 'klasse1' ? 'freigeschaltet (Lernstufe „Klasse 1“).' : 'freigeschaltet, weil Ihr Kind Flos Reise Teil 1 geschafft hat.')
+      : 'noch nicht freigeschaltet.'));
+    stage.appendChild(el('p.p-muted', '„Vorschule“ (Standard): Die Weltkarte zeigt die Kita-Inseln; die Reihe „Schule – für Schulkinder“ (Rechenschule, Leseschule, Sachkunde-Schule, Flos Kino) ist sichtbar, trägt aber den Hinweis „ab Schulkind-Stufe“ – Ihr Kind darf trotzdem hineinschauen und ausprobieren, und Flos Reise startet mit Teil 1. „Klasse 1“: Der Schul-Bereich und Flos Reise Teil 2 „Schulabenteuer“ sind voll freigeschaltet, der Reise-Knopf öffnet direkt Teil 2.' + (p1 ? '' : ' Sobald Ihr Kind Flos Reise Teil 1 geschafft hat, wird beides auch ohne diese Einstellung automatisch freigeschaltet.')));
+    body.appendChild(stage);
 
     const voice = el('div.p-card', el('h3', 'Stimme & Ton'));
     const sel = el('select');
@@ -855,19 +1002,24 @@
         el('ul',
           el('li', el('b', 'Alles wird vorgelesen. '), 'Ihr Kind braucht keine Lesefähigkeit. Mit 🔊 oder einem Tipp auf Flo wird die Aufgabe wiederholt.'),
           el('li', el('b', 'Passende Schwierigkeit. '), 'Jedes Spiel hat mehrere Stufen. Die App passt sie nach jeder Runde automatisch an (Zone der nächsten Entwicklung): nicht zu leicht, nicht zu schwer.'),
-          el('li', el('b', 'Fehler sind erlaubt. '), 'Falsche Antworten werden sanft kommentiert, nie bestraft. Nach zwei Fehlversuchen hilft Flo mit einem Hinweis – so endet jede Aufgabe mit einem Erfolgserlebnis.'),
+          el('li', el('b', 'Fehler sind erlaubt. '), 'Falsche Antworten werden sanft kommentiert, nie bestraft. Flo hilft in Stufen (Hilfe-Leiter): erst eine kurze Erklärung, warum die Antwort nicht passt, dann ein Denkanstoß, dann macht Flo es vor – und später in der Runde kommt eine ähnliche Aufgabe. So endet jede Aufgabe mit einem Erfolgserlebnis.'),
+          el('li', el('b', 'Anpassung in der Runde. '), 'Klappt es gut, kommt zwischendurch eine Knobel-Aufgabe der nächsten Stufe; nach Fehlern wird die nächste Aufgabe etwas leichter.'),
+          el('li', el('b', 'Verteiltes Wiederholen. '), 'Die App merkt sich einzelne Lerninhalte (z. B. Buchstaben, Zahlen, Reimpaare) und holt sie nach dem Leitner-Prinzip nach 1, 2, 4, 8 und 16 Tagen wieder hervor. Die erste Aufgabe einer Runde ist ein Aufwärmen mit Bekanntem. Was gerade fällig ist, sehen Sie im Tab „Lernstand“.'),
           el('li', el('b', 'Lob für Anstrengung. '), 'Gelobt wird das Dranbleiben und genaue Hinschauen (wachstumsorientierte Haltung), nicht „Du bist schlau“.'),
           el('li', el('b', 'Kurze Einheiten. '), 'Eine Runde dauert 2–4 Minuten. Bewegungspausen und ein optionales Tageslimit helfen bei einem gesunden Umgang mit Bildschirmzeit.'),
           el('li', el('b', 'Konkret – bildlich – symbolisch. '), 'Zahlen und Buchstaben werden immer mit Bildern, Mengen und Lauten verknüpft (EIS-Prinzip nach Bruner).'),
           el('li', el('b', 'Ausgewogen üben. '), 'Das Tagesabenteuer schlägt jeden Tag drei Spiele aus verschiedenen Bereichen vor und bevorzugt Neues sowie Spiele mit Übungsbedarf.'),
-          el('li', el('b', 'Schritt für Schritt: Flos Reise. '), 'Ein Lernpfad mit acht Kapitel-Orten führt durch ein aufeinander aufbauendes Curriculum (Spiralcurriculum nach Bruner): Jede Fähigkeit wird zuerst auf der leichtesten Stufe eingeführt und kommt später auf höherer Stufe wieder. Jedes Kapitel mischt Zahlen, Sprache, Formen, Denken, Sachwissen und Malen (verschachteltes Üben). Eine kleine Geschichte je Ort gibt dem Lernen einen roten Faden.'),
+          el('li', el('b', 'Schritt für Schritt: Flos Reise. '), 'Teil 1, ein Lernpfad mit acht Kapitel-Orten, führt durch ein aufeinander aufbauendes Curriculum (Spiralcurriculum nach Bruner): Jede Fähigkeit wird zuerst auf der leichtesten Stufe eingeführt und kommt später auf höherer Stufe wieder. Jedes Kapitel mischt Zahlen, Sprache, Formen, Denken, Sachwissen und Malen (verschachteltes Üben). Eine kleine Geschichte je Ort gibt dem Lernen einen roten Faden. Dazu bietet Flo bis zu drei freiwillige, persönliche Tipps an (Wiederholen, Üben, Stärke). Teil 2 „Flos Schulabenteuer“ führt in sieben Kapiteln durch den Stoff der ersten Klasse.'),
+          el('li', el('b', 'Brücke in die Schule. '), 'Die Reihe „Schule“ (Rechenschule, Leseschule, Sachkunde-Schule) orientiert sich an den Bildungsstandards für Klasse 1: Zahlenraum bis 20 mit Zehnerübergang, Silbenlesen und lautgetreues Schreiben, Sachunterricht. In Flos Kino erklären kurze Filme ein Thema, danach folgen Fragen und das passende Übungsspiel (erst verstehen, dann üben).'),
           el('li', el('b', 'Sachwissen mit Geschichten. '), 'In der Forscherwelt folgt jede Wissensreise dem Ablauf Entdecken (Bildergeschichte zum Mitmachen) – Verstehen (Fragen mit kurzer Begründung) – Anwenden (Mitmachspiel) – Sichern (Wissenskarte fürs Forscherbuch). Das Forscherbuch lädt zum Wiederholen und Erzählen ein.'),
           el('li', el('b', 'Motivation. '), 'Sterne und ein Sticker-Album belohnen das Dranbleiben – ohne Zeitdruck, Werbung oder In-App-Käufe.')
         ),
         el('p', el('b', 'Ihre Rolle: '), 'Kinder lernen am besten im Gespräch. Setzen Sie sich ab und zu dazu, fragen Sie „Wie hast du das herausgefunden?“ und greifen Sie Themen im Alltag auf. Die Tipps zu jedem Spiel finden Sie unten.')
       )
     );
-    LT.areas.forEach((a) => {
+    areaGroups().forEach((grp) => {
+    if (grp.title) body.appendChild(el('h2.p-group-head', grp.title));
+    grp.areas.forEach((a) => {
       const gs = LT.gamesOfArea(a.id);
       if (!gs.length) return;
       const card = el('div.p-card', el('h3', `${a.icon} ${a.title}`), el('p', a.parent));
@@ -884,6 +1036,7 @@
       });
       body.appendChild(card);
     });
+    });
   }
 
   function renderHelp(body) {
@@ -892,7 +1045,9 @@
         el('h3', 'So funktioniert die Lernwelt'),
         el('ul',
           el('li', 'Auf der Weltkarte wählt Ihr Kind eine Insel und dann ein Spiel. Eine Runde hat meist 5 Aufgaben.'),
-          el('li', 'Der große Knopf „Flos Reise“ führt Schritt für Schritt über einen Pfad: Die leuchtende Station ist die nächste, verschlossene Stationen öffnen sich nacheinander. Am Ende jedes Kapitels wartet eine Schatzkiste mit Bonus-Sticker.'),
+          el('li', 'Der große Knopf „Flos Reise“ führt Schritt für Schritt über einen Pfad: Die leuchtende Station ist die nächste, verschlossene Stationen öffnen sich nacheinander. Am Ende jedes Kapitels wartet eine Schatzkiste mit Bonus-Sticker. Oben bei der 💡 stehen bis zu drei freiwillige Extra-Stationen „Flos Tipp“: 🔁 Wiederholen, 💪 Üben, ⭐ Stärke. Oben auf dem Reise-Bildschirm wechseln Sie zwischen Teil 1 und Teil 2 („Schulabenteuer“, Klasse 1).'),
+          el('li', 'Unter den Kita-Inseln steht die Reihe „🎒 Schule – für Schulkinder“ mit Flos Kino (🎬 Erklärfilme). Ob sie schon freigeschaltet ist, stellen Sie unter Einstellungen → Lernstufe ein.'),
+          el('li', 'So hilft die App: Innerhalb einer Runde wird es nach Fehlern leichter, bei vielen Treffern gibt es eine Knobel-Aufgabe. Nach Fehlern hilft Flo in Stufen (erklären → Denkanstoß → vormachen → ähnliche Aufgabe). Gelernte Inhalte kommen nach 1, 2, 4, 8 und 16 Tagen zur Wiederholung (Leitner-Prinzip).'),
           el('li', 'Im Forscherbuch sammelt Ihr Kind die Wissenskarten aus der Forscherwelt.'),
           el('li', 'Die Punkte oben zeigen den Fortschritt der Runde. Gelbe Punkte = auf Anhieb richtig.'),
           el('li', 'Für jede Runde gibt es 1–3 Sterne, für je 4 Sterne einen neuen Sticker im Album.'),

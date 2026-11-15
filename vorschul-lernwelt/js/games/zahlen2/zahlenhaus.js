@@ -19,9 +19,13 @@
           werden ergänzt. Erkenntnis am Ende: links eins mehr, rechts eins
           weniger (operatives Denken).
    - Ablenker sind typische Fehler: der sichtbare Teil oder das Ganze.
-   - Hilfe nach 2 Fehlversuchen: Punkte erscheinen (bzw. der Deckel wird
-     durchsichtig) und Flo zählt die fehlenden gemeinsam mit dem Kind.
-     Nach dem 3. Fehlversuch leuchtet die richtige Kachel.
+   - Lerninhalt = die Zerlegung (Schlüssel '5 = 2 + 3', '10 = 7 + 3') bzw.
+     auf Stufe 5 die Dachzahl ('Zahlenhaus 7') über ctx.item.
+   - Hilfe-Leiter: 1. Fehler → „Zwei und vier sind zusammen sechs. Im Dach
+     wohnt aber die Fünf.“; 2. Fehler → Denkanstoß: leere Kreise/Felder
+     leuchten, der Deckel wird durchsichtig bzw. Punkte werden gemalt –
+     das Kind zählt selbst; 3. Fehler → Flo zählt die fehlenden mit dem Kind
+     und nennt die Zerlegung. (Bei drei Zahlen jeweils eine Stufe früher.)
    ========================================================================== */
 (function () {
   'use strict';
@@ -143,6 +147,11 @@
     };
   }
 
+  /** Lesbarer Schlüssel einer Zerlegung: '5 = 2 + 3' */
+  const comboKey = (c) => `${c.N} = ${c.a} + ${c.N - c.a}`;
+  /** Vormachen: Zerlegung aussprechen */
+  const modelSay = (a, b, N) => () => `${Z.Word(a)} und ${Z.word(b)} sind zusammen ${Z.word(N)}.`;
+
   /** Raum nach richtiger Antwort füllen (mit kleiner Animation). */
   function reveal(room, n, mode) {
     fillRoom(room, { n, mode, color: 'blue' });
@@ -159,7 +168,8 @@
 
   /* =================== Stufe 1: Punkte =================== */
   async function levelDots(ctx) {
-    const { N, a } = U.pickFresh('zh-1', POOL1, 4, (c) => c.key);
+    const pool = ctx.flow < 0 ? POOL1.filter((c) => c.N <= 4) : POOL1;
+    const { N, a } = ctx.item(pool, comboKey, { avoid: 4 });
     const b = N - a;
     const q = `Im Dach wohnt die ${Z.Word(N)}. Wie viele Punkte gehören in das leere Zimmer?`;
     const H = buildHouse(ctx, N, [{ l: { n: a, mode: 'dots' }, r: { mode: 'unknown' } }],
@@ -167,24 +177,29 @@
     ctx.stage.appendChild(H.house);
     const box = el('div.choices');
     ctx.stage.appendChild(box);
-    if (ctx.index === 0) await ctx.say(INTRO[1]);
+    await intro(ctx, 1);
     if (!ctx.active) return;
     ctx.instruct(q);
     const empties = H.attic.toks.slice(a);
-    await ctx.choices(numberItems(b, 3, 1, 6, [a, N], true), {
-      container: box, shuffle: false, size: 'small', hintAfter: 3,
-      correctSay: `Richtig! ${a} und ${b} sind zusammen ${N}.`,
-      wrongSay: wrongSay(a, N),
+    const items = numberItems(b, 3, 1, 6, [a, N], true);
+    const ha = Z.hintAfterFor(ctx, items.length);
+    await ctx.choices(items, {
+      container: box, shuffle: false, size: 'small', hintAfter: ha,
+      correctSay: () => (ctx.wrongCount === 0 && U.chance(0.25) ? `Richtig, du hast die leeren Kreise genau gezählt! ${a} und ${b} sind zusammen ${N}.` : `Richtig! ${a} und ${b} sind zusammen ${N}.`),
+      explain: wrongSay(a, N),
+      hintSay: 'Schau auf die Kreise oben. Wie viele sind noch leer?',
+      modelSay: modelSay(a, b, N),
       onCorrect: () => {
         Z.clearBadges(H.house);
         empties.forEach((t) => { t.classList.remove('z2-hl'); Z.setTok(t, 'b'); });
         reveal(H.rows[0].r, b, 'dots');
       },
       onWrong: async (item, tile, w) => {
-        if (w !== 2) return;
-        await ctx.say('Schau auf die Kreise oben: Wie viele sind noch leer? Wir zählen zusammen!');
-        empties.forEach((t) => t.classList.add('z2-hl'));
-        await Z.countAlong(ctx, empties);
+        if (w === ha) empties.forEach((t) => t.classList.add('z2-hl'));
+        else if (w === ha + 1) {
+          await ctx.say('Wir zählen zusammen!');
+          await Z.countAlong(ctx, empties);
+        }
       },
     });
   }
@@ -198,7 +213,7 @@
   }
 
   async function levelBox(ctx) {
-    const { N, a } = U.pickFresh('zh-2', POOL2, 5, (c) => c.key);
+    const { N, a } = ctx.item(POOL2, comboKey, { avoid: 5 });
     const b = N - a;
     const it = U.pickFresh('zh-item', BOX_ITEMS, 2, (x) => x.id);
     const q = `In der Schüttelbox sind ${N} ${it.pl}. Du siehst ${Z.acc(a, it)}. Wie viele ${it.pl} sind unter dem Deckel versteckt?`;
@@ -217,7 +232,7 @@
     ctx.stage.appendChild(box);
     ctx.setInstruction(q);
 
-    if (ctx.index === 0) await ctx.say(INTRO[2]);
+    await intro(ctx, 2);
     if (!ctx.active) return;
     await ctx.say(`In der Schüttelbox sind ${N} ${it.pl}. Ich schüttle die Box.`);
     if (!ctx.active) return;
@@ -248,9 +263,13 @@
     ctx.setInstruction(q);
     ctx.listen(lid, 'click', () => ctx.say(q));
 
-    await ctx.choices(numberItems(b, 4, 1, 7, [a, N]), {
-      container: box, shuffle: false, size: 'small', hintAfter: 3,
-      wrongSay: wrongSay(a, N, true),
+    const items = numberItems(b, 4, 1, 7, [a, N]);
+    const ha = Z.hintAfterFor(ctx, items.length);
+    await ctx.choices(items, {
+      container: box, shuffle: false, size: 'small', hintAfter: ha,
+      explain: wrongSay(a, N, true),
+      hintSay: `Ich mache den Deckel durchsichtig. Zähle die versteckten ${it.pl}.`,
+      modelSay: () => `Unter dem Deckel ${Z.verb(b, 'ist', 'sind')} ${Z.nom(b, it)}. ${Z.Word(a)} und ${Z.word(b)} sind zusammen ${Z.word(N)}.`,
       correctSay: `Richtig! Unter dem Deckel ${Z.verb(b, 'war', 'waren')} ${Z.nom(b, it)}. ${a} und ${b} sind zusammen ${N}.`,
       onCorrect: () => {
         Z.clearBadges(boxEl);
@@ -259,17 +278,19 @@
         reveal(H.rows[0].r, b, 'digit');
       },
       onWrong: async (item, tile, w) => {
-        if (w !== 2) return;
-        lid.classList.add('zh-see');
-        await ctx.say(`Ich mache den Deckel durchsichtig. Wir zählen die versteckten ${it.pl} zusammen!`);
-        await Z.countAlong(ctx, hidden);
+        if (w === ha) lid.classList.add('zh-see');
+        else if (w === ha + 1) {
+          lid.classList.add('zh-see');
+          await ctx.say('Wir zählen zusammen!');
+          await Z.countAlong(ctx, hidden);
+        }
       },
     });
   }
 
   /* =================== Stufe 3: Zehnerfreunde =================== */
   async function levelTen(ctx) {
-    const { a } = U.pickFresh('zh-3', POOL3, 4, (c) => c.key);
+    const { a } = ctx.item(POOL3, comboKey, { avoid: 4 });
     const b = 10 - a;
     const q = `Im Dach wohnt die Zehn. ${a === 1 ? 'Ein Plättchen ist' : a + ' Plättchen sind'} schon rot. Wie viele fehlen bis zur Zehn?`;
     const H = buildHouse(ctx, 10, [{ l: { n: a, mode: 'digit' }, r: { mode: 'unknown' } }], {}, () => q);
@@ -278,32 +299,37 @@
     ctx.stage.appendChild(row);
     const box = el('div.choices');
     ctx.stage.appendChild(box);
-    if (ctx.index === 0) await ctx.say(INTRO[3]);
+    await intro(ctx, 3);
     if (!ctx.active) return;
     ctx.instruct(q);
     const empties = tf.toks.slice(a);
     const cheers = ['Das sind Zehnerfreunde!', 'Zusammen sind sie zehn – Zehnerfreunde!', 'Die beiden sind Zehnerfreunde!'];
-    await ctx.choices(numberItems(b, 4, 1, 10, [a, b + 1, b - 1]), {
-      container: box, shuffle: false, size: 'small', hintAfter: 3,
+    const items = numberItems(b, 4, 1, 10, [a, b + 1, b - 1]);
+    const ha = Z.hintAfterFor(ctx, items.length);
+    await ctx.choices(items, {
+      container: box, shuffle: false, size: 'small', hintAfter: ha,
       correctSay: `Richtig! ${a} und ${b} sind zusammen 10. ${U.pick(cheers)}`,
-      wrongSay: wrongSay(a, 10),
+      explain: wrongSay(a, 10),
+      hintSay: 'Schau aufs Zehnerfeld. Wie viele Felder sind noch leer?',
+      modelSay: modelSay(a, b, 10),
       onCorrect: () => {
         Z.clearBadges(tf.node);
         empties.forEach((t) => { t.classList.remove('z2-hl'); Z.setTok(t, 'b'); });
         reveal(H.rows[0].r, b, 'digit');
       },
       onWrong: async (item, tile, w) => {
-        if (w !== 2) return;
-        await ctx.say('Schau aufs Zehnerfeld: Wie viele Felder sind noch leer? Wir zählen zusammen!');
-        empties.forEach((t) => t.classList.add('z2-hl'));
-        await Z.countAlong(ctx, empties);
+        if (w === ha) empties.forEach((t) => t.classList.add('z2-hl'));
+        else if (w === ha + 1) {
+          await ctx.say('Wir zählen zusammen!');
+          await Z.countAlong(ctx, empties);
+        }
       },
     });
   }
 
   /* =================== Stufe 4: nur Ziffern =================== */
   async function levelDigits(ctx) {
-    const { N, a } = U.pickFresh('zh-4', POOL4, 8, (c) => c.key);
+    const { N, a } = ctx.item(POOL4, comboKey, { avoid: 8 });
     const b = N - a;
     const missing = U.chance(0.5) ? 'r' : 'l';
     const known = missing === 'r' ? a : b;
@@ -316,31 +342,37 @@
     ctx.stage.appendChild(H.house);
     const box = el('div.choices');
     ctx.stage.appendChild(box);
-    if (ctx.index === 0) await ctx.say(INTRO[4]);
+    await intro(ctx, 4);
     if (!ctx.active) return;
     ctx.instruct(q);
     let empties = null;
-    await ctx.choices(numberItems(ans, 4, 0, 10, [known, N]), {
-      container: box, shuffle: false, size: 'small', hintAfter: 3,
+    const items = numberItems(ans, 4, 0, 10, [known, N]);
+    const ha = Z.hintAfterFor(ctx, items.length);
+    await ctx.choices(items, {
+      container: box, shuffle: false, size: 'small', hintAfter: ha,
       correctSay: `Richtig! ${a} und ${b} sind zusammen ${N}.`,
-      wrongSay: wrongSay(known, N),
+      explain: wrongSay(known, N),
+      hintSay: () => stripHint(N, known),
+      modelSay: modelSay(a, b, N),
       onCorrect: () => {
         if (empties) empties.forEach((t) => Z.setTok(t, 'b'));
         Z.clearBadges(ctx.stage);
         reveal(missing === 'r' ? H.rows[0].r : H.rows[0].l, ans, 'digit');
       },
       onWrong: async (item, tile, w) => {
-        if (w !== 2) return;
-        empties = addStrip(ctx.stage, box, a, b, missing);
-        await ctx.say(`Ich male dir ${N} Punkte. ${known === 1 ? 'Einer ist' : known + ' sind'} rot. Wir zählen die leeren Punkte zusammen!`);
-        await Z.countAlong(ctx, empties);
+        if (w === ha) empties = addStrip(ctx.stage, box, a, b, missing);
+        else if (w === ha + 1) {
+          if (!empties) empties = addStrip(ctx.stage, box, a, b, missing);
+          await ctx.say('Wir zählen die leeren Punkte zusammen!');
+          await Z.countAlong(ctx, empties);
+        }
       },
     });
   }
 
   /* =================== Stufe 5: ganze Zahlenhäuser =================== */
   async function levelFloors(ctx) {
-    const N = U.pickFresh('zh-5', U.range(4, 10), 3);
+    const N = ctx.item(U.range(4, 10), (n) => `Zahlenhaus ${n}`, { avoid: 3 });
     const s = U.randInt(1, N - 3);
     // drei Stockwerke mit aufeinanderfolgenden Zerlegungen; das oberste ist das Beispiel
     const floors = [s, s + 1, s + 2].map((a, i) => ({ a, b: N - a, miss: i === 0 ? null : U.pick(['l', 'r']) }));
@@ -352,7 +384,7 @@
     ctx.stage.appendChild(H.house);
     const box = el('div.choices');
     ctx.stage.appendChild(box);
-    if (ctx.index === 0) await ctx.say(INTRO[5]);
+    await intro(ctx, 5);
     if (!ctx.active) return;
     H.rows[0].row.classList.add('zh-example');
 
@@ -371,22 +403,34 @@
       const base = ctx.wrongCount;
       let strip = null;
       let empties = null;
-      await ctx.choices(numberItems(ans, 4, 0, 10, [known, N]), {
-        container: box, shuffle: false, size: 'small', hintAfter: base + 3,
+      const items = numberItems(ans, 4, 0, 10, [known, N]);
+      const ha = Z.hintAfterFor(ctx, items.length);
+      // Hilfe-Leiter je Stockwerk neu (Vormachen im oberen Stockwerk zählt nicht für das nächste)
+      const shownBefore = ctx.modelShown;
+      ctx.modelShown = false;
+      await ctx.choices(items, {
+        container: box, shuffle: false, size: 'small', hintAfter: ha,
         correctSay: `Richtig! ${f.a} und ${f.b} sind zusammen ${N}.`,
-        wrongSay: wrongSay(known, N),
+        explain: wrongSay(known, N),
+        hintSay: () => stripHint(N, known),
+        modelSay: modelSay(f.a, f.b, N),
         onCorrect: () => {
           if (empties) empties.forEach((t) => Z.setTok(t, 'b'));
           reveal(f.miss === 'r' ? rowEls.r : rowEls.l, ans, 'digit');
         },
         onWrong: async (item, tile, w) => {
-          if (w - base !== 2) return;
-          empties = addStrip(ctx.stage, box, f.a, f.b, f.miss);
-          strip = empties.length ? empties[0].parentNode : null;
-          await ctx.say(`Ich male dir ${N} Punkte. ${known === 1 ? 'Einer ist' : known + ' sind'} rot. Wir zählen die leeren Punkte zusammen!`);
-          await Z.countAlong(ctx, empties);
+          const lw = w - base;
+          if (lw === ha || (lw === ha + 1 && !empties)) {
+            empties = addStrip(ctx.stage, box, f.a, f.b, f.miss);
+            strip = empties.length ? empties[0].parentNode : null;
+          }
+          if (lw === ha + 1) {
+            await ctx.say('Wir zählen die leeren Punkte zusammen!');
+            await Z.countAlong(ctx, empties);
+          }
         },
       });
+      ctx.modelShown = shownBefore || ctx.modelShown;
       if (!ctx.active) return;
       rowEls.row.classList.remove('zh-active');
       if (strip) {
@@ -399,6 +443,20 @@
     LT.sfx.play('star');
     await ctx.say('Super, das Zahlenhaus ist fertig! Siehst du? Links wird es immer eins mehr, rechts immer eins weniger.');
     await ctx.sleep(400);
+  }
+
+  /** Denkanstoß mit gemalten Punkten (Stufe 4/5) */
+  function stripHint(N, known) {
+    return `Ich male dir ${Z.word(N)} Punkte. ${known === 1 ? 'Einer ist' : Z.Word(known) + ' sind'} rot. Wie viele Punkte sind noch leer?`;
+  }
+
+  // Einführung je Aufgabenart: zu Rundenbeginn und wenn eine andere Stufe drankommt
+  let introduced = new Set();
+  async function intro(ctx, level) {
+    if (ctx.index === 0) introduced = new Set();
+    if (introduced.has(level)) return;
+    introduced.add(level);
+    await ctx.say(INTRO[level]);
   }
 
   /* ---------------- Spiel ---------------- */
@@ -423,7 +481,7 @@
     },
 
     async task(ctx) {
-      switch (ctx.level) {
+      switch (ctx.taskLevel) {
         case 1: return levelDots(ctx);
         case 2: return levelBox(ctx);
         case 3: return levelTen(ctx);
