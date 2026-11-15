@@ -51,6 +51,7 @@
     // Ordner der Pakete relativ zu dieser Datei (…/js/core/voice.js → …/js/voice/)
     base: (function () {
       try {
+        if (window.LT_VOICE_BASE) return window.LT_VOICE_BASE; // Veröffentlichung: Stimme in eigenem Ordner
         const src = document.currentScript && document.currentScript.getAttribute('src');
         if (src && /core\/voice\.js/.test(src)) return src.replace(/core\/voice\.js.*$/, 'voice/');
       } catch (e) { /* ignore */ }
