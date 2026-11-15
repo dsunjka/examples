@@ -1,1 +1,222 @@
-/* wird gebaut */
+/* ==========================================================================
+   Flos Kino – Erklärfilme (Player, Quiz, Kino-Insel mit Kinokarten)
+   ========================================================================== */
+
+/* ---------- Film-Spiel ---------- */
+.stage.kino-stage {
+  overflow-y: auto;
+  justify-content: flex-start;
+  gap: clamp(10px, 2vmin, 20px);
+  background:
+    radial-gradient(ellipse 70% 40% at 50% 0%, rgba(194, 37, 92, 0.12), transparent 70%);
+}
+.kino-player {
+  width: min(100%, 880px, calc((100dvh - 250px) * 16 / 9));
+  min-width: min(100%, 300px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+.kino-screen {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-l);
+  overflow: hidden;
+  background: #1d1b2e;
+  box-shadow: 0 0 0 6px #2b2840, 0 10px 0 6px rgba(0, 0, 0, 0.18);
+}
+.kino-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: #000;
+  opacity: 0;
+  pointer-events: none;
+}
+.kino-player.is-watching .kino-video,
+.kino-player.is-rewatch .kino-video { opacity: 1; pointer-events: auto; z-index: 2; }
+.kino-player.is-watching .kino-play,
+.kino-player.is-watching .kino-poster { visibility: hidden; }
+
+/* Plakat */
+.kino-poster {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 25%, rgba(255, 255, 255, 0.35), transparent 40%),
+    linear-gradient(140deg, color-mix(in srgb, var(--film, #c2255c) 75%, #fff), var(--film, #c2255c));
+}
+.kino-poster-icon { font-size: clamp(56px, 14vmin, 130px); filter: drop-shadow(0 6px 0 rgba(0, 0, 0, 0.18)); }
+.kino-poster-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.kino-poster.has-img .kino-poster-icon { visibility: hidden; }
+
+.kino-play {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: clamp(96px, 20vmin, 160px);
+  height: clamp(96px, 20vmin, 160px);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  color: #c2255c;
+  box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.45), 0 8px 0 rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  animation: kino-pulse 1.8s ease-in-out infinite;
+}
+.kino-play-tri { font-size: clamp(48px, 10vmin, 80px); line-height: 1; margin-left: 0.12em; }
+.kino-play:active { transform: translate(-50%, calc(-50% + 4px)); }
+@keyframes kino-pulse {
+  0%, 100% { box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.45), 0 8px 0 rgba(0, 0, 0, 0.2); }
+  50% { box-shadow: 0 0 0 18px rgba(255, 255, 255, 0.2), 0 8px 0 rgba(0, 0, 0, 0.2); }
+}
+
+/* „Dieser Film kommt bald“ */
+.kino-soon {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 12px;
+  color: #fff;
+  background:
+    repeating-linear-gradient(90deg, transparent 0 34px, rgba(255, 255, 255, 0.06) 34px 36px),
+    linear-gradient(160deg, #3b3560, #241f3d);
+}
+.kino-soon p { margin: 2px 0; font-size: clamp(16px, 3vmin, 26px); }
+.kino-soon-icon { font-size: clamp(44px, 10vmin, 84px); }
+
+/* Steuerleiste */
+.kino-bar { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.kino-bar:empty { display: none; }
+.kino-btn { min-height: 64px; }
+.kino-bar .btn-big { padding: 12px 24px; min-height: 64px; font-size: clamp(18px, 3.4vmin, 28px); }
+.kino-title { margin: 0; font-size: clamp(22px, 4vmin, 34px); color: var(--ink); text-align: center; }
+
+/* Quiz: Film wird klein bzw. nur bei „Nochmal ansehen“ gezeigt */
+.kino-player.is-mini { display: none; }
+.kino-player.is-mini.is-rewatch { display: flex; width: min(100%, 560px); }
+.kino-player.is-mini ~ .kino-title { display: none; }
+.kino-quiz { width: min(100%, 880px); display: flex; flex-direction: column; align-items: center; gap: clamp(12px, 2.4vmin, 22px); }
+.kino-prompt { flex-direction: column; min-height: 0; width: 100%; }
+.kino-q-head { display: flex; align-items: center; gap: 8px; font-weight: 700; color: var(--ink-soft); font-size: clamp(14px, 2.4vmin, 18px); }
+.kino-q-head i { width: 14px; height: 14px; border-radius: 50%; background: var(--line); display: block; }
+.kino-q-head i.done { background: var(--ok); }
+.kino-q-head i.now { background: #c2255c; box-shadow: 0 0 0 3px #ffdeeb; }
+.kino-q-head span { margin-left: 6px; }
+.kino-q { margin: 0; font-size: clamp(22px, 4.4vmin, 40px); font-weight: 700; text-align: center; line-height: 1.25; }
+.kino-choices .tile .tile-text { font-size: clamp(30px, 7vmin, 64px); }
+.kino-tools { display: flex; justify-content: center; }
+.kino-rewatch { min-height: 56px; background: #fff0f6; color: #a61e4d; }
+
+/* Abschluss: Jetzt üben */
+.kino-end { flex-direction: column; width: min(100%, 760px); min-height: 0; }
+.kino-end-title { margin: 0; font-size: clamp(24px, 4.6vmin, 40px); font-weight: 700; }
+.kino-practice { display: flex; flex-wrap: wrap; gap: var(--gap); justify-content: center; width: 100%; }
+.kino-practice-btn {
+  flex: 1 1 220px;
+  max-width: 340px;
+  min-height: 88px;
+  flex-direction: row;
+  justify-content: flex-start;
+  text-align: left;
+  border: 4px solid #ffc9de;
+}
+.kino-practice-icon { font-size: clamp(38px, 7vmin, 58px); }
+.kino-practice-btn span:not(.emoji) { display: flex; flex-direction: column; line-height: 1.15; }
+.kino-practice-btn small { font-size: clamp(14px, 2.2vmin, 18px); color: var(--ink-soft); font-weight: 700; }
+.kino-practice-btn b { font-size: clamp(18px, 3vmin, 26px); }
+
+/* ---------- Kino-Insel: Kinokarten ---------- */
+.kino-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: 1000px;
+  margin: 0 auto var(--gap);
+  padding: 12px 18px;
+  border-radius: var(--radius-l);
+  color: #fff;
+  background:
+    radial-gradient(circle at 8% 30%, rgba(255, 255, 255, 0.25), transparent 30%),
+    linear-gradient(135deg, #c2255c, #862e9c);
+  box-shadow: var(--shadow);
+}
+.kino-head-icon { font-size: clamp(42px, 8vmin, 64px); }
+.kino-head h2 { margin: 0; font-size: clamp(24px, 4.4vmin, 36px); }
+.kino-head p { margin: 2px 0 0; font-size: clamp(15px, 2.6vmin, 20px); font-weight: 700; opacity: 0.95; }
+.kino-group { max-width: 1000px; margin: 0 auto calc(var(--gap) * 1.2); }
+.kino-group h3 { margin: 0 0 10px; font-size: clamp(20px, 3.4vmin, 28px); display: flex; align-items: center; gap: 6px; }
+.kino-tickets {
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+}
+.kino-ticket {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  position: relative;
+  display: grid;
+  grid-template-columns: 42% 1fr 56px;
+  align-items: stretch;
+  min-height: 112px;
+  padding: 0;
+  text-align: left;
+  border-radius: 20px;
+  background: #fff;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  color: var(--ink);
+  font-family: inherit;
+  transition: transform 0.1s;
+}
+.kino-ticket:active { transform: translateY(4px); }
+.kino-ticket .kino-poster { height: 100%; min-height: 112px; }
+.kino-ticket .kino-poster-icon { font-size: clamp(40px, 8vmin, 60px); }
+.kino-ticket-body { display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 10px 12px; min-width: 0; }
+.kino-ticket-title { font-size: clamp(18px, 2.8vmin, 23px); font-weight: 700; line-height: 1.15; }
+.kino-ticket-meta { font-size: 15px; font-weight: 700; color: var(--ink-soft); }
+.kino-ticket-stub {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--film, #c2255c);
+  border-left: 3px dashed rgba(255, 255, 255, 0.85);
+  position: relative;
+}
+.kino-ticket.seen .kino-ticket-stub { background: var(--ok); }
+.kino-seen {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: var(--ok);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 3px 10px;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+}

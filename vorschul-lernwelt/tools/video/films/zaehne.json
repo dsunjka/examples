@@ -1,0 +1,361 @@
+{
+  "id": "zaehne",
+  "title": "Zähne putzen mit *KAI*",
+  "icon": "🦷",
+  "subject": "sach1",
+  "related": [
+    "koerperlabor"
+  ],
+  "parent": "Zahnpflege nach der KAI-Methode: Kauflächen hin und her schrubben, Außenflächen bei geschlossenen Zähnen mit kleinen Kreisen, Innenflächen vom Zahnfleisch zum Zahn (von Rot nach Weiß) auswischen; zweimal täglich zwei Minuten mit erbsengroßer Fluorid-Zahnpasta; Zucker wird von Bakterien im Zahnbelag zu Säure, die Löcher macht, darum Wasser trinken und nicht den ganzen Tag naschen. Tipp: Eltern putzen bis etwa zum Ende der Grundschulzeit abends nach.",
+  "intro": "Schau mal, Flo putzt Zähne. Kennst du den Trick mit Kai?",
+  "accent": "#3dbe6b",
+  "beats": [
+    {
+      "say": "Hallo! Ich bin Flo. Heute putzen wir zusammen Zähne.",
+      "visual": {
+        "type": "title",
+        "subtitle": "Sachkunde mit Flo"
+      }
+    },
+    {
+      "say": "Oh je! Ich habe Bonbons genascht. Meine Zähne sind ganz pelzig. Wie putze ich richtig?",
+      "caption": "Wie putze ich *richtig*?",
+      "visual": {
+        "type": "flo",
+        "bg": "bathroom",
+        "emotion": "surprised",
+        "side": "left",
+        "bubble": "🦷❓",
+        "bubbleAt": 0.75,
+        "items": [
+          {
+            "e": "🍬",
+            "label": "Bonbons",
+            "at": 0.1
+          },
+          {
+            "e": "🍭",
+            "at": 0.2
+          },
+          {
+            "e": "🪥",
+            "label": "Zahnbürste",
+            "at": 0.7
+          }
+        ]
+      }
+    },
+    {
+      "say": "Auf den Zähnen wohnen winzige Bakterien. Sie machen aus Zucker Säure. Die Säure macht Löcher.",
+      "caption": "Zucker → Säure → *Loch*",
+      "visual": {
+        "type": "bild",
+        "bg": "bathroom",
+        "items": [
+          {
+            "e": "🍬",
+            "label": "Zucker",
+            "at": 0.05
+          },
+          {
+            "e": "🦠",
+            "label": "Bakterien",
+            "at": 0.2
+          },
+          {
+            "e": "🧪",
+            "label": "Säure",
+            "at": 0.5
+          },
+          {
+            "e": "🕳️",
+            "label": "Loch!",
+            "at": 0.8
+          }
+        ]
+      }
+    },
+    {
+      "say": "Zum Glück kenne ich einen Trick. Er heißt Kai. Jeder Buchstabe ist eine Stelle am Zahn.",
+      "caption": "K · A · I",
+      "visual": {
+        "type": "zahn",
+        "area": "alle",
+        "brushAt": 0.35,
+        "floGesture": "point"
+      }
+    },
+    {
+      "say": "K wie Kauflächen. Hier schrubbe ich hin und her.",
+      "caption": "*K* = Kauflächen",
+      "visual": {
+        "type": "zahn",
+        "area": "kau",
+        "dirt": true,
+        "brushAt": 0.3,
+        "clean": 0.95
+      }
+    },
+    {
+      "say": "A wie Außenflächen. Zähne zusammen, dann kleine Kreise malen.",
+      "caption": "*A* = Außenflächen",
+      "visual": {
+        "type": "zahn",
+        "area": "aussen",
+        "dirt": true,
+        "brushAt": 0.45,
+        "clean": 0.95
+      }
+    },
+    {
+      "say": "Jetzt fehlt noch das I. Wo putze ich noch? Was meinst du?",
+      "pause": 2.5,
+      "caption": "*I* = ?",
+      "visual": {
+        "type": "flo",
+        "bg": "bathroom",
+        "emotion": "think",
+        "side": "left",
+        "think": true,
+        "bubble": "I = ?",
+        "bubbleAt": 0.4,
+        "items": [
+          {
+            "e": "🦷",
+            "label": "K ✓",
+            "at": 0.05
+          },
+          {
+            "e": "🦷",
+            "label": "A ✓",
+            "at": 0.2
+          },
+          {
+            "e": "❓",
+            "label": "I",
+            "at": 0.45
+          }
+        ]
+      }
+    },
+    {
+      "say": "Genau, I wie Innenflächen, bei der Zunge! Ich wische vom Roten zum Weißen.",
+      "caption": "*I* = Innenflächen",
+      "visual": {
+        "type": "zahn",
+        "area": "innen",
+        "dirt": true,
+        "brushAt": 0.5,
+        "clean": 0.95,
+        "floEmotion": "happy"
+      }
+    },
+    {
+      "say": "Zweimal am Tag, morgens und abends. Immer zwei Minuten lang.",
+      "caption": "2 × am Tag, je *2 Minuten*",
+      "visual": {
+        "type": "zahn",
+        "area": "alle",
+        "brushAt": 0.05,
+        "timer": "2 Minuten",
+        "timerAt": 0.45,
+        "clean": 1
+      }
+    },
+    {
+      "say": "Was ist besser für meine Zähne? Limo oder Wasser? Was meinst du?",
+      "pause": 2.5,
+      "caption": "Limo oder Wasser?",
+      "visual": {
+        "type": "vergleich",
+        "bg": "kitchen",
+        "mid": "?",
+        "midAt": 0.55,
+        "floEmotion": "think",
+        "left": {
+          "e": "🥤",
+          "n": 1,
+          "label": "Limo",
+          "at": 0.4,
+          "color": "orange"
+        },
+        "right": {
+          "e": "💧",
+          "n": 1,
+          "label": "Wasser",
+          "at": 0.6,
+          "color": "blue"
+        }
+      }
+    },
+    {
+      "say": "Wasser! Limo hat viel Zucker. Und Süßes nasche ich nicht den ganzen Tag.",
+      "caption": "*Wasser* ist am besten",
+      "visual": {
+        "type": "vergleich",
+        "bg": "kitchen",
+        "mid": "?",
+        "continue": true,
+        "floEmotion": "happy",
+        "left": {
+          "e": "🥤",
+          "n": 1,
+          "label": "Limo",
+          "at": -0.1,
+          "color": "orange",
+          "mark": "no"
+        },
+        "right": {
+          "e": "💧",
+          "n": 1,
+          "label": "Wasser",
+          "at": -0.1,
+          "color": "blue",
+          "mark": "yes"
+        }
+      }
+    },
+    {
+      "say": "Merke: Kauflächen hin und her. Außen kleine Kreise. Innen von Rot nach Weiß. Zweimal am Tag.",
+      "visual": {
+        "type": "merke",
+        "icon": "🦷",
+        "title": "Merke: KAI",
+        "lines": [
+          "*K*auflächen: hin und her",
+          "*A*ußen: kleine Kreise",
+          "*I*nnen: Rot zu Weiß",
+          "2 × am Tag, *2 Minuten*"
+        ],
+        "at": [
+          0.05,
+          0.3,
+          0.5,
+          0.75
+        ]
+      }
+    },
+    {
+      "say": "Jetzt kommt das Quiz. Putzt du heute mit mir?",
+      "visual": {
+        "type": "flo",
+        "bg": "bathroom",
+        "emotion": "happy",
+        "gesture": "cheer",
+        "side": "left",
+        "bubble": "Quiz! 🦷",
+        "bubbleAt": 0.3,
+        "items": [
+          {
+            "e": "🪥",
+            "label": "Zahnbürste",
+            "at": 0.1
+          },
+          {
+            "e": "⏳",
+            "label": "2 Minuten",
+            "at": 0.3
+          }
+        ]
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Kai ist ein Trick. Wofür steht das K?",
+      "options": [
+        {
+          "text": "Kauflächen",
+          "say": "Kauflächen",
+          "correct": true
+        },
+        {
+          "text": "⭕ Kreise",
+          "say": "Kreise",
+          "correct": false
+        },
+        {
+          "text": "🙂 Kopf",
+          "say": "Kopf",
+          "correct": false
+        }
+      ],
+      "explain": "Schau mal: Jeder Buchstabe ist eine Stelle am Zahn. Mit welcher Stelle beißt du zu?",
+      "model": "K wie Kauflächen. Damit kauen wir. Da schrubbe ich hin und her.",
+      "key": "K wie Kauflächen",
+      "beat": 4
+    },
+    {
+      "q": "Wie putzt du die Außenflächen?",
+      "options": [
+        {
+          "text": "↔️ hin und her",
+          "say": "hin und her",
+          "correct": false
+        },
+        {
+          "text": "⭕ kleine Kreise",
+          "say": "kleine Kreise",
+          "correct": true
+        },
+        {
+          "text": "🙅 gar nicht",
+          "say": "gar nicht",
+          "correct": false
+        }
+      ],
+      "explain": "Fast! Hin und her geht es oben auf den Kauflächen. Außen malt die Bürste etwas Rundes.",
+      "model": "Ich beiße die Zähne zusammen. Dann male ich außen kleine Kreise.",
+      "key": "A wie Außenflächen",
+      "beat": 5
+    },
+    {
+      "q": "Wie oft am Tag putzt du deine Zähne?",
+      "options": [
+        {
+          "text": "1 ×",
+          "say": "einmal am Tag",
+          "correct": false
+        },
+        {
+          "text": "2 ×",
+          "say": "zweimal am Tag",
+          "correct": true
+        },
+        {
+          "text": "nur sonntags",
+          "say": "nur am Sonntag",
+          "correct": false
+        }
+      ],
+      "explain": "Denk mal an den Morgen und an den Abend. Wann putzt du da?",
+      "model": "Ich putze zweimal am Tag. Morgens und abends, immer zwei Minuten lang.",
+      "key": "zweimal am Tag",
+      "beat": 8
+    },
+    {
+      "q": "Du hast Durst. Was ist gut für deine Zähne?",
+      "options": [
+        {
+          "text": "🥤 Limo",
+          "say": "Limo",
+          "correct": false
+        },
+        {
+          "text": "💧 Wasser",
+          "say": "Wasser",
+          "correct": true
+        },
+        {
+          "text": "🧃 Saft",
+          "say": "Saft",
+          "correct": false
+        }
+      ],
+      "explain": "Schau mal: Die Bakterien lieben Zucker. Welches Getränk hat gar keinen Zucker?",
+      "model": "Wasser hat keinen Zucker. Wasser ist das beste Getränk für die Zähne.",
+      "key": "Wasser trinken",
+      "beat": 10
+    }
+  ]
+}

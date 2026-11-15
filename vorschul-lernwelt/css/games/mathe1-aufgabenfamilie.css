@@ -1,1 +1,192 @@
-/* aufgabenfamilie */
+/* ==========================================================================
+   Aufgabenfamilie (mathe1/aufgabenfamilie) – Präfix .auf-
+   ========================================================================== */
+
+.stage.auf-stage { justify-content: flex-start; padding-top: clamp(6px, 1.6vmin, 16px); }
+
+.auf-main {
+  --auf-red: #e8505b;
+  --auf-red-soft: #ffe1e3;
+  --auf-blue: #2f7de1;
+  --auf-blue-soft: #dceaff;
+  --auf-roof: #ff8a5c;
+  --auf-roof-dark: #e0663a;
+  width: 100%; max-width: 860px; flex: 1 1 auto; min-height: 0;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: clamp(10px, 2.2vmin, 22px);
+}
+.auf-hidden { display: none !important; }
+.auf-pop { animation: auf-pop .45s cubic-bezier(.3, 1.5, .5, 1); }
+@keyframes auf-pop { from { transform: scale(.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+.auf-top {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: clamp(10px, 2.4vmin, 26px); width: 100%;
+}
+
+/* ---------- Zahlenhaus ---------- */
+.auf-house {
+  --auf-w: min(94vw, 520px);
+  width: var(--auf-w);
+  display: flex; flex-direction: column; align-items: center;
+  filter: drop-shadow(0 6px 0 rgba(43, 45, 66, .12));
+}
+.auf-house.auf-small { --auf-w: min(70vw, 340px); }
+.auf-roof {
+  position: relative;
+  width: 100%;
+  height: clamp(66px, 11vh, 108px);
+  background: linear-gradient(180deg, var(--auf-roof), var(--auf-roof-dark));
+  clip-path: polygon(50% 0, 100% 100%, 0 100%);
+  display: flex; align-items: flex-end; justify-content: center;
+  padding-bottom: clamp(4px, 1vh, 10px);
+}
+.auf-small .auf-roof { height: clamp(54px, 8.5vh, 84px); }
+.auf-chimney { display: none; }
+.auf-body {
+  width: 92%;
+  background: var(--paper);
+  border: 4px solid #f0d9b0;
+  border-top: 0;
+  border-radius: 0 0 var(--radius) var(--radius);
+  padding: clamp(6px, 1.4vmin, 14px);
+  display: flex; flex-direction: column; gap: clamp(6px, 1.4vmin, 12px);
+}
+.auf-rooms { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(6px, 1.4vmin, 12px); }
+.auf-room {
+  border-radius: var(--radius-s);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+  padding: clamp(4px, 1vmin, 10px) 4px;
+  min-height: clamp(52px, 8vh, 80px);
+}
+.auf-room-a { background: var(--auf-red-soft); }
+.auf-room-b { background: var(--auf-blue-soft); }
+.auf-num {
+  font-weight: 800; line-height: 1;
+  font-size: clamp(32px, min(8.5vw, 6vh), 54px);
+  min-width: 1.5em; text-align: center;
+  border-radius: 14px;
+  transition: box-shadow .3s, background .3s;
+}
+.auf-small .auf-num { font-size: clamp(28px, min(7vw, 5vh), 44px); }
+.auf-n-s {
+  color: #fff; text-shadow: 0 2px 0 rgba(0, 0, 0, .18);
+  background: rgba(255, 255, 255, .22); padding: 2px 8px;
+}
+.auf-n-a { color: var(--auf-red); }
+.auf-n-b { color: var(--auf-blue); }
+.auf-num.auf-q { color: var(--ink-faint); background: #fff; border: 4px dashed #c4c9de; padding: 0 6px; text-shadow: none; }
+.auf-n-s.auf-q { color: var(--ink-faint); }
+.auf-num.auf-filled { border-color: var(--ok); background: var(--ok-soft); }
+.auf-n-s.auf-filled { color: var(--ink); }
+.auf-num.auf-glow { box-shadow: 0 0 0 5px var(--gold); background: #fff7d6; }
+.auf-n-s.auf-glow { color: var(--ink); }
+/* Umkehr-Tipp: die weggenommene Zahl wird durchgestrichen */
+.auf-num.auf-taken { opacity: .35; text-decoration: line-through; text-decoration-thickness: 5px; }
+.auf-house.auf-complete .auf-body { border-color: var(--ok); }
+
+/* Punkte (Stufe 1) */
+.auf-dots { display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 3px; max-width: 100%; }
+.auf-dot {
+  --d: clamp(10px, 2.4vmin, 16px);
+  width: var(--d); height: var(--d); border-radius: 50%;
+  position: relative; flex: 0 0 auto;
+}
+.auf-dgap { width: 4px; }
+.auf-dot.auf-red { background: var(--auf-red); }
+.auf-dot.auf-blue { background: var(--auf-blue); }
+.auf-dot.auf-gold { background: #f2a900; }
+.auf-dot.auf-x { opacity: .45; }
+.auf-dot.auf-x::after {
+  content: ''; position: absolute; left: -2px; right: -2px; top: 50%; height: 3px; margin-top: -1.5px;
+  background: var(--ink); border-radius: 2px; transform: rotate(-45deg);
+}
+
+/* Zimmer für die Kärtchen */
+.auf-slots { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(6px, 1.2vmin, 10px); }
+.auf-slot {
+  min-height: 60px;
+  border: 3px dashed #d5cbb4; border-radius: 18px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255, 255, 255, .6);
+}
+.auf-withdots .auf-slot { min-height: 78px; }
+.auf-slotq { font-size: 26px; font-weight: 800; color: #d5cbb4; }
+.auf-slot.auf-filled { border: 0; background: none; }
+.auf-slot.auf-wait { border-color: var(--gold); background: #fff8dc; animation: auf-wait 1.4s ease-in-out infinite; }
+@keyframes auf-wait { 50% { transform: scale(1.03); } }
+
+/* ---------- Kärtchen ---------- */
+.auf-pile {
+  display: flex; flex-wrap: wrap; justify-content: center;
+  gap: clamp(8px, 1.8vmin, 16px);
+  width: 100%; max-width: 640px;
+}
+.auf-card {
+  appearance: none; border: 0; cursor: pointer;
+  min-width: clamp(112px, 26vw, 150px); min-height: 64px;
+  padding: 8px 14px;
+  background: var(--card); color: var(--ink);
+  border-radius: 18px; box-shadow: var(--shadow);
+  border-bottom: 5px solid #ffd28a;
+  font-family: inherit; font-weight: 800;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: transform .12s, box-shadow .12s, opacity .3s;
+}
+.auf-card:active { transform: translateY(3px); box-shadow: var(--shadow-press); }
+.auf-card.auf-out { opacity: .3; filter: grayscale(.8); pointer-events: none; transform: scale(.92); }
+.auf-card.auf-gone { opacity: 0; transform: scale(.7); pointer-events: none; transition: opacity .4s, transform .4s; }
+.auf-card.is-hint, .auf-card.hint-glow { box-shadow: 0 0 0 6px var(--gold), var(--shadow); animation: tile-hint 1.1s ease-in-out infinite; }
+.auf-card.auf-in {
+  width: 100%; min-width: 0; min-height: 56px; cursor: default; pointer-events: none;
+  background: var(--ok-soft); border-bottom-color: var(--ok); box-shadow: none; padding: 6px 8px;
+}
+.auf-face { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.auf-eqline { display: inline-flex; align-items: baseline; gap: .25em; white-space: nowrap; }
+.auf-lab { font-size: clamp(24px, min(6.4vw, 4.6vh), 38px); line-height: 1.1; }
+.auf-res { display: none; font-size: clamp(22px, min(5.6vw, 4vh), 32px); color: var(--ok); }
+.auf-res.auf-show { display: inline; }
+.auf-in .auf-lab { font-size: clamp(20px, min(5.4vw, 3.8vh), 32px); }
+.auf-in .auf-res { font-size: clamp(20px, min(5.4vw, 3.8vh), 32px); color: #138a50; }
+.auf-cdots { display: flex; flex-wrap: wrap; justify-content: center; gap: 2px 8px; max-width: 150px; }
+.auf-cdots .auf-dot { --d: clamp(9px, 2vmin, 13px); }
+.auf-in .auf-cdots .auf-dot { --d: clamp(7px, 1.6vmin, 11px); }
+
+/* Kärtchen als Auswahl-Kacheln (ctx.choices) */
+.auf-cchoices { gap: clamp(8px, 1.8vmin, 16px); max-width: 640px; }
+.tile.auf-ctile {
+  width: auto; height: auto;
+  min-width: clamp(120px, 28vw, 160px); min-height: 68px;
+  padding: 10px 16px; border-radius: 18px;
+  border-bottom: 5px solid #ffd28a;
+  font-size: 16px;
+}
+.tile.auf-ctile.is-correct { border-bottom-color: var(--ok); }
+
+/* ---------- Rechnungen ---------- */
+.auf-eqbox {
+  background: var(--card); border-radius: var(--radius-l); box-shadow: var(--shadow);
+  padding: clamp(6px, 1.4vmin, 12px) clamp(18px, 4vmin, 34px);
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.auf-eq {
+  display: flex; align-items: center; gap: .2em; white-space: nowrap;
+  font-size: clamp(30px, min(8.4vw, 5.6vh), 52px); font-weight: 800; line-height: 1.15;
+}
+.auf-eq2 { color: #138a50; font-size: clamp(26px, min(7vw, 4.6vh), 44px); }
+.auf-eq-big { font-size: clamp(36px, min(10vw, 7vh), 64px); }
+.auf-slot-inline {
+  min-width: 1.4em; height: 1.15em; display: inline-flex; align-items: center; justify-content: center;
+  border: 4px dashed #b8bfd8; border-radius: 14px; color: var(--ink-faint); background: #fbfcff; font-size: .9em;
+}
+.auf-slot-inline.auf-done { border-style: solid; border-color: var(--ok); background: var(--ok-soft); color: var(--ink); }
+
+/* Zahl-Kacheln */
+.auf-nums { gap: clamp(8px, 1.8vmin, 16px); }
+.tile.auf-ntile { --tile: clamp(64px, 15vmin, 104px); }
+.tile.auf-ntile .tile-text { font-size: clamp(30px, 7vmin, 50px); }
+
+@media (max-width: 480px) {
+  .auf-house.auf-small { --auf-w: min(64vw, 240px); }
+  .auf-top { gap: 8px; }
+}

@@ -1,0 +1,435 @@
+{
+  "id": "schulweg",
+  "title": "Sicher über die *Straße*",
+  "icon": "🚸",
+  "subject": "sach1",
+  "related": [
+    "schulweg"
+  ],
+  "parent": "Verkehrserziehung für den Schulweg: Bei Rot stehen bleiben (auch ohne Auto), am Bordstein anhalten und links, rechts, links schauen, warten bis Autos stehen und Blickkontakt suchen, nicht zwischen parkenden Autos queren, im Dunkeln helle Kleidung und Reflektoren; der sicherste Weg ist nicht immer der kürzeste.",
+  "intro": "Schau mal, Flo geht zur Schule. Wie kommt er sicher über die Straße?",
+  "accent": "#3dbe6b",
+  "beats": [
+    {
+      "say": "Hallo! Ich bin Flo. Heute gehe ich zur Schule.",
+      "visual": {
+        "type": "title",
+        "subtitle": "Sachkunde mit Flo"
+      }
+    },
+    {
+      "say": "Oh je! Meine Schule ist auf der anderen Seite. Da ist eine große Straße. Wie komme ich sicher hinüber?",
+      "caption": "Wie komme ich *sicher* rüber?",
+      "visual": {
+        "type": "scene",
+        "bg": "street",
+        "actors": [
+          {
+            "e": "🏫",
+            "x": 74,
+            "y": 71,
+            "size": 130,
+            "at": 0.05,
+            "label": "Schule",
+            "labelAt": 0.2
+          },
+          {
+            "e": "🚗",
+            "x": 115,
+            "y": 77,
+            "size": 96,
+            "at": 0.2,
+            "enter": "none",
+            "moves": [
+              {
+                "x": -15,
+                "y": 77,
+                "at": 0.2,
+                "until": 0.55
+              }
+            ]
+          },
+          {
+            "e": "🚌",
+            "x": -15,
+            "y": 84,
+            "size": 120,
+            "at": 0.45,
+            "enter": "none",
+            "flip": true,
+            "z": 8,
+            "moves": [
+              {
+                "x": 115,
+                "y": 84,
+                "at": 0.45,
+                "until": 0.85
+              }
+            ]
+          },
+          {
+            "e": "❓",
+            "x": 15,
+            "y": 66,
+            "size": 64,
+            "at": 0.75,
+            "anim": "wiggle",
+            "z": 9
+          }
+        ],
+        "floEmotion": "think"
+      }
+    },
+    {
+      "say": "Hier steht eine Ampel. Rot heißt: stehen bleiben. Grün heißt: gehen.",
+      "visual": {
+        "type": "strasse",
+        "light": [
+          {
+            "state": "red",
+            "at": 0
+          },
+          {
+            "state": "green",
+            "at": 0.7
+          }
+        ],
+        "cars": [
+          {
+            "lane": "far",
+            "at": 0.05
+          },
+          {
+            "lane": "near",
+            "at": 0.15
+          }
+        ]
+      }
+    },
+    {
+      "say": "Die Ampel ist rot. Aber gerade kommt kein Auto. Darf ich gehen? Was meinst du?",
+      "pause": 2.5,
+      "visual": {
+        "type": "strasse",
+        "light": "red",
+        "floEmotion": "think"
+      }
+    },
+    {
+      "say": "Nein! Bei Rot bleibe ich stehen, auch ohne Auto. Bei Grün schaue ich kurz. Dann gehe ich.",
+      "visual": {
+        "type": "strasse",
+        "light": [
+          {
+            "state": "red",
+            "at": 0
+          },
+          {
+            "state": "green",
+            "at": 0.6
+          }
+        ],
+        "look": [
+          "left",
+          "right"
+        ],
+        "lookAt": [
+          0.68,
+          0.8
+        ],
+        "walk": 0.95,
+        "floEmotion": "happy"
+      }
+    },
+    {
+      "say": "Hier ist nur ein Zebrastreifen. Ich bleibe am Bordstein stehen. Ich schaue: links, rechts, und nochmal links.",
+      "visual": {
+        "type": "strasse",
+        "look": [
+          "left",
+          "right",
+          "left"
+        ],
+        "lookAt": [
+          0.66,
+          0.79,
+          0.92
+        ],
+        "floGesture": "point"
+      }
+    },
+    {
+      "say": "Warum zuerst links? Die nahen Autos kommen von links. Sie sind am schnellsten bei mir.",
+      "visual": {
+        "type": "strasse",
+        "look": [
+          "left"
+        ],
+        "lookAt": [
+          0.2
+        ],
+        "cars": [
+          {
+            "lane": "near",
+            "at": 0.35,
+            "until": 0.95
+          }
+        ]
+      }
+    },
+    {
+      "say": "Ein Auto kommt. Ich warte, bis es steht. Ich schaue dem Fahrer in die Augen. Dann gehe ich.",
+      "visual": {
+        "type": "strasse",
+        "cars": [
+          {
+            "lane": "near",
+            "at": 0,
+            "stop": true
+          },
+          {
+            "lane": "far",
+            "at": 0.2,
+            "stop": true,
+            "e": "🚙"
+          }
+        ],
+        "look": [
+          "left",
+          "right"
+        ],
+        "lookAt": [
+          0.55,
+          0.68
+        ],
+        "walk": 0.9
+      }
+    },
+    {
+      "say": "Jetzt bist du dran! Hier stehen parkende Autos. Gehe ich hier hinüber? Was meinst du?",
+      "pause": 3,
+      "visual": {
+        "type": "strasse",
+        "zebra": false,
+        "parked": true,
+        "floEmotion": "think"
+      }
+    },
+    {
+      "say": "Lieber nicht! Zwischen den Autos sieht mich kein Fahrer. Ich gehe zum Zebrastreifen.",
+      "visual": {
+        "type": "strasse",
+        "zebra": false,
+        "parked": true,
+        "cars": [
+          {
+            "lane": "near",
+            "at": 0.25,
+            "until": 0.65,
+            "e": "🚐"
+          }
+        ]
+      }
+    },
+    {
+      "say": "Im Winter ist es morgens dunkel. Dann trage ich Helles und Leuchtstreifen. So sieht man mich gut.",
+      "caption": "*hell* und *Leuchtstreifen*",
+      "visual": {
+        "type": "liste",
+        "bg": "night",
+        "title": "Im Dunkeln",
+        "items": [
+          {
+            "e": "👕",
+            "text": "helle Kleidung",
+            "mark": "yes",
+            "at": 0.4,
+            "markAt": 0.5
+          },
+          {
+            "e": "🦺",
+            "text": "Leuchtstreifen",
+            "mark": "yes",
+            "at": 0.6,
+            "markAt": 0.7
+          },
+          {
+            "e": "🧥",
+            "text": "schwarze Jacke",
+            "mark": "no",
+            "at": 0.72,
+            "markAt": 0.82
+          }
+        ]
+      }
+    },
+    {
+      "say": "Mein Weg über die Ampel ist länger. Aber er ist sicherer. Sicher ist wichtiger als kurz.",
+      "caption": "*sicher* vor *kurz*",
+      "visual": {
+        "type": "vergleich",
+        "left": {
+          "items": [
+            "🚙",
+            "🧒",
+            "🚐"
+          ],
+          "label": "kurz",
+          "mark": "no",
+          "at": 0.05,
+          "color": "orange"
+        },
+        "right": {
+          "items": [
+            "🚦",
+            "🚸"
+          ],
+          "label": "sicher",
+          "mark": "yes",
+          "at": 0.25,
+          "color": "green"
+        }
+      }
+    },
+    {
+      "say": "Merke: Bei Rot stehen bleiben. Links, rechts, links schauen. Warten, bis Autos stehen. Im Dunkeln hell anziehen.",
+      "visual": {
+        "type": "merke",
+        "icon": "🚸",
+        "lines": [
+          "Rot heißt *stehen*",
+          "Links, rechts, *links*",
+          "Warten, bis Autos *stehen*",
+          "Im Dunkeln *hell*"
+        ],
+        "at": [
+          0.05,
+          0.28,
+          0.52,
+          0.78
+        ]
+      }
+    },
+    {
+      "say": "Jetzt kommt das Quiz. Gehst du mit mir sicher zur Schule?",
+      "visual": {
+        "type": "flo",
+        "emotion": "happy",
+        "gesture": "cheer",
+        "side": "left",
+        "bubble": "Quiz! 🚸",
+        "bubbleAt": 0.3,
+        "items": [
+          {
+            "e": "🚦",
+            "label": "Ampel",
+            "at": 0.1
+          },
+          {
+            "e": "🏫",
+            "label": "Schule",
+            "at": 0.3
+          }
+        ]
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Die Ampel ist rot. Es kommt kein Auto. Was tust du?",
+      "options": [
+        {
+          "text": "🚶 gehen",
+          "say": "gehen",
+          "correct": false
+        },
+        {
+          "text": "🧍 warten",
+          "say": "warten",
+          "correct": true
+        },
+        {
+          "text": "🏃 rennen",
+          "say": "schnell rennen",
+          "correct": false
+        }
+      ],
+      "explain": "Schau mal auf die Ampel. Was sagt uns Rot? Das gilt auch ohne Auto.",
+      "model": "Rot heißt stehen bleiben. Ich warte, bis die Ampel grün ist.",
+      "key": "Rot heißt stehen",
+      "beat": 4
+    },
+    {
+      "q": "Du stehst am Zebrastreifen. Wohin schaust du?",
+      "options": [
+        {
+          "text": "⬅️ ➡️ ⬅️",
+          "say": "links, rechts, und nochmal links",
+          "correct": true
+        },
+        {
+          "text": "⬆️ nach oben",
+          "say": "nach oben",
+          "correct": false
+        },
+        {
+          "text": "⬇️ auf den Boden",
+          "say": "auf den Boden",
+          "correct": false
+        }
+      ],
+      "explain": "Die Autos kommen von der Seite. Dorthin müssen deine Augen schauen.",
+      "model": "Ich schaue links, rechts, und nochmal links. Die nahen Autos kommen von links.",
+      "key": "links rechts links",
+      "beat": 5
+    },
+    {
+      "q": "Ein Auto kommt zum Zebrastreifen. Wann gehst du los?",
+      "options": [
+        {
+          "text": "sofort",
+          "say": "sofort",
+          "correct": false
+        },
+        {
+          "text": "🚗 Auto steht",
+          "say": "wenn das Auto ganz steht",
+          "correct": true
+        },
+        {
+          "text": "🚗 Auto fährt",
+          "say": "wenn das Auto noch fährt",
+          "correct": false
+        }
+      ],
+      "explain": "Fast! Ein fahrendes Auto braucht Zeit zum Bremsen. Warte ab, was es macht.",
+      "model": "Ich warte, bis das Auto ganz steht. Ich schaue dem Fahrer in die Augen. Dann gehe ich.",
+      "key": "warten bis Auto steht",
+      "beat": 7
+    },
+    {
+      "q": "Morgens ist es noch dunkel. Was hilft dir?",
+      "options": [
+        {
+          "text": "🧥 schwarze Jacke",
+          "say": "eine schwarze Jacke",
+          "correct": false
+        },
+        {
+          "text": "🦺 Leuchtstreifen",
+          "say": "Leuchtstreifen",
+          "correct": true
+        },
+        {
+          "text": "🧢 Mütze",
+          "say": "eine Mütze",
+          "correct": false
+        }
+      ],
+      "explain": "Im Dunkeln müssen dich die Autofahrer gut sehen. Was leuchtet im Licht?",
+      "model": "Leuchtstreifen leuchten im Licht der Autos. Dann sieht mich der Fahrer.",
+      "key": "Leuchtstreifen",
+      "beat": 10
+    }
+  ]
+}

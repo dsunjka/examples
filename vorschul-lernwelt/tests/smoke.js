@@ -190,6 +190,25 @@ const TIMEOUT = Number(args.timeout || 45000);
       check(await page.$('.reise-intro'), 'Reise: neues Kapitel nicht enthüllt');
       await tap('.reise-intro [data-test-station]');
       await page.evaluate(() => window.LT.reise.reset());
+      // Teil 2 „Schulabenteuer“: nach Teil 1 frei, eigener Bildschirm, Umschalter
+      check(await page.evaluate(() => !window.LT.reise.schoolUnlocked() && window.LT.reise.defaultJourney() === 'reise'), 'Reise: Teil 2 ohne Freischaltung offen');
+      await page.evaluate(() => { window.LT.reise.test.completePart1(); window.LT.reise.show({ journey: 'schule' }); });
+      await page.waitForTimeout(300);
+      check(await page.evaluate(() => window.LT.reise.schoolUnlocked() && window.LT.reise.defaultJourney() === 'schule'), 'Reise: Teil 2 nach Teil 1 nicht frei');
+      check(await page.$('.reise-screen.is-schule .reise-parts'), 'Reise: Teil-2-Bildschirm oder Umschalter fehlt');
+      await tap('.reise-intro [data-test-station]');
+      await page.waitForTimeout(150);
+      await snap('reise-teil2');
+      check(await tap('.reise-part[data-journey="reise"]'), 'Reise: Umschalter Teil 1 fehlt');
+      await page.waitForTimeout(200);
+      check(await page.evaluate(() => document.querySelector('.reise-screen').dataset.journey === 'reise'), 'Reise: Umschalten auf Teil 1 klappt nicht');
+      await page.evaluate(() => { window.LT.reise.reset(); window.LT.app.showHome(); });
+    }
+    // Flos Kino: Insel mit Kinokarten
+    if (await page.evaluate(() => !!(window.LT.kino && window.LT.areaById('kino') && window.LT.kino.list().length))) {
+      await page.evaluate(() => window.LT.app.showArea('kino'));
+      await page.waitForTimeout(150);
+      if (!(await page.$('.kino-ticket'))) errors.push({ type: 'kino', text: 'Kino: keine Kinokarten auf der Insel' });
     }
     // Forscherbuch (Startseite und Forscherwelt-Insel)
     if (await page.evaluate(() => !!(window.LT.wissen && window.LT.wissen.showBook))) {
@@ -254,7 +273,7 @@ const TIMEOUT = Number(args.timeout || 45000);
     }
     const errs = errors.slice(errStart).filter((e) => !/favicon/.test(e.text));
     results.push({ id: 'app-screens', level: 0, ok: errs.length === 0, reason: errs.length ? 'Fehler in der Konsole' : '', errors: errs });
-    console.log(`${errs.length ? '❌' : '✅'} App-Bildschirme (Start, Inseln, Flos Reise, Forscherbuch, Album, Elternbereich)`);
+    console.log(`${errs.length ? '❌' : '✅'} App-Bildschirme (Start, Inseln, Flos Reise Teil 1 und 2, Kino, Forscherbuch, Album, Elternbereich)`);
     errs.slice(0, 8).forEach((e) => console.log('     ↳', e.type, e.text.split('\n').slice(0, 3).join(' | ')));
   }
 

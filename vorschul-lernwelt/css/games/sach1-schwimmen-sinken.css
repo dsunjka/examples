@@ -1,1 +1,256 @@
-/* schwimmen-sinken */
+/* Spiel „Schwimmt oder sinkt?“ (sach1/schwimmen-sinken) – Präfix .sch- */
+
+.sch-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(10px, 2.2vmin, 22px);
+  width: 100%;
+  max-width: 820px;
+}
+
+/* ---------- Frage-Karte ---------- */
+.prompt-box.sch-card {
+  flex-wrap: nowrap;
+  padding: clamp(8px, 1.8vmin, 16px) clamp(14px, 3vmin, 26px);
+  gap: clamp(8px, 1.6vmin, 14px);
+  max-width: min(100%, 640px);
+  min-height: clamp(56px, 8vh, 80px);
+}
+.sch-qtext {
+  font-size: clamp(19px, 3.3vmin, 30px);
+  font-weight: 800;
+  line-height: 1.2;
+  text-align: center;
+}
+.sch-cardpic {
+  flex: 0 0 auto;
+  width: clamp(40px, 6.5vh, 60px);
+  height: clamp(40px, 6.5vh, 60px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sch-cardpic .sch-art { width: 100%; height: 100%; }
+.sch-cardpic .sch-emo { font-size: clamp(32px, 5.6vh, 52px); }
+.sch-qtag, .sch-chip {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-weight: 800;
+  font-size: clamp(14px, 2.2vmin, 19px);
+  background: #e3f3ff;
+  color: #1f6fb2;
+}
+.sch-chip { background: var(--ok-soft); color: #13804b; }
+
+/* ---------- Wasserbecken ---------- */
+.sch-tank {
+  --h: clamp(44px, 8vh, 72px);
+  --wl: 42%;
+  position: relative;
+  flex: 0 0 auto;
+  width: min(100%, 560px);
+  height: clamp(170px, 30vh, 260px);
+  border: 5px solid #b8dcf2;
+  border-top: 0;
+  border-radius: 0 0 28px 28px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.45));
+  box-shadow: var(--shadow);
+}
+.sch-tank::before {
+  /* Glasrand oben */
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -9px;
+  right: -9px;
+  height: 7px;
+  border-radius: 6px;
+  background: #b8dcf2;
+}
+.sch-tank.sch-many { --h: clamp(36px, min(7vh, 12.5vw), 62px); }
+.sch-water {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: var(--wl);
+  z-index: 2;
+  pointer-events: none;
+  border-top: 3px solid rgba(255, 255, 255, 0.9);
+  border-radius: 0 0 22px 22px;
+  background: linear-gradient(180deg, rgba(91, 184, 245, 0.42), rgba(38, 124, 214, 0.6));
+}
+.sch-water::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 12px;
+  border-radius: 0 0 22px 22px;
+  background: #f1d79c;
+  opacity: 0.85;
+}
+
+.sch-obj {
+  position: absolute;
+  z-index: 1;
+  width: calc(var(--h) * var(--sc, 1));
+  height: calc(var(--h) * var(--sc, 1));
+  translate: -50% 0;
+  top: calc(var(--wl) - var(--h) * var(--sc, 1) - 8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: top 0.5s, scale 0.3s, filter 0.3s;
+  animation: sch-hover 2.4s ease-in-out infinite;
+}
+.sch-art { display: block; width: 100%; height: 100%; overflow: visible; }
+.sch-emo {
+  font-family: var(--emoji);
+  font-size: calc(var(--h) * var(--sc, 1) * 0.84);
+  line-height: 1;
+}
+.sch-obj.sch-float {
+  top: calc(var(--wl) - var(--h) * var(--sc, 1) * 0.62);
+  transition: top 0.9s cubic-bezier(0.3, 1.7, 0.55, 1);
+  animation: sch-bob 2.2s 0.9s ease-in-out infinite;
+}
+.sch-obj.sch-sink {
+  top: calc(100% - var(--h) * var(--sc, 1) - 10px);
+  transition: top 1.8s cubic-bezier(0.4, 0.1, 0.6, 1);
+  animation: none;
+}
+.sch-obj.sch-cur {
+  scale: 1.15;
+  filter: drop-shadow(0 0 6px var(--gold)) drop-shadow(0 0 3px var(--gold));
+}
+@keyframes sch-hover {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg) translateY(-3px); }
+}
+@keyframes sch-bob {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50% { transform: translateY(4px) rotate(2deg); }
+}
+
+.sch-splash {
+  position: absolute;
+  top: var(--wl);
+  z-index: 3;
+  width: 84px;
+  height: 22px;
+  translate: -50% -50%;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  pointer-events: none;
+  animation: sch-splash 0.75s ease-out forwards;
+}
+@keyframes sch-splash {
+  from { transform: scale(0.2); opacity: 1; }
+  to { transform: scale(1.7); opacity: 0; }
+}
+.sch-bub {
+  position: absolute;
+  bottom: 18px;
+  z-index: 3;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.95);
+  opacity: 0;
+  pointer-events: none;
+  animation: sch-bub 1.5s ease-in forwards;
+}
+@keyframes sch-bub {
+  0% { opacity: 0; transform: translateY(0); }
+  15% { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-80px); }
+}
+
+/* Vermutungs-Abzeichen (Forschertabelle) */
+.sch-badge {
+  position: absolute;
+  top: -12px;
+  right: -14px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 6px rgba(43, 45, 66, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sch-badge .sch-icon { width: 26px; height: 26px; }
+.sch-badge.sch-ok { box-shadow: 0 0 0 4px var(--ok); }
+.sch-badge.sch-oops { box-shadow: 0 0 0 4px var(--soft-wrong); }
+
+/* ---------- Bedienung ---------- */
+.sch-ctrl {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--gap);
+  max-width: 100%;
+}
+.sch-ctrl.sch-locked .tile { pointer-events: none; }
+.sch-ctrl.sch-gone { visibility: hidden; }
+.tile.sch-chosen { box-shadow: 0 0 0 5px #4a90e2, var(--shadow); }
+.tile.sch-chosen.is-correct { box-shadow: 0 0 0 6px var(--ok), var(--shadow); }
+
+.tile.sch-pbtn {
+  width: clamp(130px, 38vw, 210px);
+  height: clamp(92px, 15vh, 140px);
+}
+.sch-pb { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.sch-pb .sch-icon { width: clamp(46px, 7.5vh, 68px); height: clamp(46px, 7.5vh, 68px); }
+.sch-pb-t { font-size: clamp(20px, 3.4vmin, 30px); font-weight: 800; }
+
+.tile.sch-otile {
+  width: clamp(100px, 28vw, 190px);
+  height: clamp(110px, 17vh, 160px);
+}
+.sch-ot { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.sch-ot-pic {
+  width: clamp(48px, 8vh, 72px);
+  height: clamp(48px, 8vh, 72px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sch-ot-pic .sch-emo { font-size: clamp(40px, 7vh, 62px); }
+.sch-ot-t { font-size: clamp(16px, 2.8vmin, 24px); font-weight: 800; }
+
+.tile.sch-mtile {
+  width: clamp(78px, 20vw, 150px);
+  height: auto;
+  min-height: clamp(96px, 15vh, 150px);
+  padding: 10px 6px;
+}
+.sch-mt { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.sch-sw { width: clamp(48px, 8vh, 74px); height: clamp(48px, 8vh, 74px); display: block; }
+.sch-mt-t { font-size: clamp(16px, 2.8vmin, 24px); font-weight: 800; }
+
+.tile.sch-rtile {
+  width: clamp(150px, 23vw, 260px);
+  height: auto;
+  min-height: clamp(64px, 11vh, 120px);
+  padding: 12px 16px;
+}
+.tile.sch-rtile .tile-text {
+  font-size: clamp(17px, 2.7vmin, 24px);
+  line-height: 1.25;
+  white-space: normal;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .sch-ctrl.sch-why { width: 100%; flex-direction: column; align-items: center; flex-wrap: nowrap; gap: 10px; }
+  .tile.sch-rtile { width: min(calc(100% - 20px), 360px); min-height: 58px; padding: 10px 34px 10px 14px; }
+}
+@media (max-height: 560px) {
+  .sch-tank { height: clamp(140px, 30vh, 200px); }
+}

@@ -1,1 +1,125 @@
-/* zehnerfeld */
+/* ==========================================================================
+   Zehnerfeld-Blitz (mathe1/zehnerfeld) – Präfix .zeh-
+   ========================================================================== */
+
+.stage.zeh-stage { gap: clamp(10px, 2.2vmin, 22px); }
+
+/* ---------- Felder ---------- */
+.zeh-field {
+  --zc: min(15vw, 9vh, 76px);
+  display: flex; flex-direction: column; align-items: center;
+  gap: calc(var(--zc) * 0.22); flex: 0 0 auto;
+}
+.zeh-field.is-twenty { --zc: min(13vw, 6.4vh, 62px); }
+.zeh-field.is-build { --zc: min(15.5vw, 9.5vh, 82px); }
+.zeh-field.is-build.is-twenty { --zc: min(15vw, 7.4vh, 70px); }
+
+.zeh-frame {
+  display: grid;
+  grid-template-columns: repeat(5, var(--zc));
+  grid-template-rows: repeat(2, var(--zc));
+  background: #fff; border: 4px solid #3a3d5c; border-radius: 14px; overflow: hidden;
+  box-shadow: 0 4px 0 rgba(43, 45, 66, 0.15);
+}
+.zeh-cell {
+  appearance: none; border: 0; margin: 0; padding: 0; background: transparent; font: inherit;
+  display: flex; align-items: center; justify-content: center; position: relative;
+  border-right: 3px solid #3a3d5c; border-bottom: 3px solid #3a3d5c;
+  transition: background 0.25s;
+}
+.zeh-cell:nth-child(5n) { border-right: 0; }
+.zeh-cell:nth-child(n + 6) { border-bottom: 0; }
+/* dickere Mittellinie zwischen den Fünfern betont die Kraft der Fünf */
+.zeh-cell:nth-child(-n + 5) { border-bottom-width: 4px; }
+button.zeh-cell { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+button.zeh-cell:active { background: var(--area-soft); }
+button.zeh-cell:focus-visible { outline: 4px solid #2b7bff; outline-offset: -4px; }
+
+.zeh-tok {
+  display: block; width: calc(var(--zc) * 0.72); height: calc(var(--zc) * 0.72); border-radius: 50%;
+  transform: scale(0); transition: transform 0.22s cubic-bezier(.3, 1.6, .5, 1), background 0.3s, box-shadow 0.3s;
+}
+.zeh-tok.r, .zeh-tok.b, .zeh-tok.g { transform: scale(1); }
+.zeh-tok.r { background: radial-gradient(circle at 35% 30%, #ff9db3, #ef476f 55%, #c9184a); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.18); }
+.zeh-tok.b { background: radial-gradient(circle at 35% 30%, #9cc7ff, #3a86ff 55%, #1d5fd1); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.18); }
+.zeh-tok.g { background: #fff7d6; box-shadow: inset 0 0 0 3px var(--gold-dark); }
+
+.zeh-cell.zeh-hl { background: #fff3c4; }
+.zeh-cell.zeh-hl2 { background: #e3f0ff; }
+.zeh-cell.zeh-pop .zeh-tok { animation: zeh-pop 0.35s ease-out; }
+@keyframes zeh-pop { 0% { transform: scale(0.3); } 70% { transform: scale(1.15); } 100% { transform: scale(1); } }
+
+/* ---------- Blitzkarte ---------- */
+.zeh-card {
+  position: relative; flex: 0 0 auto; overflow: hidden;
+  background: var(--card); border-radius: var(--radius-l); box-shadow: var(--shadow);
+  padding: clamp(12px, 2.4vmin, 22px);
+}
+.zeh-face { display: flex; align-items: center; justify-content: center; }
+.zeh-cover {
+  position: absolute; inset: 0; z-index: 3; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 6px;
+  color: #fff; border-radius: inherit;
+  background:
+    radial-gradient(circle at 20% 25%, rgba(255, 255, 255, 0.25) 0 10%, transparent 11%),
+    radial-gradient(circle at 82% 70%, rgba(255, 255, 255, 0.18) 0 13%, transparent 14%),
+    linear-gradient(135deg, #ff922b, #e8590c);
+  transition: transform 0.28s ease-in;
+}
+.zeh-card.is-open .zeh-cover { transform: translateY(-102%); transition-timing-function: ease-out; }
+.zeh-cover-icon { font-size: clamp(54px, 12vmin, 110px); filter: drop-shadow(0 4px 0 rgba(0, 0, 0, 0.15)); }
+.zeh-cover-num {
+  font: 700 clamp(64px, 14vmin, 120px)/1 var(--font);
+  text-shadow: 0 5px 0 rgba(0, 0, 0, 0.15);
+  animation: zeh-pop 0.3s ease-out;
+}
+.zeh-card.is-small { padding: clamp(8px, 1.6vmin, 14px); }
+.zeh-card.is-small .zeh-field { --zc: min(10vw, 6.4vh, 54px); }
+.zeh-card.is-small .zeh-cover-icon, .zeh-card.is-small .zeh-cover-num { font-size: clamp(40px, 8vmin, 70px); }
+
+.zeh-again { min-height: 60px; }
+.zeh-again[disabled] { opacity: 0.4; }
+.zeh-choices { transition: opacity 0.3s; }
+.zeh-choices.is-waiting { opacity: 0; pointer-events: none; }
+.zeh-choices.is-locked { opacity: 0.45; pointer-events: none; }
+.zeh-choices .tile.small { --tile: clamp(72px, 13vmin, 116px); }
+
+/* ---------- Legen ---------- */
+.zeh-top { display: flex; align-items: center; justify-content: center; gap: var(--gap); flex: 0 0 auto; max-width: 100%; }
+.zeh-goal {
+  min-height: 0; padding: clamp(8px, 1.6vmin, 16px) clamp(20px, 4vmin, 40px);
+  gap: clamp(10px, 2vmin, 20px); flex-wrap: nowrap;
+}
+.zeh-goal-lbl { font-size: clamp(24px, 4.4vmin, 40px); font-weight: 700; color: var(--ink-soft); }
+.zeh-goal-num { font-size: clamp(52px, 10vmin, 96px); line-height: 1; color: var(--area); }
+.zeh-again-round {
+  width: 64px; min-width: 64px; height: 64px; padding: 0; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center; font-size: 30px;
+}
+.zeh-again-round[disabled] { opacity: 0.35; }
+
+.zeh-tools {
+  display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
+  gap: clamp(8px, 1.6vmin, 16px); max-width: 100%;
+}
+.zeh-tool, .zeh-check {
+  min-height: 64px; min-width: 64px; padding: 8px 14px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-size: clamp(20px, 3.2vmin, 28px);
+}
+.zeh-tool { background: var(--card); color: var(--ink); }
+.zeh-clear .emoji { font-size: 30px; }
+.zeh-check { padding: 8px 20px; }
+
+.zeh-strip { display: grid; grid-template-columns: repeat(5, 12px); gap: 3px; }
+.zeh-strip i {
+  display: block; width: 12px; height: 12px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #ff9db3, #ef476f 60%, #c9184a);
+}
+
+@media (max-width: 400px) {
+  .zeh-tool, .zeh-check { padding: 8px 10px; gap: 6px; }
+  .zeh-strip { grid-template-columns: repeat(5, 9px); gap: 2px; }
+  .zeh-strip i { width: 9px; height: 9px; }
+}
+.zeh-check-mark { font-size: 1.3em; line-height: 1; }

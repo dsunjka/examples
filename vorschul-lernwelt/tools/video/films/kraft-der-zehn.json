@@ -1,0 +1,102 @@
+{
+  "id": "kraft-der-zehn",
+  "title": "Die Kraft der *Zehn*",
+  "icon": "🔟",
+  "subject": "mathe1",
+  "related": ["zehnerfeld"],
+  "parent": "Bündeln in Zehner: Zahlen bis zwanzig als Zehner und Einer sehen, sprechen und richtig schreiben (13 = 1 Z + 3 E).",
+  "intro": "Schau mal, wie Flo ganz schnell Kastanien zählt!",
+  "accent": "#ff8a3d",
+  "beats": [
+    {
+      "say": "Hallo! Ich bin Flo. Heute zeige ich dir die Kraft der Zehn.",
+      "visual": {"type": "title", "subtitle": "Rechnen mit Flo"}
+    },
+    {
+      "say": "Schau mal, so viele Kastanien! Wie viele sind das nur? Zählen dauert so lange. Und ich verzähle mich immer.",
+      "caption": "Wie viele Kastanien?",
+      "visual": {"type": "scene", "bg": "forest", "actors": [
+        {"e": "flo", "x": 20, "size": 200, "emotion": "think", "bubble": "❓", "bubbleAt": 0.3},
+        {"e": "🌰🌰🌰", "x": 44, "y": 74, "size": 54, "at": 0.05, "enter": "drop"},
+        {"e": "🌰🌰", "x": 60, "y": 70, "size": 54, "at": 0.12, "enter": "drop"},
+        {"e": "🌰🌰🌰", "x": 82, "y": 75, "size": 54, "at": 0.19, "enter": "drop"},
+        {"e": "🌰🌰", "x": 52, "y": 78, "size": 54, "at": 0.26, "enter": "drop"},
+        {"e": "🌰🌰🌰", "x": 70, "y": 78, "size": 54, "at": 0.33, "enter": "drop", "anim": "wiggle"}
+      ]}
+    },
+    {
+      "say": "Ich habe eine Idee! In meine Schachtel passen genau zehn Kastanien. Eine volle Schachtel nenne ich einen Zehner.",
+      "caption": "10 Kastanien = *1 Zehner*",
+      "visual": {"type": "zehnerfeld", "size": 10, "boxes": 1, "style": "schachtel", "emoji": "🌰", "count": true,
+        "groups": [{"n": 10, "from": "top", "at": 0.25, "until": 0.6}], "floEmotion": "happy"}
+    },
+    {
+      "say": "Fünf oben und fünf unten. Siehst du es? Die Schachtel ist voll. Ich muss gar nicht zählen.",
+      "caption": "5 + 5 = 10",
+      "visual": {"type": "zehnerfeld", "size": 10, "boxes": 1, "style": "schachtel", "emoji": "🌰", "count": true, "continue": true,
+        "groups": [{"n": 10, "at": -0.1, "until": -0.1}], "highlightFive": true, "fiveAt": 0.05, "floGesture": "point"}
+    },
+    {
+      "say": "Jetzt fülle ich meine Kastanien ein. Zehn passen in die Schachtel. Drei bleiben übrig.",
+      "caption": "1 Zehner und 3 Einer",
+      "visual": {"type": "zehnerfeld", "size": 10, "boxes": 2, "style": "schachtel", "emoji": "🌰",
+        "groups": [{"n": 10, "from": "scatter", "at": 0.25, "until": 0.6}, {"n": 3, "from": "scatter", "at": 0.75, "until": 0.85}],
+        "marks": [{"from": 1, "to": 10, "at": 0.62, "label": "1 Zehner"}, {"from": 11, "to": 13, "at": 0.95, "label": "3 Einer", "color": "blue"}]}
+    },
+    {
+      "say": "Ein Zehner und drei Einer. Zehn und drei sind dreizehn! Das ging schnell, oder?",
+      "caption": "10 + 3 = *13*",
+      "visual": {"type": "stellenwert", "number": 13, "at": [0.1, 0.3], "floEmotion": "happy"}
+    },
+    {
+      "say": "Hör mal genau hin: drei, zehn. Wir sagen zuerst die Drei. Aber wir schreiben zuerst die Eins für den Zehner.",
+      "caption": "dreizehn → *13*",
+      "visual": {"type": "stellenwert", "number": 13, "at": [0.72, 0.3], "labels": {"tens": "zuerst schreiben", "ones": "zuerst sagen", "at": 0.8}}
+    },
+    {
+      "say": "Jetzt bist du dran! Eine volle Schachtel und noch sieben Kastanien. Wie viele sind das? Was meinst du?",
+      "caption": "1 Zehner und 7 Einer",
+      "pause": 3,
+      "visual": {"type": "zehnerfeld", "size": 10, "boxes": 2, "style": "schachtel", "emoji": "🌰",
+        "groups": [{"n": 10, "at": 0.05, "until": 0.25}, {"n": 7, "from": "right", "at": 0.3, "until": 0.55}],
+        "marks": [{"from": 1, "to": 10, "at": 0.3, "label": "10"}], "floEmotion": "think"}
+    },
+    {
+      "say": "Genau, siebzehn! Zehn und sieben sind siebzehn. Ich musste gar nicht alles zählen.",
+      "caption": "10 + 7 = *17*",
+      "visual": {"type": "rechnung", "parts": ["10", "+", "7", "=", "17"], "at": [-0.05, 0.0, 0.05, 0.1, 0.15], "box": true,
+        "highlight": [{"part": 0, "at": 0.5}], "floEmotion": "happy", "floGesture": "cheer"}
+    },
+    {
+      "say": "Merke dir: Erst die vollen Zehner, dann die Einer. So siehst du ganz schnell, wie viele es sind.",
+      "visual": {"type": "merke", "lines": ["Erst die vollen *Zehner*,", "dann die *Einer*.", "Das geht ganz schnell!"], "at": [0.1, 0.35, 0.65]}
+    },
+    {
+      "say": "Das ist die Kraft der Zehn! Jetzt kommt das Quiz. Machst du mit?",
+      "visual": {"type": "flo", "emotion": "happy", "gesture": "cheer", "side": "left", "bubble": "Quiz! 🔟", "bubbleAt": 0.4,
+        "items": [{"e": "📦", "label": "1 Zehner", "at": 0.1}, {"e": "🌰", "label": "Einer", "at": 0.25}]}
+    }
+  ],
+  "quiz": [
+    {"q": "Wie viele Kastanien passen in eine volle Zehner-Schachtel?",
+     "options": [{"text": "5", "say": "fünf", "correct": false}, {"text": "10", "say": "zehn", "correct": true}, {"text": "20", "say": "zwanzig", "correct": false}],
+     "explain": "Schau mal auf den Namen: Zehner-Schachtel.",
+     "model": "Fünf oben und fünf unten. Das sind zehn Kastanien.",
+     "key": "Zehner = 10", "beat": 2},
+    {"q": "Eine volle Schachtel und vier Kastanien. Wie viele sind das?",
+     "options": [{"text": "14", "say": "vierzehn", "correct": true}, {"text": "41", "say": "einundvierzig", "correct": false}, {"text": "5", "say": "fünf", "correct": false}],
+     "explain": "Fast! Denk dran: In der vollen Schachtel sind schon zehn Kastanien.",
+     "model": "Ein Zehner und vier Einer. Zehn und vier sind vierzehn.",
+     "key": "10 + 4", "beat": 5},
+    {"q": "Wie viele Einer hat die Zahl fünfzehn?",
+     "options": [{"text": "1", "say": "eins", "correct": false}, {"text": "5", "say": "fünf", "correct": true}, {"text": "15", "say": "fünfzehn", "correct": false}],
+     "explain": "Schau mal: Fünfzehn ist ein voller Zehner und noch ein paar Kastanien. Wie viele liegen übrig?",
+     "model": "Fünfzehn sind ein Zehner und fünf Einer. Also fünf Einer.",
+     "key": "Einer der 15", "beat": 5},
+    {"q": "Wie schreibt man siebzehn?",
+     "options": [{"text": "17", "say": "erst die Eins, dann die Sieben", "correct": true}, {"text": "71", "say": "erst die Sieben, dann die Eins", "correct": false}, {"text": "7", "say": "nur die Sieben", "correct": false}],
+     "explain": "Hör genau hin: sieben, zehn. Wir sagen zuerst die Sieben. Aber was schreiben wir zuerst?",
+     "model": "Siebzehn ist ein Zehner und sieben Einer. Erst die Eins für den Zehner, dann die Sieben.",
+     "key": "17 schreiben", "beat": 6}
+  ]
+}

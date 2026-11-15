@@ -1,0 +1,40 @@
+{
+  "id": "_sample",
+  "title": "Flo hüpft über die Zehn",
+  "icon": "🐸",
+  "subject": "mathe1",
+  "related": ["zehnerbruecke", "rechenrakete"],
+  "parent": "Testfilm für die Video-Pipeline: Zehnerübergang mit Zahlenstrahl und Zwanzigerfeld.",
+  "intro": "Schau mal, wie Flo über die Zehn hüpft!",
+  "accent": "#ff8a3d",
+  "beats": [
+    {
+      "say": "Hallo! Ich bin Flo. Heute hüpfen wir über die Zehn.",
+      "visual": {"type": "title", "subtitle": "Rechnen mit Flo"}
+    },
+    {
+      "say": "Acht plus fünf. Erst hüpfe ich zwei bis zur Zehn. Dann noch drei.",
+      "caption": "8 + 5 = *13*",
+      "visual": {"type": "zahlenstrahl", "from": 0, "to": 20, "bridge": 10, "start": 8,
+        "jumps": [{"to": 10, "label": "+2", "at": 0.3, "hops": true}, {"to": 13, "label": "+3", "at": 0.72, "hops": true, "color": "blue"}]}
+    },
+    {
+      "say": "Im Zwanzigerfeld siehst du es auch: zehn und drei sind dreizehn.",
+      "caption": "10 + 3 = 13",
+      "visual": {"type": "zehnerfeld", "size": 20, "count": true,
+        "groups": [{"n": 8, "color": "red", "at": 0.0, "until": 0.25}, {"n": 5, "color": "blue", "from": "right", "at": 0.35, "until": 0.7}],
+        "marks": [{"from": 1, "to": 10, "at": 0.8, "label": "10", "color": "yellow"}]}
+    },
+    {
+      "say": "Mein Trick: Erst bis zur Zehn, dann den Rest!",
+      "visual": {"type": "merke", "lines": ["Erst bis zur *10*,", "dann den Rest."], "icon": "💡"}
+    }
+  ],
+  "quiz": [
+    {"q": "Wie viele Hüpfer sind es von acht bis zehn?", "options": [
+      {"text": "1", "say": "eins", "correct": false},
+      {"text": "2", "say": "zwei", "correct": true},
+      {"text": "3", "say": "drei", "correct": false}],
+     "explain": "Von acht bis zehn sind es zwei Hüpfer.", "model": "Acht, neun, zehn. Zwei Hüpfer.", "beat": 1}
+  ]
+}

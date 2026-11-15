@@ -1,0 +1,118 @@
+{
+  "id": "ueber-die-zehn",
+  "title": "Flo hüpft über die *Zehn*",
+  "icon": "🌉",
+  "subject": "mathe1",
+  "related": ["zehnerbruecke"],
+  "parent": "Zehnerübergang beim Plusrechnen: erst bis zur Zehn ergänzen, dann den Rest dazu (8 + 5 = 8 + 2 + 3 = 13), am Zahlenstrahl und im Zwanzigerfeld.",
+  "intro": "Schau mal, wie Flo über die Zehn hüpft!",
+  "accent": "#ff8a3d",
+  "beats": [
+    {
+      "say": "Hallo! Ich bin Flo. Heute hüpfe ich über die Zehn.",
+      "visual": {"type": "title", "subtitle": "Rechnen mit Flo"}
+    },
+    {
+      "say": "Schau mal! Ich habe acht Erdbeeren. Eule bringt mir noch fünf. Wie viele sind es jetzt? Da muss ich über die Zehn hüpfen!",
+      "caption": "8 + 5 = ?",
+      "visual": {"type": "scene", "bg": "meadow", "actors": [
+        {"e": "flo", "x": 18, "size": 190, "emotion": "think", "bubble": "❓", "bubbleAt": 0.55},
+        {"e": "🍓🍓🍓🍓", "x": 44, "y": 70, "size": 50, "at": 0.08, "enter": "pop"},
+        {"e": "🍓🍓🍓🍓", "x": 44, "y": 79, "size": 50, "at": 0.14, "enter": "pop"},
+        {"e": "🦉", "x": 100, "y": 34, "size": 100, "at": 0.25, "enter": "right", "anim": "fly", "moves": [{"x": 80, "y": 34, "at": 0.28, "until": 0.42}]},
+        {"e": "🍓🍓🍓", "x": 74, "y": 70, "size": 50, "at": 0.4, "enter": "drop"},
+        {"e": "🍓🍓", "x": 74, "y": 79, "size": 50, "at": 0.45, "enter": "drop", "anim": "wiggle"}
+      ]}
+    },
+    {
+      "say": "Ich stelle mich auf die Acht. Ich will fünf Hüpfer weiter. Bei der Zehn steht eine Brücke.",
+      "caption": "Start: 8, noch 5 Hüpfer",
+      "visual": {"type": "zahlenstrahl", "from": 0, "to": 20, "bridge": 10, "start": 8, "marks": [8], "floGesture": "point"}
+    },
+    {
+      "say": "Wie viele Hüpfer sind es bis zur Brücke? Was meinst du?",
+      "caption": "8 bis 10: ? Hüpfer",
+      "pause": 2.5,
+      "visual": {"type": "zahlenstrahl", "from": 0, "to": 20, "bridge": 10, "start": 8, "marks": [8], "continue": true, "floEmotion": "think"}
+    },
+    {
+      "say": "Zwei Hüpfer! Acht, neun, zehn. Jetzt stehe ich auf der Brücke.",
+      "caption": "8 + 2 = *10*",
+      "visual": {"type": "zahlenstrahl", "from": 0, "to": 20, "bridge": 10, "start": 8, "marks": [8], "continue": true, "floEmotion": "happy",
+        "jumps": [{"to": 10, "label": "+2", "at": 0.2, "until": 0.65, "hops": true}]}
+    },
+    {
+      "say": "Fünf Hüpfer wollte ich machen. Zwei habe ich schon. Also fehlen noch drei.",
+      "caption": "5 = 2 + *3*",
+      "visual": {"type": "rechnung", "parts": ["8", "+", "5", "=", "?"], "at": [-0.05, -0.05, -0.05, -0.05, -0.05],
+        "split": {"part": 2, "into": ["2", "3"], "at": 0.3}, "highlight": [{"part": 2, "at": 0.05}]}
+    },
+    {
+      "say": "Von der Zehn hüpfe ich noch drei weiter. Elf, zwölf, dreizehn!",
+      "caption": "10 + 3 = *13*",
+      "visual": {"type": "zahlenstrahl", "from": 0, "to": 20, "bridge": 10, "start": 8, "marks": [8, 13],
+        "jumps": [{"to": 10, "label": "+2", "at": -0.1, "until": -0.06, "hops": true},
+                  {"to": 13, "label": "+3", "at": 0.45, "until": 0.95, "hops": true, "color": "blue"}]}
+    },
+    {
+      "say": "Im Zwanzigerfeld siehst du es auch. Erst zwei bis zur vollen Zehn. Dann noch drei. Acht plus fünf ist gleich dreizehn.",
+      "caption": "8 + 2 + 3 = *13*",
+      "visual": {"type": "zehnerfeld", "size": 20, "count": true,
+        "groups": [{"n": 8, "color": "red", "at": -0.05, "until": 0.1, "label": "8"},
+                   {"n": 2, "color": "blue", "from": "right", "at": 0.22, "until": 0.35, "label": "+2"},
+                   {"n": 3, "color": "green", "from": "right", "at": 0.5, "until": 0.62, "label": "+3"}],
+        "marks": [{"from": 1, "to": 10, "at": 0.38, "label": "10", "color": "yellow"}]}
+    },
+    {
+      "say": "Jetzt bist du dran! Sieben plus sechs. Wie viele Hüpfer sind es bis zur Zehn? Was meinst du?",
+      "caption": "7 + 6 = ?",
+      "pause": 3,
+      "visual": {"type": "zahlenstrahl", "from": 0, "to": 20, "bridge": 10, "start": 7, "marks": [7], "floEmotion": "think"}
+    },
+    {
+      "say": "Genau, drei! Sieben, acht, neun, zehn. Sechs Hüpfer wollte ich. Drei habe ich schon. Wie viele fehlen noch?",
+      "caption": "6 = 3 + ?",
+      "pause": 2.5,
+      "visual": {"type": "zahlenstrahl", "from": 0, "to": 20, "bridge": 10, "start": 7, "marks": [7], "continue": true, "floEmotion": "think",
+        "jumps": [{"to": 10, "label": "+3", "at": 0.1, "until": 0.45, "hops": true}]}
+    },
+    {
+      "say": "Noch drei! Elf, zwölf, dreizehn. Sieben plus sechs ist gleich dreizehn. Super gemacht!",
+      "caption": "7 + 3 + 3 = *13*",
+      "visual": {"type": "zahlenstrahl", "from": 0, "to": 20, "bridge": 10, "start": 7, "marks": [7, 13], "continue": true, "floEmotion": "happy", "floGesture": "cheer",
+        "jumps": [{"to": 10, "label": "+3", "at": -0.1, "until": -0.06, "hops": true},
+                  {"to": 13, "label": "+3", "at": 0.1, "until": 0.4, "hops": true, "color": "blue"}]}
+    },
+    {
+      "say": "Mein Trick: Erst hüpfe ich bis zur Zehn. Dann hüpfe ich den Rest.",
+      "visual": {"type": "merke", "title": "Mein Trick:", "icon": "🌉", "lines": ["Erst bis zur *10*,", "dann den Rest.", "8 + 2 + 3 = *13*"], "at": [0.1, 0.45, 0.75]}
+    },
+    {
+      "say": "Jetzt kommt das Quiz. Hüpfst du mit?",
+      "visual": {"type": "flo", "emotion": "happy", "gesture": "cheer", "side": "left", "bubble": "Quiz! 🌉", "bubbleAt": 0.3,
+        "items": [{"e": "🍓", "label": "8 + 5", "at": 0.1}, {"e": "🌉", "label": "über die 10", "at": 0.3}]}
+    }
+  ],
+  "quiz": [
+    {"q": "Flo steht auf der Acht. Wie viele Hüpfer sind es bis zur Zehn?",
+     "options": [{"text": "1", "say": "eins", "correct": false}, {"text": "2", "say": "zwei", "correct": true}, {"text": "3", "say": "drei", "correct": false}],
+     "explain": "Schau mal: Die Acht zählt nicht mit. Zähl nur die Hüpfer bis zur Brücke.",
+     "model": "Acht, neun, zehn. Das sind zwei Hüpfer.",
+     "key": "8 bis 10", "beat": 4},
+    {"q": "Was macht Flo zuerst?",
+     "options": [{"text": "🌉 bis zur 10", "say": "bis zur Zehn hüpfen", "correct": true}, {"text": "bis zur 20", "say": "bis zur Zwanzig hüpfen", "correct": false}, {"text": "⬅️ rückwärts", "say": "rückwärts hüpfen", "correct": false}],
+     "explain": "Denk an die Brücke. Bei welcher Zahl steht sie?",
+     "model": "Erst hüpft Flo bis zur Zehn. Dann hüpft er den Rest.",
+     "key": "Erst bis 10", "beat": 11},
+    {"q": "Neun plus vier. Wie viel ist das?",
+     "options": [{"text": "12", "say": "zwölf", "correct": false}, {"text": "13", "say": "dreizehn", "correct": true}, {"text": "14", "say": "vierzehn", "correct": false}],
+     "explain": "Fast! Von neun bis zur Zehn ist es nur ein Hüpfer. Wie viele fehlen dann noch?",
+     "model": "Neun plus eins ist zehn. Dann noch drei. Das sind dreizehn.",
+     "key": "9 + 4", "beat": 6},
+    {"q": "Sieben plus fünf. Flo hüpft erst bis zur Zehn. Wie viele Hüpfer fehlen dann noch?",
+     "options": [{"text": "2", "say": "zwei", "correct": true}, {"text": "3", "say": "drei", "correct": false}, {"text": "5", "say": "fünf", "correct": false}],
+     "explain": "Schau mal: Bis zur Zehn hat Flo schon ein paar Hüpfer gemacht. Die fehlen nicht mehr.",
+     "model": "Sieben plus drei ist zehn. Fünf Hüpfer, drei sind geschafft. Es fehlen noch zwei.",
+     "key": "Rest nach 10", "beat": 9}
+  ]
+}

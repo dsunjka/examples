@@ -1,1 +1,175 @@
-/* hoerkoenig */
+/* ==========================================================================
+   Hörkönig 👑 (deutsch1) – alle Klassen mit Präfix .hoe-
+   ========================================================================== */
+
+/* ---------- Bildkarte ---------- */
+.hoe-card {
+  position: relative;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  min-width: min(100%, clamp(220px, 40vmin, 360px));
+  padding: clamp(12px, 2.6vmin, 26px) clamp(18px, 4vmin, 40px);
+  gap: clamp(6px, 1.4vmin, 14px);
+  min-height: 0;
+}
+.hoe-card-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(10px, 2.4vmin, 24px);
+}
+.hoe-pic-e { font-size: clamp(64px, 14vmin, 128px); line-height: 1; display: block; }
+.hoe-pic-talk { filter: saturate(0.8); }
+.hoe-say {
+  position: absolute;
+  top: -12px;
+  left: -12px;
+}
+.hoe-word {
+  display: none;
+  font-size: clamp(28px, 5.4vmin, 52px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  text-align: center;
+  line-height: 1.15;
+}
+.hoe-revealed .hoe-word { display: block; animation: hoe-pop 0.4s ease-out; }
+.hoe-mark {
+  background: var(--gold);
+  border-radius: 10px;
+  padding: 0 4px;
+  color: #3a2a00;
+}
+
+/* Sprechblase mit dem gesuchten Buchstaben */
+.hoe-bubble {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: clamp(64px, 12vmin, 104px);
+  min-height: clamp(64px, 12vmin, 104px);
+  padding: 4px 14px;
+  border-radius: 999px;
+  background: var(--area-soft, #e3efff);
+  color: var(--area, #4a90e2);
+  font-size: clamp(36px, 7.4vmin, 66px);
+  font-weight: 700;
+  box-shadow: inset 0 0 0 4px var(--area, #4a90e2);
+}
+.hoe-del s { text-decoration-thickness: 6px; text-decoration-color: #e64949; }
+.hoe-sc { font-size: 0.6em; }
+.hoe-swap .hoe-arrow { font-size: 0.6em; color: var(--ink-soft); }
+.hoe-swap .hoe-to { color: var(--ok); }
+
+/* Lautkästchen */
+.hoe-boxes { display: flex; gap: clamp(4px, 1vmin, 8px); justify-content: center; }
+.hoe-boxes.hoe-hidden { display: none; }
+.hoe-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: clamp(34px, 6.4vmin, 56px);
+  height: clamp(40px, 7.4vmin, 64px);
+  padding: 0 4px;
+  border-radius: 12px;
+  background: #f4f6fb;
+  box-shadow: inset 0 0 0 3px var(--line);
+  font-size: clamp(22px, 4.2vmin, 38px);
+  font-weight: 700;
+  color: var(--ink);
+}
+.hoe-box.q { background: var(--gold); color: #5a3d00; box-shadow: none; }
+.hoe-box.on { background: var(--ok-soft); box-shadow: inset 0 0 0 3px var(--ok); animation: hoe-pop 0.35s ease-out; }
+
+/* ---------- Kacheln ---------- */
+.hoe-choices { gap: clamp(10px, 2.2vmin, 22px); }
+.hoe-choices.hoe-wait .tile { cursor: default; }
+
+/* Positions-Zug (Anfang / Mitte / Ende) */
+.tile.hoe-postile {
+  width: clamp(104px, 27vw, 220px);
+  height: clamp(96px, 17vmin, 150px);
+  padding: 8px;
+}
+.hoe-pos { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
+.hoe-train { display: flex; gap: 4px; width: 100%; justify-content: center; }
+.hoe-cell {
+  flex: 1;
+  max-width: 54px;
+  height: clamp(30px, 6vmin, 52px);
+  border-radius: 10px;
+  background: #f0f2f8;
+  box-shadow: inset 0 0 0 3px var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(18px, 3.6vmin, 32px);
+  color: #fff;
+}
+.hoe-cell.on { background: var(--area, #4a90e2); box-shadow: none; }
+.hoe-pos-label { font-size: clamp(17px, 2.8vmin, 26px); font-weight: 700; color: var(--ink); }
+
+/* Buchstaben (Selbstlaute) */
+.tile.hoe-ltile { --tile: clamp(76px, 15vmin, 132px); }
+.hoe-letter { font-size: clamp(40px, 8vmin, 76px); font-weight: 700; color: var(--ink); }
+
+/* Zahlen mit Punkten */
+.tile.hoe-ntile { --tile: clamp(76px, 15vmin, 132px); }
+.hoe-num { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.hoe-num-n { font-size: clamp(38px, 7.4vmin, 70px); font-weight: 700; }
+.hoe-dots { display: flex; gap: 3px; flex-wrap: nowrap; justify-content: center; }
+.hoe-dots i { width: clamp(7px, 1.3vmin, 12px); height: clamp(7px, 1.3vmin, 12px); border-radius: 50%; background: var(--area, #4a90e2); }
+
+/* Bilder */
+.tile.hoe-ptile { --tile: clamp(96px, 20vmin, 172px); }
+.hoe-tpic { display: flex; align-items: center; justify-content: center; font-size: calc(var(--tile) * 0.52); line-height: 1; }
+.hoe-tpic.many { font-size: calc(var(--tile) * 0.34); gap: 2px; }
+
+/* lang / kurz: Strich und Punkt unter dem Selbstlaut */
+.tile.hoe-lentile { --tile: clamp(110px, 22vmin, 190px); }
+.hoe-len { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.hoe-len-label { font-size: clamp(18px, 3vmin, 28px); font-weight: 700; color: var(--ink); }
+.hoe-v { position: relative; display: inline-block; }
+.hoe-v.big { font-size: clamp(44px, 8.4vmin, 80px); font-weight: 700; padding-bottom: 0.18em; color: var(--ink); }
+.hoe-v.long::after,
+.hoe-v.short::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: -0.08em;
+  transform: translateX(-50%);
+  background: #e64949;
+}
+.hoe-v.long::after { width: 92%; height: 0.1em; min-height: 4px; border-radius: 4px; }
+.hoe-v.short::after { width: 0.2em; height: 0.2em; min-width: 7px; min-height: 7px; border-radius: 50%; }
+.hoe-lword { display: inline-block; padding-bottom: 0.2em; }
+.hoe-card.hoe-q { min-height: 0; }
+
+@keyframes hoe-pop { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+
+/* ---------- kleine / niedrige Bildschirme ---------- */
+@media (max-height: 560px) {
+  .hoe-pic-e { font-size: clamp(44px, 11vmin, 90px); }
+  .hoe-card { padding: 8px 22px; }
+}
+@media (max-width: 520px) {
+  .hoe-choices { gap: 10px; }
+  .tile.hoe-ptile { --tile: clamp(96px, 27vw, 140px); }
+  .tile.hoe-ltile, .tile.hoe-ntile { --tile: clamp(72px, 19vw, 110px); }
+  .tile.hoe-lentile { --tile: clamp(120px, 38vw, 170px); }
+}
+@media (max-width: 520px) and (min-height: 700px) {
+  .hoe-pic-e { font-size: 96px; }
+  .hoe-bubble { min-width: 84px; min-height: 84px; font-size: 52px; }
+  .tile.hoe-postile { height: 132px; }
+  .hoe-cell { height: 44px; font-size: 26px; }
+  .hoe-pos-label { font-size: 20px; }
+  .tile.hoe-ptile { --tile: clamp(104px, 29vw, 150px); }
+  .tile.hoe-ltile, .tile.hoe-ntile { --tile: clamp(90px, 24vw, 120px); }
+  .hoe-letter { font-size: 56px; }
+  .hoe-num-n { font-size: 52px; }
+  .hoe-box { min-width: 44px; height: 52px; font-size: 30px; }
+}

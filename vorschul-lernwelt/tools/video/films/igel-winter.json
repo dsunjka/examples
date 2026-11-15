@@ -1,0 +1,655 @@
+{
+  "id": "igel-winter",
+  "title": "Warum schlafen *Igel* im Winter?",
+  "icon": "🦔",
+  "subject": "sach1",
+  "related": [
+    "jahreszeiten"
+  ],
+  "parent": "Tiere im Winter: Der Igel findet im Winter keine Insekten, frisst sich im Herbst einen Fettvorrat an und hält Winterschlaf (Körper kühlt ab, Herz schlägt sehr langsam). Eichhörnchen halten Winterruhe (wachen auf und fressen Vorräte), Frösche fallen in Winterstarre, Schwalben ziehen in den Süden. Tipp: Laubhaufen im Garten als Igel-Quartier liegen lassen.",
+  "intro": "Schau mal, Flo sucht seinen Freund Igel!",
+  "accent": "#3dbe6b",
+  "beats": [
+    {
+      "say": "Hallo! Ich bin Flo. Heute fragen wir: Was machen Tiere im Winter?",
+      "visual": {
+        "type": "title",
+        "subtitle": "Sachkunde mit Flo"
+      }
+    },
+    {
+      "say": "Brr, ist das kalt! Ich will mit Igel spielen. Aber wo ist er nur?",
+      "caption": "Wo ist *Igel*?",
+      "visual": {
+        "type": "scene",
+        "bg": "forest-winter",
+        "actors": [
+          {
+            "e": "flo",
+            "x": 24,
+            "size": 190,
+            "emotion": "cold",
+            "bubble": "❓",
+            "bubbleAt": 0.6
+          },
+          {
+            "e": "🍂🍂🍂",
+            "x": 66,
+            "y": 78,
+            "size": 90,
+            "at": 0.1,
+            "enter": "fade"
+          },
+          {
+            "e": "🐦",
+            "x": 84,
+            "y": 30,
+            "size": 60,
+            "at": 0.3,
+            "anim": "fly",
+            "exit": {
+              "at": 0.7,
+              "to": "up"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "say": "Im Sommer frisst Igel Käfer, Würmer und Schnecken. Aber gibt es die auch im Winter? Was meinst du?",
+      "caption": "Käfer, Würmer, Schnecken",
+      "pause": 2.2,
+      "visual": {
+        "type": "scene",
+        "bg": "meadow",
+        "floEmotion": "think",
+        "actors": [
+          {
+            "e": "🦔",
+            "x": 30,
+            "size": 120,
+            "enter": "left",
+            "flip": true,
+            "moves": [
+              {
+                "x": 40,
+                "at": 0,
+                "until": 0.2
+              }
+            ]
+          },
+          {
+            "e": "🐞",
+            "x": 58,
+            "y": 72,
+            "size": 70,
+            "at": 0.15,
+            "anim": "wiggle",
+            "label": "Käfer",
+            "labelAt": 0.2
+          },
+          {
+            "e": "🪱",
+            "x": 73,
+            "y": 74,
+            "size": 70,
+            "at": 0.25,
+            "anim": "wiggle",
+            "label": "Wurm",
+            "labelAt": 0.3
+          },
+          {
+            "e": "🐌",
+            "x": 89,
+            "y": 74,
+            "size": 70,
+            "at": 0.35,
+            "anim": "wiggle",
+            "label": "Schnecke",
+            "labelAt": 0.4
+          }
+        ]
+      }
+    },
+    {
+      "say": "Im Winter ist der Boden gefroren. Käfer und Würmer verstecken sich. Der Igel findet kein Futter.",
+      "caption": "Winter: *kein Futter*",
+      "visual": {
+        "type": "vergleich",
+        "bg": "forest-winter",
+        "mid": "→",
+        "midAt": 0.2,
+        "left": {
+          "items": [
+            "🐞",
+            "🪱",
+            "🐌"
+          ],
+          "label": "Sommer",
+          "color": "green",
+          "at": 0
+        },
+        "right": {
+          "e": "❄️",
+          "n": 3,
+          "label": "Winter",
+          "mark": "no",
+          "at": 0.3,
+          "color": "blue"
+        }
+      }
+    },
+    {
+      "say": "Darum frisst er sich im Herbst ganz dick. Das Fett ist sein Vorrat für den Winter.",
+      "caption": "Herbst: *Fett* als Vorrat",
+      "visual": {
+        "type": "scene",
+        "bg": "forest",
+        "actors": [
+          {
+            "e": "🦔",
+            "x": 34,
+            "size": 80,
+            "flip": true,
+            "moves": [
+              {
+                "x": 50,
+                "at": 0.05,
+                "until": 0.25
+              },
+              {
+                "x": 64,
+                "at": 0.3,
+                "until": 0.5
+              }
+            ],
+            "exit": {
+              "at": 0.55,
+              "to": "fade"
+            }
+          },
+          {
+            "e": "🐛",
+            "x": 54,
+            "y": 76,
+            "size": 56,
+            "anim": "wiggle",
+            "exit": {
+              "at": 0.22,
+              "to": "shrink"
+            }
+          },
+          {
+            "e": "🐞",
+            "x": 68,
+            "y": 76,
+            "size": 56,
+            "anim": "wiggle",
+            "exit": {
+              "at": 0.47,
+              "to": "shrink"
+            }
+          },
+          {
+            "e": "🦔",
+            "x": 64,
+            "size": 140,
+            "at": 0.58,
+            "flip": true,
+            "label": "dick und satt",
+            "labelAt": 0.7
+          }
+        ]
+      }
+    },
+    {
+      "say": "Dann baut er ein Nest aus Laub. Darin schläft er bis zum Frühling. Das heißt Winterschlaf.",
+      "caption": "*Winterschlaf*",
+      "visual": {
+        "type": "scene",
+        "bg": "forest",
+        "actors": [
+          {
+            "e": "🦔",
+            "x": 40,
+            "size": 110,
+            "flip": true,
+            "moves": [
+              {
+                "x": 60,
+                "at": 0.05,
+                "until": 0.3
+              }
+            ],
+            "exit": {
+              "at": 0.42,
+              "to": "fade"
+            }
+          },
+          {
+            "e": "🦔",
+            "x": 60,
+            "size": 100,
+            "at": 0.42,
+            "enter": "fade",
+            "anim": "sleep",
+            "label": "Winterschlaf",
+            "labelAt": 0.85,
+            "flip": true
+          },
+          {
+            "e": "🍂",
+            "x": 50,
+            "y": 80,
+            "size": 70,
+            "at": 0.2,
+            "enter": "drop",
+            "z": 99
+          },
+          {
+            "e": "🍂",
+            "x": 60,
+            "y": 82,
+            "size": 80,
+            "at": 0.3,
+            "enter": "drop",
+            "z": 99
+          },
+          {
+            "e": "🍂",
+            "x": 70,
+            "y": 80,
+            "size": 70,
+            "at": 0.4,
+            "enter": "drop",
+            "z": 99
+          }
+        ]
+      }
+    },
+    {
+      "say": "Da ist ja Igel! Er schläft tief und fest. Sein Herz schlägt ganz langsam. Psst, nicht wecken!",
+      "caption": "Psst! *Nicht wecken!*",
+      "visual": {
+        "type": "scene",
+        "bg": "forest-winter",
+        "actors": [
+          {
+            "e": "flo",
+            "x": 24,
+            "size": 180,
+            "emotion": "surprised",
+            "gesture": "point",
+            "bubble": "Psst!",
+            "bubbleAt": 0.8
+          },
+          {
+            "e": "🦔",
+            "x": 62,
+            "size": 120,
+            "anim": "sleep",
+            "enter": "fade",
+            "flip": true
+          },
+          {
+            "e": "🍂🍂🍂",
+            "x": 62,
+            "y": 82,
+            "size": 80,
+            "enter": "none",
+            "z": 99
+          },
+          {
+            "e": "💗",
+            "x": 82,
+            "y": 48,
+            "size": 70,
+            "at": 0.45,
+            "anim": "float",
+            "label": "ganz langsam",
+            "labelAt": 0.55
+          }
+        ]
+      }
+    },
+    {
+      "say": "Jetzt du! Das Eichhörnchen hat im Herbst Nüsse versteckt. Im Winter hat es Hunger. Was macht es? Was meinst du?",
+      "caption": "Und das *Eichhörnchen*?",
+      "pause": 2.5,
+      "visual": {
+        "type": "scene",
+        "bg": "forest-winter",
+        "floEmotion": "think",
+        "actors": [
+          {
+            "e": "🐿️",
+            "x": 42,
+            "size": 120,
+            "anim": "sleep",
+            "bubble": "❓",
+            "think": true,
+            "bubbleAt": 0.6,
+            "flip": true
+          },
+          {
+            "e": "🌰",
+            "x": 76,
+            "y": 78,
+            "size": 56,
+            "at": 0.25,
+            "enter": "up",
+            "label": "versteckt",
+            "labelAt": 0.3
+          }
+        ]
+      }
+    },
+    {
+      "say": "Es wacht auf und holt sich eine Nuss. Dann schläft es weiter. Das heißt Winterruhe.",
+      "caption": "*Winterruhe*",
+      "visual": {
+        "type": "scene",
+        "bg": "forest-winter",
+        "continue": true,
+        "floEmotion": "happy",
+        "actors": [
+          {
+            "e": "🐿️",
+            "x": 42,
+            "size": 120,
+            "enter": "none",
+            "flip": true,
+            "moves": [
+              {
+                "x": 64,
+                "at": 0.05,
+                "until": 0.3
+              },
+              {
+                "x": 42,
+                "at": 0.5,
+                "until": 0.7
+              }
+            ],
+            "bubble": "🌰",
+            "bubbleAt": 0.35,
+            "anim": "none"
+          },
+          {
+            "e": "🌰",
+            "x": 76,
+            "y": 78,
+            "size": 56,
+            "enter": "none",
+            "exit": {
+              "at": 0.3,
+              "to": "shrink"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "say": "Der Frosch versteckt sich unten im Teich im Schlamm. Er wird ganz kalt und steif. Das heißt Winterstarre.",
+      "caption": "*Winterstarre*",
+      "visual": {
+        "type": "scene",
+        "bg": "water-tank",
+        "actors": [
+          {
+            "e": "🐸",
+            "x": 55,
+            "y": 36,
+            "size": 100,
+            "enter": "drop",
+            "moves": [
+              {
+                "y": 71,
+                "at": 0.15,
+                "until": 0.45
+              }
+            ],
+            "label": "Winterstarre",
+            "labelAt": 0.8
+          },
+          {
+            "e": "🪨",
+            "x": 40,
+            "y": 73,
+            "size": 64,
+            "enter": "none",
+            "z": 99
+          },
+          {
+            "e": "🪨",
+            "x": 70,
+            "y": 73,
+            "size": 56,
+            "enter": "none",
+            "z": 99
+          },
+          {
+            "e": "❄️",
+            "x": 80,
+            "y": 26,
+            "size": 60,
+            "at": 0.55,
+            "anim": "spin"
+          }
+        ]
+      }
+    },
+    {
+      "say": "Und die Vögel? Schwalben fliegen in den warmen Süden. Im Frühling kommen sie zurück.",
+      "caption": "ab in den warmen *Süden*",
+      "visual": {
+        "type": "scene",
+        "bg": "south",
+        "actors": [
+          {
+            "e": "🐦",
+            "x": 30,
+            "y": 30,
+            "size": 70,
+            "flip": true,
+            "enter": "left",
+            "anim": "fly",
+            "at": 0.1,
+            "moves": [
+              {
+                "x": 58,
+                "at": 0.3,
+                "until": 0.7
+              }
+            ]
+          },
+          {
+            "e": "🐦",
+            "x": 38,
+            "y": 40,
+            "size": 60,
+            "flip": true,
+            "enter": "left",
+            "anim": "fly",
+            "at": 0.15,
+            "moves": [
+              {
+                "x": 66,
+                "at": 0.3,
+                "until": 0.7
+              }
+            ]
+          },
+          {
+            "e": "🐦",
+            "x": 26,
+            "y": 46,
+            "size": 54,
+            "flip": true,
+            "enter": "left",
+            "anim": "fly",
+            "at": 0.2,
+            "moves": [
+              {
+                "x": 50,
+                "at": 0.3,
+                "until": 0.7
+              }
+            ],
+            "label": "Schwalben",
+            "labelAt": 0.5,
+            "labelBelow": true
+          },
+          {
+            "e": "☀️",
+            "x": 86,
+            "y": 30,
+            "size": 90,
+            "at": 0.35,
+            "anim": "pulse"
+          }
+        ]
+      }
+    },
+    {
+      "say": "Merke: Der Igel hält Winterschlaf. Das Eichhörnchen hält Winterruhe. Der Frosch hält Winterstarre.",
+      "visual": {
+        "type": "merke",
+        "icon": "❄️",
+        "title": "Merke!",
+        "lines": [
+          "Igel: *Winterschlaf*",
+          "Eichhörnchen: *Winterruhe*",
+          "Frosch: *Winterstarre*"
+        ],
+        "at": [
+          0.05,
+          0.35,
+          0.7
+        ]
+      }
+    },
+    {
+      "say": "Mein Tipp: Ein Laubhaufen im Garten ist ein Igel-Hotel! Jetzt kommt das Quiz.",
+      "caption": "Laubhaufen = *Igel-Hotel*",
+      "visual": {
+        "type": "flo",
+        "emotion": "happy",
+        "gesture": "cheer",
+        "side": "left",
+        "bubble": "Quiz! 🦔",
+        "bubbleAt": 0.8,
+        "items": [
+          {
+            "e": "🍂",
+            "label": "Laubhaufen",
+            "at": 0.15
+          },
+          {
+            "e": "🦔",
+            "label": "Igel-Hotel",
+            "at": 0.45
+          }
+        ]
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Warum schläft der Igel im Winter?",
+      "options": [
+        {
+          "text": "🪱❌ kein Futter",
+          "say": "Er findet kein Futter.",
+          "correct": true
+        },
+        {
+          "text": "😴 faul",
+          "say": "Er ist faul.",
+          "correct": false
+        },
+        {
+          "text": "☀️ zu hell",
+          "say": "Es ist zu hell.",
+          "correct": false
+        }
+      ],
+      "explain": "Schau mal, was der Igel frisst. Gibt es das im Winter?",
+      "model": "Im Winter verstecken sich Käfer und Würmer. Der Igel findet kein Futter. Darum schläft er.",
+      "key": "Grund Winterschlaf",
+      "beat": 3
+    },
+    {
+      "q": "Was frisst der Igel am liebsten?",
+      "options": [
+        {
+          "text": "🍎 Äpfel",
+          "say": "Äpfel",
+          "correct": false
+        },
+        {
+          "text": "🐞 Käfer",
+          "say": "Käfer und Würmer",
+          "correct": true
+        },
+        {
+          "text": "🌰 Nüsse",
+          "say": "Nüsse",
+          "correct": false
+        }
+      ],
+      "explain": "Denk mal an den Sommer. Was krabbelt da auf dem Boden?",
+      "model": "Der Igel frisst Käfer, Würmer und Schnecken.",
+      "key": "Igel-Futter",
+      "beat": 2
+    },
+    {
+      "q": "Wer wacht im Winter auf und frisst?",
+      "options": [
+        {
+          "text": "🦔 Igel",
+          "say": "der Igel",
+          "correct": false
+        },
+        {
+          "text": "🐸 Frosch",
+          "say": "der Frosch",
+          "correct": false
+        },
+        {
+          "text": "🐿️ Eichhörnchen",
+          "say": "das Eichhörnchen",
+          "correct": true
+        }
+      ],
+      "explain": "Schau mal: Wer hat im Herbst Nüsse versteckt?",
+      "model": "Das Eichhörnchen wacht auf und holt sich eine Nuss. Das heißt Winterruhe.",
+      "key": "Winterruhe",
+      "beat": 8
+    },
+    {
+      "q": "Was ist ein gutes Igel-Hotel?",
+      "options": [
+        {
+          "text": "🍂 Laubhaufen",
+          "say": "ein Laubhaufen",
+          "correct": true
+        },
+        {
+          "text": "💧 Pfütze",
+          "say": "eine Pfütze",
+          "correct": false
+        },
+        {
+          "text": "🛣️ Straße",
+          "say": "die Straße",
+          "correct": false
+        }
+      ],
+      "explain": "Der Igel möchte es trocken und gemütlich. Wo kann er sich einkuscheln?",
+      "model": "Ein Laubhaufen ist trocken und warm. Darin schläft der Igel gut.",
+      "key": "Igel-Hotel",
+      "beat": 12
+    }
+  ]
+}

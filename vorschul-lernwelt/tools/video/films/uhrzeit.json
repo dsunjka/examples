@@ -1,0 +1,98 @@
+{
+  "id": "uhrzeit",
+  "title": "Wie *spät* ist es?",
+  "icon": "⏰",
+  "subject": "mathe1",
+  "related": ["uhr"],
+  "parent": "Uhr lesen: kurzer Zeiger = Stunde, langer Zeiger = Minuten; langer Zeiger oben auf der 12 = volle Stunde (8 Uhr), unten auf der 6 = halb (8:30 = halb neun, der kurze Zeiger steht zwischen 8 und 9).",
+  "intro": "Schau mal, Flo lernt die Uhr lesen!",
+  "accent": "#ff8a3d",
+  "beats": [
+    {
+      "say": "Hallo! Ich bin Flo. Heute lernen wir die Uhr lesen.",
+      "visual": {"type": "title", "subtitle": "Rechnen mit Flo"}
+    },
+    {
+      "say": "Oh je! Eule hat gesagt: Wir treffen uns um halb vier. Aber wann ist halb vier? Ich kann die Uhr noch nicht lesen. Hilfst du mir?",
+      "caption": "Wann ist *halb vier*?",
+      "visual": {"type": "scene", "bg": "meadow", "actors": [
+        {"e": "flo", "x": 22, "size": 190, "emotion": "think", "bubble": "❓", "bubbleAt": 0.4},
+        {"e": "🦉", "x": 100, "y": 40, "size": 100, "enter": "right", "anim": "fly", "moves": [{"x": 76, "y": 40, "at": 0.02, "until": 0.15}], "bubble": "halb vier!", "bubbleAt": 0.15},
+        {"e": "⏰", "x": 52, "y": 74, "size": 110, "at": 0.45, "enter": "drop", "anim": "wiggle"}
+      ]}
+    },
+    {
+      "say": "Schau mal, meine Uhr hat zwei Zeiger. Der kurze Zeiger zeigt die Stunde. Hier zeigt er auf die Sieben.",
+      "caption": "kurzer Zeiger: *Stunde*",
+      "visual": {"type": "uhr", "time": "7:00", "highlight": "hour", "marks": [7], "floGesture": "point"}
+    },
+    {
+      "say": "Der lange Zeiger zeigt die Minuten. Er ist viel schneller. Einmal ganz herum, dann ist eine Stunde vorbei.",
+      "caption": "1 Runde = *1 Stunde*",
+      "visual": {"type": "uhr", "from": "7:00", "to": "8:00", "at": [0.35, 0.95], "highlight": "minute"}
+    },
+    {
+      "say": "Jetzt steht der lange Zeiger oben auf der Zwölf. Das heißt: volle Stunde. Der kurze Zeiger zeigt auf die Acht. Es ist acht Uhr. Die Schule fängt an!",
+      "caption": "8:00 = *acht Uhr*",
+      "visual": {"type": "uhr", "time": "8:00", "continue": true, "marks": [12, 8], "digital": true, "icon": "🏫", "iconAt": 0.8, "text": "acht Uhr", "textAt": 0.65, "floEmotion": "happy"}
+    },
+    {
+      "say": "Nun läuft der lange Zeiger weiter. Er geht nach unten zur Sechs. Das ist eine halbe Runde. Also ist eine halbe Stunde vorbei.",
+      "caption": "halbe Runde = *halbe Stunde*",
+      "visual": {"type": "uhr", "from": "8:00", "to": "8:30", "at": [0.1, 0.45], "highlight": "minute", "marks": [6]}
+    },
+    {
+      "say": "Und der kurze Zeiger? Wo steht er jetzt? Was meinst du?",
+      "caption": "Wo ist der *kurze* Zeiger?",
+      "pause": 2.5,
+      "visual": {"type": "uhr", "time": "8:30", "continue": true, "highlight": "hour", "floEmotion": "think"}
+    },
+    {
+      "say": "Er steht genau zwischen acht und neun. Er ist auf halbem Weg zur Neun. Darum sagen wir: halb neun.",
+      "caption": "8:30 = *halb neun*",
+      "visual": {"type": "uhr", "time": "8:30", "continue": true, "highlight": "hour", "marks": [8, 9], "digital": true, "text": "halb neun", "textAt": 0.8, "floGesture": "point"}
+    },
+    {
+      "say": "Jetzt bist du dran! Der lange Zeiger steht unten. Der kurze steht zwischen drei und vier. Wie spät ist es? Was meinst du?",
+      "caption": "Wie spät ist es?",
+      "pause": 3,
+      "visual": {"type": "uhr", "time": "3:30", "floEmotion": "think"}
+    },
+    {
+      "say": "Langer Zeiger unten heißt halb. Der kurze ist auf dem Weg zur Vier. Es ist halb vier! Jetzt treffe ich Eule. Danke!",
+      "caption": "3:30 = *halb vier*",
+      "visual": {"type": "uhr", "time": "3:30", "continue": true, "marks": [6, 4], "digital": true, "text": "halb vier", "textAt": 0.45, "icon": "🦉", "iconAt": 0.75, "floEmotion": "happy", "floGesture": "cheer"}
+    },
+    {
+      "say": "Merke: Zeigt der lange Zeiger nach oben, ist es eine volle Stunde. Zeigt er nach unten, ist es halb.",
+      "visual": {"type": "merke", "icon": "⏰", "lines": ["Langer Zeiger oben:", "*volle Stunde*", "Langer Zeiger unten:", "*halb*"], "at": [0.05, 0.3, 0.55, 0.8]}
+    },
+    {
+      "say": "Jetzt kommt das Quiz. Liest du die Uhr mit mir?",
+      "visual": {"type": "flo", "emotion": "happy", "gesture": "cheer", "side": "left", "bubble": "Quiz! ⏰", "bubbleAt": 0.3,
+        "items": [{"e": "🏫", "label": "8 Uhr", "at": 0.1}, {"e": "🦉", "label": "halb vier", "at": 0.3}]}
+    }
+  ],
+  "quiz": [
+    {"q": "Welcher Zeiger zeigt die Stunde?",
+     "options": [{"text": "kurzer Zeiger", "say": "der kurze Zeiger", "correct": true}, {"text": "langer Zeiger", "say": "der lange Zeiger", "correct": false}, {"text": "beide", "say": "beide Zeiger", "correct": false}],
+     "explain": "Schau mal: Der lange Zeiger läuft schnell herum. Er zeigt die Minuten.",
+     "model": "Der kurze Zeiger zeigt die Stunde. Der lange zeigt die Minuten.",
+     "key": "Stundenzeiger", "beat": 2},
+    {"q": "Der lange Zeiger steht oben auf der Zwölf. Der kurze zeigt auf die Neun. Wie spät ist es?",
+     "options": [{"text": "halb neun", "say": "halb neun", "correct": false}, {"text": "9 Uhr", "say": "neun Uhr", "correct": true}, {"text": "12 Uhr", "say": "zwölf Uhr", "correct": false}],
+     "explain": "Denk daran: Der kurze Zeiger sagt die Stunde. Und steht der lange oben, gibt es kein halb.",
+     "model": "Langer Zeiger oben heißt volle Stunde. Der kurze zeigt auf die Neun. Es ist neun Uhr.",
+     "key": "volle Stunde", "beat": 4},
+    {"q": "Der lange Zeiger steht unten auf der Sechs. Der kurze steht zwischen vier und fünf. Wie spät ist es?",
+     "options": [{"text": "halb fünf", "say": "halb fünf", "correct": true}, {"text": "halb vier", "say": "halb vier", "correct": false}, {"text": "6 Uhr", "say": "sechs Uhr", "correct": false}],
+     "explain": "Fast! Halb heißt: auf halbem Weg zur nächsten Stunde. Wohin ist der kurze Zeiger unterwegs?",
+     "model": "Der lange Zeiger steht unten, also ist es halb. Der kurze ist auf dem Weg zur Fünf. Es ist halb fünf.",
+     "key": "halbe Stunde", "beat": 7},
+    {"q": "Es ist eine volle Stunde. Wohin zeigt der lange Zeiger?",
+     "options": [{"text": "⬆️ oben zur 12", "say": "nach oben zur Zwölf", "correct": true}, {"text": "⬇️ unten zur 6", "say": "nach unten zur Sechs", "correct": false}, {"text": "➡️ zur 3", "say": "zur Drei", "correct": false}],
+     "explain": "Denk an acht Uhr, als die Schule anfing. Wo stand da der lange Zeiger?",
+     "model": "Bei einer vollen Stunde zeigt der lange Zeiger nach oben auf die Zwölf.",
+     "key": "Zeiger oben", "beat": 4}
+  ]
+}

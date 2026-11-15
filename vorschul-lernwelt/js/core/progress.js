@@ -22,6 +22,7 @@
     breakMinutes: 20, // 0 = aus
     dailyLimit: 0, // Minuten, 0 = aus
     praiseName: true,
+    stage: 'vorschule', // Lernstufe: 'vorschule' | 'klasse1' (schaltet Schule + Reise Teil 2 frei)
   };
 
   function freshProfile() {

@@ -1,1 +1,231 @@
-/* satzbaumeister */
+/* ==========================================================================
+   Satzbaumeister 🚂 – Satz-Züge (Präfix .sat-)
+   ========================================================================== */
+.stage.sat-stage {
+  --sat-h: clamp(60px, 9vmin, 84px);
+  --sat-fs: clamp(22px, 3.9vmin, 36px);
+  justify-content: center;
+  gap: clamp(12px, 2.6vmin, 26px);
+}
+
+/* ---------- Kopf: Bild, Modus, Melodie-Knopf ---------- */
+.sat-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(10px, 2vmin, 20px);
+  flex-wrap: wrap;
+  max-width: 100%;
+}
+.sat-pic {
+  font-family: var(--emoji);
+  font-size: clamp(48px, 10vmin, 96px);
+  line-height: 1.1;
+  background: var(--card);
+  border-radius: var(--radius-l);
+  box-shadow: var(--shadow);
+  padding: clamp(8px, 1.6vmin, 16px) clamp(14px, 3vmin, 28px);
+  letter-spacing: 0.04em;
+}
+.sat-pic.sat-pic-s { font-size: clamp(36px, 7vmin, 64px); padding: 6px 16px; }
+.sat-mode {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 999px;
+  padding: 10px 22px;
+  font-weight: 800;
+  font-size: clamp(22px, 4vmin, 36px);
+  box-shadow: var(--shadow);
+  background: var(--card);
+}
+.sat-mode-q { background: #fff3c4; color: #8a5a00; }
+.sat-mode-s { background: #dff1ff; color: #1d5c8f; }
+.sat-mode-ic { font-family: var(--emoji); font-size: 1.15em; }
+.sat-listen {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 22px;
+  border-radius: 999px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+  font: inherit;
+  font-weight: 800;
+  font-size: clamp(18px, 3vmin, 26px);
+  color: var(--ink);
+}
+.sat-listen .emoji { font-size: 1.4em; }
+.sat-listen:active { transform: translateY(3px); box-shadow: var(--shadow-press); }
+.sat-pro {
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: #fff3c4;
+  color: #8a5a00;
+  font-weight: 800;
+  font-size: clamp(16px, 2.6vmin, 22px);
+}
+
+/* ---------- Gleis und Zug ---------- */
+.sat-track {
+  width: 100%;
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.sat-train {
+  --sat-gap: clamp(16px, 3vmin, 24px);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: center;
+  column-gap: clamp(6px, 1.2vmin, 12px);
+  row-gap: var(--sat-gap);
+  max-width: 100%;
+  padding: 0 4px 10px;
+  /* eine Schiene unter jeder Zug-Reihe (Reihenhöhe = Wagen + Räder) */
+  background: repeating-linear-gradient(to bottom,
+    transparent 0 calc(var(--sat-h) + 13px),
+    #9aa0bf calc(var(--sat-h) + 13px) calc(var(--sat-h) + 18px),
+    transparent calc(var(--sat-h) + 18px) calc(var(--sat-h) + 12px + var(--sat-gap)));
+}
+.sat-lok {
+  display: flex;
+  align-items: flex-end;
+  height: calc(var(--sat-h) + 12px);
+}
+.sat-lok-emoji {
+  font-size: calc(var(--sat-h) * 1.15);
+  line-height: 1;
+  display: inline-block;
+  transform: translateY(6px);
+}
+
+/* Wagen (Knopf oder Anzeige) */
+.sat-wagon {
+  appearance: none;
+  border: 0;
+  font: inherit;
+  position: relative;
+  min-width: calc(var(--sat-h) * 1.15);
+  height: var(--sat-h);
+  padding: 0 clamp(10px, 1.8vmin, 18px);
+  margin-bottom: 12px;
+  border-radius: 14px 14px 10px 10px;
+  background: var(--sand);
+  border: 3px dashed var(--ink-faint);
+  color: var(--ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--sat-fs);
+  font-weight: 800;
+  cursor: pointer;
+  transition: background .2s, transform .15s;
+}
+/* Räder */
+.sat-wagon::before,
+.sat-wagon::after {
+  content: '';
+  position: absolute;
+  bottom: -14px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #4a4e69;
+  box-shadow: inset 0 0 0 5px #6c7096;
+}
+.sat-wagon::before { left: 12%; }
+.sat-wagon::after { right: 12%; }
+.sat-wagon.sat-filled {
+  border: 3px solid transparent;
+  background: var(--card);
+  box-shadow: 0 5px 0 rgba(43, 45, 66, .16);
+}
+.sat-train .sat-wagon.sat-filled:nth-of-type(4n+1) { background: #ffe1e1; }
+.sat-train .sat-wagon.sat-filled:nth-of-type(4n+2) { background: #dff1ff; }
+.sat-train .sat-wagon.sat-filled:nth-of-type(4n+3) { background: #e3f8d8; }
+.sat-train .sat-wagon.sat-filled:nth-of-type(4n+4) { background: #f0e4ff; }
+.sat-wagon.sat-tail {
+  min-width: calc(var(--sat-h) * 0.95);
+  border-radius: 14px 26px 10px 10px;
+  font-size: calc(var(--sat-fs) * 1.5);
+}
+.sat-train .sat-wagon.sat-tail.sat-filled { background: #fff3c4; }
+.sat-wagon.sat-tail.sat-empty { animation: sat-wait 1.4s ease-in-out infinite; }
+.sat-wagon.sat-fixed, .sat-wagon.sat-static { cursor: default; }
+.sat-wagon.bump { animation: bump .35s; }
+.sat-wagon.sat-capped .sat-wtxt::first-letter { color: #d13b3b; }
+.sat-wtxt { white-space: nowrap; line-height: 1; }
+
+/* Abfahrt */
+.sat-train.sat-go { animation: sat-drive 1.6s ease-in .3s forwards; }
+@keyframes sat-drive {
+  0% { transform: translateX(0); }
+  15% { transform: translateX(8px); }
+  100% { transform: translateX(-110vw); }
+}
+@keyframes sat-wait { 0%, 100% { box-shadow: 0 0 0 0 rgba(255, 197, 51, 0); } 50% { box-shadow: 0 0 0 6px rgba(255, 197, 51, .7); } }
+
+/* ---------- Wortkarten ---------- */
+.sat-pool {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(10px, 2vmin, 18px);
+  max-width: min(100%, 900px);
+}
+.sat-card {
+  appearance: none;
+  border: 0;
+  font: inherit;
+  cursor: pointer;
+  min-width: 72px;
+  min-height: clamp(64px, 10vmin, 88px);
+  padding: 6px clamp(14px, 2.4vmin, 24px);
+  border-radius: 18px;
+  background: var(--card);
+  box-shadow: var(--shadow);
+  color: var(--ink);
+  font-size: var(--sat-fs);
+  font-weight: 800;
+  transition: transform .12s, opacity .25s;
+}
+.sat-card:active { transform: translateY(4px); box-shadow: var(--shadow-press); }
+.sat-card.sat-pcard { min-width: 80px; font-size: calc(var(--sat-fs) * 1.5); background: #fff3c4; }
+.sat-card.sat-used { opacity: .2; transform: scale(.9); pointer-events: none; box-shadow: none; }
+
+/* ---------- Stufe 3: Satzzeichen-Kacheln ---------- */
+.sat-pchoices .tile.large { --tile: clamp(96px, 20vmin, 170px); }
+.sat-ptile { font-size: calc(var(--tile) * 0.62); font-weight: 900; line-height: 1; }
+
+/* ---------- Stufe 5: Wagen als Kacheln ---------- */
+.sat-train.sat-fix .tile.sat-ftile {
+  width: auto;
+  height: var(--sat-h);
+  min-width: calc(var(--sat-h) * 1.15);
+  padding: 0 clamp(10px, 1.8vmin, 18px);
+  font-size: var(--sat-fs);
+  flex-direction: row;
+  border: 3px solid transparent;
+  border-radius: 14px 14px 10px 10px;
+}
+.sat-train.sat-fix .tile.sat-ftile.sat-tail { min-width: calc(var(--sat-h) * 0.95); font-size: calc(var(--sat-fs) * 1.5); border-radius: 14px 26px 10px 10px; }
+.sat-train.sat-fix .tile.sat-ftile.is-wrong { opacity: .55; filter: grayscale(.4); }
+.sat-train.sat-fix .tile.sat-ftile.sat-repaired { background: var(--ok-soft); }
+
+/* ---------- Telefon ---------- */
+@media (max-width: 520px) {
+  .stage.sat-stage { --sat-h: 56px; --sat-fs: 20px; padding-left: 8px; padding-right: 8px; }
+  .sat-train { column-gap: 4px; padding: 0 0 10px; }
+  .sat-card { min-height: 60px; padding: 6px 14px; min-width: 60px; }
+  .sat-lok-emoji { font-size: 46px; }
+  .sat-wagon, .sat-train.sat-fix .tile.sat-ftile { padding: 0 7px; min-width: 56px; }
+  .sat-wagon.sat-tail, .sat-train.sat-fix .tile.sat-ftile.sat-tail { min-width: 56px; }
+  .sat-wagon::before { left: 8%; }
+  .sat-wagon::after { right: 8%; }
+}

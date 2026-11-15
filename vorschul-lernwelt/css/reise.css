@@ -457,3 +457,84 @@
 .p-due-list { margin: 6px 0 0; padding-left: 20px; }
 .p-due-list li { overflow-wrap: anywhere; }
 .reise-flo.look-left svg { scale: -1 1; }
+
+/* ---------- Teil 1 / Teil 2 ---------- */
+.reise-parts {
+  max-width: 760px;
+  margin: 0 auto calc(var(--gap) * 0.9);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.75);
+  box-shadow: var(--shadow);
+}
+.reise-part {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  position: relative;
+  min-height: 56px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ink-soft);
+  font: 700 clamp(14px, 2.5vmin, 20px) var(--font);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  line-height: 1.1;
+}
+.reise-part-icon { font-size: 1.4em; }
+.reise-part.active { background: var(--area); color: #fff; box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15); text-shadow: 0 1px 0 rgba(0, 0, 0, 0.15); }
+.reise-part-lock { font-size: 12px; background: #fff; color: #4a4e69; border-radius: 999px; padding: 2px 8px; white-space: nowrap; }
+.reise-part.active .reise-part-lock { text-shadow: none; }
+.reise-part.locked:not(.active) { opacity: 0.85; }
+
+/* Teil 2: eigene Farbwelt (Schulheft, Kreide-Blau) */
+.reise-screen.is-schule {
+  background-color: #eef5ff;
+  background-image:
+    linear-gradient(rgba(28, 126, 214, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(28, 126, 214, 0.07) 1px, transparent 1px),
+    linear-gradient(180deg, #f3f8ff 0%, #e3efff 100%);
+  background-size: 26px 26px, 26px 26px, 100% 100%;
+}
+.reise-screen.is-schule .reise-meter { background: #dce8f8; }
+.reise-screen.is-schule .reise-meter > i { background: linear-gradient(90deg, #74c0fc, #1c7ed6); }
+.reise-screen.is-schule .reise-chapter {
+  background:
+    repeating-linear-gradient(180deg, transparent 0 29px, rgba(66, 133, 244, 0.12) 29px 30px),
+    linear-gradient(180deg, var(--ch-soft), color-mix(in srgb, var(--ch-soft) 45%, #fff) 100%);
+}
+.reise-screen.is-schule .reise-chapter.is-veiled { background: linear-gradient(180deg, #e8eef8, #f5f8fd); }
+.reise-intro.is-schule .panel { background-image: repeating-linear-gradient(180deg, transparent 0 31px, rgba(66, 133, 244, 0.12) 31px 32px); }
+
+/* Film-Station: Filmstreifen-Rand + 🎬 */
+.reise-station.is-film {
+  background:
+    radial-gradient(circle, #fff 58%, transparent 59%),
+    repeating-conic-gradient(#2b2840 0 12deg, #fff 12deg 24deg);
+}
+.reise-station.is-film.done { background: radial-gradient(circle, #fffbe9 58%, transparent 59%), repeating-conic-gradient(#2b2840 0 12deg, #fff 12deg 24deg); }
+.reise-film-badge {
+  position: absolute;
+  left: 50%;
+  bottom: -12px;
+  transform: translateX(-50%);
+  font-size: calc(var(--st) * 0.3);
+  filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.15));
+}
+
+.reise-empty { display: flex; flex-direction: column; align-items: center; padding: 30px 10px; text-align: center; font-weight: 700; color: var(--ink-soft); }
+.reise-empty-icon { font-size: 64px; }
+
+/* Startseite: Reise-Knopf für Teil 2 */
+.reise-cta.is-schule {
+  background:
+    radial-gradient(ellipse 40% 60% at 85% 15%, rgba(255, 255, 255, 0.28), transparent 70%),
+    linear-gradient(135deg, #4dabf7, #1c7ed6 60%, #1864ab);
+}

@@ -1,1 +1,115 @@
-/* wortarten */
+/* Wörter-Sortierer (wortarten) – Präfix .wor- */
+:root {
+  --wor-n: #3d7bff; --wor-n-soft: #e2ecff;
+  --wor-t: #ec4f4f; --wor-t-soft: #ffe3e3;
+  --wor-w: #1fa65a; --wor-w-soft: #dbf6e6;
+}
+
+/* Abzeichen + Frage oben */
+.wor-prompt { min-height: 0; flex-direction: column; gap: 6px; padding: clamp(10px, 2.4vmin, 22px) clamp(18px, 4vmin, 36px); }
+.wor-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 6px 18px; border-radius: 999px; color: #fff;
+  font-size: clamp(22px, 4.4vmin, 38px); font-weight: 800;
+}
+.wor-badge.wor-n { background: var(--wor-n); }
+.wor-badge.wor-t { background: var(--wor-t); }
+.wor-badge.wor-w { background: var(--wor-w); }
+.wor-ask { font-size: clamp(22px, 4.2vmin, 36px); font-weight: 700; color: var(--ink-soft); }
+
+/* Wort-Kacheln */
+.wor-word { display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; line-height: 1.05; }
+.wor-pic { font-size: clamp(40px, 8vmin, 72px); }
+.wor-txt { font-size: clamp(22px, 4.4vmin, 38px); font-weight: 800; letter-spacing: .03em; color: var(--ink); white-space: nowrap; }
+.tile.wor-wtile {
+  width: auto; min-width: clamp(118px, 26vmin, 210px); height: auto; min-height: clamp(96px, 18vmin, 170px);
+  padding: 12px 18px;
+}
+.wor-choices { max-width: min(100%, 900px); }
+
+/* Große Karte zum Sortieren */
+.wor-card {
+  position: relative; background: var(--card); border-radius: var(--radius-l); box-shadow: var(--shadow);
+  padding: clamp(16px, 3.6vmin, 34px) clamp(26px, 6vmin, 60px); min-width: min(78vw, 300px);
+  display: flex; justify-content: center; border: 5px solid var(--line);
+  transition: border-color .3s, background .3s;
+}
+.wor-word-big .wor-pic { font-size: clamp(64px, 14vmin, 130px); }
+.wor-word-big .wor-txt { font-size: clamp(34px, 7vmin, 64px); }
+.wor-card-say { position: absolute; top: -14px; right: -14px; }
+.wor-card-N { border-color: var(--wor-n); background: var(--wor-n-soft); }
+.wor-card-T { border-color: var(--wor-t); background: var(--wor-t-soft); }
+.wor-card-W { border-color: var(--wor-w); background: var(--wor-w-soft); }
+.wor-revealed .wor-txt { letter-spacing: 0; }
+
+/* Körbe */
+.wor-bins { flex-wrap: nowrap; gap: clamp(8px, 2.4vmin, 24px); max-width: 100%; }
+.tile.wor-basket {
+  width: clamp(104px, 28vw, 230px); height: clamp(132px, 24vmin, 210px);
+  border: 5px solid transparent; border-bottom-width: 12px; padding: 8px 6px;
+}
+.tile.wor-basket.wor-n { border-color: var(--wor-n); background: var(--wor-n-soft); }
+.tile.wor-basket.wor-t { border-color: var(--wor-t); background: var(--wor-t-soft); }
+.tile.wor-basket.wor-w { border-color: var(--wor-w); background: var(--wor-w-soft); }
+.wor-bin { display: flex; flex-direction: column; align-items: center; gap: 6px; line-height: 1.05; }
+.wor-bin-icon { font-size: clamp(34px, 7vmin, 60px); }
+.wor-bin-name { font-size: clamp(17px, 3.4vmin, 30px); font-weight: 800; }
+.wor-bin-q { font-size: clamp(14px, 2.6vmin, 22px); font-weight: 700; color: var(--ink-soft); }
+.wor-n .wor-bin-name { color: #1f52c4; }
+.wor-t .wor-bin-name { color: #c52f2f; }
+.wor-w .wor-bin-name { color: #11793f; }
+
+/* Bewegungen der Wortarten */
+.wor-anim-T { animation: wor-hop .55s ease-in-out 3; }
+.wor-anim-W { animation: wor-glow 1.2s ease-in-out 2; }
+.wor-anim-N .wor-txt { animation: wor-pop .5s ease-out; }
+@keyframes wor-hop { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-22px) rotate(-4deg); } 70% { transform: translateY(0) scaleY(.92); } }
+@keyframes wor-glow { 0%, 100% { filter: none; } 50% { filter: drop-shadow(0 0 14px #ffd84d) saturate(1.4); } }
+@keyframes wor-pop { 0% { transform: scale(.6); } 70% { transform: scale(1.12); } 100% { transform: scale(1); } }
+
+/* Gegenteile / Mehrzahl */
+.wor-opp, .wor-pl { gap: clamp(10px, 3vmin, 34px); flex-wrap: nowrap; }
+.wor-opp-side, .wor-pl-side { display: flex; flex-direction: column; align-items: center; gap: 6px; min-width: 0; }
+.wor-opp-e { font-size: clamp(54px, 12vmin, 110px); }
+.wor-opp-w, .wor-pl-w { font-size: clamp(26px, 5.2vmin, 46px); font-weight: 800; white-space: nowrap; }
+.wor-opp-q .wor-opp-w { color: var(--ink-faint); }
+.wor-opp-arrow { font-size: clamp(30px, 6vmin, 56px); font-weight: 800; color: var(--ink-faint); }
+.wor-pl-lbl { font-size: clamp(18px, 3.4vmin, 28px); font-weight: 700; color: var(--ink-soft); }
+.wor-pl-e { font-size: clamp(48px, 10vmin, 96px); }
+.wor-pl-es { display: flex; gap: 2px; }
+.wor-pl-e2 { font-size: clamp(30px, 7vmin, 66px); }
+.wor-gap { color: var(--ink-faint); border-bottom: 4px dashed var(--ink-faint); padding: 0 6px; }
+.wor-gap-done { color: var(--wor-n); border-bottom-color: transparent; animation: wor-pop .5s ease-out; }
+
+/* Satz-Wörter */
+.wor-sent { align-items: flex-end; gap: clamp(8px, 1.8vmin, 16px); background: var(--card); border-radius: var(--radius-l); box-shadow: var(--shadow); padding: clamp(14px, 3vmin, 28px); }
+.tile.wor-stile {
+  width: auto; height: auto; min-width: 64px; min-height: clamp(64px, 11vmin, 96px); padding: 8px 16px;
+  background: var(--paper); border: 3px solid var(--line); box-shadow: 0 4px 0 rgba(43, 45, 66, .12);
+}
+.tile.wor-stile .tile-text { font-size: clamp(26px, 5vmin, 44px); font-weight: 800; }
+.tile.wor-stile.wor-last { margin-right: 16px; }
+.tile.wor-stile.wor-last::after { content: "."; position: absolute; right: -18px; bottom: 4px; font-size: clamp(30px, 6vmin, 52px); font-weight: 800; color: var(--ink); }
+.tile.wor-stile.wor-mark.wor-n { border-color: var(--wor-n); background: var(--wor-n-soft); }
+.tile.wor-stile.wor-mark.wor-t { border-color: var(--wor-t); background: var(--wor-t-soft); }
+.tile.wor-stile.wor-mark.wor-w { border-color: var(--wor-w); background: var(--wor-w-soft); }
+
+/* Groß oder klein */
+.wor-capline { gap: 12px; }
+.wor-cw { font-size: clamp(28px, 5.6vmin, 50px); font-weight: 800; }
+.wor-capline .wor-cw:last-child { margin-left: -10px; }
+.wor-gap-done.wor-t { color: var(--wor-t); }
+.wor-gap-done.wor-w { color: var(--wor-w); }
+.tile.wor-captile .wor-txt { font-size: clamp(28px, 5.6vmin, 48px); letter-spacing: 0; }
+
+@media (max-width: 480px) {
+  .wor-bins { gap: 8px; }
+  .tile.wor-basket { width: calc((100vw - 64px) / 3); }
+  .wor-bins.wor-two .tile.wor-basket { width: 40vw; }
+  .wor-sent { padding: 12px 10px; gap: 6px; }
+  .tile.wor-stile { padding: 8px 10px; min-width: 56px; }
+  .tile.wor-stile .tile-text { font-size: 24px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .wor-anim-T, .wor-anim-W, .wor-anim-N .wor-txt, .wor-gap-done { animation: none; }
+}

@@ -1,0 +1,460 @@
+{
+  "id": "geld",
+  "title": "Flos *Geldbeutel*",
+  "icon": "💶",
+  "subject": "mathe1",
+  "related": [
+    "kaufladen"
+  ],
+  "parent": "Euro-Münzen und Scheine kennen, auf den aufgedruckten Wert statt auf die Größe achten (die 50-Cent-Münze ist größer als die 1-Euro-Münze), Beträge zusammenlegen und Rückgeld durch Weiterzählen bestimmen.",
+  "intro": "Schau mal, Flo geht mit seinem Geldbeutel einkaufen!",
+  "accent": "#ff8a3d",
+  "beats": [
+    {
+      "say": "Hallo! Ich bin Flo. Heute gehe ich einkaufen.",
+      "visual": {
+        "type": "title",
+        "subtitle": "Rechnen mit Flo"
+      }
+    },
+    {
+      "say": "Oh, ein toller Ball! Er kostet sieben Euro. Was lege ich hin? Hilfst du mir?",
+      "caption": "Der Ball kostet *7 €*",
+      "visual": {
+        "type": "scene",
+        "bg": "shop",
+        "actors": [
+          {
+            "e": "flo",
+            "x": 24,
+            "size": 190,
+            "emotion": "think",
+            "bubble": "❓",
+            "bubbleAt": 0.6
+          },
+          {
+            "e": "⚽",
+            "x": 62,
+            "y": 70,
+            "size": 110,
+            "at": 0.02,
+            "enter": "drop",
+            "anim": "bounce",
+            "label": "7 €",
+            "labelAt": 0.2
+          },
+          {
+            "e": "👛",
+            "x": 42,
+            "y": 78,
+            "size": 80,
+            "at": 0.4,
+            "enter": "pop",
+            "anim": "wiggle"
+          }
+        ]
+      }
+    },
+    {
+      "say": "Das sind Münzen. Hier ist ein Euro. Und hier sind zwei Euro.",
+      "caption": "Münzen: *1 €* und *2 €*",
+      "visual": {
+        "type": "geld",
+        "items": [
+          {
+            "v": 1,
+            "at": 0.45
+          },
+          {
+            "v": 2,
+            "at": 0.75
+          }
+        ],
+        "floGesture": "point"
+      }
+    },
+    {
+      "say": "Das sind Scheine. Fünf, zehn und zwanzig Euro.",
+      "caption": "Scheine: 5 €, 10 €, 20 €",
+      "visual": {
+        "type": "geld",
+        "items": [
+          {
+            "v": 5,
+            "at": 0.4
+          },
+          {
+            "v": 10,
+            "at": 0.6
+          },
+          {
+            "v": 20,
+            "at": 0.8
+          }
+        ]
+      }
+    },
+    {
+      "say": "Welche Münze ist mehr wert? Die große? Was meinst du?",
+      "caption": "Welche ist *mehr* wert?",
+      "pause": 2,
+      "visual": {
+        "type": "geld",
+        "items": [
+          {
+            "v": 0.5,
+            "at": 0.1
+          },
+          {
+            "v": 1,
+            "at": 0.25
+          }
+        ],
+        "floEmotion": "think"
+      }
+    },
+    {
+      "say": "Schau auf die Zahl! Die große ist fünfzig Cent. Die kleine ist ein Euro. Der Euro ist mehr wert.",
+      "caption": "Schau auf die *Zahl*!",
+      "visual": {
+        "type": "geld",
+        "continue": true,
+        "items": [
+          {
+            "v": 0.5,
+            "at": -0.1
+          },
+          {
+            "v": 1,
+            "at": -0.1
+          }
+        ],
+        "sum": "1 € ist mehr!",
+        "sumAt": 0.8,
+        "floGesture": "point"
+      }
+    },
+    {
+      "say": "Ich bezahle den Ball. Fünf Euro und zwei Euro. Fünf plus zwei ist sieben. Passt genau!",
+      "caption": "5 € + 2 € = *7 €*",
+      "visual": {
+        "type": "geld",
+        "price": {
+          "e": "⚽",
+          "v": 7
+        },
+        "items": [
+          {
+            "v": 5,
+            "at": 0.3
+          },
+          {
+            "v": 2,
+            "at": 0.5
+          }
+        ],
+        "sum": true,
+        "sumAt": 0.8,
+        "floEmotion": "happy"
+      }
+    },
+    {
+      "say": "Es geht auch nur mit Münzen. Zwei, vier, sechs, sieben!",
+      "caption": "2 + 2 + 2 + 1 = *7 €*",
+      "visual": {
+        "type": "geld",
+        "price": {
+          "e": "⚽",
+          "v": 7
+        },
+        "items": [
+          {
+            "v": 2,
+            "at": 0.4
+          },
+          {
+            "v": 2,
+            "at": 0.55
+          },
+          {
+            "v": 2,
+            "at": 0.7
+          },
+          {
+            "v": 1,
+            "at": 0.82
+          }
+        ],
+        "running": true,
+        "sum": true,
+        "sumAt": 1
+      }
+    },
+    {
+      "say": "Jetzt du! Das Buch kostet acht Euro. Reichen fünf, zwei und ein Euro? Was meinst du?",
+      "caption": "Reicht das für *8 €*?",
+      "pause": 2.5,
+      "visual": {
+        "type": "geld",
+        "price": {
+          "e": "📕",
+          "v": 8
+        },
+        "items": [
+          {
+            "v": 5,
+            "at": 0.45
+          },
+          {
+            "v": 2,
+            "at": 0.55
+          },
+          {
+            "v": 1,
+            "at": 0.65
+          }
+        ],
+        "floEmotion": "think"
+      }
+    },
+    {
+      "say": "Fünf plus zwei ist sieben. Plus eins ist acht. Das reicht genau!",
+      "caption": "5 + 2 + 1 = *8 €*",
+      "visual": {
+        "type": "geld",
+        "continue": true,
+        "price": {
+          "e": "📕",
+          "v": 8,
+          "at": -0.1
+        },
+        "items": [
+          {
+            "v": 5,
+            "at": -0.1
+          },
+          {
+            "v": 2,
+            "at": -0.1
+          },
+          {
+            "v": 1,
+            "at": -0.1
+          }
+        ],
+        "sum": true,
+        "sumAt": 0.6,
+        "floEmotion": "happy",
+        "floGesture": "cheer"
+      }
+    },
+    {
+      "say": "Und wenn ich nur zehn Euro habe? Wie viel bekomme ich dann zurück? Was meinst du?",
+      "caption": "Ich gebe 10 €. Zurück?",
+      "pause": 2,
+      "visual": {
+        "type": "geld",
+        "price": {
+          "e": "⚽",
+          "v": 7
+        },
+        "items": [
+          {
+            "v": 10,
+            "at": 0.15
+          }
+        ],
+        "floEmotion": "think"
+      }
+    },
+    {
+      "say": "Ich zähle vom Preis weiter bis zehn. Acht, neun, zehn. Das sind drei Schritte.",
+      "caption": "7 … 8, 9, 10",
+      "visual": {
+        "type": "zahlenstrahl",
+        "from": 0,
+        "to": 10,
+        "start": 7,
+        "marks": [
+          10
+        ],
+        "hopper": "⚽",
+        "jumps": [
+          {
+            "to": 10,
+            "label": "+3",
+            "at": 0.35,
+            "until": 0.8,
+            "hops": true
+          }
+        ]
+      }
+    },
+    {
+      "say": "Ich bekomme drei Euro zurück. Das heißt Rückgeld.",
+      "caption": "10 € − 7 € = *3 €*",
+      "visual": {
+        "type": "geld",
+        "price": {
+          "e": "⚽",
+          "v": 7
+        },
+        "items": [
+          10
+        ],
+        "back": [
+          {
+            "v": 2,
+            "at": 0.15
+          },
+          {
+            "v": 1,
+            "at": 0.3
+          }
+        ],
+        "backLabel": "Rückgeld:",
+        "floEmotion": "happy"
+      }
+    },
+    {
+      "say": "Merke: Schau auf die Zahl, nicht auf die Größe. Leg Geld zusammen, bis der Preis passt.",
+      "visual": {
+        "type": "merke",
+        "icon": "💶",
+        "lines": [
+          "Schau auf die *Zahl*,",
+          "nicht auf die Größe.",
+          "Geld zusammenlegen,",
+          "bis der *Preis* passt."
+        ],
+        "at": [
+          0.05,
+          0.25,
+          0.55,
+          0.75
+        ]
+      }
+    },
+    {
+      "say": "Jetzt kommt das Quiz. Gehst du mit mir einkaufen?",
+      "visual": {
+        "type": "flo",
+        "emotion": "happy",
+        "gesture": "cheer",
+        "side": "left",
+        "bubble": "Quiz! 💶",
+        "bubbleAt": 0.3,
+        "items": [
+          {
+            "e": "⚽",
+            "label": "7 €",
+            "at": 0.1
+          },
+          {
+            "e": "📕",
+            "label": "8 €",
+            "at": 0.3
+          }
+        ]
+      }
+    }
+  ],
+  "quiz": [
+    {
+      "q": "Welche Münze ist am meisten wert?",
+      "options": [
+        {
+          "text": "50 ct",
+          "say": "fünfzig Cent",
+          "correct": false
+        },
+        {
+          "text": "2 €",
+          "say": "zwei Euro",
+          "correct": true
+        },
+        {
+          "text": "1 €",
+          "say": "ein Euro",
+          "correct": false
+        }
+      ],
+      "explain": "Schau mal: Nicht die Größe zählt. Was steht auf der Münze?",
+      "model": "Zwei Euro sind mehr als ein Euro. Und ein Euro ist mehr als fünfzig Cent.",
+      "key": "Münzwert",
+      "beat": 5
+    },
+    {
+      "q": "Der Ball kostet sieben Euro. Welches Geld passt genau?",
+      "options": [
+        {
+          "text": "5 € + 2 €",
+          "say": "fünf Euro und zwei Euro",
+          "correct": true
+        },
+        {
+          "text": "5 € + 1 €",
+          "say": "fünf Euro und ein Euro",
+          "correct": false
+        },
+        {
+          "text": "2 € + 2 €",
+          "say": "zwei Euro und zwei Euro",
+          "correct": false
+        }
+      ],
+      "explain": "Fast! Zähl das Geld zusammen. Kommst du genau bis sieben?",
+      "model": "Fünf Euro plus zwei Euro ist sieben Euro. Das passt genau.",
+      "key": "Betrag legen",
+      "beat": 6
+    },
+    {
+      "q": "Fünf Euro, zwei Euro und ein Euro. Wie viel ist das zusammen?",
+      "options": [
+        {
+          "text": "7 €",
+          "say": "sieben Euro",
+          "correct": false
+        },
+        {
+          "text": "8 €",
+          "say": "acht Euro",
+          "correct": true
+        },
+        {
+          "text": "3 €",
+          "say": "drei Euro",
+          "correct": false
+        }
+      ],
+      "explain": "Schau mal: Hast du alle drei Geldstücke gezählt? Auch den einen Euro?",
+      "model": "Fünf plus zwei ist sieben. Plus eins ist acht. Zusammen acht Euro.",
+      "key": "Summe",
+      "beat": 9
+    },
+    {
+      "q": "Ein Eis kostet zwei Euro. Ich gebe fünf Euro. Wie viel bekomme ich zurück?",
+      "options": [
+        {
+          "text": "2 €",
+          "say": "zwei Euro",
+          "correct": false
+        },
+        {
+          "text": "3 €",
+          "say": "drei Euro",
+          "correct": true
+        },
+        {
+          "text": "7 €",
+          "say": "sieben Euro",
+          "correct": false
+        }
+      ],
+      "explain": "Zähl vom Preis weiter bis fünf. Wie viele Schritte sind das?",
+      "model": "Von zwei bis fünf: drei, vier, fünf. Das sind drei Schritte. Ich bekomme drei Euro zurück.",
+      "key": "Rückgeld",
+      "beat": 11
+    }
+  ]
+}
