@@ -81,6 +81,43 @@
         'Feinmotorik und Graphomotorik als Vorbereitung auf das Schreiben: Schwungübungen, Ziffern und Buchstaben in richtiger Schreibrichtung nachspuren, Zahlen der Reihe nach verbinden, kreatives Ausmalen.',
       games: ['nachspuren', 'punkte-verbinden', 'ausmalen'],
     },
+    /* ---- Schule (Brücke Vorschule → Ende Klasse 1). grade:1 = eigene Reihe auf der Weltkarte ---- */
+    {
+      id: 'mathe1', grade: 1,
+      title: 'Rechenschule',
+      icon: '🧮',
+      deco: ['10', '20', '+', '€'],
+      color: '#e8590c',
+      soft: '#ffe8d6',
+      hello: 'Willkommen in der Rechenschule! Hier rechnen wir wie die Schulkinder – bis zwanzig und darüber hinaus.',
+      parent:
+        'Mathematik Klasse 1 (KMK-Leitideen Zahlen & Operationen, Muster & Strukturen, Größen): Zwanzigerraum strukturiert erfassen (Kraft der Fünf, Zehnerfeld), Nachbarzahlen, Plus/Minus bis 20, Zehnerübergang mit Zerlegungsstrategie, Verdoppeln/Halbieren, Tausch- und Umkehraufgaben, Zahlenmauern, Sachaufgaben und Rechnen mit Geld.',
+      games: ['zehnerfeld', 'zahlen-nachbarn', 'rechenrakete', 'zehnerbruecke', 'verdoppeln', 'aufgabenfamilie', 'zahlenmauer', 'sachrechnen', 'kaufladen'],
+    },
+    {
+      id: 'deutsch1', grade: 1,
+      title: 'Leseschule',
+      icon: '📚',
+      deco: ['Ma', 'Le', 'Ab', '✏️'],
+      color: '#5f3dc4',
+      soft: '#e5dbff',
+      hello: 'Willkommen in der Leseschule! Hier lesen und schreiben wir unsere ersten Wörter und Sätze.',
+      parent:
+        'Deutsch Klasse 1 (KMK-Bereiche Lesen, Schreiben, Sprache untersuchen): Silbenlesen und Lautsynthese, lautgetreues Schreiben mit der Anlauttabelle, Lauthören (An-, In-, Auslaut, Lautanzahl), Blitzwörter aus dem Grundwortschatz, Sätze bauen (Großschreibung am Satzanfang, Punkt), Leseverständnis und erste Wortarten.',
+      games: ['silbenlesen', 'schreibwerkstatt', 'hoerkoenig', 'blitzwoerter', 'satzbaumeister', 'lesedetektiv', 'wortarten'],
+    },
+    {
+      id: 'sach1', grade: 1,
+      title: 'Sachkunde-Schule',
+      icon: '🔬',
+      deco: ['🚸', '🦷', '💧', '♻️'],
+      color: '#2b8a3e',
+      soft: '#d3f9d8',
+      hello: 'Willkommen in der Sachkunde-Schule! Hier forschen wir wie richtige Schulkinder.',
+      parent:
+        'Sachunterricht Klasse 1: sicherer Schulweg (Verkehrszeichen, Notruf 112), Körper und Gesundheit (Sinne, Zähne, Ernährung), erste Experimente (Schwimmen und Sinken: Vermuten – Ausprobieren – Erklären) und Umwelt (Müll trennen und vermeiden).',
+      games: ['schulweg', 'koerperlabor', 'schwimmen-sinken', 'muell'],
+    },
   ];
 
   LT.areaById = (id) => LT.areas.find((a) => a.id === id) || null;
