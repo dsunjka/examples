@@ -3,7 +3,9 @@
 
    Didaktik (Sprache untersuchen, Klasse 1):
    - Drei Wortarten mit je einer Frage, einer Farbe und einer Probe:
-       Namenwort  „Was ist es?“   Probe: Passt der, die oder das davor?
+       Namenwort  „Was ist es?“   Probe: ein/eine … – viele … (nicht der/die/
+                  das: „das Malen“ klingt auch richtig und würde Tunwörter
+                  durchlassen). Immer im Kontrast zu „Ich kann …“.
        Tunwort    „Was tut man?“  Probe: Ich kann …
        Wiewort    „Wie ist es?“   Probe: Es ist …
    - In den Stufen 1 bis 3 stehen alle Wörter in GROSSBUCHSTABEN (wie in der
@@ -14,7 +16,8 @@
    - Bewegungsanimation: Tunwörter hüpfen, Wiewörter leuchten, Namenwörter
      bekommen ihren Begleiter.
    - Stufen:
-       1  Namenwort finden (unter Tunwörtern; beim Steigern auch Wiewörter)
+       1  Namenwort finden (unter Tunwörtern mit Handlungsbild; höchstens
+          eine Bild-Falle wie fliegen 🕊️; beim Steigern auch Wiewörter)
        2  Tunwörter: Tunwort finden / Wort in Namenwort- oder Tunwort-Korb
        3  Drei Körbe: Namenwort, Tunwort, Wiewort (beim Steigern ohne Bild,
           auch Namenwörter, die man nicht anfassen kann: die Angst)
@@ -22,6 +25,9 @@
           Wortarten im Satz finden (Begleiter und Hilfswörter als Ablenker)
        5  Einzahl/Mehrzahl (Hund/Hunde, Haus/Häuser, mit Umlaut- und
           Endungsfallen) und Großschreibung im Satz – Niveau Ende Klasse 1
+   - Stufenwahl: In den Stufen 1 bis 3 steigert ctx.flow nur innerhalb der
+     Stufe (mehr Ablenker, ohne Bild, abstrakte Namenwörter); nach unten
+     darf es eine Stufe leichter werden. Stufen 4 und 5 bleiben stabil.
    - Fehlvorstellungen: „Nur Dinge zum Anfassen sind Namenwörter“, „das
      Bild zeigt einen Gegenstand, also Namenwort“ (malen 🎨), Gegenteil mit
      ähnlichem Wort verwechselt, Mehrzahl ohne Veränderung oder mit falschem
@@ -89,17 +95,36 @@
 
   /** Namenwörter, die man nicht anfassen kann (Stufe 3 beim Steigern). */
   const ABSTRACT = [
-    ['Angst', 'die', '😨'], ['Freude', 'die', '🥳'], ['Traum', 'der', '💭'], ['Hunger', 'der', '🍽️'], ['Idee', 'die', '💡'],
-  ].map(([w, a, e]) => ({ w, a, e, kind: 'N', abstract: true }));
+    ['Angst', 'die', '😨', 'Ich habe Angst'], ['Freude', 'die', '🥳', 'eine große Freude'], ['Traum', 'der', '💭', 'ein Traum, viele Träume'],
+    ['Hunger', 'der', '🍽️', 'Ich habe Hunger'], ['Idee', 'die', '💡', 'eine Idee, viele Ideen'],
+  ].map(([w, a, e, probe]) => ({ w, a, e, probe, kind: 'N', abstract: true }));
 
   const VERBS = [
-    ['laufen', '🏃'], ['schwimmen', '🏊'], ['malen', '🎨'], ['essen', '🍝'], ['trinken', '🥤'], ['schlafen', '😴'],
-    ['lesen', '📖'], ['singen', '🎤'], ['tanzen', '💃'], ['lachen', '😂'], ['weinen', '😭'], ['kochen', '🍳'],
-    ['fliegen', '🕊️'], ['bauen', '🧱'], ['klettern', '🧗'], ['schreiben', '✍️'], ['winken', '👋'], ['fahren', '🚲'],
-    ['putzen', '🧽'], ['springen', '🦘'],
-  ].map(([w, e]) => ({ w, e, kind: 'T' }));
+    // obj = Bild zeigt einen Gegenstand/ein Tier statt einer Handlung (Bild-Falle)
+    ['laufen', '🏃'], ['schwimmen', '🏊'], ['malen', '🎨', 1], ['turnen', '🤸'], ['trinken', '🥤', 1], ['schlafen', '😴'],
+    ['lesen', '📖', 1], ['singen', '🎤', 1], ['tanzen', '💃'], ['lachen', '😂'], ['weinen', '😭'], ['kochen', '🍳', 1],
+    ['fliegen', '🕊️', 1], ['bauen', '🧱', 1], ['klettern', '🧗'], ['schreiben', '✍️'], ['winken', '👋'], ['fahren', '🚴'],
+    ['putzen', '🧽', 1], ['springen', '🦘', 1],
+  ].map(([w, e, obj]) => ({ w, e, obj: !!obj, kind: 'T' }));
+  const VERBS_ACT = VERBS.filter((v) => !v.obj);
+  const VERBS_OBJ = VERBS.filter((v) => v.obj);
+  /** Paare mit fast gleichem Bild oder Sinn – nie zusammen in einer Aufgabe. */
+  const CLASH = [['lesen', 'Buch'], ['weinen', 'traurig'], ['lachen', 'fröhlich'], ['fliegen', 'Vogel'], ['springen', 'Hase'], ['schlafen', 'Bett']];
+  const clashes = (a, b) => CLASH.some(([x, y]) => (a.w === x && b.w === y) || (a.w === y && b.w === x));
+  const fits = (x, list) => list.every((y) => y !== x && !clashes(x, y));
+  const pickFit = (pool, list) => U.pick(pool.filter((x) => fits(x, list)));
+  const ein = (x) => (x.a === 'die' ? 'eine' : 'ein');
 
-  /* Wiewörter: [Wort, Bild, Bild gesprochen, Gegenteil, fast gleich] */
+  /* Wiewörter: [Wort, Bild, Bild gesprochen, Gegenteil, fast gleich]
+     DIM: welche Eigenschaft das Wortpaar beschreibt (für Gegenteil-Erklärungen) */
+  const DIM = {
+    groß: 'wie groß etwas ist', klein: 'wie groß etwas ist', heiß: 'wie warm etwas ist', kalt: 'wie warm etwas ist',
+    schnell: 'wie schnell etwas ist', langsam: 'wie schnell etwas ist', laut: 'wie laut etwas ist', leise: 'wie laut etwas ist',
+    nass: 'wie nass etwas ist', trocken: 'wie nass etwas ist', hell: 'wie hell etwas ist', dunkel: 'wie hell etwas ist',
+    alt: 'wie alt jemand ist', jung: 'wie alt jemand ist', hart: 'wie hart etwas ist', weich: 'wie hart etwas ist',
+    süß: 'wie etwas schmeckt', sauer: 'wie etwas schmeckt', fröhlich: 'wie sich jemand fühlt', traurig: 'wie sich jemand fühlt',
+    leicht: 'wie schwer etwas ist', schwer: 'wie schwer etwas ist',
+  };
   const ADJ = [
     ['groß', '🐘', 'ein Elefant', 'klein', 'riesig'],
     ['klein', '🐜', 'eine Ameise', 'groß', 'winzig'],
@@ -123,7 +148,7 @@
     ['traurig', '😢', 'ein weinendes Kind', 'fröhlich', null],
     ['leicht', '🪶', 'eine Feder', 'schwer', null],
     ['schwer', '🏋️', 'eine Hantel', 'leicht', null],
-  ].map(([w, e, pic, opp, near]) => ({ w, e, pic, opp, near, kind: 'W' }));
+  ].map(([w, e, pic, opp, near]) => ({ w, e, pic, opp, near, dim: DIM[w], kind: 'W' }));
   const ADJ_BY = {};
   ADJ.forEach((a) => { ADJ_BY[a.w] = a; });
   const ADJ_SORT = ADJ.filter((a) => ['groß', 'klein', 'heiß', 'kalt', 'schnell', 'langsam', 'laut', 'leise', 'nass', 'hell', 'alt', 'weich', 'süß', 'sauer', 'fröhlich', 'traurig', 'schwer'].includes(a.w));
@@ -144,7 +169,7 @@
   });
 
   const INTRO = {
-    1: 'Namenwörter sind Wörter für Menschen, Tiere und Dinge. Man kann sie sehen und anfassen. Frag: Was ist es?',
+    1: 'Namenwörter sind Wörter für Menschen, Tiere, Pflanzen und Dinge. Frag: Was ist es? Und probier: ein Hund, viele Hunde. Das passt. Ein laufen? Das passt nicht. Laufen tut man.',
     2: 'Jetzt kommen die Tunwörter. Sie sagen, was man tut. Frag: Was tut man? Laufen, malen, singen.',
     3: 'Jetzt gibt es drei Körbe. Neu sind die Wiewörter. Sie sagen, wie etwas ist. Frag: Wie ist es?',
     4: 'Wiewörter haben oft ein Gegenteil: groß und klein. Und wir suchen Wortarten in einem Satz.',
@@ -154,7 +179,7 @@
 
   /* ---------------- Bausteine ---------------- */
   const PROBE = {
-    N: (x) => `Probier mal der, die oder das davor.`,
+    N: (x) => `Probier mal: Passt ein oder eine davor? Oder passt: Ich kann ${x.w}?`,
     T: (x) => `Probier mal: Ich kann ${x.w}.`,
     W: (x) => `Probier mal: Es ist ${x.w}.`,
   };
@@ -193,11 +218,16 @@
     const target = ctx.item(pool, (x) => x.w, { avoid: 5 });
     let others;
     if (want === 'N') {
-      others = U.sample(VERBS, 2);
-      if (ctx.flow > 0) others.push(U.pick(ADJ_SORT));
+      // Tunwörter mit Handlungsbild; höchstens eine Bild-Falle (malen 🎨) und nur ab flow 0.
+      // Beim Steigern ist das Wiewort (auch mit Gegenstandsbild) die eine Falle.
+      others = [pickFit(VERBS_ACT, [target])];
+      const trap = ctx.flow === 0 && U.chance(0.4);
+      others.push(pickFit(trap ? VERBS_OBJ : VERBS_ACT, [target, ...others]));
+      if (ctx.flow > 0) others.push(pickFit(ADJ_SORT, [target, ...others]));
     } else {
-      others = [U.pick(NOUNS), U.pick(ADJ_SORT)];
-      if (ctx.flow > 0) others.push(U.pick(NOUNS.filter((n) => n !== others[0])));
+      others = [pickFit(NOUNS, [target])];
+      others.push(pickFit(ADJ_SORT, [target, ...others]));
+      if (ctx.flow > 0) others.push(pickFit(NOUNS, [target, ...others]));
     }
     const K = KIND[want];
     const prompt = el('div.prompt-box.wor-prompt',
@@ -216,21 +246,24 @@
     const right = await ctx.choices(items, {
       container: box, sayButton: true, hintAfter: ha, praise: false,
       correctSay: () => proc(ctx, vary('ok', ['Richtig!', 'Genau!', 'Super!']),
-        want === 'N' ? vary('pN', ['Du hast gefragt: Was ist es? Sehr schlau!', 'Du hast genau überlegt, was man anfassen kann. Toll!'])
+        want === 'N' ? vary('pN', ['Du hast gefragt: Was ist es? Sehr schlau!', 'Du hast die Probe gemacht: ein oder eine davor. Toll!'])
           : vary('pT', ['Du hast gefragt: Was tut man? Super Trick!', 'Du hast die Probe gemacht: Ich kann. Sehr schlau!'])),
       explain: (wrong) => {
         const w = wrong.x;
         if (want === 'N') {
-          if (w.kind === 'T') return `${cap(w.w)} kann man nicht anfassen. ${cap(w.w)} tut man. Wir suchen einen Menschen, ein Tier oder ein Ding.`;
-          return `${cap(w.w)} kann man nicht anfassen. So kann etwas sein. Wir suchen einen Menschen, ein Tier oder ein Ding.`;
+          if (w.kind === 'T') return `Hör mal: Ich kann ${w.w}. ${cap(w.w)} tut man. Wir suchen einen Menschen, ein Tier, eine Pflanze oder ein Ding.`;
+          return `Hör mal: Es ist ${w.w}. So kann etwas sein. Wir suchen einen Menschen, ein Tier, eine Pflanze oder ein Ding.`;
         }
         if (w.kind === 'N') return `${cap(w.a)} ${w.w} ist ein Namenwort. Das ist etwas. Wir suchen etwas, das man tun kann.`;
         return `${cap(w.w)} sagt, wie etwas ist. Wir suchen etwas, das man tun kann.`;
       },
-      hintSay: () => (want === 'N' ? 'Tipp: Sag der, die oder das vor die Wörter. Wo klingt es richtig?' : 'Tipp: Sag: Ich kann, und dann das Wort. Wo klingt es richtig?'),
-      modelSay: () => (want === 'N'
-        ? `Schau: ${target.a} ${target.w}. Das klingt richtig. Tipp auf ${target.w}.`
-        : `Schau: Ich kann ${target.w}. Das klingt richtig. ${cap(target.w)} ist ein Tunwort. Tipp darauf.`),
+      hintSay: () => (want === 'N' ? 'Tipp: Sag: Ich kann, und dann das Wort. Was man tun kann, ist kein Namenwort. Vor das Namenwort passt ein oder eine.' : 'Tipp: Sag: Ich kann, und dann das Wort. Wo klingt es richtig?'),
+      modelSay: () => {
+        if (want !== 'N') return `Schau: Ich kann ${target.w}. Das klingt richtig. ${cap(target.w)} ist ein Tunwort. Tipp darauf.`;
+        const v = others.find((o) => o.kind === 'T');
+        const pl = target.pl ? `, viele ${target.pl}` : '';
+        return `Schau: ${ein(target)} ${target.w}${pl}. Das klingt richtig. Aber: Ich kann ${v.w}. ${cap(v.w)} tut man. Tipp auf ${target.w}.`;
+      },
     });
     if (!ctx.active) return;
     reveal(right.node, target);
@@ -266,14 +299,15 @@
         vary('pS', ['Du hast die Frage gestellt und die Probe gemacht. Wie ein Profi!', 'Du hast erst überlegt und dann sortiert. Sehr schlau!'])),
       explain: (wrong) => {
         const t = target;
-        if (tk === 'N' && t.abstract) return `${cap(t.w)} kann man nicht anfassen. Aber es gibt noch eine Probe. Passt der, die oder das davor?`;
+        if (tk === 'N' && t.abstract) return `${cap(t.w)} kann man nicht anfassen. Trotzdem kann es ein Namenwort sein. Hör mal: ${t.probe}. Kann man ${t.w} tun? Oder kann etwas ${t.w} sein?`;
         if (tk === 'N') return `Kann man ${t.w} tun? Oder kann etwas ${t.w} sein? ${PROBE.N(t)}`;
-        if (tk === 'T') return wrong.k === 'N' ? `Kann man ${t.w} anfassen? ${PROBE.T(t)}` : `Sagt ${t.w}, wie etwas ist? ${PROBE.T(t)}`;
-        return wrong.k === 'N' ? `Kann man ${t.w} anfassen? ${PROBE.W(t)}` : `Kann man ${t.w} tun? ${PROBE.W(t)}`;
+        if (tk === 'T') return wrong.k === 'N' ? `Ist ${t.w} ein Mensch, ein Tier oder ein Ding? ${PROBE.T(t)}` : `Sagt ${t.w}, wie etwas ist? ${PROBE.T(t)}`;
+        return wrong.k === 'N' ? `Ist ${t.w} ein Mensch, ein Tier oder ein Ding? ${PROBE.W(t)}` : `Kann man ${t.w} tun? ${PROBE.W(t)}`;
       },
       modelSay: () => {
         const t = target;
-        if (tk === 'N') return `Schau: ${t.a} ${t.w}. Der Begleiter passt davor. ${cap(t.w)} ist ein Namenwort.`;
+        if (tk === 'N' && t.abstract) return `Schau: ${t.probe}. ${cap(t.w)} kann man nicht tun, und es sagt nicht, wie etwas ist. ${cap(t.w)} ist ein Namenwort.`;
+        if (tk === 'N') return `Schau: ${ein(t)} ${t.w}${t.pl ? `, viele ${t.pl}` : ''}. Das passt. Aber: Ich kann ${t.w}? Das passt nicht. ${cap(t.w)} ist ein Namenwort.`;
         if (tk === 'T') return `Schau: Ich kann ${t.w}. ${cap(t.w)} tut man. Das ist ein Tunwort.`;
         return `Schau: Es ist ${t.w}. So ist etwas. ${cap(t.w)} ist ein Wiewort.`;
       },
@@ -291,7 +325,7 @@
     const target = ctx.item(ADJ, (x) => `${x.w} → ${x.opp}`, { avoid: 5 });
     const opp = ADJ_BY[target.opp];
     const wrongPool = ADJ.filter((a) => a !== target && a !== opp && a.w !== (opp && opp.near));
-    const others = U.sample(wrongPool, ctx.flow > 0 ? 3 : 2).map((a) => ({ w: a.w, near: false }));
+    const others = U.sample(wrongPool, ctx.flow > 0 ? 3 : 2).map((a) => ({ w: a.w, dim: a.dim, near: false }));
     if (target.near && others.length) others[0] = { w: target.near, near: true };
     const row = el('div.prompt-box.wor-opp',
       el('span.wor-opp-side', U.emoji(target.e, 'wor-opp-e'), el('span.wor-opp-w', target.w)),
@@ -309,11 +343,11 @@
     await ctx.choices(items, {
       container: box, sayButton: true, hintAfter: ha, praise: false,
       correctSay: () => proc(ctx, vary('ok', ['Richtig!', 'Genau!', 'Super!']),
-        vary('pO', ['Du hast dir beides vorgestellt. Sehr schlau!', 'Du hast an etwas ganz anderes gedacht. Genau so findet man Gegenteile!'])),
+        vary('pO', ['Du hast dir beides vorgestellt. Sehr schlau!', 'Du hast an das andere Ende gedacht. Genau so findet man Gegenteile!'])),
       explain: (wrong) => (wrong.o.near
-        ? `${cap(wrong.o.w)} ist fast dasselbe wie ${target.w}. Ein Gegenteil ist ganz anders.`
-        : `${cap(wrong.o.w)} ist auch ein Wiewort. Aber ist es ganz anders als ${target.w}?`),
-      hintSay: () => `Tipp: Denk an ${target.pic}. Und dann an ${opp.pic}.`,
+        ? `${cap(wrong.o.w)} ist so ähnlich wie ${target.w}. Das Gegenteil ist genau andersherum.`
+        : `${cap(wrong.o.w)} sagt, ${wrong.o.dim}. Wir suchen ein Wort, das sagt, ${target.dim}. Und zwar genau andersherum als ${target.w}.`),
+      hintSay: () => `Tipp: ${cap(target.pic)} ist ${target.w}. Und wie ist ${opp.pic}?`,
       modelSay: () => `Schau: ${cap(target.pic)} ist ${target.w}. ${cap(opp.pic)} ist ${opp.w}. Tipp auf ${opp.w}.`,
     });
     if (!ctx.active) return;
@@ -443,9 +477,9 @@
     await ctx.choices(items, {
       container: box, hintAfter: 1, praise: false,
       correctSay: () => proc(ctx, vary('ok', ['Richtig!', 'Genau!', 'Super!']),
-        isN ? 'Du hast die Begleiter-Probe gemacht. Wie ein Schulkind!' : 'Du hast überlegt: Ist das ein Namenwort? Sehr schlau!'),
+        isN ? 'Du hast gefragt: Was ist es? Wie ein Schulkind!' : 'Du hast überlegt: Ist das ein Namenwort? Sehr schlau!'),
       explain: () => (isN
-        ? `Schau mal: Passt der, die oder das davor? Dann ist es ein Namenwort. Wie schreibt man Namenwörter?`
+        ? `Schau mal: Ist ${rightW} ein Mensch, ein Tier, eine Pflanze oder ein Ding? Dann ist es ein Namenwort. Wie schreibt man Namenwörter?`
         : c.x.k === 'T' ? `Ist ${rightW} ein Mensch, ein Tier oder ein Ding? Nein, das tut man. Wie schreibt man Tunwörter?`
           : `Ist ${rightW} ein Mensch, ein Tier oder ein Ding? Nein, so ist etwas. Wie schreibt man Wiewörter?`),
       modelSay: () => (isN ? `Schau: ${rightW} ist ein Namenwort. Namenwörter schreibt man groß.`
@@ -474,18 +508,21 @@
       skill: 'Wortarten erkennen: Namenwort, Tunwort, Wiewort; Gegenteile, Einzahl und Mehrzahl, Großschreibung',
       goal: 'Ihr Kind unterscheidet Namenwörter (Was ist es?), Tunwörter (Was tut man?) und Wiewörter (Wie ist es?) mit einfachen Proben, findet sie im Satz, bildet Gegenteile und die Mehrzahl und weiß, dass Namenwörter großgeschrieben werden (Sprache untersuchen, Klasse 1).',
       levels: [
-        'Namenwort finden: Menschen, Tiere und Dinge (Probe: der, die, das) – Brücke aus der Vorschule',
-        'Tunwörter dazu: Tunwort finden und Wörter in die Körbe Namenwort oder Tunwort sortieren (Probe: Ich kann …)',
+        'Namenwort finden: Menschen, Tiere, Pflanzen und Dinge (Probe: ein Hund – viele Hunde, im Vergleich zu „Ich kann laufen“) – Brücke aus der Vorschule; beim Steigern kommt ein Wiewort als Ablenker dazu',
+        'Tunwörter dazu: Tunwort finden und Wörter in die Körbe Namenwort oder Tunwort sortieren (Probe: Ich kann …); beim Steigern ein Ablenker mehr',
         'Drei Körbe: Namenwort, Tunwort, Wiewort; beim Steigern ohne Bild und mit Namenwörtern, die man nicht anfassen kann (die Angst)',
         'Wiewörter: Gegenteile finden (Falle: fast gleiche Wörter wie groß und riesig) und Wortarten in einem Satz finden',
         'Einzahl und Mehrzahl (Hund – Hunde, Haus – Häuser) und Großschreibung im Satz – Niveau Ende Klasse 1',
       ],
-      tip: 'Spielen Sie „Wörter-Korb“: Sie sagen ein Wort, Ihr Kind zeigt mit der Hand – Faust für Namenwort, Hüpfer für Tunwort, Daumen für Wiewort. Die Proben helfen: „der/die/das …?“, „Ich kann …?“, „Es ist …?“. Beim Einkaufen: „Ein Apfel – viele …?“',
+      tip: 'Spielen Sie „Wörter-Korb“: Sie sagen ein Wort, Ihr Kind zeigt mit der Hand – Faust für Namenwort, Hüpfer für Tunwort, Daumen für Wiewort. Die Proben helfen: „ein/eine …, viele …?“, „Ich kann …?“, „Es ist …?“. Beim Einkaufen: „Ein Apfel – viele …?“',
     },
 
     async task(ctx) {
-      // Stufen 4 und 5 sind neue Inhalte: dort bleibt die Stufe stabil, ctx.flow ändert nur die Ablenker.
-      const level = ctx.level >= 4 ? ctx.level : ctx.taskLevel;
+      // Jede Stufe bringt neue Inhalte (neue Wortart, neue Aufgabenart). Steigern (flow +1)
+      // bleibt deshalb innerhalb der eigenen Stufe: mehr Ablenker, ohne Bild, abstrakte
+      // Namenwörter. Nur in den Stufen 1 bis 3 darf es bei Schwierigkeiten eine Stufe
+      // leichter werden; 4 und 5 bleiben stabil.
+      const level = ctx.level >= 4 ? ctx.level : Math.min(ctx.level, ctx.taskLevel);
       if (ctx.index === 0) introduced = new Set();
       if (!introduced.has(level)) {
         introduced.add(level);

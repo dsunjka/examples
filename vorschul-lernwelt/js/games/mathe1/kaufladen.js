@@ -42,6 +42,9 @@
   const W = (n) => U.cap(U.numberWord(n));
   const euro = (n) => (n === 1 ? 'ein Euro' : `${w(n)} Euro`);
   const Euro = (n) => U.cap(euro(n));
+  /** Akkusativ: „kostet einen Euro“, „Lege einen Euro“, „hat einen Euro“ */
+  const euroA = (n) => (n === 1 ? 'einen Euro' : `${w(n)} Euro`);
+  const EuroA = (n) => U.cap(euroA(n));
   const lbl = (n) => `${n} €`;
   const range = (a, b) => { const r = []; for (let i = a; i <= b; i++) r.push(i); return r; };
   const sum = (arr) => arr.reduce((s, x) => s + x, 0);
@@ -66,7 +69,7 @@
   const kindFor = (level, index) => PLAN[level][index % PLAN[level].length];
 
   const INTRO = {
-    1: 'Willkommen in Flos Kaufladen! Hier bezahlen wir mit Euro. Das ist ein Euro. Und das sind zwei Euro. Schau immer auf die Zahl!',
+    1: 'Hier bezahlen wir mit Euro. Das ist ein Euro. Und das sind zwei Euro. Schau immer auf die Zahl!',
     2: 'Neu im Geldbeutel: der Schein mit fünf Euro! Ein Schein ist leicht, aber viel wert. Fünf Euro sind so viel wie fünf Münzen mit einem Euro.',
     3: 'Jetzt gibt es auch den Schein mit zehn Euro. Damit kannst du bis zwanzig Euro bezahlen.',
     4: 'Jetzt kommt der Schein mit zwanzig Euro dazu. Heute wirst du ein Geldprofi. Es gibt viele Wege, einen Preis zu legen.',
@@ -160,13 +163,16 @@
   /** Weiterzählen vom Preis bis zum bezahlten Betrag */
   function countUpSay(price, paid) {
     const c = paid - price;
+    const tail = `Das ${c === 1 ? 'ist' : 'sind'} ${euro(c)} Rückgeld.`;
     if (c <= 4) {
-      return `${W(price)}, ${range(price + 1, paid).map(w).join(', ')}. Das sind ${euro(c)} Rückgeld.`;
+      // die Schritte zählen, nicht die Startzahl: „Ich bin bei sieben. Acht, das ist ein Schritt. …“
+      const hops = range(price + 1, paid).map((x, i) => (i === 0 ? `${W(x)}, das ist ein Schritt.` : `${W(x)}, ${w(i + 1)} Schritte.`));
+      return `Ich bin bei ${w(price)}. ${hops.join(' ')} ${tail}`;
     }
     const steps = desc(greedy(c, [1, 2, 5, 10])).reverse();
     let s = price;
     const parts = steps.map((v) => { s += v; return `plus ${w(v)} ist ${w(s)}`; });
-    return `${W(price)} ${parts.join(', ')}. Zusammen sind das ${euro(c)} Rückgeld.`;
+    return `Ich bin bei ${w(price)}. ${U.cap(parts.join(', '))}. ${steps.length > 1 ? `${U.cap(steps.map(w).join(' und '))} sind ${w(c)}. ` : ''}${tail}`;
   }
 
   /* ------------------------------------------------------------------
@@ -204,10 +210,12 @@
   }
   function wenigPool(level, flow) {
     const p = flow < 0 ? range(6, 13) : flow > 0 ? range(12, 20) : range(7, 20);
-    return p.filter((n) => greedy(n, DENOMS[4]).length >= 2).map((n) => ({ kind: 'wenig', t: n, key: `Wenig ${n} €` }));
+    // 20 € bleibt drin: ein einziger Schein ist hier die Profi-Lösung (statt 10 + 10)
+    return p.filter((n) => n === 20 || greedy(n, DENOMS[4]).length >= 2).map((n) => ({ kind: 'wenig', t: n, key: `Wenig ${n} €` }));
   }
   function andersPool(level, flow) {
-    const p = flow < 0 ? range(3, 8) : flow > 0 ? range(9, 17) : range(4, 15);
+    // + 20 €: Flo legt den neuen Schein, das Kind legt z. B. 10 + 10
+    const p = [...(flow < 0 ? range(3, 8) : flow > 0 ? range(9, 17) : range(4, 15)), 20];
     return p.map((n) => ({ kind: 'anders', t: n, key: `Anders ${n} €` }));
   }
   function rueckPool(kind, flow) {
@@ -292,6 +300,7 @@
   }
 
   let introduced = new Set();
+  let used20 = false;
 
   LT.registerGame({
     id: 'kaufladen',
@@ -321,6 +330,7 @@
       if (ctx.index === 0) {
         // Stufen unterhalb der Startstufe kennt das Kind schon (kein „Willkommen“ beim Zurückstufen)
         introduced = new Set(range(1, ctx.level - 1));
+        used20 = false;
       }
       ctx.stage.classList.add('kau-stage');
       if (!introduced.has(level)) {
@@ -333,7 +343,11 @@
         await ctx.say(KIND_INTRO[kind]);
         if (!ctx.active) return;
       }
-      const t = ctx.item(poolFor(kind, level, ctx.flow), (x) => x.key, { avoid: 3 });
+      let pool = poolFor(kind, level, ctx.flow);
+      // Stufe 4 führt den 20-€-Schein ein: spätestens bei der ersten „anders“-Aufgabe wird er gebraucht
+      if (level === 4 && kind === 'anders' && !used20) pool = pool.filter((x) => x.t === 20);
+      const t = ctx.item(pool, (x) => x.key, { avoid: 3 });
+      if (level === 4 && t.t === 20) used20 = true;
       if (kind === 'zaehlen') await zaehlTask(ctx, t, level);
       else if (kind === 'vergleich') await vergleichTask(ctx, t);
       else if (kind === 'rueck') await rueckTask(ctx, t);
@@ -456,12 +470,12 @@
 
     // ---------- Texte ----------
     const priceSay = kind === 'zwei'
-      ? `${The(good)} kostet ${euro(t.a)}. ${The(good2)} kostet ${euro(t.b)}.`
-      : `${The(good)} kostet ${euro(kind === 'kasse' ? t.price : target)}.`;
+      ? `${The(good)} kostet ${euroA(t.a)}. ${The(good2)} kostet ${euroA(t.b)}.`
+      : `${The(good)} kostet ${euroA(kind === 'kasse' ? t.price : target)}.`;
     let question;
-    if (kind === 'legen') question = `${priceSay} Lege genau ${euro(target)} auf den Teller.`;
+    if (kind === 'legen') question = `${priceSay} Lege genau ${euroA(target)} auf den Teller.`;
     else if (kind === 'wenig') question = `${priceSay} Bezahle mit möglichst wenig Geldstücken.`;
-    else if (kind === 'anders') question = `Flo hat ${euro(target)} gelegt. Lege ${euro(target)} auf eine andere Art.`;
+    else if (kind === 'anders') question = `Flo hat ${euroA(target)} gelegt. Lege ${euroA(target)} auf eine andere Art.`;
     else if (kind === 'zwei') question = `${priceSay} Du kaufst beides. Lege das Geld auf den Teller.`;
     else question = `${priceSay} Das Kind bezahlt mit ${euro(t.paid)}. Lege das Rückgeld hin.`;
     const payWord = kind === 'kasse' ? 'Geben' : 'Bezahlen';
@@ -473,7 +487,7 @@
       if (kind === 'anders') {
         const big = Math.max(...flo);
         return big > 1
-          ? `Tipp: Tausche das größte Geld von Flo gegen kleinere Münzen. Zusammen müssen es wieder ${euro(target)} sein.`
+          ? `Tipp: Tausche das größte Geld von Flo gegen kleineres Geld. Zusammen müssen es wieder ${euro(target)} sein.`
           : 'Tipp: Nimm eine größere Münze statt zwei kleinen.';
       }
       if (kind === 'wenig') return `Tipp: Nimm zuerst das größte Geld, das passt. Am Teller siehst du jetzt, wie viel schon liegt.`;
@@ -518,7 +532,7 @@
         const first = ctx.wrongCount === 0 && !modeled;
         const PROC = {
           legen: ['Super! Du hast mit dem großen Geld angefangen und dann weitergezählt.', 'Klasse! Du hast genau gezählt, bis der Preis gepasst hat.'],
-          wenig: [`Wie ein Profi! Nur ${w(vals.length)} Geldstücke, weil du das große Geld zuerst genommen hast.`, 'Super schlau! Große Scheine zuerst, so brauchst du ganz wenig Geldstücke.'],
+          wenig: [`Wie ein Profi! Nur ${vals.length === 1 ? 'ein Geldstück' : w(vals.length) + ' Geldstücke'}, weil du das große Geld zuerst genommen hast.`, 'Super schlau! Große Scheine zuerst, so brauchst du ganz wenig Geldstücke.'],
           anders: ['Toll! Du hast einen eigenen Weg gefunden. Gleich viel Geld, nur anders gelegt.', 'Klasse! Du hast getauscht und es sind trotzdem gleich viele Euro.'],
           zwei: ['Super! Du hast erst zusammengerechnet und dann bezahlt.', 'Klasse! Erst rechnen, dann legen. Das machen Profis so.'],
           kasse: ['Prima! Du hast vom Preis aus weitergezählt. So machen es echte Kassierer.', 'Super! Du hast genau ergänzt bis zum Schein.'],
@@ -544,7 +558,7 @@
       } else if (kind === 'anders' && exact) {
         say = `Genau ${euro(s)}! Aber so hat Flo es auch gelegt. Findest du einen anderen Weg?`;
       } else if (s < target) {
-        const what = kind === 'zwei' ? 'Beides zusammen kostet mehr.' : kind === 'kasse' ? 'Das ist noch zu wenig Rückgeld.' : kind === 'anders' ? `Flo hat ${euro(target)} gelegt.` : `${The(good)} kostet ${euro(target)}.`;
+        const what = kind === 'zwei' ? 'Beides zusammen kostet mehr.' : kind === 'kasse' ? 'Das ist noch zu wenig Rückgeld.' : kind === 'anders' ? `Flo hat ${euroA(target)} gelegt.` : `${The(good)} kostet ${euroA(target)}.`;
         say = `${pre} ${what} Da fehlt noch etwas.`;
       } else {
         const what = kind === 'zwei' ? 'Beides zusammen kostet weniger.' : kind === 'kasse' ? 'Das ist zu viel Rückgeld.' : 'Das ist zu viel.';
@@ -688,7 +702,7 @@
       praise: false,
       className: 'kau-purses',
       correctSay: () => {
-        const facts = `Mia hat ${euro(A.s)}, Ben hat ${euro(B.s)}.`;
+        const facts = `Mia hat ${euroA(A.s)}, Ben hat ${euroA(B.s)}.`;
         if (ctx.wrongCount === 0 && U.chance(0.3)) return `${U.pickFresh('kau-proc-v', ['Super! Du hast nicht die Münzen gezählt, sondern die Euro.', 'Klasse! Du hast bei beiden genau nachgezählt.'], 1)} ${facts}`;
         return `${U.pickFresh('kau-ok', ['Richtig', 'Genau', 'Super', 'Stimmt'], 2)}! ${facts}`;
       },
@@ -701,8 +715,8 @@
       },
       hintSay: () => 'Tipp: Ich lege das Geld der Größe nach. Fang beim größten Geld an und zähle weiter. Erst bei Mia, dann bei Ben.',
       modelSay: () => (equal
-        ? `Schau: Mia hat ${euro(A.s)}. Ben hat auch ${euro(B.s)}. Beide haben gleich viel.`
-        : `Schau: ${winner.name} hat ${euro(winner.s)}. ${loser.name} hat nur ${euro(loser.s)}. ${winner.name} hat mehr Geld.`),
+        ? `Schau: Mia hat ${euroA(A.s)}. Ben hat auch ${euroA(B.s)}. Beide haben gleich viel.`
+        : `Schau: ${winner.name} hat ${euroA(winner.s)}. ${loser.name} hat nur ${euroA(loser.s)}. ${winner.name} hat mehr Geld.`),
       onCorrect: () => { rows.forEach((r) => showCount(ctx, r, 160)); },
       onWrong: async (item, tile, wrongs) => {
         if (wrongs === 1) rows.forEach(sortBox);
@@ -730,7 +744,7 @@
     const steps = el('div.kau-steps');
     ctx.stage.append(scene, backBox, steps);
 
-    const question = `${The(good)} kostet ${euro(t.price)}. Du bezahlst mit ${euro(t.paid)}. Wie viel Geld bekommst du zurück?`;
+    const question = `${The(good)} kostet ${euroA(t.price)}. Du bezahlst mit ${euro(t.paid)}. Wie viel Geld bekommst du zurück?`;
     await ctx.instruct(question);
     if (!ctx.active) return;
 
@@ -742,7 +756,8 @@
       if (steps.childElementCount) return;
       steps.appendChild(el('span.kau-step.is-start', String(t.price)));
       range(t.price + 1, t.paid).forEach((x, i) => {
-        const c = el('span.kau-step', String(x));
+        // gezählt werden die Schritte (1, 2, 3 …), nicht die Startzahl
+        const c = el('span.kau-step', String(x), el('i.kau-hop', String(i + 1)));
         steps.appendChild(c);
         ctx.timeout(() => c.classList.add('is-on'), 160 * i);
       });
@@ -765,11 +780,11 @@
       correctSay: () => {
         const check = `${W(t.price)} plus ${w(change)} ist ${w(t.paid)}.`;
         if (ctx.wrongCount === 0 && U.chance(0.3)) return `${U.pickFresh('kau-proc-r', PROC, 1)} ${check}`;
-        return `${U.pickFresh('kau-ok', ['Richtig', 'Genau', 'Super', 'Stimmt'], 2)}, ${euro(change)} zurück! ${check}`;
+        return `${U.pickFresh('kau-ok', ['Richtig', 'Genau', 'Super', 'Stimmt'], 2)}, ${euroA(change)} zurück! ${check}`;
       },
       explain: (item) => {
         const k = item.value;
-        if (k === t.price) return `Fast! ${Euro(t.price)} kostet ${good.a} ${good.k}. Wir suchen das Geld, das du zurückbekommst.`;
+        if (k === t.price) return `Fast! ${EuroA(t.price)} kostet ${good.a} ${good.k}. Wir suchen das Geld, das du zurückbekommst.`;
         if (k === t.paid) return `Fast! ${Euro(t.paid)} hast du gegeben. Du bekommst nur einen Teil davon zurück.`;
         return `Schau mal: Rechne ${w(t.price)} plus ${w(k)}. Kommst du genau auf ${w(t.paid)}?`;
       },

@@ -16,8 +16,7 @@
        2  Plus ohne Bild (auch 10 + 4 ↔ 0 + 4), 4 Antworten
        3  Minus-Analogie 7 − 4 → 17 − 4
        4  Plus und Minus gemischt, Antwort über Zahlentasten (freie Eingabe)
-       5  Platzhalter 12 + _ = 16 / 18 − _ = 13 mit Zahlentasten; die kleine
-          Schwester erscheint nur noch als Hilfe (Ende Klasse 1)
+       5  Platzhalter 12 + _ = 16 / 18 − _ = 13 mit Zahlentasten (Ende Klasse 1)
    - Fehlvorstellungen und Hilfe-Leiter:
        • Zehner vergessen (13 + 4 = 7) bzw. Zehner als „eins“ (13 + 4 = 8):
          gezielte Erklärung; 2. Hilfe: Bild mit grauem, schlafendem Zehner
@@ -25,9 +24,14 @@
          vor (Einer, dann wacht der Zehner auf).
        • Minus: Zehner mit weggenommen (17 − 4 = 3), Zeichen verwechselt.
        • Platzhalter: Ergebnis abgeschrieben (12 + _ = 16 → 16).
-   - Anpassung in der Runde: ctx.flow < 0 → kleinere Zahlen, Bild von Anfang
-     an, auf Stufe 5 wieder mit kleiner Schwester; ctx.flow > 0 (ab Stufe 2)
-     → die kleine Schwester erscheint erst als Hilfe.
+   - Anpassung in der Runde: Die Aufgabenart (Plus/Minus/gemischt/Platzhalter,
+     Kacheln/Zahlentasten) hängt nur an ctx.level, damit sie innerhalb der
+     Runde nie wechselt. ctx.flow passt innerhalb der Art an:
+     flow < 0 → kleinere Zahlen, Bild von Anfang an;
+     flow > 0 → Stufe 1: mehr Zahlen, 4 Antworten, Bild erst als Hilfe;
+                ab Stufe 2: die kleine Schwester erscheint erst als Hilfe
+                (beim Platzhalter dann mit leerem Feld, nicht mit der Lösung).
+     Stufe 3: Die ersten zwei Minus-Aufgaben zeigen immer das Bild.
    - Lerninhalte (ctx.item): '13 + 4', '17 - 4', '12 + _ = 16', '18 - _ = 13'.
    ========================================================================== */
 (function () {
@@ -100,7 +104,9 @@
     3: pairMinus(2, 9),
     3.5: pairMinus(2, 6).filter((t) => t.b <= 3),
     4: pairPlus(0, 8, 9, 9).concat(pairMinus(2, 9)),
+    4.5: pairPlus(1, 5, 6, 4).concat(pairMinus(2, 6).filter((t) => t.b <= 3)), // leichter
     5: gapPlus().concat(gapMinus()),
+    5.5: gapPlus().filter((t) => t.ce <= 7).concat(gapMinus().filter((t) => t.e <= 6)), // leichter
   };
 
   const INTRO = {
@@ -132,6 +138,19 @@
     return `${W(a)} ${opWord(t.op)} ${w(t.b)} ist ${w(big ? t.R : t.r)}.`;
   }
   const smallAnswer = (t) => (t.kind === 'gap' ? t.b : t.r);
+  /** „Es kommen noch vier dazu.“ / „Es kommt noch einer dazu.“ (Einzahl bei eins) */
+  function moves(op, b, noch = true) {
+    const n = noch ? 'noch ' : '';
+    if (b === 1) return op === '+' ? `kommt ${n}einer dazu` : `geht ${n}einer weg`;
+    return op === '+' ? `kommen ${n}${w(b)} dazu` : `gehen ${n}${w(b)} weg`;
+  }
+  /** Zählfolge von from (exklusiv) bis to (inklusiv), z. B. „vier, fünf, sechs“. */
+  function countWords(from, to) {
+    const out = [];
+    const d = to >= from ? 1 : -1;
+    for (let i = from + d; d > 0 ? i <= to : i >= to; i += d) out.push(w(i));
+    return out.join(', ');
+  }
 
   /** Erklärung zur kleinen Schwester (ohne Lösung). */
   function explainSmall(v, t) {
@@ -142,7 +161,7 @@
     }
     if (t.op === '+' && v === t.e - t.b && t.e >= t.b) return 'Schau aufs Zeichen: Plus heißt dazu. Dann werden es mehr.';
     if (t.op === '-' && v === t.e + t.b) return 'Schau aufs Zeichen: Minus heißt wegnehmen. Dann werden es weniger.';
-    if (v === t.e) return `${W(t.e)} ist die Zahl vom Anfang. Es ${t.op === '+' ? 'kommen' : 'gehen'} noch ${w(t.b)} ${t.op === '+' ? 'dazu' : 'weg'}.`;
+    if (v === t.e) return `${W(t.e)} ist die Zahl vom Anfang. Es ${moves(t.op, t.b)}.`;
     return `Fast! Es sind ${v > ans ? 'weniger' : 'mehr'} als ${w(v)}.`;
   }
   /** Erklärung zur großen Schwester: benennt die Fehlvorstellung, verrät aber nicht die Lösung. */
@@ -160,22 +179,34 @@
       if (v === t.r) return `Fast! ${W(t.r)} ist die kleine Schwester. Bei ${w(t.a)} liegt noch ein Zehner dabei. Der muss mit.`;
       if (t.e > 0 && v === t.r + 1) return 'Schau mal: Die Eins vorne ist ein ganzer Zehner, nicht nur eins. Rechne die Einer, dann kommt der Zehner dazu.';
       if (v === R + 10) return 'Hmm, du hast den Zehner zweimal gezählt. Es gibt nur einen Zehner.';
-      if (v === t.a) return `${W(t.a)} ist die Zahl vom Anfang. Es kommen noch ${w(t.b)} dazu.`;
+      if (v === t.a) return `${W(t.a)} ist die Zahl vom Anfang. Es ${moves('+', t.b)}.`;
       if (v === t.a - t.b && t.a >= t.b) return 'Schau aufs Zeichen: Plus heißt dazu. Dann werden es mehr.';
       return `Fast! Es sind ${v > R ? 'weniger' : 'mehr'} als ${w(v)}.`;
     }
     if (v === t.r && t.r !== R) return 'Fast! Der Zehner geht nicht weg. Wir nehmen nur Einer weg. Der Zehner bleibt liegen.';
     if (v === t.a + t.b) return 'Schau aufs Zeichen: Minus heißt wegnehmen. Dann werden es weniger.';
-    if (v === t.a) return `${W(t.a)} ist die Zahl vom Anfang. Es gehen noch ${w(t.b)} weg.`;
+    if (v === t.a) return `${W(t.a)} ist die Zahl vom Anfang. Es ${moves('-', t.b)}.`;
     return `Fast! Es sind ${v > R ? 'weniger' : 'mehr'} als ${w(v)}.`;
   }
   function hintSmall(t) {
     if (t.kind === 'gap') return `Tipp: Fang bei ${w(t.e)} an. Wie viele Schritte ${t.op === '+' ? 'weiter' : 'zurück'} bis ${w(t.ce)}?`;
-    if (t.e === 0) return `Tipp: Am Anfang ist nichts da. Dann kommen ${w(t.b)} dazu.`;
+    if (t.e === 0) return `Tipp: Am Anfang ist nichts da. Dann ${moves('+', t.b, false)}.`;
     return `Tipp: Fang bei ${w(t.e)} an und zähle ${w(t.b)} ${t.op === '+' ? 'weiter' : 'zurück'}.`;
   }
+  /** Vormachen mit Strategie (passend zum Bild, das gleichzeitig erscheint). */
   function modelSmall(t) {
-    return `Schau: ${sentence(t, false)} Tipp die ${w(smallAnswer(t))} an.`;
+    const tap = ` Tipp die ${w(smallAnswer(t))}.`;
+    if (t.kind === 'gap') {
+      const steps = t.b === 1 ? 'Das ist ein Schritt.' : `Das sind ${w(t.b)} Schritte.`;
+      const dir = t.op === '+' ? `Von ${w(t.e)} bis ${w(t.ce)}` : `Von ${w(t.e)} zurück bis ${w(t.ce)}`;
+      return `Schau: ${dir}: ${countWords(t.e, t.ce)}. ${steps} ${sentence(t, false)}${tap}`;
+    }
+    if (t.op === '+') {
+      if (t.e === 0) return `Schau: Am Anfang ist nichts da. Dann ${moves('+', t.b, false)}. ${sentence(t, false)}${tap}`;
+      const start = t.e === 1 ? 'Ein Würfel.' : `${W(t.e)} Würfel.`;
+      return `Schau: ${start} ${t.b === 1 ? 'Einer kommt' : `${W(t.b)} kommen`} dazu. Wir zählen weiter: ${countWords(t.e, t.r)}. ${sentence(t, false)}${tap}`;
+    }
+    return `Schau: ${W(t.e)} Würfel. ${t.b === 1 ? 'Einer geht' : `${W(t.b)} gehen`} weg. Wir zählen zurück: ${countWords(t.e, t.r)}. ${sentence(t, false)}${tap}`;
   }
   function hintBig(t) {
     if (t.kind === 'gap') {
@@ -186,7 +217,7 @@
   }
   function modelBig(t) {
     if (t.kind === 'gap') {
-      return `${sentence(t, false)} Der Zehner bleibt dabei. Also: ${sentence(t, true)} Es sind ${w(t.b)}.`;
+      return `${sentence(t, false)} Der Zehner bleibt dabei. Also: ${sentence(t, true)} Es ${moves(t.op, t.b, false)}.`;
     }
     const first = sentence(t, false);
     if (t.r === 0) return `${first} Es bleibt nur der Zehner. Das ist zehn.`;
@@ -231,8 +262,11 @@
     if (t.kind === 'gap') return [t.ce, t.b + 1, t.b - 1];
     return t.op === '+' ? [t.e - t.b, t.r + 1, t.r - 1] : [t.e + t.b, t.r + 1, t.r - 1];
   }
-  function preferBig(t) {
+  function preferBig(t, count) {
     if (t.kind === 'gap') return [t.c, t.b + 10, t.b + 1, t.b - 1];
+    // Nur 3 Kacheln: neben „Zehner vergessen“ immer eine nahe Zehnerzahl, damit
+    // die richtige Antwort nicht die einzige zweistellige ist.
+    if (count <= 3) return [t.r].concat(U.shuffle([t.R + 1, t.R - 1]));
     return t.op === '+'
       ? (t.e > 0 ? [t.r, t.r + 1, t.R + 1, t.R - 1] : [t.r, t.R + 1, t.R - 1])
       : [t.r, t.R + 1, t.R - 1, t.a + t.b];
@@ -448,6 +482,10 @@
     const shown = ctx.flow < 0 && items.length >= 4 ? items.length - 1 : items.length;
     const ha = shown <= 3 ? 1 : 2;
     let localWrong = 0;
+    // Die Hilfe-Leiter gilt je Schritt: Wurde bei der kleinen Schwester schon
+    // vorgemacht, soll die große Schwester trotzdem ihr eigenes Vormachen bekommen.
+    const prevModel = ctx.modelShown;
+    ctx.modelShown = false;
     await ctx.choices(items, {
       container: box,
       shuffle: false,
@@ -466,6 +504,7 @@
         if (localWrong === ha + 1 && opts.onModel) opts.onModel();
       },
     });
+    ctx.modelShown = prevModel || ctx.modelShown; // Wiederholung in der Runde bleibt erhalten
     // alte Kacheln entfernen, damit der Testmodus nicht auf erledigte Markierungen tippt
     box.remove();
   }
@@ -494,14 +533,20 @@
     },
 
     async task(ctx) {
-      const level = ctx.taskLevel;
+      // Jede Stufe ist eine eigene Aufgabenart (Bild/Kacheln/Minus/Zahlentasten/
+      // Platzhalter). Damit sich Art, Bedienung und Einführung in der Runde nicht
+      // ändern, gilt ctx.level; ctx.flow passt nur innerhalb der Art an.
+      const level = ctx.level;
+      const flow = ctx.flow;
       if (ctx.index === 0) introduced = new Set();
 
-      const poolKey = level === 1 && ctx.flow < 0 ? 1.5 : level === 3 && ctx.flow < 0 ? 3.5 : level;
+      const EASY = { 1: 1.5, 2: 1, 3: 3.5, 4: 4.5, 5: 5.5 };
+      const poolKey = flow < 0 ? EASY[level] : level === 1 && flow > 0 ? 2 : level;
       const t = ctx.item(POOL[poolKey], (x) => x.k, { avoid: 6 });
       const pad = level >= 4; // Zahlentasten
-      const withSister = level === 5 ? ctx.flow < 0 : !(level >= 2 && ctx.flow > 0);
-      const picFromStart = level === 1 || (pad && ctx.flow < 0);
+      const withSister = !(level >= 2 && flow > 0);
+      const picFromStart = (level === 1 && flow <= 0) || (level === 3 && ctx.index < 2) || flow < 0;
+      const tiles = level === 1 && flow <= 0 ? 3 : 4;
 
       ctx.stage.classList.add('rec-stage');
       const total = ctx.total || 6;
@@ -568,7 +613,7 @@
         } else {
           await choiceStep(ctx, work, {
             answer: ans,
-            count: level === 1 ? 3 : 4,
+            count: tiles,
             prefer: preferSmall(t),
             ui: small,
             correctSay: okSmall,
@@ -604,13 +649,19 @@
       if (!ctx.active) return;
 
       // kleine Schwester als erste Hilfe zeigen (wenn sie noch fehlt)
+      // Beim Platzhalter ist die Lücke der kleinen Schwester dieselbe Zahl wie die
+      // gesuchte – dort erscheint sie zuerst mit leerem Feld; gefüllt wird sie erst
+      // beim Vormachen bzw. nach dem Lösen.
       let sisterShown = withSister;
-      const revealSister = () => {
-        if (sisterShown) return false;
+      const revealSister = (fill) => {
+        if (sisterShown) {
+          if (fill && !small.slot.classList.contains('rec-done')) small.setSlot(String(smallAnswer(t)), true);
+          return false;
+        }
         sisterShown = true;
         small.row.classList.remove('rec-hidden');
         small.row.classList.add('rec-pop');
-        small.setSlot(String(smallAnswer(t)), true);
+        if (fill || t.kind !== 'gap') small.setSlot(String(smallAnswer(t)), true);
         return true;
       };
       const correctBig = () => {
@@ -619,17 +670,21 @@
       };
       const explainB = (v) => {
         let s = explainBig(v, t);
-        if (revealSister()) s += ' Schau, die kleine Schwester hilft dir.';
+        if (revealSister(false)) {
+          s += t.kind === 'gap'
+            ? ` Schau, die kleine Schwester hilft dir: ${spoken(t, false)}`
+            : ' Schau, die kleine Schwester hilft dir.';
+        }
         return s;
       };
       const hintB = () => {
-        revealSister();
+        revealSister(false);
         showPic(true);
         pic.sleep(true);
         return hintBig(t);
       };
       const modelB = () => {
-        revealSister();
+        revealSister(true);
         showPic(true);
         pic.sleep(false);
         pic.reveal();
@@ -651,8 +706,8 @@
       } else {
         await choiceStep(ctx, work, {
           answer: t.R,
-          count: level === 1 ? 3 : 4,
-          prefer: preferBig(t),
+          count: tiles,
+          prefer: preferBig(t, tiles),
           ui: big,
           correctSay: correctBig,
           explain: explainB,
@@ -664,7 +719,7 @@
 
       /* ---------- Festigen: Einer gleich, Zehner kommt dazu ---------- */
       pic.sleep(false);
-      revealSister();
+      revealSister(true);
       board.classList.add('rec-glow');
       if (ctx.wrongCount > 0 || ctx.index === 0) {
         await ctx.say(t.kind === 'gap'

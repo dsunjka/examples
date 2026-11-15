@@ -32,11 +32,13 @@
        * Sch statt S am Wortanfang bei St/Sp
        * ähnlich klingende Laute vertauscht (P statt B)
        * Reihenfolge vertauscht, Laut zu viel
-       * Groß/klein (Namenwort-Probe: „Kann man es sehen oder anfassen?“)
+       * Groß/klein (Artikelprobe: „Passt der, die oder das davor?“)
    - Hilfe-Leiter (ctx.helpStep): 1. Fehler → Diagnose, richtige Anfangslaute
-     bleiben grün liegen; 2. → Strategie: „Laut-Hüpfer“ (Punkte = Lautzahl),
-     Flo spricht das Wort langsam in Silben, die nächste Kachel leuchtet;
-     3. → Flo schreibt das Wort vor (Laut für Laut), danach schreibt das Kind
+     bleiben grün liegen; 2. → Strategie: „Laut-Hüpfer“: Flo dehnt das Wort
+     Laut für Laut („Bbb – rrr – ooo – t“), je Laut leuchtet ein Hüpfer auf,
+     „Wie viele Hüpfer hast du gehört?“, die nächste Kachel leuchtet;
+     3. → Flo schreibt das Wort vor und zeigt dabei die Strategie (Laut
+     sprechen – hören – Buchstaben suchen), danach schreibt das Kind
      es geführt nach (Kachel leuchtet jeweils), ctx.modelShown.
    - Lerninhalte (ctx.item): das Wort, z. B. „Sofa“, „Brot“, „Fisch“, „mit“.
    ========================================================================== */
@@ -73,18 +75,18 @@
       { t: 'STERN', e: '⭐' }, { t: 'TRAK-TOR', e: '🚜' },
     ],
     4: [
-      { t: 'Fisch', e: '🐟' }, { t: 'Schaf', e: '🐑' }, { t: 'Maus', e: '🐭' }, { t: 'Haus', e: '🏠' },
-      { t: 'Eis', e: '🍦' }, { t: 'Baum', e: '🌳' }, { t: 'Buch', e: '📖' }, { t: 'Eu-le', e: '🦉' },
-      { t: 'Feu-er', e: '🔥' }, { t: 'Sei-fe', e: '🧼' }, { t: 'Ta-sche', e: '👜' }, { t: 'Mu-schel', e: '🐚' },
-      { t: 'Frosch', e: '🐸' }, { t: 'Ku-chen', e: '🍰' }, { t: 'Au-to', e: '🚗' }, { t: 'Milch', e: '🥛' },
+      { t: 'Fisch', a: 'der', e: '🐟' }, { t: 'Schaf', a: 'das', e: '🐑' }, { t: 'Maus', a: 'die', e: '🐭' }, { t: 'Haus', a: 'das', e: '🏠' },
+      { t: 'Eis', a: 'das', e: '🍦' }, { t: 'Baum', a: 'der', e: '🌳' }, { t: 'Buch', a: 'das', e: '📖' }, { t: 'Eu-le', a: 'die', e: '🦉' },
+      { t: 'Feu-er', a: 'das', e: '🔥' }, { t: 'Sei-fe', a: 'die', e: '🧼' }, { t: 'Ta-sche', a: 'die', e: '👜' }, { t: 'Mu-schel', a: 'die', e: '🐚' },
+      { t: 'Frosch', a: 'der', e: '🐸' }, { t: 'Ku-chen', a: 'der', e: '🍰' }, { t: 'Au-to', a: 'das', e: '🚗' }, { t: 'Milch', a: 'die', e: '🥛' },
     ],
     5: [
-      { t: 'Schu-le', s: 'Ich gehe in die Schule.' },
-      { t: 'Na-me', s: 'Mein Name ist Flo.' },
-      { t: 'Ta-fel', s: 'Die Lehrerin schreibt an die Tafel.' },
-      { t: 'Fisch', s: 'Der Fisch schwimmt im Teich.' },
-      { t: 'Stift', s: 'Ich male mit dem Stift.' },
-      { t: 'Brot', s: 'Zum Frühstück esse ich ein Brot.' },
+      { t: 'Schu-le', a: 'die', s: 'Ich gehe in die Schule.' },
+      { t: 'Na-me', a: 'der', s: 'Mein Name ist Flo.' },
+      { t: 'Ta-fel', a: 'die', s: 'Die Lehrerin schreibt an die Tafel.' },
+      { t: 'Fisch', a: 'der', s: 'Der Fisch schwimmt im Teich.' },
+      { t: 'Stift', a: 'der', s: 'Ich male mit dem Stift.' },
+      { t: 'Brot', a: 'das', s: 'Zum Frühstück esse ich ein Brot.' },
       { t: 'ma-len', s: 'Wir malen ein Bild.' },
       { t: 'le-sen', s: 'Ich kann schon lesen.' },
       { t: 'lau-fen', s: 'Wir laufen ganz schnell.' },
@@ -94,17 +96,30 @@
       { t: 'ist', s: 'Das ist mein Ball.' },
       { t: 'ich', s: 'Hier bin ich.' },
       { t: 'auf', s: 'Die Katze sitzt auf dem Sofa.' },
-      { t: 'nein', s: 'Nein, danke!' },
+      { t: 'nein', s: 'Ich sage laut nein.' },
     ],
   };
 
   /** Lautpakete (eine Kachel): Reihenfolge wichtig (sch vor ch). */
   const PACKS = ['sch', 'ch', 'ei', 'au', 'eu'];
-  /** Sprechtext der Pakete: Buchstabennamen + Beispielwort (nicht aus der Wortliste). */
+  /** Sprechtext der Pakete: der LAUT (so geschrieben, dass die Stimme ihn als
+   *  einen Laut spricht, nicht als Buchstabennamen „E I“) + Beispielwort.
+   *  ch: beide Laute nennen (ich-Laut in Milch/ich, ach-Laut in Buch/Kuchen). */
   const PACK_SAY = {
-    sch: 'S C H wie bei Schere', ch: 'C H wie bei Dach', ei: 'E I wie bei Eimer',
-    au: 'A U wie bei Auge', eu: 'E U wie bei Euro',
+    sch: 'Sch wie bei Schere', ch: 'Ch wie bei ich und wie bei Dach', ei: 'Ei wie bei Eimer',
+    au: 'Au wie bei Auge', eu: 'Eu wie bei Euro',
   };
+  const PACK_NAME = { sch: 'Sch', ch: 'Ch', ei: 'Ei', au: 'Au', eu: 'Eu' };
+  /** Gedehnter Einzellaut für das Lautieren („Bbb – rrr – ooo – t“): Selbstlaute
+   *  und Dauerlaute werden gezogen; Pakete als ein Laut; Stopplaute (b, d, g, k,
+   *  p, t, z) lassen sich nicht ziehen – die Stimme kann sie nur mit Namen sprechen. */
+  const STRETCHY = ['m', 'n', 'l', 'r', 's', 'f', 'w'];
+  function soundSay(tok) {
+    const l = lc(tok);
+    if (PACK_NAME[l]) return PACK_NAME[l] + (l === 'sch' ? 'hh' : l.slice(-1).repeat(2));
+    if (['a', 'e', 'i', 'o', 'u', 'ä', 'ö', 'ü'].includes(l) || STRETCHY.includes(l)) return S2.upper(l) + l + l;
+    return S2.upper(l);
+  }
   const VOWELS = ['a', 'e', 'i', 'o', 'u', 'ä', 'ö', 'ü', 'ei', 'au', 'eu'];
   /** ähnlich klingende Laute (Ablenker ab Stufe 2, Diagnose) */
   const SIM = {
@@ -168,7 +183,7 @@
   /** Kachelname für Erklärungen: „das P“, „das Paket A U“. */
   function tokenName(tok) {
     const l = lc(tok);
-    if (PACK_SAY[l]) return 'das Paket ' + l.toUpperCase().split('').join(' ');
+    if (PACK_NAME[l]) return 'das Paket ' + PACK_NAME[l];
     return 'das ' + S2.upper(l);
   }
 
@@ -238,7 +253,7 @@
         introduced = new Set();
         for (let i = 1; i < ctx.level; i++) introduced.add(i);
       }
-      ctx.stage.classList.add('sch-stage');
+      ctx.stage.classList.add('swk-stage');
       if (!introduced.has(level)) {
         introduced.add(level);
         await ctx.say(INTRO[level]);
@@ -269,49 +284,48 @@
     let busy = true;
     let finished = false;
     let guided = false; // nach dem Vormachen: nächste Kachel leuchtet
-    let hopsShown = false;
 
     // ---------- oben: Bild bzw. Diktat ----------
     const sayWordSlow = () => ctx.say(diktat ? `${say}. ${entry.s} ${say}.` : say, { rate: 0.8 });
-    const ear = el('button.btn-round.sch-ear', {
+    const ear = el('button.btn-round.swk-ear', {
       type: 'button', 'aria-label': 'Wort nochmal hören',
       on: { click: () => { if (!finished) sayWordSlow(); } },
     }, U.emoji('🔊'));
     const top = diktat
-      ? el('div.prompt-box.sch-top.sch-diktat', el('div.sch-pic', U.emoji('👂')), el('div.sch-dik-lbl', 'Diktat'), ear)
-      : el('div.prompt-box.sch-top', el('div.sch-pic', U.emoji(entry.e)), ear);
+      ? el('div.prompt-box.swk-top.swk-diktat', el('div.swk-pic', U.emoji('👂')), el('div.swk-dik-lbl', 'Diktat'), ear)
+      : el('div.prompt-box.swk-top', el('div.swk-pic', U.emoji(entry.e)), ear);
 
     // ---------- Schreibzeile ----------
-    const line = el('div.sch-line' + (fixed ? '.sch-fixed' : '.sch-open'), { style: { '--n': String(fixed ? target.length : maxLen) } });
-    const hops = el('div.sch-hops', { 'aria-hidden': 'true' });
-    const lineWrap = el('div.sch-linewrap', line, hops);
+    const line = el('div.swk-line' + (fixed ? '.swk-fixed' : '.swk-open'), { style: { '--n': String(fixed ? target.length : maxLen) } });
+    const hops = el('div.swk-hops', { 'aria-hidden': 'true' });
+    const lineWrap = el('div.swk-linewrap', line, hops);
 
     // ---------- Tastatur ----------
     const tokens = Array.from(new Set(target));
     const keysAll = tokens.concat(distractors(entry, level, target, ctx.flow));
     keysAll.sort((a, b) => lc(a).localeCompare(lc(b), 'de') || (a === lc(a) ? 1 : -1));
     const keys = {};
-    const kb = el('div.sch-kb');
+    const kb = el('div.swk-kb');
     keysAll.forEach((tok) => {
-      const b = el('button.tile.sch-key' + (tok.length > 1 ? '.sch-pack' : ''), {
+      const b = el('button.tile.swk-key' + (tok.length > 1 ? '.swk-pack' : ''), {
         type: 'button', 'aria-label': tokenSay(tok),
-      }, el('span.sch-key-txt', tok));
+      }, el('span.swk-key-txt', tok));
       ctx.listen(b, 'click', () => press(tok, b));
       keys[tok] = b;
       kb.appendChild(b);
     });
 
     // ---------- Knöpfe ----------
-    const back = el('button.btn.sch-back', { type: 'button', 'aria-label': 'Letzten Buchstaben löschen', on: { click: () => removeAt(typed.length - 1) } },
-      el('span.sch-back-ico', '⌫'));
-    const check = el('button.btn.btn-green.sch-check', { type: 'button', 'aria-label': 'Fertig, prüfen', on: { click: () => doCheck() } },
-      el('span.sch-check-mark', '✓'));
-    const actions = el('div.sch-actions', back);
+    const back = el('button.btn.swk-back', { type: 'button', 'aria-label': 'Letzten Buchstaben löschen', on: { click: () => removeAt(typed.length - 1) } },
+      el('span.swk-back-ico', '⌫'));
+    const check = el('button.btn.btn-green.swk-check', { type: 'button', 'aria-label': 'Fertig, prüfen', on: { click: () => doCheck() } },
+      el('span.swk-check-mark', '✓'));
+    const actions = el('div.swk-actions', back);
     if (!fixed) actions.appendChild(check);
 
     ctx.stage.append(top, lineWrap, kb, actions);
     const abc = S2.abcButton(ctx);
-    abc.classList.add('sch-abc');
+    abc.classList.add('swk-abc');
     actions.appendChild(abc);
 
     function render() {
@@ -320,17 +334,17 @@
       if (!fixed) line.style.setProperty('--n', String(Math.max(n, 4)));
       for (let i = 0; i < n; i++) {
         const tok = typed[i];
-        const cell = el('button.sch-cell', {
+        const cell = el('button.swk-cell', {
           type: 'button', tabindex: '-1', 'aria-label': tok ? tokenSay(tok) : 'leer',
           on: { click: () => { if (tok) removeAt(i); } },
         });
         if (tok) {
-          cell.appendChild(el('span.sch-cell-txt', tok));
-          cell.classList.add('filled');
-          if (tok.length > 1) cell.classList.add('sch-pack');
-          if (i < okPrefix) cell.classList.add('ok');
+          cell.appendChild(el('span.swk-cell-txt', tok));
+          cell.classList.add('swk-filled');
+          if (tok.length > 1) cell.classList.add('swk-pack');
+          if (i < okPrefix) cell.classList.add('swk-ok');
         } else if (i === typed.length) {
-          cell.classList.add('cursor');
+          cell.classList.add('swk-cursor');
         }
         line.appendChild(cell);
       }
@@ -382,20 +396,31 @@
       render();
     }
 
-    function showHops() {
-      if (hopsShown) return;
-      hopsShown = true;
+    /** Laut-Hüpfer zeigen; dim = alle Punkte grau, sie leuchten erst beim Lautieren auf. */
+    function showHops(dim) {
       U.clear(hops);
-      target.forEach(() => hops.appendChild(el('span.sch-hop')));
+      target.forEach(() => hops.appendChild(el('span.swk-hop')));
       hops.classList.add('on');
+      hops.classList.toggle('swk-wait', !!dim);
     }
+    const lightHop = (i) => { const h = hops.children[i]; if (h) h.classList.add('swk-lit'); };
+    /** Wort gedehnt Laut für Laut sprechen, je Laut leuchtet ein Hüpfer. */
     async function sayStretched() {
-      const syls = syllables(entry.t).map((s) => (level <= 3 ? U.cap(lc(s)) : s));
-      for (const s of syls) {
+      for (let i = 0; i < target.length; i++) {
         if (!ctx.active) return;
-        await ctx.say(s, { rate: 0.7 });
+        lightHop(i);
+        await ctx.say(soundSay(target[i]), { rate: 0.7 });
+        if (!ctx.active) return;
         await ctx.sleep(150);
       }
+    }
+    /** Beim Vormachen: gedehnt bis zum aktuellen Laut („Brrr“), damit man das
+     *  Verschleifen hört; Stopplaute einzeln (lassen sich nicht ziehen). */
+    function prefixSay(i) {
+      const l = lc(target[i]);
+      const stretchy = VOWELS.includes(l) || STRETCHY.includes(l) || PACK_NAME[l];
+      if (i === 0 || !stretchy) return soundSay(target[i]);
+      return U.cap(lc(target.slice(0, i).join('')) + lc(soundSay(target[i])));
     }
 
     /* ---------- Prüfen ---------- */
@@ -428,13 +453,19 @@
       if (step === 1) {
         if (p > 0) await ctx.say(p === 1 ? 'Der grüne Buchstabe stimmt schon.' : 'Die grünen Buchstaben stimmen schon.');
       } else if (step === 2) {
-        // Strategie: Laute als Hüpfer zählen, langsam in Silben sprechen
-        showHops();
-        await ctx.say('Sprich ganz langsam mit mir.');
+        // Strategie: gedehnt sprechen, jeder Laut ist ein Hüpfer
+        showHops(true);
+        await ctx.say('Wir sprechen ganz langsam, Laut für Laut. Bei jedem Laut hüpft ein Punkt.');
         if (!ctx.active) return;
         await sayStretched();
         if (!ctx.active) return;
-        await ctx.say(`Jeder Punkt ist ein Laut. Ich höre ${w(target.length)} Laute.`);
+        await ctx.say(say, { rate: 0.8 });
+        if (!ctx.active) return;
+        await ctx.say('Wie viele Hüpfer hast du gehört?');
+        if (!ctx.active) return;
+        await ctx.sleep(1800);
+        if (!ctx.active) return;
+        await ctx.say(`${U.cap(w(target.length))} Hüpfer. Also schreiben wir ${w(target.length)} Laute.`);
         if (!ctx.active) return;
         const next = keys[target[typed.length]];
         if (next) { ctx.hint(next); ctx.timeout(() => ctx.unhint(next), 4000); }
@@ -449,12 +480,20 @@
     /** Hilfe Stufe 3: Flo schreibt vor, dann schreibt das Kind geführt nach. */
     async function model() {
       ctx.modelShown = true;
-      showHops();
+      showHops(true);
       typed = [];
       okPrefix = 0;
       render();
-      await ctx.say('Schau, ich schreibe es dir vor.');
-      for (const tok of target) {
+      await ctx.say('Schau, so mache ich es. Ich spreche ganz langsam und höre auf jeden Laut. Dann suche ich den Buchstaben.');
+      const last = target.length - 1;
+      for (let i = 0; i <= last; i++) {
+        if (!ctx.active) return;
+        const tok = target[i];
+        lightHop(i);
+        const q = i === 0 ? 'Was höre ich zuerst?' : i === last ? 'Und zum Schluss?' : 'Und dann?';
+        await ctx.say(q);
+        if (!ctx.active) return;
+        await ctx.say(prefixSay(i), { rate: 0.7 });
         if (!ctx.active) return;
         typed.push(tok);
         render();
@@ -465,11 +504,11 @@
         if (k) ctx.unhint(k);
         await ctx.sleep(200);
       }
-      line.classList.add('sch-shown');
-      await ctx.say(`So schreibt man ${say}. Jetzt du!`);
+      line.classList.add('swk-shown');
+      await ctx.say(`So schreibt man ${say}. Jetzt du! Sprich wieder langsam mit.`);
       if (!ctx.active) return;
       await ctx.sleep(600);
-      line.classList.remove('sch-shown');
+      line.classList.remove('swk-shown');
       typed = [];
       guided = true;
     }
@@ -477,10 +516,10 @@
     /* ---------- Geschafft ---------- */
     async function success() {
       // Silbenfarben + Silben vorlesen
-      const cells = Array.from(line.querySelectorAll('.sch-cell'));
-      cells.forEach((c, i) => { c.classList.remove('ok', 'cursor'); c.classList.add(sylIdx[i] % 2 ? 'syl-r' : 'syl-b'); });
-      line.classList.add('done');
-      cells.filter((c) => !c.classList.contains('filled')).forEach((c) => c.remove());
+      const cells = Array.from(line.querySelectorAll('.swk-cell'));
+      cells.forEach((c, i) => { c.classList.remove('swk-ok', 'swk-cursor'); c.classList.add(sylIdx[i] % 2 ? 'swk-syl-r' : 'swk-syl-b'); });
+      line.classList.add('swk-done');
+      cells.filter((c) => !c.classList.contains('swk-filled')).forEach((c) => c.remove());
       const first = ctx.wrongCount === 0;
       const PROC = {
         1: ['Super! Du hast langsam mitgesprochen und jeden Laut gefunden.', 'Klasse! Du hast genau hingehört, Laut für Laut.'],
@@ -490,8 +529,8 @@
         5: ['Wie ein Schulkind! Du hast genau gehört und an groß und klein gedacht.', 'Toll! Du hast selbst überlegt, ob das Wort groß oder klein beginnt.'],
       };
       const sayOk = first && U.chance(0.3)
-        ? U.pickFresh('sch-proc-' + level, PROC[level], 1)
-        : `${U.pickFresh('sch-ok', ['Richtig', 'Super', 'Prima', 'Genau so', 'Toll geschrieben'], 2)}! ${say}.`;
+        ? U.pickFresh('swk-proc-' + level, PROC[level], 1)
+        : `${U.pickFresh('swk-ok', ['Richtig', 'Super', 'Prima', 'Genau so', 'Toll geschrieben'], 2)}! ${say}.`;
       await ctx.correct(line, { say: sayOk, praise: false });
       if (!ctx.active) return;
       // Silben nacheinander hervorheben
@@ -500,9 +539,9 @@
         for (let s = 0; s < syls.length; s++) {
           if (!ctx.active) return;
           const on = cells.filter((c, i) => sylIdx[i] === s);
-          on.forEach((c) => c.classList.add('lit'));
+          on.forEach((c) => c.classList.add('swk-lit'));
           await ctx.say(level <= 3 ? U.cap(lc(syls[s])) : syls[s]);
-          on.forEach((c) => c.classList.remove('lit'));
+          on.forEach((c) => c.classList.remove('swk-lit'));
           await ctx.sleep(100);
         }
         if (!ctx.active) return;
@@ -515,7 +554,7 @@
       } else if (diktat) {
         await ctx.say(isNoun(entry)
           ? `${say} ist ein Namenwort. Darum schreiben wir es groß.`
-          : U.pickFresh('sch-klein', [`${say} ist kein Namenwort. Darum schreiben wir es klein.`, 'Richtig klein geschrieben!', ''], 1));
+          : U.pickFresh('swk-klein', [`${say} ist kein Namenwort. Darum schreiben wir es klein.`, 'Richtig klein geschrieben!', ''], 1));
       }
       if (!ctx.active) return;
       await ctx.sleep(450);
@@ -574,7 +613,7 @@
         return {
           keep: false,
           say: wantBig
-            ? `Fast! Alle Laute stimmen. Kannst du ${say} sehen oder anfassen? Dann ist es ein Namenwort. Wie fangen Namenwörter an?`
+            ? `Fast! Alle Laute stimmen. Passt der, die oder das davor? ${U.cap(entry.a || 'der')} ${say}, ja! Dann ist es ein Namenwort. Wie fangen Namenwörter an?`
             : `Fast! Alle Laute stimmen. Kann man der ${say} oder die ${say} sagen? Nein. Dann ist es kein Namenwort. Wie fängt es dann an?`,
         };
       }
@@ -590,7 +629,10 @@
     // Selbstlaute ausgelassen
     const noVowels = gl.filter((t) => !VOWELS.includes(t));
     if (tl.length < gl.length && tl.length === noVowels.length && tl.every((t, i) => t === noVowels[i])) {
-      return { say: `Fast! Hör mal genau hin. In jedem Wort wohnt ein Selbstlaut wie A, E, I, O oder U. Sprich ${say} langsam. Was hörst du in der Mitte?` };
+      const vi = gl.findIndex((t) => VOWELS.includes(t));
+      const pos = vi === 0 ? 'am Anfang' : vi === gl.length - 1 ? 'am Ende' : 'in der Mitte';
+      const kind = PACK_NAME[gl[vi]] ? 'ein Lautpaket wie ei, au oder eu' : 'ein Selbstlaut wie A, E, I, O oder U';
+      return { say: `Fast! Hör mal genau hin. In jedem Wort wohnt ${kind}. Sprich ${say} langsam. Was hörst du ${pos}?` };
     }
     // genau ein Laut fehlt
     if (tl.length === gl.length - 1) {

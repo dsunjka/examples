@@ -62,7 +62,7 @@
 .tile.koe-qtile.koe-qlong { width: clamp(132px, 40vw, 230px); }
 .koe-q { display: flex; flex-direction: column; align-items: center; gap: 8px; line-height: 1.1; }
 .koe-q-e { font-size: clamp(40px, 8vmin, 72px); line-height: 1; }
-.koe-q-t { font-size: clamp(16px, 3vmin, 25px); font-weight: 800; color: var(--ink); text-align: center; white-space: normal; overflow-wrap: anywhere; hyphens: auto; }
+.koe-q-t { font-size: clamp(16px, 3vmin, 25px); font-weight: 800; color: var(--ink); text-align: center; white-space: normal; overflow-wrap: normal; word-break: normal; hyphens: manual; }
 .koe-qnum .koe-q-t { font-size: clamp(30px, 6vmin, 50px); }
 .koe-seqtitle { padding-top: clamp(6px, 1.6vmin, 14px); padding-bottom: clamp(6px, 1.6vmin, 14px); }
 .koe-q .koe-tooth { width: clamp(70px, 14vmin, 120px); height: auto; }
@@ -219,4 +219,8 @@
   .koe-card-t { font-size: 14px; letter-spacing: -0.2px; }
   .koe-kai-cards .koe-card, .koe-seq-cards .koe-card { min-width: 96px; }
   .koe-thing-txt, .koe-riddle-txt, .koe-ask-txt { font-size: 20px; }
+  /* Antwortkacheln: Wörter nie trennen – Schrift etwas kleiner, Kachel mindestens so breit wie ein langes Wort */
+  .koe-q-t { font-size: 15px; letter-spacing: -0.2px; }
+  .tile.koe-qtile { width: calc(33vw - 14px); min-width: 104px; }
+  .tile.koe-qtile.koe-qlong { width: calc(45vw - 14px); min-width: 132px; }
 }

@@ -71,6 +71,8 @@
       POOL3.push({ base, u, m, k });
     });
   });
+  // leichter (flow<0): kleine Tragsteine, oben höchstens 12
+  const POOL3E = POOL3.filter((x) => Math.max.apply(null, x.base) <= 5 && top3(x.base[0], x.base[1], x.base[2]) <= 12);
   const POOLTD = [];
   triples(1, 8, (a, b, c) => top3(a, b, c) >= 12 && top3(a, b, c) <= 20).forEach((base) => {
     POOLTD.push({ base, side: U.chance(0.5) ? 0 : 1, k: 'von oben ' + base.join(' ') });
@@ -326,6 +328,11 @@
     opts.host.appendChild(box);
     let local = 0;
     const carriers = tri ? 'die zwei Zahlen innen daneben' : 'die zwei Steine darunter';
+    // Jeder Stein ist ein eigener ctx.choices-Aufruf im selben ctx: Damit jeder
+    // Stein die volle Hilfe-Leiter (inkl. Vormachen) bekommt, modelShown pro
+    // Stein zurücksetzen und danach für das Requeue der Aufgabe wieder einsetzen.
+    const modelBefore = !!ctx.modelShown;
+    ctx.modelShown = false;
     await ctx.choices(items, {
       container: box,
       shuffle: false,
@@ -383,6 +390,7 @@
       },
       onWrong: async () => { local++; },
     });
+    ctx.modelShown = modelBefore || !!ctx.modelShown;
     box.remove();
   }
 
@@ -403,9 +411,11 @@
   /* ==================================================================
      Aufgabenarten
      ================================================================== */
+  const RULE = 'Das ist eine Zahlenmauer! Jeder Stein ist so viel wie die zwei Steine darunter zusammen.';
   const INTRO = {
-    1: 'Das ist eine Zahlenmauer! Jeder Stein ist so viel wie die zwei Steine darunter zusammen. Wir bauen von unten nach oben.',
-    2: 'Jetzt wird die Mauer größer. Oben stehen Zahlen bis zwanzig.',
+    1: RULE + ' Wir bauen von unten nach oben.',
+    rule: RULE,
+    2: 'Jetzt werden die Zahlen größer. Oben stehen Zahlen bis zwanzig.',
     3: 'Achtung, jetzt fehlt unten ein Stein! Dann rechnest du rückwärts. Frag dich: Was fehlt noch?',
     4: 'Das ist ein Rechendreieck. Innen liegen drei Zahlen. Außen steht immer, was die zwei Zahlen daneben zusammen sind.',
     triMinus: 'Jetzt fehlt innen eine Zahl. Außen steht schon die Summe. Rechne rückwärts.',
@@ -418,11 +428,24 @@
   const K5 = ['plus1', 'topdown', 'weiter', 'stoer', 'mauer4'];
   let introduced = new Set();
   let order5 = K5.slice();
+  let triSeen = false;
+  /** Aufgabenart je Stufe: Innerhalb einer Runde wechselt die Art nie (flow
+   *  ändert nur Zahlenraum / Anzahl der Kärtchen, siehe engine.md). */
+  const kindOf = (lv) => (lv <= 2 ? 'wall' : lv === 3 ? 'gap' : lv === 4 ? 'tri' : 'profi');
+  const levelOf = (ctx) => (LT.s2 && LT.s2.lv
+    ? LT.s2.lv(ctx, kindOf)
+    : (kindOf(ctx.taskLevel) === kindOf(ctx.level) ? ctx.taskLevel : ctx.level));
 
   async function introOnce(ctx, key) {
     if (introduced.has(key)) return;
     introduced.add(key);
+    if (key === 1) introduced.add('rule'); // INTRO 1 enthält die Regel
     await ctx.say(INTRO[key]);
+  }
+  /** Die Mauer-Regel einmal pro Runde vor der ersten Mauer – auf jeder Stufe. */
+  async function ruleOnce(ctx) {
+    if (introduced.has('rule') || introduced.has(1)) return;
+    await introOnce(ctx, 'rule');
   }
 
   function shell(ctx) {
@@ -442,16 +465,18 @@
     if (kind === 'mauer4') {
       pick = ctx.item(POOL4M, (x) => x.k, { avoid: 4 });
       model = wallModel(pick.base);
+      // echte 4er-Mauer: flow>0 nur die untere Reihe, flow 0 ein Stein der
+      // zweiten Reihe gegeben (5 Rechenschritte), flow<0 zwei Steine (4 Schritte)
       for (let i = 0; i < 4; i++) known.add('0-' + i);
-      for (let i = 0; i < 3; i++) known.add('1-' + i);
-      if (ctx.flow > 0) known.delete('1-1');
+      const giveN = ctx.flow > 0 ? 0 : ctx.flow < 0 ? 2 : 1;
+      U.shuffle(['1-0', '1-1', '1-2']).slice(0, giveN).forEach((id) => known.add(id));
     } else if (kind === 'topdown') {
       pick = ctx.item(POOLTD, (x) => x.k, { avoid: 4 });
       model = wallModel(pick.base);
       known.add(model.top);
       if (pick.side === 0) { known.add('1-0'); known.add('0-2'); } else { known.add('1-1'); known.add('0-0'); }
     } else if (lv === 3) {
-      pick = ctx.item(POOL3, (x) => x.k, { avoid: 5 });
+      pick = ctx.item(ctx.flow < 0 && POOL3E.length ? POOL3E : POOL3, (x) => x.k, { avoid: 5 });
       model = wallModel(pick.base);
       [0, 1, 2].forEach((i) => { if (i !== pick.u) known.add('0-' + i); });
       known.add('1-' + pick.m);
@@ -466,6 +491,7 @@
     top.appendChild(view.node);
     model.order.forEach((id) => (known.has(id) ? view.set(id, model.vals[id]) : view.empty(id)));
 
+    if (lv !== 1) { await ruleOnce(ctx); if (!ctx.active) return; }
     await introOnce(ctx, kind === 'mauer4' || kind === 'topdown' ? kind : lv);
     if (!ctx.active) return;
     let count = lv === 1 ? 3 : 4;
@@ -477,7 +503,10 @@
 
   /* ---------- Stufe 4: Rechendreieck ---------- */
   async function taskTriangle(ctx) {
-    const minus = ctx.flow > 0 || (ctx.level >= 4 && ctx.index >= 2 && ctx.index % 2 === 1);
+    // Minus-Variante erst, wenn das Kind in dieser Runde schon ein normales
+    // Dreieck gelöst hat; flow<0 nie, flow>0 öfter (statt Formatwechsel).
+    const minus = triSeen && ctx.flow >= 0 && (ctx.flow > 0 || (ctx.index >= 2 && ctx.index % 2 === 1));
+    if (!minus) triSeen = true;
     const pool = ctx.flow < 0 ? POOLTRI_E : POOLTRI;
     const pick = ctx.item(pool, (x) => x.k, { avoid: 5 });
     const model = triModel(pick.inner);
@@ -510,6 +539,8 @@
     const view = buildWall(ctx, model);
     top.appendChild(view.node);
     model.order.forEach((id) => view.set(id, model.vals[id]));
+    await ruleOnce(ctx);
+    if (!ctx.active) return;
     await introOnce(ctx, 'plus1');
     if (!ctx.active) return;
     const p = pick.p;
@@ -730,8 +761,8 @@
     },
 
     async task(ctx) {
-      if (ctx.index === 0) { introduced = new Set(); order5 = U.shuffle(K5); }
-      const lv = ctx.taskLevel;
+      if (ctx.index === 0) { introduced = new Set(); order5 = U.shuffle(K5); triSeen = false; }
+      const lv = levelOf(ctx);
       if (lv === 5) {
         const kind = order5[ctx.index % order5.length];
         if (introduced.has(5) === false) { introduced.add(5); await ctx.say('Jetzt wirst du Mauer-Profi! Wir knobeln mit Mauern und mit schönen Päckchen.'); if (!ctx.active) return; }

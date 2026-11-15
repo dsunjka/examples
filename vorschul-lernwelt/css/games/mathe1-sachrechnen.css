@@ -44,12 +44,16 @@
   display: flex; align-items: center; justify-content: center;
 }
 .sac-replay:active { transform: translateY(3px); box-shadow: var(--shadow-press); }
+.sac-replay:disabled { opacity: .4; cursor: default; transform: none; box-shadow: var(--shadow); }
 
 .sac-scene { width: 100%; display: flex; align-items: center; justify-content: center; }
 
-/* Zehnerfeld-Reihen */
-.sac-field {
+/* Zehnerfeld-Reihen. --sac-c (Kästchengröße) gilt für das Feld und – im Ergänzen-Bild –
+   auch für Fragesack und Gesamtzahl daneben (die sind Geschwister des Feldes in .sac-ergwrap). */
+.sac-field, .sac-ergwrap {
   --sac-c: clamp(22px, min(calc((min(100vw, 820px) - 72px) / (var(--sac-k, 10) + .4)), 7vh), 64px);
+}
+.sac-field {
   display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
 .sac-frow { display: flex; gap: 2px; }
 .sac-gap5 { display: inline-block; width: calc(var(--sac-c) * .32); flex: 0 0 auto; }
@@ -77,11 +81,11 @@
 
 /* Ergänzen: Fragesack und Gesamtzahl */
 .sac-ergwrap { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: clamp(8px, 2vmin, 18px); }
-.sac-bag { font-family: var(--emoji); font-size: calc(var(--sac-c) * 1.4); }
+.sac-bag { font-family: var(--emoji); font-size: calc(var(--sac-c) * 1.15); line-height: 1; }
 .sac-total {
   display: inline-flex; align-items: center; gap: 4px;
   background: var(--card); border-radius: 18px; box-shadow: var(--shadow);
-  padding: 4px 12px; font-weight: 700; font-size: calc(var(--sac-c) * .95);
+  padding: 4px 12px; font-weight: 700; font-size: calc(var(--sac-c) * .85);
 }
 .sac-total-e { font-family: var(--emoji); font-size: .85em; }
 

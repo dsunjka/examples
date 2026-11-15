@@ -152,6 +152,15 @@
 @media (max-width: 480px) { .ver-choices:has(.ver-dbl) { gap: 6px; } }
 .ver-choices .tile.ver-par { --tile: clamp(84px, 17vmin, 130px); width: calc(var(--tile) * 1.5); }
 .ver-choices .tile.ver-par .label { white-space: nowrap; }
+.ver-parpic { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: clamp(14px, calc(var(--tile) * 0.19), 24px); line-height: 1; }
+.ver-pp-row { display: flex; gap: 4px; }
+.ver-pp-plate { display: inline-flex; gap: 1px; padding: 3px 4px; border-radius: 999px; background: color-mix(in srgb, var(--ink) 9%, transparent); }
+.ver-pp-extra { padding: 2px; border-radius: 50%; box-shadow: 0 0 0 2px #e8833a; }
+.ver-pp-extra.ver-pp-none { visibility: hidden; }
+@media (max-width: 480px) {
+  .ver-choices .tile.ver-par { width: min(44vw, 172px); }
+  .ver-choices .tile.ver-par .ver-parpic { margin-right: 22px; }
+}
 
 /* ---------- Kekse ---------- */
 .ver-table { width: 100%; max-width: 760px; display: flex; flex-direction: column; align-items: center; gap: clamp(8px, 1.8vmin, 16px); transition: opacity .3s; }

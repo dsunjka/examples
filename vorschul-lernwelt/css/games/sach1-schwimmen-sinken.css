@@ -1,6 +1,6 @@
-/* Spiel „Schwimmt oder sinkt?“ (sach1/schwimmen-sinken) – Präfix .sch- */
+/* Spiel „Schwimmt oder sinkt?“ (sach1/schwimmen-sinken) – Präfix .sws- */
 
-.sch-wrap {
+.sws-wrap {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -10,20 +10,20 @@
 }
 
 /* ---------- Frage-Karte ---------- */
-.prompt-box.sch-card {
+.prompt-box.sws-card {
   flex-wrap: nowrap;
   padding: clamp(8px, 1.8vmin, 16px) clamp(14px, 3vmin, 26px);
   gap: clamp(8px, 1.6vmin, 14px);
   max-width: min(100%, 640px);
   min-height: clamp(56px, 8vh, 80px);
 }
-.sch-qtext {
+.sws-qtext {
   font-size: clamp(19px, 3.3vmin, 30px);
   font-weight: 800;
   line-height: 1.2;
   text-align: center;
 }
-.sch-cardpic {
+.sws-cardpic {
   flex: 0 0 auto;
   width: clamp(40px, 6.5vh, 60px);
   height: clamp(40px, 6.5vh, 60px);
@@ -31,9 +31,9 @@
   align-items: center;
   justify-content: center;
 }
-.sch-cardpic .sch-art { width: 100%; height: 100%; }
-.sch-cardpic .sch-emo { font-size: clamp(32px, 5.6vh, 52px); }
-.sch-qtag, .sch-chip {
+.sws-cardpic .sws-art { width: 100%; height: 100%; }
+.sws-cardpic .sws-emo { font-size: clamp(32px, 5.6vh, 52px); }
+.sws-qtag, .sws-chip {
   flex: 0 0 auto;
   border-radius: 999px;
   padding: 4px 12px;
@@ -42,10 +42,10 @@
   background: #e3f3ff;
   color: #1f6fb2;
 }
-.sch-chip { background: var(--ok-soft); color: #13804b; }
+.sws-chip { background: var(--ok-soft); color: #13804b; }
 
 /* ---------- Wasserbecken ---------- */
-.sch-tank {
+.sws-tank {
   --h: clamp(44px, 8vh, 72px);
   --wl: 42%;
   position: relative;
@@ -58,7 +58,7 @@
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.45));
   box-shadow: var(--shadow);
 }
-.sch-tank::before {
+.sws-tank::before {
   /* Glasrand oben */
   content: "";
   position: absolute;
@@ -69,8 +69,8 @@
   border-radius: 6px;
   background: #b8dcf2;
 }
-.sch-tank.sch-many { --h: clamp(36px, min(7vh, 12.5vw), 62px); }
-.sch-water {
+.sws-tank.sws-many { --h: clamp(36px, min(7vh, 12.5vw), 62px); }
+.sws-water {
   position: absolute;
   left: 0;
   right: 0;
@@ -82,7 +82,7 @@
   border-radius: 0 0 22px 22px;
   background: linear-gradient(180deg, rgba(91, 184, 245, 0.42), rgba(38, 124, 214, 0.6));
 }
-.sch-water::after {
+.sws-water::after {
   content: "";
   position: absolute;
   left: 0;
@@ -94,7 +94,7 @@
   opacity: 0.85;
 }
 
-.sch-obj {
+.sws-obj {
   position: absolute;
   z-index: 1;
   width: calc(var(--h) * var(--sc, 1));
@@ -105,38 +105,38 @@
   align-items: center;
   justify-content: center;
   transition: top 0.5s, scale 0.3s, filter 0.3s;
-  animation: sch-hover 2.4s ease-in-out infinite;
+  animation: sws-hover 2.4s ease-in-out infinite;
 }
-.sch-art { display: block; width: 100%; height: 100%; overflow: visible; }
-.sch-emo {
+.sws-art { display: block; width: 100%; height: 100%; overflow: visible; }
+.sws-emo {
   font-family: var(--emoji);
   font-size: calc(var(--h) * var(--sc, 1) * 0.84);
   line-height: 1;
 }
-.sch-obj.sch-float {
+.sws-obj.sws-float {
   top: calc(var(--wl) - var(--h) * var(--sc, 1) * 0.62);
   transition: top 0.9s cubic-bezier(0.3, 1.7, 0.55, 1);
-  animation: sch-bob 2.2s 0.9s ease-in-out infinite;
+  animation: sws-bob 2.2s 0.9s ease-in-out infinite;
 }
-.sch-obj.sch-sink {
+.sws-obj.sws-sink {
   top: calc(100% - var(--h) * var(--sc, 1) - 10px);
   transition: top 1.8s cubic-bezier(0.4, 0.1, 0.6, 1);
   animation: none;
 }
-.sch-obj.sch-cur {
+.sws-obj.sws-cur {
   scale: 1.15;
   filter: drop-shadow(0 0 6px var(--gold)) drop-shadow(0 0 3px var(--gold));
 }
-@keyframes sch-hover {
+@keyframes sws-hover {
   0%, 100% { transform: rotate(-3deg); }
   50% { transform: rotate(3deg) translateY(-3px); }
 }
-@keyframes sch-bob {
+@keyframes sws-bob {
   0%, 100% { transform: translateY(0) rotate(-2deg); }
   50% { transform: translateY(4px) rotate(2deg); }
 }
 
-.sch-splash {
+.sws-splash {
   position: absolute;
   top: var(--wl);
   z-index: 3;
@@ -146,13 +146,13 @@
   border: 3px solid #fff;
   border-radius: 50%;
   pointer-events: none;
-  animation: sch-splash 0.75s ease-out forwards;
+  animation: sws-splash 0.75s ease-out forwards;
 }
-@keyframes sch-splash {
+@keyframes sws-splash {
   from { transform: scale(0.2); opacity: 1; }
   to { transform: scale(1.7); opacity: 0; }
 }
-.sch-bub {
+.sws-bub {
   position: absolute;
   bottom: 18px;
   z-index: 3;
@@ -162,16 +162,16 @@
   border: 2px solid rgba(255, 255, 255, 0.95);
   opacity: 0;
   pointer-events: none;
-  animation: sch-bub 1.5s ease-in forwards;
+  animation: sws-bub 1.5s ease-in forwards;
 }
-@keyframes sch-bub {
+@keyframes sws-bub {
   0% { opacity: 0; transform: translateY(0); }
   15% { opacity: 1; }
   100% { opacity: 0; transform: translateY(-80px); }
 }
 
 /* Vermutungs-Abzeichen (Forschertabelle) */
-.sch-badge {
+.sws-badge {
   position: absolute;
   top: -12px;
   right: -14px;
@@ -184,63 +184,63 @@
   align-items: center;
   justify-content: center;
 }
-.sch-badge .sch-icon { width: 26px; height: 26px; }
-.sch-badge.sch-ok { box-shadow: 0 0 0 4px var(--ok); }
-.sch-badge.sch-oops { box-shadow: 0 0 0 4px var(--soft-wrong); }
+.sws-badge .sws-icon { width: 26px; height: 26px; }
+.sws-badge.sws-ok { box-shadow: 0 0 0 4px var(--ok); }
+.sws-badge.sws-oops { box-shadow: 0 0 0 4px var(--soft-wrong); }
 
 /* ---------- Bedienung ---------- */
-.sch-ctrl {
+.sws-ctrl {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: var(--gap);
   max-width: 100%;
 }
-.sch-ctrl.sch-locked .tile { pointer-events: none; }
-.sch-ctrl.sch-gone { visibility: hidden; }
-.tile.sch-chosen { box-shadow: 0 0 0 5px #4a90e2, var(--shadow); }
-.tile.sch-chosen.is-correct { box-shadow: 0 0 0 6px var(--ok), var(--shadow); }
+.sws-ctrl.sws-locked .tile { pointer-events: none; }
+.sws-ctrl.sws-gone { visibility: hidden; }
+.tile.sws-chosen { box-shadow: 0 0 0 5px #4a90e2, var(--shadow); }
+.tile.sws-chosen.is-correct { box-shadow: 0 0 0 6px var(--ok), var(--shadow); }
 
-.tile.sch-pbtn {
+.tile.sws-pbtn {
   width: clamp(130px, 38vw, 210px);
   height: clamp(92px, 15vh, 140px);
 }
-.sch-pb { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-.sch-pb .sch-icon { width: clamp(46px, 7.5vh, 68px); height: clamp(46px, 7.5vh, 68px); }
-.sch-pb-t { font-size: clamp(20px, 3.4vmin, 30px); font-weight: 800; }
+.sws-pb { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.sws-pb .sws-icon { width: clamp(46px, 7.5vh, 68px); height: clamp(46px, 7.5vh, 68px); }
+.sws-pb-t { font-size: clamp(20px, 3.4vmin, 30px); font-weight: 800; }
 
-.tile.sch-otile {
+.tile.sws-otile {
   width: clamp(100px, 28vw, 190px);
   height: clamp(110px, 17vh, 160px);
 }
-.sch-ot { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-.sch-ot-pic {
+.sws-ot { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.sws-ot-pic {
   width: clamp(48px, 8vh, 72px);
   height: clamp(48px, 8vh, 72px);
   display: flex;
   align-items: center;
   justify-content: center;
 }
-.sch-ot-pic .sch-emo { font-size: clamp(40px, 7vh, 62px); }
-.sch-ot-t { font-size: clamp(16px, 2.8vmin, 24px); font-weight: 800; }
+.sws-ot-pic .sws-emo { font-size: clamp(40px, 7vh, 62px); }
+.sws-ot-t { font-size: clamp(16px, 2.8vmin, 24px); font-weight: 800; }
 
-.tile.sch-mtile {
+.tile.sws-mtile {
   width: clamp(78px, 20vw, 150px);
   height: auto;
   min-height: clamp(96px, 15vh, 150px);
   padding: 10px 6px;
 }
-.sch-mt { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-.sch-sw { width: clamp(48px, 8vh, 74px); height: clamp(48px, 8vh, 74px); display: block; }
-.sch-mt-t { font-size: clamp(16px, 2.8vmin, 24px); font-weight: 800; }
+.sws-mt { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.sws-sw { width: clamp(48px, 8vh, 74px); height: clamp(48px, 8vh, 74px); display: block; }
+.sws-mt-t { font-size: clamp(16px, 2.8vmin, 24px); font-weight: 800; }
 
-.tile.sch-rtile {
+.tile.sws-rtile {
   width: clamp(150px, 23vw, 260px);
   height: auto;
   min-height: clamp(64px, 11vh, 120px);
   padding: 12px 16px;
 }
-.tile.sch-rtile .tile-text {
+.tile.sws-rtile .tile-text {
   font-size: clamp(17px, 2.7vmin, 24px);
   line-height: 1.25;
   white-space: normal;
@@ -248,9 +248,9 @@
 }
 
 @media (max-width: 640px) {
-  .sch-ctrl.sch-why { width: 100%; flex-direction: column; align-items: center; flex-wrap: nowrap; gap: 10px; }
-  .tile.sch-rtile { width: min(calc(100% - 20px), 360px); min-height: 58px; padding: 10px 34px 10px 14px; }
+  .sws-ctrl.sws-why { width: 100%; flex-direction: column; align-items: center; flex-wrap: nowrap; gap: 10px; }
+  .tile.sws-rtile { width: min(calc(100% - 20px), 360px); min-height: 58px; padding: 10px 34px 10px 14px; }
 }
 @media (max-height: 560px) {
-  .sch-tank { height: clamp(140px, 30vh, 200px); }
+  .sws-tank { height: clamp(140px, 30vh, 200px); }
 }

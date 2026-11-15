@@ -199,6 +199,10 @@
 .sat-card.sat-pcard { min-width: 80px; font-size: calc(var(--sat-fs) * 1.5); background: #fff3c4; }
 .sat-card.sat-used { opacity: .2; transform: scale(.9); pointer-events: none; box-shadow: none; }
 
+/* ---------- Stufe 4a: Namenwörter antippen ---------- */
+.sat-mode-n { background: #e3f8d8; color: #2f6b1f; }
+.sat-train .sat-wagon.sat-ntile.sat-repaired { background: var(--ok-soft); cursor: default; }
+
 /* ---------- Stufe 3: Satzzeichen-Kacheln ---------- */
 .sat-pchoices .tile.large { --tile: clamp(96px, 20vmin, 170px); }
 .sat-ptile { font-size: calc(var(--tile) * 0.62); font-weight: 900; line-height: 1; }

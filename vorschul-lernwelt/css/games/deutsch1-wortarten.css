@@ -85,8 +85,11 @@
 .wor-sent { align-items: flex-end; gap: clamp(8px, 1.8vmin, 16px); background: var(--card); border-radius: var(--radius-l); box-shadow: var(--shadow); padding: clamp(14px, 3vmin, 28px); }
 .tile.wor-stile {
   width: auto; height: auto; min-width: 64px; min-height: clamp(64px, 11vmin, 96px); padding: 8px 16px;
-  background: var(--paper); border: 3px solid var(--line); box-shadow: 0 4px 0 rgba(43, 45, 66, .12);
+  border: 3px solid var(--line);
 }
+/* Eigene Fläche/Schatten nur ohne Rückmeldung: .is-correct (grüner Ring) und
+   .is-hint (goldener Ring, Hilfe-Stufe 3) aus base.css dürfen nicht überdeckt werden. */
+.tile.wor-stile:not(.is-correct):not(.is-hint) { background: var(--paper); box-shadow: 0 4px 0 rgba(43, 45, 66, .12); }
 .tile.wor-stile .tile-text { font-size: clamp(26px, 5vmin, 44px); font-weight: 800; }
 .tile.wor-stile.wor-last { margin-right: 16px; }
 .tile.wor-stile.wor-last::after { content: "."; position: absolute; right: -18px; bottom: 4px; font-size: clamp(30px, 6vmin, 52px); font-weight: 800; color: var(--ink); }

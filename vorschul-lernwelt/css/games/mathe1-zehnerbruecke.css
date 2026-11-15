@@ -2,12 +2,13 @@
    Über die Zehner-Brücke (mathe1/zehnerbruecke) – Präfix .zbr-
    ========================================================================== */
 
-.stage.zbr-stage { justify-content: flex-start; padding-top: clamp(6px, 1.6vmin, 16px); }
+/* etwas mehr Platz unten für Flos Sprechblase (zwei Zeilen), Inhalt rückt nach oben */
+.stage.zbr-stage { justify-content: flex-start; padding-top: clamp(6px, 1.6vmin, 16px); --bubble-safe: clamp(80px, 15vh, 128px); }
 
 .zbr-main {
   width: 100%; max-width: 860px; flex: 1 1 auto; min-height: 0;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: clamp(8px, 2vmin, 18px);
+  gap: clamp(6px, 1.6vmin, 16px);
 }
 .zbr-hidden { display: none !important; }
 .zbr-pop { animation: zbr-pop .45s cubic-bezier(.3, 1.5, .5, 1); }
@@ -49,8 +50,8 @@
   background: linear-gradient(180deg, #e8f7ff, #fff);
   border-radius: var(--radius); box-shadow: var(--shadow);
   padding: 0 clamp(16px, 3vw, 30px);
-  height: clamp(140px, 19vh, 170px);
-  position: relative;
+  height: clamp(124px, 16vh, 170px);
+  position: relative; flex-shrink: 0;
 }
 .zbr-track { position: absolute; left: clamp(16px, 3vw, 30px); right: clamp(16px, 3vw, 30px); top: 0; bottom: 0; }
 .zbr-track::before {
@@ -148,7 +149,8 @@
 .zbr-dots { display: flex; flex-direction: column; gap: 8px; }
 .zbr-dotrow { display: flex; gap: 6px; }
 .zbr-dot {
-  --d: clamp(56px, 9vmin, 70px);
+  /* nach Höhe begrenzt: zwei Punktreihen dürfen nicht unter Flos Sprechblase rutschen */
+  --d: clamp(50px, min(9vmin, 7vh), 70px);
   width: var(--d); height: var(--d); border-radius: 50%; border: none; padding: 0; cursor: pointer;
   background: #1d64d8; box-shadow: inset 0 -5px 0 rgba(0, 0, 0, .2), 0 4px 0 rgba(43, 45, 66, .15);
   transition: transform .15s, background .15s;
@@ -172,8 +174,35 @@
 .zbr-choices { margin: 0; }
 .zbr-choices .tile.zbr-num { font-size: clamp(30px, 6vmin, 46px); font-weight: 700; }
 
-/* kleine Höhen (Handy quer) */
+/* kleine Höhen (Handy quer): kein Zwanzigerfeld (die Tipps zeigen dann auf den
+   Zahlenstrahl), kompakter Zahlenstrahl, Punkte in einer Reihe neben dem Kopf */
 @media (max-height: 560px) {
+  .zbr-main { gap: 6px; justify-content: flex-start; }
   .zbr-frame { display: none; }
-  .zbr-linebox { height: 110px; }
+  .zbr-eqbox { padding: 2px 18px; gap: 0; }
+  .zbr-eq { font-size: 30px; }
+  .zbr-steps { font-size: 20px; }
+  .zbr-linebox { height: 92px; }
+  .zbr-track::before { bottom: 34px; }
+  .zbr-tick { bottom: 28px; }
+  .zbr-tick.zbr-five { bottom: 25px; }
+  .zbr-tick.zbr-ten { bottom: 24px; height: 34px; }
+  .zbr-lbl { bottom: 6px; font-size: 14px; }
+  .zbr-lbl-ten { bottom: 4px; padding: 1px 4px; }
+  .zbr-bridge { top: 2px; font-size: 22px; }
+  .zbr-flo { width: 32px; height: 32px; bottom: 37px; }
+  .zbr-flo.zbr-jump { animation-name: zbr-jump-s; }
+  .zbr-dir { width: 16px; height: 16px; font-size: 10px; top: -4px; right: -8px; }
+  .zbr-flo.zbr-back .zbr-dir { left: -8px; }
+  .zbr-arc { bottom: 37px; height: 34px; }
+  .zbr-arc.zbr-arc-rest { height: 28px; }
+  .zbr-arclbl { font-size: 12px; top: -10px; }
+  .zbr-tray { flex-direction: row; padding: 6px 10px; gap: 10px; }
+  .zbr-traybody { flex-wrap: nowrap; gap: 10px; }
+  .zbr-dots { flex-direction: row; gap: 12px; }
+  .zbr-dot { --d: 44px; }
+  .zbr-okbtn { min-width: 56px; min-height: 52px; font-size: 30px; border-radius: 16px; }
+  .zbr-traynum { font-size: 22px; padding: 0 9px; }
+  .zbr-trayhint { font-size: 15px; }
 }
+@keyframes zbr-jump-s { 40% { bottom: 52px; } 100% { bottom: 37px; } }

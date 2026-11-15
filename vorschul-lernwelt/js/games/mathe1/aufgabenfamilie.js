@@ -78,22 +78,29 @@
     return n == null ? null : n;
   }
 
-  /** fremde Kärtchen nach Art: swap (3 − 7), plus (andere Summe), minus (andere Zahl) */
-  function intruderCands(f) {
+  /** höchste Zahl, die in einer Stufe vorkommen darf (Stufe 1/2: Zahlenraum bis 10) */
+  const maxOf = (L) => (L <= 2 ? 10 : 20);
+  /** alle Zahlen einer Karte (auch das Ergebnis) liegen im Zahlenraum bis max */
+  const inRange = (c, max) => c.x <= max && c.y <= max && (isSwap(c) || (res(c) >= 0 && res(c) <= max));
+
+  /** fremde Kärtchen nach Art: swap (3 − 7), plus (andere Summe), minus (andere Zahl);
+      max begrenzt alle Zahlen der Karte (Stufe 1/2: bis 10, kein Zehnerübergang) */
+  function intruderCands(f, max = 20) {
     const { a, b, s } = f;
-    const ok = (c) => !isMember(c, f) && (isSwap(c) || foreignOf(c, f) != null) && c.x >= 0 && c.y >= 1 && c.x <= 20 && c.y <= 20 && (isSwap(c) || (res(c) >= 0 && res(c) <= 20));
+    const ok = (c) => !isMember(c, f) && (isSwap(c) || foreignOf(c, f) != null) && c.x >= 1 && c.y >= 1 && inRange(c, max);
     const uniq = (list) => {
       const seen = new Set();
       return list.filter(ok).filter((c) => { const k = keyOf(c); if (seen.has(k)) return false; seen.add(k); return true; });
     };
     return {
       swap: uniq([card(a, '-', s), card(b, '-', s)]),
-      plus: uniq([card(a, '+', b + 1), card(a + 1, '+', b), card(b, '+', b), card(a, '+', a), card(s, '+', a), card(b, '+', a - 1)]),
-      minus: uniq([card(s, '-', a + 1), card(s, '-', b - 1), card(s, '-', a - 1), card(s + 1, '-', a), card(s - 1, '-', b)]),
+      // zuerst die „fast richtigen“ Karten: nur eine Zahl ist um eins verschoben
+      plus: uniq([card(a, '+', b - 1), card(a - 1, '+', b), card(b, '+', a - 1), card(a, '+', b + 1), card(a + 1, '+', b), card(a, '+', a), card(b, '+', b), card(s, '+', a)]),
+      minus: uniq([card(s, '-', a + 1), card(s, '-', b - 1), card(s, '-', a - 1), card(s - 1, '-', b), card(s - 1, '-', a), card(s + 1, '-', a)]),
     };
   }
   function pickIntruders(f, level, n) {
-    const C = intruderCands(f);
+    const C = intruderCands(f, maxOf(level));
     const out = [];
     const add = (list) => {
       const fresh = list.filter((c) => !out.some((d) => same(c, d)));
@@ -169,13 +176,35 @@
   const RED = 'auf-red';
   const BLUE = 'auf-blue';
   function colorOf(n, f) { return n === f.a ? RED : n === f.b ? BLUE : 'auf-gold'; }
+  /** Punkte in Fünfergruppen; jede Gruppe bricht nie um (7 = 5 + 2, nie 6 + 1) */
   function dotRow(n, cls, crossed = 0) {
     const box = el('span.auf-dots');
+    let grp = null;
     for (let i = 0; i < n; i++) {
-      if (i > 0 && i % 5 === 0) box.appendChild(el('span.auf-dgap'));
-      box.appendChild(el('span', { class: 'auf-dot ' + cls + (i >= n - crossed ? ' auf-x' : '') }));
+      if (i % 5 === 0) { grp = el('span.auf-dgrp'); box.appendChild(grp); }
+      grp.appendChild(el('span', { class: 'auf-dot ' + cls + (i >= n - crossed ? ' auf-x' : '') }));
     }
     return box;
+  }
+  /** Bild zu „3 − 7“: drei Punkte werden weggenommen, für die übrigen vier ist nichts mehr da */
+  function swapPicture(c) {
+    const box = el('span.auf-dots');
+    let grp = null;
+    for (let i = 0; i < c.y; i++) {
+      if (i % 5 === 0) { grp = el('span.auf-dgrp'); box.appendChild(grp); }
+      grp.appendChild(el('span', { class: i < c.x ? 'auf-dot auf-gold auf-x' : 'auf-dot auf-none' }));
+    }
+    return el('div.auf-swapshow.auf-pop', { 'aria-hidden': 'true' },
+      el('div.auf-swaplab', lab(c)), box);
+  }
+  /** zeigt das Wegnehm-Bild kurz über dem Spielfeld (verdeckt nichts dauerhaft) */
+  function showSwap(M, c, ms = 6500) {
+    M.querySelectorAll('.auf-swapshow').forEach((n) => n.remove());
+    const pic = swapPicture(c);
+    M.appendChild(pic);
+    const remove = () => pic.remove();
+    if (ms) setTimeout(remove, ms);
+    return remove;
   }
   /** Punktbild einer Karte (Stufe 1) */
   function cardDots(c, f) {
@@ -263,7 +292,7 @@
   async function askNumber(ctx, host, o) {
     const box = el('div.choices.auf-nums');
     host.appendChild(box);
-    const values = numOptions(o.answer, o.count, o.prefer);
+    const values = numOptions(o.answer, o.count, o.prefer, o.max || 20);
     const items = values.map((v) => ({ content: String(v), text: true, correct: v === o.answer, say: w(v), value: v, className: 'auf-ntile' }));
     await ctx.choices(items, {
       container: box,
@@ -290,7 +319,10 @@
       hintAfter: hintAfter(ctx, items.length),
       praise: false,
       correctSay: (item) => o.correctSay(item),
-      explain: (item) => o.explain(item),
+      explain: (item) => {
+        if (isSwap(item.c)) showSwap(host, item.c);
+        return o.explain(item);
+      },
       hintSay: () => o.hintSay(),
       modelSay: () => o.modelSay(),
       onWrong: o.onWrong,
@@ -298,8 +330,11 @@
   }
 
   /** Erklärung zu einem Kärtchen, das nicht zur Familie gehört (ohne die Lösung zu verraten) */
+  const dotsWord = (n) => (n === 1 ? 'ein Punkt' : `${w(n)} Punkte`);
+  /** zu swapPicture: die Worte passen zu dem, was zu sehen ist */
+  const swapSay = (c) => `Schau mal: Da ${c.x === 1 ? 'ist' : 'sind'} nur ${dotsWord(c.x)}. ${W(c.y)} kann ich davon nicht wegnehmen. Bei Minus steht die größte Zahl vorne.`;
   function whyNot(c, f) {
-    if (isSwap(c)) return `Schau mal: Von ${w(c.x)} Äpfeln kann ich keine ${w(c.y)} wegnehmen. Bei Minus steht die größte Zahl vorne.`;
+    if (isSwap(c)) return swapSay(c);
     const n = foreignOf(c, f);
     if (n === res(c) && n !== c.x && n !== c.y) return `Schau mal: ${Sp(c)} ist ${w(n)}. Die ${W(n)} wohnt nicht in diesem Haus.`;
     if (n != null) return `Schau mal: In dieser Aufgabe kommt die ${W(n)} vor. Die ${W(n)} wohnt nicht in diesem Haus.`;
@@ -327,12 +362,17 @@
     const top = el('div.auf-top', H.node, E);
     M.appendChild(top);
     const right = card(y, '+', x);
+    const max = maxOf(L);
+    // „andere Zahlen“: im Zahlenraum der Stufe (Stufe 1/2 bis 10)
+    const others = [card(y, '+', y), card(x, '+', y + 1), card(x, '+', y - 1), card(x + 1, '+', y), card(x - 1, '+', y), card(x, '+', x)]
+      .filter((c) => c.x >= 1 && c.y >= 1 && inRange(c, max) && !same(c, right) && !same(c, given));
     const dis = [
       { c: card(x, '+', y), why: 'same' },
       { c: card(f.s, '-', y), why: 'minus' },
-      { c: U.chance(0.5) ? card(y, '+', y) : card(x, '+', Math.min(y + 1, 20 - x)), why: 'other' },
+      ...(others.length ? [{ c: U.pick(others), why: 'other' }] : []),
       { c: card(y, '-', x), why: 'minus' },
-    ].filter((d) => !same(d.c, right) && d.c.y >= 1);
+      // Stufe 1 (Punktbilder) ohne „3 − 7“: die Stolperkarte kommt erst ab Stufe 2
+    ].filter((d) => !same(d.c, right) && d.c.y >= 1 && inRange(d.c, max) && !(L === 1 && isSwap(d.c)));
     let n = L === 1 ? 2 : 3;
     if (ctx.flow > 0 && L > 1) n = 3;
     const pickDis = [dis[0], ...U.sample(dis.slice(1), n - 1)];
@@ -351,6 +391,7 @@
       },
       explain: (item) => {
         if (item.why === 'same') return 'Schau mal: Das ist genau die gleiche Aufgabe. Bei der Tauschaufgabe tauschen die zwei Zahlen ihre Plätze.';
+        if (isSwap(item.c)) return `${swapSay(item.c)} Die Tauschaufgabe ist eine Plusaufgabe.`;
         if (item.c.op === '-') return 'Das ist eine Minusaufgabe. Die Tauschaufgabe ist auch eine Plusaufgabe.';
         return `Schau mal: Bei ${sp(item.c)} sind andere Zahlen dabei. Beim Tauschen bleiben die Zahlen gleich. Sie wechseln nur den Platz.`;
       },
@@ -380,7 +421,8 @@
     await askNumber(ctx, M, {
       answer: x,
       count: ctx.flow > 0 ? 5 : 4,
-      prefer: [y, f.s + y <= 20 ? f.s + y : f.s, x + 1, x - 1],
+      max: maxOf(t.L),
+      prefer: [y, f.s + y <= maxOf(t.L) ? f.s + y : f.s, x + 1, x - 1],
       correctSay: () => {
         slot.textContent = String(x);
         slot.classList.add('auf-done');
@@ -462,7 +504,9 @@
           return;
         }
         sw++;
+        const unshow = isSwap(x.c) ? showSwap(M, x.c, 0) : null;
         await ctx.wrong(b, { say: whyNot(x.c, f), keep: true });
+        if (unshow) unshow();
         if (!ctx.active) return;
         b._out = true;
         b.classList.add('auf-out');
@@ -656,8 +700,9 @@
         return `Tipp: In der Familie wohnen ${w(f.a)}, ${w(f.b)} und ${w(f.s)}. Welche Aufgabe passt nicht dazu?`;
       },
       modelSay: () => {
+        if (isSwap(intr)) showSwap(M, intr);
         const why = isSwap(intr)
-          ? `Von ${w(intr.x)} kann ich keine ${w(intr.y)} wegnehmen.`
+          ? `Da ${intr.x === 1 ? 'ist' : 'sind'} nur ${dotsWord(intr.x)}. ${W(intr.y)} kann ich davon nicht wegnehmen.`
           : `In ${sp(intr)} kommt die ${W(foreignOf(intr, f))} vor.`;
         return `Schau: ${why} Diese Aufgabe ist die fremde. Tipp sie an!`;
       },

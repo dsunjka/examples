@@ -9,7 +9,8 @@
      Grün-, Braunglas) und graue Restmülltonne.
    - Die Leitfrage „Woraus ist das? Ist es eine Verpackung?“ statt Raten.
    - Pfand: Flaschen und Dosen mit Pfandzeichen bringt man in den Laden
-     zurück (Pfand-Automat), Mehrwegflaschen werden gespült und neu befüllt.
+     zurück (Pfand-Automat), Mehrwegflaschen (Pfand steht auf dem
+     Etikett, kein Einweg-Pfandzeichen) werden gespült und neu befüllt.
    - Stufe 5: Vermeiden vor Trennen – Brotdose statt Alufolie,
      Trinkflasche statt Saftpäckchen, reparieren statt wegwerfen.
    - Stufen:
@@ -43,6 +44,10 @@
   const el = U.el;
 
   const cap = (s) => U.cap(s);
+  /** Akkusativ aus dem Nominativ mit Artikel: nur „der“ ändert sich (der alte Karton → den alten Karton). */
+  const acc = (n) => n.replace(/^der (\S+e )?/, (m, adj) => 'den ' + (adj ? adj.trim() + 'n ' : ''));
+  /** Weiche Trennstellen für lange Wörter auf den kleinen Band-Karten (nur sichtbarer Text). */
+  const shy = (s) => s.replace(/(Brief|Bananen|Kartoffel|Plastik|Shampoo|Bonbon|Marmeladen|Taschen|Glas|Zahn|Eier|Apfel|Saft|Tee)(?=[a-zäöüß])/g, '$1­');
   const vary = (key, list) => U.pickFresh('mue-' + key, list, Math.min(2, list.length - 1));
   const hintAfterFor = (ctx, n, nWrong) => {
     const visible = ctx.flow < 0 && n >= 4 && nWrong >= 2 ? n - 1 : n;
@@ -64,7 +69,7 @@
      ====================================================================== */
   const BINS = {
     gelb: { label: 'Gelbe Tonne', say: 'Gelbe Tonne', dat: 'in die Gelbe Tonne', sym: '🥫',
-      rule: (it) => `In die Gelbe Tonne kommen nur Verpackungen aus Plastik oder Metall. Ist ${it.n} so eine Verpackung?` },
+      rule: (it) => `In die Gelbe Tonne kommen nur Verpackungen aus Plastik oder Metall. Woraus ist ${it.n}?` },
     papier: { label: 'Papier', say: 'blaue Papiertonne', dat: 'in die blaue Papiertonne', sym: '📰',
       rule: (it) => `In die blaue Tonne kommt nur sauberes Papier und Pappe. Ist ${it.n} aus Papier?` },
     bio: { label: 'Bio', say: 'braune Biotonne', dat: 'in die braune Biotonne', sym: '🍂',
@@ -72,9 +77,9 @@
     glas: { label: 'Glas', say: 'Glascontainer', dat: 'in den Glascontainer', sym: '🍾', dome: true,
       rule: (it) => `In den Glascontainer kommen nur Flaschen und Gläser. Ist ${it.n} aus Glas?` },
     rest: { label: 'Restmüll', say: 'graue Restmülltonne', dat: 'in die graue Restmülltonne', sym: '🗑️',
-      rule: (it) => `In den Restmüll kommt nur, was man nicht wieder verwerten kann. ${cap(it.n)} kann man aber noch verwerten.` },
+      rule: (it) => `In den Restmüll kommt nur, was man nicht wieder verwerten kann. ${cap(acc(it.n))} kann man aber noch wieder verwerten.` },
     pfand: { label: 'Pfand-Automat', say: 'Pfand Automat', dat: 'zurück in den Laden zum Pfand Automaten', automat: true,
-      rule: () => 'Der Pfand Automat nimmt nur Flaschen und Dosen mit dem Pfandzeichen. Schau mal genau hin.' },
+      rule: () => 'Der Pfand Automat nimmt nur Flaschen und Dosen, für die es Pfand gibt. Schau mal genau hin.' },
   };
   const GLASS = {
     weiss: { label: 'Weißglas', say: 'Weißglas', fill: '#e9f7fb' },
@@ -86,10 +91,43 @@
      Bilder (SVG) für Glas, Flaschen und Dosen
      ====================================================================== */
   const GC = { weiss: '#e3f6fb', gruen: '#2b9348', braun: '#8a4b14', blau: '#1971c2', rot: '#c2255c' };
-  const PFAND_BADGE = `<g transform="translate(46 92)"><circle r="12" fill="#fff" stroke="#2f9e44" stroke-width="3"/>
-    <path d="M-6 2 A6.5 6.5 0 1 1 3 6" fill="none" stroke="#2f9e44" stroke-width="3" stroke-linecap="round"/>
-    <polygon points="-9.5,0 -2.5,0 -6,5.5" fill="#2f9e44"/></g>`;
-  function svgThing(kind, color, badge) {
+  /* Vereinfachtes Einweg-Pfandzeichen (DPG): Flasche und Dose, ein Pfeil im Bogen darum.
+     Bewusst KEIN grüner Kreis mit Pfeilen – das wäre der Grüne Punkt (Gelbe Tonne). */
+  const PFAND_MARK = `<circle r="13" fill="#fff" stroke="#1d3557" stroke-width="2"/>
+    <path d="M-8.6 5.5 A10 10 0 1 1 8.6 5.5" fill="none" stroke="#1d3557" stroke-width="2.2"/>
+    <polygon points="5.4,3.6 11.8,3.6 8.6,9" fill="#1d3557"/>
+    <path d="M-5.6 -3.5 h2.2 v1.6 l1.6 2 v7.4 h-5.4 v-7.4 l1.6 -2 z" fill="#1d3557"/>
+    <rect x="0.6" y="-0.4" width="5" height="7.9" rx="1.2" fill="#1d3557"/>`;
+  const PFAND_BADGE = `<g transform="translate(43 90) scale(1.35)">${PFAND_MARK}</g>`;
+  /** Pfandzeichen allein (für den Pfand-Automaten). */
+  const pfandSign = (cls) => el('span.mue-svg.' + (cls || 'mue-pfandsign'),
+    { html: `<svg viewBox="-15 -15 30 30" aria-hidden="true">${PFAND_MARK}</svg>` });
+  /* Mehrweg-Flasche: kein Pfandzeichen, sondern ein Etikett mit Münze und „Pfand“. */
+  const MW_LABEL = `<rect x="15" y="60" width="30" height="30" rx="3" fill="#fff" stroke="#1d3557" stroke-width="1.5"/>
+    <circle cx="30" cy="71" r="7" fill="#fcc419" stroke="#e67700" stroke-width="1.5"/>
+    <text x="30" y="74" text-anchor="middle" font-size="9" font-weight="800" fill="#7a4a00" font-family="sans-serif">€</text>
+    <text x="30" y="86.5" text-anchor="middle" font-size="7.5" font-weight="800" fill="#1d3557" font-family="sans-serif">Pfand</text>`;
+  /* Breite Bilder (Vermeiden-Karten) */
+  const WIDE = {
+    tray: ['0 0 100 80', `<path d="M8 34 L92 34 L84 66 Q83 70 79 70 L21 70 Q17 70 16 66 Z" fill="#d0ebff" stroke="#4dabf7" stroke-width="3"/>
+      <path d="M8 34 L92 34" stroke="#1c7ed6" stroke-width="4" stroke-linecap="round"/>
+      <path d="M30 40 Q30 60 34 64 M50 40 V64 M70 40 Q70 60 66 64" fill="none" stroke="#74c0fc" stroke-width="3" stroke-linecap="round"/>
+      <path d="M62 34 Q78 14 96 22 L92 34" fill="#e7f5ff" fill-opacity=".8" stroke="#74c0fc" stroke-width="2"/>
+      <path d="M14 40 Q16 52 20 60" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".9"/>`],
+    foil: ['0 0 100 80', `<path d="M22 46 L78 46 L74 72 L26 72 Z" fill="#e9ecef" stroke="#adb5bd" stroke-width="2"/>
+      <path d="M34 52 L44 66 M54 52 L62 64" stroke="#fff" stroke-width="2.5" stroke-linecap="round"/>
+      <rect x="12" y="24" width="76" height="24" rx="3" fill="#ced4da" stroke="#868e96" stroke-width="3"/>
+      <ellipse cx="12" cy="36" rx="5" ry="12" fill="#dee2e6" stroke="#868e96" stroke-width="2.5"/>
+      <ellipse cx="12" cy="36" rx="2" ry="4.5" fill="#868e96"/>
+      <path d="M24 30 H80" stroke="#fff" stroke-width="3" stroke-linecap="round" opacity=".9"/>`],
+    tote: ['0 0 90 90', `<path d="M30 34 Q30 8 45 8 Q60 8 60 34" fill="none" stroke="#c9a46b" stroke-width="5"/>
+      <path d="M16 32 L74 32 L70 84 L20 84 Z" fill="#f3e3c3" stroke="#c9a46b" stroke-width="3"/>
+      <path d="M45 46 C36 50 36 66 45 72 C54 66 54 50 45 46 Z" fill="#69db7c"/><path d="M45 50 V70" stroke="#2f9e44" stroke-width="2"/>`],
+  };
+  function svgThing(kind, color, badge, mw) {
+    if (WIDE[kind]) {
+      return el('span.mue-svg.mue-svg-wide', { html: `<svg viewBox="${WIDE[kind][0]}" aria-hidden="true">${WIDE[kind][1]}</svg>` });
+    }
     const c = GC[color] || color || GC.weiss;
     const clear = color === 'weiss';
     const stroke = clear ? '#7fb2c2' : 'rgba(0,0,0,.35)';
@@ -122,13 +160,13 @@
         <path d="M42 16 Q54 18 50 34" fill="none" stroke="#1c7ed6" stroke-width="4" stroke-linecap="round"/>
         <circle cx="30" cy="70" r="9" fill="#fff" opacity=".85"/><path d="M26 70 L29 73 L35 66" fill="none" stroke="#2f9e44" stroke-width="2.5"/>`;
     }
-    return el('span.mue-svg', { html: `<svg viewBox="0 0 60 120" aria-hidden="true">${body}${badge ? PFAND_BADGE : ''}</svg>` });
+    return el('span.mue-svg', { html: `<svg viewBox="0 0 60 120" aria-hidden="true">${body}${mw ? MW_LABEL : ''}${badge ? PFAND_BADGE : ''}</svg>` });
   }
 
   /** Bild eines Dings: Emoji oder gezeichnetes SVG. */
   function pic(it, cls) {
     if (it.svg) {
-      const n = svgThing(it.svg[0], it.svg[1], it.pfand);
+      const n = svgThing(it.svg[0], it.svg[1], it.pfand, it.mw);
       if (cls) n.classList.add(cls);
       return n;
     }
@@ -145,7 +183,7 @@
     const b = BINS[id];
     if (b.automat) {
       return el('span.mue-bin.mue-automat',
-        el('span.mue-body', el('span.mue-screen', '♻'), el('span.mue-slot'), el('span.mue-coin', '🪙')),
+        el('span.mue-body', el('span.mue-screen', pfandSign()), el('span.mue-slot'), el('span.mue-coin', '🪙')),
         o.noName ? null : el('span.mue-name', b.label));
     }
     if (b.dome) {
@@ -214,14 +252,16 @@
       why: 'Das Marmeladenglas ist aus Glas. Den Deckel schraubst du vorher ab.', h: 'Tipp: Woraus ist das Marmeladenglas? Es ist hart und durchsichtig.',
       tr: { gelb: 'Das Glas ist zwar eine Verpackung, aber nicht aus Plastik oder Metall. Woraus ist es?' } },
     { k: 'Glasflasche', svg: ['bottle', 'gruen'], l: 'Glasflasche', n: 'die Glasflasche', b: 'glas', d: 1,
-      why: 'Die Flasche ist aus Glas. Aus altem Glas wird neues Glas.', h: 'Tipp: Die Flasche ist hart und kann zerbrechen. Woraus ist sie?' },
+      why: 'Die Flasche ist aus Glas. Aus altem Glas wird neues Glas.', h: 'Tipp: Die Flasche ist hart und kann zerbrechen. Woraus ist sie?',
+      tr: { gelb: 'Die Flasche ist zwar eine Verpackung, aber nicht aus Plastik oder Metall. Woraus ist sie?' } },
     // Restmüll
     { k: 'Taschentuch', e: '🤧', l: 'benutztes Taschentuch', n: 'das benutzte Taschentuch', b: 'rest', d: 2,
       why: 'Das Taschentuch ist schmutzig. Daraus kann man nichts Neues machen. Darum kommt es in den Restmüll.',
       h: 'Tipp: Das Taschentuch ist benutzt und schmutzig. Kann man daraus noch etwas Neues machen?',
       tr: { papier: 'Das Taschentuch ist aus Papier, ja. Aber es ist benutzt und schmutzig. Schmutziges Papier kann man nicht wieder verwerten.' } },
     { k: 'Pflaster', e: '🩹', l: 'altes Pflaster', n: 'das alte Pflaster', b: 'rest', d: 2,
-      why: 'Das alte Pflaster ist schmutzig. Das kommt in den Restmüll.', h: 'Tipp: Ein benutztes Pflaster ist schmutzig. Kann man daraus noch etwas machen?' },
+      why: 'Das alte Pflaster ist schmutzig. Das kommt in den Restmüll.', h: 'Tipp: Ein benutztes Pflaster ist schmutzig. Kann man daraus noch etwas machen?',
+      tr: { gelb: 'In die Gelbe Tonne kommen nur Verpackungen. War das Pflaster eine Verpackung? Und es ist schmutzig.' } },
     { k: 'Staub', e: '🧹', l: 'Staub vom Fegen', n: 'der Staub vom Fegen', b: 'rest', d: 2,
       why: 'Staub und Dreck kann man nicht wieder verwerten. Das ist Restmüll.', h: 'Tipp: Staub ist einfach nur Dreck. Ist das Papier, Plastik, Glas oder Essen?' },
     { k: 'Zahnbürste', e: '🪥', l: 'alte Zahnbürste', n: 'die alte Zahnbürste', b: 'rest', d: 3,
@@ -255,20 +295,23 @@
   /* Pfand oder Tonne? (Stufe 4) */
   const PFAND = [
     { k: 'Pfand: Plastikflasche', svg: ['plastic'], pfand: true, b: 'pfand', d: 1, n: 'die Plastikflasche mit Pfandzeichen',
-      l: 'Plastikflasche', merk: 'Flaschen mit Pfandzeichen bringst du zurück in den Laden. Dafür bekommst du Geld zurück.',
+      l: 'Plastikflasche', merk: 'Flaschen mit Pfandzeichen bringst du zurück in den Laden. Dafür bekommst du Geld zurück. Aus der Flasche wird neues Plastik gemacht.',
       tr: { gelb: 'Die Flasche ist aus Plastik, ja. Aber schau mal auf das Zeichen! Was bedeutet es?' } },
     { k: 'Pfand: Dose', svg: ['can', 'rot'], pfand: true, b: 'pfand', d: 2, n: 'die Getränkedose mit Pfandzeichen',
       l: 'Getränkedose', merk: 'Getränkedosen haben Pfand. Im Laden wird aus dem Metall neues Metall gemacht.',
       tr: { gelb: 'Viele Dosen kommen in die Gelbe Tonne. Aber schau mal genau auf diese Dose! Was ist darauf?' } },
-    { k: 'Pfand: Mehrweg', svg: ['bottle', 'braun'], pfand: true, b: 'pfand', d: 2, n: 'die Glasflasche mit Pfandzeichen',
-      l: 'Sprudelflasche', merk: 'Diese Flasche wird gespült und wieder neu befüllt. Das heißt Mehrweg.',
-      tr: { glas: 'Die Flasche ist aus Glas, das stimmt. Aber schau mal auf das Zeichen! Man kann sie noch einmal benutzen.' } },
+    // Mehrweg: trägt im echten Leben KEIN Einweg-Pfandzeichen; das Pfand steht auf dem Etikett.
+    { k: 'Pfand: Mehrweg', svg: ['bottle', 'weiss'], mw: true, b: 'pfand', d: 2, n: 'die Sprudelflasche aus Glas',
+      l: 'Sprudelflasche', merk: 'Auf dem Etikett steht Pfand. Die Flasche bringst du zurück in den Laden. Dort wird sie gespült und wieder neu befüllt. Das heißt Mehrweg.',
+      tr: { glas: 'Die Sprudelflasche ist aus Glas, das stimmt. Aber schau mal auf das Etikett! Was steht da?',
+        gelb: 'Die Sprudelflasche ist aus Glas, nicht aus Plastik oder Metall. Und schau mal auf das Etikett!' } },
     { k: 'Shampooflasche', e: '🧴', b: 'gelb', d: 1, n: 'die Shampooflasche', l: 'Shampooflasche',
       merk: 'Die Shampooflasche hat kein Pfandzeichen. Sie ist eine Verpackung für die Gelbe Tonne.' },
     { k: 'Dose', e: '🥫', b: 'gelb', d: 2, n: 'die Konservendose', l: 'Konservendose',
       merk: 'Die Konservendose hat kein Pfand. Sie kommt in die Gelbe Tonne.' },
     { k: 'Marmeladenglas', svg: ['jar', 'weiss'], b: 'glas', d: 1, n: 'das Marmeladenglas', l: 'Marmeladenglas',
-      merk: 'Das Marmeladenglas hat kein Pfand. Es kommt in den Glascontainer.' },
+      merk: 'Das Marmeladenglas hat kein Pfand. Es kommt in den Glascontainer.',
+      tr: { gelb: 'Das Glas ist zwar eine Verpackung, aber nicht aus Plastik oder Metall. Woraus ist es?' } },
     { k: 'Trinkglas', e: '🥛', b: 'rest', d: 3, n: 'das kaputte Trinkglas', l: 'kaputtes Trinkglas',
       merk: 'Trinkgläser sind anderes Glas als Flaschen. Sie kommen in den Restmüll.',
       tr: { glas: 'Das Trinkglas ist aus Glas, ja. Aber es ist anderes Glas als Flaschen. Es stört im Container.' } },
@@ -278,14 +321,14 @@
   const AVOID = [
     { k: 'Vermeiden: Brotdose', q: 'Dein Pausenbrot soll eingepackt werden. Was ist am besten?',
       best: { e: '🍱', l: 'Brotdose', say: 'Brotdose, jeden Tag wieder benutzen' },
-      thing: { e: '🌯', name: 'Alufolie', n: 'die Alufolie' }, ok: 'gelb', bad: 'rest',
+      thing: { svg: ['foil'], name: 'Alufolie', n: 'die Alufolie' }, ok: 'gelb', bad: 'rest',
       merk: 'Die Brotdose benutzt du jeden Tag wieder. So entsteht gar kein Müll.' },
     { k: 'Vermeiden: Trinkflasche', q: 'Du hast Durst in der Schule. Was ist am besten?',
       best: { svg: ['flask'], l: 'Trinkflasche', say: 'Trinkflasche, immer wieder auffüllen' },
       thing: { e: '🧃', name: 'Saftpäckchen', n: 'das Saftpäckchen' }, ok: 'gelb', bad: 'papier',
       merk: 'Die Trinkflasche füllst du immer wieder auf. Das ist noch besser als trennen.' },
     { k: 'Vermeiden: Stoffbeutel', q: 'Ihr kauft ein. Worin tragt ihr alles nach Hause?',
-      best: { e: '👜', l: 'Stoffbeutel', say: 'Stoffbeutel, immer wieder mitnehmen' },
+      best: { svg: ['tote'], l: 'Stoffbeutel', say: 'Stoffbeutel, immer wieder mitnehmen' },
       thing: { e: '🛍️', name: 'Plastiktüte', n: 'die Plastiktüte' }, ok: 'gelb', bad: 'rest',
       merk: 'Den Stoffbeutel nimmst du immer wieder mit. Dann brauchst du keine Tüte.' },
     { k: 'Vermeiden: reparieren', q: 'Dein Spielzeugauto ist kaputt. Was ist am besten?',
@@ -299,7 +342,7 @@
       merk: 'Wenn du beide Seiten benutzt, brauchst du nur halb so viel Papier.' },
     { k: 'Vermeiden: lose Äpfel', q: 'Ihr kauft Äpfel. Was ist am besten?',
       best: { e: '🍎', e2: '🍏', l: 'lose Äpfel ohne Verpackung', say: 'lose Äpfel ohne Verpackung' },
-      thing: { e: '🍎', name: 'Plastikschale', n: 'die Plastikschale' }, ok: 'gelb', bad: 'papier',
+      thing: { svg: ['tray'], name: 'Plastikschale', n: 'die Plastikschale' }, ok: 'gelb', bad: 'papier',
       merk: 'Lose Äpfel brauchen gar keine Verpackung. So entsteht kein Müll.' },
   ];
 
@@ -338,13 +381,21 @@
      Stufe 1/2: ein Ding → Tonne wählen
      ====================================================================== */
   async function taskSort(ctx, lv) {
+    // lv = ctx.level (1 oder 2); die Anpassung (ctx.flow) wirkt innerhalb der Stufe:
+    // Stufe 1 + Steigern: nur der Restmüll kommt dazu (Dinge bis d2), noch kein Glas.
+    // Stufe 2 + Steigern: erste d3-Fallen; Stufe 2 + Erleichtern: nur eindeutige Dinge.
     let bins = lv === 1 ? ['gelb', 'papier', 'bio'] : ['gelb', 'papier', 'bio', 'glas', 'rest'];
     let maxD = lv === 1 ? 1 : 2;
     if (lv === 1 && ctx.flow > 0) { bins = bins.concat('rest'); maxD = 2; }
-    if (lv === 2 && ctx.taskLevel > 2) maxD = 3;
+    if (lv === 2 && ctx.flow > 0) maxD = 3;
     if (lv === 2 && ctx.flow < 0) maxD = 1;
     const pool = ITEMS.filter((x) => bins.includes(x.b) && x.d <= maxD);
     const it = ctx.item(pool, (x) => x.k, { avoid: 4 });
+    if (lv === 1 && bins.includes('rest') && !introduced.has('rest1')) {
+      introduced.add('rest1');
+      await ctx.say('Jetzt kommt die graue Restmülltonne dazu. Da hinein kommt, woraus man nichts Neues mehr machen kann.');
+      if (!ctx.active) return;
+    }
     const box = promptThing(it, 'Wohin kommt das?');
     ctx.stage.appendChild(box);
     await ctx.instruct(`Wohin kommt ${it.n}?`);
@@ -401,7 +452,9 @@
       if (ctx.flow > 0) n++;
       if (ctx.flow < 0) n--;
       const minD = pro && ctx.flow >= 0 ? 2 : 1;
-      const maxD = pro || ctx.taskLevel >= 3 ? 3 : 2;
+      // Stufe 3: neue Bedienung zuerst mit bekannten Dingen; die d3-Fallen erst beim Steigern
+      // oder in der zweiten Rundenhälfte (Stufe 5 bzw. Steigern aus Stufe 2/4 sofort).
+      const maxD = pro || ctx.flow > 0 || (lv === 3 && ctx.flow === 0 && ctx.index >= 3) ? 3 : 2;
       const pool = ITEMS.filter((x) => x.d >= minD && x.d <= maxD);
       const things = pickBand(ctx, pool, n);
       const binIds = ['gelb', 'papier', 'bio', 'glas', 'rest'];
@@ -414,7 +467,7 @@
 
       const thingBtns = things.map((it) => {
         const b = el('button.mue-thing', { type: 'button', 'aria-label': it.l || it.k },
-          pic(it, 'mue-thing-e'), el('span.mue-thing-l', it.l || it.k));
+          pic(it, 'mue-thing-e'), el('span.mue-thing-l', shy(it.l || it.k)));
         b._it = it;
         b._w = 0;
         b.addEventListener('click', () => {
@@ -629,9 +682,9 @@
     const bins = ['pfand', 'gelb', 'glas', 'rest'];
     const box = el('div.prompt-box.mue-ask',
       el('span.mue-ask-pic', pic(it, 'mue-ask-e')),
-      el('div.mue-ask-col', el('p.mue-ask-l', it.l), el('p.mue-ask-q', it.pfand ? 'Siehst du das Zeichen?' : 'Pfand oder Tonne?')));
+      el('div.mue-ask-col', el('p.mue-ask-l', it.l), el('p.mue-ask-q', it.pfand ? 'Siehst du das Zeichen?' : it.mw ? 'Schau aufs Etikett!' : 'Pfand oder Tonne?')));
     ctx.stage.appendChild(box);
-    await ctx.instruct(`Wohin kommt ${it.n.replace(/ mit Pfandzeichen$/, '')}? Schau genau, ob ein Pfandzeichen darauf ist.`);
+    await ctx.instruct(`Wohin kommt ${it.n.replace(/ mit Pfandzeichen$/, '')}? Schau genau hin: Gibt es dafür Pfand?`);
     if (!ctx.active) return;
     const items = bins.map((id) => ({
       content: binNode(id), correct: id === it.b, say: BINS[id].say, aria: BINS[id].say, bin: id, className: 'mue-bintile',
@@ -645,8 +698,9 @@
       explain: (w) => (it.tr && it.tr[w.bin]) || (w.bin === 'pfand'
         ? 'Schau mal genau: Hier ist gar kein Pfandzeichen. Ohne das Zeichen nimmt der Automat nichts.'
         : explainSort(it, w.bin)),
-      hintSay: () => (it.pfand ? 'Tipp: Siehst du den grünen Kreis mit dem Pfeil? Das ist das Pfandzeichen.'
-        : 'Tipp: Hier ist kein Pfandzeichen. Woraus ist es, und ist es eine Verpackung?'),
+      hintSay: () => (it.pfand ? 'Tipp: Siehst du das Zeichen mit der Flasche, der Dose und dem Pfeil darum? Das ist das Pfandzeichen.'
+        : it.mw ? 'Tipp: Schau auf das Etikett. Da ist eine Münze, und da steht Pfand.'
+          : 'Tipp: Hier ist kein Pfandzeichen und kein Pfand auf dem Etikett. Woraus ist es, und ist es eine Verpackung?'),
       modelSay: () => `Schau: ${cap(it.n)} kommt ${BINS[it.b].dat}.`,
       onCorrect: (item, tile) => { picked = tile; },
     });
@@ -670,7 +724,7 @@
     }
     const bin = kind === 'ok' ? a.ok : a.bad;
     return el('span.mue-av',
-      el('span.mue-av-pics', U.emoji(a.thing.e, 'mue-av-e'), el('span.mue-av-arrow', '➜'), el('span.mue-av-bin', binNode(bin, { noName: true }))),
+      el('span.mue-av-pics', a.thing.svg ? svgThing(a.thing.svg[0]) : U.emoji(a.thing.e, 'mue-av-e'), el('span.mue-av-arrow', '➜'), el('span.mue-av-bin', binNode(bin, { noName: true }))),
       el('span.mue-av-l', `${a.thing.name} in ${bin === 'rest' ? 'den Restmüll' : bin === 'papier' ? 'die Papiertonne' : bin === 'bio' ? 'die Biotonne' : 'die Gelbe Tonne'}`));
   }
   async function taskAvoid(ctx) {
@@ -710,7 +764,7 @@
      Registrierung
      ====================================================================== */
   const INTRO = {
-    1: 'Wir fangen mit drei Tonnen an: die Gelbe Tonne für Verpackungen, die blaue für Papier und die braune für Obst und Gemüse.',
+    1: 'Wir fangen mit drei Tonnen an: die Gelbe Tonne für Verpackungen aus Plastik und Metall, die blaue für Papier und die braune für Obst und Gemüse.',
     2: 'Jetzt kommen alle Tonnen dazu: der Glascontainer und die graue Restmülltonne. Frag dich immer: Woraus ist das?',
     3: 'Jetzt kommt das Sortier Band! Tipp auf ein Ding und dann auf die richtige Tonne. Du kannst es auch hineinziehen.',
     4: 'Jetzt wird es kniffelig. Glas wird nach Farben sortiert. Und manche Flaschen bringst du zurück in den Laden. Das heißt Pfand.',
@@ -741,8 +795,9 @@
     },
 
     async task(ctx) {
-      // Stufen 1 und 2 haben dieselbe Bedienung (Anpassung darf wechseln); ab Stufe 3 bleibt die Art stabil.
-      const level = ctx.level <= 2 ? Math.min(2, ctx.taskLevel) : ctx.level;
+      // Die Aufgabenart hängt an ctx.level; die Anpassung (ctx.flow) steuert jede Aufgabe selbst
+      // (Stufe 1 + Steigern = nur Restmüll dazu, nicht gleich alle fünf Tonnen).
+      const level = ctx.level;
       if (ctx.index === 0) introduced = new Set();
       if (!introduced.has(level)) {
         introduced.add(level);

@@ -160,8 +160,8 @@
       <circle cx="${x}" cy="${by - 54}" r="4.6" fill="${c(state === 'yellow', '#ffcc00', '#4a4123')}"/>
       <circle cx="${x}" cy="${by - 43}" r="4.6" fill="${c(state === 'green', '#2ee86f', '#1d3d29')}"/>`;
   }
-  const pedLightNode = (green) => svg('0 0 100 210', pedLightMarkup(green), 'sch-light');
-  const carLightNode = (state) => svg('6 32 28 78', carLight(20, 108, state), 'sch-light sch-carlight');
+  const pedLightNode = (green) => svg('0 0 100 210', pedLightMarkup(green), 'swg-light');
+  const carLightNode = (state) => svg('6 32 28 78', carLight(20, 108, state), 'swg-light swg-carlight');
 
   /** Straße. Fahrbahn y 48–104, Bordstein 104, Gehweg (nah) darunter. */
   function street(o = {}) {
@@ -187,7 +187,7 @@
       <rect y="104" width="240" height="46" fill="${walk}"/>
       <rect y="102" width="240" height="5" fill="${n ? '#80838f' : '#b4b7c2'}"/>${extra}`;
   }
-  const scene = (markup) => svg('0 0 240 150', markup, 'sch-scene');
+  const scene = (markup) => svg('0 0 240 150', markup, 'swg-scene');
 
   /* --- Verkehrszeichen (viewBox 0 0 100 100), nach StVO vereinfacht --- */
   function octagon(r) {
@@ -263,7 +263,7 @@
         <path d="M74 74 Q74 70 78 70 L80 67 L86 67 L88 70 Q90 70 90 74 Z" fill="#fff"/><path d="M12 76 H90" stroke="#fff" stroke-width="2"/>`,
     },
   };
-  const signNode = (id, cls) => svg('0 0 100 100', SIGNS[id].svg, 'sch-sign ' + (cls || ''));
+  const signNode = (id, cls) => svg('0 0 100 100', SIGNS[id].svg, 'swg-sign ' + (cls || ''));
 
   /* --- Mini-Szenen als Bild-Antworten --- */
   /** Zebrastreifen: Auto fährt / bremst / steht (viewBox 0 0 120 84) */
@@ -274,14 +274,14 @@
     if (state === 'fahrt') s += car(30, 54, '#e53935', 1, { s: 0.62, speed: true });
     if (state === 'bremst') s += car(52, 54, '#e53935', 1, { s: 0.62, brake: true }) + '<g stroke="#ffffff" stroke-width="2" stroke-linecap="round"><line x1="22" y1="44" x2="30" y2="44"/><line x1="20" y1="50" x2="30" y2="50"/></g><text x="22" y="34" font-size="16" font-weight="700" fill="#ffcc00" font-family="Arial, sans-serif">!</text>';
     if (state === 'steht') s += car(56, 54, '#e53935', 1, { s: 0.62, driver: true });
-    return svg('0 0 120 84', s, 'sch-mini');
+    return svg('0 0 120 84', s, 'swg-mini');
   }
   /** Nachts: Wie gut sieht man das Kind? (viewBox 0 0 80 100) */
   function nightMini(type) {
     const o = type === 'dark' ? { dark: true, bag: '#20222c', op: 0.55 } : type === 'bright' ? { bright: true, bag: '#d9dde8' } : { vest: true, glow: true, bag: '#ff5fa2' };
     const s = '<rect width="80" height="100" fill="#141a33"/><circle cx="66" cy="14" r="6" fill="#f5f0c8"/><rect y="78" width="80" height="22" fill="#2a2d38"/>' +
       '<polygon points="0,96 80,62 80,100 0,100" fill="#fff6a0" opacity=".08"/>' + kid(40, 92, o, 1.25);
-    return svg('0 0 80 100', s, 'sch-mini sch-night');
+    return svg('0 0 80 100', s, 'swg-mini swg-night');
   }
 
   /* --- Wimmelbild-Bausteine: Felder à 80 Breite, Höhe 160 (Fahrbahn y 52–110) --- */
@@ -341,6 +341,7 @@
         { node: () => carLightNode('green'), aria: 'Ampel mit drei Lichtern', why: 'Diese Ampel hat drei runde Lichter. Sie ist für die Autos.' },
       ],
       hint: 'Such die Ampel mit dem Männchen.',
+      model: 'Ich gehe zu Fuß. Also suche ich die Ampel mit dem Männchen. Die Ampel mit drei Lichtern ist für die Autos.',
       learn: 'Die Ampel mit dem Männchen ist für dich. Die Ampel mit drei Lichtern ist für die Autos.',
       proc: 'Du hast genau auf das Männchen geachtet. Sehr aufmerksam!',
     },
@@ -353,6 +354,7 @@
         { e: '🏃', t: 'Ja, wenn ich ganz schnell renne.', why: 'Rennen macht es nicht sicherer. Schau, welche Ampel für dich gilt.' },
       ],
       hint: 'Such die Ampel mit dem Männchen. Welche Farbe hat sie?',
+      model: 'Ich suche zuerst die Ampel mit dem Männchen. Das Männchen ist rot. Das grüne Licht gehört den Autos.',
       learn: 'Für dich gilt nur die Ampel mit dem Männchen. Wenn die Autos Grün haben, hast du Rot.',
       proc: 'Du hast dich nicht vom Grün der Autoampel reinlegen lassen. Stark!',
     },
@@ -365,6 +367,7 @@
         { e: '🙈', t: 'Ich gehe, wenn keiner guckt.', why: 'Die Regel gilt immer, auch wenn keiner zuschaut. Kleine Kinder machen dir alles nach.' },
       ],
       hint: 'Was bedeutet das rote Männchen? Es steht still.',
+      model: 'Ich schaue auf mein Männchen. Es ist rot. Rot heißt warten, auch wenn gerade kein Auto kommt.',
       learn: 'Bei Rot wartest du immer, auch wenn kein Auto kommt. Du bist ein Vorbild für kleinere Kinder.',
     },
     {
@@ -376,6 +379,7 @@
         { e: '🏠', t: 'Ich gehe wieder nach Hause.', why: 'Nach Hause musst du nicht. Es gibt einen sicheren Weg über die Straße.' },
       ],
       hint: 'Das Auto blinkt. Hat der Fahrer dich wirklich gesehen?',
+      model: 'Das Auto blinkt. Es will um die Ecke, genau über meinen Weg. Ich weiß nicht, ob der Fahrer mich sieht. Also schaue ich, ob es anhält.',
       learn: 'Auch bei Grün schaust du nach abbiegenden Autos. Erst wenn das Auto anhält, gehst du.',
       proc: 'Du hast das blinkende Auto bemerkt. Wie ein echter Verkehrsprofi!',
     },
@@ -388,6 +392,7 @@
         { e: '🧍', t: 'Ich bleibe mitten auf der Straße stehen.', why: 'Mitten auf der Straße ist kein sicherer Platz zum Warten.' },
       ],
       hint: 'Die Autos warten noch einen Moment. Wo ist der nächste sichere Platz?',
+      model: 'Ich bin schon in der Mitte. Zurück ist genauso weit wie nach vorn. Die Autos warten noch kurz, also gehe ich zügig weiter.',
       learn: 'Wird die Ampel rot, wenn du schon gehst, gehst du zügig weiter. Die Autos warten, bis du drüben bist.',
     },
     {
@@ -399,6 +404,7 @@
         { e: '🏃', t: 'Ich gehe bei Rot.', why: 'Bei Rot ist die Straße nicht für dich, auch wenn es lange dauert.' },
       ],
       hint: 'Schau mal auf den gelben Kasten an der Ampel.',
+      model: 'Ich schaue mir die Ampel genau an. Da hängt ein gelber Kasten mit einem Knopf. Den drücke ich.',
       learn: 'An vielen Ampeln gibt es einen Knopf. Du drückst ihn und wartest geduldig auf Grün.',
     },
     {
@@ -407,6 +413,7 @@
         { sign: 'ampel', ok: true }, { sign: 'kinder' }, { sign: 'stopp' },
       ],
       hint: 'Schau in die Dreiecke. Wo siehst du drei kleine Lichter?',
+      model: 'Ich schaue in die Dreiecke. In einem ist eine kleine Ampel mit drei Lichtern.',
       learn: 'Dieses Schild warnt die Autofahrer: Achtung, gleich kommt eine Ampel!',
     },
   ];
@@ -416,11 +423,12 @@
     {
       k: 'Zebra: wann gehen', kind: 'card', q: 'Am Zebrastreifen: Wann darfst du losgehen?', pics: true,
       opts: [
-        { node: () => zebraMini('steht'), label: 'steht', aria: 'Das Auto steht', ok: true, cls: 'sch-minitile' },
-        { node: () => zebraMini('bremst'), label: 'bremst', aria: 'Das Auto bremst', cls: 'sch-minitile', why: 'Das Auto bremst gerade. Es rollt aber noch.' },
-        { node: () => zebraMini('fahrt'), label: 'fährt', aria: 'Das Auto fährt', cls: 'sch-minitile', why: 'Das Auto fährt noch schnell. Es hat noch nicht angehalten.' },
+        { node: () => zebraMini('steht'), label: 'steht', aria: 'Das Auto steht', ok: true, cls: 'swg-minitile' },
+        { node: () => zebraMini('bremst'), label: 'bremst', aria: 'Das Auto bremst', cls: 'swg-minitile', why: 'Das Auto bremst gerade. Es rollt aber noch.' },
+        { node: () => zebraMini('fahrt'), label: 'fährt', aria: 'Das Auto fährt', cls: 'swg-minitile', why: 'Das Auto fährt noch schnell. Es hat noch nicht angehalten.' },
       ],
       hint: 'Schau auf die Striche hinter den Autos. Welches Auto bewegt sich gar nicht mehr?',
+      model: 'Ich schaue auf die Striche hinter den Autos. Striche heißen: Das Auto rollt noch. Ein Auto hat gar keine Striche. Es steht.',
       learn: 'Am Zebrastreifen gehst du erst, wenn das Auto ganz steht und der Fahrer dich sieht.',
       proc: 'Du hast genau geschaut, ob das Auto wirklich steht. Sehr gut!',
     },
@@ -433,6 +441,7 @@
         { e: '🐢', t: 'Das Auto fährt langsamer.', why: 'Langsamer heißt noch nicht stehen. Das Auto kann noch weiterfahren.' },
       ],
       hint: 'Schau dem Fahrer in die Augen. Was macht das Auto?',
+      model: 'Ich schaue dem Fahrer in die Augen. Schaut er mich an, und das Auto hält, dann hat er mich gesehen.',
       learn: 'Schau dem Fahrer in die Augen. Wenn er dich anschaut und das Auto steht, weißt du: Er hat dich gesehen.',
     },
     {
@@ -444,26 +453,29 @@
       ],
       emoji: '🚲',
       hint: 'Für wen ist der Zebrastreifen gemacht?',
+      model: 'Der Zebrastreifen ist für Fußgänger. Auf dem Rad bin ich kein Fußgänger. Wenn ich schiebe, schon.',
       learn: 'Am Zebrastreifen steigst du ab und schiebst dein Fahrrad. Dann bist du ein Fußgänger.',
     },
     {
-      k: 'Schild Zebrastreifen', kind: 'card', q: 'Was bedeutet dieses Schild?', sign: 'zebra', read: true,
+      k: 'Schild Zebrastreifen', kind: 'card', q: 'Was bedeutet dieses Schild?', sign: 'zebra',
       opts: [
         { e: '🦓', t: 'Hier ist ein Zebrastreifen.', ok: true },
         { e: '🎠', t: 'Hier ist ein Spielplatz.', why: 'Auf einem Spielplatz-Schild spielen Kinder. Hier ist etwas anderes.' },
         { e: '🚲', t: 'Hier fahren nur Fahrräder.', why: 'Ein Fahrrad ist auf diesem Schild nicht zu sehen.' },
       ],
       hint: 'Schau genau: Worüber geht der Mensch auf dem Schild?',
+      model: 'Ich schaue, was auf dem Schild ist. Ein Mensch geht über weiße Streifen. Das ist ein Zebrastreifen.',
       learn: 'Das Schild zeigt einen Zebrastreifen. Hier müssen die Autos Fußgänger rüberlassen.',
     },
     {
-      k: 'Schild Gehweg', kind: 'card', q: 'Was bedeutet dieses Schild?', sign: 'gehweg', read: true,
+      k: 'Schild Gehweg', kind: 'card', q: 'Was bedeutet dieses Schild?', sign: 'gehweg',
       opts: [
         { e: '🚶', t: 'Hier gehen Fußgänger.', ok: true },
         { e: '🚲', t: 'Hier fahren Fahrräder.', why: 'Auf diesem Schild ist kein Fahrrad.' },
         { e: '🚌', t: 'Hier hält der Bus.', why: 'Das Bus-Schild ist gelb und grün mit einem großen H.' },
       ],
       hint: 'Wer ist auf dem Schild zu sehen?',
+      model: 'Ich schaue, wer auf dem Schild ist. Da gehen ein Erwachsener und ein Kind. Kein Fahrrad und kein Bus.',
       learn: 'Das blaue runde Schild mit den zwei Menschen zeigt: Dieser Weg ist für Fußgänger.',
     },
   ];
@@ -495,6 +507,7 @@
         { e: '💡', t: 'Das Licht ist für mich zum Sehen.', why: 'Das Licht ist ein Zeichen. Es verrät, wohin das Auto gleich fährt.' },
       ],
       hint: 'Das Licht ist hinten am Auto. In welche Richtung fährt es wohl?',
+      model: 'Das weiße Licht ist hinten am Auto. Es leuchtet, wenn das Auto nach hinten fahren will.',
       learn: 'Weißes Licht hinten heißt: Das Auto fährt rückwärts. Bleib stehen, bis es weg ist.',
       proc: 'Du hast das kleine weiße Licht entdeckt. Toll aufgepasst!',
     },
@@ -507,47 +520,62 @@
         { e: '↩️', t: 'Sofort hinter dem Bus.', why: 'Auch hinter dem Bus bist du versteckt. Die Autos sehen dich nicht.' },
       ],
       hint: 'Kannst du an dem Bus vorbei die Autos sehen?',
+      model: 'Ich überlege: Kann ich an dem großen Bus vorbeischauen? Nein. Also sehen mich auch die Autos nicht.',
       learn: 'Warte, bis der Bus weggefahren ist. Dann siehst du die Straße wieder, und die Autos sehen dich.',
     },
     {
-      k: 'Schild Kinder', kind: 'card', q: 'Was bedeutet dieses Schild?', sign: 'kinder', read: true,
+      k: 'Schild Kinder', kind: 'card', q: 'Was bedeutet dieses Schild?', sign: 'kinder',
       opts: [
         { e: '⚠️', t: 'Achtung, hier sind oft Kinder!', ok: true },
         { e: '🧒', t: 'Hier dürfen nur Kinder gehen.', why: 'Das Schild verbietet niemandem den Weg. Es ist ein Dreieck. Dreiecke warnen.' },
         { e: '✋', t: 'Hier müssen alle anhalten.', why: 'Das Schild zum Anhalten ist rot mit acht Ecken.' },
       ],
       hint: 'Ein Dreieck mit rotem Rand warnt die Autofahrer. Wovor wohl?',
+      model: 'Das Schild ist ein Dreieck mit rotem Rand. Dreiecke warnen. Im Dreieck laufen zwei Kinder.',
       learn: 'Das Dreieck warnt die Autofahrer: Achtung, Kinder! Oft steht es vor Schulen und Kindergärten.',
     },
     {
-      k: 'Schild Spielstraße', kind: 'card', q: 'Was bedeutet dieses Schild?', sign: 'spiel', read: true,
+      k: 'Schild Spielstraße', kind: 'card', q: 'Was bedeutet dieses Schild?', sign: 'spiel',
       opts: [
         { e: '⚽', t: 'Hier dürfen Kinder spielen. Autos fahren ganz langsam.', ok: true },
         { e: '🏟️', t: 'Hier ist ein Fußballplatz.', why: 'Auf dem Schild sind auch ein Haus und ein Auto. Es ist eine Straße.' },
         { e: '🚫', t: 'Hier dürfen keine Kinder hin.', why: 'Schau genau: Auf dem Schild spielt ein Kind.' },
       ],
       hint: 'Wer ist auf dem Schild groß, und was ist ganz klein?',
+      model: 'Ich schaue genau: Das Kind ist groß in der Mitte, das Auto ist ganz klein. Hier sind die Kinder wichtig.',
       learn: 'In der Spielstraße dürfen Kinder spielen. Autos müssen Schritttempo fahren. Trotzdem passt du auf.',
     },
     {
-      k: 'Schild Stopp', kind: 'card', q: 'Was bedeutet dieses Schild?', sign: 'stopp', read: true,
+      k: 'Schild Stopp', kind: 'card', q: 'Was bedeutet dieses Schild?', sign: 'stopp',
       opts: [
         { e: '✋', t: 'Autos müssen hier ganz anhalten.', ok: true },
         { e: '🚌', t: 'Hier ist eine Bushaltestelle.', why: 'Das Schild für den Bus ist gelb mit grünem Rand.' },
         { e: '💨', t: 'Hier darf man schnell fahren.', why: 'Rot bedeutet bei Schildern meistens: Achtung oder halt.' },
       ],
       hint: 'Das Schild ist rot und hat acht Ecken. Was steht darauf?',
+      model: 'Das Schild ist rot und hat acht Ecken. Darauf steht Stopp. Das heißt anhalten.',
       learn: 'Am Stoppschild müssen alle Autos ganz anhalten. Schau trotzdem, ob sie wirklich stehen.',
     },
   ];
 
+  /** Ranzen mit leuchtenden Reflektorstreifen (viewBox 0 0 60 60) */
+  function glowBagNode() {
+    const s = '<g opacity=".55" stroke="#fff59d" stroke-width="2.4" stroke-linecap="round"><line x1="4" y1="34" x2="9" y2="34"/><line x1="51" y1="34" x2="56" y2="34"/><line x1="5" y1="48" x2="9" y2="47"/><line x1="51" y1="47" x2="55" y2="48"/></g>' +
+      '<rect x="20" y="4" width="20" height="10" rx="5" fill="none" stroke="#1f5fbf" stroke-width="3"/>' +
+      '<rect x="11" y="10" width="38" height="46" rx="8" fill="#4a90e2"/><path d="M11 18 Q11 10 19 10 H41 Q49 10 49 18 V26 H11 Z" fill="#1f5fbf"/>' +
+      '<rect x="27" y="22" width="6" height="7" rx="2" fill="#ffd400"/>' +
+      '<rect x="9" y="31" width="42" height="6" rx="2" fill="#fffde0" stroke="#ffe14d" stroke-width="1.5"/>' +
+      '<rect x="9" y="44" width="42" height="6" rx="2" fill="#fffde0" stroke="#ffe14d" stroke-width="1.5"/>';
+    return svg('0 0 60 60', s, 'swg-mpic');
+  }
+  // Sichtbar im Dunkeln: eindeutige Bilder; Ablenker sind typische Fehlvorstellungen
   const MULTI_ITEMS = [
     { e: '🦺', t: 'Warnweste', ok: true, yes: 'Ja! Die Warnweste leuchtet im Scheinwerferlicht.' },
-    { e: '🎒', t: 'Ranzen mit Leuchtstreifen', ok: true, yes: 'Ja! Die Leuchtstreifen am Ranzen werfen das Licht zurück.' },
-    { e: '🔦', t: 'Blinklicht', ok: true, yes: 'Ja! Ein kleines Blinklicht sieht man schon von weitem.' },
+    { node: glowBagNode, t: 'Ranzen mit Leuchtstreifen', ok: true, yes: 'Ja! Die Leuchtstreifen am Ranzen werfen das Licht zurück.' },
+    { e: '🔦', t: 'Taschenlampe', ok: true, yes: 'Ja! Eine Taschenlampe leuchtet. Das Licht sieht man schon von weitem.' },
     { e: '🧥', t: 'Dunkle Jacke', why: 'Eine dunkle Jacke sieht man im Dunkeln kaum.' },
-    { e: '🕶️', t: 'Sonnenbrille', why: 'Mit einer Sonnenbrille siehst du selbst schlechter. Und gesehen wirst du davon nicht.' },
-    { e: '🎩', t: 'Schwarzer Hut', why: 'Ein schwarzer Hut verschwindet im Dunkeln.' },
+    { e: '👋', t: 'Dem Auto winken', why: 'Im Dunkeln sieht der Fahrer deine Hand kaum. Winken leuchtet nicht.' },
+    { e: '👖', t: 'Dunkle Hose', why: 'Eine dunkle Hose verschwindet im Dunkeln. Sie wirft kein Licht zurück.' },
   ];
 
   const L4 = [
@@ -560,6 +588,7 @@
         { node: () => nightMini('dark'), aria: 'Kind in dunkler Kleidung', why: 'Dunkle Sachen verschwinden im Dunkeln fast ganz.' },
       ],
       hint: 'Was leuchtet, wenn das Licht vom Auto darauf fällt?',
+      model: 'Ich denke an das Licht vom Auto. Fällt es auf Leuchtstreifen, leuchten sie hell zurück.',
       learn: 'Leuchtstreifen werfen das Licht zurück. Mit ihnen sehen dich Autofahrer schon von ganz weit weg.',
       proc: 'Du hast an das Licht der Autos gedacht. Sehr schlau!',
     },
@@ -572,6 +601,7 @@
         { e: '🚫', t: 'Bei Regen fahren keine Autos.', why: 'Autos fahren auch bei Regen. Viele Eltern fahren dann sogar mit dem Auto.' },
       ],
       hint: 'Denk an eine nasse Rutsche. Wie schnell kommst du da zum Stehen?',
+      model: 'Ich denke an eine nasse Rutsche. Da rutscht man weiter. Ein Auto auf nasser Straße auch.',
       learn: 'Auf nasser Straße rutschen die Autos länger. Darum wartest du lieber einmal mehr.',
     },
     {
@@ -583,19 +613,48 @@
       ],
       emoji: '🌙',
       hint: 'Was sieht man im Licht der Autos am besten?',
+      model: 'Ich denke an das Licht vom Auto. Helle Sachen und Leuchtstreifen sieht man am besten. Schwarz verschwindet im Dunkeln.',
       learn: 'Helle Kleidung und Leuchtstreifen machen dich im Dunkeln gut sichtbar.',
     },
+    {
+      k: 'Ich sehe das Auto', kind: 'card', q: 'Es ist dunkel. Du siehst die hellen Lichter von einem Auto. Sieht der Fahrer dich auch?',
+      scene: () => street({ night: true }) + car(56, 100, '#4a90e2', 1, { beam: true }) + kid(196, 140, { dark: true, bag: '#20222c', op: 0.6 }),
+      opts: [
+        { e: '🤔', t: 'Vielleicht nicht. Ich warte lieber.', ok: true },
+        { e: '👍', t: 'Ja. Ich sehe ihn, also sieht er mich.', why: 'Das Auto hat helle Lampen, darum siehst du es. Du selbst leuchtest nicht. Ohne Leuchtstreifen sieht der Fahrer dich erst ganz spät.' },
+        { e: '👋', t: 'Ja, wenn ich ihm winke.', why: 'Im Dunkeln sieht der Fahrer deine Hand kaum. Winken macht dich nicht sichtbar.' },
+      ],
+      hint: 'Das Auto hat helle Lampen. Hast du auch Lampen an dir?',
+      model: 'Ich denke nach: Das Auto leuchtet, darum sehe ich es. Ich leuchte nicht. Also sieht der Fahrer mich vielleicht gar nicht.',
+      learn: 'Du siehst das Auto, weil es helle Lichter hat. Das heißt nicht, dass der Fahrer dich sieht. Darum wartest du und trägst Leuchtsachen.',
+      proc: 'Du hast dich nicht von den hellen Autolichtern reinlegen lassen. Sehr schlau!',
+    },
+    {
+      k: 'Fahrradlicht', kind: 'card', q: 'Es wird dunkel, und du fährst mit Papa Fahrrad. Was braucht dein Fahrrad jetzt?',
+      emoji: '🚲',
+      opts: [
+        { e: '💡', t: 'Licht vorne und hinten.', ok: true },
+        { e: '🔔', t: 'Nur eine laute Klingel.', why: 'Eine Klingel hört man. Aber im Dunkeln sieht dich damit niemand.' },
+        { e: '🎀', t: 'Bunte Bänder am Lenker.', why: 'Bänder leuchten nicht. Im Dunkeln sieht man sie nicht.' },
+      ],
+      hint: 'Was hat ein Auto im Dunkeln vorne und hinten an?',
+      model: 'Ich denke an ein Auto im Dunkeln. Es hat vorne und hinten Licht. So sehen es alle. Das braucht mein Fahrrad auch.',
+      learn: 'Im Dunkeln braucht dein Fahrrad Licht: vorne weiß und hinten rot. Die Reflektoren an Rädern und Pedalen leuchten zurück.',
+    },
   ];
-  // Schilder-Profi (Stufe 4): Bedeutung hören, Schild finden – mit ähnlichen Ablenkern
+  // Schilder-Profi (Stufe 4): Bedeutung hören, Schild finden – mit ähnlichen Ablenkern.
+  // Nur zwei Pool-Einträge (Schild wird in der Aufgabe gewählt), damit die Dunkelheit Schwerpunkt der Stufe bleibt.
   const SIMILAR = { zebra: ['gehweg', 'radweg', 'spiel'], gehweg: ['radweg', 'zebra', 'spiel'], radweg: ['gehweg', 'zebra', 'spiel'], stopp: ['kinder', 'ampel', 'zebra'], kinder: ['ampel', 'stopp', 'spiel'], ampel: ['kinder', 'stopp', 'zebra'], spiel: ['zebra', 'gehweg', 'kinder'] };
-  Object.keys(SIGNS).forEach((id) => {
-    L4.push({
-      k: 'Schild finden: ' + SIGNS[id].title, kind: 'card', q: SIGNS[id].mean + ' Welches Schild passt?', pics: true,
-      signPick: id,
-      hint: SIGNS[id].look,
-      learn: SIGNS[id].mean,
-    });
-  });
+  L4.push(
+    { k: 'Schilder-Profi: rot', kind: 'card', pics: true, signGroup: ['stopp', 'kinder', 'ampel'] },
+    { k: 'Schilder-Profi: blau', kind: 'card', pics: true, signGroup: ['zebra', 'gehweg', 'radweg', 'spiel'] }
+  );
+  /** Schilder-Profi: konkretes Schild für diese Aufgabe festlegen. */
+  function signTask(sc) {
+    const id = U.pickFresh('swg-sign-' + sc.k, sc.signGroup, 2);
+    const S = SIGNS[id];
+    return Object.assign({}, sc, { signPick: id, q: S.mean + ' Welches Schild passt?', hint: S.look, model: `Ich höre genau hin und suche das passende Bild. ${S.look}`, learn: S.mean });
+  }
 
   // Stufe 5: Notruf
   const NUM_OPTS = {
@@ -605,9 +664,9 @@
   };
   const NUMBER_CASES = [
     { k: 'Nummer: Rauch', q: 'Aus einem Fenster kommt dicker, schwarzer Rauch.', emoji: '🔥', ans: 'n112', learn: `Bei Feuer rufst du die Feuerwehr: ${S112}.` },
-    { k: 'Nummer: Sturz', q: 'Ein Kind ist vom Klettergerüst gefallen. Es kann den Arm nicht bewegen.', emoji: '🤕', ans: 'n112', learn: `Wenn jemand verletzt ist, kommt der Rettungswagen: ${S112}. Hol auch einen Erwachsenen.` },
-    { k: 'Nummer: Fahrraddieb', q: 'Jemand bricht ein fremdes Fahrrad auf und fährt damit weg.', emoji: '🚲', ans: 'n110', learn: `Bei Dieben hilft die Polizei: ${S110}.` },
-    { k: 'Nummer: Blechschaden', q: 'Zwei Autos sind zusammengestoßen. Niemand ist verletzt. Die Fahrer streiten laut.', emoji: '🚗', ans: 'n110', learn: `Wenn niemand verletzt ist, hilft die Polizei: ${S110}.` },
+    { k: 'Nummer: Sturz', q: 'Ein Kind ist vom Klettergerüst gefallen. Es kann den Arm nicht bewegen. Kein Erwachsener ist in der Nähe.', emoji: '🤕', ans: 'n112', learn: `Wenn jemand verletzt ist, kommt der Rettungswagen: ${S112}. Ist ein Erwachsener in der Nähe, holst du ihn zuerst.` },
+    { k: 'Nummer: Fahrraddieb', q: 'Jemand bricht ein fremdes Fahrrad auf und fährt damit weg. Kein Erwachsener ist da.', emoji: '🚲', ans: 'n110', learn: `Bei Dieben hilft die Polizei: ${S110}. Bleib weg von dem Dieb.` },
+    { k: 'Nummer: Unfallflucht', q: 'Ein Auto fährt gegen ein parkendes Auto und fährt einfach weiter. Niemand ist verletzt. Kein Erwachsener ist da.', emoji: '🚗', ans: 'n110', learn: `Bei einem Unfall ohne Verletzte und bei Dieben hilft die Polizei: ${S110}.` },
     { k: 'Nummer: Ball', q: 'Dein Ball ist über den Zaun in den Garten geflogen.', emoji: '⚽', ans: 'none', learn: 'Das ist kein Notfall. Frag lieber einen Erwachsenen, ob er dir hilft.' },
     { k: 'Nummer: Schlüssel', q: 'Du hast deinen Hausschlüssel vergessen.', emoji: '🔑', ans: 'none', learn: 'Das ist kein Notfall. Ruf Mama oder Papa an, oder geh zu den Nachbarn.' },
     { k: 'Nummer: Spaß', q: 'Ein Kind will zum Spaß beim Notruf anrufen.', emoji: '😜', ans: 'none', learn: 'Der Notruf ist nie zum Spaß. Sonst fehlt die Hilfe für einen echten Notfall.' },
@@ -632,15 +691,15 @@
       wieviel: { t: 'Nur meine Oma ist verletzt.' },
     },
     {
-      k: 'Notruf: Feuer', emoji: '🔥', story: 'Neben dem Spielplatz brennt ein Mülleimer. Der Rauch wird immer mehr. Niemand löscht.',
+      k: 'Notruf: Feuer', emoji: '🔥', story: 'Neben dem Spielplatz brennt ein Mülleimer. Der Rauch wird immer mehr. Kein Erwachsener ist in der Nähe.',
       wo: { t: 'Am Spielplatz in der Parkstraße.' },
       was: { t: 'Ein Mülleimer brennt.' },
       wieviel: { t: 'Niemand ist verletzt.' },
     },
     {
-      k: 'Notruf: Unfall', emoji: '🚗', story: 'An der Kreuzung sind zwei Autos zusammengestoßen. Eine Frau hält sich den Arm und weint.',
+      k: 'Notruf: Unfall', emoji: '🚗', story: 'An der Kreuzung ist ein Auto gegen einen Baum gefahren. Die Fahrerin hält sich den Arm und weint. Sonst ist niemand da.',
       wo: { t: 'An der Kreuzung Hauptstraße und Schulstraße.' },
-      was: { t: 'Zwei Autos sind zusammengestoßen. Eine Frau ist verletzt.' },
+      was: { t: 'Ein Auto ist gegen einen Baum gefahren. Die Frau ist verletzt.' },
       wieviel: { t: 'Eine Frau ist verletzt.' },
     },
   ];
@@ -700,7 +759,7 @@
         if (!ctx.active) return;
       }
       const t = pickTask(ctx, level);
-      ctx.stage.classList.add('sch-stage');
+      ctx.stage.classList.add('swg-stage');
       if (t.kind === 'look') return lookTask(ctx, t);
       if (t.kind === 'hunt') return huntTask(ctx, t);
       if (t.kind === 'spot') return spotTask(ctx, t);
@@ -727,25 +786,31 @@
   }
 
   const ha = (n) => (n <= 2 ? 2 : n === 3 ? 1 : 2);
-  const okWord = () => U.pickFresh('sch-ok', OK, 2)[0] || 'Richtig!';
+  const okWord = () => U.pickFresh('swg-ok', OK, 2) || 'Richtig!';
   function praiseSay(ctx, sc, learn) {
     if (ctx.modelShown) return `Genau. ${learn}`;
     if (ctx.wrongCount === 0 && U.chance(0.3)) return `${sc.proc || U.pick(PROC)} ${learn}`;
     return `${okWord()} ${learn}`;
   }
 
-  function cardContent(o) {
-    if (o.big) return el('span.sch-ci.sch-numcard', el('span.sch-big' + (o.none ? '.sch-big-none' : ''), o.big), el('span.sch-ct', o.t));
-    return el('span.sch-ci', o.e ? U.emoji(o.e, 'sch-ce') : null, el('span.sch-ct', o.t));
+  /** Textkarte; noEmoji beim Selbstlesen, damit das Bild die Antwort nicht verrät. */
+  function cardContent(o, noEmoji) {
+    if (o.big) return el('span.swg-ci.swg-numcard', el('span.swg-big' + (o.none ? '.swg-big-none' : ''), o.big), el('span.swg-ct', o.t));
+    return el('span.swg-ci', o.e && !noEmoji ? U.emoji(o.e, 'swg-ce') : null, el('span.swg-ct', o.t));
+  }
+  /** Neue Auswahl im selben Container: Sperre der vorigen Auswahl aufheben (.choices.locked blockiert Taps). */
+  function resetBox(box) {
+    U.clear(box);
+    box.classList.remove('locked');
   }
 
   function layout(ctx, qText, fig) {
-    const wrap = el('div.sch-wrap' + (fig ? '' : '.sch-nofig'));
-    const left = el('div.sch-left');
-    const q = el('div.sch-q', el('span.sch-qt', qText));
+    const wrap = el('div.swg-wrap' + (fig ? '' : '.swg-nofig'));
+    const left = el('div.swg-left');
+    const q = el('div.swg-q', el('span.swg-qt', qText));
     left.appendChild(q);
-    if (fig) left.appendChild(el('div.sch-fig', fig));
-    const box = el('div.choices.sch-opts');
+    if (fig) left.appendChild(el('div.swg-fig', fig));
+    const box = el('div.choices.swg-opts');
     wrap.append(left, box);
     ctx.stage.appendChild(wrap);
     return { wrap, left, q, box };
@@ -753,10 +818,11 @@
 
   /* ---------------- Bild-/Textkarten-Aufgabe ---------------- */
   async function cardTask(ctx, sc) {
+    if (sc.signGroup) sc = signTask(sc);
     let fig = null;
     if (sc.scene) fig = scene(sc.scene());
-    else if (sc.sign) fig = signNode(sc.sign, 'sch-sign-big');
-    else if (sc.emoji) fig = U.emoji(sc.emoji, 'sch-figemoji');
+    else if (sc.sign) fig = signNode(sc.sign, 'swg-sign-big');
+    else if (sc.emoji) fig = U.emoji(sc.emoji, 'swg-figemoji');
     let opts = sc.opts;
     if (sc.signPick) {
       const n = ctx.flow > 0 ? 3 : 2;
@@ -770,19 +836,20 @@
     }
     const L = layout(ctx, sc.q, fig);
     const pics = !!sc.pics;
-    L.box.classList.add(pics ? 'sch-picopts' : 'sch-cardopts');
-    if (pics && opts.length > 3) L.box.classList.add('sch-four');
-    if (opts.some((o) => o.cls === 'sch-minitile')) L.box.classList.add('sch-minis');
+    // Vorlesen: auf Stufe 1–3 liest Flo die Antworten vor; ab Stufe 4 liest das Kind selbst (🔊 hilft).
+    // Beim Selbstlesen ohne Emoji, sonst verrät das Bild die Antwort.
+    const readSelf = !pics && ctx.taskLevel >= 4 && ctx.flow >= 0;
+    const nameFirst = !pics && !readSelf;
+    L.box.classList.add(pics ? 'swg-picopts' : 'swg-cardopts');
+    if (pics && opts.length > 3) L.box.classList.add('swg-four');
+    if (opts.some((o) => o.cls === 'swg-minitile')) L.box.classList.add('swg-minis');
     const items = opts.map((o) => {
       if (o.sign) {
-        return { content: signNode(o.sign), correct: !!o.ok, className: 'sch-pic sch-signtile', aria: SIGNS[o.sign].title, sign: o.sign, why: o.why };
+        return { content: signNode(o.sign), correct: !!o.ok, className: 'swg-pic swg-signtile', aria: SIGNS[o.sign].title, sign: o.sign, why: o.why };
       }
-      if (o.node) return { content: o.node(), correct: !!o.ok, className: 'sch-pic' + (o.cls ? ' ' + o.cls : ''), aria: o.aria, label: o.label, why: o.why };
-      return { content: cardContent(o), correct: !!o.ok, className: 'sch-card', say: o.s || o.t, why: o.why };
+      if (o.node) return { content: o.node(), correct: !!o.ok, className: 'swg-pic' + (o.cls ? ' ' + o.cls : ''), aria: o.aria, label: o.label, why: o.why };
+      return { content: cardContent(o, readSelf), correct: !!o.ok, className: 'swg-card', say: o.s || o.t, why: o.why };
     });
-    // Vorlesen: auf Stufe 1–3 liest Flo die Antworten vor; ab Stufe 4 liest das Kind selbst (🔊 hilft)
-    const readSelf = !pics && (ctx.taskLevel >= 4 || sc.read) && ctx.flow >= 0;
-    const nameFirst = !pics && !readSelf;
     const spoken = sc.qs || sc.q;
     await ctx.instruct(readSelf ? `${spoken} Lies selbst. Der Lautsprecher hilft dir.` : spoken);
     if (!ctx.active) return;
@@ -799,10 +866,12 @@
         return wr.why || 'Schau noch einmal genau hin.';
       },
       hintSay: () => sc.hint,
+      // Vormachen mit lautem Denken: erst die Strategie, dann die Antwort
       modelSay: () => {
-        if (right.sign) return `Schau, hier ist ${SIGNS[right.sign].name}. ${SIGNS[right.sign].look} Tipp es an.`;
-        if (right.say) return `Schau, diese Antwort passt: ${right.say} Tipp sie an.`;
-        return 'Schau, dieses Bild passt. Tipp es an.';
+        const think = `Ich zeige es dir. ${sc.model || sc.hint}`;
+        if (right.sign) return `${think} Darum passt ${SIGNS[right.sign].name}. Tipp es an.`;
+        if (right.say) return `${think} Darum passt diese Antwort: ${right.say} Tipp sie an.`;
+        return `${think} Darum passt dieses Bild. Tipp es an.`;
       },
     });
     if (!ctx.active) return;
@@ -812,27 +881,27 @@
   /* ---------------- Stufe 2: Links – rechts – links legen ---------------- */
   function crossMarkup() {
     return street() +
-      `<polygon class="sch-look sch-look-l" points="120,98 0,50 0,104" fill="#fff59d" opacity="0"/>
-       <polygon class="sch-look sch-look-r" points="120,98 240,50 240,104" fill="#fff59d" opacity="0"/>
-       <g class="sch-car sch-car-l" style="transform: translate(-70px, 0)">${car(0, 100, '#e53935', 1)}</g>
-       <g class="sch-car sch-car-r" style="transform: translate(310px, 0)">${car(0, 72, '#4a90e2', -1)}</g>
-       <g class="sch-walker">${kid(120, 140, { back: true, shirt: '#3dbe6b', bag: '#ff8a3d' })}</g>`;
+      `<polygon class="swg-look swg-look-l" points="120,98 0,50 0,104" fill="#fff59d" opacity="0"/>
+       <polygon class="swg-look swg-look-r" points="120,98 240,50 240,104" fill="#fff59d" opacity="0"/>
+       <g class="swg-car swg-car-l" style="transform: translate(-70px, 0)">${car(0, 100, '#e53935', 1)}</g>
+       <g class="swg-car swg-car-r" style="transform: translate(310px, 0)">${car(0, 72, '#4a90e2', -1)}</g>
+       <g class="swg-walker">${kid(120, 140, { back: true, shirt: '#3dbe6b', bag: '#ff8a3d' })}</g>`;
   }
 
   async function lookTask(ctx, t) {
     const want = ['l', 'r', 'l'];
     const sv = scene(crossMarkup());
     const L = layout(ctx, 'Wohin schaust du? Lege die Reihenfolge.', sv);
-    L.box.classList.add('sch-lookbox');
-    const slots = want.map(() => el('div.sch-slot', '?'));
-    const slotRow = el('div.sch-slots', ...slots);
-    const btnL = el('button.tile.sch-dir', { type: 'button', 'aria-label': 'links' }, U.emoji('⬅️'), el('span.label', 'links'));
-    const btnR = el('button.tile.sch-dir', { type: 'button', 'aria-label': 'rechts' }, U.emoji('➡️'), el('span.label', 'rechts'));
-    const btnRow = el('div.sch-dirs', btnL, btnR);
+    L.box.classList.add('swg-lookbox');
+    const slots = want.map(() => el('div.swg-slot', '?'));
+    const slotRow = el('div.swg-slots', ...slots);
+    const btnL = el('button.tile.swg-dir', { type: 'button', 'aria-label': 'links' }, U.emoji('⬅️'), el('span.label', 'links'));
+    const btnR = el('button.tile.swg-dir', { type: 'button', 'aria-label': 'rechts' }, U.emoji('➡️'), el('span.label', 'rechts'));
+    const btnRow = el('div.swg-dirs', btnL, btnR);
     L.box.append(slotRow, btnRow);
     const look = (side) => {
-      sv.querySelectorAll('.sch-look').forEach((n) => n.setAttribute('opacity', '0'));
-      if (side) sv.querySelector('.sch-look-' + side).setAttribute('opacity', '0.45');
+      sv.querySelectorAll('.swg-look').forEach((n) => n.setAttribute('opacity', '0'));
+      if (side) sv.querySelector('.swg-look-' + side).setAttribute('opacity', '0.45');
     };
     const btnOf = (s) => (s === 'l' ? btnL : btnR);
     const WHY = [
@@ -857,7 +926,7 @@
           ctx.unhint(btnL); ctx.unhint(btnR);
           LT.sfx.play('pop');
           slots[step].textContent = side === 'l' ? '⬅️' : '➡️';
-          slots[step].classList.add('sch-slot-ok');
+          slots[step].classList.add('swg-slot-ok');
           look(side);
           step++;
           mark();
@@ -881,7 +950,7 @@
     });
     if (!ctx.active) return;
     ctx.markTest(btnL, false); ctx.markTest(btnR, false);
-    btnRow.classList.add('sch-done');
+    btnRow.classList.add('swg-done');
     await ctx.correct(slotRow, {
       say: firstTryLook.ok && U.chance(0.3)
         ? 'Du hast ganz ruhig links, rechts, links geschaut. Wie ein echtes Schulkind!'
@@ -891,7 +960,7 @@
 
     // Kommt ein Auto? (wenn es gut läuft: immer)
     const carSide = ctx.flow > 0 ? U.pick(['l', 'r']) : U.pick([null, 'l', 'r']);
-    const carEl = carSide ? sv.querySelector('.sch-car-' + carSide) : null;
+    const carEl = carSide ? sv.querySelector('.swg-car-' + carSide) : null;
     if (carEl) {
       look(carSide);
       carEl.style.transition = 'transform ' + (1.2 * LT.config.speed + 0.01) + 's ease-out';
@@ -900,19 +969,21 @@
       if (!ctx.active) return;
     }
     const decide = async (carNow) => {
-      U.clear(L.box);
-      L.q.querySelector('.sch-qt').textContent = carNow ? 'Da kommt ein Auto! Darfst du gehen?' : 'Die Straße ist frei. Darfst du gehen?';
+      resetBox(L.box);
+      L.q.querySelector('.swg-qt').textContent = carNow ? 'Da kommt ein Auto! Darfst du gehen?' : 'Die Straße ist frei. Darfst du gehen?';
       await ctx.instruct(carNow ? 'Da kommt ein Auto! Darfst du jetzt gehen?' : 'Die Straße ist frei. Darfst du jetzt gehen?');
       if (!ctx.active) return;
       await ctx.choices([
-        { content: cardContent({ e: '🚶', t: 'Gehen' }), correct: !carNow, className: 'sch-card sch-short', say: 'Gehen' },
-        { content: cardContent({ e: '✋', t: 'Warten' }), correct: carNow, className: 'sch-card sch-short', say: 'Warten' },
+        { content: cardContent({ e: '🚶', t: 'Gehen' }), correct: !carNow, className: 'swg-card swg-short', say: 'Gehen' },
+        { content: cardContent({ e: '✋', t: 'Warten' }), correct: carNow, className: 'swg-card swg-short', say: 'Warten' },
       ], {
         container: L.box,
         shuffle: false,
         praise: false,
         correctSay: carNow ? 'Richtig! Du wartest, bis das Auto vorbei ist.' : 'Richtig! Jetzt gehst du zügig geradeaus.',
         explain: () => (carNow ? 'Halt! Das Auto ist noch da. Es kann nicht so schnell bremsen.' : 'Links und rechts ist alles frei. Kein Auto kommt.'),
+        hintSay: carNow ? 'Schau auf die Straße. Ist das Auto schon vorbei?' : 'Schau nach links und nach rechts. Kommt da ein Auto?',
+        modelSay: carNow ? 'Ich schaue: Das Auto fährt noch. Es kann nicht sofort bremsen. Darum warte ich. Tipp auf Warten.' : 'Ich schaue: Links ist frei, rechts ist frei. Darum darf ich gehen. Tipp auf Gehen.',
       });
     };
     if (carEl) {
@@ -930,7 +1001,7 @@
     look(null);
     await decide(false);
     if (!ctx.active) return;
-    const walker = sv.querySelector('.sch-walker');
+    const walker = sv.querySelector('.swg-walker');
     walker.style.transition = 'transform ' + (1.6 * LT.config.speed + 0.01) + 's linear';
     walker.style.transform = 'translate(0, -96px)';
     await ctx.sleep(1700);
@@ -940,12 +1011,12 @@
   function streetRows(defs) {
     const portrait = window.innerHeight > window.innerWidth * 1.15;
     const rows = portrait && defs.length >= 4 ? [defs.slice(0, Math.ceil(defs.length / 2)), defs.slice(Math.ceil(defs.length / 2))] : [defs];
-    const node = el('div.sch-rows' + (rows.length > 1 ? '.sch-tworows' : ''));
+    const node = el('div.swg-rows' + (rows.length > 1 ? '.swg-tworows' : ''));
     const cells = [];
     rows.forEach((row) => {
       const m = row.length;
       const markup = slotBg(m) + row.map((s, i) => SLOT_DRAW[s.id](i * 80)).join('');
-      const pic = el('div.sch-pic-wrap', { style: { maxWidth: `calc(${rows.length > 1 ? 30 : 52}vh * ${(m * 80 / 138).toFixed(3)})` } }, svg(`0 22 ${m * 80} 138`, markup, 'sch-scene sch-wimmel'));
+      const pic = el('div.swg-pic-wrap', { style: { maxWidth: `calc(${rows.length > 1 ? 30 : 52}vh * ${(m * 80 / 138).toFixed(3)})` } }, svg(`0 22 ${m * 80} 138`, markup, 'swg-scene swg-wimmel'));
       row.forEach((s, i) => cells.push({ def: s, pic, left: i * 100 / m, width: 100 / m }));
       node.appendChild(pic);
     });
@@ -960,11 +1031,11 @@
     const safes = U.sample(Object.keys(SAFE), nSafe);
     const slotsDef = U.shuffle([t.main].concat(others).map((d) => ({ id: d, danger: true })).concat(safes.map((s) => ({ id: s, danger: false }))));
     const q = `Finde die ${w(nDanger)} Gefahren!`;
-    const wrap = el('div.sch-huntwrap');
-    const qBox = el('div.sch-q', el('span.sch-qt', q), el('span.sch-count', '0 / ' + nDanger));
+    const wrap = el('div.swg-huntwrap');
+    const qBox = el('div.swg-q', el('span.swg-qt', q), el('span.swg-count', '0 / ' + nDanger));
     const R = streetRows(slotsDef);
     const spots = R.cells.map((c, i) => {
-      const b = el('button.sch-hot', { type: 'button', 'aria-label': 'Stelle ' + (i + 1), style: { left: c.left + '%', width: c.width + '%' } });
+      const b = el('button.swg-hot', { type: 'button', 'aria-label': 'Stelle ' + (i + 1), style: { left: c.left + '%', width: c.width + '%' } });
       b._def = c.def;
       c.pic.appendChild(b);
       return b;
@@ -975,28 +1046,28 @@
     if (!ctx.active) return;
     let found = 0;
     let busy = false;
-    const open = () => spots.filter((b) => b._def.danger && !b.classList.contains('sch-found'));
+    const open = () => spots.filter((b) => b._def.danger && !b.classList.contains('swg-found'));
     const remark = () => { spots.forEach((b) => ctx.markTest(b, false)); const o = open(); if (o.length) ctx.markTest(o[0]); };
     remark();
     await new Promise((resolve) => {
       spots.forEach((b) => ctx.listen(b, 'click', async () => {
-        if (busy || !ctx.active || b.classList.contains('sch-found') || b.classList.contains('sch-safe')) return;
+        if (busy || !ctx.active || b.classList.contains('swg-found') || b.classList.contains('swg-safe')) return;
         busy = true;
         const d = b._def;
         if (d.danger) {
-          b.classList.add('sch-found');
-          b.appendChild(el('span.sch-badge', '⚠️'));
+          b.classList.add('swg-found');
+          b.appendChild(el('span.swg-badge', '⚠️'));
           spots.forEach((x) => ctx.unhint(x));
           found++;
-          qBox.querySelector('.sch-count').textContent = found + ' / ' + nDanger;
+          qBox.querySelector('.swg-count').textContent = found + ' / ' + nDanger;
           remark();
           LT.sfx.play('correct');
           LT.ui.animate(b, 'joy');
           await ctx.say(DANGERS[d.id].found);
           if (found >= nDanger) { resolve(); return; }
         } else {
-          b.classList.add('sch-safe');
-          b.appendChild(el('span.sch-badge.sch-badge-ok', '✅'));
+          b.classList.add('swg-safe');
+          b.appendChild(el('span.swg-badge.swg-badge-ok', '✅'));
           await ctx.wrong(b, { keep: true, say: SAFE[d.id] });
           if (!ctx.active) return;
           const hs = ctx.helpStep;
@@ -1032,18 +1103,18 @@
     const defs = U.shuffle([{ id: 'zebraLeer', ok: true }].concat(bads.map((id) => ({ id }))));
     const n = defs.length;
     const markup = slotBg(n) + defs.map((s, i) => SLOT_DRAW[s.id](i * 80)).join('');
-    const sv = svg(`0 22 ${n * 80} 138`, markup, 'sch-scene sch-wimmel');
-    const wrap = el('div.sch-huntwrap');
-    const qBox = el('div.sch-q', el('span.sch-qt', 'Wo gehst du am sichersten über die Straße?'));
-    const pic = el('div.sch-pic-wrap', { style: { maxWidth: `calc(52vh * ${(n * 80 / 138).toFixed(3)})` } }, sv);
-    const box = el('div.choices.sch-spotbox');
+    const sv = svg(`0 22 ${n * 80} 138`, markup, 'swg-scene swg-wimmel');
+    const wrap = el('div.swg-huntwrap');
+    const qBox = el('div.swg-q', el('span.swg-qt', 'Wo gehst du am sichersten über die Straße?'));
+    const pic = el('div.swg-pic-wrap', { style: { maxWidth: `calc(52vh * ${(n * 80 / 138).toFixed(3)})` } }, sv);
+    const box = el('div.choices.swg-spotbox');
     pic.appendChild(box);
     wrap.append(qBox, pic);
     ctx.stage.appendChild(wrap);
     await ctx.instruct('Wo gehst du am sichersten über die Straße? Tippe auf eine Nummer.');
     if (!ctx.active) return;
     const items = defs.map((d, i) => ({
-      content: String(i + 1), text: true, correct: !!d.ok, className: 'sch-spot', aria: 'Stelle ' + w(i + 1), id: d.id,
+      content: String(i + 1), text: true, correct: !!d.ok, className: 'swg-spot', aria: 'Stelle ' + w(i + 1), id: d.id,
       pos: (i + 0.5) * 100 / n,
     }));
     const p = ctx.choices(items, {
@@ -1071,15 +1142,26 @@
     const list = U.shuffle(goods.concat(bads));
     const q = `Was macht dich im Dunkeln sichtbar? Finde ${w(nGood)} Sachen.`;
     const L = layout(ctx, q, scene(street({ night: true }) + car(56, 100, '#4a90e2', 1, { beam: true }) + kid(190, 140, { dark: true, bag: '#20222c', op: 0.6 })));
-    L.box.classList.add('sch-multiopts');
+    L.box.classList.add('swg-multiopts');
     const tiles = list.map((it) => {
-      const b = el('button.tile.sch-mtile', { type: 'button', 'aria-label': it.t }, U.emoji(it.e), el('span.label', it.t));
+      const b = LT.ui.tile(it.node ? it.node() : it.e, { className: 'swg-mtile', label: it.t, say: it.t, sayButton: true, aria: it.t });
       b._it = it;
       L.box.appendChild(b);
       return b;
     });
     await ctx.instruct(q);
     if (!ctx.active) return;
+    // Bilder benennen, damit die Aufgabe nicht am Lesen hängt (🔊 auf jeder Kachel hilft später)
+    if (ctx.flow <= 0 || !introduced.has('multiNamed')) {
+      introduced.add('multiNamed');
+      for (const b of tiles) {
+        b.classList.add('speaking');
+        await ctx.say(b._it.t, { interrupt: true });
+        b.classList.remove('speaking');
+        if (!ctx.active) return;
+        await ctx.sleep(120);
+      }
+    }
     let got = 0;
     let busy = false;
     const open = () => tiles.filter((b) => b._it.ok && !b.classList.contains('is-correct'));
@@ -1105,7 +1187,7 @@
           if (hs >= 2 && o.length) ctx.hint(o[0]);
           if (hs >= 3 && o.length && !ctx.modelShown) {
             ctx.modelShown = true;
-            await ctx.say(`Schau, das hier leuchtet im Dunkeln: ${o[0]._it.t}. Tipp es an.`);
+            await ctx.say(`Ich zeige es dir. Ich denke an das Licht vom Auto. Was leuchtet selbst oder wirft das Licht zurück? ${o[0]._it.t}. Tipp es an.`);
           }
         }
         busy = false;
@@ -1124,11 +1206,11 @@
 
   /* ---------------- Stufe 5: Welche Nummer? ---------------- */
   async function numberTask(ctx, sc) {
-    const L = layout(ctx, sc.q + ' Wen rufst du an?', U.emoji(sc.emoji, 'sch-figemoji'));
-    L.box.classList.add('sch-cardopts');
+    const L = layout(ctx, sc.q + ' Wen rufst du an?', U.emoji(sc.emoji, 'swg-figemoji'));
+    L.box.classList.add('swg-cardopts');
     let keys = ['n112', 'n110', 'none'];
     if (ctx.flow < 0) keys = [sc.ans, U.pick(keys.filter((k) => k !== sc.ans))];
-    const items = keys.map((k) => ({ content: cardContent(NUM_OPTS[k]), correct: k === sc.ans, className: 'sch-card sch-num', say: NUM_OPTS[k].s, key: k }));
+    const items = keys.map((k) => ({ content: cardContent(NUM_OPTS[k]), correct: k === sc.ans, className: 'swg-card swg-num', say: NUM_OPTS[k].s, key: k }));
     await ctx.instruct(`${sc.q} Wen rufst du an?`);
     if (!ctx.active) return;
     await ctx.choices(items, {
@@ -1148,19 +1230,19 @@
 
   /* ---------------- Stufe 5: Notruf-Rollenspiel ---------------- */
   async function callTask(ctx, sc) {
-    const wrap = el('div.sch-callwrap');
-    const storyBox = el('div.sch-q.sch-story', U.emoji(sc.emoji, 'sch-storyemoji'), el('span.sch-qt', sc.story));
-    const phone = el('div.sch-phone');
-    const display = el('div.sch-display', ' ');
-    const pad = el('div.sch-pad');
+    const wrap = el('div.swg-callwrap');
+    const storyBox = el('div.swg-q.swg-story', U.emoji(sc.emoji, 'swg-storyemoji'), el('span.swg-qt', sc.story));
+    const phone = el('div.swg-phone');
+    const display = el('div.swg-display', ' ');
+    const pad = el('div.swg-pad');
     const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', '#'];
     const keyBtns = {};
     KEYS.forEach((k) => {
-      const b = el('button.sch-key', { type: 'button', 'aria-label': k }, k);
+      const b = el('button.swg-key', { type: 'button', 'aria-label': k }, k);
       keyBtns[k] = b;
       pad.appendChild(b);
     });
-    const callBtn = el('button.sch-callbtn', { type: 'button', 'aria-label': 'Anrufen' }, '📞');
+    const callBtn = el('button.swg-callbtn', { type: 'button', 'aria-label': 'Anrufen' }, '📞');
     phone.append(display, pad, callBtn);
     wrap.append(storyBox, phone);
     ctx.stage.appendChild(wrap);
@@ -1192,7 +1274,7 @@
           display.textContent = typed;
           LT.ui.animate(b, 'joy');
           mark();
-          if (typed.length >= 3) { callBtn.classList.add('sch-ready'); await ctx.say('Und jetzt auf den grünen Hörer.'); }
+          if (typed.length >= 3) { callBtn.classList.add('swg-ready'); await ctx.say('Und jetzt auf den grünen Hörer.'); }
         } else {
           localWrong++;
           const say = localWrong === 1
@@ -1213,7 +1295,7 @@
     });
     if (!ctx.active) return;
     LT.sfx.play('pop');
-    phone.classList.add('sch-ringing');
+    phone.classList.add('swg-ringing');
     display.textContent = '📞 112 …';
     await ctx.say(localWrong === 0 ? `Super, ${S112}. Es klingelt.` : 'Es klingelt.');
     if (!ctx.active) return;
@@ -1222,12 +1304,12 @@
 
     // 2) Gespräch mit der Leitstelle
     U.clear(phone);
-    phone.classList.remove('sch-ringing');
-    phone.classList.add('sch-talk');
-    const bubble = el('div.sch-bubble', el('span.sch-who', '🎧'), el('span.sch-bt', ''));
-    const ans = el('div.choices.sch-opts.sch-cardopts');
+    phone.classList.remove('swg-ringing');
+    phone.classList.add('swg-talk');
+    const bubble = el('div.swg-bubble', el('span.swg-who', '🎧'), el('span.swg-bt', ''));
+    const ans = el('div.choices.swg-opts.swg-cardopts');
     phone.append(bubble, ans);
-    storyBox.classList.add('sch-story-small');
+    storyBox.classList.add('swg-story-small');
 
     const name = (ctx.name || '').trim();
     const Q = [
@@ -1239,6 +1321,7 @@
           { e: '😶', t: 'Rate mal!', why: 'Beim Notruf gibt es keine Rätsel. Sag ihr, wer du bist.' },
         ],
         hint: 'Wie heißt du?',
+        model: 'Die Frau am Telefon kennt dich nicht. Darum sagst du deinen Namen.',
       },
       {
         q: 'Wo ist der Notfall?',
@@ -1248,6 +1331,7 @@
           { e: '🤷', t: 'Das weiß ich nicht.', why: 'Schau dich um. Steht irgendwo ein Straßenschild oder ein bekanntes Haus?' },
         ],
         hint: 'Sag die Straße und was in der Nähe ist.',
+        model: 'Die Frau am Telefon kann dich nicht sehen. Darum sagst du die Straße und was in der Nähe ist.',
       },
       {
         q: 'Was ist passiert?',
@@ -1257,6 +1341,7 @@
           { e: '🍦', t: 'Ich habe Hunger.', why: 'Das hat mit dem Notfall nichts zu tun.' },
         ],
         hint: 'Erzähl kurz, was du gesehen hast.',
+        model: 'Die Frau muss wissen, welche Hilfe kommen soll. Darum sagst du genau, was passiert ist.',
       },
     ];
     if (ctx.flow > 0 || ctx.isReview) {
@@ -1268,6 +1353,7 @@
           { e: '👋', t: 'Tschüss!', why: 'Leg noch nicht auf. Die Frau braucht noch eine Antwort.' },
         ],
         hint: 'Zähl, wie viele Menschen Hilfe brauchen.',
+        model: 'Die Helfer müssen wissen, wie viele Menschen Hilfe brauchen. Darum sagst du genau, was du siehst.',
       });
     }
     Q.push({
@@ -1278,19 +1364,20 @@
         { e: '🏃', t: 'Ich laufe weg.', why: 'Die Helfer brauchen dich noch. Bleib am Telefon.' },
       ],
       hint: 'Wer beendet beim Notruf das Gespräch?',
+        model: 'Beim Notruf beendet die Frau am Telefon das Gespräch. Darum wartest du und hörst zu.',
     });
 
     const praiseStep = U.chance(0.3) ? U.randInt(1, Q.length - 1) : -1;
     for (let i = 0; i < Q.length; i++) {
       const step = Q[i];
       if (!ctx.active) return;
-      U.clear(ans);
-      bubble.querySelector('.sch-bt').textContent = step.q;
+      resetBox(ans);
+      bubble.querySelector('.swg-bt').textContent = step.q;
       LT.ui.animate(bubble, 'joy');
       const before = ctx.wrongCount;
       await ctx.instruct(step.q);
       if (!ctx.active) return;
-      const items = step.opts.map((o) => ({ content: cardContent(o), correct: !!o.ok, className: 'sch-card', say: o.s || o.t, why: o.why }));
+      const items = step.opts.map((o) => ({ content: cardContent(o), correct: !!o.ok, className: 'swg-card', say: o.s || o.t, why: o.why }));
       await ctx.choices(items, {
         container: ans,
         sayButton: true,
@@ -1302,15 +1389,15 @@
           : `${okWord()}`),
         explain: (wr) => wr.why,
         hintSay: step.hint,
-        modelSay: (r) => `Schau, diese Antwort hilft: ${r.say} Tipp sie an.`,
+        modelSay: (r) => `Ich zeige es dir. ${step.model} Diese Antwort hilft: ${r.say} Tipp sie an.`,
       });
       if (!ctx.active) return;
       await ctx.sleep(200);
     }
     if (!ctx.active) return;
-    bubble.querySelector('.sch-bt').textContent = 'Danke! Die Hilfe ist unterwegs.';
-    U.clear(ans);
-    ans.appendChild(el('div.sch-helpcoming', U.emoji(sc.k === 'Notruf: Feuer' ? '🚒' : '🚑', 'sch-figemoji')));
+    bubble.querySelector('.swg-bt').textContent = 'Danke! Die Hilfe ist unterwegs.';
+    resetBox(ans);
+    ans.appendChild(el('div.swg-helpcoming', U.emoji(sc.k === 'Notruf: Feuer' ? '🚒' : '🚑', 'swg-figemoji')));
     await ctx.say('Danke! Die Hilfe ist unterwegs. Du hast alles richtig gemacht. Wer? Wo? Was? Und dann warten.');
     if (!ctx.active) return;
     await ctx.sleep(400);

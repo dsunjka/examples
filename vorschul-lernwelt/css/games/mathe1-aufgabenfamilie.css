@@ -14,6 +14,7 @@
   width: 100%; max-width: 860px; flex: 1 1 auto; min-height: 0;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: clamp(10px, 2.2vmin, 22px);
+  position: relative;
 }
 .auf-hidden { display: none !important; }
 .auf-pop { animation: auf-pop .45s cubic-bezier(.3, 1.5, .5, 1); }
@@ -86,13 +87,14 @@
 .auf-house.auf-complete .auf-body { border-color: var(--ok); }
 
 /* Punkte (Stufe 1) */
-.auf-dots { display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 3px; max-width: 100%; }
+/* Fünfergruppen: umbrechen darf nur zwischen den Gruppen (7 = 5 + 2) */
+.auf-dots { display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 3px 7px; max-width: 100%; }
+.auf-dgrp { display: inline-flex; flex-wrap: nowrap; gap: 3px; }
 .auf-dot {
   --d: clamp(10px, 2.4vmin, 16px);
   width: var(--d); height: var(--d); border-radius: 50%;
   position: relative; flex: 0 0 auto;
 }
-.auf-dgap { width: 4px; }
 .auf-dot.auf-red { background: var(--auf-red); }
 .auf-dot.auf-blue { background: var(--auf-blue); }
 .auf-dot.auf-gold { background: #f2a900; }
@@ -190,3 +192,21 @@
   .auf-house.auf-small { --auf-w: min(64vw, 240px); }
   .auf-top { gap: 8px; }
 }
+
+/* „3 − 7“ mit Bild: drei Punkte weggenommen, für die übrigen ist nichts mehr da */
+.auf-swapshow {
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%); z-index: 5;
+  pointer-events: none;
+  max-width: min(92vw, 420px);
+  background: var(--card); border-radius: var(--radius-l);
+  box-shadow: 0 0 0 4px var(--gold), var(--shadow);
+  padding: 10px 18px;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.auf-swapshow.auf-pop { animation: auf-pop-c .45s cubic-bezier(.3, 1.5, .5, 1); }
+@keyframes auf-pop-c { from { transform: translateX(-50%) scale(.6); opacity: 0; } to { transform: translateX(-50%) scale(1); opacity: 1; } }
+.auf-swaplab { font-weight: 800; font-size: clamp(28px, min(7vw, 5vh), 44px); line-height: 1.1; white-space: nowrap; }
+.auf-swapshow .auf-dot { --d: clamp(20px, 4.6vmin, 30px); }
+.auf-swapshow .auf-dots { gap: 6px 12px; }
+.auf-swapshow .auf-dgrp { gap: 5px; }
+.auf-dot.auf-none { background: #fff; border: 3px dashed #c4c9de; }

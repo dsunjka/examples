@@ -60,9 +60,10 @@
   }
   const W = (n) => U.cap(w(n));
   const range = (a, b) => { const r = []; for (let i = a; i <= b; i++) r.push(i); return r; };
-  /** Ziffern vertauscht (14 → 41); null, wenn das nichts Neues ergibt. */
+  /** Ziffern vertauscht (14 → 41); null, wenn das nichts Neues ergibt.
+   *  Volle Zehner (10, 20) haben keinen echten Zahlendreher (20 → „02“). */
   const rev = (n) => {
-    if (n < 10) return null;
+    if (n < 10 || n % 10 === 0) return null;
     const r = Number(String(n).split('').reverse().join(''));
     return r !== n ? r : null;
   };
@@ -85,6 +86,11 @@
     sort: 'Bring die Zahlen in die richtige Reihe. Tippe zuerst die kleinste Zahl an, dann die nächste.',
     hundert: 'Jetzt ein Blick ins Hochhaus! Hier wohnen Zahlen bis hundert. Die Nachbarn gibt es dort auch.',
   };
+
+  /** Aufgabenfamilie je Stufe: Innerhalb einer Runde bleibt die Bedienung
+   *  gleich (engine.md: taskLevel nur, wenn die Familie gleich bleibt). */
+  const familyOf = (lv) => (lv <= 2 ? 'house' : lv === 3 ? 'ze' : lv === 4 ? 'line' : 'cmp');
+  const lvFor = (ctx) => (familyOf(ctx.taskLevel) === familyOf(ctx.level) ? ctx.taskLevel : ctx.level);
 
   /** Aufgabenart je Stufe und Aufgabe. */
   function kindFor(ctx, level, index) {
@@ -467,7 +473,8 @@
       }
       let say;
       if (v === 0) say = 'Leg zuerst Stangen oder Würfel in die Tafel. Tippe auf Plus.';
-      else if (z === te && e === tz && rev(n) === v) say = `Fast! Du hast ${w(z)} Zehner und ${e === 1 ? 'einen' : w(e)} Einer gebaut. Das ist ${w(v)}. Bei ${w(n)} hört man die Einer zuerst. Aber der Zehner steht vorne.`;
+      else if (n >= 13 && n <= 19 && z === te && e === tz) say = `Fast! Du hast ${w(z)} Zehner und ${e === 1 ? 'einen' : w(e)} Einer gebaut. Das ist ${w(v)}. Bei ${w(n)} hört man die Einer zuerst. Aber der Zehner steht vorne.`;
+      else if (n === 20 && z === 0 && e === 2) say = 'Fast! Du hast zwei Einer gebaut. Das ist zwei. Zwanzig sind zwei Zehner und null Einer.';
       else say = `Fast! Du hast ${z === 1 ? 'einen' : w(z)} Zehner und ${e === 1 ? 'einen' : w(e)} Einer gebaut. Das ist ${w(v)}. Wir suchen ${w(n)}.`;
       await ctx.wrong(table, { say, keep: true });
       if (!ctx.active) return;
@@ -726,12 +733,31 @@
   /* ==================================================================
      Stufe 5: Ordnen, größte/kleinste, dazwischen, Ausblick bis 100
      ================================================================== */
-  /** Zahlen zum Vergleichen: ein, zwei Zahlen ohne Zehner (6–9) und sonst
-   *  nahe beieinander liegende Zahlen mit Zehner (Stellenwert-Vergleich). */
-  function numberSet(count) {
-    const singles = count >= 5 ? 2 : 1;
-    const s = U.sample(range(6, 9), singles).concat(U.sample(range(11, 20), count - singles));
-    return s.sort((a, b) => a - b);
+  /** Feste Zahlenmengen zum Vergleichen (stabile ctx.item-Schlüssel, damit
+   *  Zwillingsaufgabe und Wiederholung greifen): ein, zwei Zahlen ohne Zehner
+   *  (6–9) und sonst nahe beieinander liegende Zahlen mit Zehner, auch die 20. */
+  const SETS = {
+    3: [[7, 12, 15], [8, 11, 14], [6, 13, 17], [9, 12, 16], [7, 14, 18], [9, 15, 20]],
+    4: [[7, 12, 15, 18], [8, 11, 14, 20], [6, 13, 16, 19], [9, 12, 17, 20], [7, 11, 15, 18], [8, 14, 16, 19]],
+    5: [[6, 8, 12, 15, 19], [7, 9, 11, 16, 20], [6, 9, 13, 14, 18], [7, 8, 12, 17, 20], [8, 9, 11, 15, 16], [6, 7, 14, 18, 19]],
+    // alle mit Zehner (Stufe 5 mit Rückenwind)
+    tens: [[12, 15, 17, 18, 20], [11, 13, 14, 16, 19], [12, 14, 16, 17, 18], [11, 15, 18, 19, 20], [13, 14, 16, 17, 20], [11, 12, 15, 16, 19]],
+  };
+
+  /** Vergleichs-Tipp passend zu den Zahlen: erst die Zehner zählen, nur bei
+   *  gleich vielen Zehnern auf die Einer schauen. */
+  const tensWord = (k) => (k === 0 ? 'keinen Zehner' : k === 1 ? 'einen Zehner' : `${w(k)} Zehner`);
+  function compareHint(nums, big) {
+    const tens = nums.map((x) => Math.floor(x / 10));
+    const target = big ? Math.max(...tens) : Math.min(...tens);
+    if (tens.every((k) => k === tens[0])) return `Tipp: Alle haben ${tensWord(tens[0])}. Dann schau auf die Einer.`;
+    const group = nums.filter((x) => Math.floor(x / 10) === target);
+    let s = big ? 'Tipp: Schau zuerst auf die Zehner. Wer hat die meisten Zehner?' : 'Tipp: Schau zuerst auf die Zehner. Wer hat die wenigsten Zehner?';
+    if (!big && target === 0) s += ' Zahlen ohne Zehner sind am kleinsten.';
+    if (nums.includes(20) && !(big && group.length === 1)) s += ' Die Zwanzig hat zwei Zehner. Sie ist groß.';
+    if (big && group.length === 1 && group[0] === 20) s += ' Die Zwanzig hat sogar zwei.';
+    if (group.length > 1) s += ' Wenn mehrere gleich viele Zehner haben, schau auf die Einer.';
+    return s;
   }
 
   async function sortTask(ctx, t) {
@@ -773,9 +799,9 @@
         onCorrect: (item, tile) => { picked = tile; },
         correctSay: () => (i === 0 ? `${okWord()}, ${w(ans)} ist die kleinste!` : `${W(ans)}!`),
         explain: (item) => `Fast! Es gibt noch eine kleinere Zahl als die ${W(item.value)}.`,
-        hintSay: () => (restNow.some((x) => x < 10) && restNow.some((x) => x >= 10)
-          ? 'Tipp: Zahlen ohne Zehner sind am kleinsten. Schau, wer keinen Zehner hat.'
-          : restNow.every((x) => x >= 10) ? 'Tipp: Alle haben einen Zehner. Dann schau auf die Einer.' : 'Tipp: Zähl im Kopf von eins los. Welche Zahl kommt zuerst?'),
+        hintSay: () => (restNow.every((x) => x < 10)
+          ? 'Tipp: Zähl im Kopf von eins los. Welche Zahl kommt zuerst?'
+          : compareHint(restNow, false)),
         modelSay: () => `Die ${W(ans)} ist die kleinste von diesen Zahlen. Tipp sie an.`,
       });
       if (!ctx.active) return;
@@ -817,11 +843,7 @@
         'Klasse verglichen! Zehner zuerst, dann die Einer.',
       ], 'ext'),
       explain: (item) => `Fast! Es gibt noch eine ${big ? 'größere' : 'kleinere'} Zahl als die ${W(item.value)}.`,
-      hintSay: () => {
-        const mixed = nums.some((x) => x < 10) && nums.some((x) => x >= 10);
-        if (mixed) return big ? 'Tipp: Zahlen mit einem Zehner sind größer als Zahlen ohne Zehner. Dann schau auf die Einer.' : 'Tipp: Zahlen ohne Zehner sind kleiner als Zahlen mit Zehner.';
-        return 'Tipp: Alle haben gleich viele Zehner. Schau auf die Einer.';
-      },
+      hintSay: () => compareHint(nums, big),
       modelSay: () => `Die ${W(ans)} ist die ${big ? 'größte' : 'kleinste'}. Tipp sie an.`,
     });
     if (!ctx.active) return;
@@ -953,19 +975,15 @@
     }
     if (kind === 'sort') {
       const count = flow < 0 ? 3 : flow > 0 ? 5 : 4;
-      return range(1, 6).map(() => {
-        const nums = numberSet(count);
-        return { kind, nums, key: 'ordne ' + nums.join(' ') };
-      });
+      return SETS[count].map((nums) => ({ kind, nums, key: 'ordne ' + nums.join(' ') }));
     }
     if (kind === 'extreme') {
-      const count = flow < 0 ? 3 : 5;
-      return range(1, 6).map(() => {
-        const big = U.chance(0.5);
-        let nums = numberSet(count);
-        if (flow > 0) nums = U.sample(range(11, 20), count).sort((a, b) => a - b); // alle mit Zehner
-        return { kind, nums, big, key: `${big ? 'größte' : 'kleinste'} ${nums.join(' ')}` };
-      });
+      const sets = flow < 0 ? SETS[3] : flow > 0 ? SETS.tens : SETS[5];
+      const p = [];
+      sets.forEach((nums) => [true, false].forEach((big) => {
+        p.push({ kind, nums, big, key: `${big ? 'größte' : 'kleinste'} ${nums.join(' ')}` });
+      }));
+      return p;
     }
     if (kind === 'between') {
       const p = [];
@@ -1012,12 +1030,19 @@
     },
 
     async task(ctx) {
-      const level = ctx.taskLevel;
+      // Aufgabenart bleibt in der Runde gleich; nur Stufe 1 ↔ 2 (beides
+      // Zahlenhaus) folgt ctx.taskLevel, sonst passt ctx.flow innerhalb an.
+      const level = lvFor(ctx);
       if (ctx.index === 0) { introduced = new Set(); buildCount = 0; }
       const kind = kindFor(ctx, level, ctx.index);
-      if (!introduced.has(level)) {
-        introduced.add(level);
-        await ctx.say(INTRO[level]);
+      if (!introduced.has(ctx.level)) {
+        introduced.add(ctx.level);
+        await ctx.say(INTRO[ctx.level]);
+        if (!ctx.active) return;
+      }
+      if (level === 2 && ctx.level === 1 && !introduced.has('two')) {
+        introduced.add('two');
+        await ctx.say('Das Zahlenhaus bekommt ein zweites Stockwerk! Oben wohnen elf bis zwanzig.');
         if (!ctx.active) return;
       }
       if (KIND_INTRO[kind] && !introduced.has('k:' + kind)) {

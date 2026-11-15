@@ -7,9 +7,13 @@
      Wort bleibt verborgen, bis die Aufgabe gelöst ist (sonst würde das Kind
      den Buchstaben optisch suchen statt zu hören). Nach dem Lösen erscheint
      das Wort mit markiertem Laut als Brücke zur Schrift.
-   - Die Vorlesestimme kann isolierte Laute nicht sauber sprechen. Flo nennt
-     Buchstaben deshalb mit Namen („das M“, „das S C H“) – wie in den anderen
-     Spielen – und erinnert: Wir hören auf den LAUT im Wort.
+   - Die Vorlesestimme kann isolierte Mitlaute nicht sauber sprechen. Flo
+     nennt einfache Buchstaben deshalb mit Namen („das M“) – wie in den
+     anderen Spielen – und erinnert: Wir hören auf den LAUT im Wort.
+     Lautverbindungen, deren Buchstabennamen nichts mit dem Laut zu tun
+     haben, spricht Flo als Laut („das Sch“, „das Ei“, „das Au“), nie als
+     „Es-Ce-Ha“. Beim Vormachen spricht Flo gedehnt („Haaase“, „Mauuus“),
+     damit das Kind die Strategie hört, nicht nur das Ergebnis.
    - Gearbeitet wird mit Lauten, nicht mit Buchstaben: ll, ff, ah, oo, ie,
      sch, ei, au sind je EIN Laut. Unsichere Stellen (Auslautverhärtung wie
      d in Mond, vokalisiertes r wie in Turm, Schwa-e) werden nie abgefragt.
@@ -18,9 +22,12 @@
           Mitte oder am Ende? Schwerpunkt Auslaut (3 Positionskästchen)
        2  Inlaut: Welchen Selbstlaut hörst du in der Mitte (Hut, Ball)?
           Dazu: Laute zählen (Affe hat drei Laute) und Mitte orten
-       3  Laut weglassen: „Reis ohne R“ → Eis (Bildauswahl)
+       3  Laut weglassen: „Reis ohne R“ → Eis (Bildauswahl); nur echte
+          Lautwegnahmen (kein Mehrzahl-n wie Hosen → Hose: das wäre Grammatik
+          und hinge am Schwa)
        4  Laut austauschen: „Maus, aus M wird H“ → Haus; später in der Mitte
-          (Hund → Hand) und am Ende (Schaf → Schal)
+          (Hund → Hand, Hahn → Huhn; nur Selbstlaute gleicher Länge) und am
+          Ende (Schaf → Schal)
        5  Lange und kurze Selbstlaute (Hase/Katze) mit Strich und Punkt –
           Vorbereitung auf die Rechtschreibung in Klasse 2
    - Fehlvorstellungen und Hilfe-Leiter (über ctx.choices):
@@ -130,8 +137,10 @@ Kaktus|🌵|k a k t u s
   const isVowelTok = (tok) => VOW.includes(canon(tok.t)) || tok.t === 'er';
   /** Buchstabe zum Zeigen: „M“, „Sch“, „Ei“ */
   const disp = (c) => (c.length > 1 ? U.cap(c) : c.toUpperCase());
-  /** Buchstabe zum Sprechen (Großbuchstaben, damit die Stimme den Namen sagt). */
-  const SAYL = { sch: 'S C H', ch: 'C H', ei: 'E I', au: 'A U', eu: 'E U' };
+  /** Buchstabe zum Sprechen: einfache Buchstaben in Großschrift (die Stimme sagt
+   *  den Namen); Lautverbindungen so geschrieben, dass die Stimme den LAUT spricht
+   *  („Sch“ = /ʃ/, „Ei“ = /aɪ/) statt drei Buchstabennamen („Es-Ce-Ha“). */
+  const SAYL = { sch: 'Sch', ch: 'Ch', ei: 'Ei', au: 'Au', eu: 'Eu' };
   const sayL = (c) => SAYL[c] || c.toUpperCase();
 
   const WORDS = DB_RAW.trim().split('\n').map((line) => {
@@ -143,11 +152,47 @@ Kaktus|🌵|k a k t u s
   const BY = {};
   WORDS.forEach((x) => { BY[x.w] = x; });
 
+  /** Gedehnt geschriebenes Wort: der erste Selbstlaut wird gezogen
+   *  („Hase“ → „Haaase“, „Maus“ → „Mauuus“, „Eis“ → „Eiiis“). */
+  function stretch(w) {
+    const m = /(ie|ei|ai|au|eu|äu|aa|oo|ee|[aeiouäöü]h?)/i.exec(w);
+    if (!m) return w;
+    const n = m[0];
+    const lo = n.toLowerCase();
+    const diph = ['ei', 'ai', 'au', 'eu', 'äu'].includes(lo);
+    const k = diph ? n.length - 1 : 0;
+    const v = n.charAt(k).toLowerCase();
+    const s = n.slice(0, k + 1) + v + v + n.slice(k + 1);
+    return w.slice(0, m.index) + s + w.slice(m.index + n.length);
+  }
+  /** Ist der erste Selbstlaut lang (oder ein Zwielaut)? Erst die geprüfte Liste
+   *  aus Stufe 5, dann Lautzeichen (ah, uh, ie, ei …), dann die Schreibregel
+   *  (Doppelmitlaut oder Mitlauthäufung → kurz). */
+  const SHORT_X = ['Bus'];
+  /** Betonung auf der zweiten Silbe: den ersten Selbstlaut nicht ziehen. */
+  const LATE_STRESS = ['Kamel', 'Salat', 'Pirat', 'Tomate', 'Banane', 'Rakete'];
+  function firstLong(w) {
+    if (LATE_STRESS.includes(w)) return false;
+    const l = LEN.find((y) => y.w === w);
+    if (l) return l.long;
+    if (SHORT_X.includes(w)) return false;
+    const m = /(ie|ei|ai|au|eu|äu|aa|oo|ee|[aeiouäöü]h?)/i.exec(w);
+    if (!m) return false;
+    if (m[0].length > 1) return true;
+    const rest = w.slice(m.index + 1).toLowerCase();
+    return !/^[^aeiouäöü]{2,}/.test(rest);
+  }
+  /** Zum Vormachen: lange Selbstlaute werden gezogen, kurze nicht (ein gezogener
+   *  kurzer Selbstlaut – „Taaasse“ – widerspräche Stufe 5). */
+  const slow = (w) => (firstLong(w) ? stretch(w) : w);
+  const hear = (w) => (firstLong(w) ? `Hör mal, ich spreche ganz langsam: ${stretch(w)}` : `Hör mal ganz genau: ${w}`);
+
   /* ------------------------------------------------------------------
      Aufgaben-Pools (automatisch aus der Datenbank)
      ------------------------------------------------------------------ */
   const POS = ['Anfang', 'Mitte', 'Ende'];
   const POS_PHRASE = { Anfang: 'ganz am Anfang', Mitte: 'in der Mitte', Ende: 'ganz am Ende' };
+  const POS_ORDER = { Anfang: 'zuerst', Mitte: 'dazwischen', Ende: 'zuletzt' };
 
   /** Wo hörst du …? – nur eindeutige, sichere Laute; Mitte nur zwischen zwei Selbstlauten. */
   const WHERE = [];
@@ -177,8 +222,10 @@ Kaktus|🌵|k a k t u s
   });
   const SIM_V = { a: ['o', 'e'], e: ['i', 'a'], i: ['e', 'u'], o: ['u', 'a'], u: ['o', 'i'] };
 
-  /** Laute zählen */
-  const COUNT_TASKS = WORDS.filter((x) => !x.noCount && x.sounds >= 2 && x.sounds <= 6)
+  /** Laute zählen (Stufe 2): höchstens 5 Laute und keine Mitlautverbindung am
+   *  Anfang (Kr-, Bl-, Fr-, Schw-) – vollständiges Zerlegen solcher Wörter ist
+   *  schwerer als das Weglassen des ersten Lautes in Stufe 3. */
+  const COUNT_TASKS = WORDS.filter((x) => !x.noCount && x.sounds >= 2 && x.sounds <= 5 && !(x.toks.length > 1 && !x.toks[0].v && !x.toks[1].v))
     .map((x) => ({ x, n: x.sounds, key: `Laute: ${x.w}` }));
 
   /* Bilder für Stufe 3 und 4 (auch Mehrzahl als doppeltes Bild) */
@@ -189,7 +236,7 @@ Kaktus|🌵|k a k t u s
     Bananen: '🍌🍌', Ananas: '🍍', Tomate: '🍅', Tomaten: '🍅🍅', Rakete: '🚀', Haus: '🏠', Hund: '🐶', Mund: '👄',
     Mond: '🌙', Hand: '✋', Dose: '🥫', Kuh: '🐄', Schuh: '👞', Schaf: '🐑', Zahn: '🦷', Hahn: '🐓', Huhn: '🐔',
     Rad: '🚲', Bad: '🛁', Bett: '🛏️', Ball: '⚽', Tasse: '☕', Tasche: '👜', Flasche: '🍾', Schal: '🧣', Hut: '🎩',
-    Fisch: '🐟', Sonne: '☀️', Apfel: '🍎',
+    Fisch: '🐟', Sonne: '☀️', Apfel: '🍎', Schwein: '🐷', Schein: '💶', Bein: '🦵',
   };
   /** Anzeige- und Sprechname (rot ist kein Namenwort) */
   const SPOKEN = { rot: 'rot' };
@@ -204,12 +251,11 @@ Kaktus|🌵|k a k t u s
     { src: 'Beule', del: 'b', pos: 'Anfang', res: 'Eule', d: ['Biene', 'Eis', 'Igel'], nopic: true },
     { src: 'Ziegel', del: 'z', pos: 'Anfang', res: 'Igel', d: ['Ziegel', 'Ziege', 'Eule'] },
     { src: 'warm', del: 'w', pos: 'Anfang', res: 'Arm', d: ['Wal', 'Ohr', 'Ball'], nopic: true },
-    { src: 'Hosen', del: 'n', pos: 'Ende', res: 'Hose', d: ['Hosen', 'Rose', 'Hase'] },
-    { src: 'Rosen', del: 'n', pos: 'Ende', res: 'Rose', d: ['Rosen', 'Hose', 'Nase'] },
-    { src: 'Hasen', del: 'n', pos: 'Ende', res: 'Hase', d: ['Hasen', 'Nase', 'Hose'] },
-    { src: 'Bananen', del: 'n', pos: 'Ende', res: 'Banane', d: ['Bananen', 'Ananas', 'Tomate'] },
-    { src: 'Tomaten', del: 'n', pos: 'Ende', res: 'Tomate', d: ['Tomaten', 'Rakete', 'Banane'] },
+    // Ende: nur ein echter Mitlaut, der wegfällt (kein Mehrzahl-n: „Hosen ohne N“
+    // klänge wie „ohne en“ und wäre Grammatik statt Lautwegnahme)
+    { src: 'Eis', del: 's', pos: 'Ende', res: 'Ei', d: ['Eis', 'Eule', 'Reis'] },
     { src: 'Brot', del: 'r', pos: 'Mitte', res: 'Boot', d: ['Brot', 'rot', 'Bus'] },
+    { src: 'Schwein', del: 'w', pos: 'Mitte', res: 'Schein', d: ['Schwein', 'Bein', 'Schaf'] },
   ].map((t) => Object.assign(t, { key: `${t.src} ohne ${disp(t.del)}` }));
 
   /* Stufe 4: Laut austauschen. */
@@ -225,7 +271,7 @@ Kaktus|🌵|k a k t u s
     { src: 'Mais', from: 'm', to: 'r', pos: 'Anfang', res: 'Reis', d: ['Mais', 'Eis', 'Rose'] },
     { src: 'Hund', from: 'u', to: 'a', pos: 'Mitte', res: 'Hand', d: ['Hund', 'Mund', 'Hahn'] },
     { src: 'Hose', from: 'o', to: 'a', pos: 'Mitte', res: 'Hase', d: ['Hose', 'Nase', 'Rose'] },
-    { src: 'Mond', from: 'o', to: 'u', pos: 'Mitte', res: 'Mund', d: ['Mond', 'Hund', 'Maus'] },
+    { src: 'Hahn', from: 'a', to: 'u', pos: 'Mitte', res: 'Huhn', d: ['Hahn', 'Hut', 'Zahn'] },
     { src: 'Tasse', from: 's', to: 'sch', pos: 'Mitte', res: 'Tasche', d: ['Tasse', 'Flasche', 'Tomate'] },
     { src: 'Schaf', from: 'f', to: 'l', pos: 'Ende', res: 'Schal', d: ['Schaf', 'Schuh', 'Wal'] },
     { src: 'Hut', from: 't', to: 'n', pos: 'Ende', res: 'Huhn', d: ['Hut', 'Hund', 'Hahn'] },
@@ -455,7 +501,7 @@ Messer|🔪|e|K
         return `Fast! Hör nochmal genau: ${x.w}. Wir hören auf den Laut, nicht auf den Namen vom Buchstaben.`;
       },
       hintSay: () => `Sprich ${x.w} ganz langsam, wie eine Schnecke. Kommt das ${Ls} zuerst, zuletzt oder dazwischen?`,
-      modelSay: () => `Hör mal: ${x.w}. Das ${Ls} kommt ${POS_PHRASE[t.pos]}. Tipp auf ${t.pos}.`,
+      modelSay: () => `${hear(x.w)}. Das ${Ls} kommt ${POS_ORDER[t.pos]}, also ${POS_PHRASE[t.pos]}. Tipp auf ${t.pos}.`,
       onCorrect: () => revealWord(c, x.w, findMark(x.w, x.toks[t.i].t, t.pos)),
     });
     if (!ctx.active) return;
@@ -485,7 +531,7 @@ Messer|🔪|e|K
         `${ok()} Du hast genau in die Mitte gehört. In ${x.w} klingt das ${V}.`),
       explain: (it) => `Fast! Mit ${it.v.toUpperCase()} würde das Wort anders klingen. Hör nochmal: ${x.w}.`,
       hintSay: () => `Sprich ${x.w} ganz langsam und zieh die Mitte lang. Welcher Selbstlaut klingt da?`,
-      modelSay: () => `Hör mal: ${x.w}. In der Mitte klingt das ${V}. Tipp auf das ${V}.`,
+      modelSay: () => `${firstLong(x.w) ? `Hör mal, ich ziehe die Mitte lang: ${stretch(x.w)}` : `Hör mal genau auf die Mitte: ${x.w}`}. Da klingt das ${V}. Tipp auf das ${V}.`,
       onCorrect: () => {
         row.fill(x.toks.map((tk) => tk.t));
         revealWord(c, x.w, findMark(x.w, x.toks[t.i].t, 'Mitte'));
@@ -499,8 +545,8 @@ Messer|🔪|e|K
      Stufe 2: Laute zählen
      ------------------------------------------------------------------ */
   async function countTask(ctx) {
-    const max = ctx.flow > 0 ? 6 : ctx.flow < 0 ? 4 : 5;
-    const min = ctx.flow > 0 ? 4 : 2;
+    const max = ctx.flow > 0 ? 5 : ctx.flow < 0 ? 3 : 4;
+    const min = ctx.flow > 0 ? 3 : 2;
     let pool = COUNT_TASKS.filter((t) => t.n >= min && t.n <= max);
     // Wörter mit Doppelbuchstaben oder Lautpaketen sind die spannenden: öfter nehmen
     if (U.chance(0.5) && pool.some((t) => t.x.letters !== t.n)) pool = pool.filter((t) => t.x.letters !== t.n);
@@ -525,6 +571,7 @@ Messer|🔪|e|K
       content: el('span.hoe-num', el('span.hoe-num-n', String(n)), el('span.hoe-dots', ...U.range(0, n - 1).map(() => el('i')))),
       say: W(n), aria: W(n), correct: n === t.n, n, className: 'hoe-ntile',
     }));
+    const hintAfter = hintAfterFor(ctx, items);
     await ask(ctx, items, `${x.w}. Wie viele Laute hörst du?`, {
       shuffle: false,
       correctSay: () => proc(ctx,
@@ -537,9 +584,18 @@ Messer|🔪|e|K
         return `Fast! So viele Laute sind es nicht. Hör nochmal: ${x.w}.`;
       },
       hintSay: () => `Sprich ${x.w} ganz langsam. Streck für jeden Laut einen Finger aus.`,
-      modelSay: () => `Schau mal, für jeden Laut ein Kästchen. ${x.w} hat ${W(t.n)} Laute.`,
+      modelSay: () => `Für jeden Laut ein Kästchen. ${x.w} hat ${W(t.n)} Laute. Tipp auf die ${W(t.n)}.`,
       onWrong: async (it, tile, n) => {
-        if (n >= 3) { row.classList.remove('hoe-hidden'); row.fill(x.toks.map((tk) => tk.t)); }
+        // Vormachen (nächster Schritt der Hilfe-Leiter): langsam sprechen und
+        // dabei die Kästchen nacheinander aufleuchten lassen
+        if (n <= hintAfter || ctx.modelShown) return;
+        row.classList.remove('hoe-hidden');
+        await ctx.say(`Pass auf, ich zeige dir jeden Laut: ${slow(x.w)}.`);
+        for (let i = 0; i < x.toks.length; i++) {
+          if (!ctx.active) return;
+          row.fill(x.toks.slice(0, i + 1).map((tk) => tk.t));
+          await ctx.sleep(450);
+        }
       },
       onCorrect: () => {
         row.classList.remove('hoe-hidden');
@@ -579,7 +635,7 @@ Messer|🔪|e|K
         return `Fast! ${U.cap(nameOf(it.w))} klingt anders. Nimm nur das ${D} weg, der Rest bleibt gleich.`;
       },
       hintSay: () => `Sprich ${t.src} ganz langsam. Lass das ${D} ${where} einfach weg. Was hörst du dann?`,
-      modelSay: () => `Hör mal: ${t.src}. Ohne ${D} bleibt ${nameOf(t.res)}. Tipp auf ${nameOf(t.res)}.`,
+      modelSay: () => `${hear(t.src)}. Jetzt lasse ich das ${D} weg: ${slow(nameOf(t.res))}. Das ist ${nameOf(t.res)}. Tipp auf ${nameOf(t.res)}.`,
       onCorrect: () => revealWord(c, `${t.src} ➜ ${nameOf(t.res)}`),
     }, { name: true });
     if (!ctx.active) return;
@@ -613,7 +669,7 @@ Messer|🔪|e|K
         return `Fast! Bei ${it.w} ist mehr anders. Nur das ${A} wird zum ${B}, alles andere bleibt gleich.`;
       },
       hintSay: () => `Sprich ${t.src} ganz langsam. Sag ${where} ${B} statt ${A}. Wie klingt das?`,
-      modelSay: () => `Hör mal: ${t.src}. Aus ${A} wird ${B}. So wird daraus ${t.res}. Tipp auf ${t.res}.`,
+      modelSay: () => `${hear(t.src)}. Jetzt sage ich ${where} ${B} statt ${A}: ${slow(t.res)}. Das ist ${t.res}. Tipp auf ${t.res}.`,
       onCorrect: () => revealWord(c, `${t.src} ➜ ${t.res}`),
     }, { name: true });
     if (!ctx.active) return;
@@ -631,14 +687,22 @@ Messer|🔪|e|K
   function lenMark(long, V) {
     return el('span.hoe-len', el('span.hoe-v.big.' + (long ? 'long' : 'short'), V), el('span.hoe-len-label', long ? 'lang' : 'kurz'));
   }
-  async function afterLen(ctx, c, x) {
+  /** Wort mit Strich/Punkt zeigen – schon beim Lösen (onCorrect), damit es
+   *  während des ganzen Lobs sichtbar ist. */
+  function revealLen(c, x) {
     c._word.textContent = '';
     c._word.appendChild(lenWord(x));
     c.classList.add('hoe-revealed');
+  }
+  async function afterLen(ctx, x) {
     if (!x.long && DOUBLE_RE.test(x.w.toLowerCase()) && U.chance(0.5)) {
       await ctx.say('Schau: Nach einem kurzen Selbstlaut kommen oft zwei Mitlaute.');
     }
   }
+  /** Vormachen: lang = ziehen geht; kurz = gezogen klingt es komisch. */
+  const lenModel = (x, V) => (x.long
+    ? `Hör mal: ${stretch(x.w)}. Das ${V} kann ich lang ziehen. Also ist es lang.`
+    : `Hör mal: ${x.w}. Das ${V} ist ganz schnell vorbei. ${stretch(x.w)} klingt komisch. Also ist es kurz.`);
 
   async function lengthClassify(ctx) {
     const x = ctx.item(LEN, (q) => `${q.w} lang?`, { avoid: 5 });
@@ -655,12 +719,13 @@ Messer|🔪|e|K
         ? `Fast! Sprich ${x.w} nochmal. Kannst du das ${V} ziehen, wie ein Gummiband?`
         : `Fast! Sprich ${x.w} nochmal. Ist das ${V} ganz schnell vorbei, wie ein Klatschen?`),
       hintSay: () => 'Tipp: Wenn du den Selbstlaut lang ziehen kannst, ist er lang. Wenn er schnell vorbei ist, ist er kurz.',
-      modelSay: () => `Hör mal: ${x.w}. Das ${V} klingt ${x.long ? 'lang' : 'kurz'}.`,
+      modelSay: () => `${lenModel(x, V)} Tipp auf ${x.long ? 'lang' : 'kurz'}.`,
+      onCorrect: () => revealLen(c, x),
     });
     if (!ctx.active) return;
-    await afterLen(ctx, c, x);
+    await afterLen(ctx, x);
     if (!ctx.active) return;
-    await ctx.sleep(600);
+    await ctx.sleep(1200);
   }
 
   async function lengthPick(ctx) {
@@ -684,12 +749,13 @@ Messer|🔪|e|K
         `${ok()} Du hast jedes Wort genau verglichen. In ${x.w} ist das ${V} ${word}.`),
       explain: (it) => `Fast! In ${it.y.w} klingt das ${V} ${wantLong ? 'kurz' : 'lang'}. Hör nochmal genau.`,
       hintSay: () => `Sprich jedes Wort langsam. Wo kannst du das ${V} ${wantLong ? 'lang ziehen' : 'gar nicht ziehen'}?`,
-      modelSay: () => `Hör mal: ${x.w}. Da klingt das ${V} ${word}. Tipp auf ${x.w}.`,
+      modelSay: () => `${lenModel(x, V)} Tipp auf ${x.w}.`,
+      onCorrect: () => revealLen(c, x),
     }, { name: true });
     if (!ctx.active) return;
-    await afterLen(ctx, c, x);
+    await afterLen(ctx, x);
     if (!ctx.active) return;
-    await ctx.sleep(600);
+    await ctx.sleep(1200);
   }
 
   /* ------------------------------------------------------------------
@@ -712,8 +778,8 @@ Messer|🔪|e|K
       goal: 'Ihr Kind hört Laute an jeder Stelle eines Wortes heraus: am Anfang, in der Mitte und am Ende. Es zählt Laute, nimmt einen Laut weg (Reis ohne R ist Eis) und tauscht einen Laut aus (aus Maus wird Haus). Zum Schluss unterscheidet es lange und kurze Selbstlaute (Hase, Katze). Diese genaue Lautanalyse ist die wichtigste Grundlage für das lautgetreue Schreiben und später für die Rechtschreibung (doppelte Mitlaute nach kurzem Selbstlaut). Das geschriebene Wort erscheint erst nach dem Lösen.',
       levels: [
         'Stufe 1: Wo hörst du den Laut – am Anfang, in der Mitte oder am Ende? Schwerpunkt Endlaut (Maus: S am Ende)',
-        'Stufe 2: Den Selbstlaut in der Mitte erkennen (Hut: U), Laute zählen (Affe hat drei Laute) und Laute in der Mitte orten',
-        'Stufe 3: Einen Laut weglassen (Reis ohne R ist Eis, Hosen ohne N ist Hose, Brot ohne R ist Boot)',
+        'Stufe 2: Den Selbstlaut in der Mitte erkennen (Hut: U), Laute in kurzen Wörtern zählen (Affe hat drei Laute) und Laute in der Mitte orten',
+        'Stufe 3: Einen Laut weglassen (Reis ohne R ist Eis, Eis ohne S ist Ei, Brot ohne R ist Boot)',
         'Stufe 4: Einen Laut austauschen – am Anfang (Maus zu Haus), in der Mitte (Hund zu Hand) und am Ende (Schaf zu Schal)',
         'Stufe 5: Lange und kurze Selbstlaute unterscheiden (Hase mit Strich, Katze mit Punkt) – Vorbereitung auf Klasse 2',
       ],

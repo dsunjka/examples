@@ -38,50 +38,73 @@
      Inhalte
      ====================================================================== */
 
-  /* ---------- Stufe 1: Gruppen ähnlicher Wörter [Wort, Emoji, Artikel] ---------- */
+  /* ---------- Stufe 1: Gruppen ähnlicher Wörter [Wort, Emoji, Artikel] ----------
+     Nach Schwierigkeit gestuft (Brücke aus der Vorschule):
+       Stufe A: lauttreue, kurze Wörter ohne Mehrbuchstaben-Laute außer au/ei
+       Stufe B: ch/sch, ie, Doppel-Mitlaut am Anfang einzelner Wörter
+       Stufe C: Mitlaut-Häufungen (Tr, Br, Fr, Fl) und Umlaute (ü) */
   const GROUPS = [
-    [['Maus', '🐭', 'die'], ['Haus', '🏠', 'das'], ['Mais', '🌽', 'der']],
-    [['Hose', '👖', 'die'], ['Rose', '🌹', 'die'], ['Dose', '🥫', 'die']],
-    [['Nase', '👃', 'die'], ['Hase', '🐰', 'der'], ['Vase', '🏺', 'die']],
-    [['Tasche', '👜', 'die'], ['Flasche', '🍾', 'die'], ['Tasse', '☕', 'die']],
-    [['Hund', '🐶', 'der'], ['Mund', '👄', 'der'], ['Mond', '🌙', 'der']],
-    [['Eis', '🍦', 'das'], ['Reis', '🍚', 'der'], ['Kreis', '⭕', 'der']],
-    [['Biene', '🐝', 'die'], ['Birne', '🍐', 'die'], ['Bein', '🦵', 'das']],
-    [['Raupe', '🐛', 'die'], ['Traube', '🍇', 'die'], ['Taube', '🕊️', 'die']],
-    [['Kuh', '🐄', 'die'], ['Schuh', '👟', 'der'], ['Kuchen', '🍰', 'der']],
-    [['Kind', '🧒', 'das'], ['Rind', '🐂', 'das'], ['Wind', '🌬️', 'der']],
-    [['Brot', '🍞', 'das'], ['Boot', '⛵', 'das'], ['Brille', '👓', 'die']],
-    [['Schaf', '🐑', 'das'], ['Schal', '🧣', 'der'], ['Schiff', '🚢', 'das']],
-    [['Fisch', '🐟', 'der'], ['Frosch', '🐸', 'der'], ['Flasche', '🍾', 'die']],
-    [['Bus', '🚌', 'der'], ['Buch', '📖', 'das'], ['Burg', '🏰', 'die']],
-    [['Kuchen', '🍰', 'der'], ['Küken', '🐥', 'das'], ['Küche', '🍳', 'die']],
+    { tier: 1, w: [['Maus', '🐭', 'die'], ['Haus', '🏠', 'das'], ['Mais', '🌽', 'der']] },
+    { tier: 1, w: [['Hose', '👖', 'die'], ['Rose', '🌹', 'die'], ['Dose', '🥫', 'die']] },
+    { tier: 1, w: [['Nase', '👃', 'die'], ['Hase', '🐰', 'der'], ['Vase', '🏺', 'die']] },
+    { tier: 1, w: [['Hund', '🐶', 'der'], ['Mund', '👄', 'der'], ['Mond', '🌙', 'der']] },
+    { tier: 1, w: [['Wal', '🐳', 'der'], ['Wald', '🌲', 'der'], ['Wind', '🌬️', 'der']] },
+    { tier: 1, w: [['Eis', '🍦', 'das'], ['Ei', '🥚', 'das'], ['Reis', '🍚', 'der']] },
+    { tier: 2, w: [['Bus', '🚌', 'der'], ['Buch', '📖', 'das'], ['Burg', '🏰', 'die']] },
+    { tier: 2, w: [['Kuh', '🐄', 'die'], ['Schuh', '👟', 'der'], ['Kuchen', '🍰', 'der']] },
+    { tier: 2, w: [['Biene', '🐝', 'die'], ['Birne', '🍐', 'die'], ['Bein', '🦵', 'das']] },
+    { tier: 2, w: [['Tasche', '👜', 'die'], ['Flasche', '🍾', 'die'], ['Tasse', '☕', 'die']] },
+    { tier: 2, w: [['Schaf', '🐑', 'das'], ['Schal', '🧣', 'der'], ['Schiff', '🚢', 'das']] },
+    { tier: 3, w: [['Raupe', '🐛', 'die'], ['Traube', '🍇', 'die'], ['Taube', '🕊️', 'die']] },
+    { tier: 3, w: [['Brot', '🍞', 'das'], ['Boot', '⛵', 'das'], ['Brille', '👓', 'die']] },
+    { tier: 3, w: [['Fisch', '🐟', 'der'], ['Frosch', '🐸', 'der'], ['Flasche', '🍾', 'die']] },
+    { tier: 3, w: [['Kuchen', '🍰', 'der'], ['Küken', '🐥', 'das'], ['Küche', '🍳', 'die']] },
   ];
   const WORDS = [];
-  GROUPS.forEach((g, gi) => g.forEach(([w, e, a]) => {
-    if (!WORDS.find((x) => x.w === w)) WORDS.push({ w, e, a, groups: [] });
-    WORDS.find((x) => x.w === w).groups.push(gi);
+  GROUPS.forEach((g, gi) => g.w.forEach(([w, e, a]) => {
+    if (!WORDS.find((x) => x.w === w)) WORDS.push({ w, e, a, groups: [], tier: g.tier });
+    const o = WORDS.find((x) => x.w === w);
+    o.groups.push(gi);
+    o.tier = Math.min(o.tier, g.tier);
   }));
   const wordObj = (w) => WORDS.find((x) => x.w === w);
 
-  /* ---------- Stufe 2: Satz-Gruppen mit genau einem entscheidenden Unterschied ---------- */
+  /* ---------- Stufe 2: Satz-Gruppen mit genau einem entscheidenden Unterschied ----------
+     Echte Minimalpaare: Jeder Ablenker unterscheidet sich vom Zielsatz nur im
+     „Wer“ (Artikel + Namenwort gelten als ein Satzteil) ODER in einem Wort danach.
+     who = Anzahl Wörter des „Wer“ am Satzanfang, v = Position des Tunworts,
+     q = Frage nach dem Tunwort (für die Erklärung, wenn nur das Tunwort anders ist). */
   const SETS = [
-    [['Der Junge fährt Fahrrad.', ['👦', '🚲']], ['Der Junge fährt Roller.', ['👦', '🛴']], ['Das Mädchen fährt Fahrrad.', ['👧', '🚲']]],
-    [['Mama trinkt Tee.', ['👩', '🍵']], ['Mama trinkt Saft.', ['👩', '🧃']], ['Papa trinkt Tee.', ['👨', '🍵']]],
-    [['Der Bär isst Honig.', ['🐻', '🍯']], ['Der Bär isst Fisch.', ['🐻', '🐟']], ['Der Affe isst Honig.', ['🐒', '🍯']]],
-    [['Oma liest ein Buch.', ['👵', '📖']], ['Oma strickt einen Schal.', ['👵', '🧶']], ['Opa liest ein Buch.', ['👴', '📖']]],
-    [['Das Baby weint.', ['👶', '😢']], ['Das Baby lacht.', ['👶', '😄']], ['Das Baby schläft.', ['👶', '💤']]],
-    [['Der Frosch springt ins Wasser.', ['🐸', '💦']], ['Der Frosch sitzt im Gras.', ['🐸', '🌿']], ['Die Ente springt ins Wasser.', ['🦆', '💦']]],
-    [['Lea malt eine Sonne.', ['👧', '🖍️', '☀️']], ['Lea malt ein Haus.', ['👧', '🖍️', '🏠']], ['Lea malt eine Blume.', ['👧', '🖍️', '🌸']]],
-    [['Tim baut einen Schneemann.', ['👦', '⛄']], ['Tim baut eine Burg.', ['👦', '🏰']], ['Tim baut eine Rakete.', ['👦', '🚀']]],
-    [['Die Katze trinkt Milch.', ['🐱', '🥛']], ['Die Katze jagt eine Maus.', ['🐱', '🐭']], ['Der Hund trinkt Milch.', ['🐶', '🥛']]],
-    [['Der Vogel fliegt hoch.', ['🐦', '☁️']], ['Der Vogel singt ein Lied.', ['🐦', '🎵']], ['Das Flugzeug fliegt hoch.', ['✈️', '☁️']]],
-    [['Draußen regnet es.', ['🌧️']], ['Draußen schneit es.', ['🌨️']], ['Draußen blitzt es.', ['🌩️']]],
-    [['Der Hund spielt mit dem Ball.', ['🐶', '⚽']], ['Der Hund spielt mit der Katze.', ['🐶', '🐱']], ['Das Kind spielt mit dem Ball.', ['🧒', '⚽']]],
-    [['Papa kocht Suppe.', ['👨', '🍲']], ['Papa kocht Nudeln.', ['👨', '🍝']], ['Papa isst Suppe.', ['👨', '🥄', '🍲']]],
-    [['Der Igel sucht Äpfel.', ['🦔', '🍎']], ['Der Igel sucht Pilze.', ['🦔', '🍄']], ['Das Eichhörnchen sucht Pilze.', ['🐿️', '🍄']]],
+    { who: 2, v: 2, q: 'Was macht der Junge?', s: [['Der Junge fährt Fahrrad.', ['👦', '🚲']], ['Der Junge fährt Roller.', ['👦', '🛴']], ['Das Mädchen fährt Fahrrad.', ['👧', '🚲']]] },
+    { who: 1, v: 1, q: 'Was macht Mama?', s: [['Mama trinkt Tee.', ['👩', '🍵']], ['Mama trinkt Saft.', ['👩', '🧃']], ['Papa trinkt Tee.', ['👨', '🍵']]] },
+    { who: 2, v: 2, q: 'Was macht der Bär?', s: [['Der Bär isst Honig.', ['🐻', '🍯']], ['Der Bär isst Fisch.', ['🐻', '🐟']], ['Der Affe isst Honig.', ['🐒', '🍯']]] },
+    { who: 1, v: 1, q: 'Was macht Oma?', s: [['Oma backt Kuchen.', ['👵', '🍰']], ['Oma backt Brot.', ['👵', '🍞']], ['Opa backt Kuchen.', ['👴', '🍰']]] },
+    { who: 2, v: 2, q: 'Was macht das Baby?', s: [['Das Baby weint.', ['👶', '😢']], ['Das Baby lacht.', ['👶', '😄']], ['Das Baby schläft.', ['👶', '💤']]] },
+    { who: 2, v: 2, q: 'Was macht der Frosch?', s: [['Der Frosch sitzt im Wasser.', ['🐸', '🌊']], ['Der Frosch sitzt im Gras.', ['🐸', '🌿']], ['Die Ente sitzt im Wasser.', ['🦆', '🌊']]] },
+    { who: 1, v: 1, q: 'Was macht Lea?', s: [['Lea malt eine Sonne.', ['👧', '🖍️', '☀️']], ['Lea malt eine Blume.', ['👧', '🖍️', '🌸']], ['Lea malt eine Rakete.', ['👧', '🖍️', '🚀']]] },
+    { who: 1, v: 1, q: 'Was macht Tim?', s: [['Tim baut eine Burg.', ['👦', '🏰']], ['Tim baut eine Rakete.', ['👦', '🚀']], ['Tim baut eine Brücke.', ['👦', '🌉']]] },
+    { who: 2, v: 2, q: 'Was macht die Katze?', s: [['Die Katze trinkt Milch.', ['🐱', '🥛']], ['Die Katze trinkt Wasser.', ['🐱', '💧']], ['Der Hund trinkt Milch.', ['🐶', '🥛']]] },
+    { who: 2, v: 2, q: 'Was macht der Vogel?', s: [['Der Vogel sitzt auf dem Baum.', ['🐦', '🌳']], ['Der Vogel sitzt auf dem Dach.', ['🐦', '🏠']], ['Die Katze sitzt auf dem Baum.', ['🐱', '🌳']]] },
+    { who: 0, v: 1, q: 'Was passiert draußen?', s: [['Draußen regnet es.', ['🌧️']], ['Draußen schneit es.', ['🌨️']], ['Draußen blitzt es.', ['🌩️']]] },
+    { who: 2, v: 2, q: 'Was macht der Hund?', s: [['Der Hund spielt mit dem Ball.', ['🐶', '⚽']], ['Der Hund spielt mit dem Knochen.', ['🐶', '🦴']], ['Das Kind spielt mit dem Ball.', ['🧒', '⚽']]] },
+    { who: 1, v: 1, q: 'Was macht Papa?', s: [['Papa kocht Suppe.', ['👨‍🍳', '🍲']], ['Papa kocht Nudeln.', ['👨‍🍳', '🍝']], ['Mama kocht Suppe.', ['👩‍🍳', '🍲']]] },
+    { who: 2, v: 2, q: 'Was macht der Igel?', s: [['Der Igel sucht Äpfel.', ['🦔', '🍎']], ['Der Igel sucht Pilze.', ['🦔', '🍄']], ['Das Eichhörnchen sucht Pilze.', ['🐿️', '🍄']]] },
   ];
   const SENTS = [];
-  SETS.forEach((set, si) => set.forEach(([t, scene]) => SENTS.push({ t, scene, si, words: splitWords(t) })));
+  SETS.forEach((set, si) => set.s.forEach(([t, scene]) => SENTS.push({ t, scene, si, words: splitWords(t) })));
+  /** Positionen, an denen sich zwei Wortlisten unterscheiden. */
+  function diffIdx(a, b) {
+    const d = [];
+    for (let i = 0; i < Math.max(a.length, b.length); i++) if (clean(a[i] || '') !== clean(b[i] || '')) d.push(i);
+    return d;
+  }
+  /** Minimalpaar: nur das „Wer“ ist anders ODER genau ein anderes Wort. */
+  function minimalPair(a, b) {
+    const d = diffIdx(a.words, b.words);
+    return d.length > 0 && (d.every((i) => i < SETS[a.si].who) || d.length === 1);
+  }
+  /** Zielsätze: nur solche, zu denen ALLE Geschwister echte Minimalpaare sind. */
+  const SENT_TARGETS = SENTS.filter((s) => SENTS.every((o) => o === s || o.si !== s.si || minimalPair(s, o)));
 
   /* ---------- Stufe 3a: Präpositionen ---------- */
   const ANIMALS = [
@@ -172,7 +195,7 @@
       k: 'Lotta',
       s: ['Lotta hat eine Katze.', 'Die Katze ist schwarz.', 'Sie schläft gern auf dem Sofa.'],
       q: [
-        { q: 'Welche Farbe hat die Katze?', s: 1, a: [{ t: 'schwarz', ok: true }, { t: 'weiß', why: 'Lies den zweiten Satz genau.' }, { t: 'braun', why: 'Lies den zweiten Satz genau.' }], x: { t: 'rot', why: 'Rote Katzen gibt es nicht. Lies den zweiten Satz.' } },
+        { q: 'Welche Farbe hat die Katze?', s: 1, a: [{ t: 'schwarz', ok: true }, { t: 'weiß', why: 'Lies den zweiten Satz genau.' }, { t: 'braun', why: 'Lies den zweiten Satz genau.' }], x: { t: 'grün', why: 'Grüne Katzen gibt es nicht. Lies den zweiten Satz.' } },
         { q: 'Wo schläft die Katze gern?', s: 2, a: [{ e: '🛋️', say: 'Sofa', ok: true }, { e: '🛏️', say: 'Bett', why: 'Ein Bett steht nicht in der Geschichte.' }, { e: '📦', say: 'Kiste', why: 'Eine Kiste steht nicht in der Geschichte.' }], x: { e: '🧺', say: 'Korb', why: 'Ein Korb steht nicht in der Geschichte.' } },
       ],
     },
@@ -230,10 +253,10 @@
     { t: 'In der Nacht scheint die Sonne.', key: 'Sonne', fix: 'In der Nacht scheint der Mond.' },
     { t: 'Das Auto fliegt über die Wolken.', key: 'fliegt', fix: 'Ein Auto fährt auf der Straße.' },
     { t: 'Die Katze bellt laut.', key: 'bellt', fix: 'Eine Katze miaut. Ein Hund bellt.' },
-    { t: 'Ich schlafe in der Badewanne.', key: 'Badewanne', fix: 'Ich schlafe im Bett.' },
+    { t: 'Der Stuhl isst eine Suppe.', key: 'isst', fix: 'Ein Stuhl kann nicht essen. Auf einem Stuhl sitzt man.' },
     { t: 'Im Sommer bauen wir einen Schneemann.', key: 'Sommer', fix: 'Einen Schneemann bauen wir im Winter.' },
     { t: 'Der Elefant ist kleiner als eine Maus.', key: 'kleiner', fix: 'Ein Elefant ist viel größer als eine Maus.' },
-    { t: 'Ich putze mir mit dem Kamm die Zähne.', key: 'Kamm', fix: 'Zähne putze ich mit der Zahnbürste.' },
+    { t: 'Die Schnecke ist schneller als ein Auto.', key: 'schneller', fix: 'Eine Schnecke kriecht ganz langsam.' },
     { t: 'Der Apfel wächst unter der Erde.', key: 'unter', fix: 'Ein Apfel wächst am Baum.' },
   ];
   const SENSE = [
@@ -274,7 +297,7 @@
      Helfer
      ====================================================================== */
   function splitWords(t) { return t.replace(/[.!?]$/, '').split(' '); }
-  const clean = (w) => w.replace(/[.,!?]/g, '');
+  function clean(w) { return w.replace(/[.,!?]/g, ''); }
   const vary = (key, list) => U.pickFresh('les-' + key, list, Math.min(2, list.length - 1));
   const proc = (ctx, normal, process) => (ctx.wrongCount === 0 && !ctx._lesHelped && U.chance(0.3) ? process : normal);
   const ORD = ['ersten', 'zweiten', 'dritten'];
@@ -386,16 +409,18 @@
     }
   }
 
-  /** Index des ersten Worts, in dem sich zwei Sätze unterscheiden (oder -1). */
-  function firstDiff(a, b) {
-    const n = Math.max(a.length, b.length);
-    for (let i = 0; i < n; i++) if (clean(a[i] || '') !== clean(b[i] || '')) return i;
-    return -1;
-  }
-
   /** Entscheidende Wörter: kommen im Zielsatz vor, aber nicht in allen Ablenkern. */
   function keyWords(target, others) {
     return target.filter((w) => others.some((o) => !o.map(clean).includes(clean(w)))).map(clean);
+  }
+
+  const ARTICLES = ['der', 'die', 'das', 'dem', 'den', 'ein', 'eine', 'einen', 'im', 'es'];
+  /** „Wichtig ist das Wort X.“ / „Wichtig sind die Wörter X und Y.“ (ohne Artikel) */
+  function keyPhrase(kw) {
+    const w = kw.filter((x) => !ARTICLES.includes(x.toLowerCase()));
+    const list = w.length ? w : kw;
+    if (list.length === 1) return `Wichtig ist das Wort ${list[0]}.`;
+    return `Wichtig sind die Wörter ${list.slice(0, -1).join(', ')} und ${list[list.length - 1]}.`;
   }
 
   function glowWords(textBox, words) {
@@ -419,13 +444,39 @@
   /* ======================================================================
      Stufe 1: Wort lesen → Bild wählen (ähnliche Wörter)
      ====================================================================== */
+  /** Laute/Buchstabengruppen eines Worts (sch, ch, ei, au, ie, Dehnungs-h …) als [start, ende). */
+  function graphemes(w) {
+    const re = /sch|ch|ck|ei|ai|au|äu|eu|ie|qu|pf|aa|ee|oo|[aeiouäöü]h(?![aeiouäöü])|./gi;
+    const out = [];
+    let m;
+    while ((m = re.exec(w))) out.push([m.index, m.index + m[0].length]);
+    return out;
+  }
+
+  /** Wo unterscheidet sich das Ablenker-Wort vom Zielwort? (für Flos Vormachen) */
+  function wordContrast(target, other) {
+    const a = target.w.toLowerCase();
+    const b = other.w.toLowerCase();
+    if (a[0] !== b[0]) return `Bei ${other.w} ist der Anfang anders.`;
+    let i = 0;
+    while (i < a.length && a[i] === b[i]) i++;
+    if (i >= Math.min(a.length, b.length) - 1) return `Bei ${other.w} ist das Ende anders.`;
+    return `Bei ${other.w} ist die Mitte anders.`;
+  }
+
   async function wordTask(ctx) {
-    const target = ctx.item(WORDS, (x) => x.w, { avoid: 6 });
-    const gi = U.pick(target.groups);
-    const sibs = GROUPS[gi].map((x) => wordObj(x[0])).filter((x) => x !== target);
+    // Gestuft: zuerst lauttreue Wörter (Stufe A), später ch/sch/ie (B), am Ende Häufungen/Umlaute (C).
+    // Bei flow < 0 nur Stufe A.
+    const maxTier = ctx.flow < 0 ? 1 : ctx.index < 2 ? 1 : ctx.index < 4 ? 2 : 3;
+    const pool = WORDS.filter((x) => x.tier <= maxTier);
+    const target = ctx.item(pool, (x) => x.w, { avoid: 6 });
+    const gi = U.pick(target.groups.filter((g) => GROUPS[g].tier <= maxTier));
+    const sibs = GROUPS[gi].w.map((x) => wordObj(x[0])).filter((x) => x !== target);
     const opts = [target, ...sibs];
     if (ctx.flow > 0) {
-      const extra = U.pick(WORDS.filter((x) => !opts.includes(x) && x.e !== target.e));
+      // Zusatzbild: aus keiner Gruppe des Zielworts (keine Bedeutungs-Überschneidung), gleiche Stufe
+      const extra = U.pick(WORDS.filter((x) => !opts.includes(x) && x.e !== target.e && x.tier <= maxTier
+        && !x.groups.some((g) => target.groups.includes(g))));
       if (extra) opts.push(extra);
     }
     const letters = el('div.les-word', { 'aria-label': 'Lesewort' }, ...Array.from(target.w).map((ch) => el('span.les-ch', ch)));
@@ -433,6 +484,17 @@
     ctx.stage.appendChild(card);
     const chars = Array.from(letters.children);
     letters.addEventListener('click', () => sweep(ctx, chars, 300));
+    /** Leselineal Laut für Laut: Buchstabengruppen (M – au – s) leuchten gemeinsam. */
+    async function soundSweep(ms) {
+      for (const [a, b] of graphemes(target.w)) {
+        if (!ctx.active) return;
+        const g = chars.slice(a, b);
+        g.forEach((c) => c.classList.add('les-lit'));
+        await ctx.sleep(ms);
+        g.forEach((c) => c.classList.remove('les-lit'));
+      }
+    }
+    const modelText = () => `${target.w}. ${wordContrast(target, sibs[0])} Schau, das passende Bild.`;
 
     ctx.instruct(vary('w-instr', ['Lies das Wort. Welches Bild passt?', 'Was steht hier? Tippe auf das passende Bild.', 'Lies genau bis zum Ende. Welches Bild passt?']));
     const items = opts.map((x) => ({ content: x.e, correct: x === target, say: x.w, x }));
@@ -454,12 +516,21 @@
         }
         return `Das Bild heißt ${a}. Der Anfang stimmt. Lies weiter bis zum Ende!`;
       },
-      hintSay: 'Die Lupe hilft dir. Lies jeden Buchstaben, ganz langsam.',
-      modelSay: () => `Hier steht ${target.w}. Schau, das passende Bild.`,
+      // Bei 3–4 Bildern bleibt nach dem 2. Fehler nur noch (fast) das richtige Bild übrig.
+      // Darum macht Flo hier die Strategie vor (Laut für Laut bis zum Ende + Vergleich mit dem
+      // ähnlichen Wort) und zeigt das Bild – statt eines Denkanstoßes, der nichts mehr nützt.
+      hintSay: () => (localWrong >= 2 ? '' : 'Die Lupe hilft dir. Lies jeden Buchstaben, ganz langsam.'),
+      modelSay: () => modelText(),
       onWrong: async (item, tile) => {
         const n = ++localWrong; // eigene Zählung (Vorlesen zählt in ctx.wrongCount mit)
         if (n === 1) await sweep(ctx, chars, 380);
-        else if (n === 2) await sweep(ctx, chars, 520);
+        else if (n === 2) {
+          await ctx.say('Pass auf, ich lese Laut für Laut, ganz bis zum Ende.');
+          if (!ctx.active) return;
+          await soundSweep(650);
+          if (!ctx.active) return;
+          await ctx.say(modelText());
+        }
       },
     });
     if (!ctx.active) return;
@@ -492,12 +563,17 @@
         cfg.procSay || vary('s-proc', ['Du hast Wort für Wort gelesen, bis zum Punkt. Klasse!', 'Toll, du hast auch die kleinen Wörter genau gelesen!'])),
       explain: (item) => cfg.explain(item.o),
       hintSay: 'Schau auf die leuchtenden Wörter. Die sind wichtig!',
-      modelSay: 'Hier ist das passende Bild.',
+      modelSay: () => `${keyPhrase(kw)} Darum passt dieses Bild.`,
       onWrong: async (item, tile) => {
         const n = ++localWrong; // eigene Zählung (Vorlesen zählt in ctx.wrongCount mit)
         if (n === 1 && ha > 1) await sweep(ctx, tb._words);
         if (n === ha) glowWords(tb, kw);
-        if (n > ha) await readAloud(ctx, card, target.t);
+        if (n === ha + 1) {
+          // Vormachen: Flo liest Wort für Wort bis zum Punkt; danach nennt modelSay die wichtigen Wörter
+          await ctx.say('Schau, ich lese Wort für Wort, bis zum Punkt.');
+          if (!ctx.active) return;
+          await readAloud(ctx, card, target.t);
+        }
       },
     });
     if (!ctx.active) return;
@@ -505,15 +581,19 @@
     await ctx.sleep(500);
   }
 
-  /** Erklärung für Satz-Bild: Wo steckt der Unterschied? (ohne Lösung) */
+  /** Erklärung für Satz-Bild: Wo steckt der Unterschied? (ohne Lösung)
+      Richtet sich nach der ROLLE des anderen Worts (wer / Tunwort / Rest), nicht nach der Position. */
   function diffExplain(target, wrong) {
-    const i = firstDiff(splitWords(target.t), splitWords(wrong.t));
-    if (i <= 1) return 'Schau genau, wer im Satz etwas macht. Lies den Anfang noch einmal.';
+    if (wrong.si !== target.si) return 'Dieses Bild passt gar nicht. Lies Wort für Wort, was da steht.';
+    const set = SETS[target.si];
+    const d = diffIdx(target.words, wrong.words);
+    if (d[0] < set.who) return 'Der Anfang ist anders. Schau genau, wer im Satz etwas macht.';
+    if (d[0] === set.v) return `Der Anfang stimmt. Aber: ${set.q} Lies das nächste Wort ganz genau.`;
     return 'Der Anfang stimmt. Aber lies weiter, bis zum Punkt!';
   }
 
   async function sentTask(ctx) {
-    const target = ctx.item(SENTS, (s) => s.t, { avoid: 8 });
+    const target = ctx.item(SENT_TARGETS, (s) => s.t, { avoid: 8 });
     const others = SENTS.filter((s) => s.si === target.si && s !== target);
     if (ctx.flow > 0) {
       const extra = U.pick(SENTS.filter((s) => s.si !== target.si));
@@ -602,6 +682,7 @@
     parts.forEach((p) => { kw.push(clean(p.s.acc.split(' ')[1]), p.c.w); });
     let sel = null;
     let busy = false;
+    let localWrong = 0; // eigene Zählung: Vorlesen (🔊) zählt in ctx.wrongCount/helpStep mit
     const done = new Set();
     let resolveTask;
     const finished = new Promise((r) => { resolveTask = r; });
@@ -654,7 +735,7 @@
       if (!ctx.active) return;
       await ctx.sleep(300);
       fill(b, null);
-      const step = ctx.helpStep;
+      const step = ++localWrong; // 1 → Leselineal, 2 → Wörter leuchten, 3+ → vormachen
       if (step === 1) await sweep(ctx, tb._words);
       else if (step === 2) {
         glowWords(tb, kw);
@@ -755,7 +836,7 @@
           : vary('st-ok1', ['Richtig!', 'Genau!', 'Stimmt!'])),
         explain: (item) => item.a.why || 'Lies noch einmal in der Geschichte nach.',
         hintSay: `Die Antwort steht im ${ORD[q.s]} Satz. Ich lasse ihn leuchten.`,
-        modelSay: 'Hier ist die Antwort.',
+        modelSay: `Ich schaue in der Geschichte nach. Im ${ORD[q.s]} Satz steht die Antwort. Darum passt diese hier.`,
         onWrong: async (item, tile) => {
         const n = ++localWrong; // eigene Zählung (Vorlesen zählt in ctx.wrongCount mit)
           if (n === ha) lines[q.s].classList.add('les-answerline');
@@ -833,12 +914,12 @@
       className: 'les-oddlist',
       hintAfter: ha,
       praise: false,
-      correctSay: () => proc(ctx,
+      correctSay: () => (ctx.modelShown ? 'Genau, das ist der Unsinn-Satz.' : proc(ctx,
         `${vary('odd-ok', ['Genau, das ist Unsinn!', 'Richtig gefunden!'])} ${target.fix}`,
-        `Du hast alle Sätze genau gelesen. Super! ${target.fix}`),
+        `Du hast alle Sätze genau gelesen. Super! ${target.fix}`)),
       explain: (item) => 'Dieser Satz kann stimmen. Stell dir jeden Satz wie ein Bild vor. Welcher ist komisch?',
       hintSay: 'Lies die Sätze noch einmal ganz langsam. Ein Satz ist schon weg.',
-      modelSay: 'Schau, dieser Satz ist Unsinn.',
+      modelSay: () => `Ich stelle mir jeden Satz wie ein Bild im Kopf vor. ${target.t} Das geht nicht! ${target.fix}`,
       onWrong: async (item, tile) => {
         const n = ++localWrong; // eigene Zählung (Vorlesen zählt in ctx.wrongCount mit)
         if (n > ha && target.key) glowWords(tItem.tb, [target.key]);

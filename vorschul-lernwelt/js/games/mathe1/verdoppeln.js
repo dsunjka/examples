@@ -43,7 +43,11 @@
     { e: '🎈', sg: 'Ballon', pl: 'Ballons', g: 'm' },
   ];
   const ART_ACC = { m: 'einen', f: 'eine', n: 'ein' };
+  const ART_NOM = { m: 'ein', f: 'eine', n: 'ein' };
   const acc = (n, it) => (n === 1 ? `${ART_ACC[it.g]} ${it.sg}` : `${w(n)} ${it.pl}`);
+  const nom = (n, it) => (n === 1 ? `${ART_NOM[it.g]} ${it.sg}` : `${w(n)} ${it.pl}`);
+  /** „Das ist ein Apfel.“ / „Das sind drei Äpfel.“ */
+  const dasSind = (n, it, extra = '') => (n === 1 ? `Das ist ${extra}${nom(n, it)}.` : `Das sind ${extra}${nom(n, it)}.`);
   const thing = () => U.pickFresh('ver-thing', THINGS, 3, (x) => x.sg);
 
   /* ---------------- Aufgaben-Pools ---------------- */
@@ -64,7 +68,9 @@
   const POOL = {
     b: U.range(1, 5).map((n) => ({ ...dbl(n), kind: 'build' })),
     be: U.range(1, 3).map((n) => ({ ...dbl(n), kind: 'build' })),
+    bs: U.range(3, 5).map((n) => ({ ...dbl(n), kind: 'build' })),
     d: U.range(6, 10).map((n) => dbl(n)),
+    de: U.range(6, 8).map((n) => dbl(n)),
     dd: U.range(6, 10).map((n) => dbl(n, true)),
     h: evens(4, 20).map((n) => half(n)),
     he: evens(2, 10).map((n) => half(n)),
@@ -87,16 +93,17 @@
     ],
   };
 
-  /** Pool und Intro je Aufgabe (ctx.level bestimmt die Art, ctx.taskLevel die Schwere). */
+  /** Pool und Intro je Aufgabe. ctx.level bestimmt die Art (Legen, Fünferreihen,
+      Halbieren, …), ctx.taskLevel nur die Schwere innerhalb dieser Art – so
+      wechselt die Bedienung (Korb vs. Antwortkarten) nie mitten in der Runde. */
   function config(ctx) {
     const L = ctx.level;
     const T = ctx.taskLevel;
+    if (L === 1) return { pool: T > 1 ? 'bs' : ctx.flow < 0 ? 'be' : 'b', intro: 1 };
+    if (L === 2) return { pool: T < 2 ? 'de' : T > 2 ? 'dd' : 'd', intro: 2 };
     if (L === 3) return { pool: T < 3 ? 'he' : T > 3 ? 'hh' : 'h', intro: 3 };
     if (L === 4) return { pool: T < 4 ? 'ne' : T > 4 ? 'nd' : 'n', intro: 4 };
-    if (L === 5) return { pool: T < 5 ? 'me' : 'm', intro: 5 };
-    if (T === 1) return { pool: ctx.flow < 0 ? 'be' : 'b', intro: 1 };
-    if (T === 2) return { pool: 'd', intro: 2 };
-    return { pool: 'dd', intro: 2 };
+    return { pool: T < 5 ? 'me' : 'm', intro: 5 };
   }
 
   const INTRO = {
@@ -352,12 +359,14 @@
         }
         sw++;
         const say = count > t.n
-          ? `Schau mal: Das sind ${w(count)}. Wir brauchen ${w(t.n)}. Mit dem Minus nimmst du eins weg.`
-          : `Schau mal: Das sind erst ${w(count)}. Wir brauchen ${w(t.n)}.`;
+          ? `Schau mal: ${dasSind(count, it)} Wir brauchen ${acc(t.n, it)}. Mit dem Minus nimmst du eins weg.`
+          : `Schau mal: ${dasSind(count, it, 'erst ')} Wir brauchen ${acc(t.n, it)}.`;
         await ctx.wrong(M.left, { say, keep: true });
         if (!ctx.active) return;
         if (sw === 2) {
-          await ctx.say(`Tipp: Zähle mit, wenn du tippst. Bis ${w(t.n)}.`);
+          await ctx.say(t.n === 1
+            ? 'Tipp: Tippe nur ein einziges Mal auf den Korb.'
+            : `Tipp: Zähle mit, wenn du tippst. Bis ${w(t.n)}.`);
           if (!ctx.active) return;
           guide();
         } else if (sw >= 3) {
@@ -368,7 +377,7 @@
             LT.sfx.play('tap');
             await ctx.sleep(260);
           }
-          await ctx.say(`Schau, so sind es ${w(t.n)}. Jetzt tippst du auf den Zauberstab.`);
+          await ctx.say(`Schau, so stimmt es: ${dasSind(t.n, it)} Jetzt tippst du auf den Zauberstab.`);
           if (!ctx.active) return;
           guide();
         }
@@ -396,23 +405,29 @@
         const normal = `${okWord()}! ${W(n)} plus ${w(n)} ist ${w(t.R)}.`;
         if (n >= 6) {
           return proc(ctx, normal, [
-            'Du hast mit der Fünf gerechnet. Fünf und fünf sind zehn. Sehr schlau!',
-            `Super! Du kennst das Doppelte von ${w(n)} schon. So rechnen Profis.`,
+            n === 10
+              ? 'Super! Zehn und zehn sind zwanzig. Das kannst du dir gut merken.'
+              : `Super! Mit der Fünf geht das schnell: Fünf und fünf sind zehn, dann noch ${w(r)} und ${w(r)}.`,
+            `Klasse! Das Doppelte von ${w(n)} ist ${w(t.R)}. Das kannst du dir gut merken.`,
           ]);
         }
         return proc(ctx, normal, [
-          `Klasse! ${W(n)} und noch einmal ${w(n)}. Du hast genau überlegt.`,
-          'Super! Du hast beide Seiten zusammen gerechnet.',
+          `Klasse! ${W(n)} und noch einmal ${w(n)} sind ${w(t.R)}.`,
+          `Super! Beide Seiten zusammen sind ${w(t.R)}.`,
         ]);
       },
       explain: (v) => {
         if (v === n + 2 && n !== 2) return 'Schau mal: Verdoppeln heißt nicht zwei dazu. Verdoppeln heißt: gleich viele noch einmal.';
         if (v === n) return 'Das ist nur eine Seite. Im Spiegel sind noch einmal genauso viele.';
         if (Math.abs(v - t.R) === 1) return 'Fast! Nur eins daneben. Beide Seiten haben gleich viele.';
-        return `Fast! Es sind ${v > t.R ? 'weniger' : 'mehr'} als ${w(v)}.`;
+        return `Schau noch einmal. Es sind ${v > t.R ? 'weniger' : 'mehr'} als ${w(v)}.`;
       },
       hintSay: () => {
         if (M.fogged()) M.reveal();
+        if (n === 10) {
+          M.glowFives(true);
+          return 'Tipp: Auf jeder Seite sind zwei volle Fünferreihen. Das sind zehn. Zehn und noch einmal zehn.';
+        }
         if (n >= 6) {
           M.glowFives(true);
           return `Tipp: Auf jeder Seite ist eine volle Fünferreihe. Fünf und fünf sind zehn. Und dann noch ${w(r)} und ${w(r)}.`;
@@ -421,6 +436,11 @@
       },
       modelSay: () => {
         if (M.fogged()) M.reveal();
+        if (n === 10) {
+          M.glowFives(true);
+          eq.help('<b>10 + 10</b> = 20');
+          return 'Schau: Auf jeder Seite sind zehn. Zehn und zehn sind zwanzig.';
+        }
         if (n >= 6) {
           M.glowFives(true);
           eq.help(`<b>5 + 5</b> = 10 &nbsp; <b>${r} + ${r}</b> = ${2 * r}`);
@@ -509,8 +529,8 @@
       correctSay: () => {
         eq.fill(h);
         return proc(ctx, `${okWord()}! Die Hälfte von ${w(n)} ist ${w(h)}.`, [
-          'Du hast an die Verdopplung gedacht. So rechnen Profis!',
-          `Super! ${W(h)} und ${w(h)} sind ${w(n)}. Das hast du schlau überlegt.`,
+          `Klasse! Die Verdopplung hilft beim Halbieren: ${w(h)} plus ${w(h)} ist ${w(n)}.`,
+          `Super! ${W(h)} und ${w(h)} sind ${w(n)}. Das passt genau.`,
         ]);
       },
       explain: (v) => {
@@ -587,6 +607,9 @@
       base = chosen.value;
       box.remove();
     }
+    // Alle Hilfen folgen der gewählten Verdopplung: a + a und einer mehr,
+    // oder b + b und einer weniger.
+    const up = () => base === a;
     const showHelp = () => {
       if (M.fogged()) M.reveal();
       if (base === a) eq.help(`${x} + ${y} = <b>${a} + ${a}</b> + 1`);
@@ -611,29 +634,36 @@
       correctSay: () => {
         eq.fill(t.R);
         return proc(ctx, `${okWord()}! ${W(x)} plus ${w(y)} ist ${w(t.R)}.`, [
-          'Du hast die Verdopplung als Trick benutzt. Sehr schlau!',
-          'Klasse! Erst verdoppeln, dann einer mehr. So rechnen Profis.',
-          'Toll überlegt! Mit dem Spiegel-Trick geht es ganz schnell.',
+          'Super! Die Verdopplung ist ein guter Trick.',
+          up() ? 'Klasse! Erst verdoppeln, dann einer mehr. So geht es schnell.'
+            : 'Klasse! Erst verdoppeln, dann einer weniger. So geht es schnell.',
+          'Toll! Mit dem Spiegel-Trick geht es ganz schnell.',
         ]);
       },
       explain: (v) => {
         if (v === 2 * a) return `Das ist ${w(a)} plus ${w(a)}. Aber ${w(b)} ist einer mehr als ${w(a)}.`;
         if (v === 2 * b) return `Das ist ${w(b)} plus ${w(b)}. Aber ${w(a)} ist einer weniger als ${w(b)}.`;
         if (Math.abs(v - t.R) === 1) return 'Fast! Nur eins daneben. Rechne mit der Verdopplung.';
-        return `Fast! Es sind ${v > t.R ? 'weniger' : 'mehr'} als ${w(v)}.`;
+        return `Schau noch einmal. Es sind ${v > t.R ? 'weniger' : 'mehr'} als ${w(v)}.`;
       },
       hintSay: () => {
         showHelp();
-        return `Tipp: Rechne zuerst ${w(a)} plus ${w(a)}. Dann kommt noch der eine Extra-Punkt dazu.`;
+        return up()
+          ? `Tipp: Rechne zuerst ${w(a)} plus ${w(a)}. Dann kommt noch der eine Extra-Punkt dazu.`
+          : `Tipp: Rechne zuerst ${w(b)} plus ${w(b)}. Dann nimmst du einen weg.`;
       },
       modelSay: () => {
         showHelp();
-        return `Schau: ${W(a)} plus ${w(a)} ist ${w(2 * a)}. Und einer mehr ist ${w(t.R)}.`;
+        return up()
+          ? `Schau: ${W(a)} plus ${w(a)} ist ${w(2 * a)}. Und einer mehr ist ${w(t.R)}.`
+          : `Schau: ${W(b)} plus ${w(b)} ist ${w(2 * b)}. Und einer weniger ist ${w(t.R)}.`;
       },
     });
     if (!ctx.active) return;
     if (ctx.wrongCount > 0 || ctx.index === 0) {
-      await ctx.say(`${W(a)} plus ${w(a)} ist ${w(2 * a)}. Einer mehr ist ${w(t.R)}. Also ist ${w(x)} plus ${w(y)} gleich ${w(t.R)}.`);
+      await ctx.say(up()
+        ? `${W(a)} plus ${w(a)} ist ${w(2 * a)}. Einer mehr ist ${w(t.R)}. Also ist ${w(x)} plus ${w(y)} gleich ${w(t.R)}.`
+        : `${W(b)} plus ${w(b)} ist ${w(2 * b)}. Einer weniger ist ${w(t.R)}. Also ist ${w(x)} plus ${w(y)} gleich ${w(t.R)}.`);
       if (!ctx.active) return;
     }
     await ctx.sleep(450);
@@ -654,9 +684,15 @@
     const box = el('div.choices.ver-choices');
     work.appendChild(box);
     let paired = false;
+    // Konkrete Bilder statt Symbolen: zwei Teller mit gleich vielen Keksen,
+    // bzw. zwei Teller und ein Keks, der übrig bleibt.
+    const plate = () => el('span.ver-pp-plate', el('span', '🍪'), el('span', '🍪'));
+    const pic = (odd) => el('span.ver-parpic', { 'aria-hidden': 'true' },
+      el('span.ver-pp-row', plate(), plate()),
+      el('span', { class: 'ver-pp-extra' + (odd ? '' : ' ver-pp-none') }, '🍪'));
     const items = [
-      { content: '⚖️', label: 'gerecht', say: 'Geht gerecht.', correct: !t.odd, value: 'even', className: 'ver-par' },
-      { content: '☝️', label: 'einer übrig', say: 'Einer bleibt übrig.', correct: t.odd, value: 'odd', className: 'ver-par' },
+      { content: pic(false), label: 'gerecht', say: 'Geht gerecht.', correct: !t.odd, value: 'even', className: 'ver-par' },
+      { content: pic(true), label: 'einer übrig', say: 'Einer bleibt übrig.', correct: t.odd, value: 'odd', className: 'ver-par' },
     ];
     await ctx.choices(items, {
       container: box,
@@ -666,8 +702,8 @@
       hintAfter: 1,
       praise: false,
       correctSay: () => proc(ctx, `${okWord()}!`, [
-        'Du hast an Paare gedacht. Klasse!',
-        'Super! Du hast genau überlegt, ob jeder Keks einen Partner hat.',
+        'Klasse! Mit Paaren sieht man das gut.',
+        t.odd ? 'Super! Ein Keks hat keinen Partner.' : 'Super! Jeder Keks hat einen Partner.',
       ]),
       explain: () => 'Schau mal genau hin. Wir legen immer einen Keks für Flo und einen für Eule.',
       onWrong: async () => {

@@ -46,7 +46,7 @@
   /* ------------------------------------------------------------------
      Stufen
      ------------------------------------------------------------------ */
-  const SHOW = { 1: 2000, 2: 1000, 3: 2000, 4: 2600, 5: 2600 };
+  const SHOW = { 1: 2000, 2: 1000, 3: 2000, 4: 3500, 5: 2600 };
   const ROUNDS = 6;
 
   /** Aufgabenart je Stufe und Aufgabe (jede dritte Aufgabe wird gelegt). */
@@ -64,7 +64,7 @@
     2: 'Jetzt wird es blitzschnell! Das Zehnerfeld ist nur ganz kurz zu sehen. Denk an die volle Fünferreihe.',
     3: 'Jetzt kommt das Zwanzigerfeld! Es hat zwei Zehnerfelder. Ist das obere Feld voll, sind das schon zehn.',
     4: 'Jetzt gibt es rote und blaue Plättchen. Wie viele sind es zusammen? Tipp: Mach im Kopf erst die Zehn voll.',
-    5: 'Jetzt wird es knifflig! Wie viele fehlen noch, bis alles voll ist? Schau auf die leeren Kästchen.',
+    5: 'Jetzt wird es knifflig! Wie viele fehlen noch bis zehn oder bis zwanzig? Schau auf die leeren Kästchen.',
   };
   const KIND_INTRO = {
     lege: 'Jetzt legst du selbst! Tippe auf die Kästchen. Mit dem Fünferstreifen geht es schneller. Dann tippst du auf Fertig.',
@@ -149,7 +149,7 @@
   /* ------------------------------------------------------------------
      Pools (Lerninhalte)
      ------------------------------------------------------------------ */
-  function poolFor(kind, level, flow) {
+  function poolFor(kind, level, flow, index = 0) {
     if (kind === 'ten') {
       const lo = level === 1 ? 3 : 1;
       let p = range(lo, 10);
@@ -174,7 +174,10 @@
         for (let b = 2; b <= 9; b++) {
           const s = a + b;
           if (s < 10 || s > 18) continue;
-          if (flow < 0 && (a < 6 || s > 14)) continue;
+          // Zehnerübergang ist neu: Einstieg mit 9 + x / 8 + x (nur eins
+          // oder zwei Plättchen wandern), dann 7 / 6; a ≤ 5 erst bei flow > 0.
+          if (flow < 0 && (a < 8 || s > 14)) continue;
+          if (flow === 0 && a < (index < 2 ? 8 : 6)) continue;
           if (flow > 0 && s < 13) continue;
           p.push({ kind, a, b, n: s, key: `${a} + ${b}` });
         }
@@ -258,7 +261,7 @@
         await ctx.say(KIND_INTRO[ik]);
         if (!ctx.active) return;
       }
-      const t = ctx.item(poolFor(kind, level, ctx.flow), (x) => x.key, { avoid: 3 });
+      const t = ctx.item(poolFor(kind, level, ctx.flow, ctx.index), (x) => x.key, { avoid: 3 });
       if (kind === 'lege' || kind === 'nach') await buildTask(ctx, t, level);
       else await blitzTask(ctx, t, level);
     },
@@ -269,7 +272,8 @@
      ================================================================== */
   async function blitzTask(ctx, t, level) {
     const kind = t.kind;
-    const size = kind === 'ten' ? 10 : 20;
+    // „bis zehn“ im Zehnerfeld: sonst wären 20 − n Kästchen leer statt 10 − n.
+    const size = kind === 'ten' || (kind === 'miss' && t.goal === 10) ? 10 : 20;
     let spec;
     if (kind === 'pair') spec = Array.from({ length: 20 }, (_, i) => (i < t.a ? 'r' : i >= 10 && i < 10 + t.b ? 'b' : ''));
     else spec = ordered(t.n, size);
@@ -382,7 +386,12 @@
     if (kind === 'ten') values = Z.options(answer, 4, level === 1 ? 2 : 1, 10, [answer - 1, answer + 1, answer > 5 ? answer - 5 : answer + 5]);
     else if (kind === 'twenty') values = Z.options(answer, 4, 1, 20, [answer - 10, answer + 1, answer - 1]);
     else if (kind === 'pair') values = Z.options(answer, 4, 1, 20, [answer - 1, answer + 1, U.pick([t.a, t.b])]);
-    else values = Z.options(answer, 4, 1, 20, [t.n, answer + 1, answer - 1, t.goal === 20 && t.n > 10 ? t.n - 10 : 10 - answer]);
+    else {
+      // typische Fehler: Plättchen statt Lücke (n); bis 20 mit n > 10 nur das
+      // untere Feld (n − 10); bis 20 mit n < 10 nur bis zehn ergänzt (10 − n).
+      const typ = t.goal === 20 ? (t.n > 10 ? [t.n - 10] : [10 - t.n]) : [];
+      values = Z.options(answer, 4, 1, 20, [...typ, t.n, answer + 1, answer - 1]);
+    }
     const items = values.map((k) => ({ content: String(k), text: true, correct: k === answer, say: w(k), value: k, className: 'zeh-num' }));
     const ha = Z.hintAfterFor(ctx, items.length);
 
@@ -398,23 +407,21 @@
       const k = item.value;
       if (kind === 'ten') {
         if (t.n > 5 && k === t.n - 5) return 'Fast! Das ist nur die untere Reihe. Die volle obere Reihe gehört auch dazu.';
-        if (Math.abs(k - t.n) === 1) return `Ganz knapp! Es waren ein bisschen ${more(k)} als ${w(k)}.`;
-        return `Schau mal: Es waren ${more(k)} als ${w(k)}.`;
+        return `Schau mal: Es waren ${more(k)} als ${w(k)}. Denk an die volle Fünferreihe.`;
       }
       if (kind === 'twenty') {
         if (k === t.n - 10) return 'Fast! Das ist nur das untere Feld. Das volle obere Feld gehört auch dazu.';
-        if (Math.abs(k - t.n) === 1) return `Ganz knapp! Es waren ein bisschen ${more(k)} als ${w(k)}.`;
-        return `Schau mal: Es waren ${more(k)} als ${w(k)}.`;
+        return `Schau mal: Es waren ${more(k)} als ${w(k)}. Denk an das volle obere Feld.`;
       }
       if (kind === 'pair') {
         if (k === t.a) return 'Fast! Das sind nur die roten Plättchen. Die blauen gehören auch dazu.';
         if (k === t.b) return 'Fast! Das sind nur die blauen Plättchen. Die roten gehören auch dazu.';
-        if (Math.abs(k - answer) === 1) return `Ganz knapp! Zusammen sind es ein bisschen ${more(k)} als ${w(k)}.`;
-        return `Schau mal: Zusammen sind es ${more(k)} als ${w(k)}.`;
+        return `Schau mal: Zusammen sind es ${more(k)} als ${w(k)}. Mach im Kopf erst die Zehn voll.`;
       }
       if (k === t.n) return `Fast! So viele Plättchen sind schon da. Wir suchen die leeren Kästchen bis ${w(t.goal)}.`;
       if (t.goal === 20 && t.n > 10 && k === t.n - 10) return 'Fast! So viele Plättchen liegen unten. Wie viele Kästchen sind noch leer?';
-      return `Schau mal: Es fehlen ${more(k)} als ${w(k)}.`;
+      if (t.goal === 20 && t.n < 10 && k === 10 - t.n) return 'Fast! Das fehlt nur bis zehn. Das untere Feld ist auch noch leer.';
+      return `Schau mal: Es fehlen ${more(k)} als ${w(k)}. Schau auf die leeren Kästchen.`;
     }
     function hintSay() {
       const open = 'Die Karte bleibt jetzt offen. ';
@@ -625,9 +632,15 @@
       }
       // nicht richtig
       const tooMany = k > n;
+      if (k === 0) {
+        // leeres Feld: nur ein Anstoß, kein Fehler (keine Wertung, keine Hilfestufe)
+        LT.ui.animate(field.node, 'shake');
+        await ctx.say('Leg zuerst Plättchen ins Feld. Tippe auf die Kästchen.');
+        busy = false;
+        return;
+      }
       let say;
-      if (k === 0) say = 'Leg zuerst Plättchen ins Feld. Tippe auf die Kästchen.';
-      else if (nach) say = `Fast! Das sind ${tooMany ? 'zu viele' : 'zu wenige'}. Denk an das Feld von eben.`;
+      if (nach) say = `Fast! Das sind ${tooMany ? 'zu viele' : 'zu wenige'}. Denk an das Feld von eben.`;
       else say = `Fast! Das sind ${tooMany ? 'zu viele' : 'zu wenige'}.`;
       await ctx.wrong(field.node, { say, keep: true });
       if (!ctx.active) return;

@@ -65,6 +65,13 @@
     return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
   }
   const isText = (t) => /[A-Za-z0-9ÄÖÜäöüß€]/.test(String(t));
+  /* Filmtitel aus films.js markieren das Schlüsselwort mit *Sternchen* (für den
+     Vorspann im Film). In der App: ohne Sternchen; auf der Kinokarte hervorgehoben. */
+  const plainTitle = (t) => String(t || '').replace(/\*/g, '').replace(/\s+/g, ' ').trim();
+  function titleNode(t) {
+    const parts = String(t || '').split('*');
+    return parts.map((x, i) => (i % 2 ? el('em.kino-hl', x) : x)).filter((x) => x !== '');
+  }
 
   function watched(film) {
     const rec = LT.progress.profile.games[gameId(film)];
@@ -83,6 +90,8 @@
     if (LT.games[id]) return;
     film.quiz = Array.isArray(film.quiz) ? film.quiz.filter((q) => q && q.q && Array.isArray(q.options) && q.options.length >= 2) : [];
     film.related = Array.isArray(film.related) ? film.related : [];
+    if (film.titleMarked == null) film.titleMarked = film.title || '';
+    film.title = plainTitle(film.title);
     const subj = SUBJECTS[film.subject] || { label: 'Erklärfilm' };
     LT.registerGame({
       id,
@@ -387,7 +396,7 @@
         },
           posterNode(f),
           el('span.kino-ticket-body',
-            el('span.kino-ticket-title', f.title),
+            el('span.kino-ticket-title', ...titleNode(f.titleMarked || f.title)),
             el('span.kino-ticket-meta', U.emoji('⏱️'), ` ${fmtDur(f.duration)}`)
           ),
           el('span.kino-ticket-stub', { 'aria-hidden': 'true' }, isSeen ? '✓' : '▶'),

@@ -15,9 +15,13 @@
           mehrere richtige Reihenfolgen werden angenommen
        3  Satzzeichen wählen: Punkt oder Fragezeichen? (Erzählsatz,
           Ja/Nein-Frage, W-Frage). Melodie hören über 🔊 (adaptiv)
-       4  Frage oder Erzählsatz selbst bauen – aus DENSELBEN Wörtern. Karten
-          sind klein (außer Namenwörtern); an der Lok wird das erste Wort groß.
-          Satzzeichen-Karte selbst anhängen.
+       4  im Wechsel (Namenwörter zuerst):
+          a) Namenwörter finden und groß machen: Satz steht klein im Zug,
+             Kind tippt die Namenwörter an; Artikelprobe „der Hund? Passt!“
+          b) Frage oder Erzählsatz selbst bauen – aus DENSELBEN Wörtern. Karten
+             sind klein (außer Namenwörtern); an der Lok wird das erste Wort
+             groß. Satzzeichen-Karte selbst anhängen. Umstandswort vorne
+             („Heute scheint die Sonne.“) wird über alt mit angenommen.
        5  Fehler finden: In jedem Zug steckt ein Fehler (kleiner Satzanfang,
           Namenwort klein, Tunwort groß, falsches Satzzeichen) → antippen.
    - Fehlvorstellungen: „Alles groß“ oder „nur vorne groß“ (auch Namenwörter
@@ -28,7 +32,8 @@
      2. nächste passende Karte leuchtet + Strategie, 3. Flo spricht den Satz
      vor und zeigt Karte für Karte.
    - Lerninhalte (ctx.item): der richtige Satz, z. B. „Flo isst Eis.“ oder
-     „Isst Flo Eis?“; Stufe 5 Satz + Fehlerart („Der Hund bellt. / Namenwort“).
+     „Isst Flo Eis?“; Stufe 4a Satz + „/ Namenwörter“; Stufe 5 Satz + Fehlerart
+     („Der Hund bellt. / Namenwort“).
    ========================================================================== */
 (function () {
   'use strict';
@@ -112,12 +117,37 @@
     { w: ['du', 'kommst', 'mit'], v: 1, e: '🧒👋' },
     { w: ['das', 'Baby', 'lacht'], v: 2, e: '👶😄' },
     { w: ['Lea', 'mag', 'Pizza'], v: 1, e: '👧🍕' },
-    { w: ['der', 'Bus', 'kommt', 'gleich'], v: 2, e: '🚌' },
+    // alt: weitere richtige Reihenfolgen (Umstandswort vorne) je Modus
+    { w: ['der', 'Bus', 'kommt', 'gleich'], v: 2, e: '🚌',
+      alt: { s: [['gleich', 'kommt', 'der', 'Bus']], q: [['kommt', 'gleich', 'der', 'Bus']] } },
     { w: ['Papa', 'liest', 'ein', 'Buch'], v: 1, e: '👨📖' },
-    { w: ['die', 'Sonne', 'scheint', 'heute'], v: 2, e: '☀️' },
+    { w: ['die', 'Sonne', 'scheint', 'heute'], v: 2, e: '☀️',
+      alt: { s: [['heute', 'scheint', 'die', 'Sonne']], q: [['scheint', 'heute', 'die', 'Sonne']] } },
     { w: ['Tim', 'spielt', 'Fußball'], v: 1, e: '👦⚽' },
-    { w: ['der', 'Igel', 'schläft', 'schon'], v: 2, e: '🦔💤' },
+    { w: ['der', 'Igel', 'schläft', 'schon'], v: 2, e: '🦔💤',
+      alt: { s: [['schon', 'schläft', 'der', 'Igel']], q: [['schläft', 'schon', 'der', 'Igel']] } },
   ];
+  // Stufe 4 (Namenwörter): kein Name, kein Namenwort am Satzanfang, keine Wörter, die es
+  // auch als Namenwort gibt (lesen/das Lesen) – sonst führt die Artikelprobe in die Irre.
+  const L4N = [
+    { w: ['der', 'Hund', 'holt', 'den', 'Ball'], e: '🐶⚽' },
+    { w: ['die', 'Katze', 'trinkt', 'Milch'], e: '🐱🥛' },
+    { w: ['das', 'Kind', 'malt', 'eine', 'Blume'], e: '🧒🖍️🌼' },
+    { w: ['der', 'Vogel', 'sitzt', 'auf', 'dem', 'Baum'], e: '🐦🌳' },
+    { w: ['die', 'Maus', 'frisst', 'Käse'], e: '🐭🧀' },
+    { w: ['der', 'Junge', 'isst', 'einen', 'Apfel'], e: '👦🍎' },
+    { w: ['das', 'Pferd', 'steht', 'im', 'Stall'], e: '🐎🏠' },
+    { w: ['die', 'Kuh', 'frisst', 'Gras'], e: '🐄🌱' },
+    { w: ['der', 'Hase', 'hüpft', 'über', 'die', 'Wiese'], e: '🐰🌼' },
+    { w: ['ich', 'sehe', 'einen', 'Igel'], e: '👀🦔' },
+    { w: ['die', 'Ente', 'schwimmt', 'im', 'Teich'], e: '🦆💧' },
+    { w: ['der', 'Bär', 'sucht', 'Honig'], e: '🐻🍯' },
+    { w: ['die', 'Sonne', 'scheint', 'auf', 'das', 'Haus'], e: '☀️🏠' },
+    { w: ['das', 'Baby', 'hat', 'einen', 'Teddy'], e: '👶🧸' },
+    { w: ['der', 'Mond', 'leuchtet'], e: '🌙' },
+    { w: ['wir', 'bauen', 'einen', 'Schneemann'], e: '🧒⛄' },
+  ];
+  const BEGLEITER = ['der', 'die', 'das', 'den', 'dem', 'ein', 'eine', 'einen'];
   const DISTRACT = ['Hund', 'Ball', 'Baum', 'Mond', 'schnell', 'rot', 'Hose', 'liest', 'Schuh', 'klein'];
 
   const sentenceOf = (words, t) => words.map((w, i) => (i === 0 ? cap(w) : w)).join(' ') + (t || '.');
@@ -127,8 +157,9 @@
   const L4POOL = [];
   L4.forEach((x) => {
     const q = [x.w[x.v]].concat(x.w.filter((_, i) => i !== x.v));
-    L4POOL.push({ mode: 's', w: x.w, t: '.', e: x.e, key: sentenceOf(x.w, '.'), cards: x.w, verb: x.w[x.v] });
-    L4POOL.push({ mode: 'q', w: q, t: '?', e: x.e, key: sentenceOf(q, '?'), cards: x.w, verb: x.w[x.v] });
+    const alt = x.alt || {};
+    L4POOL.push({ mode: 's', w: x.w, alt: alt.s, t: '.', e: x.e, key: sentenceOf(x.w, '.'), cards: x.w, verb: x.w[x.v] });
+    L4POOL.push({ mode: 'q', w: q, alt: alt.q, t: '?', e: x.e, key: sentenceOf(q, '?'), cards: x.w, verb: x.w[x.v] });
   });
   // Stufe 5: Sätze aus Stufe 2 und 3
   const L5 = L2.map((x) => ({ w: x.w, t: '.' })).concat(L3);
@@ -141,6 +172,7 @@
     1: 'Wir bauen Satzzüge! Tipp die Wörter in der richtigen Reihenfolge an. Das Bild hilft dir. Dann fährt der Zug los.',
     2: 'Jetzt werden die Züge länger. Vier oder fünf Wörter! Lies jedes Wort genau. Frag dich: Wer tut etwas?',
     3: 'Jeder Satz braucht hinten einen Schlusswagen. Erzählt der Satz etwas, kommt ein Punkt. Fragt der Satz etwas, kommt ein Fragezeichen.',
+    '4n': 'Namenwörter schreiben wir groß. Das sind Menschen, Tiere, Pflanzen und Dinge. Mach die Probe: Passt der, die oder das davor? Hör mal: der Hund. Das passt! Also schreiben wir Hund groß.',
     4: 'Jetzt baust du selbst Fragen und Erzählsätze. Bei einer Frage steht das Tunwort ganz vorne. Vergiss den Schlusswagen nicht!',
     5: 'Oh je! In jedem Zug hat sich ein Fehler versteckt. Lies genau und tipp auf den Wagen mit dem Fehler.',
   };
@@ -178,7 +210,7 @@
       if (ctx.flow < 0) pool = L4POOL.filter((x) => x.w.length === 3);
       target = ctx.item(pool, (x) => x.key, { avoid: 5 });
       mode = target.mode;
-      valid = [target.w];
+      valid = [target.w].concat(target.alt || []);
       cardWords = target.cards.slice();
       picture = target.e;
     }
@@ -403,12 +435,125 @@
     render();
     let instr;
     if (level === 4) instr = mode === 'q' ? 'Bau eine Frage!' : 'Bau einen Erzählsatz!';
-    else instr = ctx.index === 0 || U.chance(0.5) ? 'Bau den Satz zum Bild! Tipp die Wörter der Reihe nach an.' : vary('ins', ['Bau den Satz zum Bild!', 'Welcher Satz passt zum Bild?']);
+    else instr = ctx.index === 0 || U.chance(0.5) ? 'Bau den Satz zum Bild! Tipp die Wörter der Reihe nach an.' : vary('ins', ['Bau den Satz zum Bild!', 'Bau den Satz zum Bild! Wer tut was?']);
     if (extra) instr += ' Ein Wort gehört nicht dazu.';
     await ctx.instruct(instr);
     if (!ctx.active) return;
     busy = false;
     render();
+    await finished;
+    if (!ctx.active) return;
+    await ctx.sleep(500);
+  }
+
+
+  /* ==========================================================================
+     Stufe 4 (a): Namenwörter finden und groß machen – Artikelprobe
+     Der Satz steht im Zug, alles klein außer dem Satzanfang. Das Kind tippt die
+     Wörter an, die groß werden müssen; jedes gefundene Namenwort wird groß.
+     ========================================================================== */
+  const NUMW = ['', 'Ein', 'Zwei', 'Drei'];
+  async function nounTask(ctx) {
+    let pool = L4N;
+    if (ctx.flow < 0) pool = L4N.filter((x) => x.w.length <= 4);
+    else if (ctx.flow > 0) pool = L4N.filter((x) => x.w.length >= 5);
+    const target = ctx.item(pool, (x) => sentenceOf(x.w, '.') + ' / Namenwörter', { avoid: 5 });
+    const nounIdx = target.w.map((w, i) => (i > 0 && isNounBase(w) ? i : -1)).filter((i) => i >= 0);
+    const found = new Set();
+    let busy = true;
+    let done = false;
+    let guide = false;
+    let finish;
+    const finished = new Promise((r) => { finish = r; });
+
+    const tiles = target.w.map((w, i) => {
+      const b = el('button.sat-wagon.sat-filled.sat-ntile', { type: 'button', 'aria-label': i === 0 ? cap(w) : low(w) },
+        el('span.sat-wtxt', i === 0 ? cap(w) : low(w)));
+      b._i = i;
+      return b;
+    });
+    const tail = el('div.sat-wagon.sat-tail.sat-filled.sat-static', el('span.sat-wtxt', '.'));
+    const train = el('div.sat-train', lok(), tiles, tail);
+    const top = el('div.sat-top',
+      el('div.sat-pic', { 'aria-hidden': 'true' }, target.e),
+      el('div.sat-mode.sat-mode-n', el('span.sat-mode-ic', '🔠'), el('span.sat-mode-t', 'der, die, das?')));
+    ctx.stage.classList.add('sat-stage');
+    ctx.stage.append(top, el('div.sat-track', train));
+
+    const nextNoun = () => tiles[nounIdx.find((i) => !found.has(i))] || null;
+    function mark() {
+      tiles.forEach((t) => { ctx.markTest(t, false); ctx.unhint(t); });
+      if (done) return;
+      const nn = nextNoun();
+      if (!busy) ctx.markTest(nn);
+      if (guide && nn) ctx.hint(nn);
+    }
+
+    async function tap(t) {
+      if (busy || done) return;
+      const i = t._i;
+      const w = target.w[i];
+      if (found.has(i)) return;
+      if (i === 0) {
+        LT.speech.say(`${cap(w)} steht am Satzanfang. Das ist schon groß.`, { interrupt: true });
+        return;
+      }
+      busy = true; mark();
+      if (nounIdx.includes(i)) {
+        found.add(i);
+        t.querySelector('.sat-wtxt').textContent = w;
+        t.setAttribute('aria-label', w);
+        t.classList.add('sat-capped', 'sat-repaired');
+        LT.sfx.play('pop');
+        LT.ui.animate(t, 'bump');
+        if (found.size < nounIdx.length) {
+          await ctx.say(`${artOf(w)} ${w}. Das passt! ${w} ist ein Namenwort.`);
+          if (!ctx.active) return;
+          busy = false; mark();
+          return;
+        }
+        done = true; mark();
+        train.classList.add('sat-go');
+        const names = nounIdx.map((k) => target.w[k]);
+        const why = `${artOf(w)} ${w}. Das passt! Du hast alle Namenwörter gefunden.`;
+        await ctx.correct(train, { say: proc(ctx, why, why + ' Du hast bei jedem Wort die Probe gemacht. Wie ein Profi!'), praise: false });
+        if (!ctx.active) return;
+        await ctx.say(sentenceOf(target.w, '.'));
+        if (!ctx.active) return;
+        if (names.length > 1 && ctx.wrongCount > 0) { await ctx.say(names.map((x) => `${artOf(x)} ${x}`).join(', ') + '.'); if (!ctx.active) return; }
+        finish();
+        return;
+      }
+      // kein Namenwort: Hilfe-Leiter
+      const nw = await ctx.wrong(t, { keep: true, say: '' });
+      if (!ctx.active) return;
+      const nn = nextNoun();
+      const nWord = nn ? target.w[nn._i] : '';
+      if (nw === 1) {
+        await ctx.say(BEGLEITER.includes(w)
+          ? `${w} ist ein Begleiter. Er bleibt klein. Aber schau mal: Er zeigt dir, dass gleich ein Namenwort kommt!`
+          : `Mach die Probe: der ${w}? die ${w}? das ${w}? Das passt nicht. Also bleibt ${w} klein.`);
+      } else if (nw === 2) {
+        await ctx.say('Tipp: Was kannst du auf dem Bild sehen oder anfassen? Passt der, die oder das davor? Dann ist es ein Namenwort.');
+      } else {
+        ctx.modelShown = true;
+        guide = true;
+        await ctx.say(`Hör mal: ${artOf(nWord)} ${nWord}. Das passt! Tipp das Wort an, das leuchtet.`);
+      }
+      if (!ctx.active) return;
+      busy = false; mark();
+    }
+
+    tiles.forEach((t) => ctx.listen(t, 'click', () => tap(t)));
+    ctx.testSolve(() => { busy = false; const nn = nextNoun(); if (nn) tap(nn); });
+
+    const n = nounIdx.length;
+    mark();
+    await ctx.instruct(n === 1
+      ? 'Ein Namenwort ist noch klein. Tipp es an!'
+      : `${NUMW[n]} Namenwörter sind noch klein. Tipp sie an!`);
+    if (!ctx.active) return;
+    busy = false; mark();
     await finished;
     if (!ctx.active) return;
     await ctx.sleep(500);
@@ -456,7 +601,10 @@
         ? (wq ? `Schau mal auf das erste Wort: ${cap(firstW)}. Mit so einem Wort will man etwas wissen.`
           : `Schau mal auf das erste Wort: ${cap(firstW)}. Sagt es, was jemand tut? Will der Satz etwas wissen?`)
         : `Schau mal: Der Satz erzählt uns etwas. Will er wirklich etwas wissen?`),
-      hintSay: () => (isQ ? 'Hör mal, wie die Stimme am Ende hochgeht.' : 'Hör mal, die Stimme geht am Ende runter.'),
+      // W-Fragen fallen am Ende meist ab – dort hilft das Fragewort, nicht die Melodie
+      hintSay: () => (!isQ ? 'Hör mal, die Stimme geht am Ende runter. Der Satz erzählt etwas.'
+        : wq ? 'Schau aufs erste Wort. Wo, was, wer, wie: Das sind Fragewörter. Damit will man etwas wissen.'
+          : 'Das Tunwort steht ganz vorne. Und hör mal, die Stimme geht am Ende hoch.'),
       modelSay: () => (isQ ? 'Schau, das Fragezeichen. Der Satz fragt etwas. Tipp es an!' : 'Schau, der Punkt. Der Satz erzählt etwas. Tipp ihn an!'),
       onWrong: async () => { await ctx.say(sayText); },
     });
@@ -472,13 +620,16 @@
      ========================================================================== */
   const ERR_KEY = { start: 'Satzanfang', noun: 'Namenwort', verb: 'zu groß', punct: 'Satzzeichen' };
   const NAMES = ['Flo', 'Mia', 'Ben', 'Oma', 'Opa', 'Lea', 'Tim', 'Mama', 'Papa'];
+  // Wörter, die es auch als Namenwort gibt (der Morgen, das Lesen): groß geschrieben wären sie
+  // nach der Artikelprobe nicht eindeutig falsch → nie als „zu groß“-Fehler verwenden
+  const NOUN_HOMOGRAPH = ['morgen', 'lesen', 'gehen', 'essen', 'spielen', 'schwimmen', 'hast', 'heute'];
   // mögliche Fehlerstellen je Fehlerart (Namen bleiben immer groß, kurze Wörter wie „du“ nicht)
   function errOptions(s) {
     const o = { start: [], noun: [], verb: [], punct: [s.w.length] };
     if (!isNounBase(s.w[0])) o.start.push(0);
     s.w.forEach((w, i) => {
       if (i === 0) return;
-      if (isNounBase(w)) { if (!NAMES.includes(w)) o.noun.push(i); } else if (w.length > 2) o.verb.push(i);
+      if (isNounBase(w)) { if (!NAMES.includes(w)) o.noun.push(i); } else if (w.length > 2 && !NOUN_HOMOGRAPH.includes(w)) o.verb.push(i);
     });
     return o;
   }
@@ -569,6 +720,8 @@
     Schule: 'die', Auto: 'das', Milch: 'die', Igel: 'der', Laub: 'das', Haus: 'das', Ente: 'die', See: 'der', Buch: 'das',
     Bär: 'der', Honig: 'der', Maus: 'die', Käse: 'der', Kuh: 'die', Fisch: 'der', Katze: 'die', Sofa: 'das', Hund: 'der',
     Hase: 'der', Möhre: 'die', Zoo: 'der', Ball: 'der', Tür: 'die', Hunger: 'der', Erdbeeren: 'die', Fußball: 'der',
+    Kind: 'das', Blume: 'die', Vogel: 'der', Baum: 'der', Junge: 'der', Stall: 'der', Wiese: 'die', Sonne: 'die',
+    Baby: 'das', Teddy: 'der', Mond: 'der', Schneemann: 'der',
   };
   const artOf = (w) => ART[w] || 'der';
 
@@ -589,7 +742,7 @@
         'Sätze aus drei Wortkarten zum Bild bauen (Wer? tut was? was?) – Satzanfang und Punkt sind vorgegeben',
         'Längere Sätze aus vier bis fünf Wörtern bauen, auch mit Ortsangaben; beim Steigern ein Wort, das nicht dazugehört',
         'Punkt oder Fragezeichen wählen: Erzählsatz, Ja-Nein-Frage, W-Frage (Satzmelodie anhören, später ohne)',
-        'Aus denselben Wörtern eine Frage oder einen Erzählsatz bauen (Tunwort nach vorne) und das Satzzeichen selbst setzen',
+        'Namenwörter finden und groß schreiben (Probe: der Hund, die Katze); im Wechsel aus denselben Wörtern eine Frage oder einen Erzählsatz bauen und das Satzzeichen setzen',
         'Fehler finden: kleiner Satzanfang, kleines Namenwort, großes Tunwort oder falsches Satzzeichen – Niveau Ende Klasse 1',
       ],
       tip: 'Spielen Sie „Satz-Zug“ mit Zetteln: Jedes Wort auf eine Karte, Ihr Kind legt den Satz und liest ihn vor. Fragen Sie: „Wer tut etwas? Was tut er?“ Für die Großschreibung hilft die Probe: „Passt der, die oder das davor? Dann ist es ein Namenwort.“',
@@ -602,14 +755,17 @@
         capExplained = false;
         for (let i = 1; i < ctx.level; i++) if (KIND(i) === KIND(ctx.level)) introduced.add(i);
       }
-      if (!introduced.has(level)) {
-        introduced.add(level);
-        await ctx.say(INTRO[level]);
+      // Stufe 4 wechselt ab: Namenwörter (Artikelprobe, zuerst) und Frage/Erzählsatz bauen
+      const noun = level === 4 && ctx.index % 2 === 0;
+      const ik = noun ? '4n' : level;
+      if (!introduced.has(ik)) {
+        introduced.add(ik);
+        await ctx.say(INTRO[ik]);
         if (!ctx.active) return;
       }
       if (level <= 2) return buildTask(ctx, level);
       if (level === 3) return punctTask(ctx);
-      if (level === 4) return buildTask(ctx, 4);
+      if (level === 4) return noun ? nounTask(ctx) : buildTask(ctx, 4);
       return fixTask(ctx);
     },
   });

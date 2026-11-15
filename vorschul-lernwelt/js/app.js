@@ -174,9 +174,13 @@
     let adv = P.profile.adventure;
     const valid = adv && adv.date === today && adv.games.every((id) => LT.games[id]);
     if (!valid) {
+      // Schulspiele (Klasse 1) nur, wenn die Schul-Reihe frei ist; Erklärfilme nie
+      // (die stehen in Flos Kino und auf Flos Reise Teil 2).
+      const school = schoolUnlocked();
+      const k1 = P.settings().stage === 'klasse1';
       const scored = LT.gameOrder
         .map((id) => LT.games[id])
-        .filter((g) => g.type !== 'free')
+        .filter((g) => g.type !== 'free' && g.area !== 'kino' && (school || !isSchool(LT.areaById(g.area))))
         .map((g) => {
           const rec = P.profile.games[g.id];
           const st = P.status(g.id);
@@ -187,6 +191,8 @@
           if (rec && rec.lastPlayed) w += Math.min(4, (Date.now() - rec.lastPlayed) / 86400000);
           // Bereiche mit Basiskompetenzen etwas häufiger
           if (g.area === 'zahlen' || g.area === 'sprache') w += 1;
+          // Schulkinder: Schulstoff bevorzugen
+          if (k1 && isSchool(LT.areaById(g.area))) w += 3;
           return { g, w };
         })
         .sort((a, b) => b.w - a.w);
@@ -1003,7 +1009,7 @@
           el('li', el('b', 'Kurze Einheiten. '), 'Eine Runde dauert 2–4 Minuten. Bewegungspausen und ein optionales Tageslimit helfen bei einem gesunden Umgang mit Bildschirmzeit.'),
           el('li', el('b', 'Konkret – bildlich – symbolisch. '), 'Zahlen und Buchstaben werden immer mit Bildern, Mengen und Lauten verknüpft (EIS-Prinzip nach Bruner).'),
           el('li', el('b', 'Ausgewogen üben. '), 'Das Tagesabenteuer schlägt jeden Tag drei Spiele aus verschiedenen Bereichen vor und bevorzugt Neues sowie Spiele mit Übungsbedarf.'),
-          el('li', el('b', 'Schritt für Schritt: Flos Reise. '), 'Teil 1 ist ein Lernpfad mit acht Kapitel-Orten führt durch ein aufeinander aufbauendes Curriculum (Spiralcurriculum nach Bruner): Jede Fähigkeit wird zuerst auf der leichtesten Stufe eingeführt und kommt später auf höherer Stufe wieder. Jedes Kapitel mischt Zahlen, Sprache, Formen, Denken, Sachwissen und Malen (verschachteltes Üben). Eine kleine Geschichte je Ort gibt dem Lernen einen roten Faden. Dazu bietet Flo bis zu drei freiwillige, persönliche Tipps an (Wiederholen, Üben, Stärke). Teil 2 „Flos Schulabenteuer“ führt in sieben Kapiteln durch den Stoff der ersten Klasse.'),
+          el('li', el('b', 'Schritt für Schritt: Flos Reise. '), 'Teil 1, ein Lernpfad mit acht Kapitel-Orten, führt durch ein aufeinander aufbauendes Curriculum (Spiralcurriculum nach Bruner): Jede Fähigkeit wird zuerst auf der leichtesten Stufe eingeführt und kommt später auf höherer Stufe wieder. Jedes Kapitel mischt Zahlen, Sprache, Formen, Denken, Sachwissen und Malen (verschachteltes Üben). Eine kleine Geschichte je Ort gibt dem Lernen einen roten Faden. Dazu bietet Flo bis zu drei freiwillige, persönliche Tipps an (Wiederholen, Üben, Stärke). Teil 2 „Flos Schulabenteuer“ führt in sieben Kapiteln durch den Stoff der ersten Klasse.'),
           el('li', el('b', 'Brücke in die Schule. '), 'Die Reihe „Schule“ (Rechenschule, Leseschule, Sachkunde-Schule) orientiert sich an den Bildungsstandards für Klasse 1: Zahlenraum bis 20 mit Zehnerübergang, Silbenlesen und lautgetreues Schreiben, Sachunterricht. In Flos Kino erklären kurze Filme ein Thema, danach folgen Fragen und das passende Übungsspiel (erst verstehen, dann üben).'),
           el('li', el('b', 'Sachwissen mit Geschichten. '), 'In der Forscherwelt folgt jede Wissensreise dem Ablauf Entdecken (Bildergeschichte zum Mitmachen) – Verstehen (Fragen mit kurzer Begründung) – Anwenden (Mitmachspiel) – Sichern (Wissenskarte fürs Forscherbuch). Das Forscherbuch lädt zum Wiederholen und Erzählen ein.'),
           el('li', el('b', 'Motivation. '), 'Sterne und ein Sticker-Album belohnen das Dranbleiben – ohne Zeitdruck, Werbung oder In-App-Käufe.')

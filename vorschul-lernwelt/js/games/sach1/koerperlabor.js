@@ -91,18 +91,19 @@
     { k: 'Brezel', e: '🥨', o: 'zunge', s: 'Die Brezel ist salzig.', c: 'Salzig schmeckst du mit der Zunge.' },
     { k: 'Teddy', e: '🧸', o: 'haut', s: 'Der Teddy ist weich und kuschelig.', c: 'Weich fühlst du mit der Haut.' },
     { k: 'Eiswürfel', e: '🧊', o: 'haut', s: 'Der Eiswürfel ist eiskalt.', c: 'Kalt fühlst du mit der Haut.' },
-    { k: 'Igel', e: '🦔', o: 'haut', s: 'Der Igel ist stachelig.', c: 'Stachelig fühlst du mit der Haut.' },
+    { k: 'Igel', e: '🦔', o: 'haut', s: 'Du fasst den Igel an. Er pikst!', c: 'Das Piksen fühlst du mit der Haut.' },
     { k: 'Badewasser', e: '🛁', o: 'haut', s: 'Das Badewasser ist schön warm.', c: 'Warm fühlst du mit der Haut, am ganzen Körper.' },
   ];
 
   /* Stufe 2: Rätsel nur mit Text. ex = besondere Erklärung für eine typische Verwechslung. */
   const SENSE2 = [
-    { k: 'Schnupfen', o: 'nase', s: 'Ich habe Schnupfen. Mein Essen schmeckt nach gar nichts. Was ist verstopft?',
+    { k: 'Schnupfen', o: 'nase', s: 'Ich habe Schnupfen. Mein Essen schmeckt nach gar nichts. Was ist verstopft?', ask: '',
+      hint: 'Tipp: Bei Schnupfen ist etwas zu. Was hilft sonst beim Schmecken mit?',
       ex: { zunge: 'Die Zunge schmeckt nur süß, sauer, salzig und bitter. Beim Schmecken hilft noch ein Sinnesorgan mit. Was ist bei Schnupfen zu?' },
       c: 'Die Nase hilft beim Schmecken mit. Bei Schnupfen schmeckt alles fad.' },
-    { k: 'Rauch', o: 'nase', s: 'Irgendwo brennt etwas. Ich sehe nichts, aber ich merke es trotzdem.', c: 'Rauch riechst du mit der Nase, auch wenn du ihn nicht siehst.' },
-    { k: 'Milch', o: 'nase', s: 'Die alte Milch ist schlecht. Ich merke es, bevor ich trinke.', c: 'Die Nase warnt dich, bevor du etwas Schlechtes isst.' },
-    { k: 'Lichtschalter', o: 'haut', s: 'Es ist stockdunkel. Trotzdem finde ich den Lichtschalter an der Wand.',
+    { k: 'Rauch', o: 'nase', s: 'Irgendwo weit weg brennt ein Feuer. Ich sehe und höre nichts. Trotzdem merke ich es.', c: 'Rauch riechst du mit der Nase, auch wenn du ihn nicht siehst.' },
+    { k: 'Milch', o: 'nase', s: 'Ich schaue nicht hin. Trotzdem merke ich, dass die alte Milch schlecht ist, schon bevor ich trinke.', c: 'Die Nase warnt dich, bevor du etwas Schlechtes isst.' },
+    { k: 'Lichtschalter', o: 'haut', s: 'Es ist stockdunkel. Trotzdem finde ich den Lichtschalter an der Wand.', ask: 'Welches Sinnesorgan hilft mir dabei?',
       ex: { auge: 'Im Dunkeln sehen die Augen fast nichts. Wie findest du den Schalter dann?' },
       c: 'Im Dunkeln tastest du mit der Haut an deinen Fingern.' },
     { k: 'Krabbeln', o: 'haut', s: 'Etwas krabbelt auf meinem Arm.', c: 'Das Krabbeln fühlst du mit der Haut.' },
@@ -114,7 +115,7 @@
     { k: 'Blitz', o: 'auge', s: 'Beim Gewitter zuckt ein heller Blitz.',
       ex: { ohr: 'Den Donner kann man hören. Aber ein Blitz macht kein Geräusch. Was merkt das helle Licht?' },
       c: 'Den Blitz siehst du mit den Augen. Den Donner hörst du.' },
-    { k: 'Ball', o: 'auge', s: 'Ein Ball fliegt auf mich zu. Ich fange ihn.', c: 'Damit du fangen kannst, schauen die Augen genau hin.' },
+    { k: 'Ball', o: 'auge', s: 'Ein Ball fliegt auf mich zu. Ich weiß schon vorher, wo er landet.', c: 'Die Augen sehen den Ball kommen. So weißt du, wo er landet.' },
     { k: 'Pullifarbe', o: 'auge', s: 'Ich weiß, welche Farbe mein Pulli hat.', c: 'Farben siehst du mit den Augen.' },
     { k: 'Medizin', o: 'zunge', s: 'Igitt, die Medizin ist bitter!', c: 'Bitter schmeckst du mit der Zunge.' },
     { k: 'Suppe', o: 'zunge', s: 'Ich probiere die Suppe. Sie ist versalzen.', c: 'Salzig schmeckst du mit der Zunge.' },
@@ -162,9 +163,11 @@
     ctx.stage.appendChild(card);
     const box = el('div.choices.koe-orgs');
     ctx.stage.appendChild(box);
-    const ask = riddle ? 'Welches Sinnesorgan hilft hier?' : 'Mit welchem Sinnesorgan merkst du das?';
-    ctx.setInstruction(`${target.s} ${ask}`);
-    await ctx.instruct(`${target.s} ${ask}`);
+    // eigene Frage je Rätsel möglich (Schnupfen fragt schon selbst: „Was ist verstopft?“)
+    const ask = target.ask !== undefined ? target.ask : (riddle ? 'Welches Sinnesorgan merkt das?' : 'Mit welchem Sinnesorgan merkst du das?');
+    const instr = ask ? `${target.s} ${ask}` : target.s;
+    ctx.setInstruction(instr);
+    await ctx.instruct(instr);
     if (!ctx.active) return;
 
     const items = ids.map((id) => Object.assign(orgTile(id), { correct: id === target.o }));
@@ -179,7 +182,7 @@
         const W = ORG[wrong.id];
         return `Mit ${W.dat} ${W.verb} du ${W.what}. Passt das hier?`;
       },
-      hintSay: () => O.hint,
+      hintSay: () => target.hint || O.hint,
       modelSay: () => `Schau: ${target.c} Tipp auf ${O.def}.`,
     });
     if (!ctx.active) return;
@@ -204,7 +207,7 @@
     if (!ctx.active) return;
     const items = [target, ...others].map((p) => ({
       content: el('span.koe-q', U.emoji(p.e, 'koe-q-e'), el('span.koe-q-t', p.label)),
-      say: p.label, correct: p === target, p, className: 'koe-qtile',
+      say: p.label, correct: p === target, p, className: 'koe-qtile' + longCls(p.label),
     }));
     const ha = hintAfterFor(ctx, items.length, items.length - 1);
     await ctx.choices(items, {
@@ -441,6 +444,9 @@
     { k: 'Zahn: Außenfläche', q: 'Welche Fläche zeigt zur Wange?', tooth: 'A' },
   ];
 
+  /** Breitere Kachel bei langem Text oder einem langen Einzelwort (Wörter werden nie getrennt). */
+  const longCls = (t) => (t.length > 14 || t.split(/\s+/).some((w) => w.length > 9) ? ' koe-qlong' : '');
+
   async function quizTask(ctx, q, opts) {
     opts = opts || {};
     let list = q.o;
@@ -458,7 +464,7 @@
     if (!ctx.active) return;
     const items = list.map((x) => ({
       content: el('span.koe-q', x.svg ? toothSvg(x.svg) : U.emoji(x.e, 'koe-q-e'), el('span.koe-q-t', x.t)),
-      say: x.s, correct: !!x.ok, x, className: 'koe-qtile' + (x.t.length > 14 ? ' koe-qlong' : '') + (/^\d+$/.test(x.t) ? ' koe-qnum' : ''),
+      say: x.s, correct: !!x.ok, x, className: 'koe-qtile' + longCls(x.t) + (/^\d+$/.test(x.t) ? ' koe-qnum' : ''),
     }));
     const right = list.find((x) => x.ok);
     const ha = hintAfterFor(ctx, items.length, items.length - 1);
@@ -486,43 +492,45 @@
      ====================================================================== */
   const FLOOR = {
     r: { name: 'wenig', sub: 'ab und zu', icon: '🔴', where: 'ganz oben', tap: 'oben',
-      ex: (x) => `Ganz oben steht nur Naschzeug mit viel Zucker oder Fett. ${x.pl ? 'Sind' : 'Ist'} ${x.k} Naschzeug?`,
-      tip: 'Tipp: Ist das süß, fettig oder zum Knabbern?' },
+      ex: (x) => `Ganz oben steht nur Naschzeug: Süßes und fettige Knabbersachen wie Pommes. ${x.pl ? 'Sind' : 'Ist'} ${x.nd} Naschzeug?`,
+      tip: 'Tipp: Ist das süß oder eine fettige Knabbersache wie Pommes?' },
     y: { name: 'ein bisschen', sub: 'jeden Tag', icon: '🟡', where: 'in die Mitte', tap: 'in der Mitte',
-      ex: (x) => `In der Mitte stehen Milch, Käse, Eier, Fisch und Fleisch. ${x.pl ? 'Gehören' : 'Gehört'} ${x.k} dazu?`,
+      ex: (x) => `In der Mitte stehen Milch, Käse, Eier, Fisch und Fleisch. ${x.pl ? 'Gehören' : 'Gehört'} ${x.nd} dazu?`,
       tip: 'Tipp: Kommt es von einem Tier, wie Milch, Ei oder Fisch?' },
     g: { name: 'viel', sub: 'jeden Tag', icon: '🟢', where: 'ganz nach unten', tap: 'unten',
       ex: (x) => `Ganz unten steht, wovon du richtig viel essen und trinken darfst. Darfst du von ${x.d} so viel nehmen?`,
       tip: 'Tipp: Wächst es auf dem Feld oder am Baum? Oder ist es Wasser?' },
   };
-  /* n = Name mit Artikel (Satzanfang), d = Name im Satz (Dativ für „von …“), drink = Getränk */
+  /* n = Name mit Artikel (Satzanfang), nd = Name im Satz (Nominativ, bestimmter Artikel; Stoffnamen ohne),
+     d = Name im Satz (Dativ für „von …“), drink = Getränk,
+     t (nur unten) = 'og' Obst/Gemüse oder 'satt' Brot, Nudeln, Reis, Kartoffeln – für den bunten Teller.
+     Butter fehlt absichtlich: Eine Drei-Stufen-Ampel kann Fette nicht sauber zeigen („fettig = oben“ wäre eine Falle). */
   const FOOD = [
-    { k: 'Wasser', e: '💧', f: 'g', n: 'Wasser', d: 'Wasser', drink: true },
-    { k: 'Apfel', e: '🍎', f: 'g', n: 'Ein Apfel', d: 'Äpfeln' },
-    { k: 'Banane', e: '🍌', f: 'g', n: 'Eine Banane', d: 'Bananen' },
-    { k: 'Karotte', e: '🥕', f: 'g', n: 'Eine Karotte', d: 'Karotten' },
-    { k: 'Brokkoli', e: '🥦', f: 'g', n: 'Brokkoli', d: 'Brokkoli' },
-    { k: 'Brot', e: '🍞', f: 'g', n: 'Brot', d: 'Brot' },
-    { k: 'Kartoffel', e: '🥔', f: 'g', n: 'Eine Kartoffel', d: 'Kartoffeln', tip: 'Tipp: Kartoffeln wachsen auf dem Feld und machen lange satt.' },
-    { k: 'Nudeln', e: '🍝', f: 'g', n: 'Nudeln', d: 'Nudeln', pl: true },
-    { k: 'Gurke', e: '🥒', f: 'g', n: 'Eine Gurke', d: 'Gurken' },
-    { k: 'Tomate', e: '🍅', f: 'g', n: 'Eine Tomate', d: 'Tomaten' },
-    { k: 'Trauben', e: '🍇', f: 'g', n: 'Trauben', d: 'Trauben', pl: true },
-    { k: 'Reis', e: '🍚', f: 'g', n: 'Reis', d: 'Reis' },
-    { k: 'Milch', e: '🥛', f: 'y', n: 'Milch', d: 'Milch', drink: true, tip: 'Tipp: Milch ist ein Getränk, aber sie kommt von der Kuh. Sie ist eher ein Essen.' },
-    { k: 'Käse', e: '🧀', f: 'y', n: 'Käse', d: 'Käse' },
-    { k: 'Ei', e: '🥚', f: 'y', n: 'Ein Ei', d: 'Eiern' },
-    { k: 'Fisch', e: '🐟', f: 'y', n: 'Fisch', d: 'Fisch' },
-    { k: 'Hähnchen', e: '🍗', f: 'y', n: 'Hähnchen', d: 'Hähnchen' },
-    { k: 'Butter', e: '🧈', f: 'y', n: 'Butter', d: 'Butter', tip: 'Tipp: Butter wird aus Milch gemacht. Ein bisschen davon ist gut.' },
-    { k: 'Bonbon', e: '🍬', f: 'r', n: 'Ein Bonbon', d: 'Bonbons' },
-    { k: 'Schokolade', e: '🍫', f: 'r', n: 'Schokolade', d: 'Schokolade' },
-    { k: 'Lolli', e: '🍭', f: 'r', n: 'Ein Lolli', d: 'Lollis' },
-    { k: 'Kuchen', e: '🍰', f: 'r', n: 'Kuchen', d: 'Kuchen' },
-    { k: 'Limo', e: '🥤', f: 'r', n: 'Limo', d: 'Limo', drink: true, tip: 'Tipp: Limo ist ein Getränk, aber voller Zucker.' },
-    { k: 'Pommes', e: '🍟', f: 'r', n: 'Pommes', d: 'Pommes', pl: true, tip: 'Tipp: Pommes sind aus Kartoffeln, aber in viel Fett gebraten.' },
-    { k: 'Donut', e: '🍩', f: 'r', n: 'Ein Donut', d: 'Donuts' },
-    { k: 'Keks', e: '🍪', f: 'r', n: 'Ein Keks', d: 'Keksen' },
+    { k: 'Wasser', e: '💧', f: 'g', n: 'Wasser', nd: 'Wasser', d: 'Wasser', drink: true },
+    { k: 'Apfel', e: '🍎', f: 'g', t: 'og', n: 'Ein Apfel', nd: 'der Apfel', d: 'Äpfeln' },
+    { k: 'Banane', e: '🍌', f: 'g', t: 'og', n: 'Eine Banane', nd: 'die Banane', d: 'Bananen' },
+    { k: 'Karotte', e: '🥕', f: 'g', t: 'og', n: 'Eine Karotte', nd: 'die Karotte', d: 'Karotten' },
+    { k: 'Brokkoli', e: '🥦', f: 'g', t: 'og', n: 'Brokkoli', nd: 'Brokkoli', d: 'Brokkoli' },
+    { k: 'Brot', e: '🍞', f: 'g', t: 'satt', n: 'Brot', nd: 'Brot', d: 'Brot' },
+    { k: 'Kartoffel', e: '🥔', f: 'g', t: 'satt', n: 'Eine Kartoffel', nd: 'die Kartoffel', d: 'Kartoffeln', tip: 'Tipp: Kartoffeln wachsen auf dem Feld und machen lange satt.' },
+    { k: 'Nudeln', e: '🍝', f: 'g', t: 'satt', n: 'Nudeln', nd: 'Nudeln', d: 'Nudeln', pl: true },
+    { k: 'Gurke', e: '🥒', f: 'g', t: 'og', n: 'Eine Gurke', nd: 'die Gurke', d: 'Gurken' },
+    { k: 'Tomate', e: '🍅', f: 'g', t: 'og', n: 'Eine Tomate', nd: 'die Tomate', d: 'Tomaten' },
+    { k: 'Trauben', e: '🍇', f: 'g', t: 'og', n: 'Trauben', nd: 'Trauben', d: 'Trauben', pl: true },
+    { k: 'Reis', e: '🍚', f: 'g', t: 'satt', n: 'Reis', nd: 'Reis', d: 'Reis' },
+    { k: 'Milch', e: '🥛', f: 'y', n: 'Milch', nd: 'Milch', d: 'Milch', drink: true, tip: 'Tipp: Milch ist ein Getränk, aber sie kommt von der Kuh. Sie ist eher ein Essen.' },
+    { k: 'Käse', e: '🧀', f: 'y', n: 'Käse', nd: 'Käse', d: 'Käse', tip: 'Tipp: Käse wird aus Milch gemacht.' },
+    { k: 'Ei', e: '🥚', f: 'y', n: 'Ein Ei', nd: 'das Ei', d: 'Eiern' },
+    { k: 'Fisch', e: '🐟', f: 'y', n: 'Fisch', nd: 'Fisch', d: 'Fisch' },
+    { k: 'Hähnchen', e: '🍗', f: 'y', n: 'Hähnchen', nd: 'Hähnchen', d: 'Hähnchen' },
+    { k: 'Bonbon', e: '🍬', f: 'r', n: 'Ein Bonbon', nd: 'das Bonbon', d: 'Bonbons' },
+    { k: 'Schokolade', e: '🍫', f: 'r', n: 'Schokolade', nd: 'Schokolade', d: 'Schokolade' },
+    { k: 'Lolli', e: '🍭', f: 'r', n: 'Ein Lolli', nd: 'der Lolli', d: 'Lollis' },
+    { k: 'Kuchen', e: '🍰', f: 'r', n: 'Kuchen', nd: 'Kuchen', d: 'Kuchen' },
+    { k: 'Limo', e: '🥤', f: 'r', n: 'Limo', nd: 'Limo', d: 'Limo', drink: true, tip: 'Tipp: Limo ist ein Getränk, aber voller Zucker.' },
+    { k: 'Pommes', e: '🍟', f: 'r', n: 'Pommes', nd: 'Pommes', d: 'Pommes', pl: true, tip: 'Tipp: Pommes sind aus Kartoffeln, aber in viel Fett gebraten.' },
+    { k: 'Donut', e: '🍩', f: 'r', n: 'Ein Donut', nd: 'der Donut', d: 'Donuts' },
+    { k: 'Keks', e: '🍪', f: 'r', n: 'Ein Keks', nd: 'der Keks', d: 'Keksen' },
   ];
   const RULE = {
     g: (x) => (x.drink ? 'Davon darfst du viel trinken.' : 'Davon darfst du viel essen.'),
@@ -546,7 +554,7 @@
     ctx.stage.appendChild(card);
     const box = el('div.choices.koe-pyr');
     ctx.stage.appendChild(box);
-    const q = `Wohin ${target.pl ? 'gehören' : 'gehört'} ${target.k} in der Pyramide?`;
+    const q = `Wohin ${target.pl ? 'gehören' : 'gehört'} ${target.nd} in der Pyramide?`;
     ctx.setInstruction(q);
     await ctx.instruct(q);
     if (!ctx.active) return;
@@ -559,7 +567,7 @@
         'Du hast an Zucker und Fett gedacht. Sehr schlau!'])),
       explain: (wrong) => FLOOR[wrong.f].ex(target),
       hintSay: () => target.tip || F.tip,
-      modelSay: () => `Schau: ${target.k} ${target.pl ? 'gehören' : 'gehört'} ${F.where}. Tipp ${F.tap}.`,
+      modelSay: () => `Schau: ${cap(target.nd)} ${target.pl ? 'gehören' : 'gehört'} ${F.where}. Tipp ${F.tap}.`,
     });
     if (!ctx.active) return;
     placed[target.f].push(target.e);
@@ -580,7 +588,8 @@
     const G = eat.filter((x) => x.f === 'g');
     const Y = eat.filter((x) => x.f === 'y');
     const R = eat.filter((x) => x.f === 'r');
-    const good = U.shuffle([...U.sample(G, 2), ...U.sample(Y, 1)]);
+    // bunter Teller: immer Obst oder Gemüse + etwas Sattmachendes von unten + ein bisschen aus der Mitte
+    const good = U.shuffle([U.pick(G.filter((x) => x.t === 'og')), U.pick(G.filter((x) => x.t === 'satt')), U.pick(Y)]);
     const sweet = U.shuffle([...U.sample(R, 2), ...U.sample(G, 1)]);
     const plates = [{ foods: good, ok: true }, { foods: sweet, kind: 'sweet' }];
     // ohne Ablenkung auf Stufe -1, sonst auch die Falle „gar nichts Süßes, aber nichts von unten“
@@ -604,7 +613,7 @@
         ? 'Auf diesem Teller ist viel Naschzeug von ganz oben aus der Pyramide.'
         : 'Hier ist nichts Süßes. Aber auch nichts von ganz unten. Kein Obst, kein Gemüse, kein Brot.'),
       hintSay: () => 'Tipp: Ein guter Teller hat viel von ganz unten aus der Pyramide.',
-      modelSay: () => 'Schau: Dieser Teller hat Obst, Gemüse oder Brot und ein bisschen aus der Mitte. Tipp darauf.',
+      modelSay: () => 'Schau: Dieser Teller hat Obst oder Gemüse, etwas zum Sattwerden von unten und ein bisschen aus der Mitte. Tipp darauf.',
     });
     if (!ctx.active) return;
     box.classList.add('koe-ampel-on');
@@ -676,7 +685,7 @@
       good: [['🍎', 'Apfel in der Pause', 'Flo isst einen Apfel in der Pause.'], ['🥗', 'Salat zum Mittag', 'Flo isst Salat zum Mittag.'], ['🪥', 'Zähne putzen', 'Flo putzt die Zähne.']],
       fix: 'Flos Körper will sich jeden Tag bewegen. Mindestens eine Stunde!', hint: 'Tipp: Denk an Bewegung.' },
     { k: 'Nur Limo', bad: { e: '🥤', t: 'nur Limo trinken', s: 'Flo trinkt nur Limo.' },
-      good: [['🥪', 'Brot in der Pause', 'Flo isst ein Brot in der Pause.'], ['🏊', 'schwimmen gehen', 'Flo geht schwimmen.'], ['📖', 'Gutenachtgeschichte', 'Flo hört eine Gutenachtgeschichte.']],
+      good: [['🥪', 'Brot in der Pause', 'Flo isst ein Brot in der Pause.'], ['🏊', 'schwimmen gehen', 'Flo geht schwimmen.'], ['📖', 'Geschichte', 'Flo hört eine Gutenachtgeschichte.']],
       fix: 'Bei Durst ist Wasser am besten. Limo hat viel Zucker.', hint: 'Tipp: Denk ans Trinken.' },
     { k: 'Ohne Putzen', bad: { e: '🌙', t: 'ohne Zähneputzen ins Bett', s: 'Flo geht ohne Zähneputzen ins Bett.' },
       good: [['🚶', 'zu Fuß gehen', 'Flo geht zu Fuß.'], ['🥕', 'Karotten knabbern', 'Flo knabbert Karotten.'], ['💧', 'Wasser trinken', 'Flo trinkt Wasser.']],
@@ -698,7 +707,7 @@
     const cards = [{ e: set.bad.e, t: set.bad.t, s: set.bad.s, ok: true }, ...set.good.map(([e, t, s]) => ({ e, t, s }))];
     const items = cards.map((x) => ({
       content: el('span.koe-q', U.emoji(x.e, 'koe-q-e'), el('span.koe-q-t', x.t)),
-      say: x.s, correct: !!x.ok, x, className: 'koe-qtile koe-daytile',
+      say: x.s, correct: !!x.ok, x, className: 'koe-qtile koe-daytile' + longCls(x.t),
     }));
     const ha = hintAfterFor(ctx, items.length, items.length - 1);
     await ctx.choices(items, {
@@ -724,16 +733,17 @@
     ], extra: { id: 'h0', e: '🚽', label: 'nach dem Klo', say: 'Nach dem Klo zum Waschbecken gehen' }, extraFirst: true,
       c: 'Einseifen und dabei bis dreißig zählen. Dann sind die Hände wirklich sauber.' },
     { k: 'Morgen', title: 'Flos Morgen', icon: '🌅', ask: 'Was macht Flo am Morgen? Bring es in die richtige Reihenfolge.', steps: [
-      { id: 'm1', e: '⏰', label: 'aufstehen', say: 'aufstehen' },
-      { id: 'm2', e: '🥣', label: 'frühstücken', say: 'frühstücken' },
-      { id: 'm3', e: '🪥', label: 'Zähne putzen', say: 'Zähne putzen' },
-      { id: 'm4', e: '🎒', label: 'zur Schule', say: 'zur Schule gehen' },
+      // nur Schritte, die logisch aufeinander folgen (Frühstück und Zähneputzen sind je nach Familie verschieden)
+      { id: 'm1', e: '⏰', label: 'aufwachen', say: 'aufwachen' },
+      { id: 'm2', e: '👕', label: 'anziehen', say: 'anziehen' },
+      { id: 'm3', e: '🎒', label: 'Ranzen auf', say: 'den Schulranzen aufsetzen' },
+      { id: 'm4', e: '🚸', label: 'zur Schule', say: 'zur Schule gehen' },
     ], extra: { id: 'm5', e: '🏫', label: 'lernen', say: 'in der Schule lernen' },
-      c: 'Ein gutes Frühstück und saubere Zähne. So startet ein guter Tag.' },
+      c: 'Wach werden, anziehen, Ranzen auf und los. Mit einem guten Frühstück startet der Tag noch besser.' },
     { k: 'Abend', title: 'Flos Abend', icon: '🌙', ask: 'Was macht Flo am Abend? Bring es in die richtige Reihenfolge.', steps: [
       { id: 'a1', e: '🍝', label: 'Abendessen', say: 'Abendessen' },
       { id: 'a2', e: '🪥', label: 'Zähne putzen', say: 'Zähne putzen' },
-      { id: 'a3', e: '📖', label: 'Geschichte', say: 'eine Gutenachtgeschichte hören' },
+      { id: 'a3', e: '🛏️', label: 'ins Bett', say: 'ins Bett gehen' },
       { id: 'a4', e: '😴', label: 'schlafen', say: 'schlafen' },
     ], extra: { id: 'a0', e: '⚽', label: 'draußen toben', say: 'draußen toben' }, extraFirst: true,
       c: 'Nach dem Zähneputzen wird nichts mehr gegessen. Dann gute Nacht!' },
@@ -780,7 +790,7 @@
      ====================================================================== */
   const INTRO = {
     1: 'Du hast fünf Sinne: sehen, hören, riechen, schmecken und fühlen. Für jeden Sinn gibt es ein Sinnesorgan. Welches passt?',
-    2: 'Jetzt kommen Sinnes Rätsel ohne Bild. Lies oder hör genau zu und überlege, welches Sinnesorgan hilft.',
+    2: 'Jetzt kommen Sinnes Rätsel ohne Bild. Lies oder hör genau zu und überlege, welches Sinnesorgan das merkt.',
     3: 'Jetzt geht es um deine Zähne. Profis putzen nach dem Zauberwort KAI: Kauflächen, Außenflächen, Innenflächen.',
     4: 'Hier ist die Essens Pyramide. Unten steht, wovon du viel essen darfst. Ganz oben steht, was es nur ab und zu gibt.',
     5: 'Was macht einen guten Tag? Genug Schlaf, viel Bewegung, Wasser und gesundes Essen. Wir prüfen Flos Tag!',

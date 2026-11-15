@@ -19,15 +19,17 @@
        1  zweisilbig, offene Silben, lautgetreu (Ma-ma, Ro-se, So-fa)
        2  dreisilbig (To-ma-te, Ba-na-ne, Ra-ke-te)
        3  geschlossene Silben (Kat-ze, Tul-pe, Hams-ter)
-       4  Silben-Baustelle: Wort aus Silbenkarten zusammensetzen, mit
-          Laut-Paketen sch, ei, au, eu, ie, ch (Schu-le, Ei-mer, Rau-pe);
-          Ablenker-Silben unterscheiden sich nur im Vokal (Schu/Scho)
+       4  Silben-Baustelle: zum Bild (Wort wird NICHT vorgesagt) das Wort aus
+          Silbenkarten zusammensetzen, zweisilbig mit Laut-Paketen sch, ei, au,
+          eu, ie, ch (Schu-le, Ei-mer, Rau-pe); Ablenker-Silben unterscheiden
+          sich nur im Vokal (Schu/Scho), nie gleich klingend (kein Bie/Bi)
        5  kurze Sätze (3–5 Wörter) lesen, passendes Bild aus Minimalpaaren
    - Hilfe-Leiter (Stufe 1–3, 5): 1. Fehler → gewähltes Bild benennen und mit
      dem Wortanfang vergleichen + stiller Lesefinger, 2. → Silben einzeln
      vorsprechen / entscheidende Wörter leuchten, 3. → vormachen.
-     Stufe 4: 1. gewählte Silbe benennen, 2. gesuchte Silbe vorsprechen und
-     eine Ablenker-Karte verschwindet, 3. richtige Karte leuchtet.
+     Stufe 4: 1. gewählte Silbe und das Bild benennen, 2. gesuchte Silbe
+     vorsprechen und eine Ablenker-Karte verschwindet, 3. richtige Karte leuchtet.
+     Wiederholtes Tippen derselben falschen Karte zählt nicht doppelt.
    - Lerninhalte (ctx.item): Wort ('Rose') bzw. Satz ('Die Katze schläft.').
    ========================================================================== */
 (function () {
@@ -41,30 +43,28 @@
     1: [
       ['Ma-ma', '👩', 'die'], ['Pa-pa', '👨', 'der'], ['O-ma', '👵', 'die'], ['O-pa', '👴', 'der'],
       ['Ro-se', '🌹', 'die'], ['Na-se', '👃', 'die'], ['Ho-se', '👖', 'die'], ['Do-se', '🥫', 'die'],
-      ['Ha-se', '🐰', 'der'], ['Va-se', '🏺', 'die'], ['So-fa', '🛋️', 'das'], ['La-ma', '🦙', 'das'],
-      ['Ki-wi', '🥝', 'die'], ['Lu-pe', '🔍', 'die'], ['Di-no', '🦕', 'der'], ['Ka-no', '🛶', 'das'],
-      ['Ju-do', '🥋', 'das'], ['Ta-xi', '🚕', 'das'], ['Ti-ger', '🐯', 'der'], ['Ho-nig', '🍯', 'der'],
+      ['Ha-se', '🐰', 'der'], ['Ze-bra', '🦓', 'das'], ['So-fa', '🛋️', 'das'], ['La-ma', '🦙', 'das'],
+      ['Ki-wi', '🥝', 'die'], ['Lu-pe', '🔍', 'die'], ['Di-no', '🦕', 'der'], ['Ka-nu', '🛶', 'das'],
+      ['Ju-do', '🥋', 'das'], ['Li-mo', '🥤', 'die'], ['Ku-li', '🖊️', 'der'], ['Mo-fa', '🛵', 'das'],
     ],
     2: [
       ['To-ma-te', '🍅', 'die'], ['Ba-na-ne', '🍌', 'die'], ['Ra-ke-te', '🚀', 'die'], ['Me-lo-ne', '🍉', 'die'],
-      ['Zi-tro-ne', '🍋', 'die'], ['A-na-nas', '🍍', 'die'], ['Ro-bo-ter', '🤖', 'der'], ['Ra-di-o', '📻', 'das'],
-      ['Ka-me-ra', '📷', 'die'], ['Kro-ko-dil', '🐊', 'das'], ['E-le-fant', '🐘', 'der'], ['Te-le-fon', '☎️', 'das'],
-      ['Ka-ru-sell', '🎠', 'das'], ['Pa-pa-gei', '🦜', 'der'],
+      ['Zi-tro-ne', '🍋', 'die'], ['Ro-bo-ter', '🤖', 'der'], ['Ra-di-o', '📻', 'das'], ['Ka-me-ra', '📷', 'die'],
+      ['Ko-a-la', '🐨', 'der'], ['Ki-mo-no', '👘', 'der'],
     ],
     3: [
       ['Kat-ze', '🐱', 'die'], ['Ker-ze', '🕯️', 'die'], ['Kak-tus', '🌵', 'der'], ['Kür-bis', '🎃', 'der'],
       ['Ham-mer', '🔨', 'der'], ['Hams-ter', '🐹', 'der'], ['Tul-pe', '🌷', 'die'], ['Tor-te', '🎂', 'die'],
-      ['Lam-pe', '💡', 'die'], ['Pal-me', '🌴', 'die'], ['Pan-da', '🐼', 'der'], ['Pin-sel', '🖌️', 'der'],
-      ['Bir-ne', '🍐', 'die'], ['Bal-lon', '🎈', 'der'], ['Wol-ke', '☁️', 'die'], ['Wür-fel', '🎲', 'der'],
-      ['Gur-ke', '🥒', 'die'], ['Mas-ke', '🎭', 'die'], ['Ap-fel', '🍎', 'der'], ['Pin-gu-in', '🐧', 'der'],
+      ['Tas-se', '☕', 'die'], ['Pal-me', '🌴', 'die'], ['Pan-da', '🐼', 'der'], ['Pin-sel', '🖌️', 'der'],
+      ['Bir-ne', '🍐', 'die'], ['Bril-le', '👓', 'die'], ['Wol-ke', '☁️', 'die'], ['Wür-fel', '🎲', 'der'],
+      ['Gur-ke', '🥒', 'die'], ['Mas-ke', '🎭', 'die'], ['Ap-fel', '🍎', 'der'], ['Kof-fer', '🧳', 'der'],
     ],
     4: [
       ['Schu-le', '🏫', 'die'], ['Sche-re', '✂️', 'die'], ['Ta-sche', '👜', 'die'], ['Fla-sche', '🍾', 'die'],
       ['Mu-schel', '🐚', 'die'], ['Schne-cke', '🐌', 'die'], ['Schlan-ge', '🐍', 'die'], ['Sei-fe', '🧼', 'die'],
-      ['Ein-horn', '🦄', 'das'], ['A-mei-se', '🐜', 'die'], ['Rau-pe', '🐛', 'die'], ['Zau-be-rer', '🧙', 'der'],
-      ['Ku-chen', '🍰', 'der'], ['Dra-chen', '🐉', 'der'], ['Bie-ne', '🐝', 'die'], ['Zie-ge', '🐐', 'die'],
-      ['Stie-fel', '👢', 'der'], ['Eu-le', '🦉', 'die'], ['Schmet-ter-ling', '🦋', 'der'], ['Spin-ne', '🕷️', 'die'],
-      ['Kir-sche', '🍒', 'die'], ['Feu-er', '🔥', 'das'], ['Eich-hörn-chen', '🐿️', 'das'],
+      ['Ein-horn', '🦄', 'das'], ['Ei-mer', '🪣', 'der'], ['Rau-pe', '🐛', 'die'], ['Ku-chen', '🍰', 'der'],
+      ['Dra-chen', '🐉', 'der'], ['Bie-ne', '🐝', 'die'], ['Zie-ge', '🐐', 'die'], ['Stie-fel', '👢', 'der'],
+      ['Eu-le', '🦉', 'die'], ['Kir-sche', '🍒', 'die'], ['Feu-er', '🔥', 'das'],
     ],
   };
   const plain = (t) => String(t).replace(/-/g, '');
@@ -82,7 +82,7 @@
   const SETS = [
     [['Die Kat-ze schläft.', '🐱💤'], ['Der Hund schläft.', '🐶💤'], ['Die Kat-ze spielt.', '🐱🧶']],
     [['Der Hund rennt schnell.', '🐶💨'], ['Das Pferd rennt schnell.', '🐴💨'], ['Der Hund frisst ei-nen Kno-chen.', '🐶🦴']],
-    [['Der Vo-gel sitzt auf dem Baum.', '🐦🌳'], ['Der Vo-gel sitzt auf dem Haus.', '🐦🏠'], ['Die Kat-ze sitzt auf dem Baum.', '🐱🌳']],
+    [['Der Vo-gel sitzt im Baum.', '🐦🌳'], ['Der Vo-gel sitzt am Haus.', '🐦🏠'], ['Die Kat-ze sitzt im Baum.', '🐱🌳']],
     [['Die Maus isst Kä-se.', '🐭🧀'], ['Die Maus isst ei-nen Ap-fel.', '🐭🍎'], ['Der Bär isst Kä-se.', '🐻🧀']],
     [['Flo liest ein Buch.', '🦊📖'], ['Flo malt ein Bild.', '🦊🎨'], ['O-ma liest ein Buch.', '👵📖']],
     [['Das Kind lacht.', '🧒😄'], ['Das Kind weint.', '🧒😢'], ['O-pa lacht.', '👴😄']],
@@ -105,7 +105,7 @@
     1: 'Silben lesen! Tippe die Silben nacheinander an und lies sie laut. Dann schwingst du den großen Bogen und liest das ganze Wort.',
     2: 'Jetzt kommen lange Wörter mit drei Silben: blau, rot, blau. Lies jede Silbe und schwing mit!',
     3: 'Jetzt haben die Silben am Ende noch einen Buchstaben, wie bei Katze. Lies jede Silbe ganz bis zum Ende.',
-    4: 'Silben-Baustelle! Ich sage dir ein Wort. Du suchst die passenden Silben und baust das Wort. Achtung: sch, ei, au und ie gehören immer zusammen.',
+    4: 'Silben-Baustelle! Schau dir das Bild an. Lies die Silbenkarten und bau das Wort. Achtung: sch, ei, au und ie gehören immer zusammen.',
     5: 'Jetzt liest du ganze Sätze! Lies Wort für Wort, ganz bis zum Punkt. Dann tippe auf das passende Bild.',
   };
   let introduced = new Set();
@@ -115,6 +115,10 @@
   const vary = (key, list) => U.pickFresh('sil-' + key, list, Math.min(2, list.length - 1));
   const proc = (ctx, normal, process) => (ctx.wrongCount === 0 && U.chance(0.3) ? process : normal);
   const ORD = ['erste', 'zweite', 'dritte', 'vierte'];
+  /** ≤ 3 sichtbare Kacheln (nach ease) → hintAfter 1, sonst 2 (wie LT.z2.hintAfterFor). */
+  const hintAfterFor = (ctx, count) => (LT.z2 && LT.z2.hintAfterFor
+    ? LT.z2.hintAfterFor(ctx, count)
+    : ((ctx.flow < 0 && count >= 4 ? count - 1 : count) <= 3 ? 1 : 2));
 
   /** Silbenwort-Knoten: Silben blau/rot mit Bögen. */
   function wordNode(text, cls) {
@@ -266,7 +270,8 @@
     // Phase 3: Bild wählen
     ctx.instruct(vary('pic', ['Welches Bild passt?', 'Was hast du gelesen? Tippe auf das Bild.', 'Welches Bild gehört zu dem Wort?']));
     const items = [target, ...others].map((w) => ({ content: w.e, correct: w === target, say: w.k, w }));
-    const ha = items.length <= 2 ? 1 : 2;
+    // ≤ 3 sichtbare Bilder → Hilfe-Leiter schon nach dem 1. Fehler (engine.md, LT.z2.hintAfterFor)
+    const ha = hintAfterFor(ctx, items.length);
     await ctx.choices(items, {
       size: 'large',
       sayButton: true,
@@ -283,15 +288,20 @@
       },
       hintSay: 'Schwing die Silben in deinem Kopf zusammen. Welches Bild passt?',
       modelSay: 'Hier ist das passende Bild.',
+      // Reihenfolge der Engine: explain → onWrong → (bei n === hintAfter) hintSay
       onWrong: async (item, tile, n) => {
+        // Audiohilfe ab dem 1. Fehler: Silben EINZELN vorsprechen, das Kind schwingt selbst
+        // zusammen. Ab jetzt sind die Silben auch beim Antippen hörbar (wird angesagt).
         audible = true;
-        if (n === 1) await silentFinger(ctx, spans);
-        else if (n === ha) {
-          await ctx.say('Hör gut zu. Ich sage dir die Silben einzeln.');
-          await speakSyls(ctx, word, { whole: false, rate: 0.8 });
-        } else if (n > ha) {
+        if (n > ha) {
           await ctx.say('Ich lese es dir vor.');
           await speakSyls(ctx, word, { rate: 0.8 });
+        } else if (n === 1) {
+          await ctx.say('Hör gut zu. Ich sage dir die Silben einzeln.');
+          await speakSyls(ctx, word, { whole: false, rate: 0.8 });
+          if (ctx.active) await ctx.say('Du kannst die Silben jetzt auch antippen, dann lese ich mit.');
+        } else {
+          await silentFinger(ctx, spans);
         }
       },
     });
@@ -305,7 +315,9 @@
      Stufe 4: Silben-Baustelle – Wort aus Silbenkarten bauen
      ====================================================================== */
   const VOWELS = ['ie', 'ei', 'au', 'eu', 'äu', 'a', 'e', 'i', 'o', 'u', 'ä', 'ö', 'ü'];
-  const SWAP = { ie: ['ei', 'i', 'e'], ei: ['au', 'ie', 'eu'], au: ['ei', 'eu', 'a'], eu: ['ei', 'au'], äu: ['ei', 'au'], a: ['o', 'e', 'u'], e: ['a', 'i', 'o'], i: ['e', 'a', 'ie'], o: ['a', 'u', 'e'], u: ['o', 'a', 'i'], ä: ['a', 'e'], ö: ['o', 'ü'], ü: ['u', 'ö'] };
+  // Ersatz-Vokale so gewählt, dass keine gleich klingende Silbe entsteht
+  // (NICHT ie↔i: Bie/Bi; NICHT ä↔e; NICHT äu↔eu) – sonst entscheidet Rechtschreibwissen statt Lesen.
+  const SWAP = { ie: ['ei', 'e', 'a'], ei: ['au', 'ie', 'eu'], au: ['ei', 'eu', 'a'], eu: ['ei', 'au'], äu: ['ei', 'au'], a: ['o', 'e', 'u'], e: ['a', 'i', 'o'], i: ['e', 'a', 'ie'], o: ['a', 'u', 'e'], u: ['o', 'a', 'i'], ä: ['a', 'o'], ö: ['o', 'ü'], ü: ['u', 'ö'] };
   /** Ähnliche Silbe: nur der Vokal ist anders (Schu → Scho). */
   function nearSyl(s) {
     const low = s.toLowerCase();
@@ -353,7 +365,14 @@
     let finish;
     const done = new Promise((r) => { finish = r; });
     const nextCard = () => cards.find((b) => !b._used && b._c.s === syls[pos]);
-    const markNext = () => { cards.forEach((b) => ctx.markTest(b, false)); if (pos < syls.length) ctx.markTest(nextCard()); };
+    const markNext = () => {
+      cards.forEach((b) => ctx.markTest(b, false));
+      if (pos >= syls.length) return;
+      const nc = nextCard();
+      // Sicherheitsnetz: eine benötigte Karte darf nie ausgegraut bleiben
+      if (nc.classList.contains('sil-out')) { nc.classList.remove('sil-out'); nc.removeAttribute('aria-disabled'); }
+      ctx.markTest(nc);
+    };
     markNext();
     const name = target.k;
     const art = target.a;
@@ -376,16 +395,28 @@
         busy = false;
         return;
       }
-      // Fehlversuch
+      // Dieselbe falsche Karte für denselben Platz nochmal: zählt nicht doppelt (wie ctx.choices)
+      if (b._wrongAt === pos) {
+        LT.ui.animate(b, 'shake');
+        busy = false;
+        return;
+      }
+      b._wrongAt = pos;
+      // Fehlversuch – 1. Fehler: Audiohilfe, Flo nennt das Bild (vorher wird es nicht gesagt)
       const n = await ctx.wrong(b, {
         keep: true,
-        say: `Da steht ${sylSay(b._c.s)}. ` + (pos === 0 ? `Wir brauchen den Anfang von ${name}.` : `Wir brauchen die ${ORD[pos] || 'nächste'} Silbe von ${name}.`),
+        say: `Da steht ${sylSay(b._c.s)}. ` + (pos === 0 ? `Das Bild ist ${art} ${name}. Wir brauchen den Anfang.` : `Wir brauchen die ${ORD[pos] || 'nächste'} Silbe von ${name}.`),
       });
       if (!ctx.active) return;
       const right = nextCard();
       if (n === 2) {
-        const open = cards.filter((x) => !x._used && x._c.s !== syls[pos] && !x.classList.contains('sil-out'));
-        if (open.length) { const out = open.includes(b) ? b : U.pick(open); out.classList.add('sil-out'); out.setAttribute('aria-disabled', 'true'); }
+        // Nur echte Ablenker ausgrauen – nie eine Silbe, die das Wort später noch braucht
+        const open = cards.filter((x) => x._c.pos === -1 && !x._used && !x.classList.contains('sil-out'));
+        if (open.length) {
+          const out = open.includes(b) ? b : U.pick(open);
+          out.classList.add('sil-out');
+          out.setAttribute('aria-disabled', 'true');
+        }
         await ctx.say(`Hör genau: Wir suchen ${sylSay(syls[pos])}. Lies jede Karte bis zum Ende.`);
       } else if (n >= 3) {
         ctx.modelShown = true;
@@ -397,9 +428,11 @@
 
     const first = !introduced.has('build-instr');
     introduced.add('build-instr');
+    // Das Wort wird NICHT vorgesagt: Das Kind benennt das Bild selbst und muss die
+    // Silbenkarten lesen (Ablenker unterscheiden sich nur im Vokal: Schu/Scho).
     ctx.instruct(first
-      ? `Das ist ${art} ${name}. Bau das Wort aus Silben! Tippe die Silben der Reihe nach an.`
-      : `Das ist ${art} ${name}. Bau das Wort!`);
+      ? 'Was ist auf dem Bild? Lies die Silbenkarten und bau das Wort! Tippe die Silben der Reihe nach an.'
+      : vary('build-instr', ['Was ist auf dem Bild? Bau das Wort!', 'Lies die Karten genau und bau das Wort zum Bild!', 'Welche Silben passen zum Bild?']));
     await done;
     if (!ctx.active) return;
     await ctx.correct(slotRow, {
@@ -458,7 +491,7 @@
     introduced.add('sent-instr');
     ctx.instruct(first ? 'Lies den Satz Wort für Wort. Welches Bild passt?' : vary('sent', ['Lies den Satz. Welches Bild passt?', 'Lies genau bis zum Punkt. Welches Bild passt?', 'Was steht da? Tippe auf das passende Bild.']));
     const items = opts.map((s) => ({ content: el('span.sil-scene', s.scene), correct: s === target, aria: 'Bild', className: 'sil-scene-tile', s }));
-    const ha = 2;
+    const ha = hintAfterFor(ctx, items.length);
     await ctx.choices(items, {
       size: 'large',
       className: 'sil-pics',
@@ -468,22 +501,33 @@
         vary('sent-ok', ['Richtig gelesen!', 'Genau, das passt!', 'Super gelesen!']),
         vary('sent-proc', ['Du hast Wort für Wort gelesen, wie ein echter Leser!', 'Toll, du hast den ganzen Satz bis zum Punkt gelesen!'])),
       explain: (item) => `Zu diesem Bild passt: ${item.s.k} Lies noch einmal Wort für Wort.`,
-      hintSay: 'Lies die leuchtenden Wörter ganz genau.',
+      hintSay: 'Lies die leuchtenden Wörter ganz genau. Welches Bild passt?',
       modelSay: 'Hier ist das passende Bild.',
       onWrong: async (item, tile, n) => {
+        // Audiohilfe ab dem 1. Fehler: die entscheidenden Wörter leuchten und werden vorgelesen.
         audible = true;
-        if (n === 1) {
+        if (n > ha) {
+          sent.classList.add('sil-all');
+          await ctx.say(target.k);
+        } else if (n === 1) {
+          const keys = sent._words.filter((we) => keyWords.includes(we._word));
+          keys.forEach((we) => we.classList.add('sil-key'));
+          await ctx.say('Hör gut zu.');
+          for (const we of keys) {
+            if (!ctx.active) return;
+            we.classList.add('sil-on');
+            await ctx.say(we._word);
+            we.classList.remove('sil-on');
+            await ctx.sleep(200);
+          }
+          if (ctx.active) await ctx.say('Du kannst jetzt auch ein Wort antippen, dann lese ich es dir vor.');
+        } else {
           for (const we of sent._words) {
             if (!ctx.active) return;
             we.classList.add('sil-on');
             await ctx.sleep(650);
             we.classList.remove('sil-on');
           }
-        } else if (n === ha) {
-          sent._words.forEach((we) => { if (keyWords.includes(we._word)) we.classList.add('sil-key'); });
-        } else {
-          sent.classList.add('sil-all');
-          await ctx.say(target.k);
         }
       },
     });
@@ -510,7 +554,7 @@
         'Zweisilbige Wörter mit offenen Silben (Ma-ma, Ro-se, So-fa)',
         'Dreisilbige Wörter (To-ma-te, Ba-na-ne, Ra-ke-te)',
         'Geschlossene Silben (Kat-ze, Tul-pe, Hams-ter) mit ähnlichen Ablenkern',
-        'Silben-Baustelle: Wörter mit sch, ei, au, ie aus Silbenkarten bauen (Schu-le, Rau-pe)',
+        'Silben-Baustelle: zum Bild das Wort mit sch, ei, au, ie aus Silbenkarten bauen – die Karten müssen genau gelesen werden (Schu-le, Rau-pe)',
         'Kurze Sätze mit 3–5 Wörtern lesen und das passende Bild finden',
       ],
       tip: 'Lesen Sie gemeinsam in Silben und schwingen Sie dabei mit dem Arm einen Bogen pro Silbe. Bei Fehlern nicht das Wort vorsagen, sondern fragen: „Wie heißt die erste Silbe? Und die nächste? Jetzt zusammen!“',

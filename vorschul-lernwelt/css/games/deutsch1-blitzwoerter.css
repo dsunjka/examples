@@ -59,10 +59,16 @@
 .btn-round.bli-again {
   width: clamp(60px, 9vmin, 76px);
   height: clamp(60px, 9vmin, 76px);
-  background: var(--gold);
-  box-shadow: 0 4px 0 var(--gold-dark);
+  /* gleiche Farbe wie die Abdeckung der Blitzkarte → „Karte nochmal aufblitzen“ */
+  background:
+    radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.3), transparent 45%),
+    linear-gradient(135deg, #7048e8, #4dabf7);
+  box-shadow: 0 4px 0 #4b2db3;
 }
-.btn-round.bli-again .emoji { font-size: clamp(28px, 4.6vmin, 38px); }
+.btn-round.bli-again .emoji {
+  font-size: clamp(28px, 4.6vmin, 38px);
+  filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.25));
+}
 
 /* ---------- Wort-Kacheln ---------- */
 .bli-choices { gap: clamp(10px, 2vmin, 20px); }

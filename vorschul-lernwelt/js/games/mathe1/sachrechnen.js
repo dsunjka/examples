@@ -12,12 +12,14 @@
    - Schritt 2: Die Rechnung wird ausgerechnet; danach spricht Flo den
      Antwortsatz („Jetzt sind es dreizehn Vögel.“).
    - Stufen:
-       1  Hinzukommen bis 20 (Brücke aus der Vorschule)
-       2  Wegnehmen (gemischt mit Hinzukommen)
-       3  Vergleichen: „Wie viele mehr / weniger?“ → Minus, nicht Plus!
-       4  Ergänzen mit Platzhalter: 8 + ☐ = 14
+       1  Hinzukommen bis 10 (Brücke aus der Vorschule)
+       2  Wegnehmen bis 10 (gemischt mit Hinzukommen bis 20 ohne Zehnerübergang)
+       3  Vergleichen bis 20 ohne Zehnerübergang: „Wie viele mehr / weniger?“ → Minus!
+       4  Ergänzen mit Platzhalter: 8 + ☐ = 14 – ab hier mit Zehnerübergang
        5  Knifflig: Sprach-Fallen („Das sind 4 mehr, als Ben hat“), alle Arten
           gemischt und umgekehrt: die passende Geschichte zur Rechnung finden.
+     Die Aufgabenart hängt an der Rundenstufe; ctx.flow macht den Zahlenraum innerhalb
+     der Stufe leichter oder schwerer (siehe range()).
    - Fehlvorstellung: „mehr heißt immer plus“. Hilfe: Szene nachspielen statt
      auf Signalwörter achten (Hinweise beschreiben die Handlung).
    - Hilfe-Leiter: 1. Fehler → Erklärung des Missverständnisses (ohne Lösung)
@@ -123,31 +125,66 @@
     return t;
   };
 
+  /** Zehnerübergang? (+: Einer laufen über die Zehn, −: Einer reichen nicht, ☐: Lücke über die Zehn) */
+  const crossesTen = (t) => (t.op === '+' && t.x < 10 && t.x + t.y > 10)
+    || (t.op === '-' && t.x > 10 && t.y < 10 && t.x - t.y < 10)
+    || (t.op === 'gap' && t.x < 10 && t.y > 10);
+
+  /**
+   * Zahlenraum je Stufe und Aufgabenart – steigt Schritt für Schritt:
+   *   1  Plus bis 10 ohne Übergang
+   *   2  Minus bis 10, Plus bis 20 ohne Übergang
+   *   3  Vergleichen (und Plus/Minus) bis 20 ohne Übergang
+   *   4/5  mit Zehnerübergang
+   * ctx.flow macht es innerhalb der Stufe leichter (−1) oder schwerer (+1).
+   * Liefert { max: größte Zahl, cross: Zehnerübergang erlaubt }.
+   */
+  function range(kind, level, flow) {
+    if (level <= 1) return { max: flow > 0 ? 20 : flow < 0 ? 8 : 10, cross: false };
+    if (level === 2) {
+      if (OP[kind] === '-') return { max: flow > 0 ? 20 : 10, cross: false };
+      return { max: flow < 0 ? 10 : 20, cross: flow > 0 };
+    }
+    if (level === 3) return { max: flow < 0 ? 10 : 20, cross: flow > 0 };
+    return { max: 20, cross: flow >= 0 };
+  }
+
   function pool(kind, level, flow) {
     const out = [];
-    const easy = flow < 0;
+    const { max, cross } = range(kind, level, flow);
+    const ok = (t) => cross || !crossesTen(t);
     if (kind === 'add' || kind === 'cmpadd' || kind === 'wenigerals') {
-      const maxR = kind === 'add' && level === 1 && easy ? 10 : 20;
-      for (let x = 2; x <= (level === 1 ? 12 : 15); x++) {
-        for (let y = 2; y <= (level === 1 ? 8 : 9); y++) {
-          const r = x + y;
-          if (r > maxR || r < 5) continue;
-          if (kind !== 'add' && x > 12) continue;
-          out.push(mk(kind, x, y));
+      for (let x = 2; x <= Math.min(kind === 'add' ? 18 : 12, max - 2); x++) {
+        for (let y = 2; y <= 9; y++) {
+          const t = mk(kind, x, y);
+          if (t.r > max || t.r < 4 || !ok(t)) continue;
+          out.push(t);
         }
       }
     } else if (kind === 'sub' || kind === 'cmpsub' || kind === 'mehrals') {
-      const maxX = easy ? 10 : 20;
-      for (let x = 5; x <= maxX; x++) for (let y = 2; y <= 9; y++) if (x - y >= 2) out.push(mk(kind, x, y));
+      for (let x = 5; x <= max; x++) {
+        for (let y = 2; y <= 9; y++) {
+          const t = mk(kind, x, y);
+          if (t.r >= 2 && ok(t)) out.push(t);
+        }
+      }
     } else if (kind === 'cmp') {
-      const maxBig = easy ? 10 : level >= 5 ? 18 : 15;
-      for (let x = 5; x <= maxBig; x++) for (let y = 2; y <= x - 2; y++) if (x - y <= 9) out.push(mk('cmp', x, y));
+      for (let x = 5; x <= max; x++) {
+        for (let y = 2; y <= x - 2; y++) {
+          const t = mk('cmp', x, y);
+          if (t.r <= 9 && ok(t)) out.push(t);
+        }
+      }
     } else if (kind === 'erg') {
-      const maxY = easy ? 10 : 20;
-      for (let x = 2; x <= 14; x++) for (let y = x + 2; y <= Math.min(maxY, x + 9); y++) out.push(mk('erg', x, y));
+      for (let x = 2; x <= 14; x++) {
+        for (let y = x + 2; y <= Math.min(max, x + 9); y++) {
+          const t = mk('erg', x, y);
+          if (ok(t)) out.push(t);
+        }
+      }
     } else if (kind === 'rev') {
       for (const k of ['add', 'sub']) {
-        for (const t of pool(k, 3, flow)) if (t.x > t.y + 1 && (k === 'add' || t.x <= 18)) out.push(Object.assign({}, t, { kind: 'rev', base: k }));
+        for (const t of pool(k, level, flow)) if (t.x > t.y + 1 && (k === 'add' || t.x <= 18)) out.push(Object.assign({}, t, { kind: 'rev', base: k }));
       }
     }
     return out;
@@ -214,12 +251,20 @@
         return y2 >= t.x + 2 && y2 <= 20 ? { x: t.x, y: y2, op: 'gap', trap: 'num', bad: y2 } : null;
       }
       const y2 = t.y + dv;
-      if (y2 < 1) return null;
+      // Die falsche Zahl darf in der Geschichte nicht vorkommen (sonst stimmt die Erklärung
+      // „Kommt die … in der Geschichte vor?“ nicht).
+      if (y2 < 1 || y2 === t.x) return null;
       if (t.op === '-' && t.x - y2 < 1) return null;
       if (t.op === '+' && t.x + y2 > 20) return null;
       return { x: t.x, y: y2, op: t.op, trap: 'num', bad: y2 };
     }).filter(Boolean);
-    const num = cand[0] || { x: t.x + 1, y: t.y, op: t.op === 'gap' ? 'gap' : t.op, trap: 'num', bad: t.x + 1 };
+    let num = cand[0];
+    if (!num) {
+      // Notfall: die erste Zahl verändern
+      const x2 = [t.x + 1, t.x - 1, t.x + 2, t.x - 2].find((v) => v >= 1 && v !== t.y
+        && (t.op === 'gap' ? t.y - v >= 2 : t.op === '-' ? v - t.y >= 1 : v + t.y <= 20));
+      num = { x: x2, y: t.y, op: t.op, trap: 'num', bad: x2 };
+    }
     return [right, swap, num];
   }
 
@@ -245,6 +290,7 @@
       if (x > 10) return `Tipp: Schau nur auf die Einer. ${W(x - 10)} plus ${w(y)}.`;
       return `Tipp: Starte bei ${w(x)} und zähle ${w(y)} weiter.`;
     }
+    if (y >= 10) return y === 10 ? 'Tipp: Nimm die Zehn weg. Was bleibt übrig?' : `Tipp: Nimm erst die Zehn weg. Dann noch ${w(y - 10)}.`;
     if (x > 10 && x - y < 10) return `Tipp: Rechne erst bis zur Zehn zurück. ${W(x)} minus ${w(x - 10)} ist zehn.`;
     if (x > 10) return `Tipp: Schau nur auf die Einer. ${W(x - 10)} minus ${w(y)}.`;
     return `Tipp: Starte bei ${w(x)} und geh ${w(y)} Schritte zurück.`;
@@ -260,11 +306,11 @@
       if (x > 10) return `${W(x - 10)} plus ${w(y)} ist ${w(x - 10 + y)}. Mit der Zehn sind es ${w(r)}.`;
       return `${W(x)} plus ${w(y)} ist ${w(r)}.`;
     }
+    if (y >= 10) return y === 10 ? `${W(x)} minus zehn ist ${w(r)}.` : `${W(x)} minus zehn ist ${w(x - 10)}. ${W(x - 10)} minus ${w(y - 10)} ist ${w(r)}.`;
     if (x > 10 && x - y < 10) return `${W(x)} minus ${w(x - 10)} ist zehn. Und noch ${w(y - (x - 10))} weg ist ${w(r)}.`;
     if (x > 10) return `${W(x - 10)} minus ${w(y)} ist ${w(x - 10 - y)}. Mit der Zehn sind es ${w(r)}.`;
     return `${W(x)} minus ${w(y)} ist ${w(r)}.`;
   }
-  const crossesTen = (t) => (t.op === '+' && t.x < 10 && t.x + t.y > 10) || (t.op === '-' && t.x > 10 && t.x - t.y < 10) || (t.op === 'gap' && t.x < 10 && t.y > 10);
 
   /* ---------------- Szene (Bild) ---------------- */
   function cell(e, cls) {
@@ -350,6 +396,8 @@
       let bag;
       let total;
       const wrap = el('div.sac-ergwrap');
+      // gleiche Kästchengröße wie das (größte) Feld, damit ❓ und Gesamtzahl mitwachsen
+      wrap.style.setProperty('--sac-k', String(Math.max(5, Math.min(10, t.y))));
       node.appendChild(wrap);
       api.reset = () => {
         U.clear(wrap);
@@ -475,10 +523,19 @@
       default: return `${b} hat ${w(t.y)} weniger. Darum rechnen wir ${s}.`;
     }
   }
-  function explainNum(t, v) {
+  function explainNum(t, v, st) {
     const { x, y, op, r } = t;
     const kind = t.kind === 'rev' ? t.base : t.kind;
-    if (op === 'gap') {
+    if (TRAPS.includes(kind)) {
+      // Vergleichs-Geschichten: Hier kommt nichts dazu und geht nichts weg – zwei Kinder werden verglichen.
+      const a = st.p1.n;
+      const b = st.p2.n;
+      const bMore = kind === 'cmpadd' || kind === 'wenigerals';
+      if (v === x) return `So viele hat ${a}. Wir suchen, wie viele ${b} hat.`;
+      if (v === y) return `Das ist der Unterschied. ${b} hat ${w(y)} ${bMore ? 'mehr' : 'weniger'} als ${a}. Wie viele hat ${b} also?`;
+      if (bMore && v === x - y) return `Fast! ${b} hat mehr als ${a}, nicht weniger.`;
+      if (!bMore && v === x + y) return `Fast! ${b} hat weniger als ${a}, nicht mehr.`;
+    } else if (op === 'gap') {
       if (v === y) return `Fast! ${W(y)} sind alle zusammen. Wir suchen nur die, die noch dazukommen.`;
       if (v === x) return `So viele sind schon da. Wie viele fehlen bis ${w(y)}?`;
     } else if (kind === 'cmp') {
@@ -506,17 +563,20 @@
       skill: 'Sachaufgaben lösen (Zahlenraum 20)',
       goal: 'Ihr Kind übersetzt kleine Alltagsgeschichten in Rechnungen: Es hört die Szene, sieht sie im Bild, wählt aus drei Rechnungen die passende und rechnet sie aus. Geübt werden Hinzukommen, Wegnehmen, Vergleichen und Ergänzen. Die Ablenker zielen auf die typische Schlüsselwort-Falle („mehr heißt immer plus“).',
       levels: [
-        'Hinzukommen bis 20: Rechnung wählen und ausrechnen',
-        'Wegnehmen, gemischt mit Hinzukommen',
-        'Vergleichen: „Wie viele mehr / weniger?“ (Unterschied mit Minus)',
-        'Ergänzen mit Platzhalter (8 + ☐ = 14)',
+        'Hinzukommen bis 10: Rechnung wählen und ausrechnen',
+        'Wegnehmen bis 10, gemischt mit Hinzukommen bis 20 (ohne Zehnerübergang)',
+        'Vergleichen bis 20: „Wie viele mehr / weniger?“ (Unterschied mit Minus, ohne Zehnerübergang)',
+        'Ergänzen mit Platzhalter (8 + ☐ = 14), jetzt auch mit Zehnerübergang',
         'Sprach-Fallen („Das sind 4 mehr, als Ben hat“), alles gemischt, Geschichte zur Rechnung finden',
       ],
       tip: 'Spielen Sie Rechengeschichten mit Spielzeug nach, statt auf Signalwörter zu achten: „Lena hat 9 Autos, Ben hat 13. Wie viele mehr hat Ben?“ Legen Sie die Autos paarweise nebeneinander. Fragen Sie ruhig: „Kommt etwas dazu oder vergleichen wir nur?“',
     },
 
     async task(ctx) {
-      const level = ctx.taskLevel;
+      // Jede Stufe hat eine eigene Aufgabenart (wie LT.s2.lv): Steigt/fällt ctx.taskLevel mitten
+      // in der Runde, bliebe sonst die Art nicht gleich (fremdes INTRO mitten in der Runde).
+      // Die Art kommt darum aus der Rundenstufe; ctx.flow steuert nur den Zahlenraum (range).
+      const level = MAIN[ctx.taskLevel] === MAIN[ctx.level] ? ctx.taskLevel : ctx.level;
       if (ctx.index === 0) { introduced = new Set(); pending = null; lastKinds = []; }
       let slot = chooseKind(ctx, level);
       if (!introduced.has(level)) {
@@ -578,9 +638,18 @@
 
       const fullSay = `${story.say.lines.join(' ')} ${story.say.q}`;
 
+      // token: jede neue Erzählung (oder jede Antwort / jeder Tipp) beendet die laufende Erzählung.
       let token = 0;
+      let narrating = 0; // token der gerade laufenden Erzählung (0 = keine)
+      let narration = null; // Promise der zuletzt gestarteten Erzählung
+      let solved = false; // Schritt 2 gelöst → 🔁 macht nichts mehr
+      const stopNarration = () => { token++; narrating = 0; };
       async function narrate(withScene) {
         const my = ++token;
+        narrating = my;
+        try { return await narrateRun(my, withScene); } finally { if (narrating === my) narrating = 0; }
+      }
+      async function narrateRun(my, withScene) {
         if (withScene) scene.reset();
         lineEls.forEach((n) => n.classList.remove('sac-now'));
         for (let i = 0; i < story.say.lines.length; i++) {
@@ -600,9 +669,24 @@
       }
 
       let hinted = false;
-      const showHint = () => { if (!hinted) { hinted = true; token++; scene.settle && scene.settle(); scene.hint(); } };
+      const showHint = () => { if (!hinted) { hinted = true; stopNarration(); scene.settle && scene.settle(); scene.hint(); } };
 
-      ctx.listen(replay, 'click', () => { LT.sfx.play('click'); narrate(!hinted && kind !== 'rev'); });
+      ctx.listen(replay, 'click', () => {
+        // Nicht dazwischenreden: Während Flo eine Rückmeldung, einen Tipp oder die Frage spricht
+        // (oder nach der Lösung) bleibt 🔁 ohne Wirkung. Eine laufende Erzählung beginnt neu.
+        if (solved || (LT.speech.speaking && !narrating)) return;
+        LT.sfx.play('click');
+        narration = narrate(!hinted && kind !== 'rev');
+      });
+      /** Erzählen und warten, bis die (evtl. per 🔁 neu gestartete) Erzählung fertig ist. */
+      async function narrateFully(withScene) {
+        narration = narrate(withScene);
+        for (;;) {
+          const p = narration;
+          const done = await p;
+          if (done || !ctx.active || p === narration) return done;
+        }
+      }
 
       // Prozess-Lob höchstens einmal pro Aufgabe, nur auf Anhieb
       const praiseStep = U.chance(0.3) ? (U.chance(0.5) ? 1 : 2) : 0;
@@ -633,11 +717,18 @@
           { s: sOther, trap: 'op' },
           { s: sSame, trap: 'num', bad: y2 },
         ].map((c) => ({ content: el('span.sac-storytxt', c.s.show), correct: !!c.correct, say: c.s.say, className: 'sac-card', trap: c.trap, bad: c.bad }));
-        await ctx.instruct(`Welche Geschichte passt zur Rechnung ${eqSay(e)}? Lies genau!`);
+        // Wer noch nicht flüssig liest, soll wissen, dass Flo vorlesen kann. Beim ersten Mal in
+        // der Runde liest Flo alle drei Geschichten vor (nameFirst: Kachel leuchtet, Eingabe wartet).
+        const readAll = !introduced.has('rev');
+        introduced.add('rev');
+        await ctx.instruct(readAll
+          ? `Welche Geschichte passt zur Rechnung ${eqSay(e)}? Ich lese dir die Geschichten vor. Hör genau zu!`
+          : `Welche Geschichte passt zur Rechnung ${eqSay(e)}? Lies genau, oder tipp auf den Lautsprecher. Dann lese ich dir die Geschichte vor.`);
         if (!ctx.active) return;
         await ctx.choices(cards, {
           container: choicesBox,
           sayButton: true,
+          nameFirst: readAll,
           hintAfter: 1,
           praise: false,
           correctSay: () => (praiseStep === 1 && ctx.wrongCount === 0
@@ -666,7 +757,7 @@
         // ----- Schritt 1: Szene erzählen, Rechnung wählen -----
         ctx.setInstruction(`${fullSay} Welche Rechnung passt?`);
         await ctx.sleep(150);
-        await narrate(true);
+        await narrateFully(true);
         if (!ctx.active) return;
         await ctx.say('Welche Rechnung passt?');
         if (!ctx.active) return;
@@ -687,13 +778,14 @@
             }
             return `${U.pickFresh('sac-eqok', ['Genau!', 'Richtig!', 'Super!'], 1)} ${U.cap(eqSay(t))}.`;
           },
-          explain: (wr) => explainEq(t, wr, story),
+          explain: (wr) => { stopNarration(); return explainEq(t, wr, story); },
           hintSay: () => hintEq(t, story),
           modelSay: () => modelEq(t, story),
           onWrong: async () => { showHint(); },
+          onCorrect: () => stopNarration(),
         });
         if (!ctx.active) return;
-        token++;
+        stopNarration();
         if (scene.settle) scene.settle();
         await ctx.sleep(250);
       }
@@ -710,6 +802,7 @@
       let prefer;
       if (t.op === 'gap') prefer = [t.y, t.x];
       else if (baseKind === 'cmp') prefer = [t.x + t.y, t.x];
+      else if (t.op === '+' && TRAPS.includes(baseKind)) prefer = [t.x - t.y, t.x, t.y];
       else if (t.op === '+') prefer = [t.x, t.r + 1];
       else prefer = [t.x + t.y, t.y, t.x];
       const nums = numOptions(t.r, count, U.shuffle(prefer)).map((v) => ({ content: String(v), text: true, correct: v === t.r, say: w(v), value: v }));
@@ -732,7 +825,7 @@
           }
           return `${U.pickFresh('sac-nok', ['Richtig!', 'Genau!', 'Super!'], 1)} ${ans}`;
         },
-        explain: (wr) => explainNum(t, wr.value),
+        explain: (wr) => { stopNarration(); return explainNum(t, wr.value, story); },
         hintSay: () => { showHint(); return hintCalc(t); },
         modelSay: () => modelCalc(t),
         onCorrect: () => {
@@ -741,7 +834,9 @@
           ansEl.classList.remove('sac-hide');
           ansEl.classList.add('sac-show', 'sac-pop');
           qEl.classList.add('sac-dim');
-          token++;
+          solved = true;
+          stopNarration();
+          replay.disabled = true;
           scene.solved();
         },
       });

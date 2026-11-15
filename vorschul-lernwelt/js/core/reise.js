@@ -153,9 +153,14 @@
      Stationen wie oben [Spiel-ID, Stufe]; ['film', filmId] ist eine
      Film-Station (Spiel 'film-<filmId>' aus Flos Kino) und steht direkt
      vor dem passenden Übungsspiel. Spirale: die Schulspiele steigen von
-     Kapitel zu Kapitel um eine Stufe; dazwischen Kita-Spiele auf der
-     höchsten Stufe als Brücke. Noch fehlende Spiele/Filme werden
-     übersprungen und erscheinen automatisch, sobald es sie gibt.
+     Kapitel zu Kapitel um höchstens eine Stufe (nie eine Stufe, deren
+     Vorstufen das Kind nicht schon kennt); dazwischen Kita-Spiele als
+     Brücke, höchstens zwei Stufen über dem, was Teil 1 verlangt hat
+     (Teil 1: Rechnen 2, Erstes Lesen 1, Jahreszeiten 1, Uhr 1). Filme
+     stehen vor dem Spiel, dessen Stufe genau den Filminhalt übt
+     (Zähne → Körper-Labor 3, Uhrzeit → Uhr 3, Igel → Jahreszeiten 3).
+     Noch fehlende Spiele/Filme werden übersprungen und erscheinen
+     automatisch, sobald es sie gibt.
      ------------------------------------------------------------------ */
   const SCHOOL_CHAPTERS = [
     {
@@ -167,8 +172,8 @@
       deco: ['✏️', '📏', '🍎', '🖍️', '📓', '🧮'],
       intro: 'Heute ist dein erster Schultag! Wir sind im Klassenzimmer. Hier lernen wir rechnen, lesen und den sicheren Schulweg. Ich bin schon ganz aufgeregt!',
       story: 'Hurra, dein erster Schultag war ein voller Erfolg! Die Lehrerin ist sehr stolz auf dich. In deiner Schultüte liegt ein Schatz. Jetzt gehen wir in die Bücherei!',
-      focus: 'Schulstart: Zehnerfeld und Kraft der Fünf, Silben lesen, Nachbarzahlen, Laute hören, sicherer Schulweg; dazu Rechnen auf der höchsten Kita-Stufe. Erklärfilme: Kraft der Zehn, Silben, Schulweg.',
-      stations: [['film', 'kraft-der-zehn'], ['zehnerfeld', 1], ['film', 'silben'], ['silbenlesen', 1], ['zahlen-nachbarn', 1], ['hoerkoenig', 1], ['film', 'schulweg'], ['schulweg', 1], ['rechnen', 5]],
+      focus: 'Schulstart: Zehnerfeld und Kraft der Fünf, Silben lesen, Nachbarzahlen, Laute hören, sicherer Schulweg; dazu Minus bis 10 aus der Kita-Welt als Brücke. Erklärfilme: Kraft der Zehn, Silben, Schulweg.',
+      stations: [['film', 'kraft-der-zehn'], ['zehnerfeld', 1], ['film', 'silben'], ['silbenlesen', 1], ['zahlen-nachbarn', 1], ['hoerkoenig', 1], ['film', 'schulweg'], ['schulweg', 1], ['rechnen', 4]],
     },
     {
       id: 'buecherei',
@@ -177,10 +182,10 @@
       color: '#5f3dc4',
       soft: '#e5dbff',
       deco: ['📖', '🦉', '🔖', '🐛', '📚', '🪑'],
-      intro: 'Wir sind in der Bücherei. Hier stehen ganz viele Bücher mit spannenden Geschichten. Der Bücherwurm zeigt uns, wie man Wörter liest und schreibt.',
+      intro: 'Wir sind in der Bücherei. Hier stehen ganz viele Bücher mit spannenden Geschichten. Der Bücherwurm zeigt uns, wie man Wörter liest und schreibt. Und in einem Sachbuch entdecken wir unsere Sinne.',
       story: 'Toll, du hast in der Bücherei schon richtig viel gelesen! Der Bücherwurm schenkt dir ein Lesezeichen und einen Schatz. Komm mit, wir gehen auf den Marktplatz!',
-      focus: 'Blitzwörter, Wörter lautgetreu schreiben (Erklärfilm), Plus und Minus bis 20 mit der „kleinen Schwester“-Aufgabe, dreisilbige Wörter lesen, Leseverständnis Wort–Bild, Zehnerfeld schneller; dazu Erstes Lesen auf der höchsten Stufe.',
-      stations: [['blitzwoerter', 1], ['film', 'wort-schreiben'], ['schreibwerkstatt', 1], ['rechenrakete', 1], ['silbenlesen', 2], ['lesedetektiv', 1], ['zehnerfeld', 2], ['erstes-lesen', 4]],
+      focus: 'Blitzwörter, Wörter lautgetreu schreiben (Erklärfilm), Plus bis 20 mit der „kleinen Schwester“-Aufgabe (3 + 4 → 13 + 4), dreisilbige Wörter lesen, Leseverständnis Wort–Bild, Zehnerfeld schneller, die fünf Sinne; dazu Erstes Lesen mit langen Wörtern.',
+      stations: [['blitzwoerter', 1], ['film', 'wort-schreiben'], ['schreibwerkstatt', 1], ['rechenrakete', 1], ['silbenlesen', 2], ['lesedetektiv', 1], ['zehnerfeld', 2], ['erstes-lesen', 3], ['koerperlabor', 1]],
     },
     {
       id: 'markt',
@@ -203,8 +208,8 @@
       deco: ['🧪', '🔍', '💧', '🧲', '🦷', '⚗️'],
       intro: 'Wir sind im Forscherlabor. Hier machen wir Experimente wie echte Forscher. Wir vermuten, probieren aus und erklären.',
       story: 'Wunderbar, du bist ein echter Forscher! Alle Experimente haben geklappt. Im Labor wartet ein glitzernder Schatz auf dich. Jetzt gehen wir in den Schulgarten!',
-      focus: 'Schwimmen und Sinken, Körper und Zähne (je mit Erklärfilm), Sätze bauen mit Großschreibung und Punkt (Erklärfilm Satz-Zug), Tausch- und Umkehraufgaben, geschlossene Silben lesen, längere Wörter schreiben.',
-      stations: [['film', 'schwimmen-sinken'], ['schwimmen-sinken', 1], ['film', 'zaehne'], ['koerperlabor', 1], ['film', 'satz-zug'], ['satzbaumeister', 1], ['aufgabenfamilie', 1], ['silbenlesen', 3], ['schreibwerkstatt', 2]],
+      focus: 'Schwimmen und Sinken, Zähne putzen mit KAI und Zahnwissen (je mit Erklärfilm), Sätze bauen (Erklärfilm Satz-Zug: Großschreibung und Punkt), Tausch- und Umkehraufgaben, geschlossene Silben lesen, längere Wörter schreiben.',
+      stations: [['film', 'schwimmen-sinken'], ['schwimmen-sinken', 1], ['film', 'zaehne'], ['koerperlabor', 3], ['film', 'satz-zug'], ['satzbaumeister', 1], ['aufgabenfamilie', 1], ['silbenlesen', 3], ['schreibwerkstatt', 2]],
     },
     {
       id: 'garten',
@@ -215,8 +220,8 @@
       deco: ['🌱', '🐞', '🦔', '🍂', '🌻', '🐝'],
       intro: 'Wir sind im Schulgarten. Hier wachsen Blumen und Gemüse, und unter dem Laub wohnt ein kleiner Igel. Komm, wir helfen beim Gärtnern!',
       story: 'Prima, der Schulgarten blüht und der Igel hat ein warmes Nest! Du hast fleißig geholfen. Unter den Blättern liegt ein Schatz für dich. Jetzt machen wir einen Klassenausflug!',
-      focus: 'Zehnerübergang mit der Brücke (Erklärfilm), Tiere im Winter (Erklärfilm) und Jahreszeiten auf der höchsten Stufe, Müll trennen, Namenwörter erkennen, Sätze sinnentnehmend lesen, Zahlenmauern, Verdoppeln bis 10 + 10.',
-      stations: [['film', 'ueber-die-zehn'], ['zehnerbruecke', 1], ['film', 'igel-winter'], ['jahreszeiten', 5], ['muell', 1], ['wortarten', 1], ['lesedetektiv', 2], ['zahlenmauer', 1], ['verdoppeln', 2]],
+      focus: 'Zehnerübergang mit der Brücke (Erklärfilm), Tiere im Winter (Erklärfilm) und der Jahreskreislauf, Müll trennen, Namenwörter erkennen, Sätze sinnentnehmend lesen, Zahlenmauern, Verdoppeln bis 10 + 10.',
+      stations: [['film', 'ueber-die-zehn'], ['zehnerbruecke', 1], ['film', 'igel-winter'], ['jahreszeiten', 3], ['muell', 1], ['wortarten', 1], ['lesedetektiv', 2], ['zahlenmauer', 1], ['verdoppeln', 2]],
     },
     {
       id: 'ausflug',
@@ -227,8 +232,8 @@
       deco: ['🚌', '🗺️', '🥪', '⏰', '🦆', '🌳'],
       intro: 'Heute machen wir einen Klassenausflug! Wir fahren mit dem Bus in den Park. Damit wir den Bus zurück nicht verpassen, schauen wir oft auf die Uhr.',
       story: 'Juhu, was für ein schöner Ausflug! Alle Kinder sind pünktlich wieder am Bus. Der Busfahrer hat einen Schatz für dich. Jetzt feiern wir das große Schulfest!',
-      focus: 'Uhrzeit mit vollen und halben Stunden (Erklärfilm, Uhr auf höchster Stufe), Zehnerübergang mit 7 und 8, Rechengeschichten, Zebrastreifen und Blickrichtung, längere Sätze, Blitzwörter, Geld mit Schein, Aufgabenfamilien ohne Bilder.',
-      stations: [['film', 'uhrzeit'], ['uhr', 5], ['zehnerbruecke', 2], ['sachrechnen', 1], ['schulweg', 2], ['satzbaumeister', 2], ['blitzwoerter', 3], ['kaufladen', 2], ['aufgabenfamilie', 2]],
+      focus: 'Uhrzeit mit vollen und halben Stunden (Erklärfilm, danach die halbe Stunde auf der Uhr finden), Zehnerübergang mit 7 und 8, Rechengeschichten, Zebrastreifen und Blickrichtung, längere Sätze, Blitzwörter, Geld mit Schein, Aufgabenfamilien ohne Bilder.',
+      stations: [['film', 'uhrzeit'], ['uhr', 3], ['zehnerbruecke', 2], ['sachrechnen', 1], ['schulweg', 2], ['satzbaumeister', 2], ['blitzwoerter', 3], ['kaufladen', 2], ['aufgabenfamilie', 2]],
     },
     {
       id: 'fest',
@@ -239,8 +244,8 @@
       deco: ['🎈', '🎪', '🎉', '🥇', '🎵', '🍰'],
       intro: 'Heute ist das große Schulfest! Es gibt Spiele, Musik und Kuchen. Hier warten die schwierigsten Aufgaben des Schuljahres. Du hast so viel gelernt, du schaffst das!',
       story: 'Hurra, du hast das ganze Schulabenteuer geschafft! Beim Schulfest jubeln alle Kinder für dich. Du hast so viel gelernt und nie aufgegeben. Dafür bekommst du den größten Schatz!',
-      focus: 'Meisterstufe Klasse 1: Zehnerübergang frei, Silbenlesen mit sch, ei, au, Zahlenmauern bis 20, Präpositionen lesen, Rechengeschichten mit Wegnehmen, Konsonantenhäufungen schreiben, Platzhalteraufgaben, Tunwörter, Laute weglassen.',
-      stations: [['zehnerbruecke', 3], ['silbenlesen', 4], ['zahlenmauer', 2], ['lesedetektiv', 3], ['sachrechnen', 2], ['schreibwerkstatt', 3], ['rechenrakete', 4], ['wortarten', 2], ['hoerkoenig', 3]],
+      focus: 'Meisterstufe Klasse 1: Zehnerübergang frei, Silbenlesen mit sch, ei, au, Zahlenmauern bis 20, Präpositionen lesen, Rechengeschichten mit Wegnehmen, Konsonantenhäufungen schreiben, Minus mit der „kleinen Schwester“ (17 − 4), Tunwörter, Laute weglassen.',
+      stations: [['zehnerbruecke', 3], ['silbenlesen', 4], ['zahlenmauer', 2], ['lesedetektiv', 3], ['sachrechnen', 2], ['schreibwerkstatt', 3], ['rechenrakete', 3], ['wortarten', 2], ['hoerkoenig', 3]],
     },
   ];
 

@@ -3,8 +3,8 @@
    http(s) ausgeliefert wird, z. B. GitHub Pages). Beim Installieren wird
    index.html gelesen und alle darin verlinkten Dateien werden gespeichert.
    ========================================================================== */
-const CACHE = 'lernwelt-v3';
-const MEDIA = 'lernwelt-media-v1'; // Erklärfilme (videos/*): erst beim ersten Ansehen gespeichert, bleibt über Versionen erhalten
+const CACHE = 'lernwelt-v4';
+const MEDIA = 'lernwelt-media-v2'; // Erklärfilme (videos/*): erst beim ersten Ansehen gespeichert, bleibt über Versionen erhalten (neu gerenderte Filme: siehe revalidateMedia)
 const BASE = ['./', './index.html', './manifest.webmanifest', './assets/icon.svg', './assets/icon-192.png', './assets/icon-512.png', './assets/fonts/andika-400.woff2', './assets/fonts/andika-700.woff2'];
 
 self.addEventListener('install', (event) => {
@@ -40,12 +40,37 @@ self.addEventListener('activate', (event) => {
  * geladen und abgelegt. Range-Anfragen (Video-Spulen) werden aus der
  * gespeicherten Datei als 206 beantwortet; cache.put kann keine 206-Antworten
  * speichern, darum wird beim ersten Mal die ganze Datei ohne Range geholt.
+ * Der Schlüssel enthält die Query (films.js kann so mit ?v=2 versionieren);
+ * außerdem prüft revalidateMedia nach einem Treffer im Hintergrund per HEAD,
+ * ob die Datei neu gerendert wurde (ETag/Last-Modified/Länge), und lädt sie
+ * dann für das nächste Ansehen neu.
  */
-async function mediaResponse(req) {
+const mediaChecked = new Set(); // je Lauf des Service Workers nur einmal prüfen
+async function revalidateMedia(cache, key, cached) {
+  if (mediaChecked.has(key)) return;
+  mediaChecked.add(key);
+  try {
+    const head = await fetch(key, { method: 'HEAD', credentials: 'same-origin', cache: 'no-store' });
+    if (!head || !head.ok) return;
+    const same = (h) => {
+      const a = head.headers.get(h);
+      const b = cached.headers.get(h);
+      return !a || !b || a === b;
+    };
+    if (same('ETag') && same('Last-Modified') && same('Content-Length')) return;
+    const full = await fetch(key, { credentials: 'same-origin', cache: 'no-store' });
+    if (full && full.ok && full.status === 200) await cache.put(key, full);
+  } catch (e) {
+    /* offline – alte Datei behalten */
+  }
+}
+
+async function mediaResponse(req, event) {
   const cache = await caches.open(MEDIA);
   const url = new URL(req.url);
-  const key = url.origin + url.pathname;
+  const key = url.origin + url.pathname + url.search;
   let res = await cache.match(key);
+  if (res && event) event.waitUntil(revalidateMedia(cache, key, res.clone()));
   if (!res) {
     try {
       const full = await fetch(key, { credentials: 'same-origin' });
@@ -82,7 +107,7 @@ self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET' || new URL(req.url).origin !== self.location.origin) return;
   if (/\/videos\/[^/]+\.(?:mp4|webm|jpe?g|png|webp|vtt)$/i.test(new URL(req.url).pathname)) {
-    event.respondWith(mediaResponse(req));
+    event.respondWith(mediaResponse(req, event));
     return;
   }
   event.respondWith(

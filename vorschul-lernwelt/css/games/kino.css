@@ -177,7 +177,7 @@
   cursor: pointer;
   position: relative;
   display: grid;
-  grid-template-columns: 42% 1fr 56px;
+  grid-template-columns: 36% minmax(0, 1fr) 52px;
   align-items: stretch;
   min-height: 112px;
   padding: 0;
@@ -194,7 +194,8 @@
 .kino-ticket .kino-poster { height: 100%; min-height: 112px; }
 .kino-ticket .kino-poster-icon { font-size: clamp(40px, 8vmin, 60px); }
 .kino-ticket-body { display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 10px 12px; min-width: 0; }
-.kino-ticket-title { font-size: clamp(18px, 2.8vmin, 23px); font-weight: 700; line-height: 1.15; }
+.kino-ticket-title { font-size: clamp(18px, 2.8vmin, 23px); font-weight: 700; line-height: 1.15; overflow-wrap: break-word; }
+.kino-ticket-title .kino-hl { font-style: normal; color: var(--film, #c2255c); }
 .kino-ticket-meta { font-size: 15px; font-weight: 700; color: var(--ink-soft); }
 .kino-ticket-stub {
   display: flex;

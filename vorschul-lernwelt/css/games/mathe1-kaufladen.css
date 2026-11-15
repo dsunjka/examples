@@ -208,6 +208,16 @@
 }
 .kau-step.is-start { background: #fff3c4; color: #7a4d00; }
 .kau-step.is-on { background: var(--area); color: #fff; }
+.kau-steps { padding-top: 10px; row-gap: 12px; }
+.kau-step { position: relative; }
+/* Schritt-Nummer (1, 2, 3 …): gezählt werden die Sprünge, nicht die Startzahl */
+.kau-hop {
+  position: absolute; top: -9px; right: -5px; min-width: 18px; height: 18px; padding: 0 3px;
+  border-radius: 9px; background: #fff3c4; color: #7a4d00; font: 800 12px/18px var(--font);
+  font-style: normal; text-align: center; box-shadow: 0 1px 0 rgba(43, 45, 66, 0.18);
+  opacity: 0; transform: scale(0.6); transition: opacity 0.2s, transform 0.2s;
+}
+.kau-step.is-on .kau-hop { opacity: 1; transform: none; }
 
 /* ---------- kleine Bildschirme ---------- */
 @media (max-width: 480px) {

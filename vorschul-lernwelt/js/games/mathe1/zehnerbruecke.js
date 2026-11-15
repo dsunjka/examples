@@ -14,8 +14,10 @@
    - Stufen:
        1  9 + x  (immer nur 1 bis zur 10, Brücke aus der Vorschule)
        2  8 + x, 7 + x
-       3  beliebig plus über die 10 (Ergebnis bis 18), ohne Zwanzigerfeld
-       4  Minus über die 10: 13 − 5 = 13 − 3 − 2 (Flo dreht sich um)
+       3  beliebig plus über die 10 (Ergebnis bis 18), ohne Zwanzigerfeld;
+          b > a nur ab a = 7 (sonst wäre die Tauschaufgabe der Weg)
+       4  Minus über die 10: 13 − 5 = 13 − 3 − 2 (Flo dreht sich um);
+          Einstieg mit 11 − x / 12 − x (nur 1–2 zurück bis zur Zehn)
        5  Plus und Minus gemischt, ohne Brückenhilfe; Zeitbonus ⚡ statt
           Zeitdruck. Die Brücke erscheint nur als Hilfe.
    - Fehlvorstellungen:
@@ -38,6 +40,12 @@
   const opSign = (op) => (op === '+' ? '+' : '−');
   const hopsW = (n) => (n === 1 ? 'einen Hüpfer' : `${w(n)} Hüpfer`);
   const dotsW = (n) => (n === 1 ? 'einen Punkt' : `${w(n)} Punkte`);
+  const stepsW = (n) => (n === 1 ? 'einen Schritt' : `${w(n)} Schritte`);
+  const onesW = (n) => (n === 1 ? 'ein Einer' : `${w(n)} Einer`);
+  /** „Es fehlt noch ein Hüpfer.“ / „Es fehlen noch drei Hüpfer.“ */
+  const missingSay = (n) => (n === 1 ? 'Es fehlt noch ein Hüpfer.' : `Es fehlen noch ${w(n)} Hüpfer.`);
+  /** „Dann bleibt noch ein Hüpfer.“ / „Dann bleiben noch drei Hüpfer.“ */
+  const remainSay = (n) => (n === 1 ? 'Dann bleibt noch ein Hüpfer.' : `Dann bleiben noch ${w(n)} Hüpfer.`);
 
   /* ---------------- Aufgaben ---------------- */
   function plus(a, b) {
@@ -48,10 +56,17 @@
     const to = a - 10;
     return { op: '-', a, b, to, rest: b - to, R: a - b, k: `${a} - ${b}` };
   }
+  /** Plusaufgaben über die 10. Das Kind füllt den ersten Summanden bis zur 10
+   *  auf. Bei kleinem a und großem b (3 + 9: sieben von neun Punkten) wäre das
+   *  ineffizient; dort ist die Tauschaufgabe 9 + 3 der Weg, also stellen wir
+   *  b > a nur, wenn a ≥ 7 ist (höchstens drei Hüpfer bis zur Zehn, z. B. 7 + 8). */
   function plusPool(as, bMin, bMax, maxR) {
     const out = [];
     as.forEach((a) => {
-      for (let b = bMin; b <= bMax; b++) if (a + b > 10 && a + b <= maxR) out.push(plus(a, b));
+      for (let b = bMin; b <= bMax; b++) {
+        if (b > a && a < 7) continue;
+        if (a + b > 10 && a + b <= maxR) out.push(plus(a, b));
+      }
     });
     return out;
   }
@@ -67,9 +82,12 @@
     '1e': plusPool([9], 2, 5, 20),
     '2': plusPool([8, 7], 3, 9, 20),
     '2e': plusPool([8, 7], 3, 6, 20),
-    '3': plusPool([3, 4, 5, 6, 7, 8, 9], 2, 9, 18).filter((t) => t.rest >= 1),
+    '3': plusPool([6, 7, 8, 9], 2, 9, 18),
     '3e': plusPool([6, 7, 8, 9], 2, 7, 15),
-    '3h': plusPool([3, 4, 5, 6], 5, 9, 18),
+    // Stretch: weiter bis zur Zehn (3–4 Hüpfer) und größerer Rest, kein 3 + 9
+    '3h': plusPool([6, 7], 4, 9, 18),
+    // Einstieg Minus wie Stufe 1 bei Plus: nur 1–2 Hüpfer zurück bis zur Zehn
+    '4s': minusPool(11, 12, 9),
     '4': minusPool(11, 18, 9),
     '4e': minusPool(11, 14, 6),
   };
@@ -84,6 +102,8 @@
     if (lv === 5) return { lv, pool: '5', mode: 'direct', frame: false, n: ctx.flow > 0 ? 5 : 4 };
     let pool = String(lv);
     if (ctx.flow < 0 && POOL[lv + 'e']) pool = lv + 'e';
+    // Minus-Einstieg: die ersten Aufgaben von Stufe 4 nur von 11/12 zurück
+    else if (lv === 4 && lvl === 4 && ctx.index < 2) pool = '4s';
     const frame = lv <= 2 || ctx.flow < 0 || (lv === 4 && ctx.level === 4);
     return { lv, pool, mode: 'split', frame, n: lv === 1 ? 3 : 4 };
   }
@@ -143,10 +163,20 @@
     while (set.size < count && guard++ < 100) set.add(U.randInt(1, 20));
     return Array.from(set).sort((x, y) => x - y);
   }
+  /** Typische Fehler des Zehnerübergangs zuerst: den ganzen zweiten Summanden an
+   *  die Zehn hängen (8 + 5 → 15) bzw. den ganzen Subtrahenden von der Zehn
+   *  abziehen (13 − 5 → 5); dann Richtungsfehler, ±1, die Zehn selbst. */
   function prefer(t) {
     const near = U.shuffle([t.R - 1, t.R + 1]);
-    if (t.op === '+') return [near[0], 10, near[1], t.R + 2];
-    return [10 + t.rest, near[0], 10, near[1]];
+    if (t.op === '+') return [10 + t.b, near[0], 10, near[1], t.R + 2];
+    return [10 - t.b, 10 + t.rest, near[0], 10, near[1]];
+  }
+  /** Erklärung für den „ganzer Summand ab der Zehn“-Fehler, sonst null. */
+  function wholeFromTen(t, v) {
+    if (t.to < 2) return null; // bei 9 + x / 11 − x ist das der ±1-Fehler
+    if (t.op === '+' && v === 10 + t.b) return `Du hast alle ${w(t.b)} nach der Zehn gehüpft. Aber ${hopsW(t.to)} hat Flo schon bis zur Zehn gebraucht.`;
+    if (t.op === '-' && v === 10 - t.b) return `Du bist alle ${w(t.b)} von der Zehn zurückgehüpft. Aber ${hopsW(t.to)} hat Flo schon bis zur Zehn gebraucht.`;
+    return null;
   }
 
   /* ---------------- Gleichung ---------------- */
@@ -331,6 +361,12 @@
         return 'Fast! Dann ist Flo schon unter die Zehn gehüpft. Wir wollen genau bis zur Zehn.';
       }
       function hintSay() {
+        // Auf sehr niedrigen Bildschirmen (Handy quer) bleibt das Zwanzigerfeld
+        // aus Platzgründen weg; dann zeigt der Tipp auf den Zahlenstrahl.
+        if (!ui.frameVisible()) {
+          if (t.op === '+') return `Tipp: Schau auf den Zahlenstrahl. Wie viele Hüpfer sind es von ${w(t.a)} bis zur Zehn?`;
+          return `Tipp: Schau auf den Zahlenstrahl. Wie viele Hüpfer sind es von ${w(t.a)} zurück bis zur Zehn?`;
+        }
         if (t.op === '+') return `Tipp: Schau aufs Zwanzigerfeld. Wie viele Plätze sind bis zur Zehn noch frei? Von ${w(t.a)} bis zehn.`;
         return `Tipp: Schau aufs Zwanzigerfeld. Wie viele Plättchen liegen rechts nach der Zehn? Von ${w(t.a)} zurück bis zehn.`;
       }
@@ -495,11 +531,14 @@
           },
           explain: (v) => {
             showLine();
-            if (Math.abs(v - t.R) === 1) return 'Fast! Nur eins daneben. Nicht zählen, sondern erst bis zur Zehn rechnen. Wie viele fehlen bis zur Zehn?';
+            const toTen = t.op === '+' ? 'Wie viele fehlen bis zur Zehn?' : 'Wie viele Hüpfer sind es zurück bis zur Zehn?';
+            const whole = wholeFromTen(t, v);
+            if (whole) return whole;
+            if (Math.abs(v - t.R) === 1) return `Fast! Nur eins daneben. Nicht zählen, sondern erst bis zur Zehn rechnen. ${toTen}`;
             if (v === 10) return t.op === '+' ? 'Zehn ist die Brücke. Flo muss noch weiter hüpfen.' : 'Zehn ist die Brücke. Flo muss noch weiter zurück.';
             if (t.op === '-' && v === 10 + t.rest) return 'Schau mal: Minus heißt zurück. Flo hüpft zu den kleineren Zahlen.';
             if (t.op === '+' && v < t.a) return 'Schau aufs Zeichen: Plus heißt dazu. Dann werden es mehr.';
-            return `Fast! Es sind ${v > t.R ? 'weniger' : 'mehr'} als ${w(v)}. Wie viele fehlen bis zur Zehn?`;
+            return `Fast! Es sind ${v > t.R ? 'weniger' : 'mehr'} als ${w(v)}. ${toTen}`;
           },
           hintSay: () => {
             showLine();
@@ -536,6 +575,7 @@
           fr.glowFree(true);
           line.glowTen(true);
         },
+        frameVisible: () => fr.node.getClientRects().length > 0,
       });
       if (!ctx.active) return;
       fr.glowFree(false);
@@ -545,7 +585,7 @@
       await ctx.correct(work.querySelector('.zbr-tray'), {
         say: firstSplit
           ? `${okWord()}! ${U.cap(hopsW(t.to))} bis zur Zehn.`
-          : `${okWord()}! ${U.cap(hopsW(t.to))} bis zur Zehn. Dann bleiben noch ${w(t.rest)}.`,
+          : `${okWord()}! ${U.cap(hopsW(t.to))} bis zur Zehn. ${remainSay(t.rest)}`,
         praise: false,
       });
       if (!ctx.active) return;
@@ -557,7 +597,7 @@
 
       /* ================= Schritt 2: Rest ================= */
       const q = t.op === '+'
-        ? `Flo ist auf der Brücke! Es fehlen noch ${hopsW(t.rest)}. Zehn plus ${w(t.rest)}. Wo landet Flo?`
+        ? `Flo ist auf der Brücke! ${missingSay(t.rest)} Zehn plus ${w(t.rest)}. Wo landet Flo?`
         : `Flo ist auf der Brücke! Noch ${hopsW(t.rest)} zurück. Zehn minus ${w(t.rest)}. Wo landet Flo?`;
       await ctx.instruct(q);
       if (!ctx.active) return;
@@ -571,6 +611,8 @@
           return `${okWord()}! ${sentence(t)}`;
         },
         explain: (v) => {
+          const whole = wholeFromTen(t, v);
+          if (whole) return whole;
           if (t.op === '+') {
             if (v === 10) return `Flo steht erst auf der Brücke. Er hüpft noch ${w(t.rest)} weiter.`;
             if (Math.abs(v - t.R) === 1) return `Fast! Hüpfe von der Zehn genau ${hopsW(t.rest)} weiter. Nicht mehr und nicht weniger.`;
@@ -584,8 +626,8 @@
         hintSay: () => {
           fr.node.classList.remove('zbr-hidden');
           fr.solved(1);
-          if (t.op === '+') return `Tipp: Ein voller Zehner und noch ${w(t.rest)} Einer. Welche Zahl ist das?`;
-          return `Tipp: Zähle von zehn ${w(t.rest)} Schritte zurück.`;
+          if (t.op === '+') return `Tipp: Ein voller Zehner und noch ${onesW(t.rest)}. Welche Zahl ist das?`;
+          return `Tipp: Zähle von zehn ${stepsW(t.rest)} zurück.`;
         },
         modelSay: () => {
           fr.node.classList.remove('zbr-hidden');

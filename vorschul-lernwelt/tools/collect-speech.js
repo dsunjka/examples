@@ -43,6 +43,7 @@ const HOOK = () => {
       all.set(t, g);
     }
   };
+  // Film-Spiele (film-*, Flos Kino) laufen im Testmodus ohne Video: Plakat → Quiz → „Fertig“ (markiert).
   for (const g of games.filter((x) => !wanted || wanted.includes(x.id))) {
     const before = all.size;
     for (let lv = 1; lv <= g.levels; lv++) {
@@ -97,8 +98,14 @@ const HOOK = () => {
     LT.areas.forEach((a) => { say(a.hello); say(a.hello + ' Tippe auf ein Spiel!'); });
     say('Hallo! Ich bin Flo, der Fuchs. Schön, dass du da bist! Wohin wollen wir heute reisen?');
     say('Hurra! Du hast das Tagesabenteuer geschafft!');
-    // Flos Reise und Forscherbuch
+    say('Was möchtest du spielen?');
+    say('Welchen Film möchtest du sehen?');
+    // Flos Reise (Teil 1 und Teil 2 „Schulabenteuer“: Kapitel, Geschichten, Tipps) und Forscherbuch
     if (LT.reise && LT.reise.speechTexts) LT.reise.speechTexts().forEach(say);
+    // Flos Kino: Film-Einleitungen (auch mit „Tippe auf den großen Knopf …“), Quizfragen,
+    // Antworten, Erklärungen, Denkanstöße, Musterlösungen und Kino-Sätze (auch die,
+    // die nur ohne ?test vorkommen: Plakat, Pause, „kommt bald“)
+    if (LT.kino && LT.kino.speechTexts) LT.kino.speechTexts().forEach(say);
     (LT.engine.STRETCH_SAY || []).forEach(say);
     if (LT.wissen && LT.wissen.bookTexts) LT.wissen.bookTexts().forEach(say);
   });

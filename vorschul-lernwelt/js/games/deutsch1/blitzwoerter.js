@@ -29,7 +29,8 @@
      zählen, Anfang und Ende anschauen) + ein Ablenker verschwindet,
      3. Flo deckt das Wort auf und zeigt es.
      Stufe 4: 1. kurz nochmal hinschauen, 2. nächster Buchstabe leuchtet im
-     Wort, 3. passende Kachel leuchtet. Stufe 5: 1. Satz mit dem gewählten
+     Wort, 3. Flo zeigt den Buchstaben im Wort und die passende Kachel
+     (die Stufe zählt je Buchstabe, nicht fürs ganze Wort). Stufe 5: 1. Satz mit dem gewählten
      Wort vorlesen („Passt das?“), 2. Denkanstoß, 3. vormachen.
    - Lerninhalte (ctx.item): Wort ('nicht'), Schreibwort ('✍ Haus'),
      Lückensatz ('Das ist _ Hund.').
@@ -49,14 +50,14 @@
   // echte Wörter, die nur als Ablenker vorkommen (ähnliche Wortbilder)
   const EXTRA = ['den', 'dem', 'des', 'dir', 'mir', 'wie', 'mich', 'dich', 'sich', 'isst', 'in', 'an', 'am', 'um',
     'eins', 'einer', 'neun', 'nie', 'mein', 'kein', 'Mami', 'Opas', 'Omas', 'Hand', 'Bein', 'Hase', 'Hose', 'Maus',
-    'Baum', 'Bauch', 'Bus', 'Tor', 'Tal', 'Kino', 'Rind', 'Wind', 'Mund', 'Hut', 'Gut', 'Haut', 'Ast', 'Kuh',
+    'Baum', 'Bauch', 'Bus', 'Tor', 'Tal', 'Kino', 'Rind', 'Wind', 'Mund', 'Hut', 'Haut', 'Ast', 'Kuh',
     'Pause', 'Schuh', 'Schale', 'Bild', 'Wald', 'Licht', 'ach', 'auch', 'aus', 'Ei', 'du', 'zu', 'so', 'wer', 'war',
-    'was', 'hier', 'ihr', 'Tier', 'Bier', 'vier', 'gehen', 'sehen', 'geben', 'leben', 'legen', 'lesen', 'Besen',
+    'was', 'hier', 'ihr', 'Tier', 'vier', 'gehen', 'sehen', 'geben', 'leben', 'legen', 'lesen', 'Besen',
     'spielen', 'spülen', 'fallen', 'kalt', 'klar', 'kleben', 'groß', 'Gras', 'Glas', 'gut', 'Mut', 'rot', 'Rose',
     'Oma', 'Opa', 'Ofen', 'Papi', 'Pappe', 'Papier', 'Mama', 'Ball', 'Bello', 'alle', 'Tage', 'Tag', 'Tat', 'Mitte',
-    'mit', 'Kind', 'Kinn', 'Auto', 'Alt', 'auf', 'Affe', 'Lauf', 'nein', 'neu', 'nicht', 'nichts', 'Nacht', 'Schuhe',
-    'er', 'es', 'sie', 'Sie', 'die', 'ein', 'wir', 'wie', 'im', 'ihn', 'ihm', 'Uhr', 'und', 'Hund', 'Hunde', 'das', 'dass',
-    'der', 'ich', 'ist', 'eine', 'klein', 'Klee', 'wo', 'wohl', 'Woche', 'Haus', 'Hans', 'Laus', 'Schule', 'Schaufel'];
+    'mit', 'Kind', 'Kinn', 'Auto', 'alt', 'auf', 'Affe', 'Lauf', 'nein', 'neu', 'nicht', 'nichts', 'Nacht', 'Schuhe',
+    'er', 'es', 'sie', 'die', 'ein', 'wir', 'wie', 'im', 'ihn', 'ihm', 'Uhr', 'und', 'Hund', 'Hunde', 'das', 'dass',
+    'der', 'ich', 'ist', 'eine', 'klein', 'Klee', 'wo', 'wohl', 'Woche', 'Haus', 'Laus', 'Schule', 'Schaufel'];
   const BANK = Array.from(new Set(W1.concat(W2, W3, EXTRA)));
   const isNoun = (w) => w[0] !== w[0].toLowerCase();
 
@@ -69,8 +70,8 @@
   /* ---------------- Stufe 5: Lückensätze ---------------- */
   // [Satz mit _, richtiges Wort, Ablenker (passen grammatisch oder vom Sinn nicht), Tipp]
   const GAPS = [
-    ['Das ist _ Hund.', 'ein', ['eine', 'und', 'ich'], 'Es heißt der Hund. Dann sagt man: ein Hund.'],
-    ['Das ist _ Katze.', 'eine', ['ein', 'und', 'ist'], 'Es heißt die Katze. Dann sagt man: eine Katze.'],
+    ['Das ist _ Hund.', 'ein', ['eine', 'und', 'ich'], 'Sag zuerst: der Hund oder die Hund? Bei der heißt es ein, bei die heißt es eine.'],
+    ['Das ist _ Katze.', 'eine', ['ein', 'und', 'ist'], 'Sag zuerst: der Katze oder die Katze? Bei der heißt es ein, bei die heißt es eine.'],
     ['Mama _ Papa lachen.', 'und', ['auf', 'ist', 'mit'], 'Zwei lachen zusammen: Mama, hmm, Papa. Welches Wort verbindet sie?'],
     ['_ Hund bellt.', 'Der', ['Die', 'Das', 'Und'], 'Sag laut: der Hund, die Hund, das Hund. Was klingt richtig?'],
     ['_ Sonne scheint.', 'Die', ['Der', 'Das', 'Ist'], 'Sag laut: der Sonne, die Sonne, das Sonne. Was klingt richtig?'],
@@ -78,12 +79,12 @@
     ['Der Elefant ist sehr _.', 'groß', ['klein', 'Haus', 'auf'], 'Denk an einen Elefanten. Wie ist er?'],
     ['Die Maus ist sehr _.', 'klein', ['groß', 'Hund', 'mit'], 'Denk an eine Maus. Wie ist sie?'],
     ['Das Kind ist _ müde.', 'nicht', ['wir', 'und', 'das'], 'Das Kind will noch lange spielen. Ist es dann müde?'],
-    ['Die Katze sitzt _ dem Baum.', 'auf', ['und', 'ist', 'ich'], 'Wo sitzt die Katze? Oben, auf dem Baum.'],
+    ['Die Katze sitzt _ dem Baum.', 'auf', ['und', 'ist', 'ich'], 'Die Katze ist hochgeklettert. Ist sie jetzt unten am Baum oder oben drauf?'],
     ['Ich spiele _ Flo.', 'mit', ['ist', 'die', 'wo'], 'Flo und ich spielen zusammen.'],
     ['Wir _ in die Schule.', 'gehen', ['Haus', 'gut', 'und'], 'Welches Wort sagt, was wir tun?'],
     ['Wir _ ein Buch.', 'lesen', ['gehen', 'Schule', 'auf'], 'Was macht man mit einem Buch?'],
     ['_ bist mein Freund.', 'Du', ['Ich', 'Wir', 'Der'], 'Bist passt nur zu einem Wort. Ich bin, und wie heißt es bei bist?'],
-    ['_ bin Flo.', 'Ich', ['Du', 'Wir', 'Ist'], 'Bin passt zu einem Wort. Ich bin, du bist.'],
+    ['_ bin Flo.', 'Ich', ['Du', 'Wir', 'Ist'], 'Wer spricht hier? Flo sagt etwas über sich selbst. Welches Wort sagst du, wenn du von dir sprichst?'],
     ['_ spielen Ball.', 'Wir', ['Ich', 'Du', 'Ist'], 'Spielen passt zu mehreren Kindern.'],
     ['Das Eis schmeckt _.', 'gut', ['Haus', 'wir', 'groß'], 'Wie schmeckt ein leckeres Eis?'],
     ['Ich wohne in einem _.', 'Haus', ['Ball', 'gehen', 'Schule'], 'Wo wohnen Menschen?'],
@@ -91,8 +92,9 @@
     ['Der Ball ist _, nicht dort.', 'hier', ['wo', 'auch', 'und'], 'Nicht dort, sondern ganz nah bei mir.'],
     ['Ich mag Eis. Flo mag _ Eis.', 'auch', ['und', 'ist', 'wo'], 'Flo mag Eis genauso wie ich.'],
     ['_ ist mein Ball?', 'Wo', ['Wir', 'Und', 'Ich'], 'Das ist eine Frage. Ich suche meinen Ball.'],
-    ['Papa liest _ ein Buch.', 'mir', ['wir', 'die', 'auf'], 'Wem liest Papa vor?'],
-    ['Oma und Opa _ heute da.', 'sind', ['ist', 'bin', 'und'], 'Es sind zwei: Oma und Opa.'],
+    ['Der Fisch schwimmt _ Wasser.', 'im', ['ist', 'und', 'wo'], 'Ist der Fisch draußen oder mitten drin? Welches kleine Wort sagt: drin?'],
+    ['Tom ist ein Junge. _ lacht.', 'Er', ['Sie', 'Wir', 'Ich'], 'Statt Tom kann man ein kleines Wort sagen. Welches Wort passt zu einem Jungen?'],
+    ['Lea ist ein Mädchen. _ malt.', 'Sie', ['Er', 'Du', 'Wir'], 'Statt Lea kann man ein kleines Wort sagen. Welches Wort passt zu einem Mädchen?'],
   ].map(([t, a, d, tip]) => ({ t, a, d, tip, k: t }));
 
   /* ---------------- Texte ---------------- */
@@ -116,6 +118,8 @@
     if (ch === 'ß') return 'das scharfe S';
     return ch === ch.toLowerCase() ? `das kleine ${upper(ch)}` : `das große ${ch}`;
   };
+  /** Buchstaben einzeln zum Vorsprechen: „D – e – r“ → Sprachausgabe nennt die Buchstaben. */
+  const spell = (w) => Array.from(w).map((c) => (c === 'ß' ? 'scharfes S' : upper(c))).join(' – ');
   // Wörter, die die Sprachausgabe allein leicht falsch liest, im Satzrahmen sprechen
   const sayWord = (w) => `${w}.`;
 
@@ -148,10 +152,13 @@
     const lt = target.toLowerCase();
     const others = BANK.filter((w) => w.toLowerCase() !== lt);
     if (level === 1) {
-      // Brücke: Wörter aus den ersten zehn, nicht zu ähnlich, aber gleich lang oder ähnlich lang
-      const cand = U.shuffle(W1.filter((w) => w !== target && Math.abs(w.length - target.length) <= 1 && dist(w.toLowerCase(), lt) >= 1));
+      // Brücke: Wörter aus den ersten zehn, nicht zu ähnlich (anderer Anfangsbuchstabe,
+      // mind. zwei Buchstaben anders), aber ähnlich lang. der/die/das-Kontraste erst ab Stufe 2/3.
+      const okL1 = (w) => w !== target && w[0].toLowerCase() !== lt[0] && dist(w.toLowerCase(), lt) >= 2;
+      const cand = U.shuffle(W1.filter((w) => okL1(w) && Math.abs(w.length - target.length) <= 1));
       const res = cand.slice(0, 2);
-      const rest = U.shuffle(W1.filter((w) => w !== target && !res.includes(w)));
+      const rest = U.shuffle(W1.filter((w) => okL1(w) && !res.includes(w)))
+        .concat(U.shuffle(W1.filter((w) => w !== target && !okL1(w))));
       while (res.length < 2) res.push(rest.shift());
       return res;
     }
@@ -271,7 +278,7 @@
       hintSay: () => (isNoun(target)
         ? `Tipp: Das Blitzwort hat ${nLetters} Buchstaben und fängt groß an. Zähl die Buchstaben!`
         : `Tipp: Das Blitzwort hat ${nLetters} Buchstaben. Schau auf den Anfang und auf das Ende!`),
-      modelSay: () => `Schau, hier ist das Blitzwort. Es heißt ${target}. Tipp es an!`,
+      modelSay: () => `Ich vergleiche Buchstabe für Buchstabe: ${spell(target)}. Bei diesem Wort stimmt jeder Buchstabe, vom ersten bis zum letzten. Das ist das Blitzwort: ${target}. Tipp es an!`,
       onWrong: async (item, tile, n) => {
         if (n === 1 || n === ha) {
           await ctx.sleep(200);
@@ -340,7 +347,7 @@
     ctx.stage.append(top, line, kb);
 
     let pos = 0;
-    let localWrong = 0;
+    const wrongAt = chars.map(() => 0); // Hilfe-Leiter je Buchstabe
     let finish;
     const finished = new Promise((r) => { finish = r; });
 
@@ -356,6 +363,7 @@
       if (t._ch === chars[pos]) {
         tiles.forEach((x) => ctx.unhint(x));
         letterSpans.forEach((s) => s.classList.remove('bli-lit'));
+        card.classList.remove('bli-show'); // nach dem Vormachen wieder verdecken
         t.classList.add('bli-used');
         slots[pos].textContent = t._ch;
         slots[pos].classList.add('bli-filled');
@@ -366,17 +374,21 @@
         return;
       }
       busy = true;
-      localWrong++;
+      const step = ++wrongAt[pos];
       const need = chars[pos];
       let say;
-      if (localWrong === 1) say = `Das ist ${letterName(t._ch)}. ${vary('w4', ['Schau nochmal kurz hin.', 'Guck nochmal genau.'])}`;
-      else if (localWrong === 2) say = `Schau, dieser Buchstabe kommt jetzt.`;
-      else say = `Hier ist ${letterName(need)}. Tipp es an!`;
+      if (step === 1) say = `Das ist ${letterName(t._ch)}. ${vary('w4', ['Schau nochmal kurz hin.', 'Guck nochmal genau.'])}`;
+      else if (step === 2) say = `Schau, dieser Buchstabe kommt jetzt.`;
+      else {
+        say = pos === 0
+          ? `Ich schaue ins Wort: ${word} fängt mit ${letterName(need)} an. Hier ist es. Tipp es an!`
+          : `Ich schaue ins Wort: Nach ${spell(chars.slice(0, pos).join(''))} kommt ${letterName(need)}. Hier ist es. Tipp es an!`;
+      }
       await ctx.wrong(t, { keep: true, say });
       if (!ctx.active) return;
-      if (localWrong === 1) {
+      if (step === 1) {
         await flash(ctx, card, 1100);
-      } else if (localWrong === 2) {
+      } else if (step === 2) {
         card.classList.add('bli-show');
         letterSpans[pos].classList.add('bli-lit');
         await ctx.sleep(1600);
@@ -384,6 +396,8 @@
         card.classList.remove('bli-show');
       } else {
         ctx.modelShown = true;
+        card.classList.add('bli-show');
+        letterSpans[pos].classList.add('bli-lit');
         ctx.hint(nextTile());
       }
       busy = false;
@@ -443,7 +457,11 @@
       correctSay: () => proc(ctx, vary('gok', ['Richtig! Das passt.', 'Genau!', 'Super gelesen!']), 'Du hast den ganzen Satz bis zum Punkt gelesen. So findet man das richtige Wort!'),
       explain: (wrong) => `Hör mal: ${fill(wrong.w)} Passt das?`,
       hintSay: () => g.tip,
-      modelSay: () => `Schau: ${fill(g.a)}`,
+      modelSay: () => {
+        // Strategie zeigen: jedes Wort im Satz ausprobieren
+        const tries = g.d.slice(0, 2).map((w) => `${fill(w)} Nein, das passt nicht.`).join(' ');
+        return `Ich lese den Satz mit jedem Wort. ${tries} ${fill(g.a)} Ja, nur mit ${g.a} passt es!`;
+      },
       onCorrect: () => { gap.textContent = g.a; gap.classList.add('bli-gap-ok'); },
     });
     if (!ctx.active) return;

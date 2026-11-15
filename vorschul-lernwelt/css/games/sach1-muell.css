@@ -153,9 +153,9 @@
 .mue-screen {
   display: flex; align-items: center; justify-content: center;
   width: 70%; height: 26%;
-  border-radius: 6px; background: #d3f9d8; color: #2f9e44;
-  font-size: clamp(16px, 3vmin, 26px); font-weight: 800; line-height: 1;
+  border-radius: 6px; background: #f1f3f5;
 }
+.mue-screen .mue-pfandsign { height: 86%; aspect-ratio: 1; }
 .mue-slot { display: block; width: 40%; aspect-ratio: 1; border-radius: 50%; background: #1a1b29; box-shadow: 0 0 0 4px #ced4da; }
 .mue-coin { font-size: clamp(14px, 2.6vmin, 22px); line-height: 1; }
 
@@ -185,7 +185,7 @@
   appearance: none; border: 0; cursor: pointer;
   position: relative;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
-  width: clamp(76px, 20vw, 128px);
+  width: clamp(84px, 20vw, 140px);
   min-height: clamp(92px, 18vmin, 140px);
   padding: 8px 4px;
   border-radius: 18px;
@@ -200,7 +200,11 @@
 }
 .mue-thing .emoji { font-size: clamp(40px, 8vmin, 70px); line-height: 1; pointer-events: none; }
 .mue-thing .mue-svg { width: clamp(30px, 5.6vmin, 46px); height: clamp(60px, 11vmin, 92px); pointer-events: none; }
-.mue-thing-l { font-size: clamp(13px, 2.2vmin, 18px); font-weight: 800; line-height: 1.1; text-align: center; pointer-events: none; }
+.mue-thing-l {
+  max-width: 100%;
+  font-size: clamp(14px, 2.2vmin, 18px); font-weight: 800; line-height: 1.1; text-align: center; pointer-events: none;
+  hyphens: manual; overflow-wrap: anywhere;
+}
 .mue-thing.mue-sel { box-shadow: 0 0 0 5px var(--gold), 0 4px 0 rgba(0, 0, 0, .25); transform: translateY(-6px); }
 .mue-thing.mue-drag { z-index: 20; transition: none; box-shadow: 0 0 0 5px var(--gold), 0 14px 24px rgba(0, 0, 0, .3); pointer-events: none; }
 .mue-thing.mue-gone { visibility: hidden; pointer-events: none; }
@@ -219,6 +223,7 @@
 .mue-av-e.emoji { font-size: clamp(40px, 8vmin, 66px); line-height: 1; }
 .mue-av-e2.emoji { font-size: clamp(28px, 5.4vmin, 46px); line-height: 1; }
 .mue-av-pics .mue-svg { width: clamp(28px, 5vmin, 40px); height: clamp(56px, 10vmin, 80px); }
+.mue-av-pics .mue-svg.mue-svg-wide { width: clamp(60px, 11vmin, 92px); height: clamp(52px, 9.5vmin, 80px); }
 .mue-av-again { font-size: clamp(22px, 4vmin, 34px); line-height: 1; }
 .mue-av-arrow { font-size: clamp(20px, 3.6vmin, 30px); color: var(--ink-soft); font-weight: 800; }
 .mue-av-bin { width: clamp(46px, 8vmin, 66px); display: inline-flex; }
@@ -233,6 +238,9 @@
 }
 
 @media (max-width: 480px) {
+  /* Sortier-Band: drei Karten pro Reihe, damit lange Wörter Platz haben */
+  .mue-band { width: 100%; box-sizing: border-box; }
+  .mue-thing { width: calc((100% - 2 * clamp(8px, 1.8vmin, 16px)) / 3); padding: 8px 5px; }
   .tile.mue-avtile { width: min(100%, 320px); min-height: 0; flex-direction: row; }
   .mue-av { flex-direction: row; gap: 10px; text-align: left; width: 100%; justify-content: flex-start; }
   .mue-av-pics { flex: none; width: 124px; }
