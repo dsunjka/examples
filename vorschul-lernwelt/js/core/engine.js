@@ -44,6 +44,35 @@
      ctx.onCleanup(fn), ctx.timeout(fn, ms), ctx.interval(fn, ms), ctx.listen(target, ev, fn)
      ctx.wrongCount      – Fehlversuche in dieser Aufgabe
      ctx.testSolve(fn)   – Auto-Löser für den Testmodus registrieren (für Spiele ohne ctx.choices)
+
+   ADAPTIV LERNEN (siehe auch LT.progress.itemResult):
+     ctx.taskLevel       – Stufe DIESER Aufgabe: ctx.level ± Anpassung innerhalb der Runde.
+                           Nach 3 Aufgaben in Folge auf Anhieb → eine „Knobel-Aufgabe“ der nächsten Stufe,
+                           nach 2 Aufgaben mit Fehlern (oder 3 Fehlern in einer) → eine Stufe leichter.
+                           Spiele lesen ihre Stufen-Einstellungen aus ctx.taskLevel statt ctx.level.
+     ctx.flow            – -1 (leichter) | 0 | +1 (kniffliger); auch auf Stufe 1/Höchststufe nutzbar
+                           (z. B. weniger/mehr Auswahl). ctx.stretch = true bei Knobel-Aufgabe.
+     ctx.item(pool, keyFn, {fresh, avoid}) – wählt den Lerninhalt der Aufgabe aus pool:
+                           1. in dieser Runde falsch gelöste Inhalte (1–2 Aufgaben später nochmal),
+                           2. Aufwärmen: erste Aufgabe ein sicher gekonnter Inhalt,
+                           3. fällige Wiederholungen früherer Tage (höchstens 2 pro Runde),
+                           4. sonst zufällig ohne direkte Wiederholung (wie U.pickFresh).
+                           keyFn(x) → kurzer, LESBARER Schlüssel (‚b‘, ‚7‘, ‚Haus – Maus‘) – erscheint im Elternbereich.
+                           Der Inhalt wird automatisch protokolliert (auf Anhieb richtig = gewusst).
+                           ctx.isReview = true, wenn es eine Wiederholung ist.
+     ctx.track(key, ok?) – Inhalt manuell protokollieren (ok weglassen = „auf Anhieb gelöst?“ am Aufgabenende).
+                           Bei type 'single'/'free' immer mit ok aufrufen.
+     ctx.helpStep        – Hilfe-Stufe nach Fehlern (für Spiele mit eigener Bedienung):
+                           0 keine, 1 Frage wiederholen/erklären, 2 Denkanstoß, 3 vormachen.
+
+   HILFE-LEITER in ctx.choices (automatisch):
+     1. Fehler  → opts.explain(gewählt, richtig) erklärt den Fehler („Das sind fünf. Wir suchen eins mehr.“);
+                  ohne explain: Ermutigung + Frage wiederholen.
+     hintAfter (Std. 2) Fehler → Denkanstoß opts.hintSay(richtig) + eine falsche Kachel verschwindet.
+     hintAfter+1 Fehler      → vormachen: richtige Kachel leuchtet, opts.modelSay(richtig).
+     Danach kommt derselbe Inhalt in der Runde noch einmal („Zwillingsaufgabe“), wenn ctx.item benutzt wird.
+     Bereits falsch angetippte Kacheln zählen nicht doppelt. Bei ctx.flow < 0 und ≥ 4 Kacheln
+     fällt eine falsche Kachel weg (opts.ease: false schaltet das ab).
      ctx.markTest(node)  – im Testmodus Element als „als Nächstes antippen“ markieren
 
    ctx.choices(items, opts)
@@ -51,8 +80,8 @@
      opts:  { columns, size: 'small'|'large'|'wide', container (Standard: neue .choices in stage),
               nameFirst: true  → Flo zeigt vorher auf jede Kachel und nennt das Wort (item.say),
               sayButton: true  → kleiner 🔊-Knopf auf jeder Kachel,
-              hintAfter: 2     → nach so vielen Fehlversuchen wird die Lösung hervorgehoben,
-              shuffle: true, praise, correctSay, wrongSay, hintSay,
+              hintAfter: 2     → Hilfe-Leiter (s. o.): Denkanstoß nach so vielen Fehlern, danach vormachen,
+              shuffle: true, praise, correctSay, wrongSay, hintSay, explain(wrong, right), modelSay(right), ease,
               onWrong: async (item, tile, wrongCount) => {…}  – nach dem Fehler-Feedback, Eingabe solange gesperrt,
               onCorrect(item, tile) }
    ========================================================================== */
@@ -77,6 +106,12 @@
   };
 
   const E = { current: null };
+  const STRETCH_SAY = [
+    'Das klappt richtig gut! Jetzt kommt eine Knobel-Aufgabe.',
+    'Super! Traust du dich an eine kniffligere Aufgabe?',
+    'Du bist ja schon richtig fit! Hier ist eine Knobel-Aufgabe für dich.',
+  ];
+  E.STRETCH_SAY = STRETCH_SAY;
 
   function stopCurrent() {
     const s = E.current;
@@ -113,6 +148,10 @@
       cleanups: [],
       results: [],
       stats: { correct: 0, wrong: 0 },
+      // Anpassung innerhalb der Runde
+      flow: 0, streakOk: 0, streakBad: 0,
+      requeue: [], // [{ key, at }] in dieser Runde falsch gelöste Inhalte
+      reviews: 0, usedKeys: [],
       instruction: '',
       startedAt: Date.now(),
       opts,
@@ -162,6 +201,7 @@
     const def = session.def;
     let wrongCount = 0;
     let correctCount = 0;
+    const tracked = new Map(); // key → true/false/null (null = am Ende nach „auf Anhieb“)
     const stage = session.stage;
     U.clear(stage);
     stage.className = 'stage';
@@ -173,6 +213,16 @@
       id: def.id,
       level: session.level,
       maxLevel: def.levels,
+      flow: session.flow,
+      taskLevel: U.clamp(session.level + session.flow, 1, def.levels),
+      get stretch() { return session.flow > 0 && ctx.taskLevel > session.level; },
+      isReview: false,
+      modelShown: false,
+      _tracked: tracked,
+      get helpStep() {
+        const h = (ctx._hintAfter == null ? 2 : ctx._hintAfter);
+        return wrongCount <= 0 ? 0 : wrongCount < h ? 1 : wrongCount === h ? 2 : 3;
+      },
       index,
       total,
       stage,
@@ -261,6 +311,50 @@
         else node.removeAttribute('data-test-correct');
       },
       choices(items, opts) { return choices(ctx, session, items, opts || {}); },
+      track(key, ok) {
+        if (key == null) return;
+        key = String(key);
+        if (ok === undefined) { if (!tracked.has(key)) tracked.set(key, null); }
+        else tracked.set(key, !!ok);
+        if (def.type !== 'tasks' && ok !== undefined) {
+          LT.progress.itemResult(def.id, key, !!ok);
+          tracked.delete(key);
+        }
+      },
+      item(pool, keyFn = (x) => x, o = {}) {
+        const list = Array.from(pool || []);
+        if (!list.length) return undefined;
+        const kf = (x) => String(keyFn(x));
+        const byKey = new Map(list.map((x) => [kf(x), x]));
+        const last = session.usedKeys[session.usedKeys.length - 1];
+        let pick = null;
+        // 1. in dieser Runde falsch gelöst → jetzt nochmal (Zwillingsaufgabe)
+        const rq = session.requeue.findIndex((r) => r.at <= index && byKey.has(r.key));
+        if (rq >= 0) { pick = session.requeue[rq].key; session.requeue.splice(rq, 1); ctx.isReview = true; }
+        // 2. Aufwärmen mit etwas Bekanntem (erste Aufgabe, nur wenn genug Auswahl)
+        if (!pick && index === 0 && list.length >= 4 && def.type === 'tasks') {
+          const known = LT.progress.knownItems(def.id).filter((k) => byKey.has(k));
+          if (known.length) pick = U.pick(known);
+        }
+        // 3. fällige Wiederholungen früherer Tage
+        if (!pick && index > 0 && session.reviews < 2 && list.length >= 2) {
+          const due = LT.progress.dueItems(def.id).filter((k) => byKey.has(k) && !session.usedKeys.includes(k) && k !== last);
+          if (due.length) { pick = due[0]; session.reviews++; ctx.isReview = true; }
+        }
+        let value;
+        if (pick) value = byKey.get(pick);
+        else {
+          const avoid = o.avoid == null ? 3 : o.avoid;
+          let pool2 = list.length > 1 ? list.filter((x) => kf(x) !== last) : list;
+          const unseen = pool2.filter((x) => !session.usedKeys.includes(kf(x)));
+          if (unseen.length) pool2 = unseen; // in einer Runde möglichst Abwechslung
+          value = U.pickFresh(o.fresh || 'item-' + def.id, pool2, avoid, kf);
+        }
+        const key = kf(value);
+        session.usedKeys.push(key);
+        ctx.track(key);
+        return value;
+      },
     };
     return ctx;
   }
@@ -270,7 +364,14 @@
      ------------------------------------------------------------------ */
   function choices(ctx, session, items, opts) {
     return new Promise((resolve) => {
-      const list = opts.shuffle === false ? items.slice() : U.shuffle(items);
+      let src = items.slice();
+      // leichter machen (Anpassung innerhalb der Runde): eine falsche Kachel weniger
+      if (ctx.flow < 0 && opts.ease !== false && src.length >= 4 && src.filter((x) => !x.correct).length >= 2) {
+        const wrongs = src.filter((x) => !x.correct);
+        const drop = wrongs[Math.floor(Math.random() * wrongs.length)];
+        src = src.filter((x) => x !== drop);
+      }
+      const list = opts.shuffle === false ? src : U.shuffle(src);
       const box = opts.container || el('div.choices');
       if (opts.className) box.classList.add(...opts.className.split(' '));
       if (opts.columns) {
@@ -280,6 +381,8 @@
       }
       if (!opts.container) ctx.stage.appendChild(box);
       const hintAfter = opts.hintAfter == null ? 2 : opts.hintAfter;
+      ctx._hintAfter = hintAfter;
+      const fnOr = (v, ...a) => (typeof v === 'function' ? v(...a) : v);
       let busy = !!opts.nameFirst;
       let finished = false;
       let localWrong = 0; // Fehler nur dieser Auswahl (für hintAfter)
@@ -298,6 +401,7 @@
         if (item.correct) ctx.markTest(t);
         t.addEventListener('click', async () => {
           if (busy || finished || session.aborted) return;
+          if (!item.correct && (t.classList.contains('is-wrong') || t.classList.contains('is-out'))) return; // zählt nicht doppelt
           if (item.correct) {
             finished = true;
             box.classList.add('locked');
@@ -307,19 +411,43 @@
             resolve(item);
           } else {
             busy = true;
-            const n = await ctx.wrong(t, { say: typeof opts.wrongSay === 'function' ? opts.wrongSay(item) : opts.wrongSay });
+            localWrong++;
+            const right = tiles.find((x) => x._item.correct);
+            const rightItem = right && right._item;
+            // Stufe 1: erklären, was am Gewählten nicht passt (oder ermutigen und Frage wiederholen)
+            let say = opts.wrongSay !== undefined ? fnOr(opts.wrongSay, item) : undefined;
+            if (opts.explain) {
+              try { say = fnOr(opts.explain, item, rightItem) || say; } catch (e) { console.error(e); }
+            }
+            const n = await ctx.wrong(t, { say });
+            if (localWrong === 1 && !opts.explain && opts.wrongSay === undefined && session.instruction && session.instruction.length <= 90 && !session.aborted) {
+              await ctx.say(session.instruction);
+            }
             if (opts.onWrong) {
               try { await opts.onWrong(item, t, n); } catch (e) { console.error(e); }
             }
-            busy = false;
-            localWrong++;
-            if (localWrong >= hintAfter) {
-              const right = tiles.find((x) => x._item.correct);
-              if (right) {
+            if (right && !session.aborted) {
+              if (localWrong === hintAfter) {
+                // Stufe 2: Denkanstoß + eine falsche Kachel verschwindet
+                const open = tiles.filter((x) => !x._item.correct && !x.classList.contains('is-wrong') && !x.classList.contains('is-out'));
+                const active = tiles.filter((x) => !x.classList.contains('is-wrong') && !x.classList.contains('is-out'));
+                const hs = opts.hintSay ? fnOr(opts.hintSay, rightItem) : '';
+                if (open.length && active.length > 2) {
+                  const out = U.pick(open);
+                  out.classList.add('is-out');
+                  out.setAttribute('aria-disabled', 'true');
+                }
+                if (hs) await ctx.say(hs);
+                else if (!(open.length && active.length > 2)) { ctx.hint(right); ctx.modelShown = true; }
+              } else if (localWrong > hintAfter && !ctx.modelShown) {
+                // Stufe 3: vormachen – danach kommt der Inhalt in der Runde noch einmal
+                ctx.modelShown = true;
                 ctx.hint(right);
-                if (localWrong === hintAfter && opts.hintSay) ctx.say(typeof opts.hintSay === 'function' ? opts.hintSay(right._item) : opts.hintSay);
-              }
+                const ms = opts.modelSay ? fnOr(opts.modelSay, rightItem) : (rightItem.say ? `Schau, hier: ${rightItem.say}. Tipp es an!` : 'Schau, das hier ist richtig. Tipp es an!');
+                if (ms) await ctx.say(ms);
+              } else if (localWrong > hintAfter) ctx.hint(right);
             }
+            busy = false;
           }
         });
         box.appendChild(t);
@@ -359,10 +487,16 @@
         updateDots(session, i);
         const ctx = makeCtx(session, i, total);
         if (i === 0 && def.intro) await ctx.say(def.intro);
+        if (session.raised && ctx.stretch) {
+          session.raised = false;
+          await ctx.say(U.pickFresh('stretch-say', STRETCH_SAY, 1));
+        }
+        if (ctx.stretch && session.dots && session.dots.children[i]) session.dots.children[i].classList.add('stretch');
         if (session.aborted) return;
         await def.task(ctx);
         if (session.aborted) return;
         const firstTry = ctx.wrongCount === 0;
+        afterTask(session, ctx, i, total, firstTry);
         session.results.push({ firstTry, wrong: ctx.wrongCount });
         LT.progress.recordTask(def.id, { firstTry, wrong: ctx.wrongCount });
         if (LT.test) LT.test.solver = null;
@@ -376,6 +510,7 @@
       if (session.aborted) return;
       const res = (await def.play(ctx)) || {};
       if (session.aborted) return;
+      for (const [k, ok] of ctx._tracked) LT.progress.itemResult(def.id, k, ok == null ? ctx.wrongCount === 0 : ok);
       if (LT.test) LT.test.solver = null;
       if (def.type === 'free') score = null;
       else if (typeof res.score === 'number') score = U.clamp(res.score, 0, 1);
@@ -392,6 +527,28 @@
     LT.ui.bumpStars();
     if (LT.app && LT.app.onRoundFinished) LT.app.onRoundFinished(def.id, result);
     await showRoundEnd(session, result);
+  }
+
+  /** Nach jeder Aufgabe: Inhalte protokollieren, Fehler einplanen, Schwierigkeit nachsteuern. */
+  function afterTask(session, ctx, i, total, firstTry) {
+    for (const [k, ok] of ctx._tracked) {
+      const good = ok == null ? firstTry : ok;
+      LT.progress.itemResult(session.def.id, k, good);
+      // falsch gelöst → in dieser Runde nochmal: nach dem Vormachen gleich als Nächstes, sonst eine Aufgabe später
+      if (!good && !session.requeue.some((r) => r.key === k)) session.requeue.push({ key: k, at: i + (ctx.modelShown ? 1 : 2) });
+    }
+    if (firstTry) { session.streakOk++; session.streakBad = 0; }
+    else { session.streakBad++; session.streakOk = 0; }
+    if (session.streakOk >= 3 && session.flow < 1) {
+      session.flow++;
+      session.streakOk = 0;
+      session.raised = true;
+    } else if ((session.streakBad >= 2 || ctx.wrongCount >= 3) && session.flow > -1) {
+      session.flow--;
+      session.streakBad = 0;
+    }
+    // nach einer Knobel-Aufgabe mit Fehlern wieder auf die normale Stufe
+    if (session.flow > 0 && !firstTry) session.flow = 0;
   }
 
   function updateDots(session, i) {

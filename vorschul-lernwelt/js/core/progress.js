@@ -201,6 +201,63 @@
     return rec.firstTry / rec.tasks;
   };
 
+  /* ---------------- Gedächtnis für einzelne Lerninhalte (verteiltes Wiederholen) ----------------
+     Jedes Spiel meldet über ctx.item/ctx.track, WELCHER Inhalt geübt wurde (Buchstabe „b“, Zahl 7,
+     Reimpaar „Haus – Maus“ …). Leitner-Kästchen 0–5:
+       - Fehler            → Kästchen 0, sofort wieder fällig (in derselben Runde noch einmal)
+       - auf Anhieb richtig → ein Kästchen weiter; neu & gleich richtig → Kästchen 2
+       - fällig nach        0 / 1 / 2 / 4 / 8 / 16 Tagen  (Kästchen 5 = sicher gelernt)
+     Gespeichert pro Spiel: { key: { b, d (fällig ab, ms), n (gesehen), w (Fehler), t (zuletzt) } } */
+  const DAY = 86400000;
+  P.ITEM_DAYS = [0, 1, 2, 4, 8, 16];
+  P.ITEM_MAX = 200; // pro Spiel
+  P.items = function (id) {
+    const all = (P.profile.items = P.profile.items || {});
+    return (all[id] = all[id] || {});
+  };
+  P.itemResult = function (id, key, ok, now = Date.now()) {
+    key = String(key);
+    const items = P.items(id);
+    const it = items[key] || { b: -1, d: 0, n: 0, w: 0, t: 0 };
+    const fresh = it.b < 0;
+    if (ok) it.b = fresh ? 2 : Math.min(5, it.b + 1);
+    else { it.b = 0; it.w++; }
+    it.d = now + P.ITEM_DAYS[it.b] * DAY;
+    it.n++;
+    it.t = now;
+    items[key] = it;
+    const keys = Object.keys(items);
+    if (keys.length > P.ITEM_MAX) {
+      // die am besten gelernten, am längsten nicht gesehenen zuerst vergessen
+      keys.sort((a, b) => items[b].b - items[a].b || items[a].t - items[b].t);
+      for (const k of keys.slice(0, keys.length - P.ITEM_MAX)) delete items[k];
+    }
+    P.save();
+    return it;
+  };
+  /** Fällige Inhalte eines Spiels: schwächste und am längsten überfällige zuerst. */
+  P.dueItems = function (id, now = Date.now()) {
+    const items = P.items(id);
+    return Object.keys(items).filter((k) => items[k].d <= now)
+      .sort((a, b) => items[a].b - items[b].b || items[a].d - items[b].d);
+  };
+  /** Sicher gekonnte Inhalte (zum Aufwärmen). */
+  P.knownItems = function (id) {
+    const items = P.items(id);
+    return Object.keys(items).filter((k) => items[k].b >= 3);
+  };
+  /** Überblick für Eltern und Reise: { total, due, learned, tricky: [key …] } */
+  P.itemSummary = function (id, now = Date.now()) {
+    const items = P.items(id);
+    const keys = Object.keys(items);
+    return {
+      total: keys.length,
+      due: keys.filter((k) => items[k].d <= now).length,
+      learned: keys.filter((k) => items[k].b >= 4).length,
+      tricky: keys.filter((k) => items[k].b <= 1 && items[k].w > 0).sort((a, b) => items[b].w - items[a].w || items[b].t - items[a].t).slice(0, 6),
+    };
+  };
+
   P.reset = function () {
     profile = freshProfile();
     P.save(true);
