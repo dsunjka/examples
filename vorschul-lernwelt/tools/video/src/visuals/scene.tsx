@@ -90,6 +90,9 @@ const ActorView: React.FC<{a: Actor; i: number; ground: number}> = ({a, i, groun
   const isFlo = a.e === 'flo';
   const bubbleEmoji = a.bubble && !/[A-Za-zÄÖÜäöüß0-9]/.test(a.bubble);
   const zzz = anim === 'sleep';
+  // Schild nicht aus dem Bild ragen lassen (Breite grob geschätzt: Andika 700 ≈ 0,52 em pro Zeichen + Polster).
+  const labelW = a.label ? a.label.length * 30 * 0.52 + 36 : 0;
+  const labelShift = a.label ? Math.max(labelW / 2 + 6, Math.min(960 - labelW / 2 - 6, left)) - left : 0;
   return (
     <div
       style={{
@@ -116,7 +119,7 @@ const ActorView: React.FC<{a: Actor; i: number; ground: number}> = ({a, i, groun
         </div>
       )}
       {a.label && (
-        <div style={{position: 'absolute', left: 0, top: a.bubble || a.labelBelow ? 8 : -size - 50, transform: 'translateX(-50%)'}}>
+        <div style={{position: 'absolute', left: labelShift, top: a.bubble || a.labelBelow ? 8 : -size - 50, transform: 'translateX(-50%)'}}>
           <Tag text={a.label} k={kl} size={30} />
         </div>
       )}

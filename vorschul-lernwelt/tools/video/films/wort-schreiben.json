@@ -54,7 +54,7 @@
         "letters": [{"l": "M", "pic": "🌙", "word": "Mond", "at": -0.1}, {"l": "au", "pic": "🚗", "word": "Auto", "at": -0.1}, {"l": "s", "pic": "☀️", "word": "Sonne", "at": -0.1}]}
     },
     {
-      "say": "Schau mal genau hin. Au sind zwei Buchstaben, aber nur ein Laut. Bei ei ist das auch so. Und sch hat sogar drei Buchstaben.",
+      "say": "Schau mal genau hin. Au, das sind zwei Buchstaben, aber nur ein Laut. Bei ei ist das auch so. Und sch hat sogar drei Buchstaben.",
       "caption": "au, ei, sch: je *1 Laut*",
       "visual": {"type": "liste", "title": "Ein Laut", "floGesture": "point",
         "items": [{"e": "🚗", "text": "au: 2 Buchstaben", "at": 0.25}, {"e": "🥚", "text": "ei: 2 Buchstaben", "at": 0.55}, {"e": "🐑", "text": "sch: 3 Buchstaben", "at": 0.78}]}
@@ -66,7 +66,7 @@
       "visual": {"type": "scene", "bg": "classroom", "actors": [
         {"e": "flo", "x": 22, "size": 180, "emotion": "think", "bubble": "👂", "think": true, "bubbleAt": 0.75},
         {"e": "🛋️", "x": 62, "size": 150, "at": 0.08, "enter": "drop"},
-        {"e": "🐌", "x": 50, "y": 86, "size": 64, "at": 0.3, "enter": "fade", "flip": true, "moves": [{"x": 78, "y": 86, "at": 0.32, "until": 0.7}], "z": 6}
+        {"e": "🐌", "x": 36, "y": 79, "size": 64, "at": 0.3, "enter": "fade", "flip": true, "moves": [{"x": 50, "y": 79, "at": 0.32, "until": 0.7}], "z": 6}
       ]}
     },
     {
@@ -76,7 +76,7 @@
         "letters": [{"l": "S", "pic": "☀️", "word": "Sonne", "at": 0.12}, {"l": "o", "pic": "👂", "word": "Ohr", "at": 0.3}, {"l": "f", "pic": "🐟", "word": "Fisch", "at": 0.47}, {"l": "a", "pic": "🐒", "word": "Affe", "at": 0.63}]}
     },
     {
-      "say": "Mein Tipp: Sprich das Wort ganz langsam. Hör genau hin. Schreib für jeden Laut einen Buchstaben. Probier es gleich im Quiz!",
+      "say": "Mein Tipp: Sprich das Wort ganz langsam. Hör genau hin. Schreib jeden Laut der Reihe nach auf. Probier es gleich im Quiz!",
       "visual": {"type": "merke", "title": "Mein Tipp:", "icon": "✏️", "lines": ["*Langsam* sprechen.", "Genau *hinhören*.", "Jeden *Laut* schreiben."], "at": [0.05, 0.3, 0.5]}
     }
   ],
@@ -90,7 +90,7 @@
       {"text": "M", "say": "mmm", "correct": false},
       {"text": "F", "say": "fff", "correct": true},
       {"text": "A", "say": "aaa", "correct": false}],
-     "explain": "Sprich das Wort ganz langsam. Was hörst du zuerst?", "model": "Fffisch. Ganz am Anfang hörst du fff. Den Laut schreibe ich mit F.", "key": "Anlaut", "beat": 5},
+     "explain": "Sprich das Wort ganz langsam. Was hörst du zuerst?", "model": "Fffisch. Ganz am Anfang hörst du fff. Den Laut schreibe ich mit F.", "key": "Anlaut", "beat": 9},
     {"q": "Wie viele Buchstaben braucht der Laut sch?", "options": [
       {"text": "1", "say": "einen", "correct": false},
       {"text": "2", "say": "zwei", "correct": false},

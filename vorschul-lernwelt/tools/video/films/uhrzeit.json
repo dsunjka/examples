@@ -10,14 +10,14 @@
   "beats": [
     {
       "say": "Hallo! Ich bin Flo. Heute lernen wir die Uhr lesen.",
-      "visual": {"type": "title", "subtitle": "Rechnen mit Flo"}
+      "visual": {"type": "title", "subtitle": "Uhr lesen mit Flo"}
     },
     {
       "say": "Oh je! Eule hat gesagt: Wir treffen uns um halb vier. Aber wann ist halb vier? Ich kann die Uhr noch nicht lesen. Hilfst du mir?",
       "caption": "Wann ist *halb vier*?",
       "visual": {"type": "scene", "bg": "meadow", "actors": [
         {"e": "flo", "x": 22, "size": 190, "emotion": "think", "bubble": "❓", "bubbleAt": 0.4},
-        {"e": "🦉", "x": 100, "y": 40, "size": 100, "enter": "right", "anim": "fly", "moves": [{"x": 76, "y": 40, "at": 0.02, "until": 0.15}], "bubble": "halb vier!", "bubbleAt": 0.15},
+        {"e": "🦉", "x": 100, "y": 44, "size": 100, "enter": "right", "anim": "fly", "moves": [{"x": 68, "y": 44, "at": 0.02, "until": 0.15}], "bubble": "halb vier!", "bubbleAt": 0.15},
         {"e": "⏰", "x": 52, "y": 74, "size": 110, "at": 0.45, "enter": "drop", "anim": "wiggle"}
       ]}
     },

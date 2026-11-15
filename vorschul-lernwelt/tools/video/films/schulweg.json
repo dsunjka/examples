@@ -68,16 +68,17 @@
             ]
           },
           {
-            "e": "❓",
-            "x": 15,
-            "y": 66,
-            "size": 64,
-            "at": 0.75,
-            "anim": "wiggle",
+            "e": "flo",
+            "x": 12,
+            "y": 97,
+            "size": 170,
+            "emotion": "think",
+            "bubble": "❓",
+            "think": true,
+            "bubbleAt": 0.75,
             "z": 9
           }
-        ],
-        "floEmotion": "think"
+        ]
       }
     },
     {
@@ -103,7 +104,8 @@
             "lane": "near",
             "at": 0.15
           }
-        ]
+        ],
+        "childX": 500
       }
     },
     {
@@ -112,7 +114,8 @@
       "visual": {
         "type": "strasse",
         "light": "red",
-        "floEmotion": "think"
+        "floEmotion": "think",
+        "childX": 500
       }
     },
     {
@@ -138,8 +141,10 @@
           0.8
         ],
         "walk": 0.95,
-        "floEmotion": "happy"
-      }
+        "floEmotion": "happy",
+        "childX": 500
+      },
+      "pause": 2.0
     },
     {
       "say": "Hier ist nur ein Zebrastreifen. Ich bleibe am Bordstein stehen. Ich schaue: links, rechts, und nochmal links.",
@@ -155,7 +160,8 @@
           0.79,
           0.92
         ],
-        "floGesture": "point"
+        "floGesture": "point",
+        "childX": 500
       }
     },
     {
@@ -174,7 +180,8 @@
             "at": 0.35,
             "until": 0.95
           }
-        ]
+        ],
+        "childX": 500
       }
     },
     {
@@ -202,8 +209,10 @@
           0.55,
           0.68
         ],
-        "walk": 0.9
-      }
+        "walk": 0.9,
+        "childX": 500
+      },
+      "pause": 2.0
     },
     {
       "say": "Jetzt bist du dran! Hier stehen parkende Autos. Gehe ich hier hinüber? Was meinst du?",
@@ -426,7 +435,7 @@
           "correct": false
         }
       ],
-      "explain": "Im Dunkeln müssen dich die Autofahrer gut sehen. Was leuchtet im Licht?",
+      "explain": "Im Dunkeln müssen dich die Autofahrer gut sehen. Was sehen sie im Licht der Autos gut?",
       "model": "Leuchtstreifen leuchten im Licht der Autos. Dann sieht mich der Fahrer.",
       "key": "Leuchtstreifen",
       "beat": 10

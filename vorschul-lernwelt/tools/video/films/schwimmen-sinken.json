@@ -81,8 +81,7 @@
           {
             "e": "🍾",
             "result": "float",
-            "at": 9,
-            "label": "Korken: schwimmt"
+            "at": 9
           },
           {
             "e": "🪨",
@@ -103,14 +102,12 @@
           {
             "e": "🍾",
             "result": "float",
-            "at": 0.1,
-            "label": "Korken: schwimmt"
+            "at": 0.1
           },
           {
             "e": "🪨",
             "result": "sink",
-            "at": 0.35,
-            "label": "Stein: sinkt"
+            "at": 0.35
           }
         ]
       }
@@ -128,13 +125,13 @@
             "e": "🪵",
             "result": "float",
             "at": 9,
-            "size": 112
+            "size": 124
           },
           {
             "e": "🔩",
             "result": "sink",
             "at": 9,
-            "size": 46
+            "size": 56
           }
         ]
       }
@@ -151,21 +148,19 @@
             "e": "🪵",
             "result": "float",
             "at": 0.05,
-            "size": 112,
-            "label": "Stamm: schwimmt"
+            "size": 124
           },
           {
             "e": "🔩",
             "result": "sink",
             "at": 0.25,
-            "size": 46,
-            "label": "Schraube: sinkt"
+            "size": 56
           }
         ]
       }
     },
     {
-      "say": "Wichtig ist das Material. Woraus ist es gemacht? Holz, Kork und Plastik schwimmen meistens. Metall und Stein sinken.",
+      "say": "Wichtig ist das Material. Woraus ist es gemacht? Holz, Kork und Plastik schwimmen meistens. Metall und Stein gehen meistens unter.",
       "caption": "*Material*: Woraus ist es?",
       "visual": {
         "type": "vergleich",
@@ -201,12 +196,14 @@
           {
             "e": "✏️",
             "result": "float",
-            "at": 0.6,
+            "at": 0.72,
             "size": 100,
             "label": "Holz: schwimmt"
           }
-        ]
-      }
+        ],
+        "guess": true
+      },
+      "pause": 1.0
     },
     {
       "say": "Jetzt du! Ein Schlüssel. Woraus ist er? Was meinst du: Schwimmt er oder sinkt er?",
@@ -263,7 +260,7 @@
       }
     },
     {
-      "say": "Probier es in der Badewanne aus! Jetzt kommt das Quiz.",
+      "say": "Probier es mit einem Erwachsenen in der Badewanne aus! Jetzt kommt das Quiz.",
       "caption": "Erst *vermuten*, dann schauen!",
       "visual": {
         "type": "flo",

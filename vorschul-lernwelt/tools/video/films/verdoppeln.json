@@ -37,6 +37,7 @@
     {
       "say": "Jetzt vier Sterne. Vier und noch einmal vier sind acht.",
       "caption": "4 + 4 = *8*",
+      "pause": 1.2,
       "visual": {"type": "vergleich", "mid": "mirror", "midAt": 0,
         "left": {"e": "⭐", "n": 4, "label": "4", "at": 0.2},
         "right": {"e": "⭐", "n": 4, "label": "noch 4", "at": 0.45}}
@@ -44,7 +45,7 @@
     {
       "say": "Achtung! Verdoppeln heißt nicht zwei dazu. Es kommen immer gleich viele dazu.",
       "caption": "gleich viele dazu!",
-      "visual": {"type": "vergleich", "mid": "≠", "midAt": 0.5,
+      "visual": {"type": "vergleich", "mid": "≠", "midAt": 0.62,
         "left": {"text": "4 + 4", "label": "doppelt", "mark": "yes", "at": 0.55},
         "right": {"text": "4 + 2", "label": "nur 2 dazu", "mark": "no", "at": 0.3}, "floEmotion": "think"}
     },
@@ -86,7 +87,7 @@
     {
       "say": "Jetzt habe ich sechs Äpfel für Eule. Kommst du mit zum Quiz?",
       "visual": {"type": "flo", "emotion": "happy", "gesture": "cheer", "side": "left", "bubble": "Quiz! 🪞", "bubbleAt": 0.6,
-        "items": [{"e": "🍎", "label": "3 Äpfel", "at": 0.05}, {"e": "🪞", "label": "doppelt", "at": 0.15}, {"e": "🧺", "label": "6 Äpfel", "at": 0.3}]}
+        "items": [{"e": "🪞", "label": "3 + 3", "at": 0.05}, {"e": "🧺", "label": "6 Äpfel", "at": 0.25}]}
     }
   ],
   "quiz": [

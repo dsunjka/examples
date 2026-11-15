@@ -116,7 +116,7 @@
       "caption": "Winter: *kein Futter*",
       "visual": {
         "type": "vergleich",
-        "bg": "forest-winter",
+        "bg": "plain",
         "mid": "→",
         "midAt": 0.2,
         "left": {
@@ -130,8 +130,10 @@
           "at": 0
         },
         "right": {
-          "e": "❄️",
-          "n": 3,
+          "items": [
+            "❄️",
+            "🍽️"
+          ],
           "label": "Winter",
           "mark": "no",
           "at": 0.3,
@@ -373,7 +375,11 @@
             ],
             "bubble": "🌰",
             "bubbleAt": 0.35,
-            "anim": "none"
+            "anim": "none",
+            "exit": {
+              "at": 0.72,
+              "to": "fade"
+            }
           },
           {
             "e": "🌰",
@@ -385,6 +391,15 @@
               "at": 0.3,
               "to": "shrink"
             }
+          },
+          {
+            "e": "🐿️",
+            "x": 42,
+            "size": 120,
+            "at": 0.72,
+            "enter": "fade",
+            "anim": "sleep",
+            "flip": true
           }
         ]
       }
@@ -410,7 +425,23 @@
               }
             ],
             "label": "Winterstarre",
-            "labelAt": 0.8
+            "labelAt": 0.62
+          },
+          {
+            "e": "🌿",
+            "x": 28,
+            "y": 74,
+            "size": 80,
+            "enter": "none",
+            "z": 98
+          },
+          {
+            "e": "🌿",
+            "x": 84,
+            "y": 74,
+            "size": 70,
+            "enter": "none",
+            "z": 98
           },
           {
             "e": "🪨",
@@ -429,12 +460,12 @@
             "z": 99
           },
           {
-            "e": "❄️",
-            "x": 80,
-            "y": 26,
-            "size": 60,
+            "e": "🧊🧊🧊",
+            "x": 50,
+            "y": 38,
+            "size": 48,
             "at": 0.55,
-            "anim": "spin"
+            "enter": "fade"
           }
         ]
       }
@@ -450,7 +481,7 @@
             "e": "🐦",
             "x": 30,
             "y": 30,
-            "size": 70,
+            "size": 96,
             "flip": true,
             "enter": "left",
             "anim": "fly",
@@ -467,7 +498,7 @@
             "e": "🐦",
             "x": 38,
             "y": 40,
-            "size": 60,
+            "size": 86,
             "flip": true,
             "enter": "left",
             "anim": "fly",
@@ -484,7 +515,7 @@
             "e": "🐦",
             "x": 26,
             "y": 46,
-            "size": 54,
+            "size": 80,
             "flip": true,
             "enter": "left",
             "anim": "fly",
@@ -518,9 +549,9 @@
         "icon": "❄️",
         "title": "Merke!",
         "lines": [
-          "Igel: *Winterschlaf*",
-          "Eichhörnchen: *Winterruhe*",
-          "Frosch: *Winterstarre*"
+          "🦔 *Winterschlaf*",
+          "🐿️ *Winterruhe*",
+          "🐸 *Winterstarre*"
         ],
         "at": [
           0.05,
@@ -564,7 +595,7 @@
           "correct": true
         },
         {
-          "text": "😴 faul",
+          "text": "🦥 faul",
           "say": "Er ist faul.",
           "correct": false
         },
@@ -589,7 +620,7 @@
         },
         {
           "text": "🐞 Käfer",
-          "say": "Käfer und Würmer",
+          "say": "Käfer",
           "correct": true
         },
         {
@@ -622,7 +653,7 @@
           "correct": true
         }
       ],
-      "explain": "Schau mal: Wer hat im Herbst Nüsse versteckt?",
+      "explain": "Denk mal an den Vorrat im Versteck. Wer hat ihn im Herbst angelegt?",
       "model": "Das Eichhörnchen wacht auf und holt sich eine Nuss. Das heißt Winterruhe.",
       "key": "Winterruhe",
       "beat": 8

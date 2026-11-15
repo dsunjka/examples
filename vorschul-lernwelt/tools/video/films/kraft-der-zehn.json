@@ -63,13 +63,13 @@
     },
     {
       "say": "Genau, siebzehn! Zehn und sieben sind siebzehn. Ich musste gar nicht alles zählen.",
-      "caption": "10 + 7 = *17*",
       "visual": {"type": "rechnung", "parts": ["10", "+", "7", "=", "17"], "at": [-0.05, 0.0, 0.05, 0.1, 0.15], "box": true,
         "highlight": [{"part": 0, "at": 0.5}], "floEmotion": "happy", "floGesture": "cheer"}
     },
     {
-      "say": "Merke dir: Erst die vollen Zehner, dann die Einer. So siehst du ganz schnell, wie viele es sind.",
-      "visual": {"type": "merke", "lines": ["Erst die vollen *Zehner*,", "dann die *Einer*.", "Das geht ganz schnell!"], "at": [0.1, 0.35, 0.65]}
+      "say": "Merke dir: Erst die vollen Zehner, dann die Einer. So siehst du ganz schnell, wie viele es sind. Und beim Schreiben kommt der Zehner zuerst.",
+      "pause": 1.2,
+      "visual": {"type": "merke", "lines": ["Erst die vollen *Zehner*,", "dann die *Einer*.", "Der *Zehner* steht vorn!"], "at": [0.08, 0.25, 0.72]}
     },
     {
       "say": "Das ist die Kraft der Zehn! Jetzt kommt das Quiz. Machst du mit?",
@@ -85,7 +85,7 @@
      "key": "Zehner = 10", "beat": 2},
     {"q": "Eine volle Schachtel und vier Kastanien. Wie viele sind das?",
      "options": [{"text": "14", "say": "vierzehn", "correct": true}, {"text": "41", "say": "einundvierzig", "correct": false}, {"text": "5", "say": "fünf", "correct": false}],
-     "explain": "Fast! Denk dran: In der vollen Schachtel sind schon zehn Kastanien.",
+     "explain": "Denk dran: In der vollen Schachtel sind schon zehn Kastanien.",
      "model": "Ein Zehner und vier Einer. Zehn und vier sind vierzehn.",
      "key": "10 + 4", "beat": 5},
     {"q": "Wie viele Einer hat die Zahl fünfzehn?",

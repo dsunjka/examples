@@ -86,13 +86,13 @@
       }
     },
     {
-      "say": "K wie Kauflächen. Hier schrubbe ich hin und her.",
+      "say": "K wie Kauflächen. Damit kauen wir. Hier schrubbe ich hin und her.",
       "caption": "*K* = Kauflächen",
       "visual": {
         "type": "zahn",
         "area": "kau",
         "dirt": true,
-        "brushAt": 0.3,
+        "brushAt": 0.5,
         "clean": 0.95
       }
     },
@@ -139,13 +139,13 @@
       }
     },
     {
-      "say": "Genau, I wie Innenflächen, bei der Zunge! Ich wische vom Roten zum Weißen.",
+      "say": "Genau, I wie Innenflächen, innen bei der Zunge! Ich wische vom roten Zahnfleisch zum weißen Zahn.",
       "caption": "*I* = Innenflächen",
       "visual": {
         "type": "zahn",
         "area": "innen",
         "dirt": true,
-        "brushAt": 0.5,
+        "brushAt": 0.55,
         "clean": 0.95,
         "floEmotion": "happy"
       }
@@ -194,7 +194,6 @@
       "visual": {
         "type": "vergleich",
         "bg": "kitchen",
-        "mid": "?",
         "continue": true,
         "floEmotion": "happy",
         "left": {
@@ -265,7 +264,7 @@
       "q": "Kai ist ein Trick. Wofür steht das K?",
       "options": [
         {
-          "text": "Kauflächen",
+          "text": "🦷 Kauflächen",
           "say": "Kauflächen",
           "correct": true
         },
@@ -304,7 +303,7 @@
           "correct": false
         }
       ],
-      "explain": "Fast! Hin und her geht es oben auf den Kauflächen. Außen malt die Bürste etwas Rundes.",
+      "explain": "Fast! Hin und her geht es oben auf den Kauflächen. Schau noch mal, was die Bürste außen malt.",
       "model": "Ich beiße die Zähne zusammen. Dann male ich außen kleine Kreise.",
       "key": "A wie Außenflächen",
       "beat": 5

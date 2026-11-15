@@ -171,6 +171,8 @@ Flo groß links (winkt, spricht), rechts Karte mit Icon und Titel. Wird für das
 ### `flo` – Flo groß im Bild
 
 Flo groß (links oder rechts) mit Sprech- oder Denkblase und optionalen Gegenständen. Kein Ecken-Flo.
+Hat der Beat eine `caption`, steht Flo automatisch etwas kleiner und höher, damit die Untertitelzeile ihn nicht verdeckt.
+Bei 3–4 Gegenständen werden Bilder und Schilder kleiner (Schilder ≤ 12 Zeichen halten).
 
 | Eigenschaft | Standard | Bedeutung |
 |---|---|---|
@@ -205,7 +207,7 @@ Figur (`actors[]`):
 | `moves` | – | Wegpunkte: `[{"x": 70, "y": 76, "at": 0.3, "until": 0.6}]` (ohne `until`: 1,2 s). Nacheinander abgearbeitet. |
 | `exit` | – | Abgang `{"at": 0.8, "to": "left" | "right" | "fade" | "shrink" | "up" | "down"}`. |
 | `flip` | false | Spiegeln (Blickrichtung rechts). |
-| `label` | – | Schild über der Figur (bzw. darunter, wenn `bubble` gesetzt oder `labelBelow: true`). |
+| `label` | – | Schild über der Figur (bzw. darunter, wenn `bubble` gesetzt oder `labelBelow: true`). Am Bildrand wird es nach innen geschoben. |
 | `labelAt` | at+0.15 | Einblendzeit des Schilds. |
 | `bubble` | – | Sprechblase über der Figur (Text oder Emoji). `bubbleAt`, `think` wie bei `flo`. |
 | `emotion`, `gesture` | – | Nur für `"e": "flo"`. |
@@ -252,7 +254,7 @@ Punkte (oder Emojis) füllen Felder nacheinander; Gruppen in verschiedenen Farbe
 | Eigenschaft | Standard | Bedeutung |
 |---|---|---|
 | `from`, `to` | 0, 20 | Bereich. Für große Ziffern ≤ 20 Schritte; bis 100 möglich (dann Beschriftung in 5er/10er-Schritten). |
-| `labelEvery` | auto | Beschriftung jede n-te Zahl (≤ 20: 1, ≤ 50: 5, sonst 10). |
+| `labelEvery` | auto | Beschriftung jede n-te Zahl (≤ 20: 1, ≤ 50: 5, sonst 10). Schriftgröße und Markierungskreise passen sich dem Abstand an (0–10: groß, 0–20: zweistellige Zahlen kleiner, damit sie sich nicht berühren). |
 | `marks` | – | Hervorgehobene Zahlen (Kreis): `[13]`. |
 | `bridge` | – | Zehner-Brücke über einer Zahl (goldene Säule + Brücke), z. B. `10`. |
 | `start` | 1. Sprung | Wo der Hüpfer anfangs steht. |
@@ -365,6 +367,9 @@ Silben in Blau/Rot (Silbenmethode) erscheinen nacheinander, darunter schwingt je
 | `merge` | – | Zeit, zu der die Silben zum ganzen Wort zusammenrücken (Bögen verschwinden, Wort wird dunkel; `keepColors: true` behält die Farben). `mergeText` zeigt zusätzlich ein Schild. |
 | `count` | – | Schild unter dem Wort, z. B. `"3 Silben"`, `countAt` (Standard 0.75). |
 
+Das Wort steht immer an derselben Stelle (unabhängig von `clap`, `count`, `mergeText`) – so springt nichts beim
+Anschluss mit `continue`.
+
 ```json
 {"say": "Klatsch mit mir: To, ma, te. Drei Silben!",
  "visual": {"type": "silben", "word": "Tomate", "syllables": ["To", "ma", "te"], "at": [0.15, 0.3, 0.45], "clap": true,
@@ -420,7 +425,7 @@ Autos auf der **nahen** Spur kommen von **links**, auf der **fernen** Spur von *
 |---|---|---|
 | `light` | – | Fußgängerampel: `"red"`, `"green"` oder Wechsel `[{"state": "red", "at": 0}, {"state": "green", "at": 0.7}]`. Ohne `light` keine Ampel. |
 | `zebra` | true | Zebrastreifen zeichnen. |
-| `look` | – | Blickfolge des Kindes, z. B. `["left", "right", "left"]` – Kind dreht sich, Pfeil + „links“/„rechts“. |
+| `look` | – | Blickfolge des Kindes, z. B. `["left", "right", "left"]` – Kind dreht sich, Pfeil + „links“/„rechts“ (weicht der Ampel aus). |
 | `lookAt` | verteilt | Zeiten je Blick. |
 | `walk` | – | Zeit, zu der das Kind über den Zebrastreifen geht (dauert 2,2 s). |
 | `child` | `🧒` | Emoji des Kindes; `childX` (Standard 470 px) Position. |
@@ -490,8 +495,8 @@ Zwei Karten nebeneinander mit Zeichen oder Spiegel dazwischen (Verdoppeln, Halbi
 
 | Eigenschaft | Standard | Bedeutung |
 |---|---|---|
-| `left`, `right` | – | `{e, n, items, text, label, mark, at, color}`: `e` + `n` = n gleiche Emojis, oder `items` = Liste verschiedener Emojis, oder `text` = großer Text (z. B. `"8"`); `label` Schild darunter; `mark` `"yes"`/`"no"` (✓/✗-Plakette); `at` Einblendzeit (rechts Standard 0.35); `color` Rahmenfarbe. |
-| `mid` | – | Zeichen in der Mitte: `"="`, `"≠"`, `"<"`, `">"`, `"oder"`, `"→"` … oder `"mirror"` (Zauberspiegel; rechte Seite erscheint gespiegelt). |
+| `left`, `right` | – | `{e, n, items, text, label, mark, at, color}`: `e` + `n` = n gleiche Emojis (≤ 8), oder `items` = Liste verschiedener Emojis, oder `text` = großer Text (z. B. `"8"`, ≤ 9 Zeichen; ab 6 Zeichen kleiner); `label` Schild darunter (≤ 14 Zeichen); `mark` `"yes"`/`"no"` (✓/✗-Plakette); `at` Einblendzeit (rechts Standard 0.35); `color` Rahmenfarbe. |
+| `mid` | – | Zeichen in der Mitte: `"="`, `"≠"`, `"<"`, `">"`, `"oder"`, `"→"` … (Wörter ab 3 Zeichen kleiner) oder `"mirror"` (Zauberspiegel; rechte Seite erscheint gespiegelt). |
 | `midAt` | Mitte | Einblendzeit des Mittelzeichens. |
 
 ```json

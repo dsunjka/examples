@@ -166,7 +166,7 @@ export const ZahlenstrahlV: React.FC<VProps> = ({v}) => {
   const b = useBeat();
   const from: number = v.from ?? 0;
   const to: number = v.to ?? 20;
-  const W = 770, lineY = 272, x0 = v.wide === false ? 40 : -120, x1 = W - 44;
+  const W = 770, lineY = 272, x0 = v.wide === false ? 40 : -120, x1 = W - 54;
   const unit = (x1 - x0) / (to - from);
   const X = (n: number) => x0 + (n - from) * unit;
   const range = to - from;
@@ -230,20 +230,23 @@ export const ZahlenstrahlV: React.FC<VProps> = ({v}) => {
             </g>
           </g>
         )}
-        <line x1={x0 - 20} y1={lineY} x2={x1 + 24} y2={lineY} stroke={C.ink} strokeWidth="6" strokeLinecap="round" />
-        <path d={`M${x1 + 24} ${lineY - 12} L${x1 + 40} ${lineY} L${x1 + 24} ${lineY + 12} Z`} fill={C.ink} />
+        <line x1={x0 - 20} y1={lineY} x2={x1 + 34} y2={lineY} stroke={C.ink} strokeWidth="6" strokeLinecap="round" />
+        <path d={`M${x1 + 34} ${lineY - 12} L${x1 + 48} ${lineY} L${x1 + 34} ${lineY + 12} Z`} fill={C.ink} />
         {Array.from({length: range + 1}, (_, i) => {
           const n = from + i;
           const big = n % 10 === 0 || n % 5 === 0;
           const lab = n % every === 0 || marks.includes(n) || n === v.bridge;
           const hl = marks.includes(n) || n === v.bridge;
+          // Schrift passt sich dem Abstand an (zweistellige Zahlen dürfen sich nicht berühren)
+          const roomy = unit * every >= 60; // wenige Zahlen (z. B. 0–10): größer schreiben
+          const fsN = Math.min(n % 5 === 0 || hl ? (roomy ? 44 : 34) : roomy ? 40 : 30, Math.abs(n) >= 10 ? unit * every * (hl ? 0.56 : 0.6) : unit * every * 0.85);
           return (
             <g key={n}>
               <line x1={X(n)} y1={lineY - (big ? 16 : 10)} x2={X(n)} y2={lineY + (big ? 16 : 10)} stroke={C.ink} strokeWidth={big ? 5 : 3} />
               {lab && (
                 <>
-                  {hl && <circle cx={X(n)} cy={lineY + 50} r={range > 20 ? 22 : 26} fill={n === v.bridge ? C.gold : '#fff'} stroke={n === v.bridge ? C.goldDark : b.accent} strokeWidth="4" />}
-                  <text x={X(n)} y={lineY + 61} textAnchor="middle" fontFamily={FONT} fontWeight={700} fontSize={Math.min(n % 5 === 0 || hl ? 34 : 30, Math.abs(n) >= 10 ? unit * every * 0.68 : unit * every * 0.9)} fill={C.ink}>
+                  {hl && <circle cx={X(n)} cy={lineY + 50} r={Math.min(range > 20 ? 22 : unit * every >= 60 ? 31 : 26, Math.max(16, unit * every * 0.56))} fill={n === v.bridge ? C.gold : '#fff'} stroke={n === v.bridge ? C.goldDark : b.accent} strokeWidth="4" />}
+                  <text x={X(n)} y={lineY + 50 + fsN * 0.34} textAnchor="middle" fontFamily={FONT} fontWeight={700} fontSize={fsN} fill={C.ink}>
                     {n}
                   </text>
                 </>
@@ -385,7 +388,7 @@ export const StellenwertV: React.FC<VProps> = ({v}) => {
         <div style={{height: 96, display: 'flex', gap: 8, alignItems: 'flex-end', justifyContent: 'center', flexWrap: 'wrap', width: 230, opacity: Math.min(1, k)}}>
           {kind === 'z'
             ? Array.from({length: digit}, (_, i) => (
-                <div key={i} style={{width: 20, height: 92, borderRadius: 8, background: `repeating-linear-gradient(180deg, ${c} 0 9px, rgba(255,255,255,0.7) 9px 11px)`, border: `2px solid ${c}`}} />
+                <div key={i} style={{width: digit > 6 ? 20 : 28, height: 94, borderRadius: 8, background: `repeating-linear-gradient(180deg, ${c} 0 7.4px, rgba(255,255,255,0.75) 7.4px 9.4px)`, border: `2px solid ${c}`, boxSizing: 'border-box'}} />
               ))
             : Array.from({length: digit}, (_, i) => (
                 <div key={i} style={{width: 32, height: 32, borderRadius: 16, background: c}} />

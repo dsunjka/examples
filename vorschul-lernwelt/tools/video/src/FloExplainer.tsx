@@ -99,7 +99,7 @@ const BeatView: React.FC<{bt: Beat; index: number; film: FilmInfo; first: boolea
     <BeatCtx.Provider value={{f, fps, lead, narr, frames: bt.frames ?? narr + lead, accent: film.accent, talk, index}}>
       <AbsoluteFill style={{opacity: fadeIn}}>
         {!entry.ownBg && <Backdrop name={bg} frame={f} />}
-        <Comp v={v} film={film} />
+        <Comp v={bt.caption ? {...v, _caption: true} : v} film={film} />
         {corner && (
           <div style={{position: 'absolute', left: 4, bottom: -6}}>
             <Flo size={180} frame={f} fps={fps} talk={talk} emotion={v.floEmotion} gesture={v.floGesture ?? 'none'} />

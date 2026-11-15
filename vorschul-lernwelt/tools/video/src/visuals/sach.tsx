@@ -60,6 +60,14 @@ export const StrasseV: React.FC<VProps> = ({v}) => {
   const cars: Car[] = v.cars || [];
   const night = !!v.night;
   const parked = !!v.parked;
+  // Blick-Schild (Pfeil + Wort, ca. 230 px breit) nicht über die Ampel (x 612–688) legen.
+  const LOOK_W = 230, AMP_L = 604, AMP_R = 696;
+  const lookLeft = (dir: string) => {
+    let l = dir === 'left' ? childX - 220 : childX + 60;
+    if (light && l < AMP_R && l + LOOK_W > AMP_L) l = dir === 'left' ? AMP_L - LOOK_W : AMP_R;
+    l = Math.max(8, Math.min(960 - LOOK_W - 8, l));
+    return l - childX;
+  };
   return (
     <div style={{position: 'absolute', inset: 0, isolation: 'isolate'}}>
       <svg width="960" height="540" viewBox="0 0 960 540" style={{position: 'absolute', inset: 0}}>
@@ -129,7 +137,7 @@ export const StrasseV: React.FC<VProps> = ({v}) => {
           </div>
         )}
         {look && (
-          <div style={{position: 'absolute', top: -250, left: look === 'left' ? -220 : 60, display: 'flex', alignItems: 'center', gap: 6, transform: `scale(${kLook})`, flexDirection: look === 'left' ? 'row' : 'row-reverse'}}>
+          <div style={{position: 'absolute', top: -250, left: lookLeft(look), display: 'flex', alignItems: 'center', gap: 6, transform: `scale(${kLook})`, flexDirection: look === 'left' ? 'row' : 'row-reverse'}}>
             <div style={{fontSize: 70, fontWeight: 700, color: b.accent, fontFamily: FONT, lineHeight: 1}}>{look === 'left' ? '⬅' : '➡'}</div>
             <Tag text={look === 'left' ? 'links' : 'rechts'} size={40} color={b.accent} />
           </div>
@@ -148,12 +156,13 @@ export const WasserV: React.FC<VProps> = ({v}) => {
   const items: Thing[] = v.items || [];
   const ats = items.map((x) => x.at);
   const n = Math.max(1, items.length);
-  const tankL = 60, tankR = 710, surf = 200, bottom = 404;
+  // Becken etwas tiefer, damit die wartenden Gegenstände (und ❓) ganz im Bild sind.
+  const tankL = 60, tankR = 710, tankTop = 146, surf = 218, bottom = 408;
   const kIn = v.continue ? 1 : b.sp(-0.08, 0, 14);
   return (
     <Stage>
       <svg width={770} height={424} viewBox="0 0 770 424" style={{position: 'absolute', inset: 0, overflow: 'visible', transform: `scale(${kIn})`}}>
-        <rect x={tankL} y={120} width={tankR - tankL} height={bottom - 110} rx={18} fill="#e9f7ff" stroke="#9ccbe6" strokeWidth={8} />
+        <rect x={tankL} y={tankTop} width={tankR - tankL} height={bottom - tankTop + 10} rx={18} fill="#e9f7ff" stroke="#9ccbe6" strokeWidth={8} />
         <path d={`M${tankL + 4} ${surf} ${Array.from({length: 14}, (_, i) => `Q${tankL + 4 + (i + 0.5) * ((tankR - tankL - 8) / 14)} ${surf + Math.sin(b.sec * 2 + i) * 5} ${tankL + 4 + (i + 1) * ((tankR - tankL - 8) / 14)} ${surf}`).join(' ')} L${tankR - 4} ${bottom} L${tankL + 4} ${bottom} Z`} fill="#5ab8ef" opacity={0.75} />
         <rect x={tankL + 20} y={surf + 20} width={18} height={bottom - surf - 40} rx={9} fill="#fff" opacity={0.3} />
       </svg>
@@ -164,7 +173,7 @@ export const WasserV: React.FC<VProps> = ({v}) => {
         const s = b.at(at);
         const fallEnd = s + 0.45 * b.fps;
         const settleEnd = fallEnd + (it.result === 'sink' ? 1.4 : 0.6) * b.fps;
-        const waitY = 70;
+        const waitY = Math.min(tankTop - 12, Math.max(size + 18, 110));
         const floatY = surf + size * 0.18;
         const sinkY = bottom - 6;
         let y = waitY, rot = 0;
@@ -202,13 +211,13 @@ export const WasserV: React.FC<VProps> = ({v}) => {
               <Emo e={it.e} size={size * 0.9} />
             </div>
             {v.guess && b.f < s && (
-              <div style={{position: 'absolute', left: x + size * 0.25, top: waitY - size - 30, transform: `scale(${b.sp(0.02)})`}}>
+              <div style={{position: 'absolute', left: x + size * 0.25, top: Math.max(-6, waitY - size - 30), transform: `scale(${b.sp(0.02)})`}}>
                 <Emo e="❓" size={44} />
               </div>
             )}
             {kRes > 0 && (
-              <div style={{position: 'absolute', left: x, top: it.result === 'float' ? surf + 70 : sinkY - size - 66, transform: 'translateX(-50%)'}}>
-                <Tag text={resText} k={kRes} size={30} color={it.result === 'float' ? C.ok : NAMED.blue} />
+              <div style={{position: 'absolute', left: x, top: it.result === 'float' ? surf + 64 : sinkY - size - 66, transform: 'translateX(-50%)', zIndex: 2}}>
+                <Tag text={resText} k={kRes} size={resText.length > 16 ? 28 : 32} color={it.result === 'float' ? C.ok : NAMED.blue} />
               </div>
             )}
           </React.Fragment>
@@ -297,9 +306,9 @@ export const ZahnV: React.FC<VProps> = ({v}) => {
           const on = z.id === active;
           const k = b.sp(i * 0.06 - 0.05);
           return (
-            <div key={z.k} style={{display: 'flex', alignItems: 'center', gap: 14, transform: `scale(${k * (on ? 1.08 : 0.92)})`, transformOrigin: 'left center', opacity: on ? 1 : 0.55}}>
+            <div key={z.k} style={{display: 'flex', alignItems: 'center', gap: 14, transform: `scale(${k * (on ? 1.08 : 0.92)})`, transformOrigin: 'left center', opacity: on ? 1 : 0.8}}>
               <div style={{width: 76, height: 76, borderRadius: 38, background: on ? b.accent : '#fff', color: on ? '#fff' : C.ink, fontFamily: FONT, fontWeight: 700, fontSize: 52, display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 4px 0 rgba(43,45,66,0.14)', paddingBottom: 6, boxSizing: 'border-box'}}>{z.k}</div>
-              <div style={{fontFamily: FONT, fontWeight: 700, fontSize: 31, color: C.ink, background: on ? '#fff' : 'rgba(255,255,255,0.6)', borderRadius: 14, padding: '0 12px 4px', whiteSpace: 'nowrap'}}>{z.word}</div>
+              <div style={{fontFamily: FONT, fontWeight: 700, fontSize: 31, color: on ? C.ink : C.inkSoft, background: on ? '#fff' : 'rgba(255,255,255,0.85)', borderRadius: 14, padding: '0 12px 4px', whiteSpace: 'nowrap'}}>{z.word}</div>
             </div>
           );
         })}

@@ -29,8 +29,7 @@
             "x": 24,
             "size": 190,
             "emotion": "think",
-            "bubble": "❓",
-            "bubbleAt": 0.6
+            "gesture": "point"
           },
           {
             "e": "⚽",
@@ -41,7 +40,8 @@
             "enter": "drop",
             "anim": "bounce",
             "label": "7 €",
-            "labelAt": 0.2
+            "labelAt": 0.2,
+            "labelBelow": true
           },
           {
             "e": "👛",
@@ -191,7 +191,7 @@
       }
     },
     {
-      "say": "Jetzt du! Das Buch kostet acht Euro. Reichen fünf, zwei und ein Euro? Was meinst du?",
+      "say": "Jetzt du! Das Buch kostet acht Euro. Reichen fünf Euro, zwei Euro und ein Euro? Was meinst du?",
       "caption": "Reicht das für *8 €*?",
       "pause": 2.5,
       "visual": {
@@ -203,7 +203,7 @@
         "items": [
           {
             "v": 5,
-            "at": 0.45
+            "at": 0.4
           },
           {
             "v": 2,
@@ -211,7 +211,7 @@
           },
           {
             "v": 1,
-            "at": 0.65
+            "at": 0.7
           }
         ],
         "floEmotion": "think"
@@ -249,8 +249,8 @@
       }
     },
     {
-      "say": "Und wenn ich nur zehn Euro habe? Wie viel bekomme ich dann zurück? Was meinst du?",
-      "caption": "Ich gebe 10 €. Zurück?",
+      "say": "Jetzt bezahle ich den Ball mit einem Zehn-Euro-Schein. Wie viel Geld bekomme ich zurück? Was meinst du?",
+      "caption": "Ich gebe *10 €*. Wie viel zurück?",
       "pause": 2,
       "visual": {
         "type": "geld",
@@ -261,7 +261,7 @@
         "items": [
           {
             "v": 10,
-            "at": 0.15
+            "at": 0.3
           }
         ],
         "floEmotion": "think"
@@ -291,7 +291,7 @@
       }
     },
     {
-      "say": "Ich bekomme drei Euro zurück. Das heißt Rückgeld.",
+      "say": "Ich bekomme drei Euro zurück. Zwei Euro und ein Euro. Das nennt man Rückgeld.",
       "caption": "10 € − 7 € = *3 €*",
       "visual": {
         "type": "geld",
@@ -305,16 +305,17 @@
         "back": [
           {
             "v": 2,
-            "at": 0.15
+            "at": 0.38
           },
           {
             "v": 1,
-            "at": 0.3
+            "at": 0.55
           }
         ],
         "backLabel": "Rückgeld:",
         "floEmotion": "happy"
-      }
+      },
+      "pause": 1.2
     },
     {
       "say": "Merke: Schau auf die Zahl, nicht auf die Größe. Leg Geld zusammen, bis der Preis passt.",

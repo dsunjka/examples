@@ -9,7 +9,7 @@
       "subject": "mathe1",
       "src": "videos/kraft-der-zehn.mp4",
       "poster": "videos/kraft-der-zehn.jpg",
-      "duration": 77,
+      "duration": 80,
       "ready": true,
       "related": [
         "zehnerfeld"
@@ -60,7 +60,7 @@
               "correct": false
             }
           ],
-          "explain": "Fast! Denk dran: In der vollen Schachtel sind schon zehn Kastanien.",
+          "explain": "Denk dran: In der vollen Schachtel sind schon zehn Kastanien.",
           "model": "Ein Zehner und vier Einer. Zehn und vier sind vierzehn.",
           "key": "10 + 4",
           "at": 34.25
@@ -163,7 +163,7 @@
               "correct": true
             },
             {
-              "text": "bis zur 20",
+              "text": "➡️ bis zur 20",
               "say": "bis zur Zwanzig hüpfen",
               "correct": false
             },
@@ -235,7 +235,7 @@
       "subject": "mathe1",
       "src": "videos/verdoppeln.mp4",
       "poster": "videos/verdoppeln.jpg",
-      "duration": 72,
+      "duration": 73,
       "ready": true,
       "related": [
         "verdoppeln"
@@ -289,7 +289,7 @@
           "explain": "Fast! Teile zehn Kekse gerecht auf zwei Teller. Wie viele liegen dann auf jedem Teller?",
           "model": "Fünf für dich und fünf für mich. Die Hälfte von zehn ist fünf.",
           "key": "Hälfte von 10",
-          "at": 55.13
+          "at": 55.63
         },
         {
           "q": "Wann ist gerecht geteilt?",
@@ -313,7 +313,7 @@
           "explain": "Denk an Flo und Eule. Keiner soll traurig sein. Wie viele bekommt jeder?",
           "model": "Gerecht teilen heißt: Beide haben gleich viel.",
           "key": "gerecht teilen",
-          "at": 55.13
+          "at": 55.63
         },
         {
           "q": "Flo verdoppelt sechs. Wie viele sind das?",
@@ -337,7 +337,7 @@
           "explain": "Schau mal: Beim Verdoppeln kommen nicht nur eins oder zwei dazu. Es kommen gleich viele dazu.",
           "model": "Sechs und noch einmal sechs. Sechs und sechs sind zwölf.",
           "key": "Doppelte von 6",
-          "at": 27.96
+          "at": 28.46
         }
       ]
     },
@@ -461,7 +461,7 @@
       "subject": "mathe1",
       "src": "videos/geld.mp4",
       "poster": "videos/geld.jpg",
-      "duration": 91,
+      "duration": 94,
       "ready": true,
       "related": [
         "kaufladen"
@@ -539,7 +539,7 @@
           "explain": "Schau mal: Hast du alle drei Geldstücke gezählt? Auch den einen Euro?",
           "model": "Fünf plus zwei ist sieben. Plus eins ist acht. Zusammen acht Euro.",
           "key": "Summe",
-          "at": 55.96
+          "at": 56.38
         },
         {
           "q": "Ein Eis kostet zwei Euro. Ich gebe fünf Euro. Wie viel bekomme ich zurück?",
@@ -563,7 +563,7 @@
           "explain": "Zähl vom Preis weiter bis fünf. Wie viele Schritte sind das?",
           "model": "Von zwei bis fünf: drei, vier, fünf. Das sind drei Schritte. Ich bekomme drei Euro zurück.",
           "key": "Rückgeld",
-          "at": 69.21
+          "at": 70.25
         }
       ]
     },
@@ -574,7 +574,7 @@
       "subject": "deutsch1",
       "src": "videos/silben.mp4",
       "poster": "videos/silben.jpg",
-      "duration": 73,
+      "duration": 74,
       "ready": true,
       "related": [
         "silbenlesen"
@@ -610,7 +610,7 @@
           "q": "Welcher Buchstabe ist ein Silbenkönig?",
           "options": [
             {
-              "text": "M",
+              "text": "m",
               "say": "M",
               "correct": false
             },
@@ -625,10 +625,10 @@
               "correct": false
             }
           ],
-          "explain": "Schau mal: Silbenkönige sind Selbstlaute. Die kannst du lange singen.",
+          "explain": "Denk an die Tomate. Welche Buchstaben haben dort gelb geleuchtet?",
           "model": "Das a ist ein Selbstlaut. A, e, i, o und u sind Silbenkönige.",
           "key": "Selbstlaut",
-          "at": 25.71
+          "at": 25.67
         },
         {
           "q": "Ro, se. Welches Wort ist das?",
@@ -652,7 +652,7 @@
           "explain": "Fast! Sag die zwei Silben schnell hintereinander.",
           "model": "Ro, se. Zusammen: Rose.",
           "key": "Silben zusammenziehen",
-          "at": 33.42
+          "at": 33.38
         },
         {
           "q": "Wie liest Flo ein langes Wort?",
@@ -676,7 +676,7 @@
           "explain": "Denk an die Schokolade. Wie hat Flo das Wort gelesen?",
           "model": "Silbe für Silbe. Scho, ko, la, de. Dann das ganze Wort: Schokolade.",
           "key": "Lesestrategie",
-          "at": 58.08
+          "at": 58.04
         }
       ]
     },
@@ -741,7 +741,7 @@
           "explain": "Sprich das Wort ganz langsam. Was hörst du zuerst?",
           "model": "Fffisch. Ganz am Anfang hörst du fff. Den Laut schreibe ich mit F.",
           "key": "Anlaut",
-          "at": 30.71
+          "at": 65.04
         },
         {
           "q": "Wie viele Buchstaben braucht der Laut sch?",
@@ -800,7 +800,7 @@
       "subject": "deutsch1",
       "src": "videos/satz-zug.mp4",
       "poster": "videos/satz-zug.jpg",
-      "duration": 77,
+      "duration": 82,
       "ready": true,
       "related": [
         "satzbaumeister"
@@ -854,7 +854,7 @@
           "explain": "Schau mal, wo der Punkt steht. Er hängt ganz hinten im Zug.",
           "model": "Der Punkt steht im Schlusswagen. Er sagt: Hier ist der Satz zu Ende.",
           "key": "Punkt am Satzende",
-          "at": 24.38
+          "at": 25.29
         },
         {
           "q": "Wie heißt du? Das ist eine Frage. Was kommt in den Schlusswagen?",
@@ -876,9 +876,9 @@
             }
           ],
           "explain": "Hör mal genau hin. Bei einer Frage geht die Stimme hoch.",
-          "model": "Wie heißt du ist eine Frage. Hinten kommt ein Fragezeichen.",
+          "model": "Wie heißt du? Das ist eine Frage. Also kommt hinten ein Fragezeichen.",
           "key": "Fragezeichen",
-          "at": 42.75
+          "at": 47
         },
         {
           "q": "Welches Wort schreiben wir groß?",
@@ -889,7 +889,7 @@
               "correct": false
             },
             {
-              "text": "🐶 HUND",
+              "text": "HUND",
               "say": "Hund",
               "correct": true
             },
@@ -900,9 +900,9 @@
             }
           ],
           "explain": "Fast! Frag dich: Ist es ein Ding, ein Tier oder ein Mensch?",
-          "model": "Hund ist ein Tier. Namen für Tiere schreiben wir groß: Hund.",
+          "model": "Hund ist ein Tier. Namen für Tiere schreiben wir groß.",
           "key": "Namenwörter groß",
-          "at": 30.79
+          "at": 31.63
         }
       ]
     },
@@ -967,7 +967,7 @@
           "explain": "Die Autos kommen von der Seite. Dorthin müssen deine Augen schauen.",
           "model": "Ich schaue links, rechts, und nochmal links. Die nahen Autos kommen von links.",
           "key": "links rechts links",
-          "at": 33.08
+          "at": 34.38
         },
         {
           "q": "Ein Auto kommt zum Zebrastreifen. Wann gehst du los?",
@@ -991,7 +991,7 @@
           "explain": "Fast! Ein fahrendes Auto braucht Zeit zum Bremsen. Warte ab, was es macht.",
           "model": "Ich warte, bis das Auto ganz steht. Ich schaue dem Fahrer in die Augen. Dann gehe ich.",
           "key": "warten bis Auto steht",
-          "at": 47.71
+          "at": 49
         },
         {
           "q": "Morgens ist es noch dunkel. Was hilft dir?",
@@ -1012,10 +1012,10 @@
               "correct": false
             }
           ],
-          "explain": "Im Dunkeln müssen dich die Autofahrer gut sehen. Was leuchtet im Licht?",
+          "explain": "Im Dunkeln müssen dich die Autofahrer gut sehen. Was sehen sie im Licht der Autos gut?",
           "model": "Leuchtstreifen leuchten im Licht der Autos. Dann sieht mich der Fahrer.",
           "key": "Leuchtstreifen",
-          "at": 69.13
+          "at": 71.71
         }
       ]
     },
@@ -1043,7 +1043,7 @@
               "correct": true
             },
             {
-              "text": "😴 faul",
+              "text": "🦥 faul",
               "say": "Er ist faul.",
               "correct": false
             },
@@ -1068,7 +1068,7 @@
             },
             {
               "text": "🐞 Käfer",
-              "say": "Käfer und Würmer",
+              "say": "Käfer",
               "correct": true
             },
             {
@@ -1101,7 +1101,7 @@
               "correct": true
             }
           ],
-          "explain": "Schau mal: Wer hat im Herbst Nüsse versteckt?",
+          "explain": "Denk mal an den Vorrat im Versteck. Wer hat ihn im Herbst angelegt?",
           "model": "Das Eichhörnchen wacht auf und holt sich eine Nuss. Das heißt Winterruhe.",
           "key": "Winterruhe",
           "at": 55.5
@@ -1139,7 +1139,7 @@
       "subject": "sach1",
       "src": "videos/schwimmen-sinken.mp4",
       "poster": "videos/schwimmen-sinken.jpg",
-      "duration": 82,
+      "duration": 84,
       "ready": true,
       "related": [
         "schwimmen-sinken"
@@ -1217,7 +1217,7 @@
           "explain": "Schau mal auf das Material. Welches Material sinkt?",
           "model": "Der Schlüssel ist aus Metall. Metall sinkt. Holz und Kork schwimmen.",
           "key": "Material Metall",
-          "at": 66.67
+          "at": 67.63
         },
         {
           "q": "Was macht ein Forscher zuerst?",
@@ -1252,7 +1252,7 @@
       "subject": "sach1",
       "src": "videos/zaehne.mp4",
       "poster": "videos/zaehne.jpg",
-      "duration": 77,
+      "duration": 79,
       "ready": true,
       "related": [
         "koerperlabor"
@@ -1264,7 +1264,7 @@
           "q": "Kai ist ein Trick. Wofür steht das K?",
           "options": [
             {
-              "text": "Kauflächen",
+              "text": "🦷 Kauflächen",
               "say": "Kauflächen",
               "correct": true
             },
@@ -1303,10 +1303,10 @@
               "correct": false
             }
           ],
-          "explain": "Fast! Hin und her geht es oben auf den Kauflächen. Außen malt die Bürste etwas Rundes.",
+          "explain": "Fast! Hin und her geht es oben auf den Kauflächen. Schau noch mal, was die Bürste außen malt.",
           "model": "Ich beiße die Zähne zusammen. Dann male ich außen kleine Kreise.",
           "key": "A wie Außenflächen",
-          "at": 29.46
+          "at": 30.83
         },
         {
           "q": "Wie oft am Tag putzt du deine Zähne?",
@@ -1330,7 +1330,7 @@
           "explain": "Denk mal an den Morgen und an den Abend. Wann putzt du da?",
           "model": "Ich putze zweimal am Tag. Morgens und abends, immer zwei Minuten lang.",
           "key": "zweimal am Tag",
-          "at": 46.29
+          "at": 49.04
         },
         {
           "q": "Du hast Durst. Was ist gut für deine Zähne?",
@@ -1354,7 +1354,7 @@
           "explain": "Schau mal: Die Bakterien lieben Zucker. Welches Getränk hat gar keinen Zucker?",
           "model": "Wasser hat keinen Zucker. Wasser ist das beste Getränk für die Zähne.",
           "key": "Wasser trinken",
-          "at": 58.21
+          "at": 60.96
         }
       ]
     }

@@ -23,7 +23,9 @@ export const SilbenV: React.FC<VProps> = ({v}) => {
   const colors = [color(v.colors?.[0], C.syl1), color(v.colors?.[1], C.syl2)];
   return (
     <Stage>
-      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 10, marginTop: v.clap ? 70 : 0}}>
+      {/* Feste Lage (unabhängig von clap/count), damit "continue"-Beats nicht springen:
+          Klatsch-Hände ragen nach oben, Schilder hängen unten dran, ohne das Wort zu verschieben. */}
+      <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', marginTop: 44, position: 'relative'}}>
         <div style={{display: 'flex', alignItems: 'flex-end', gap}}>
           {v.picture && (
             <div style={{transform: `scale(${kPic})`, marginRight: 30 - gap, alignSelf: 'center'}}>
@@ -38,7 +40,7 @@ export const SilbenV: React.FC<VProps> = ({v}) => {
             const kc = v.clap ? b.sp(at) : 0;
             const clapScale = v.clap ? 1 + 0.25 * Math.max(0, 1 - (b.f - b.at(at)) / (0.3 * b.fps)) : 1;
             return (
-              <div key={i} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative'}}>
+              <div key={i} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', position: 'relative', paddingBottom: 40}}>
                 {v.clap && (
                   <div style={{position: 'absolute', top: -96, transform: `scale(${kc * clapScale})`, opacity: Math.min(1, kc) * (1 - km)}}>
                     <Emo e="👏" size={70} />
@@ -47,7 +49,7 @@ export const SilbenV: React.FC<VProps> = ({v}) => {
                 <div
                   style={{
                     fontFamily: FONT, fontWeight: 700, fontSize: fs, lineHeight: 1.1, color: km > 0.5 && !v.keepColors ? C.ink : col,
-                    transform: `translateY(${(1 - k) * 40}px)`, opacity: Math.min(1, k * 2), padding: '0 2px',
+                    transform: `translateY(${(1 - k) * 40}px)`, opacity: Math.min(1, k * 2), padding: `0 ${2 * (1 - km)}px`,
                   }}
                 >
                   {s.split('').map((ch, ci) => {
@@ -67,21 +69,22 @@ export const SilbenV: React.FC<VProps> = ({v}) => {
                     );
                   })}
                 </div>
-                <svg width={Math.max(60, s.length * fs * 0.55)} height={40} viewBox="0 0 100 40" preserveAspectRatio="none" style={{opacity: 1 - km}}>
+                {/* Bogen absolut: nimmt keine Breite ein (sonst bleiben nach dem Zusammenrücken Lücken im Wort) */}
+                <svg width={Math.max(60, s.length * fs * 0.55)} height={40} viewBox="0 0 100 40" preserveAspectRatio="none" style={{opacity: 1 - km, position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)'}}>
                   <path d="M6 6 Q50 62 94 6" stroke={col} strokeWidth={7} fill="none" strokeLinecap="round" pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - swing} vectorEffect="non-scaling-stroke" />
                 </svg>
               </div>
             );
           })}
         </div>
-        {mergeAt !== undefined && v.mergeText && (
-          <div style={{marginTop: 4, opacity: km, transform: `scale(${0.8 + 0.2 * km})`}}>
-            <Tag text={v.mergeText ?? word} size={58} color={b.accent} />
-          </div>
-        )}
-        {v.count && (
-          <div style={{marginTop: 6}}>
-            <Tag text={v.count} size={44} color={b.accent} k={b.sp(v.countAt ?? 0.75)} />
+        {((mergeAt !== undefined && v.mergeText) || v.count) && (
+          <div style={{position: 'absolute', top: '100%', marginTop: 4, display: 'flex', gap: 18, alignItems: 'center', whiteSpace: 'nowrap'}}>
+            {mergeAt !== undefined && v.mergeText && (
+              <div style={{opacity: km, transform: `scale(${0.8 + 0.2 * km})`}}>
+                <Tag text={v.mergeText ?? word} size={52} color={b.accent} />
+              </div>
+            )}
+            {v.count && <Tag text={v.count} size={44} color={b.accent} k={b.sp(v.countAt ?? 0.75)} />}
           </div>
         )}
       </div>

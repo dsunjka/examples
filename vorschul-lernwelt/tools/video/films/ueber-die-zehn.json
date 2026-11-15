@@ -100,7 +100,7 @@
      "model": "Acht, neun, zehn. Das sind zwei Hüpfer.",
      "key": "8 bis 10", "beat": 4},
     {"q": "Was macht Flo zuerst?",
-     "options": [{"text": "🌉 bis zur 10", "say": "bis zur Zehn hüpfen", "correct": true}, {"text": "bis zur 20", "say": "bis zur Zwanzig hüpfen", "correct": false}, {"text": "⬅️ rückwärts", "say": "rückwärts hüpfen", "correct": false}],
+     "options": [{"text": "🌉 bis zur 10", "say": "bis zur Zehn hüpfen", "correct": true}, {"text": "➡️ bis zur 20", "say": "bis zur Zwanzig hüpfen", "correct": false}, {"text": "⬅️ rückwärts", "say": "rückwärts hüpfen", "correct": false}],
      "explain": "Denk an die Brücke. Bei welcher Zahl steht sie?",
      "model": "Erst hüpft Flo bis zur Zehn. Dann hüpft er den Rest.",
      "key": "Erst bis 10", "beat": 11},

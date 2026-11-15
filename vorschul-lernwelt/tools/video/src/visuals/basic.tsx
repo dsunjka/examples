@@ -58,8 +58,9 @@ export const FloV: React.FC<VProps> = ({v}) => {
   const bubbleIsEmoji = typeof v.bubble === 'string' && !/[A-Za-zÄÖÜäöüß0-9]/.test(v.bubble);
   return (
     <Stage full>
-      <div style={{position: 'absolute', [side]: 70, bottom: 30, transform: `translateY(${(1 - kIn) * 300}px)`}}>
-        <Flo size={380} frame={b.f} fps={b.fps} talk={b.talk} emotion={v.emotion} gesture={v.gesture} flip={side === 'right'} />
+      {/* Mit Untertitel (v._caption, von FloExplainer gesetzt) steht Flo kleiner und höher, damit die Zeile ihn nicht verdeckt. */}
+      <div style={{position: 'absolute', [side]: v._caption ? 90 : 70, bottom: v._caption ? 104 : 30, transform: `translateY(${(1 - kIn) * 300}px)`}}>
+        <Flo size={v._caption ? 330 : 380} frame={b.f} fps={b.fps} talk={b.talk} emotion={v.emotion} gesture={v.gesture} flip={side === 'right'} />
       </div>
       {v.bubble && (
         <Bubble
@@ -67,19 +68,19 @@ export const FloV: React.FC<VProps> = ({v}) => {
           think={!!v.think}
           tail={side === 'left' ? 'left' : 'right'}
           size={bubbleIsEmoji ? 110 : v.bubble.length > 18 ? 46 : 56}
-          style={{[side]: 450, top: items.length ? 60 : 110, maxWidth: 430, transformOrigin: side === 'left' ? 'left bottom' : 'right bottom'}}
+          style={{[side]: 450, top: items.length ? 50 : v._caption ? 80 : 110, maxWidth: 430, transformOrigin: side === 'left' ? 'left bottom' : 'right bottom'}}
         >
           {bubbleIsEmoji ? <Emo e={v.bubble} size={110} /> : <Marked text={v.bubble} accent={b.accent} />}
         </Bubble>
       )}
       {items.length > 0 && (
-        <div style={{position: 'absolute', [side]: 450, top: v.bubble ? 290 : 160, display: 'flex', gap: 26}}>
+        <div style={{position: 'absolute', [side]: 450, top: v.bubble ? (v._caption ? 230 : 280) : 160, width: 494, display: 'flex', gap: items.length > 2 ? 14 : 26, justifyContent: side === 'left' ? 'flex-start' : 'flex-end'}}>
           {items.map((it, i) => {
             const k = b.sp(atOf(items.map((x) => x.at), i, 0.15, 0.7));
             return (
               <div key={i} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', transform: `scale(${k})`}}>
-                <Emo e={it.e} size={it.label ? 96 : 110} />
-                {it.label && <Tag text={it.label} size={28} style={{marginTop: 6}} />}
+                <Emo e={it.e} size={items.length > 2 ? 92 : it.label ? 100 : 110} />
+                {it.label && <Tag text={it.label} size={items.length > 2 || it.label.length > 10 ? 28 : 34} style={{marginTop: 6}} />}
               </div>
             );
           })}
@@ -203,18 +204,18 @@ type Side = {e?: string; n?: number; items?: string[]; label?: string; mark?: 'y
 const SideBox: React.FC<{s: Side; k: number; mirror?: boolean; idx: number}> = ({s, k, mirror, idx}) => {
   const b = useBeat();
   const list = s.items || (s.e ? Array.from({length: s.n ?? 1}, () => s.e as string) : []);
-  const size = list.length <= 1 ? 150 : list.length <= 3 ? 96 : list.length <= 6 ? 76 : 58;
+  const size = list.length <= 1 ? 150 : list.length <= 3 ? 96 : list.length <= 4 ? 76 : list.length <= 6 ? 70 : 54;
   const col = s.mark === 'yes' ? C.ok : s.mark === 'no' ? C.no : color(s.color, C.line);
   return (
-    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, width: 320}}>
+    <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14, width: 310}}>
       <Card
         style={{
-          width: 320, height: 260, display: 'flex', flexWrap: 'wrap', alignContent: 'center', justifyContent: 'center',
+          width: 310, height: 260, boxSizing: 'border-box', display: 'flex', flexWrap: 'wrap', alignContent: 'center', justifyContent: 'center',
           gap: 8, padding: 14, border: `5px solid ${col}`, position: 'relative',
           transform: `scale(${0.6 + 0.4 * k})`, opacity: Math.min(1, k * 1.5),
         }}
       >
-        {s.text && <div style={{fontSize: 76, fontWeight: 700}}>{s.text}</div>}
+        {s.text && <div style={{fontSize: s.text.length > 7 ? 54 : s.text.length > 5 ? 64 : 76, fontWeight: 700, whiteSpace: 'nowrap'}}>{s.text}</div>}
         {list.map((e, i) => {
           const ki = b.sp((s.at ?? 0) + i * 0.04);
           return <Emo key={i} e={e} size={size} style={{transform: `scale(${ki}) ${mirror ? 'scaleX(-1)' : ''}`}} />;
@@ -222,7 +223,7 @@ const SideBox: React.FC<{s: Side; k: number; mirror?: boolean; idx: number}> = (
         {s.mark && (
           <div
             style={{
-              position: 'absolute', right: -18, top: -18, width: 62, height: 62, borderRadius: 31,
+              position: 'absolute', right: -16, top: -16, width: 60, height: 60, borderRadius: 30,
               background: col, color: '#fff', fontSize: 42, fontWeight: 700,
               display: 'flex', alignItems: 'center', justifyContent: 'center', transform: `scale(${b.sp((s.at ?? 0) + 0.25)})`,
             }}
@@ -247,9 +248,9 @@ export const VergleichV: React.FC<VProps> = ({v}) => {
   const mirror = v.mid === 'mirror';
   return (
     <Stage>
-      <div style={{display: 'flex', alignItems: 'center', gap: 34}}>
+      <div style={{display: 'flex', alignItems: 'center', gap: 22}}>
         <SideBox s={{...left, at: lAt}} k={b.sp(lAt)} idx={0} />
-        <div style={{width: 64, display: 'flex', justifyContent: 'center', transform: `scale(${kM})`}}>
+        <div style={{minWidth: 64, display: 'flex', justifyContent: 'center', transform: `scale(${kM})`}}>
           {mirror ? (
             <div
               style={{
@@ -259,7 +260,7 @@ export const VergleichV: React.FC<VProps> = ({v}) => {
               }}
             />
           ) : (
-            <div style={{fontSize: 80, fontWeight: 700, color: b.accent, marginTop: -50}}>{v.mid ?? ''}</div>
+            <div style={{fontSize: String(v.mid ?? '').length > 2 ? 46 : 80, fontWeight: 700, color: b.accent, marginTop: -50, whiteSpace: 'nowrap'}}>{v.mid ?? ''}</div>
           )}
         </div>
         <SideBox s={{...right, at: rAt}} k={b.sp(rAt)} mirror={mirror} idx={1} />
