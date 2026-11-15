@@ -55,13 +55,13 @@ const HOOK = () => {
             const st = await page.evaluate(() => window.LT.test.state());
             if (st.ended) break;
             if (st.hasMark) {
-              // manchmal erst falsch tippen (Hilfe-/Fehlertexte), bis zu 2×
-              const wrongs = r % 2 === 0 ? Math.floor(Math.random() * 3) : 0;
+              // manchmal erst falsch tippen (Erklärung, Denkanstoß, Vormachen), bis zu 3×
+              const wrongs = r % 2 === 0 ? Math.floor(Math.random() * 4) : 0;
               for (let w = 0; w < wrongs; w++) {
                 await page.evaluate(() => {
                   const mark = document.querySelector('[data-test-correct]');
                   const box = mark && mark.parentElement;
-                  const cands = box ? Array.from(box.children).filter((n) => n !== mark && n.tagName === 'BUTTON' && !n.classList.contains('is-wrong')) : [];
+                  const cands = box ? Array.from(box.children).filter((n) => n !== mark && n.tagName === 'BUTTON' && !n.classList.contains('is-wrong') && !n.classList.contains('is-out')) : [];
                   if (cands.length) cands[Math.floor(Math.random() * cands.length)].click();
                 });
                 await page.waitForTimeout(120);
@@ -99,6 +99,7 @@ const HOOK = () => {
     say('Hurra! Du hast das Tagesabenteuer geschafft!');
     // Flos Reise und Forscherbuch
     if (LT.reise && LT.reise.speechTexts) LT.reise.speechTexts().forEach(say);
+    (LT.engine.STRETCH_SAY || []).forEach(say);
     if (LT.wissen && LT.wissen.bookTexts) LT.wissen.bookTexts().forEach(say);
   });
   await page.evaluate(() => { const b = document.querySelector('.splash .btn'); if (b) b.click(); });
