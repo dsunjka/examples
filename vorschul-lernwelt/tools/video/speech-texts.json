@@ -1,1 +1,834 @@
-{}
+{
+ "Schau mal, wie Flo ganz schnell Kastanien zählt!": [
+  "film-kraft-der-zehn"
+ ],
+ "Wie viele Kastanien passen in eine volle Zehner-Schachtel?": [
+  "film-kraft-der-zehn"
+ ],
+ "fünf": [
+  "film-kraft-der-zehn",
+  "film-ueber-die-zehn",
+  "film-verdoppeln"
+ ],
+ "zehn": [
+  "film-kraft-der-zehn"
+ ],
+ "zwanzig": [
+  "film-kraft-der-zehn",
+  "film-verdoppeln"
+ ],
+ "Schau mal auf den Namen: Zehner-Schachtel.": [
+  "film-kraft-der-zehn"
+ ],
+ "Fünf oben und fünf unten. Das sind zehn Kastanien.": [
+  "film-kraft-der-zehn"
+ ],
+ "Eine volle Schachtel und vier Kastanien. Wie viele sind das?": [
+  "film-kraft-der-zehn"
+ ],
+ "vierzehn": [
+  "film-kraft-der-zehn",
+  "film-ueber-die-zehn"
+ ],
+ "einundvierzig": [
+  "film-kraft-der-zehn"
+ ],
+ "Fast! Denk dran: In der vollen Schachtel sind schon zehn Kastanien.": [
+  "film-kraft-der-zehn"
+ ],
+ "Ein Zehner und vier Einer. Zehn und vier sind vierzehn.": [
+  "film-kraft-der-zehn"
+ ],
+ "Wie viele Einer hat die Zahl fünfzehn?": [
+  "film-kraft-der-zehn"
+ ],
+ "eins": [
+  "film-kraft-der-zehn",
+  "film-ueber-die-zehn"
+ ],
+ "fünfzehn": [
+  "film-kraft-der-zehn"
+ ],
+ "Schau mal: Fünfzehn ist ein voller Zehner und noch ein paar Kastanien. Wie viele liegen übrig?": [
+  "film-kraft-der-zehn"
+ ],
+ "Fünfzehn sind ein Zehner und fünf Einer. Also fünf Einer.": [
+  "film-kraft-der-zehn"
+ ],
+ "Wie schreibt man siebzehn?": [
+  "film-kraft-der-zehn"
+ ],
+ "erst die Eins, dann die Sieben": [
+  "film-kraft-der-zehn"
+ ],
+ "erst die Sieben, dann die Eins": [
+  "film-kraft-der-zehn"
+ ],
+ "nur die Sieben": [
+  "film-kraft-der-zehn"
+ ],
+ "Hör genau hin: sieben, zehn. Wir sagen zuerst die Sieben. Aber was schreiben wir zuerst?": [
+  "film-kraft-der-zehn"
+ ],
+ "Siebzehn ist ein Zehner und sieben Einer. Erst die Eins für den Zehner, dann die Sieben.": [
+  "film-kraft-der-zehn"
+ ],
+ "Schau mal, wie Flo über die Zehn hüpft!": [
+  "film-ueber-die-zehn"
+ ],
+ "Flo steht auf der Acht. Wie viele Hüpfer sind es bis zur Zehn?": [
+  "film-ueber-die-zehn"
+ ],
+ "zwei": [
+  "film-ueber-die-zehn",
+  "film-verdoppeln",
+  "film-silben",
+  "film-wort-schreiben"
+ ],
+ "drei": [
+  "film-ueber-die-zehn",
+  "film-silben",
+  "film-wort-schreiben"
+ ],
+ "Schau mal: Die Acht zählt nicht mit. Zähl nur die Hüpfer bis zur Brücke.": [
+  "film-ueber-die-zehn"
+ ],
+ "Acht, neun, zehn. Das sind zwei Hüpfer.": [
+  "film-ueber-die-zehn"
+ ],
+ "Was macht Flo zuerst?": [
+  "film-ueber-die-zehn"
+ ],
+ "bis zur Zehn hüpfen": [
+  "film-ueber-die-zehn"
+ ],
+ "bis zur Zwanzig hüpfen": [
+  "film-ueber-die-zehn"
+ ],
+ "rückwärts hüpfen": [
+  "film-ueber-die-zehn"
+ ],
+ "Denk an die Brücke. Bei welcher Zahl steht sie?": [
+  "film-ueber-die-zehn"
+ ],
+ "Erst hüpft Flo bis zur Zehn. Dann hüpft er den Rest.": [
+  "film-ueber-die-zehn"
+ ],
+ "Neun plus vier. Wie viel ist das?": [
+  "film-ueber-die-zehn"
+ ],
+ "zwölf": [
+  "film-ueber-die-zehn",
+  "film-verdoppeln"
+ ],
+ "dreizehn": [
+  "film-ueber-die-zehn"
+ ],
+ "Fast! Von neun bis zur Zehn ist es nur ein Hüpfer. Wie viele fehlen dann noch?": [
+  "film-ueber-die-zehn"
+ ],
+ "Neun plus eins ist zehn. Dann noch drei. Das sind dreizehn.": [
+  "film-ueber-die-zehn"
+ ],
+ "Sieben plus fünf. Flo hüpft erst bis zur Zehn. Wie viele Hüpfer fehlen dann noch?": [
+  "film-ueber-die-zehn"
+ ],
+ "Schau mal: Bis zur Zehn hat Flo schon ein paar Hüpfer gemacht. Die fehlen nicht mehr.": [
+  "film-ueber-die-zehn"
+ ],
+ "Sieben plus drei ist zehn. Fünf Hüpfer, drei sind geschafft. Es fehlen noch zwei.": [
+  "film-ueber-die-zehn"
+ ],
+ "Schau mal, Flo hat einen Zauberspiegel!": [
+  "film-verdoppeln"
+ ],
+ "Was ist das Doppelte von vier?": [
+  "film-verdoppeln"
+ ],
+ "sechs": [
+  "film-verdoppeln"
+ ],
+ "acht": [
+  "film-verdoppeln"
+ ],
+ "Schau mal in den Spiegel. Beim Verdoppeln kommen gleich viele dazu, nicht nur zwei.": [
+  "film-verdoppeln"
+ ],
+ "Vier und noch einmal vier. Vier und vier sind acht.": [
+  "film-verdoppeln"
+ ],
+ "Was ist die Hälfte von zehn?": [
+  "film-verdoppeln"
+ ],
+ "Fast! Teile zehn Kekse gerecht auf zwei Teller. Wie viele liegen dann auf jedem Teller?": [
+  "film-verdoppeln"
+ ],
+ "Fünf für dich und fünf für mich. Die Hälfte von zehn ist fünf.": [
+  "film-verdoppeln"
+ ],
+ "Wann ist gerecht geteilt?": [
+  "film-verdoppeln"
+ ],
+ "Beide haben gleich viel.": [
+  "film-verdoppeln"
+ ],
+ "Einer hat mehr.": [
+  "film-verdoppeln"
+ ],
+ "Einer hat nichts.": [
+  "film-verdoppeln"
+ ],
+ "Denk an Flo und Eule. Keiner soll traurig sein. Wie viele bekommt jeder?": [
+  "film-verdoppeln"
+ ],
+ "Gerecht teilen heißt: Beide haben gleich viel.": [
+  "film-verdoppeln"
+ ],
+ "Flo verdoppelt sechs. Wie viele sind das?": [
+  "film-verdoppeln"
+ ],
+ "sieben": [
+  "film-verdoppeln"
+ ],
+ "Schau mal: Beim Verdoppeln kommen nicht nur eins oder zwei dazu. Es kommen gleich viele dazu.": [
+  "film-verdoppeln"
+ ],
+ "Sechs und noch einmal sechs. Sechs und sechs sind zwölf.": [
+  "film-verdoppeln"
+ ],
+ "Schau mal, Flo lernt die Uhr lesen!": [
+  "film-uhrzeit"
+ ],
+ "Welcher Zeiger zeigt die Stunde?": [
+  "film-uhrzeit"
+ ],
+ "der kurze Zeiger": [
+  "film-uhrzeit"
+ ],
+ "der lange Zeiger": [
+  "film-uhrzeit"
+ ],
+ "beide Zeiger": [
+  "film-uhrzeit"
+ ],
+ "Schau mal: Der lange Zeiger läuft schnell herum. Er zeigt die Minuten.": [
+  "film-uhrzeit"
+ ],
+ "Der kurze Zeiger zeigt die Stunde. Der lange zeigt die Minuten.": [
+  "film-uhrzeit"
+ ],
+ "Der lange Zeiger steht oben auf der Zwölf. Der kurze zeigt auf die Neun. Wie spät ist es?": [
+  "film-uhrzeit"
+ ],
+ "halb neun": [
+  "film-uhrzeit"
+ ],
+ "neun Uhr": [
+  "film-uhrzeit"
+ ],
+ "zwölf Uhr": [
+  "film-uhrzeit"
+ ],
+ "Denk daran: Der kurze Zeiger sagt die Stunde. Und steht der lange oben, gibt es kein halb.": [
+  "film-uhrzeit"
+ ],
+ "Langer Zeiger oben heißt volle Stunde. Der kurze zeigt auf die Neun. Es ist neun Uhr.": [
+  "film-uhrzeit"
+ ],
+ "Der lange Zeiger steht unten auf der Sechs. Der kurze steht zwischen vier und fünf. Wie spät ist es?": [
+  "film-uhrzeit"
+ ],
+ "halb fünf": [
+  "film-uhrzeit"
+ ],
+ "halb vier": [
+  "film-uhrzeit"
+ ],
+ "sechs Uhr": [
+  "film-uhrzeit"
+ ],
+ "Fast! Halb heißt: auf halbem Weg zur nächsten Stunde. Wohin ist der kurze Zeiger unterwegs?": [
+  "film-uhrzeit"
+ ],
+ "Der lange Zeiger steht unten, also ist es halb. Der kurze ist auf dem Weg zur Fünf. Es ist halb fünf.": [
+  "film-uhrzeit"
+ ],
+ "Es ist eine volle Stunde. Wohin zeigt der lange Zeiger?": [
+  "film-uhrzeit"
+ ],
+ "nach oben zur Zwölf": [
+  "film-uhrzeit"
+ ],
+ "nach unten zur Sechs": [
+  "film-uhrzeit"
+ ],
+ "zur Drei": [
+  "film-uhrzeit"
+ ],
+ "Denk an acht Uhr, als die Schule anfing. Wo stand da der lange Zeiger?": [
+  "film-uhrzeit"
+ ],
+ "Bei einer vollen Stunde zeigt der lange Zeiger nach oben auf die Zwölf.": [
+  "film-uhrzeit"
+ ],
+ "Schau mal, Flo geht mit seinem Geldbeutel einkaufen!": [
+  "film-geld"
+ ],
+ "Welche Münze ist am meisten wert?": [
+  "film-geld"
+ ],
+ "fünfzig Cent": [
+  "film-geld"
+ ],
+ "zwei Euro": [
+  "film-geld"
+ ],
+ "ein Euro": [
+  "film-geld"
+ ],
+ "Schau mal: Nicht die Größe zählt. Was steht auf der Münze?": [
+  "film-geld"
+ ],
+ "Zwei Euro sind mehr als ein Euro. Und ein Euro ist mehr als fünfzig Cent.": [
+  "film-geld"
+ ],
+ "Der Ball kostet sieben Euro. Welches Geld passt genau?": [
+  "film-geld"
+ ],
+ "fünf Euro und zwei Euro": [
+  "film-geld"
+ ],
+ "fünf Euro und ein Euro": [
+  "film-geld"
+ ],
+ "zwei Euro und zwei Euro": [
+  "film-geld"
+ ],
+ "Fast! Zähl das Geld zusammen. Kommst du genau bis sieben?": [
+  "film-geld"
+ ],
+ "Fünf Euro plus zwei Euro ist sieben Euro. Das passt genau.": [
+  "film-geld"
+ ],
+ "Fünf Euro, zwei Euro und ein Euro. Wie viel ist das zusammen?": [
+  "film-geld"
+ ],
+ "sieben Euro": [
+  "film-geld"
+ ],
+ "acht Euro": [
+  "film-geld"
+ ],
+ "drei Euro": [
+  "film-geld"
+ ],
+ "Schau mal: Hast du alle drei Geldstücke gezählt? Auch den einen Euro?": [
+  "film-geld"
+ ],
+ "Fünf plus zwei ist sieben. Plus eins ist acht. Zusammen acht Euro.": [
+  "film-geld"
+ ],
+ "Ein Eis kostet zwei Euro. Ich gebe fünf Euro. Wie viel bekomme ich zurück?": [
+  "film-geld"
+ ],
+ "Zähl vom Preis weiter bis fünf. Wie viele Schritte sind das?": [
+  "film-geld"
+ ],
+ "Von zwei bis fünf: drei, vier, fünf. Das sind drei Schritte. Ich bekomme drei Euro zurück.": [
+  "film-geld"
+ ],
+ "Schau mal, Flo findet ein ganz langes Wort!": [
+  "film-silben"
+ ],
+ "Wie viele Silben hat das Wort Sonne?": [
+  "film-silben"
+ ],
+ "eine": [
+  "film-silben"
+ ],
+ "Klatsch das Wort ganz langsam. Wie oft klatschst du?": [
+  "film-silben"
+ ],
+ "Son, ne. Zwei Mal geklatscht. Zwei Silben.": [
+  "film-silben"
+ ],
+ "Welcher Buchstabe ist ein Silbenkönig?": [
+  "film-silben"
+ ],
+ "M": [
+  "film-silben"
+ ],
+ "a": [
+  "film-silben"
+ ],
+ "t": [
+  "film-silben"
+ ],
+ "Schau mal: Silbenkönige sind Selbstlaute. Die kannst du lange singen.": [
+  "film-silben"
+ ],
+ "Das a ist ein Selbstlaut. A, e, i, o und u sind Silbenkönige.": [
+  "film-silben"
+ ],
+ "Ro, se. Welches Wort ist das?": [
+  "film-silben"
+ ],
+ "Rose": [
+  "film-silben"
+ ],
+ "Nase": [
+  "film-silben"
+ ],
+ "Rabe": [
+  "film-silben"
+ ],
+ "Fast! Sag die zwei Silben schnell hintereinander.": [
+  "film-silben"
+ ],
+ "Ro, se. Zusammen: Rose.": [
+  "film-silben"
+ ],
+ "Wie liest Flo ein langes Wort?": [
+  "film-silben"
+ ],
+ "Silbe für Silbe": [
+  "film-silben"
+ ],
+ "ganz schnell auf einmal": [
+  "film-silben"
+ ],
+ "gar nicht": [
+  "film-silben",
+  "film-wort-schreiben",
+  "film-zaehne"
+ ],
+ "Denk an die Schokolade. Wie hat Flo das Wort gelesen?": [
+  "film-silben"
+ ],
+ "Silbe für Silbe. Scho, ko, la, de. Dann das ganze Wort: Schokolade.": [
+  "film-silben"
+ ],
+ "Schau mal, Flo will ein Wort schreiben!": [
+  "film-wort-schreiben"
+ ],
+ "Wie spricht Flo ein Wort, bevor er es schreibt?": [
+  "film-wort-schreiben"
+ ],
+ "ganz schnell": [
+  "film-wort-schreiben"
+ ],
+ "ganz langsam": [
+  "film-wort-schreiben"
+ ],
+ "Denk an die Schnecke. Wie hat Flo Maus gesprochen?": [
+  "film-wort-schreiben"
+ ],
+ "Ganz langsam, wie eine Schnecke. Mmm, au, sss. So hört man jeden Laut.": [
+  "film-wort-schreiben"
+ ],
+ "Welchen Laut hörst du ganz am Anfang von Fisch?": [
+  "film-wort-schreiben"
+ ],
+ "mmm": [
+  "film-wort-schreiben"
+ ],
+ "fff": [
+  "film-wort-schreiben"
+ ],
+ "aaa": [
+  "film-wort-schreiben"
+ ],
+ "Sprich das Wort ganz langsam. Was hörst du zuerst?": [
+  "film-wort-schreiben"
+ ],
+ "Fffisch. Ganz am Anfang hörst du fff. Den Laut schreibe ich mit F.": [
+  "film-wort-schreiben"
+ ],
+ "Wie viele Buchstaben braucht der Laut sch?": [
+  "film-wort-schreiben"
+ ],
+ "einen": [
+  "film-wort-schreiben"
+ ],
+ "Schau mal genau hin. Ein Laut kann aus mehreren Buchstaben bestehen.": [
+  "film-wort-schreiben"
+ ],
+ "S, c, h. Drei Buchstaben, aber nur ein Laut: sch, wie bei Schaf.": [
+  "film-wort-schreiben"
+ ],
+ "Wie viele Laute hörst du bei Eis?": [
+  "film-wort-schreiben"
+ ],
+ "Sprich ganz langsam und zähl mit den Fingern. Denk an das au bei Maus.": [
+  "film-wort-schreiben"
+ ],
+ "Ei, sss. Zwei Laute. Das ei schreibe ich mit zwei Buchstaben.": [
+  "film-wort-schreiben"
+ ],
+ "Schau mal, Flos Satz-Zug fährt noch nicht richtig!": [
+  "film-satz-zug"
+ ],
+ "Wie beginnt ein Satz?": [
+  "film-satz-zug"
+ ],
+ "mit einem großen Buchstaben": [
+  "film-satz-zug"
+ ],
+ "mit einem Punkt": [
+  "film-satz-zug"
+ ],
+ "mit einem kleinen Buchstaben": [
+  "film-satz-zug"
+ ],
+ "Schau mal auf die Lok ganz vorne. Wie sieht der erste Buchstabe aus?": [
+  "film-satz-zug"
+ ],
+ "Ein Satz beginnt immer mit einem großen Buchstaben. Wie die Lok vorne im Zug.": [
+  "film-satz-zug"
+ ],
+ "Was sagt der Punkt am Ende?": [
+  "film-satz-zug"
+ ],
+ "Hier ist der Satz zu Ende.": [
+  "film-satz-zug"
+ ],
+ "Hier fängt der Satz an.": [
+  "film-satz-zug"
+ ],
+ "Das ist eine Frage.": [
+  "film-satz-zug"
+ ],
+ "Schau mal, wo der Punkt steht. Er hängt ganz hinten im Zug.": [
+  "film-satz-zug"
+ ],
+ "Der Punkt steht im Schlusswagen. Er sagt: Hier ist der Satz zu Ende.": [
+  "film-satz-zug"
+ ],
+ "Wie heißt du? Das ist eine Frage. Was kommt in den Schlusswagen?": [
+  "film-satz-zug"
+ ],
+ "ein Punkt": [
+  "film-satz-zug"
+ ],
+ "ein Fragezeichen": [
+  "film-satz-zug"
+ ],
+ "gar nichts": [
+  "film-satz-zug"
+ ],
+ "Hör mal genau hin. Bei einer Frage geht die Stimme hoch.": [
+  "film-satz-zug"
+ ],
+ "Wie heißt du ist eine Frage. Hinten kommt ein Fragezeichen.": [
+  "film-satz-zug"
+ ],
+ "Welches Wort schreiben wir groß?": [
+  "film-satz-zug"
+ ],
+ "spielt": [
+  "film-satz-zug"
+ ],
+ "Hund": [
+  "film-satz-zug"
+ ],
+ "schnell": [
+  "film-satz-zug"
+ ],
+ "Fast! Frag dich: Ist es ein Ding, ein Tier oder ein Mensch?": [
+  "film-satz-zug"
+ ],
+ "Hund ist ein Tier. Namen für Tiere schreiben wir groß: Hund.": [
+  "film-satz-zug"
+ ],
+ "Schau mal, Flo geht zur Schule. Wie kommt er sicher über die Straße?": [
+  "film-schulweg"
+ ],
+ "Die Ampel ist rot. Es kommt kein Auto. Was tust du?": [
+  "film-schulweg"
+ ],
+ "gehen": [
+  "film-schulweg"
+ ],
+ "warten": [
+  "film-schulweg"
+ ],
+ "schnell rennen": [
+  "film-schulweg"
+ ],
+ "Schau mal auf die Ampel. Was sagt uns Rot? Das gilt auch ohne Auto.": [
+  "film-schulweg"
+ ],
+ "Rot heißt stehen bleiben. Ich warte, bis die Ampel grün ist.": [
+  "film-schulweg"
+ ],
+ "Du stehst am Zebrastreifen. Wohin schaust du?": [
+  "film-schulweg"
+ ],
+ "links, rechts, und nochmal links": [
+  "film-schulweg"
+ ],
+ "nach oben": [
+  "film-schulweg"
+ ],
+ "auf den Boden": [
+  "film-schulweg"
+ ],
+ "Die Autos kommen von der Seite. Dorthin müssen deine Augen schauen.": [
+  "film-schulweg"
+ ],
+ "Ich schaue links, rechts, und nochmal links. Die nahen Autos kommen von links.": [
+  "film-schulweg"
+ ],
+ "Ein Auto kommt zum Zebrastreifen. Wann gehst du los?": [
+  "film-schulweg"
+ ],
+ "sofort": [
+  "film-schulweg"
+ ],
+ "wenn das Auto ganz steht": [
+  "film-schulweg"
+ ],
+ "wenn das Auto noch fährt": [
+  "film-schulweg"
+ ],
+ "Fast! Ein fahrendes Auto braucht Zeit zum Bremsen. Warte ab, was es macht.": [
+  "film-schulweg"
+ ],
+ "Ich warte, bis das Auto ganz steht. Ich schaue dem Fahrer in die Augen. Dann gehe ich.": [
+  "film-schulweg"
+ ],
+ "Morgens ist es noch dunkel. Was hilft dir?": [
+  "film-schulweg"
+ ],
+ "eine schwarze Jacke": [
+  "film-schulweg"
+ ],
+ "Leuchtstreifen": [
+  "film-schulweg"
+ ],
+ "eine Mütze": [
+  "film-schulweg"
+ ],
+ "Im Dunkeln müssen dich die Autofahrer gut sehen. Was leuchtet im Licht?": [
+  "film-schulweg"
+ ],
+ "Leuchtstreifen leuchten im Licht der Autos. Dann sieht mich der Fahrer.": [
+  "film-schulweg"
+ ],
+ "Schau mal, Flo sucht seinen Freund Igel!": [
+  "film-igel-winter"
+ ],
+ "Warum schläft der Igel im Winter?": [
+  "film-igel-winter"
+ ],
+ "Er findet kein Futter.": [
+  "film-igel-winter"
+ ],
+ "Er ist faul.": [
+  "film-igel-winter"
+ ],
+ "Es ist zu hell.": [
+  "film-igel-winter"
+ ],
+ "Schau mal, was der Igel frisst. Gibt es das im Winter?": [
+  "film-igel-winter"
+ ],
+ "Im Winter verstecken sich Käfer und Würmer. Der Igel findet kein Futter. Darum schläft er.": [
+  "film-igel-winter"
+ ],
+ "Was frisst der Igel am liebsten?": [
+  "film-igel-winter"
+ ],
+ "Äpfel": [
+  "film-igel-winter"
+ ],
+ "Käfer und Würmer": [
+  "film-igel-winter"
+ ],
+ "Nüsse": [
+  "film-igel-winter"
+ ],
+ "Denk mal an den Sommer. Was krabbelt da auf dem Boden?": [
+  "film-igel-winter"
+ ],
+ "Der Igel frisst Käfer, Würmer und Schnecken.": [
+  "film-igel-winter"
+ ],
+ "Wer wacht im Winter auf und frisst?": [
+  "film-igel-winter"
+ ],
+ "der Igel": [
+  "film-igel-winter"
+ ],
+ "der Frosch": [
+  "film-igel-winter"
+ ],
+ "das Eichhörnchen": [
+  "film-igel-winter"
+ ],
+ "Schau mal: Wer hat im Herbst Nüsse versteckt?": [
+  "film-igel-winter"
+ ],
+ "Das Eichhörnchen wacht auf und holt sich eine Nuss. Das heißt Winterruhe.": [
+  "film-igel-winter"
+ ],
+ "Was ist ein gutes Igel-Hotel?": [
+  "film-igel-winter"
+ ],
+ "ein Laubhaufen": [
+  "film-igel-winter"
+ ],
+ "eine Pfütze": [
+  "film-igel-winter"
+ ],
+ "die Straße": [
+  "film-igel-winter"
+ ],
+ "Der Igel möchte es trocken und gemütlich. Wo kann er sich einkuscheln?": [
+  "film-igel-winter"
+ ],
+ "Ein Laubhaufen ist trocken und warm. Darin schläft der Igel gut.": [
+  "film-igel-winter"
+ ],
+ "Schau mal, Flo forscht in der Badewanne!": [
+  "film-schwimmen-sinken"
+ ],
+ "Was macht der Korken im Wasser?": [
+  "film-schwimmen-sinken"
+ ],
+ "Er schwimmt.": [
+  "film-schwimmen-sinken"
+ ],
+ "Er sinkt.": [
+  "film-schwimmen-sinken"
+ ],
+ "Er schmilzt.": [
+  "film-schwimmen-sinken"
+ ],
+ "Denk an den ersten Versuch. Wo blieb der Korken?": [
+  "film-schwimmen-sinken"
+ ],
+ "Der Korken bleibt oben auf dem Wasser. Er schwimmt.": [
+  "film-schwimmen-sinken"
+ ],
+ "Ein riesiger Baumstamm kommt ins Wasser. Was passiert?": [
+  "film-schwimmen-sinken"
+ ],
+ "Er geht kaputt.": [
+  "film-schwimmen-sinken"
+ ],
+ "Groß und schwer ist nicht der Grund. Woraus ist der Baumstamm gemacht?": [
+  "film-schwimmen-sinken"
+ ],
+ "Der Baumstamm ist aus Holz. Holz schwimmt. Also schwimmt auch der große Stamm.": [
+  "film-schwimmen-sinken"
+ ],
+ "Was sinkt im Wasser?": [
+  "film-schwimmen-sinken"
+ ],
+ "der Bleistift": [
+  "film-schwimmen-sinken"
+ ],
+ "der Schlüssel": [
+  "film-schwimmen-sinken"
+ ],
+ "der Korken": [
+  "film-schwimmen-sinken"
+ ],
+ "Schau mal auf das Material. Welches Material sinkt?": [
+  "film-schwimmen-sinken"
+ ],
+ "Der Schlüssel ist aus Metall. Metall sinkt. Holz und Kork schwimmen.": [
+  "film-schwimmen-sinken"
+ ],
+ "Was macht ein Forscher zuerst?": [
+  "film-schwimmen-sinken"
+ ],
+ "vermuten": [
+  "film-schwimmen-sinken"
+ ],
+ "aufräumen": [
+  "film-schwimmen-sinken"
+ ],
+ "weglaufen": [
+  "film-schwimmen-sinken"
+ ],
+ "Bevor Flo etwas ins Wasser legt, überlegt er. Wie heißt das?": [
+  "film-schwimmen-sinken"
+ ],
+ "Erst vermuten, dann ausprobieren, dann genau schauen.": [
+  "film-schwimmen-sinken"
+ ],
+ "Schau mal, Flo putzt Zähne. Kennst du den Trick mit Kai?": [
+  "film-zaehne"
+ ],
+ "Kai ist ein Trick. Wofür steht das K?": [
+  "film-zaehne"
+ ],
+ "Kauflächen": [
+  "film-zaehne"
+ ],
+ "Kreise": [
+  "film-zaehne"
+ ],
+ "Kopf": [
+  "film-zaehne"
+ ],
+ "Schau mal: Jeder Buchstabe ist eine Stelle am Zahn. Mit welcher Stelle beißt du zu?": [
+  "film-zaehne"
+ ],
+ "K wie Kauflächen. Damit kauen wir. Da schrubbe ich hin und her.": [
+  "film-zaehne"
+ ],
+ "Wie putzt du die Außenflächen?": [
+  "film-zaehne"
+ ],
+ "hin und her": [
+  "film-zaehne"
+ ],
+ "kleine Kreise": [
+  "film-zaehne"
+ ],
+ "Fast! Hin und her geht es oben auf den Kauflächen. Außen malt die Bürste etwas Rundes.": [
+  "film-zaehne"
+ ],
+ "Ich beiße die Zähne zusammen. Dann male ich außen kleine Kreise.": [
+  "film-zaehne"
+ ],
+ "Wie oft am Tag putzt du deine Zähne?": [
+  "film-zaehne"
+ ],
+ "einmal am Tag": [
+  "film-zaehne"
+ ],
+ "zweimal am Tag": [
+  "film-zaehne"
+ ],
+ "nur am Sonntag": [
+  "film-zaehne"
+ ],
+ "Denk mal an den Morgen und an den Abend. Wann putzt du da?": [
+  "film-zaehne"
+ ],
+ "Ich putze zweimal am Tag. Morgens und abends, immer zwei Minuten lang.": [
+  "film-zaehne"
+ ],
+ "Du hast Durst. Was ist gut für deine Zähne?": [
+  "film-zaehne"
+ ],
+ "Limo": [
+  "film-zaehne"
+ ],
+ "Wasser": [
+  "film-zaehne"
+ ],
+ "Saft": [
+  "film-zaehne"
+ ],
+ "Schau mal: Die Bakterien lieben Zucker. Welches Getränk hat gar keinen Zucker?": [
+  "film-zaehne"
+ ],
+ "Wasser hat keinen Zucker. Wasser ist das beste Getränk für die Zähne.": [
+  "film-zaehne"
+ ]
+}
