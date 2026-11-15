@@ -71,7 +71,7 @@ export const SilbenV: React.FC<VProps> = ({v}) => {
                 </div>
                 {/* Bogen absolut: nimmt keine Breite ein (sonst bleiben nach dem Zusammenrücken Lücken im Wort) */}
                 <svg width={Math.max(60, s.length * fs * 0.55)} height={40} viewBox="0 0 100 40" preserveAspectRatio="none" style={{opacity: 1 - km, position: 'absolute', bottom: 0, left: '50%', transform: 'translateX(-50%)'}}>
-                  <path d="M6 6 Q50 62 94 6" stroke={col} strokeWidth={7} fill="none" strokeLinecap="round" pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - swing} vectorEffect="non-scaling-stroke" />
+                  <path d="M6 6 Q50 62 94 6" stroke={col} strokeWidth={7} fill="none" strokeLinecap="round" opacity={swing > 0.02 ? 1 : 0} pathLength={1} strokeDasharray="1 1" strokeDashoffset={1 - swing} vectorEffect="non-scaling-stroke" />
                 </svg>
               </div>
             );
