@@ -913,7 +913,7 @@
       "subject": "sach1",
       "src": "videos/schulweg.mp4",
       "poster": "videos/schulweg.jpg",
-      "duration": 96,
+      "duration": 99,
       "ready": true,
       "related": [
         "schulweg"
