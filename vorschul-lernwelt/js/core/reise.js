@@ -13,9 +13,22 @@
    - Kapitel-Einleitung und Schatzkisten-Geschichte geben einen roten Faden
      (narratives Lernen) und belohnen mit einem Bonus-Sticker.
 
+   Persönlicher Teil – „Flos Tipp“ (bis zu drei freiwillige Extra-Stationen,
+   oben auf dem Reise-Bildschirm, aus den Daten des Kindes berechnet):
+   - Wiederholen: gespieltes Spiel mit den meisten fälligen Inhalten (≥ 2,
+     verteiltes Wiederholen, siehe LT.progress.itemSummary),
+   - Üben: gespieltes Spiel aus dem schwächsten Bereich (Status 'practice'
+     bzw. geringste Trefferquote), auf der aktuellen Stufe des Kindes,
+   - Stärke: Erfolgsspiel (Status 'solid' bzw. hohe Trefferquote) für ein
+     sicheres Erfolgserlebnis.
+   Die Auswahl bleibt für den Tag stabil, blockiert die Reise nie und gibt
+   nach der Runde ganz normal Sterne. Vor neuen Kapitel-Stationen gibt es
+   bewusst nichts zusätzlich: Das Aufwärmen mit Bekanntem macht die Engine.
+
    Fehlende Spiele (z. B. noch nicht vorhandene Forscherwelt-Reisen) werden
    einfach übersprungen. Gespeichert wird in LT.store('reise'):
-     { done: { 'spiel@stufe': true }, chests: { kapitelId: true }, intros: { kapitelId: true } }
+     { done: { 'spiel@stufe': true }, chests: { kapitelId: true }, intros: { kapitelId: true },
+       tips: { date, picks: { art: spielId }, done: { art: true }, told: { art: true }, hello } }
 
    ALLE gesprochenen Sätze sind feste Texte (vorab aufgenommene Stimme).
    ========================================================================== */
@@ -150,7 +163,20 @@
     reveal: 'Schau mal, ein neuer Ort ist aufgetaucht!',
     finished: 'Du hast die ganze Reise geschafft! Du kannst jede Station nochmal spielen.',
     replay: 'Das hast du schon geschafft. Wir spielen es gerne nochmal!',
+    // Flos Tipp (persönliche Extra-Stationen)
+    tipsHello: 'Oben habe ich heute Extra-Tipps für dich. Tippe darauf, wenn du magst.',
+    tipsHead: 'Das sind meine Tipps für dich. Du kannst sie spielen, wenn du magst. Die Reise geht auch ohne sie weiter.',
+    tipReview: 'Hier üben wir etwas, das du schon kennst, damit du es nicht vergisst.',
+    tipPractice: 'Hier üben wir noch ein bisschen. Mit jedem Üben wird es leichter.',
+    tipStrength: 'Das kannst du schon richtig gut! Zeig mir, wie toll du das machst.',
+    tipDone: 'Diesen Tipp hast du heute schon gespielt. Wir spielen ihn gerne nochmal!',
+    tipThanks: 'Toll, du hast meinen Tipp gespielt! Weiter geht unsere Reise.',
   };
+  const TIP_KINDS = [
+    { kind: 'review', badge: '🔁', label: 'Wiederholen', say: 'tipReview', color: '#2f9e5f' },
+    { kind: 'practice', badge: '💪', label: 'Üben', say: 'tipPractice', color: '#1a8fc4' },
+    { kind: 'strength', badge: '⭐', label: 'Stärke', say: 'tipStrength', color: '#e0a100' },
+  ];
 
   /* ------------------------------------------------------------------
      Zustand
@@ -162,6 +188,17 @@
     st.chests = st.chests || {};
     st.intros = st.intros || {};
     return st;
+  }
+  /** Tages-Zustand der Tipps (wird an einem neuen Tag zurückgesetzt). */
+  function tipState() {
+    const st = S();
+    const today = U.today();
+    if (!st.tips || typeof st.tips !== 'object' || st.tips.date !== today) st.tips = { date: today, picks: {}, done: {}, told: {}, hello: false };
+    const t = st.tips;
+    t.picks = t.picks || {};
+    t.done = t.done || {};
+    t.told = t.told || {};
+    return t;
   }
   let state = null;
   const S = () => state || (state = load());
@@ -212,6 +249,80 @@
   }
 
   /* ------------------------------------------------------------------
+     Flos Tipp: persönliche Extra-Stationen aus den Lerndaten
+     ------------------------------------------------------------------ */
+  function playedGames() {
+    const recs = LT.progress.profile.games || {};
+    return LT.gameOrder.map((id) => LT.games[id])
+      .filter((d) => d && d.type !== 'free' && recs[d.id] && recs[d.id].rounds > 0);
+  }
+  const accOf = (id) => {
+    const a = LT.progress.accuracy(id);
+    return a == null ? 0.5 : a;
+  };
+  const CHOOSE = {
+    // meiste fällige Inhalte (mindestens 2)
+    review(cands) {
+      let best = null;
+      let bestDue = 1;
+      cands.forEach((d) => {
+        const due = LT.progress.itemSummary(d.id).due;
+        if (due > bestDue) { best = d; bestDue = due; }
+      });
+      return best;
+    },
+    // schwächster Bereich: zuerst Spiele mit Status „üben“, dann geringste Trefferquote
+    practice(cands, all) {
+      const P = LT.progress;
+      const areaAcc = {};
+      all.forEach((d) => { (areaAcc[d.area] = areaAcc[d.area] || []).push(accOf(d.id)); });
+      Object.keys(areaAcc).forEach((a) => { areaAcc[a] = U.sum(areaAcc[a]) / areaAcc[a].length; });
+      const list = cands.filter((d) => P.status(d.id) !== 'solid');
+      list.sort((a, b) => (P.status(a.id) === 'practice' ? 0 : 1) - (P.status(b.id) === 'practice' ? 0 : 1)
+        || areaAcc[a.area] - areaAcc[b.area]
+        || accOf(a.id) - accOf(b.id));
+      return list[0] || null;
+    },
+    // Erfolgsspiel: sicher gekonnt oder hohe Trefferquote, gern oft gespielt
+    strength(cands) {
+      const P = LT.progress;
+      const recs = P.profile.games;
+      const list = cands.filter((d) => P.status(d.id) === 'solid' || (P.accuracy(d.id) != null && P.accuracy(d.id) >= 0.75));
+      list.sort((a, b) => (P.status(a.id) === 'solid' ? 0 : 1) - (P.status(b.id) === 'solid' ? 0 : 1)
+        || accOf(b.id) - accOf(a.id)
+        || (recs[b.id].rounds || 0) - (recs[a.id].rounds || 0));
+      return list[0] || null;
+    },
+  };
+
+  /**
+   * Bis zu drei Tipps für heute: [{ kind, badge, label, say, color, game, def, done }].
+   * Einmal gewählte Tipps bleiben den ganzen Tag gleich (auch nach dem Spielen).
+   */
+  function tips(sit) {
+    const all = playedGames();
+    if (!all.length) return [];
+    const t = tipState();
+    sit = sit || situation();
+    const curGame = sit.current && sit.current.station !== 'chest' ? sit.current.station.game : null;
+    let changed = false;
+    // ungültig gewordene Tipps verwerfen (Spiel fehlt oder ist „frei“)
+    Object.keys(t.picks).forEach((k) => {
+      const d = LT.games[t.picks[k]];
+      if (!d || d.type === 'free') { delete t.picks[k]; changed = true; }
+    });
+    TIP_KINDS.forEach(({ kind }) => {
+      if (t.picks[kind]) return;
+      const used = new Set(Object.values(t.picks));
+      const cands = all.filter((d) => !used.has(d.id) && d.id !== curGame);
+      const pick = CHOOSE[kind](cands, all);
+      if (pick) { t.picks[kind] = pick.id; changed = true; }
+    });
+    if (changed) save();
+    return TIP_KINDS.filter((k) => t.picks[k.kind]).map((k) => Object.assign({}, k, { game: t.picks[k.kind], def: LT.games[t.picks[k.kind]], done: !!t.done[k.kind] }));
+  }
+
+  /* ------------------------------------------------------------------
      Pfad-Geometrie: geschwungene Schlange
      ------------------------------------------------------------------ */
   const xAt = (i, phase) => 50 + 27 * Math.sin(i * 0.95 + phase);
@@ -234,6 +345,7 @@
   const R = { chapters: CHAPTERS, SAY };
   let run = null; // laufende Station { key, chapterId }
   let justDone = null; // zuletzt geschaffte Station (für die Hüpf-Animation)
+  let justTip = false; // gerade einen Tipp gespielt (für Flos Dank)
   let hint = SAY.tap;
 
   function stationNode(s, ch) {
@@ -327,6 +439,33 @@
     );
   }
 
+  function tipsNode(list) {
+    const head = el('button.reise-tips-flo', {
+      type: 'button',
+      'aria-label': 'Flos Tipps',
+      title: 'Flos Tipps',
+      on: { click: () => { LT.sfx.play('pop'); LT.ui.animate(head, 'reise-flo-joy'); LT.speech.say(SAY.tipsHead); } },
+    }, el('span.reise-tips-face', { html: LT.ui.floSVG() }), el('span.reise-tips-bulb.emoji', { 'aria-hidden': 'true' }, '💡'));
+    const row = el('div.reise-tips-row');
+    list.forEach((t) => {
+      const btn = el('button.reise-tip.' + t.kind + (t.done ? '.done' : ''), {
+        type: 'button',
+        'aria-label': `Flos Tipp – ${t.label}: ${t.def.title}`,
+        title: `${t.label}: ${t.def.title}`,
+        style: { '--tip': t.color },
+        data: { tip: t.kind },
+        on: { click: () => onTip(t, btn) },
+      },
+        U.emoji(t.def.icon, 'reise-tip-icon'),
+        el('span.reise-tip-badge.emoji', { 'aria-hidden': 'true' }, t.badge),
+        t.done ? el('span.reise-check', '✓') : null,
+        el('span.reise-tip-label', t.label)
+      );
+      row.appendChild(btn);
+    });
+    return el('div.reise-tips', { role: 'group', 'aria-label': 'Flos Tipps' }, head, row);
+  }
+
   function finishNode() {
     return el('div.reise-goal', U.emoji('🏆', 'reise-goal-icon'), el('p', 'Ziel'));
   }
@@ -368,6 +507,10 @@
         el('span.reise-progress-num', `${sit.done}/${sit.total}`)
       )
     );
+
+    // Flos Tipp: persönliche Extra-Stationen (freiwillig)
+    const tipList = tips(sit);
+    if (tipList.length) content.appendChild(tipsNode(tipList));
 
     const map = el('div.reise-map');
     content.appendChild(map);
@@ -458,15 +601,26 @@
     else hint = SAY.tap;
 
     const st = S();
+    const fromTip = justTip;
+    justTip = false;
+    const ts = tipList.length ? tipState() : null;
+    const tipsHello = ts && !ts.hello && tipList.some((t) => !t.done);
     if (cur && !st.intros[cur.chapter.id]) {
       // Als gesehen gilt die Einleitung erst, wenn sie wirklich erscheint (siehe showIntro)
       setTimeout(() => { if (flo.isConnected) showIntro(cur.chapter, cur.chapter.index > 0); }, hopped ? 900 : 250);
+    } else if (fromTip) {
+      LT.speech.say(SAY.tipThanks);
     } else if (hopped) {
       LT.speech.say(cur && cur.station === 'chest' ? SAY.chestReady : U.pickFresh('reise-hop', SAY.hop, 2));
     } else if (!cur) {
       LT.speech.say(SAY.finished);
     } else if (cur.station === 'chest') {
       LT.speech.say(SAY.chestReady);
+    } else if (tipsHello) {
+      // einmal am Tag auf die Tipps hinweisen
+      ts.hello = true;
+      save();
+      LT.speech.say((R._greeted ? SAY.back : SAY.welcome) + ' ' + SAY.tipsHello);
     } else {
       LT.speech.say(R._greeted ? SAY.back : SAY.welcome);
     }
@@ -505,6 +659,32 @@
     R.startStation(s);
   }
 
+  /** Tipp antippen: beim ersten Mal am Tag erklärt Flo kurz, warum; danach startet das Spiel. */
+  function onTip(t, btn) {
+    LT.sfx.play('click');
+    LT.ui.animate(btn, 'bump');
+    const ts = tipState();
+    let text = null;
+    if (t.done) text = SAY.tipDone;
+    else if (!ts.told[t.kind]) text = SAY[t.say];
+    if (!text) { R.startTip(t); return; }
+    ts.told[t.kind] = true;
+    save();
+    const p = LT.speech.say(text);
+    const tok = LT.speech._token;
+    p.then(() => {
+      if (LT.speech._token === tok && btn.isConnected && LT.app && LT.app.screen === 'reise') R.startTip(t);
+    });
+  }
+
+  /** Tipp starten: Spiel auf der aktuellen Stufe des Kindes (keine feste Stufe). */
+  R.startTip = function (t) {
+    run = { tip: t.kind, game: t.game };
+    const A = LT.app;
+    if (!A || !A.startGame) return;
+    A.startGame(t.game, { from: 'reise' });
+  };
+
   /** Station starten (Spiel mit genau dieser Stufe). */
   R.startStation = function (s) {
     run = { key: s.key, game: s.game, level: s.level };
@@ -516,6 +696,15 @@
   /** Von app.js nach jeder beendeten Runde aufgerufen. */
   R.onRoundFinished = function (gameId) {
     if (!run || run.game !== gameId) return;
+    if (run.tip) {
+      const ts = tipState();
+      if (!ts.done[run.tip]) {
+        ts.done[run.tip] = true;
+        justTip = true;
+        save();
+      }
+      return;
+    }
     const st = S();
     if (!st.done[run.key]) {
       st.done[run.key] = true;
@@ -634,11 +823,14 @@
       missing: CHAPTERS.flatMap((c) => c.stations.filter(([g]) => !LT.games[g]).map(([g]) => g)),
     };
   };
+  /** Heutige Tipps (für Startseite und Elternbereich). */
+  R.tips = () => tips();
   R.reset = function () {
     state = { done: {}, chests: {}, intros: {} };
     save();
     run = null;
     justDone = null;
+    justTip = false;
     R._greeted = false;
   };
   /** Alle festen Sätze (z. B. für das Einsammeln der Sprachaufnahmen). */
@@ -646,6 +838,7 @@
     const out = [];
     Object.values(SAY).forEach((v) => (Array.isArray(v) ? out.push(...v) : out.push(v)));
     CHAPTERS.forEach((c) => { out.push(c.intro, c.story, SAY.reveal + ' ' + c.intro); });
+    out.push(SAY.welcome + ' ' + SAY.tipsHello, SAY.back + ' ' + SAY.tipsHello);
     (LT.stickers || []).forEach((s) => out.push(s.name));
     return out;
   };
@@ -663,6 +856,7 @@
         return true;
       },
       situation,
+      tips,
     };
   }
 

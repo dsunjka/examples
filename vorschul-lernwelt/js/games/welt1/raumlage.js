@@ -14,7 +14,11 @@
    - Der ganze Satz wird vorgelesen, die Präposition steht groß und farbig im
      Aufgabenfeld. Nach einem Fehler sagt Flo, was auf dem falschen Bild zu
      sehen ist („Hier ist die Katze AUF dem Tisch“) – so lernt das Kind auch
-     aus Fehlern. Nach 2 Fehlversuchen wird die Lösung hervorgehoben.
+     aus Fehlern. Hilfe-Leiter: Denkanstoß mit der Bedeutung des Begriffs
+     („Unter heißt darunter.“, bei links/rechts mit Pfeil), danach zeigt Flo
+     das richtige Bild und begründet es.
+   - Lerninhalt = der Lagebegriff (Schlüssel 'unter', 'über' …) über ctx.item;
+     Stufe aus ctx.taskLevel, auf Stufe 1 bei ctx.flow < 0 nur zwei Bilder.
    - Stufen: auf/unter/in → neben/vor/hinter/über → links/rechts/zwischen →
      umgekehrt: Das Kind setzt das Tier selbst an die richtige Stelle.
    ========================================================================== */
@@ -28,20 +32,20 @@
   /* ---------------- Tiere ---------------- */
   // e = ganzes Tier (seitlich), f = Gesicht (für „in der Kiste / im Bett“)
   const GROUND = [
-    { id: 'katze', nom: 'die Katze', e: '🐈', f: '🐱' },
-    { id: 'hund', nom: 'der Hund', e: '🐕', f: '🐶' },
-    { id: 'hase', nom: 'der Hase', e: '🐇', f: '🐰' },
-    { id: 'maus', nom: 'die Maus', e: '🐁', f: '🐭' },
+    { id: 'katze', nom: 'die Katze', acc: 'die Katze', e: '🐈', f: '🐱' },
+    { id: 'hund', nom: 'der Hund', acc: 'den Hund', e: '🐕', f: '🐶' },
+    { id: 'hase', nom: 'der Hase', acc: 'den Hasen', e: '🐇', f: '🐰' },
+    { id: 'maus', nom: 'die Maus', acc: 'die Maus', e: '🐁', f: '🐭' },
   ];
   const FLYING = [
-    { id: 'vogel', nom: 'der Vogel', e: '🐦', f: '🐦', fly: true },
-    { id: 'schmetterling', nom: 'der Schmetterling', e: '🦋', f: '🦋', fly: true },
-    { id: 'biene', nom: 'die Biene', e: '🐝', f: '🐝', fly: true },
+    { id: 'vogel', nom: 'der Vogel', acc: 'den Vogel', e: '🐦', f: '🐦', fly: true },
+    { id: 'schmetterling', nom: 'der Schmetterling', acc: 'den Schmetterling', e: '🦋', f: '🦋', fly: true },
+    { id: 'biene', nom: 'die Biene', acc: 'die Biene', e: '🐝', f: '🐝', fly: true },
   ];
   // Am Baum nur Tiere, die wirklich auf einen Baum klettern/fliegen (kein Hund/Hase „auf dem Baum“)
   const TREE = [
     GROUND[0],
-    { id: 'eichhoernchen', nom: 'das Eichhörnchen', e: '🐿️', f: '🐿️' },
+    { id: 'eichhoernchen', nom: 'das Eichhörnchen', acc: 'das Eichhörnchen', e: '🐿️', f: '🐿️' },
     FLYING[0],
   ];
 
@@ -159,6 +163,16 @@
   }
 
   const WORD = { auf: 'auf', unter: 'unter', in: 'in', neben: 'neben', vor: 'vor', hinter: 'hinter', ueber: 'über', links: 'links', rechts: 'rechts', zwischen: 'zwischen' };
+  /** Was der Lagebegriff bedeutet – für Denkanstoß („Auf heißt oben drauf.“) und Vormachen („…, also oben drauf.“). */
+  const MEANS = {
+    auf: 'oben drauf', unter: 'darunter', in: 'drinnen', neben: 'direkt daneben', vor: 'vorne, näher bei dir',
+    hinter: 'hinten, halb versteckt', ueber: 'oben in der Luft', links: 'auf der linken Seite',
+    rechts: 'auf der rechten Seite', zwischen: 'in der Mitte',
+  };
+  /** Denkanstoß: Bedeutung des Lagebegriffs (links/rechts mit Pfeil, siehe pickTask). */
+  const meansSay = (p) => (p === 'links' || p === 'rechts'
+    ? `${U.cap(WORD[p])} ist auf dieser Seite. Schau auf den Pfeil.`
+    : `${U.cap(WORD[p])} heißt ${MEANS[p]}.`);
 
   /** Satzteil „unter dem Tisch“ / „zwischen den Kisten“ (Dativ = wo?). */
   function phrase(objId, prep, pair) {
@@ -282,11 +296,12 @@
   };
 
   /** Ziel-Präposition und passende Ablenker (ohne verwechselbare Bilder). */
-  function makeTask(level) {
-    let target;
-    if (level === 1) target = U.pickFresh('raum-p1', SETS[1], 1);
-    else if (level === 2) target = U.chance(0.8) ? U.pickFresh('raum-p2', SETS[2], 2) : U.pick(SETS[1]);
-    else target = U.chance(0.8) ? U.pickFresh('raum-p3', SETS[3], 1) : U.pick(SETS[2].concat(SETS[1]));
+  function makeTask(ctx, level) {
+    // Lerninhalt = der Lagebegriff (verteiltes Wiederholen über ctx.item);
+    // auf Stufe 2/3 ab und zu ein Begriff der Stufen davor (Wiederholung).
+    const topics = level === 1 || U.chance(0.8) ? SETS[level]
+      : SETS[level].concat(level === 2 ? SETS[1] : SETS[2].concat(SETS[1]));
+    const target = ctx.item(topics, (p) => WORD[p], { avoid: 1 });
 
     const pair = target === 'zwischen';
     const objs = Object.keys(OBJ).filter((k) => OBJ[k].preps.includes(target));
@@ -304,12 +319,14 @@
     const allowed = level === 1 ? ['auf', 'unter', 'in', 'neben'] : level === 2 ? SETS[1].concat(SETS[2]) : null;
     if (allowed) pool = pool.filter((p) => allowed.includes(p));
     const picked = [];
+    // leichter (Stufe 1, nach Fehlern in der Runde): nur ein Ablenker
+    const nWrong = level === 1 && ctx.flow < 0 ? 1 : 2;
     if (target === 'links' && pool.includes('rechts')) picked.push('rechts');
     if (target === 'rechts' && pool.includes('links')) picked.push('links');
     const prefer = U.shuffle(pool.filter((p) => !picked.includes(p) && (SETS[level] || []).includes(p)));
     const rest = U.shuffle(pool.filter((p) => !picked.includes(p) && !prefer.includes(p)));
     for (const p of prefer.concat(rest)) {
-      if (picked.length >= 2) break;
+      if (picked.length >= nWrong) break;
       if (picked.some((q) => conflict(o, p, q))) continue;
       picked.push(p);
     }
@@ -341,14 +358,14 @@
     },
 
     async task(ctx) {
-      if (ctx.level >= 4) return placeTask(ctx);
+      if (ctx.taskLevel >= 4) return placeTask(ctx);
       return pickTask(ctx);
     },
   });
 
   /** Stufen 1–3: das richtige Bild antippen. */
   async function pickTask(ctx) {
-    const t = makeTask(ctx.level);
+    const t = makeTask(ctx, ctx.taskLevel);
     anchor._side = U.chance(0.5) ? -1 : 1;
     const A = U.cap(t.animal.nom);
     const sentence = (p) => `${A} ist ${phrase(t.objId, p, t.pair)}.`;
@@ -370,18 +387,26 @@
     }));
     ctx.instruct(`Finde das Bild: ${sentence(t.target)}`);
 
+    const ha = W.hintAfter(ctx, items.length);
     let arrowShown = false;
     await ctx.choices(items, {
       container: box,
-      correctSay: () => `Richtig! ${sentence(t.target)}`,
-      wrongSay: (item) => `Hier ist ${t.animal.nom} ${phrase(t.objId, item.value, t.pair)}.`,
-      hintSay: `Schau mal: Hier ist ${t.animal.nom} ${phrase(t.objId, t.target, t.pair)}.`,
-      onWrong: async () => {
-        // Links/rechts: Richtungspfeil als Hilfe einblenden
-        if (!arrowShown && (t.target === 'links' || t.target === 'rechts')) {
+      hintAfter: ha,
+      // ab und zu Prozess-Lob: genau hingeschaut
+      correctSay: () => (ctx.wrongCount === 0 && U.chance(0.3)
+        ? `Richtig, du hast genau hingeschaut. ${sentence(t.target)}`
+        : `Richtig! ${sentence(t.target)}`),
+      // 1. Hilfe: sagen, was auf dem gewählten Bild zu sehen ist, und das Gesuchte nennen
+      explain: (item) => `Hier ist ${t.animal.nom} ${phrase(t.objId, item.value, t.pair)}. Finde ${t.animal.acc} ${phrase(t.objId, t.target, t.pair)}.`,
+      // 2. Hilfe: Bedeutung des Lagebegriffs (bei links/rechts mit Richtungspfeil)
+      hintSay: () => meansSay(t.target),
+      // 3. Hilfe: Lösung zeigen und begründen
+      modelSay: () => `Schau: Hier ist ${t.animal.nom} ${phrase(t.objId, t.target, t.pair)}, also ${MEANS[t.target]}.`,
+      onWrong: async (item, tile, n) => {
+        // Links/rechts: Richtungspfeil zum Denkanstoß einblenden
+        if (n === ha && !arrowShown && (t.target === 'links' || t.target === 'rechts')) {
           arrowShown = true;
           prompt.insertBefore(U.emoji(t.target === 'links' ? '⬅️' : '➡️', 'raum-arrow'), prompt.firstChild);
-          await ctx.say(t.target === 'links' ? 'Links ist auf dieser Seite. Schau auf den Pfeil.' : 'Rechts ist auf dieser Seite. Schau auf den Pfeil.');
         }
       },
     });
@@ -389,17 +414,19 @@
 
   /** Stufe 4: Das Kind setzt das Tier selbst an die richtige Stelle. */
   async function placeTask(ctx) {
-    const pair = U.chance(0.3);
+    // Lerninhalt = der Lagebegriff; danach passender Gegenstand (einzeln oder als Paar)
+    const target = ctx.item(['auf', 'unter', 'in', 'links', 'rechts', 'zwischen'], (p) => WORD[p], { avoid: 1 });
+    const pairIds = ['tisch', 'kiste', 'stuhl', 'baum'];
+    const pair = target === 'zwischen' || (['auf', 'links', 'rechts'].includes(target) && U.chance(0.3));
     let objId;
     let zones;
     if (pair) {
-      objId = U.pickFresh('raum-obj4p', ['tisch', 'kiste', 'stuhl', 'baum'], 1);
+      objId = U.pickFresh('raum-obj4p', pairIds, 1);
       zones = ['zwischen', 'links', 'rechts', 'auf'];
     } else {
-      objId = U.pickFresh('raum-obj4', Object.keys(OBJ), 2);
+      objId = U.pickFresh('raum-obj4', Object.keys(OBJ).filter((k) => OBJ[k].zones.includes(target)), 2);
       zones = OBJ[objId].zones.slice();
     }
-    const target = U.pickFresh('raum-p4', zones, 2);
     const animal = U.pickFresh('raum-animal', objId === 'baum' ? TREE : GROUND, 2, (a) => a.id);
     const A = U.cap(animal.nom);
     const open = objId === 'kiste' && zones.includes('in');
@@ -429,9 +456,17 @@
     const done = ctx.choices(items, {
       container: zoneBox,
       shuffle: false,
+      hintAfter: W.hintAfter(ctx, items.length),
+      ease: false, // Trefferzonen bleiben alle sichtbar (feste Stellen in der Szene)
       correctSay: () => `Super! Jetzt ist ${animal.nom} ${phrase(objId, target, pair)}.`,
-      wrongSay: (item) => `Dann wäre ${animal.nom} ${phrase(objId, item.value, pair)}.`,
-      hintSay: `Ich zeige dir die Stelle: ${phrase(objId, target, pair)}.`,
+      explain: (item) => `Dann wäre ${animal.nom} ${phrase(objId, item.value, pair)}. ${A} möchte ${phraseAcc(objId, target, pair)}.`,
+      hintSay: () => meansSay(target),
+      modelSay: () => `Schau, hier ist die Stelle ${phrase(objId, target, pair)}, also ${MEANS[target]}.`,
+      onWrong: async (item, tile, n) => {
+        if (n === W.hintAfter(ctx, items.length) && (target === 'links' || target === 'rechts')) {
+          prompt.insertBefore(U.emoji(target === 'links' ? '⬅️' : '➡️', 'raum-arrow'), prompt.firstChild);
+        }
+      },
       onCorrect: () => {
         // Tier an die gewählte Stelle setzen
         U.clear(svgBox);

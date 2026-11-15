@@ -507,5 +507,27 @@
   /** Zufällig einen von mehreren Sätzen (Abwechslung beim Feedback). */
   S.vary = (key, list) => U.pickFresh('s1-' + key, list, Math.min(2, list.length - 1));
 
+  /* ------------------------------------------------------------------
+     Adaptiv lernen (siehe Kopfkommentar js/core/engine.js)
+     ------------------------------------------------------------------ */
+  /**
+   * Stufe DIESER Aufgabe: ctx.taskLevel – aber nur, wenn dabei die Aufgabenart
+   * gleich bleibt (kindOf(stufe) → z. B. 'klatschen' | 'zahl' | 'bild').
+   * Sonst bleibt es bei ctx.level, und das Spiel passt die Aufgabe über ctx.flow
+   * innerhalb der Aufgabenart an. So wechselt die Bedienung in einer Runde nie.
+   */
+  S.lv = (ctx, kindOf) => (kindOf(ctx.taskLevel) === kindOf(ctx.level) ? ctx.taskLevel : ctx.level);
+  /**
+   * Pool für ctx.item: alle Inhalte, die filter erfüllen – plus fällige
+   * Wiederholungen (auch wenn sie den Filter gerade nicht erfüllen), damit
+   * zufällige Vorauswahl (z. B. Silbenzahl) Wiederholungen nicht aussperrt.
+   */
+  S.poolWithDue = function (ctx, all, keyFn, filter) {
+    const due = new Set(LT.progress.dueItems ? LT.progress.dueItems(ctx.id) : []);
+    return all.filter((x) => filter(x) || due.has(String(keyFn(x))));
+  };
+  /** „einmal“, „zweimal“ … (für „Du hast zweimal geklatscht.“) */
+  S.times = (n) => (n === 1 ? 'einmal' : U.numberWord(n) + 'mal');
+
   LT.s1 = S;
 })();

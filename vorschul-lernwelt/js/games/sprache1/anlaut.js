@@ -23,8 +23,10 @@
           F/W, S/Sch/Z, L/R)
        5  Buchstabe zum Anlaut ohne Bildhilfe, 4 Buchstaben, auch ähnliche
           Laute, Sch und Selbstlaute (A, E, I, O, U)
-   - Fehler: Flo stellt die beiden Wörter gegenüber („Mond – Kuh: Das klingt
-     am Anfang anders.“); nach 2 Fehlversuchen wird die Lösung hervorgehoben.
+   - Hilfe-Leiter: Flo stellt die beiden Wörter gegenüber („Mond – Kuh. Das
+     klingt am Anfang anders.“) → Denkanstoß („Sag Mond ganz langsam und hör
+     auf den Anfang …“) → Flo zeigt und begründet die Lösung.
+     Lerninhalt für ctx.item ist der Anlaut-Buchstabe (Schlüssel „M“).
    ========================================================================== */
 (function () {
   'use strict';
@@ -56,6 +58,7 @@
   const EASY = ['M', 'S', 'F', 'L', 'R', 'Sch', 'W', 'N'].filter((L) => CONS.includes(L));
   const SIM_TARGETS = CONS.filter((L) => (SIMILAR[L] || []).some((s) => LETTERS.includes(s)));
 
+  const kindOf = (lv) => (lv === 3 || lv === 5 ? 'letter' : 'picture');
   const letterSize = (L) => (L.length > 1 ? 'long' : '');
 
   /** Buchstaben, die NICHT ähnlich zu `L` (und untereinander verschieden) sind */
@@ -95,15 +98,16 @@
   /* ------------------------------------------------------------------
      Bild zu Bild (Stufen 1, 2, 4)
      ------------------------------------------------------------------ */
-  async function pictureTask(ctx) {
-    const lv = ctx.level;
-    const T = lv === 1 ? U.pickFresh('anl-easy', EASY, 3) : lv === 4 ? U.pickFresh('anl-sim', SIM_TARGETS, 4) : U.pickFresh('anl-cons', CONS, 5);
+  async function pictureTask(ctx, lv) {
+    // Lerninhalt = der Anlaut (Schlüssel „M“), gewählt über ctx.item
+    const T = ctx.item(lv === 1 ? EASY : lv === 4 ? SIM_TARGETS : CONS, (L) => L, { avoid: lv === 1 ? 3 : 5 });
     const [prompt, match] = U.sample(FAM[T], 2);
     let disLetters;
     if (lv === 4) {
       const sim = U.pick((SIMILAR[T] || []).filter((s) => LETTERS.includes(s)));
       const other = clearContrasts(T, 1, LETTERS.filter((L) => L !== sim))[0];
-      disLetters = [sim, other];
+      // leichter (Anpassung innerhalb der Runde): nur der ähnlich klingende Ablenker
+      disLetters = ctx.flow < 0 && lv === ctx.level ? [sim] : [sim, other];
     } else {
       disLetters = clearContrasts(T, lv === 1 ? 1 : 2, CONS);
     }
@@ -112,11 +116,17 @@
     ctx.stage.appendChild(card);
     const items = [match].concat(dis).map((x) => ({ content: x.e, say: x.w, correct: x === match, x }));
     await ask(ctx, items, `Welches Bild fängt so an wie ${prompt.w}?`, {
-      correctSay: (it) => `Richtig! ${prompt.w} und ${it.x.w} fangen beide mit ${T} an.`,
-      wrongSay: (it) => (lv === 4
+      correctSay: (it) => S.vary('anl-pic-ok', [
+        `Richtig! ${prompt.w} und ${it.x.w} fangen beide mit ${T} an.`,
+        `Richtig! ${prompt.w} und ${it.x.w} fangen beide mit ${T} an.`,
+        `Genau, du hast gut auf den Anfang gehört. ${prompt.w} und ${it.x.w} fangen mit ${T} an.`,
+      ]),
+      // Hilfe-Leiter: Klangvergleich → Denkanstoß (langsam sprechen) → vormachen
+      explain: (it) => (lv === 4
         ? `Hör genau: ${prompt.w} fängt mit ${T} an, ${it.x.w} mit ${S.letterOf(it.x)}.`
-        : `${prompt.w} – ${it.x.w}. Das klingt am Anfang anders. Hör noch mal genau hin!`),
-      hintSay: () => `Hör mal: ${prompt.w} – ${match.w}. Das klingt am Anfang gleich!`,
+        : `${prompt.w} – ${it.x.w}. Das klingt am Anfang anders.`),
+      hintSay: () => `Sag ${prompt.w} ganz langsam und hör auf den Anfang. Welches Bild fängt genauso an?`,
+      modelSay: () => `Schau: ${prompt.w} – ${match.w}. Beide fangen mit ${T} an.`,
       onCorrect: () => LT.ui.animate(card, 'joy'),
     });
   }
@@ -124,9 +134,8 @@
   /* ------------------------------------------------------------------
      Buchstabe zum Anlaut (Stufen 3, 5)
      ------------------------------------------------------------------ */
-  async function letterTask(ctx) {
-    const lv = ctx.level;
-    const T = lv === 3 ? U.pickFresh('anl-l3', U.chance(0.8) ? CONS : LETTERS, 5) : U.pickFresh('anl-l5', LETTERS, 6);
+  async function letterTask(ctx, lv) {
+    const T = ctx.item(lv === 3 && U.chance(0.8) ? CONS : LETTERS, (L) => L, { avoid: lv === 3 ? 5 : 6 });
     const prompt = wordOf(T);
     let others;
     if (lv === 3) {
@@ -154,8 +163,11 @@
     }));
     await ask(ctx, items, `Mit welchem Buchstaben fängt ${prompt.w} an?`, {
       correctSay: () => `Richtig! ${prompt.w} fängt mit ${T} an. ${T} wie ${prompt.w}!`,
-      wrongSay: (it) => `Das ist das ${it.L}, wie ${key[it.L].w}. ${prompt.w} fängt anders an.`,
-      hintSay: () => `Hör mal: ${prompt.w}. ${T} wie ${key[T].w}!`,
+      explain: (it) => `Das ist das ${it.L}, wie ${key[it.L].w}. ${prompt.w} fängt anders an.`,
+      hintSay: () => (lv === 3
+        ? `Hör auf die Bilder bei den Buchstaben. Welches fängt so an wie ${prompt.w}?`
+        : `Sag ${prompt.w} ganz langsam. Welcher Buchstabe klingt am Anfang genauso?`),
+      modelSay: () => `Schau: ${prompt.w} fängt mit ${T} an. ${T} wie ${key[T].w}.`,
       onCorrect: () => LT.ui.animate(card, 'joy'),
     });
   }
@@ -181,8 +193,9 @@
     },
 
     async task(ctx) {
-      if (ctx.level === 3 || ctx.level === 5) return letterTask(ctx);
-      return pictureTask(ctx);
+      const lv = S.lv(ctx, kindOf);
+      if (lv === 3 || lv === 5) return letterTask(ctx, lv);
+      return pictureTask(ctx, lv);
     },
   });
 })();

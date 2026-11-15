@@ -14,10 +14,14 @@
      mit wechselnden Darstellungen in einer Aufgabe.
    - Gezielte Ablenker: 6↔9, „14 ↔ 4“ (Bedeutung der Eins als Zehner) und
      Zahlendreher „14 ↔ 41“ (im Deutschen spricht man die Einer zuerst!).
-   - Gestufte Hilfe: 1. Fehler → informatives Feedback („Da sind sechs.“),
-     Ziffer wird benannt bzw. 6/9-Merkhilfe; 2. Fehler → Flo zählt auf dem
-     Zahlenstrahl hoch, zählt die Menge vor (ab 10 weiterzählen) oder zeigt
-     die Zehner-Einer-Schreibweise – dann wird die Lösung hervorgehoben.
+   - Lerninhalt = die Zahl (Schlüssel '7') über ctx.item: verwechselte Zahlen
+     kommen in der Runde und an späteren Tagen wieder.
+   - Hilfe-Leiter: 1. Fehler → informatives Feedback zum GEWÄHLTEN
+     („Das ist die Neun. Wir suchen die Sechs.“, 6/9-Merkhilfe, Zahlendreher);
+     dann Denkanstoß (Zahlenstrahl zum Selberzählen, Zehner und Einer,
+     „Zähle auf jedem Bild nach“); zuletzt macht Flo es vor: zählt auf dem
+     Zahlenstrahl hoch, zählt die Menge vor oder zeigt Zehner und Einer.
+     Bei nur drei Bildern kommt der Denkanstoß schon nach dem 1. Fehler.
    ========================================================================== */
 (function () {
   'use strict';
@@ -201,6 +205,22 @@
     }
   }
 
+  /** Denkanstoß für „hören → Ziffer“ (ohne Lösung) */
+  function digitHintSay(n) {
+    if (n === 0) return 'Denk dran: Null heißt gar nichts. Die Null sieht aus wie ein Kreis.';
+    if (n < 10) return `Schau auf den Zahlenstrahl und zähle bis ${nw(n)} mit.`;
+    if (n === 10 || n === 11 || n === 20) return writeNote(n);
+    return `Denk dran: ${NW(n)} ist zehn und ${nw(n - 10)}. Vorne steht die Eins für die Zehn.`;
+  }
+  /** Denkanstoß für „Menge → Ziffer“ je Darstellung */
+  function qtyHintSay(rep, n) {
+    if (n === 0) return 'Schau genau: Ist da überhaupt etwas?';
+    if (rep === 'twenty' && n > 10) return 'Ein volles Zehnerfeld sind zehn. Zähle dann im zweiten Feld weiter.';
+    if (rep === 'hands' && n > 5) return 'Denk dran: Eine ganze Hand sind fünf Finger. Zähle dann weiter.';
+    if (rep === 'frame' && n > 5) return 'Denk dran: Oben im Zehnerfeld sind genau fünf. Zähle dann unten weiter.';
+    return 'Zähle jedes Ding genau einmal und zeige mit dem Finger darauf.';
+  }
+
   /** Hilfe für „hören → Ziffer“: Zahlenstrahl hochzählen bzw. Zehner+Einer zeigen */
   async function helpDigit(ctx, n, box) {
     U.clear(box);
@@ -253,10 +273,12 @@
     },
 
     async task(ctx) {
-      const cfg = LEVELS[ctx.level] || LEVELS[1];
+      const lv = ctx.taskLevel;
+      const cfg = LEVELS[lv] || LEVELS[1];
       const type = typeFor(ctx);
-      // ohne direkte Wiederholung, aber nicht vorhersagbar (bei 1–5 nur die letzten 2 sperren)
-      const n = U.pickFresh('zd-n-' + ctx.level, cfg.pool, Math.min(4, Math.floor(new Set(cfg.pool).size / 2)));
+      // Lerninhalt: die Zahl (Pool enthält 6 und 9 mehrfach → kommen öfter dran)
+      const pool = lv === 1 && ctx.flow < 0 ? cfg.pool.filter((x) => x <= 4) : cfg.pool;
+      const n = ctx.item(pool, (k) => String(k), { avoid: Math.min(4, Math.floor(new Set(pool).size / 2)) });
       const env = { thing: Z.pickThing('zd-thing'), skin: U.pick(Z.SKINS) };
       const prompt = el('div.prompt-box.zd-prompt');
       const helpBox = el('div.zd-help');
@@ -266,32 +288,42 @@
       if (type === 'hear-digit') {
         const ear = earButton(ctx, NW(n));
         prompt.append(ear, helpBox);
-        const values = Z.numberChoices(n, cfg.digits, cfg.min, cfg.max, digitPrefer(n, ctx.level));
+        const values = Z.numberChoices(n, cfg.digits, cfg.min, cfg.max, digitPrefer(n, lv));
         const q = `Wo ist die ${NW(n)}?`;
         ctx.setInstruction(q);
         ctx.instruct(ctx.index === 0 ? `Hör gut zu! ${q} Tippe sie an.` : q);
+        const ha = Z.hintAfterFor(ctx, values.length);
         await ctx.choices(digitItems(values, n), {
           shuffle: false,
-          hintAfter: 2,
-          wrongSay: (item) => `Das ist die ${NW(item.value)}.`,
+          hintAfter: ha,
+          // 1. Hilfe: gewählte Ziffer benennen, typische Verwechslung erklären
+          explain: (item) => {
+            const k = item.value;
+            if ((n === 6 && k === 9) || (n === 9 && k === 6)) return `Das ist die ${NW(k)}. ${BELLY}`;
+            if (n >= 13 && n <= 19 && k === (n % 10) * 10 + 1) return `Vorsicht! Bei ${nw(n)} hörst du zuerst die ${NW(n - 10)}. Aber vorne steht die Eins für die Zehn.`;
+            return `Das ist die ${NW(k)}. Wir suchen die ${NW(n)}.`;
+          },
+          // 2. Hilfe: Zahlenstrahl zum Selberzählen bzw. Zehner und Einer
+          hintSay: () => digitHintSay(n),
+          // 3. Hilfe: Flo zählt auf dem Zahlenstrahl hoch / zeigt Zehner und Einer
+          modelSay: () => `Hier ist die ${NW(n)}. Tipp sie an.`,
           onWrong: async (item, tile, wrongs) => {
-            if (wrongs === 1) {
-              if ((n === 6 && item.value === 9) || (n === 9 && item.value === 6)) await ctx.say(BELLY);
-              else if (n >= 13 && n <= 19 && item.value === (n % 10) * 10 + 1) await ctx.say(`Vorsicht! Bei ${nw(n)} hörst du zuerst die ${NW(n - 10)}. Aber vorne steht die Eins für die Zehn.`);
-              else await ctx.say(`Wir suchen die ${NW(n)}.`);
-            } else if (wrongs === 2) {
+            if (wrongs === ha && n > 0 && n < 10) {
+              U.clear(helpBox);
+              helpBox.appendChild(Z.numberLine(1, 10));
+            } else if (wrongs === ha + 1) {
               await helpDigit(ctx, n, helpBox);
             }
           },
           onCorrect: () => {
             // Verknüpfung zur Menge sichtbar machen
             U.clear(helpBox);
-            const rep = n > 10 ? 'twenty' : n === 0 ? 'frame' : n <= 6 && ctx.level === 1 ? 'dice' : 'frame';
+            const rep = n > 10 ? 'twenty' : n === 0 ? 'frame' : n <= 6 && lv === 1 ? 'dice' : 'frame';
             const link = buildQty(rep, n, env);
             prompt.appendChild(el('div.zd-link', link));
           },
           correctSay: () => {
-            const note = ctx.level >= 3 && writeNote(n) ? ' ' + writeNote(n) : '';
+            const note = lv >= 3 && writeNote(n) ? ' ' + writeNote(n) : '';
             return `Richtig, das ist die ${NW(n)}!${note}`;
           },
         });
@@ -303,7 +335,7 @@
       if (type === 'digit-qty' || type === 'hear-qty') {
         if (type === 'digit-qty') prompt.append(lens(n));
         else prompt.append(earButton(ctx, NW(n)));
-        const values = Z.numberChoices(n, 3, cfg.min, cfg.max, qtyPrefer(n, ctx.level));
+        const values = Z.numberChoices(n, 3, cfg.min, cfg.max, qtyPrefer(n, lv));
         const reps = repsFor(cfg, values);
         const qtys = {};
         const items = U.shuffle(values.map((v, i) => {
@@ -323,24 +355,32 @@
         const right = await ctx.choices(items, {
           container: choiceBox,
           shuffle: false,
-          hintAfter: 2,
-          wrongSay: (item) => thereAre(item.value),
+          // nur drei Bilder: Denkanstoß schon nach dem 1. Fehler, danach vormachen
+          hintAfter: 1,
+          // 1. Hilfe: sagen, was auf dem GEWÄHLTEN Bild ist, und was gesucht ist
+          explain: (item) => {
+            const k = item.value;
+            if (type === 'digit-qty') {
+              const belly = (n === 6 && k === 9) || (n === 9 && k === 6) ? ' ' + BELLY : '';
+              if (n === 0) return `${thereAre(k)} In der Lupe steht die Null. Null heißt: gar nichts.`;
+              return `${thereAre(k)} In der Lupe steht die ${NW(n)}.${belly}`;
+            }
+            return n === 0 ? `${thereAre(k)} Wir suchen null, also gar nichts.` : `${thereAre(k)} Wir suchen ${nw(n)}.`;
+          },
+          hintSay: () => {
+            if (n === 0) return 'Such das Bild, auf dem gar nichts ist.';
+            if (reps.includes('twenty') && n > 10) return 'Ein volles Zehnerfeld sind zehn. Zähle dann im zweiten Feld weiter.';
+            return 'Zähle auf jedem Bild genau nach.';
+          },
+          modelSay: () => 'Tipp das Bild an.',
           onWrong: async (item, tile, wrongs) => {
-            if (wrongs === 1) {
-              if (type === 'digit-qty') {
-                const belly = (n === 6 && item.value === 9) || (n === 9 && item.value === 6) ? ' ' + BELLY : '';
-                await ctx.say(n === 0 ? 'Das ist die Null. Null heißt: gar nichts.' : `Das ist die ${NW(n)}.${belly} Such das Bild, auf dem genau ${n === 1 ? 'eins ist' : nw(n) + ' sind'}.`);
-              } else {
-                await ctx.say(n === 0 ? 'Wir suchen null – gar nichts.' : `Wir suchen ${nw(n)}.`);
-              }
-            } else if (wrongs === 2) {
-              const qn = qtys[n];
-              if (n === 0) {
-                await ctx.say('Schau, hier ist gar nichts. Das ist null.');
-              } else {
-                await ctx.say(n === 1 ? 'Schau, hier ist genau eins.' : `Schau, hier sind ${nw(n)}. Ich zähle:`);
-                await countQty(ctx, qn, n);
-              }
+            if (wrongs !== 2) return;
+            const qn = qtys[n];
+            if (n === 0) {
+              await ctx.say('Schau, hier ist gar nichts. Das ist null.');
+            } else {
+              await ctx.say(n === 1 ? 'Schau, hier ist genau eins.' : `Schau, hier sind ${nw(n)}. Ich zähle:`);
+              await countQty(ctx, qn, n);
             }
           },
           correctSay: (item) => {
@@ -361,21 +401,29 @@
       const rep = repsFor(cfg, [n])[0];
       const qty = buildQty(rep, n, env);
       prompt.append(el('div.zd-show', qty));
-      const values = Z.numberChoices(n, cfg.digits, cfg.min, cfg.max, digitPrefer(n, ctx.level));
+      const values = Z.numberChoices(n, cfg.digits, cfg.min, cfg.max, digitPrefer(n, lv));
       let q = `Wie viele ${unitWord(rep, env)} sind das? Tippe auf die passende Zahl.`;
-      if (rep === 'twenty' && n > 10 && ctx.level === 3) q += ' Tipp: Ein volles Zehnerfeld sind zehn.';
+      if (rep === 'twenty' && n > 10 && lv === 3) q += ' Tipp: Ein volles Zehnerfeld sind zehn.';
       ctx.instruct(q);
+      const ha = Z.hintAfterFor(ctx, values.length);
       await ctx.choices(digitItems(values, n), {
         shuffle: false,
-        hintAfter: 2,
-        sayButton: ctx.level <= 2,
+        hintAfter: ha,
+        sayButton: lv <= 2,
+        explain: (item) => (n === 0
+          ? `${NW(item.value)} passt nicht. Schau genau: Da ist gar nichts.`
+          : `${NW(item.value)} passt nicht. Es sind ${item.value > n ? 'weniger' : 'mehr'} als ${nw(item.value)}.`),
+        hintSay: () => qtyHintSay(rep, n),
+        modelSay: () => (n === 0 ? 'Da ist gar nichts. Das ist die Null.' : `Das ist die ${NW(n)}.`),
         onWrong: async (item, tile, wrongs) => {
-          if (wrongs === 2) {
-            await ctx.say(n === 0 ? 'Schau genau: Da ist gar nichts. Das ist null.' : 'Komm, wir zählen zusammen!');
-            if (n > 0) await countQty(ctx, qty, n);
+          if (wrongs === ha + 1 && n > 0) {
+            await ctx.say('Komm, wir zählen zusammen!');
+            await countQty(ctx, qty, n);
           }
         },
-        correctSay: () => `Richtig! ${U.cap(qtyPhrase(rep, n, env))} – das ist die ${NW(n)}.`,
+        correctSay: () => (ctx.wrongCount === 0 && n > 0 && U.chance(0.3)
+          ? `Richtig, du hast genau hingeschaut! ${U.cap(qtyPhrase(rep, n, env))}, das ist die ${NW(n)}.`
+          : `Richtig! ${U.cap(qtyPhrase(rep, n, env))} – das ist die ${NW(n)}.`),
       });
       await ctx.sleep(400);
     },

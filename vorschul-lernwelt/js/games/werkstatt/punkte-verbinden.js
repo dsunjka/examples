@@ -10,8 +10,15 @@
      Punkt zu Punkt ziehen (Linien wie mit dem Stift).
    - Neugier als Motor: „Was wird das wohl?“ – am Ende erscheint das fertige,
      farbige Bild und wird benannt.
-   - Fehler sind erlaubt: Ein falscher Punkt wird sanft kommentiert („Das ist
-     die Sieben. Wir suchen die Fünf.“), nach 2 Fehlern pulsiert der richtige.
+   - Hilfe-Leiter je gesuchter Zahl: 1. Fehler → Flo benennt den falschen
+     Punkt („Das ist die Sieben. Wir suchen die Fünf.“); 2. Fehler →
+     Denkanstoß („Die nächste Zahl ist ganz in der Nähe vom letzten Punkt.“);
+     3. Fehler → der richtige Punkt pulsiert, Flo begründet („Nach der Vier
+     kommt die Fünf.“).
+   - Lerninhalt = die Zahlen (Schlüssel '13'): Jede Zahl wird protokolliert
+     (ohne Fehlgriff gefunden = gewusst), so sehen Eltern, welche Ziffern
+     noch verwechselt werden. Die Bildgröße folgt ctx.taskLevel; auf Stufe 1
+     bei ctx.flow < 0 nur Bilder mit fünf Punkten.
    - Stufen: bis 5/6 → bis 10 → bis 15 → bis 20 Punkte.
 
    Bilder: Punktlisten im 100×100-Raster in Verbindungsreihenfolge
@@ -194,8 +201,10 @@
     },
 
     async task(ctx) {
-      const pool = PICS[ctx.level] || PICS[1];
-      const pic = U.pickFresh('pv-' + ctx.level, pool, Math.min(3, pool.length - 1), (p) => p.id);
+      let pool = PICS[ctx.taskLevel] || PICS[1];
+      if (ctx.taskLevel === 1 && ctx.flow < 0) pool = pool.filter((p) => p.pts.length <= 5);
+      // Das Bild ist nur die Belohnung – Lerninhalt sind die Zahlen (siehe play)
+      const pic = U.pickFresh('pv-' + ctx.taskLevel, pool, Math.min(3, pool.length - 1), (p) => p.id);
       await play(ctx, pic);
     },
   });
@@ -242,6 +251,7 @@
     let resolveDone;
     const done = new Promise((r) => (resolveDone = r));
     let wrongBusy = false;
+    let numWrong = 0; // Fehlgriffe bei der gerade gesuchten Zahl (Hilfe-Leiter)
 
     function setNext() {
       dots.forEach((d) => { ctx.markTest(d, false); d.classList.remove('pv-hinted'); });
@@ -260,6 +270,9 @@
       dots[i].classList.add('done');
       dots[i].classList.remove('first');
       if (i > 0) addLine(i - 1, i);
+      // Lerninhalt: diese Zahl – ohne Fehlgriff gefunden?
+      ctx.track(String(i + 1), numWrong === 0);
+      numWrong = 0;
       LT.sfx.tone(440 + Math.min(i, 20) * 22, 0.08, { type: 'triangle', volume: 0.3 });
       ctx.say(U.numberWord(i + 1));
       expected++;
@@ -289,9 +302,17 @@
       const say = isDone
         ? `Die ${NUM(i + 1)} hast du schon. Wir suchen die ${NUM(expected + 1)}.`
         : `Das ist die ${NUM(i + 1)}. Wir suchen die ${NUM(expected + 1)}.`;
-      const k = await ctx.wrong(dots[i], { say });
-      if (k >= 2 && !finished) {
+      numWrong++;
+      await ctx.wrong(dots[i], { say });
+      if (!ctx.active) return;
+      if (!finished && numWrong === 2) {
+        // Denkanstoß: Strategie statt Lösung
+        await ctx.say(expected > 0 ? 'Tipp: Die nächste Zahl ist ganz in der Nähe vom letzten Punkt.' : 'Tipp: Schau oben auf die große Zahl und such sie auf dem Bild.');
+      } else if (!finished && numWrong >= 3) {
+        // vormachen und begründen
         dots[expected].classList.add('pv-hinted');
+        ctx.modelShown = true;
+        if (numWrong === 3) await ctx.say(expected > 0 ? `Schau, hier ist die ${NUM(expected + 1)}. Nach der ${NUM(expected)} kommt die ${NUM(expected + 1)}.` : 'Schau, hier ist die Eins. Mit der Eins fangen wir an.');
       }
       wrongBusy = false;
     }
@@ -351,7 +372,9 @@
     head.replaceChildren(U.emoji(pic.e, 'pv-pic-emoji'), el('span.pv-pic-name', U.cap(pic.say.split(' ').slice(1).join(' '))));
     head.classList.add('solved');
     await ctx.sleep(500);
-    await ctx.correct(svg, { say: `Super! Das ist ${pic.say}!` });
+    await ctx.correct(svg, { say: ctx.wrongCount === 0 && U.chance(0.3)
+      ? `Super, du hast alle Zahlen der Reihe nach gefunden! Das ist ${pic.say}!`
+      : `Super! Das ist ${pic.say}!` });
   }
 
   LT.werk.pvPics = PICS;

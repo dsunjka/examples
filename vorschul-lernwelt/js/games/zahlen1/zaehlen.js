@@ -6,8 +6,14 @@
      markiert und die Zahl wird mitgezählt („eins, zwei, drei …“).
    - Kardinalprinzip: Nach der richtigen Antwort wird die Menge noch einmal
      benannt („Richtig, sieben Äpfel!“) – die letzte Zählzahl ist die Anzahl.
-   - Hilfe nach 2 Fehlversuchen: Flo zählt langsam vor und zeigt auf jedes Ding.
+   - Lerninhalt = die Anzahl (Schlüssel '7'): über ctx.item gewählt, damit
+     schwierige Anzahlen in der Runde und an späteren Tagen wiederkommen.
+   - Hilfe-Leiter: 1. Fehler → „Es sind mehr / weniger als drei.“;
+     2. Fehler → Denkanstoß „Tippe jedes Ding einmal an“ (Zählung wird
+     zurückgesetzt, eine Zahl verschwindet); 3. Fehler → Flo zählt langsam
+     vor, zeigt auf jedes Ding und benennt die letzte Zahl als Anzahl.
    - Stufen: geordnet (Fünferreihen) → ungeordnet → Zahlenraum bis 20.
+     Innerhalb der Runde: ctx.taskLevel; auf Stufe 1 bei ctx.flow < 0 nur 1–4.
    ========================================================================== */
 (function () {
   'use strict';
@@ -88,9 +94,10 @@
     },
 
     async task(ctx) {
-      const cfg = LEVELS[ctx.level] || LEVELS[1];
-      // keine direkte Wiederholung derselben Anzahl
-      const n = U.pickFresh('zaehlen-n-' + ctx.level, U.range(cfg.min, cfg.max), 2);
+      const cfg = LEVELS[ctx.taskLevel] || LEVELS[1];
+      // Lerninhalt: die Anzahl (verteiltes Wiederholen über ctx.item)
+      const max = ctx.taskLevel === 1 && ctx.flow < 0 ? 4 : cfg.max;
+      const n = ctx.item(U.range(cfg.min, max), (k) => String(k), { avoid: 2 });
       const item = U.pickFresh('zaehlen-item', countables(), 6, (w) => w.id);
       const plural = item.p;
 
@@ -168,8 +175,7 @@
 
       // Hilfe: Flo zählt vor
       async function countAloud() {
-        items.forEach((b) => { b.classList.remove('counted'); const s = b.querySelector('.num'); if (s) s.remove(); });
-        counted = 0;
+        resetCount();
         for (let i = 0; i < items.length; i++) {
           if (!ctx.active) return;
           items[i].classList.add('pointing', 'counted');
@@ -188,15 +194,30 @@
         text: true,
         correct: k === n,
         say: U.numberWord(k),
+        value: k,
       }));
+      const resetCount = () => {
+        items.forEach((b) => { b.classList.remove('counted'); const s = b.querySelector('.num'); if (s) s.remove(); });
+        counted = 0;
+      };
+      const ha = Z.hintAfterFor(ctx, options.length);
       await ctx.choices(options, {
         shuffle: false,
         size: 'small',
-        hintAfter: 2,
-        correctSay: () => `Richtig! ${U.cap(Z.count(n, item))}.`,
-        // nach dem 2. Fehlversuch zählt Flo gemeinsam mit dem Kind (Eingabe ist solange gesperrt)
+        hintAfter: ha,
+        // Prozess-Lob nur ab und zu, sonst kurz die Anzahl benennen
+        correctSay: () => (ctx.wrongCount === 0 && U.chance(0.3)
+          ? `Richtig, du hast genau gezählt: ${Z.count(n, item)}.`
+          : `Richtig! ${U.cap(Z.count(n, item))}.`),
+        // 1. Hilfe: Richtung angeben, ohne die Lösung zu verraten
+        explain: (choice) => `${U.cap(U.numberWord(choice.value))} passt nicht. Es sind ${choice.value > n ? 'weniger' : 'mehr'} als ${U.numberWord(choice.value)}.`,
+        // 2. Hilfe: Strategie – jedes Ding genau einmal antippen (Zählung beginnt neu)
+        hintSay: () => 'Tippe jedes Ding genau einmal an und zähle laut mit.',
+        // 3. Hilfe: Flo zählt vor (in onWrong), dann wird die Lösung begründet
+        modelSay: () => `Darum ist die ${U.cap(U.numberWord(n))} richtig.`,
         onWrong: async (choice, tile, wrongs) => {
-          if (wrongs === 2) {
+          if (wrongs === ha) resetCount();
+          else if (wrongs === ha + 1) {
             await ctx.say('Komm, wir zählen zusammen!');
             await countAloud();
           }

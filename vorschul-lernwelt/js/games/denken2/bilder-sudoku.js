@@ -11,10 +11,16 @@
    - Bedienung ohne Lesen: Ein lösbares leeres Feld ist schon ausgewählt
      (leuchtet); das Kind tippt unten das passende Bild an. Es kann aber auch
      jedes andere leere Feld antippen.
-   - Fehler: Flo erklärt konkret, WARUM es nicht passt („In dieser Reihe ist
-     schon eine Katze.“) und zeigt auf das doppelte Bild. Nach 2 Fehlern im
-     selben Feld werden Reihe und Spalte hervorgehoben und das passende Bild
-     leuchtet.
+   - Hilfe-Leiter je Feld: 1. Fehler → Flo erklärt konkret, WARUM es nicht
+     passt („In dieser Reihe ist schon eine Katze.“) und zeigt auf das doppelte
+     Bild; 2. Fehler → Denkanstoß: Reihe und Spalte (und Kästchen) werden
+     hervorgehoben („Schau dir die Reihe und die Spalte an …“);
+     3. Fehler → vormachen: das passende Bild leuchtet und Flo begründet es
+     („Alle anderen Tiere sind hier schon da. Es fehlt nur noch …“).
+   - Lerninhalt = die Regeln (Schlüssel 'Regel Reihe', 'Regel Spalte',
+     'Regel Kästchen'): Verstöße werden protokolliert, so sehen Eltern, welche
+     Regel noch übersehen wird. Größe und Lückenzahl folgen ctx.taskLevel;
+     auf Stufe 4 bei ctx.flow > 0 ein bis zwei Lücken mehr.
    - Stufen: 3×3 mit 1 Lücke · 3×3 mit 3 Lücken · 4×4 (mit 2×2-Kästchen)
      mit 3–4 Lücken · 4×4 mit 6–8 Lücken.
    ========================================================================== */
@@ -43,8 +49,8 @@
       { e: '🍐', w: 'Birne', a: 'die', ein: 'eine' }, { e: '🍓', w: 'Erdbeere', a: 'die', ein: 'eine' }] },
   ];
   const KIND = {
-    tier: { every: 'jedes Tier', which: 'Welches Tier' },
-    obst: { every: 'jede Obstsorte', which: 'Welches Obst' },
+    tier: { every: 'jedes Tier', which: 'Welches Tier', others: 'Alle anderen Tiere' },
+    obst: { every: 'jede Obstsorte', which: 'Welches Obst', others: 'Alle anderen Obstsorten' },
   };
 
   const LEVELS = {
@@ -155,7 +161,8 @@
     },
 
     async task(ctx) {
-      const cfg = LEVELS[ctx.level] || LEVELS[1];
+      let cfg = LEVELS[ctx.taskLevel] || LEVELS[1];
+      if (ctx.taskLevel === ctx.maxLevel && ctx.flow > 0) cfg = { n: 4, holes: [7, 9] };
       const n = cfg.n;
       const set = U.pickFresh('sud-set', SETS, 2, (s) => s.id);
       const pics = U.sample(set.items, n);
@@ -198,6 +205,10 @@
       let busy = true;
       let cellWrong = 0;
       let done = null;
+      // Regeln als Lerninhalt: wurde eine Regel in dieser Aufgabe verletzt?
+      const broke = { 'Regel Reihe': false, 'Regel Spalte': false };
+      if (n === 4) broke['Regel Kästchen'] = false;
+      const RULE_KEY = { 'In dieser Reihe': 'Regel Reihe', 'In dieser Spalte': 'Regel Spalte', 'In diesem Kästchen': 'Regel Kästchen' };
       const finished = new Promise((r) => { done = r; });
 
       const empties = () => cells.flat().filter((x) => grid[x._r][x._c] === -1);
@@ -278,6 +289,7 @@
             sel = null;
             const left = empties().length;
             if (!left) {
+              Object.keys(broke).forEach((k) => ctx.track(k, !broke[k]));
               await ctx.correct(board, { say: n === 4
                 ? `Super! Jetzt kommt in jeder Reihe, jeder Spalte und jedem Kästchen ${kind.every} genau einmal vor.`
                 : `Super! Jetzt kommt in jeder Reihe und jeder Spalte ${kind.every} genau einmal vor.` });
@@ -286,7 +298,8 @@
             }
             LT.sfx.play('correct');
             LT.ui.animate(cell, 'joy');
-            await ctx.say(`Genau, ${p.a} ${p.w}!`);
+            // ab und zu Prozess-Lob: benennt den Schluss
+            await ctx.say(cellWrong === 0 && U.chance(0.25) ? `Genau, ${p.a} ${p.w} hat hier noch gefehlt!` : `Genau, ${p.a} ${p.w}!`);
             autoSelect();
             busy = false;
           } else {
@@ -313,18 +326,25 @@
             }
             dup.classList.add('sud-dup');
             cellWrong++;
+            broke[RULE_KEY[where]] = true;
+            // 1. Hilfe: konkret erklären, warum das gewählte Bild hier nicht passt
             await ctx.wrong(b, { say: `${where} ist schon ${p.ein} ${p.w}.` });
             if (!ctx.active) return;
             dup.classList.remove('sud-dup');
-            if (cellWrong >= 2) {
-              // Hilfe: Reihe und Spalte hervorheben, passendes Bild leuchtet
+            if (cellWrong === 2) {
+              // 2. Hilfe: Denkanstoß – Reihe und Spalte (und Kästchen) hervorheben, Lösung nicht verraten
               cells.flat().forEach((x) => {
                 if (x._r === r || x._c === c || (n === 4 && boxOf(n, x._r, x._c) === boxOf(n, r, c))) x.classList.add('sud-line');
               });
-              ctx.hint(palBtns[sol[r][c]]);
               await ctx.say(n === 4
                 ? `Schau dir die Reihe, die Spalte und das Kästchen an. ${kind.which} fehlt hier noch?`
                 : `Schau dir die Reihe und die Spalte an. ${kind.which} fehlt hier noch?`);
+            } else if (cellWrong >= 3) {
+              // 3. Hilfe: vormachen und begründen
+              const right = pics[sol[r][c]];
+              ctx.hint(palBtns[sol[r][c]]);
+              if (!ctx.modelShown || cellWrong === 3) await ctx.say(`Schau: ${kind.others} sind hier schon da. Es fehlt nur noch ${right.ein} ${right.w}.`);
+              ctx.modelShown = true;
             }
             busy = false;
           }

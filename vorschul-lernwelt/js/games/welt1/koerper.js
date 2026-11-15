@@ -9,8 +9,10 @@
      Körperteil an; danach wird es benannt und mit einem kleinen Sachsatz
      verknüpft („Mit den Ohren hörst du.“).
    - Tippt das Kind daneben, sagt Flo, was es angetippt hat („Das ist der
-     Arm.“) – so lernt es auch dabei ein Wort. Nach 2 Fehlversuchen leuchtet
-     die richtige Stelle auf.
+     Arm.“) – so lernt es auch dabei ein Wort. Hilfe-Leiter: nach 2 Fehlern
+     ein Lage-Tipp („Das Knie ist in der Mitte vom Bein.“), danach leuchtet
+     die richtige Stelle. Sinne: Tipp zum Ausprobieren („Halt dir die Ohren zu.“).
+   - Lerninhalt = Körperteil bzw. Sinn (Schlüssel 'Knie', 'hören') über ctx.item.
    - Ab und zu lädt Flo ein, das Körperteil am eigenen Körper zu zeigen
      (Verknüpfung von Bild und eigenem Körper).
    - Stufen: große Körperteile → Gesicht (vergrößert) → Details (Hals,
@@ -50,6 +52,21 @@
     finger: { is: 'ein Finger', def: 'der Finger', fact: 'An jeder Hand hast du fünf Finger.', show: 'Wackel mal mit deinen Fingern!' },
     zeh: { is: 'ein Zeh', def: 'der Zeh', fact: 'An jedem Fuß hast du fünf Zehen.', show: 'Wackel mal mit deinen Zehen!' },
   };
+  /** Denkanstoß: Wo am Körper liegt das Körperteil? (zeigt die Stelle noch nicht) */
+  const WHERE = {
+    kopf: 'Der Kopf ist ganz oben.', bauch: 'Der Bauch ist in der Mitte vom Körper.',
+    arm: 'Die Arme sind an den Seiten, zwischen Schulter und Hand.', bein: 'Die Beine sind unten, darauf stehst du.',
+    hand: 'Die Hände sind ganz am Ende der Arme.', fuss: 'Die Füße sind ganz unten.',
+    auge: 'Die Augen sind über der Nase.', nase: 'Die Nase ist in der Mitte vom Gesicht.',
+    mund: 'Der Mund ist unter der Nase.', ohr: 'Die Ohren sind an den Seiten vom Kopf.',
+    haare: 'Die Haare sind oben auf dem Kopf.', kinn: 'Das Kinn ist ganz unten im Gesicht, unter dem Mund.',
+    wange: 'Die Wangen sind links und rechts neben der Nase.', braue: 'Die Augenbrauen sind direkt über den Augen.',
+    hals: 'Der Hals ist zwischen Kopf und Körper.', schulter: 'Die Schultern sind oben, wo die Arme anfangen.',
+    ellenbogen: 'Der Ellenbogen ist in der Mitte vom Arm, da wo er sich beugt.', knie: 'Das Knie ist in der Mitte vom Bein, da wo es sich beugt.',
+    finger: 'Die Finger sind vorne an der Hand.', zeh: 'Die Zehen sind vorne am Fuß.',
+  };
+  /** Kurzer, lesbarer Schlüssel für das Gedächtnis (Elternbereich): „Kopf“, „Augenbraue“ */
+  const partKey = (id) => (PARTS[id].def || PARTS[id].is).replace(/^\S+\s/, '');
   const LEVEL_PARTS = {
     1: ['kopf', 'bauch', 'arm', 'bein', 'hand', 'fuss'],
     2: ['auge', 'nase', 'mund', 'ohr', 'haare', 'kinn', 'wange', 'braue'],
@@ -177,6 +194,22 @@
   }
 
   /* ---------------- Die fünf Sinne (Stufe 4) ---------------- */
+  /** Denkanstoß für die direkte Frage: am eigenen Körper ausprobieren. */
+  const TRY = {
+    sehen: 'Mach mal kurz die Augen zu. Was siehst du jetzt noch?',
+    hoeren: 'Halt dir mal die Ohren zu. Was hörst du jetzt noch?',
+    riechen: 'Halt dir mal die Nase zu. Kannst du jetzt noch riechen?',
+    schmecken: 'Denk an ein Eis. Womit leckst du daran?',
+    fuehlen: 'Denk an eine weiche Katze. Womit streichelst du sie?',
+  };
+  /** Denkanstoß für Situationen: Was passiert da eigentlich? */
+  const THINK = {
+    sehen: 'Denk mal nach: Muss man dafür hinschauen?',
+    hoeren: 'Denk mal nach: Ist das ein Geräusch?',
+    riechen: 'Denk mal nach: Ist das ein Duft oder ein Geruch?',
+    schmecken: 'Denk mal nach: Merkst du das im Mund, beim Essen?',
+    fuehlen: 'Denk mal nach: Spürst du das auf der Haut?',
+  };
   const SENSES = {
     sehen: { e: '👀', say: 'die Augen', mit: 'mit den Augen', verb: 'siehst', q: 'Womit siehst du?' },
     hoeren: { e: '👂', say: 'die Ohren', mit: 'mit den Ohren', verb: 'hörst', q: 'Womit hörst du?' },
@@ -184,6 +217,7 @@
     schmecken: { e: '👅', say: 'die Zunge', mit: 'mit der Zunge', verb: 'schmeckst', q: 'Womit schmeckst du?' },
     fuehlen: { e: '✋', say: 'die Hände', mit: 'mit den Händen und der Haut', verb: 'fühlst', q: 'Womit fühlst du, ob etwas weich oder hart ist?' },
   };
+  const SENSE_KEY = { sehen: 'sehen', hoeren: 'hören', riechen: 'riechen', schmecken: 'schmecken', fuehlen: 'fühlen' };
   // Situationen, die eindeutig EINEN Sinn ansprechen
   const SITUATIONS = [
     { s: 'hoeren', e: '🔔', t: 'Die Glocke läutet: Ding, dong!' },
@@ -223,15 +257,16 @@
     },
 
     async task(ctx) {
-      if (ctx.level >= 4) return senseTask(ctx);
+      if (ctx.taskLevel >= 4) return senseTask(ctx);
       return bodyTask(ctx);
     },
   });
 
   /** Stufen 1–3: Körperteil auf der Figur antippen. */
   async function bodyTask(ctx) {
-    const level = ctx.level;
-    const partId = U.pickFresh('koerper-' + level, LEVEL_PARTS[level], 3);
+    const level = ctx.taskLevel;
+    // Lerninhalt = das Körperteil (verteiltes Wiederholen über ctx.item)
+    const partId = ctx.item(LEVEL_PARTS[level], partKey);
     const part = PARTS[partId];
     const look = W.look('koerper');
     const verb = part.plural ? 'sind' : 'ist';
@@ -259,11 +294,15 @@
       onCorrect: (z) => z.classList.add('w1-ok'),
       feedbackNode: () => wrap,
       correctSay: () => `Richtig! Das ${verb} ${part.is}. ${showMe ? part.show : part.fact}`,
-      wrongSay: (z) => {
+      // 1. Hilfe: benennen, was angetippt wurde (beim 1. Fehler mit der Frage)
+      wrongSay: (z, n) => {
         const p = nameOf(z);
-        return `Das ${p.plural ? 'sind' : 'ist'} ${p.is}. ${q}`;
+        return `Das ${p.plural ? 'sind' : 'ist'} ${p.is}.${n === 1 ? ' ' + q : ''}`;
       },
-      hintSay: `Schau mal, hier leuchtet es. Da ${verb} ${part.def || part.is}.`,
+      // 2. Hilfe: Denkanstoß, wo das Körperteil liegt
+      hintSay: () => `Ein Tipp: ${WHERE[partId]}`,
+      // 3. Hilfe: Stelle leuchtet
+      modelSay: () => `Schau mal, hier leuchtet es. Da ${verb} ${part.def || part.is}. Tippe darauf!`,
     });
     if (showMe && ctx.active) await ctx.sleep(1200);
   }
@@ -271,19 +310,18 @@
   /** Stufe 4: Welcher Sinn passt? */
   async function senseTask(ctx) {
     const direct = U.chance(0.3);
-    let senseId;
+    // Lerninhalt = der Sinn („hören“): über ctx.item, Situation passend dazu
+    const senseId = ctx.item(Object.keys(SENSES), (k) => SENSE_KEY[k]);
     let promptNode;
     let text;
     let correctText;
     if (direct) {
-      senseId = U.pickFresh('koerper-sense', Object.keys(SENSES), 2);
       const s = SENSES[senseId];
       text = s.q;
       correctText = `Richtig! Du ${s.verb} ${s.mit}.`;
       promptNode = el('div.w1-prompt', U.emoji('🤔'), el('span.w1-q', s.q));
     } else {
-      const sit = U.pickFresh('koerper-sit', SITUATIONS, 6, (x) => x.e);
-      senseId = sit.s;
+      const sit = U.pickFresh('koerper-sit', SITUATIONS.filter((x) => x.s === senseId), 2, (x) => x.e);
       const s = SENSES[senseId];
       text = `${sit.t} Womit merkst du das?`;
       correctText = `Richtig! Das ${s.verb} du ${s.mit}.`;
@@ -297,15 +335,20 @@
       value: k,
     }));
     ctx.instruct(text);
+    const S = SENSES[senseId];
     await ctx.choices(items, {
       shuffle: false,
       sayButton: true,
       nameFirst: ctx.index === 0,
       className: 'koerper-senses',
-      correctSay: () => correctText,
-      // informativ: Was macht man mit dem gewählten Sinnesorgan?
-      wrongSay: (it) => `${U.cap(SENSES[it.value].mit)} ${SENSES[it.value].verb} du. Probier es nochmal!`,
-      hintSay: `Ich helfe dir: ${U.cap(SENSES[senseId].mit)} ${SENSES[senseId].verb} du.`,
+      hintAfter: W.hintAfter(ctx, items.length),
+      correctSay: () => (ctx.modelShown ? `Genau, ${S.mit}.` : correctText),
+      // 1. Hilfe: Was macht man mit dem gewählten Sinnesorgan?
+      explain: (it) => `${U.cap(SENSES[it.value].mit)} ${SENSES[it.value].verb} du. Hier suchen wir etwas anderes.`,
+      // 2. Hilfe: am eigenen Körper ausprobieren bzw. über die Situation nachdenken
+      hintSay: () => (direct ? TRY[senseId] : THINK[senseId]),
+      // 3. Hilfe: Lösung zeigen und begründen
+      modelSay: () => `Schau: Das ${S.verb} du ${S.mit}.`,
     });
   }
 })();

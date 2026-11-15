@@ -7,10 +7,13 @@
    - Nach der Lösung spricht Flo das Muster rhythmisch vor, während die
      Perlen nacheinander hüpfen („rot, blau, rot, blau …“) – Sehen, Hören und
      Rhythmus verankern die Regel gemeinsam.
-   - Hilfe nach 2 Fehlversuchen: Die sich wiederholende Einheit wird farbig
-     unterlegt und gegliedert vorgesprochen („rot, blau – rot, blau – …“).
-   - Tippt das Kind daneben, nennt Flo die angetippte Perle („Grün passt hier
-     nicht.“) – ohne Druck, mit einer neuen Chance.
+   - Hilfe-Leiter je Platz: 1. Fehler → Flo erklärt, was an der angetippten
+     Perle nicht passt („Grün kommt in der Kette gar nicht vor.“ / „Die Form
+     stimmt, aber die Farbe nicht.“); 2. Fehler → die sich wiederholende
+     Einheit wird farbig unterlegt und gegliedert vorgesprochen; 3. Fehler →
+     Flo zeigt die Lösung und begründet sie mit der Wiederholung.
+   - Lerninhalt = der Mustertyp (Schlüssel 'AAB Farben', 'Lücke ABC',
+     'wachsend' …) über ctx.item, Stufe je Aufgabe aus ctx.taskLevel.
    - Progression:
        1  AB-Muster mit Farben (Perlenkette), ein Platz
        2  AAB / ABB / AABB mit Farben oder AB mit Formen, zwei Plätze
@@ -137,37 +140,39 @@
   /** Hilfe: Einheiten farbig unterlegen und gegliedert vorsprechen
       („rot, blau – rot, blau – rot, …“). Lücken werden nicht verraten:
       In der Mitte heißt es „Lücke“, beim Fortsetzen endet der Satz davor. */
-  async function showUnits(ctx, cells, seq, unitLen, holes, gapMode, question) {
+  function unitsHint(cells, seq, unitLen, holes, gapMode, question) {
     cells.forEach((c, i) => c.classList.add(Math.floor(i / unitLen) % 2 ? 'muster-u1' : 'muster-u0'));
+    // Einheiten durch Punkt gegliedert („rot, blau. rot, blau. rot, und dann?“)
     let text = '';
     for (let j = 0; j < seq.length; j++) {
-      if (j > 0) text += j % unitLen === 0 ? ' – ' : ', ';
+      if (j > 0) text += j % unitLen === 0 ? '. ' : ', ';
       if (holes.includes(j)) {
-        if (!gapMode) { text += '…'; break; }
+        if (!gapMode) { text = text.replace(/[.,] $/, ''); text += ', und dann?'; return `Schau, immer wieder: ${text}`; }
         text += 'Lücke';
       } else text += chantName(seq[j]);
     }
-    await ctx.say(`Schau, immer wieder: ${text}${text.endsWith('…') ? '' : '.'} ${question}`);
+    return `Schau, immer wieder: ${text}. ${question}`;
   }
+
+  /** Mustertypen je Stufe: [Einheit, Merkmal]; Schlüssel lesbar für den Elternbereich. */
+  const MODE_NAME = { color: 'Farben', shape: 'Formen', both: 'Form und Farbe' };
+  const TYPES = {
+    1: [['AB', 'color']],
+    2: [['AB', 'shape'], ['AAB', 'color'], ['ABB', 'color'], ['AABB', 'color']],
+    3: [['ABC', 'color'], ['AB', 'both'], ['ABC', 'both'], ['ABC', 'shape']],
+    4: [['AB', null], ['AAB', null], ['ABB', null], ['ABC', null]],
+  };
+  const typeKey = (lv, t) => (lv === 4 ? `Lücke ${t[0]}` : `${t[0]} ${MODE_NAME[t[1]]}`);
 
   /* ------------------------------------------------------------------
      Stufen 1–4: Kette fortsetzen bzw. Lücke füllen
      ------------------------------------------------------------------ */
   async function patternTask(ctx) {
-    const lv = ctx.level;
-    let unitName;
-    let mode;
-    if (lv === 1) { unitName = 'AB'; mode = 'color'; }
-    else if (lv === 2) {
-      if (U.chance(0.3)) { unitName = 'AB'; mode = 'shape'; }
-      else { unitName = U.pickFresh('muster-u2', ['AAB', 'ABB', 'AABB'], 1); mode = 'color'; }
-    } else if (lv === 3) {
-      const r = U.pickFresh('muster-u3', ['ABC-color', 'AB-both', 'ABC-both', 'ABC-shape'], 2);
-      [unitName, mode] = r.split('-');
-    } else {
-      unitName = U.pickFresh('muster-u4', ['AB', 'AAB', 'ABB', 'ABC'], 2);
-      mode = U.pick(unitName === 'AB' ? ['color', 'shape', 'both'] : ['color', 'shape']);
-    }
+    const lv = Math.min(4, ctx.taskLevel);
+    // Lerninhalt: der Mustertyp (verteiltes Wiederholen über ctx.item)
+    const type = ctx.item(TYPES[lv], (t) => typeKey(lv, t), { avoid: lv === 2 ? 1 : 2 });
+    const unitName = type[0];
+    const mode = type[1] || U.pick(unitName === 'AB' ? ['color', 'shape', 'both'] : ['color', 'shape']);
     const unit = UNITS[unitName];
     const k = Math.max(...unit) + 1;
     const elements = makeElements(mode, k);
@@ -202,7 +207,6 @@
       ? `In der ${what} fehlt etwas. Was gehört in die Lücke?`
       : `Schau dir die ${what} an. Was kommt als Nächstes?`);
 
-    let hinted = false;
     for (let s = 0; s < holes.length; s++) {
       if (!ctx.active) return;
       const idx = holes[s];
@@ -217,20 +221,24 @@
         aria: chantName(e),
       }));
       if (s > 0) ctx.instruct('Und was kommt danach?');
-      // Fehler zählen je Platz (ctx.wrongCount zählt über die ganze Aufgabe)
-      const base = ctx.wrongCount;
+      // Hilfe-Leiter je Platz (ctx.choices zählt die Fehler je Auswahl)
       await ctx.choices(items, {
         container: choiceBox,
         className: 'muster-opts',
-        praise: true,
-        hintAfter: base + 2,
-        wrongSay: (it) => `Hmm, ${defName(it.e)} passt hier nicht. Schau noch mal!`,
-        onWrong: async (it, tile, n) => {
-          if (n - base >= 2 && !hinted) {
-            hinted = true;
-            await showUnits(ctx, cells, seq, unit.length, holes.slice(s), gapMode, q);
-          }
+        hintAfter: 2,
+        correctSay: () => (ctx.wrongCount === 0 && U.chance(0.3) ? 'Richtig, du hast die Regel gefunden!' : LT.ui.praise()),
+        // 1. Hilfe: konkret sagen, was an der gewählten Perle/Form nicht passt
+        explain: (it) => {
+          const name = U.cap(defName(it.e));
+          if (it.e.mode === 'both' && it.e.shape === correct.shape) return `${name} passt hier nicht. Die Form stimmt, aber die Farbe nicht.`;
+          if (it.e.mode === 'both' && it.e.color === correct.color) return `${name} passt hier nicht. Die Farbe stimmt, aber die Form nicht.`;
+          if (!elements.some((x) => same(x, it.e))) return `${name} kommt in der Kette gar nicht vor.`;
+          return `${name} kommt in der Kette vor, aber nicht an dieser Stelle.`;
         },
+        // 2. Hilfe: Einheiten zeigen und gegliedert vorsprechen (ohne die Lösung zu nennen)
+        hintSay: () => unitsHint(cells, seq, unit.length, holes.slice(s), gapMode, q),
+        // 3. Hilfe: Lösung zeigen und mit der Wiederholung begründen
+        modelSay: () => `Schau, hier gehört ${defName(correct)} hin. Das Muster wiederholt sich immer wieder.`,
       });
       if (!ctx.active) return;
       const cell = cells[idx];
@@ -253,7 +261,7 @@
   }
 
   async function growTask(ctx) {
-    const grow = U.chance(0.65);
+    const grow = ctx.item(['wachsend', 'schrumpfend'], (x) => x, { avoid: 1 }) === 'wachsend';
     const kind = U.pick(['tower', 'beads']);
     const color = U.pick(FM.VIVID);
     const groups = U.pick([3, 4]);
@@ -296,13 +304,15 @@
       shuffle: false,
       className: 'muster-opts muster-gopts',
       correctSay: `Richtig! ${U.cap(FM.nw(answer))} ${answer === 1 ? unitWord[0] : unitWord[1]}.`,
-      wrongSay: (it) => `Das ${it.n === 1 ? (kind === 'tower' ? 'ist ein Stein' : 'ist eine Perle') : 'sind ' + FM.nw(it.n) + ' ' + unitWord[1]}. Zähl noch mal nach!`,
-      onWrong: async (it, tile, n) => {
-        if (n === 2) {
-          row.classList.add('show-nums');
-          await ctx.say(`Zähl mal mit: ${shown.map((c) => FM.nw(c)).join(', ')} – und dann?`);
-        }
+      // 1. Hilfe: Anzahl der gewählten Säule nennen und sagen, ob es zu viele oder zu wenige sind
+      explain: (it) => `Das ${it.n === 1 ? (kind === 'tower' ? 'ist ein Stein' : 'ist eine Perle') : 'sind ' + FM.nw(it.n) + ' ' + unitWord[1]}. Das sind zu ${it.n > answer ? 'viele' : 'wenige'}.`,
+      // 2. Hilfe: Zahlen einblenden und die Reihe mitzählen
+      hintSay: () => {
+        row.classList.add('show-nums');
+        return `Zähl mal mit: ${shown.map((c) => FM.nw(c)).join(', ')}, und dann?`;
       },
+      // 3. Hilfe: Lösung zeigen und die Regel nennen
+      modelSay: () => `Schau: Hier sind es ${FM.nw(answer)} ${answer === 1 ? unitWord[0] : unitWord[1]}. Immer ${oneMore} ${grow ? 'mehr' : 'weniger'}.`,
     });
     if (!ctx.active) return;
     U.clear(slot).appendChild(stack(answer, kind, color));
@@ -311,7 +321,7 @@
     row.classList.add('show-nums');
     U.clear(choiceBox);
     const colsAll = cols.concat([slot]);
-    const speech = ctx.say(`${counts.map((c) => FM.nw(c)).join(', ')} – immer ${oneMore} ${grow ? 'mehr' : 'weniger'}!`);
+    const speech = ctx.say(`${counts.map((c) => FM.nw(c)).join(', ')}. Immer ${oneMore} ${grow ? 'mehr' : 'weniger'}!`);
     for (const c of colsAll) {
       if (!ctx.active) return;
       c.classList.add('muster-bounce');
@@ -344,7 +354,7 @@
     },
 
     async task(ctx) {
-      if (ctx.level <= 4) return patternTask(ctx);
+      if (ctx.taskLevel <= 4) return patternTask(ctx);
       return growTask(ctx);
     },
   });

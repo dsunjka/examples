@@ -12,9 +12,12 @@
      Fledermaus ist kein Vogel, Erdbeere wächst nicht am Baum).
    - Nach der Lösung wird IMMER begründet: „Richtig! Die Gurke ist Gemüse.
      Die anderen sind Obst.“ – das macht die Denkregel bewusst.
-   - Fehler sind Lerngelegenheiten: Flo erklärt, warum das angetippte Bild
-     doch dazugehört („Die Banane ist auch Obst.“). Nach dem 2. Fehlversuch
-     nennt Flo die Regel und hebt die Lösung hervor.
+   - Fehler sind Lerngelegenheiten (Hilfe-Leiter): 1. Fehler → Flo erklärt,
+     warum das angetippte Bild doch dazugehört („Die Banane ist auch Obst.“);
+     2. Fehler → Denkanstoß mit der Regel („Drei davon sind Obst. Welches
+     nicht?“), ein Bild verschwindet; 3. Fehler → Flo zeigt und begründet.
+   - Lerninhalt = die Denkregel der Aufgabe (Schlüssel 'Gemüse unter Obst',
+     'kann fliegen' …) über ctx.item; Stufe je Aufgabe aus ctx.taskLevel.
    - Datensätze sorgfältig geprüft: Jede Aufgabe hat genau EINE sinnvolle
      Lösung. Dafür stammen die Bilder einer Merkmals-Aufgabe aus derselben
      Oberkategorie (sonst könnte ein zweites Bild „nicht passen“, z. B. das
@@ -52,9 +55,12 @@
     wild: { sg: 'ist ein wildes Tier', pl: 'sind wilde Tiere', ids: ['loewe', 'tiger', 'elefant', 'giraffe', 'zebra', 'affe', 'nilpferd', 'nashorn', 'kaenguru', 'koala', 'panda'] },
   };
 
+  /** Lesbare Namen der Oberbegriffe (Lern-Schlüssel im Elternbereich) */
+  const CAT_NAME = { tiere: 'Tiere', fahrzeuge: 'Fahrzeuge', obst: 'Obst', obst2: 'Obst', kleidung: 'Kleidung', musik: 'Instrumente', gemuese: 'Gemüse', spielzeug: 'Spielzeug', instrumente: 'Instrumente', blumen: 'Blumen', baeume: 'Bäume', hof: 'Bauernhof', wild: 'wilde Tiere' };
+
   /** Aufgabe aus zwei Oberbegriffen: a = Gruppe, b = Ausreißer */
   function catSet(a, b) {
-    return { id: `${a}-${b}`, a: CAT[a].ids, aSg: CAT[a].sg, aPl: CAT[a].pl, b: CAT[b].ids.map((id) => ({ id, pred: CAT[b].sg })) };
+    return { id: `${a}-${b}`, key: `${CAT_NAME[b]} unter ${CAT_NAME[a]}`, a: CAT[a].ids, aSg: CAT[a].sg, aPl: CAT[a].pl, b: CAT[b].ids.map((id) => ({ id, pred: CAT[b].sg })) };
   }
   /** Ausreißer-Liste mit gleichem Prädikat */
   const odd = (ids, pred, extra) => ids.map((id) => ({ id, pred, extra }));
@@ -131,6 +137,15 @@
     },
   };
 
+  /** Lern-Schlüssel der Merkmals-Aufgaben (Elternbereich) */
+  const F_KEY = {
+    'fliegen-tiere': 'Tiere, die fliegen', 'fliegen-fahrzeuge': 'Fahrzeuge, die fliegen', wasser: 'lebt im Wasser', raeder: 'hat Räder',
+    heiss: 'heiß', kalt: 'kalt', wald: 'lebt im Wald', bauernhof: 'lebt auf dem Bauernhof', licht: 'macht Licht', fuesse: 'an die Füße',
+    kopf: 'auf den Kopf', rot: 'rot', streifen: 'Streifen', pinguin: 'Pinguin fliegt nicht', fledermaus: 'Fledermaus ist kein Vogel',
+    beine: 'vier Beine', baumobst: 'wächst am Baum',
+  };
+  Object.keys(F).forEach((k) => { F[k].key = F_KEY[F[k].id] || F[k].id; });
+
   const SETS3 = [F.fliegenTiere, F.fliegenFahrzeuge, F.wasser, F.raeder, F.heiss, F.kalt, F.wald, F.bauernhof, F.licht, F.fuesse, F.kopf, F.rot, F.streifen];
   const SETS4 = [
     F.pinguin, F.fledermaus, F.beine, F.baumobst, F.kopf, F.fliegenTiere, F.wasser, F.raeder,
@@ -184,12 +199,13 @@
     }
     return true;
   }
-  /** Aufgabe ziehen: Gruppe + Ausreißer, die den Prüfer bestehen (sonst neue Ziehung). */
-  function draw(sets, level, k) {
+  /** Aufgabe ziehen: Gruppe + Ausreißer, die den Prüfer bestehen (sonst neue Ziehung).
+      first = bereits über ctx.item gewählte Aufgabe (wird zuerst versucht). */
+  function draw(sets, level, k, first) {
     let last = null;
     for (let s = 0; s < 12; s++) {
-      const set = U.pickFresh('pn-set-' + level, sets, Math.min(4, sets.length - 1), (x) => x.id);
-      for (let i = 0; i < 40; i++) {
+      const set = s === 0 && first ? first : U.pickFresh('pn-set-' + level, sets, Math.min(4, sets.length - 1), (x) => x.id);
+      for (let i = 0; i < (s === 0 ? 120 : 40); i++) {
         const outlier = U.pick(set.b);
         const pool = set.a.filter((id) => id !== outlier.id);
         if (pool.length < k) continue;
@@ -231,11 +247,14 @@
     },
 
     async task(ctx) {
-      const cfg = LEVELS[ctx.level] || LEVELS[1];
+      const lv = ctx.taskLevel;
+      const cfg = LEVELS[lv] || LEVELS[1];
       const k = cfg.n - 1; // so viele gehören zusammen
 
+      // Lerninhalt: die Denkregel (verteiltes Wiederholen über ctx.item);
       // Gruppe und Ausreißer ziehen – geprüft auf genau EINE sinnvolle Lösung
-      const { set, outlier, groupIds } = draw(cfg.sets, ctx.level, k);
+      const chosen = ctx.item(cfg.sets, (x) => x.key, { fresh: 'pn-set-' + lv, avoid: Math.min(4, cfg.sets.length - 1) });
+      const { set, outlier, groupIds } = draw(cfg.sets, lv, k, chosen);
       const group = D.words(groupIds);
       const oddWord = D.word(outlier.id);
 
@@ -267,19 +286,28 @@
         className: 'pn-choices n' + cfg.n,
         sayButton: true,
         hintAfter: 2,
-        // Fehler erklären: Das angetippte Bild gehört doch zur Gruppe
-        wrongSay: (it) => `${D.Art(it.word)} ${D.auch(set.aSg)}. Probier ein anderes!`,
+        // die Zahl „drei gehören zusammen“ muss stimmen → keine automatisch entfernte Kachel
+        ease: false,
+        // 1. Hilfe: Das angetippte Bild gehört doch zur Gruppe
+        explain: (it) => `${D.Art(it.word)} ${D.auch(set.aSg)}. Probier ein anderes!`,
+        // 2. Hilfe: die Regel als Denkanstoß
         hintSay: () => `Ich helfe dir: ${howMany} davon ${set.aPl}. Welches nicht?`,
+        // 3. Hilfe: zeigen und begründen
+        modelSay: () => `Schau: ${D.Art(oddWord)} ${outlier.pred}.`,
         onCorrect: (it, tile) => {
           groupTiles = (box._tiles || []).filter((t) => t !== tile);
           groupTiles.forEach((t) => t.classList.add('pn-same'));
         },
-        correctSay: () => `Richtig! ${reason}`,
+        correctSay: () => {
+          if (ctx.modelShown) return `Genau! Die anderen ${set.aPl}.`;
+          if (ctx.wrongCount === 0 && U.chance(0.3)) return `Richtig, du hast die Gemeinsamkeit gefunden! ${reason}`;
+          return `Richtig! ${reason}`;
+        },
       });
 
       await ctx.say(question);
       // Bilder benennen: auf Stufe 1 nur bei der ersten Aufgabe, danach immer (Wortschatz!)
-      if (ctx.level > 1 || first) {
+      if (lv > 1 || first) {
         for (const t of box._tiles || []) {
           if (!ctx.active) return;
           t.classList.add('speaking');

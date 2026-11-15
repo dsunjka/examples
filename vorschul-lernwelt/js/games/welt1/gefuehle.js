@@ -14,6 +14,9 @@
    - Geschichten nutzen abwechslungsreiche Vornamen. Ablenker werden so
      gewählt, dass nur EIN Gefühl wirklich passt (z. B. bei einem Geschenk
      nie „überrascht“ als Ablenker neben „fröhlich“).
+   - Hilfe-Leiter: Merkmal des gewählten Gefühls → Denkanstoß (Merkmal des
+     gesuchten Gefühls, „Stell dir vor, dir passiert das“) → Flo zeigt und
+     begründet. Lerninhalt (Gefühl, Geschichte, Handlung) über ctx.item.
    - Stufen: Grundgefühle → weitere Gefühle & gleiches Gefühl wiederfinden →
      Situationen → Was hilft?
    ========================================================================== */
@@ -110,57 +113,57 @@
   /* ---------------- Geschichten (Stufe 3) ----------------
      g: Geschlecht des Namens; ex: Gefühle, die hier AUCH passen könnten → nie als Ablenker */
   const STORIES = [
-    { g: 'w', t: '{N} bekommt ein Geschenk.', e: '🎁', f: 'froehlich', why: '{er} ein Geschenk bekommt', ex: ['ueberrascht', 'verliebt'] },
-    { g: 'm', t: '{N} hat seinen Teddy verloren.', e: '🧸', f: 'traurig', why: '{er} den Teddy vermisst', ex: ['aengstlich', 'wuetend'] },
-    { g: 'm', t: 'Jemand macht die Sandburg von {N} kaputt. Mit Absicht!', e: '🏰', f: 'wuetend', why: 'jemand die Sandburg kaputt gemacht hat', ex: ['traurig', 'ueberrascht'] },
-    { g: 'w', t: 'Es donnert und blitzt ganz laut. {N} ist allein in ihrem Zimmer.', e: '⛈️', f: 'aengstlich', why: 'das Gewitter so laut ist', ex: ['ueberrascht', 'traurig'] },
-    { g: 'm', t: '{N} war den ganzen Tag im Schwimmbad. Jetzt ist es Abend, und er gähnt.', e: '🌙', f: 'muede', why: 'er den ganzen Tag geschwommen ist', ex: ['traurig', 'froehlich'] },
-    { g: 'w', t: '{N} darf mit Oma ein Eis essen.', e: '🍦', f: 'froehlich', why: '{er} mit Oma Eis isst', ex: ['verliebt', 'ueberrascht'] },
-    { g: 'm', t: 'Der Luftballon von {N} fliegt weg, hoch in den Himmel.', e: '🎈', f: 'traurig', why: 'der Luftballon weg ist', ex: ['ueberrascht', 'wuetend'] },
-    { g: 'w', t: 'Ein anderes Kind nimmt {N} einfach die Schaufel weg.', e: '⛏️', f: 'wuetend', why: 'ihr jemand die Schaufel weggenommen hat', ex: ['traurig', 'ueberrascht'], noEmoji: true },
-    { g: 'm', t: 'Ein großer Hund bellt {N} ganz laut an.', e: '🐕', f: 'aengstlich', why: 'der große Hund laut bellt', ex: ['ueberrascht', 'wuetend'] },
-    { g: 'w', t: 'Plötzlich springt Opa hinter dem Sofa hervor und ruft: Kuckuck! Damit hat {N} nicht gerechnet.', e: '👴', f: 'ueberrascht', why: '{er} damit nicht gerechnet hat', ex: ['aengstlich', 'froehlich'] },
-    { g: 'm', t: '{N} hat den ganzen Tag getobt. Jetzt fallen ihm die Augen zu.', e: '🛏️', f: 'muede', why: 'er so viel getobt hat', ex: ['traurig', 'froehlich'] },
-    { g: 'w', t: 'Die beste Freundin von {N} zieht in eine andere Stadt.', e: '🚚', f: 'traurig', why: 'die Freundin wegzieht', ex: ['wuetend', 'aengstlich'] },
-    { g: 'm', t: '{N} hat ganz allein einen hohen Turm gebaut.', e: '🧱', f: 'froehlich', why: 'der Turm so toll geworden ist', ex: ['ueberrascht', 'verliebt'] },
-    { g: 'w', t: '{N} hat Geburtstag, und alle singen für sie.', e: '🎂', f: 'froehlich', why: 'alle für sie singen', ex: ['ueberrascht', 'verliebt'] },
-    { g: 'm', t: 'Der große Bruder kritzelt einfach auf das Bild von {N}.', e: '🖍️', f: 'wuetend', why: 'sein Bild bekritzelt wurde', ex: ['traurig', 'ueberrascht'] },
-    { g: 'w', t: 'Es wird dunkel, und {N} hört draußen ein komisches Geräusch.', e: '🌲', f: 'aengstlich', why: 'das Geräusch unheimlich ist', ex: ['ueberrascht', 'traurig'] },
-    { g: 'w', t: '{N} findet unter ihrem Kissen einen glitzernden Stein. Damit hat sie nicht gerechnet!', e: '💎', f: 'ueberrascht', why: 'sie damit nicht gerechnet hat', ex: ['froehlich', 'verliebt'] },
-    { g: 'w', t: '{N} denkt an Karim und bekommt ganz rote Wangen. Sie mag ihn sooo gern.', e: '💕', f: 'verliebt', why: 'sie Karim so gern mag', ex: ['froehlich'], nameNot: 'Karim' },
+    { k: 'Geschenk', g: 'w', t: '{N} bekommt ein Geschenk.', e: '🎁', f: 'froehlich', why: '{er} ein Geschenk bekommt', ex: ['ueberrascht', 'verliebt'] },
+    { k: 'Teddy verloren', g: 'm', t: '{N} hat seinen Teddy verloren.', e: '🧸', f: 'traurig', why: '{er} den Teddy vermisst', ex: ['aengstlich', 'wuetend'] },
+    { k: 'Sandburg kaputt', g: 'm', t: 'Jemand macht die Sandburg von {N} kaputt. Mit Absicht!', e: '🏰', f: 'wuetend', why: 'jemand die Sandburg kaputt gemacht hat', ex: ['traurig', 'ueberrascht'] },
+    { k: 'Gewitter', g: 'w', t: 'Es donnert und blitzt ganz laut. {N} ist allein in ihrem Zimmer.', e: '⛈️', f: 'aengstlich', why: 'das Gewitter so laut ist', ex: ['ueberrascht', 'traurig'] },
+    { k: 'Schwimmbad', g: 'm', t: '{N} war den ganzen Tag im Schwimmbad. Jetzt ist es Abend, und er gähnt.', e: '🌙', f: 'muede', why: 'er den ganzen Tag geschwommen ist', ex: ['traurig', 'froehlich'] },
+    { k: 'Eis mit Oma', g: 'w', t: '{N} darf mit Oma ein Eis essen.', e: '🍦', f: 'froehlich', why: '{er} mit Oma Eis isst', ex: ['verliebt', 'ueberrascht'] },
+    { k: 'Luftballon weg', g: 'm', t: 'Der Luftballon von {N} fliegt weg, hoch in den Himmel.', e: '🎈', f: 'traurig', why: 'der Luftballon weg ist', ex: ['ueberrascht', 'wuetend'] },
+    { k: 'Schaufel weg', g: 'w', t: 'Ein anderes Kind nimmt {N} einfach die Schaufel weg.', e: '⛏️', f: 'wuetend', why: 'ihr jemand die Schaufel weggenommen hat', ex: ['traurig', 'ueberrascht'], noEmoji: true },
+    { k: 'großer Hund', g: 'm', t: 'Ein großer Hund bellt {N} ganz laut an.', e: '🐕', f: 'aengstlich', why: 'der große Hund laut bellt', ex: ['ueberrascht', 'wuetend'] },
+    { k: 'Opa ruft Kuckuck', g: 'w', t: 'Plötzlich springt Opa hinter dem Sofa hervor und ruft: Kuckuck! Damit hat {N} nicht gerechnet.', e: '👴', f: 'ueberrascht', why: '{er} damit nicht gerechnet hat', ex: ['aengstlich', 'froehlich'] },
+    { k: 'viel getobt', g: 'm', t: '{N} hat den ganzen Tag getobt. Jetzt fallen ihm die Augen zu.', e: '🛏️', f: 'muede', why: 'er so viel getobt hat', ex: ['traurig', 'froehlich'] },
+    { k: 'Freundin zieht weg', g: 'w', t: 'Die beste Freundin von {N} zieht in eine andere Stadt.', e: '🚚', f: 'traurig', why: 'die Freundin wegzieht', ex: ['wuetend', 'aengstlich'] },
+    { k: 'Turm gebaut', g: 'm', t: '{N} hat ganz allein einen hohen Turm gebaut.', e: '🧱', f: 'froehlich', why: 'der Turm so toll geworden ist', ex: ['ueberrascht', 'verliebt'] },
+    { k: 'Geburtstag', g: 'w', t: '{N} hat Geburtstag, und alle singen für sie.', e: '🎂', f: 'froehlich', why: 'alle für sie singen', ex: ['ueberrascht', 'verliebt'] },
+    { k: 'Bild bekritzelt', g: 'm', t: 'Der große Bruder kritzelt einfach auf das Bild von {N}.', e: '🖍️', f: 'wuetend', why: 'sein Bild bekritzelt wurde', ex: ['traurig', 'ueberrascht'] },
+    { k: 'Geräusch im Dunkeln', g: 'w', t: 'Es wird dunkel, und {N} hört draußen ein komisches Geräusch.', e: '🌲', f: 'aengstlich', why: 'das Geräusch unheimlich ist', ex: ['ueberrascht', 'traurig'] },
+    { k: 'Glitzerstein', g: 'w', t: '{N} findet unter ihrem Kissen einen glitzernden Stein. Damit hat sie nicht gerechnet!', e: '💎', f: 'ueberrascht', why: 'sie damit nicht gerechnet hat', ex: ['froehlich', 'verliebt'] },
+    { k: 'verliebt in Karim', g: 'w', t: '{N} denkt an Karim und bekommt ganz rote Wangen. Sie mag ihn sooo gern.', e: '💕', f: 'verliebt', why: 'sie Karim so gern mag', ex: ['froehlich'], nameNot: 'Karim' },
   ];
 
   /* ---------------- Was hilft? (Stufe 4) ----------------
      Immer EINE hilfreiche Handlung, zwei klar nicht hilfreiche. */
   const HELP = [
-    { f: 'traurig', t: 'Dein Freund ist traurig. Sein Turm ist umgefallen. Was kannst du tun?',
+    { k: 'trösten', f: 'traurig', t: 'Dein Freund ist traurig. Sein Turm ist umgefallen. Was kannst du tun?',
       ok: { e: '🤗', say: 'Ihn trösten' }, no: [{ e: '😝', say: 'Ihm die Zunge rausstrecken' }, { e: '😂', say: 'Ihn auslachen' }],
       learn: 'Genau! Trösten hilft, wenn jemand traurig ist.' },
-    { f: 'wuetend', t: 'Du bist ganz wütend. Was hilft dir?',
+    { k: 'tief durchatmen', f: 'wuetend', t: 'Du bist ganz wütend. Was hilft dir?',
       ok: { e: '🌬️', say: 'Tief durchatmen' }, no: [{ e: '👊', say: 'Jemanden hauen' }, { e: '💥', say: 'Sachen kaputt machen' }],
       learn: 'Genau! Tief durchatmen hilft, wenn du wütend bist. Danach kannst du sagen, was dich ärgert.' },
-    { f: 'wuetend', t: 'Ein Kind nimmt dir einfach dein Spielzeugauto weg. Du bist wütend. Was kannst du tun?',
+    { k: 'Stopp sagen', f: 'wuetend', t: 'Ein Kind nimmt dir einfach dein Spielzeugauto weg. Du bist wütend. Was kannst du tun?',
       ok: { e: '🗣️', say: 'Laut sagen: Stopp, das will ich nicht!' }, no: [{ e: '👊', say: 'Zurückhauen' }, { e: '🦷', say: 'Beißen' }],
       learn: 'Genau! Mit Worten sagen, was dich stört. Das hilft.' },
-    { f: 'aengstlich', t: 'Du wachst nachts auf und hast Angst im Dunkeln. Was hilft dir?',
+    { k: 'Licht an, Hilfe rufen', f: 'aengstlich', t: 'Du wachst nachts auf und hast Angst im Dunkeln. Was hilft dir?',
       ok: { e: '💡', say: 'Licht anmachen und einen Erwachsenen rufen' }, no: [{ e: '📺', say: 'Einen gruseligen Film anschauen' }, { e: '🍭', say: 'Ganz viele Süßigkeiten essen' }],
       learn: 'Genau! Licht anmachen und einen Erwachsenen rufen. Dann ist die Angst schnell kleiner.' },
-    { f: 'traurig', t: 'Ein Kind sitzt ganz allein und schaut traurig zu. Was kannst du tun?',
+    { k: 'mitspielen fragen', f: 'traurig', t: 'Ein Kind sitzt ganz allein und schaut traurig zu. Was kannst du tun?',
       ok: { e: '🤝', say: 'Fragen: Willst du mitspielen?' }, no: [{ e: '🙈', say: 'Einfach wegschauen' }, { e: '😂', say: 'Das Kind auslachen' }],
       learn: 'Genau! Fragen, ob es mitspielen will. Dann ist es nicht mehr allein.' },
-    { f: 'traurig', t: 'Deine Freundin ist hingefallen und weint. Was kannst du tun?',
+    { k: 'helfen, Erwachsenen holen', f: 'traurig', t: 'Deine Freundin ist hingefallen und weint. Was kannst du tun?',
       ok: { e: '🩹', say: 'Ihr helfen und einen Erwachsenen holen' }, no: [{ e: '😂', say: 'Sie auslachen' }, { e: '🏃', say: 'Einfach weiterrennen' }],
       learn: 'Genau! Helfen und einen Erwachsenen holen. Das ist lieb von dir.' },
-    { f: 'traurig', t: 'Du hast zwei Äpfel. Dein Freund hat Hunger und hat keinen. Was kannst du tun?',
+    { k: 'teilen', f: 'traurig', t: 'Du hast zwei Äpfel. Dein Freund hat Hunger und hat keinen. Was kannst du tun?',
       ok: { e: '🍎', say: 'Einen Apfel abgeben' }, no: [{ e: '😋', say: 'Beide Äpfel allein essen' }, { e: '🗑️', say: 'Einen Apfel wegwerfen' }],
       learn: 'Genau! Teilen macht beide froh.' },
-    { f: 'traurig', t: 'Du bist traurig. Was hilft dir?',
+    { k: 'kuscheln und erzählen', f: 'traurig', t: 'Du bist traurig. Was hilft dir?',
       ok: { e: '🤗', say: 'Mit jemandem kuscheln und erzählen, was los ist' }, no: [{ e: '💥', say: 'Etwas kaputt machen' }, { e: '👊', say: 'Jemanden hauen' }],
       learn: 'Genau! Erzählen, was los ist, und kuscheln. Das tröstet.' },
-    { f: 'traurig', t: 'Du hast aus Versehen den Turm von Mila umgeworfen. Jetzt ist Mila traurig. Was kannst du tun?',
+    { k: 'Entschuldigung sagen', f: 'traurig', t: 'Du hast aus Versehen den Turm von Mila umgeworfen. Jetzt ist Mila traurig. Was kannst du tun?',
       ok: { e: '💬', say: 'Entschuldigung sagen und beim Aufbauen helfen' }, no: [{ e: '😝', say: 'Ihr die Zunge rausstrecken' }, { e: '🏃', say: 'Schnell weglaufen' }],
       learn: 'Genau! Entschuldigung sagen und helfen. Dann geht es Mila bald besser.' },
-    { f: 'aengstlich', t: 'Du musst zum Arzt und hast ein bisschen Angst. Was hilft dir?',
+    { k: 'Kuscheltier mitnehmen', f: 'aengstlich', t: 'Du musst zum Arzt und hast ein bisschen Angst. Was hilft dir?',
       ok: { e: '🧸', say: 'Dein Kuscheltier mitnehmen' }, no: [{ e: '🍭', say: 'Ganz viele Süßigkeiten essen' }, { e: '👊', say: 'Den Arzt hauen' }],
       learn: 'Genau! Ein Kuscheltier gibt Mut. Und ein Erwachsener ist bei dir.' },
   ];
@@ -185,16 +188,19 @@
     },
 
     async task(ctx) {
-      if (ctx.level === 1) return pickFace(ctx, BASIC, 3);
-      if (ctx.level === 2) return U.chance(0.45) ? matchFace(ctx) : pickFace(ctx, BASIC.concat(MORE), 4, true);
-      if (ctx.level === 3) return storyTask(ctx);
+      const lv = ctx.taskLevel;
+      // Stufe 1, nach Fehlern in der Runde: nur zwei Gesichter
+      if (lv === 1) return pickFace(ctx, BASIC, ctx.flow < 0 ? 2 : 3);
+      if (lv === 2) return U.chance(0.45) ? matchFace(ctx) : pickFace(ctx, BASIC.concat(MORE), 4, true);
+      if (lv === 3) return storyTask(ctx);
       return helpTask(ctx);
     },
   });
 
   /** Stufen 1–2: „Tippe auf das traurige Kind.“ */
   async function pickFace(ctx, pool, n, preferNew) {
-    let target = preferNew && U.chance(0.6) ? U.pickFresh('gef-new', MORE, 1) : U.pickFresh('gef-t' + ctx.level, pool, 2);
+    // Lerninhalt = das Gefühl (verteiltes Wiederholen über ctx.item); Stufe 2 bevorzugt die neuen Gefühle
+    const target = ctx.item(preferNew && U.chance(0.6) ? MORE : pool, (f) => FEEL[f].adj, { avoid: 1 });
     const others = U.sample(pool.filter((f) => f !== target), n - 1);
     const lk = looks(n);
     const F = FEEL[target];
@@ -211,16 +217,21 @@
     const extra = F.ok && U.chance(0.5) ? ' ' + F.ok : '';
     await ctx.choices(items, {
       size: 'large',
-      correctSay: () => `Richtig! Dieses Kind ist ${F.adj}. ${F.cue}${extra}`,
-      wrongSay: (it) => `Dieses Kind ist ${FEEL[it.value].adj}. Wir suchen das ${F.attr} Kind.`,
-      hintSay: `Ein Tipp: ${F.hint}`,
+      hintAfter: W.hintAfter(ctx, items.length),
+      correctSay: () => (ctx.modelShown ? `Genau, dieses Kind ist ${F.adj}.${extra}` : `Richtig! Dieses Kind ist ${F.adj}. ${F.cue}${extra}`),
+      // 1. Hilfe: Woran man das gewählte Gefühl erkennt – und was gesucht ist
+      explain: (it) => `Dieses Kind ist ${FEEL[it.value].adj}. ${FEEL[it.value].cue} Wir suchen das ${F.attr} Kind.`,
+      // 2. Hilfe: Merkmal des gesuchten Gefühls (Blick auf Augenbrauen, Augen, Mund)
+      hintSay: () => `Ein Tipp: ${F.hint}`,
+      // 3. Hilfe: zeigen und begründen
+      modelSay: () => `Schau, dieses Kind ist ${F.adj}. ${F.cue}`,
     });
   }
 
   /** Stufe 2: gleiches Gefühl bei einem anderen Kind wiederfinden. */
   async function matchFace(ctx) {
     const pool = BASIC.concat(MORE);
-    const target = U.pickFresh('gef-m', pool, 3);
+    const target = ctx.item(pool, (f) => FEEL[f].adj, { avoid: 2 });
     const others = U.sample(pool.filter((f) => f !== target), 2);
     const lk = looks(4);
     const F = FEEL[target];
@@ -235,15 +246,19 @@
     ctx.instruct(`Dieses Kind ist ${F.adj}. Welches andere Kind ist auch ${F.adj}?`);
     await ctx.choices(items, {
       size: 'large',
-      correctSay: () => `Richtig! Beide Kinder sind ${F.adj}. ${F.cuePl}`,
-      wrongSay: (it) => `Dieses Kind ist ${FEEL[it.value].adj}. Schau nochmal genau hin.`,
-      hintSay: `Ein Tipp: ${F.hint}`,
+      hintAfter: W.hintAfter(ctx, items.length),
+      correctSay: () => (ctx.modelShown ? `Genau, beide Kinder sind ${F.adj}.` : `Richtig! Beide Kinder sind ${F.adj}. ${F.cuePl}`),
+      explain: (it) => `Dieses Kind ist ${FEEL[it.value].adj}. ${FEEL[it.value].cue} Das Kind oben ist ${F.adj}.`,
+      // Strategie: mit dem Kind oben vergleichen
+      hintSay: () => `Vergleiche mit dem Kind oben. ${F.cue}`,
+      modelSay: () => `Schau, dieses Kind ist auch ${F.adj}. ${F.cuePl}`,
     });
   }
 
   /** Stufe 3: Geschichte hören, passendes Gefühl wählen. */
   async function storyTask(ctx) {
-    const s = U.pickFresh('gef-story', STORIES, 8, (x) => x.t);
+    // Lerninhalt = die Geschichte („Geschenk – fröhlich“)
+    const s = ctx.item(STORIES, (x) => `${x.k} – ${FEEL[x.f].adj}`, { avoid: 6 });
     let name = W.name(s.g);
     if (s.nameNot && name === s.nameNot) name = W.name(s.g);
     const er = s.g === 'w' ? 'sie' : 'er';
@@ -269,15 +284,21 @@
     ctx.instruct(`${text} Wie fühlt ${er} sich?`);
     await ctx.choices(items, {
       size: 'large',
-      correctSay: () => `Richtig! ${name} ist ${F.adj}, weil ${why}.`,
-      wrongSay: (it) => `Dieses Kind ist ${FEEL[it.value].adj}. Passt das zu ${name}?`,
-      hintSay: `Ich glaube, ${name} ist ${F.adj}.`,
+      hintAfter: W.hintAfter(ctx, items.length),
+      correctSay: () => (ctx.modelShown ? `Genau, ${name} ist ${F.adj}.`
+        : ctx.wrongCount === 0 && U.chance(0.3) ? `Richtig, du hast dich gut in ${name} hineinversetzt. ${name} ist ${F.adj}, weil ${why}.`
+          : `Richtig! ${name} ist ${F.adj}, weil ${why}.`),
+      explain: (it) => `Dieses Kind ist ${FEEL[it.value].adj}. Passt das zu ${name}?`,
+      // Strategie: sich in das Kind hineinversetzen
+      hintSay: () => 'Stell dir vor, dir passiert das. Wie würdest du dich fühlen?',
+      modelSay: () => `Schau, dieses Kind ist ${F.adj}. ${name} ist ${F.adj}, weil ${why}.`,
     });
   }
 
   /** Stufe 4: Was hilft? */
   async function helpTask(ctx) {
-    const h = U.pickFresh('gef-help', HELP, 5, (x) => x.t);
+    // Lerninhalt = die hilfreiche Handlung („trösten“)
+    const h = ctx.item(HELP, (x) => x.k, { avoid: 5 });
     const look = W.look('gef');
     ctx.stage.appendChild(el('div.w1-prompt.gef-story',
       faceNode(h.f, look, 'gef-face-model'),
@@ -289,10 +310,15 @@
     await ctx.choices(items, {
       nameFirst: true,
       sayButton: true,
+      hintAfter: W.hintAfter(ctx, items.length),
       correctSay: () => h.learn,
-      // informativ: Flo wiederholt die gewählte Idee und sagt, dass sie nicht hilft
-      wrongSay: (it) => `${it.say.replace(/[.!?]$/, '')}? Nein, das hilft nicht. Hör dir die anderen Ideen nochmal an.`,
-      hintSay: `Ich glaube, das hilft: ${h.ok.say.replace(/[.!?]$/, '')}.`,
+      // 1. Hilfe: Flo wiederholt die gewählte Idee und sagt, dass sie nicht hilft
+      explain: (it) => `${it.say.replace(/[.!?]$/, '')}? Das hilft leider nicht. Hör dir die anderen Ideen nochmal an.`,
+      // 2. Hilfe: Perspektive wechseln
+      hintSay: () => (/hilft dir\?$/.test(h.t)
+        ? 'Überleg mal: Was tut dir gut, damit es dir besser geht?'
+        : 'Überleg mal: Was würdest du dir wünschen, wenn dir das passiert?'),
+      modelSay: () => `Schau, das hilft: ${h.ok.say.replace(/[.!?]$/, '')}.`,
     });
   }
 })();

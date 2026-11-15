@@ -11,9 +11,14 @@
      Doppelte Kodierung (Farbe/Tier + Ton) unterstützt Kinder, die eher
      visuell oder eher auditiv lernen; die Tiernamen geben eine sprachliche
      Merkhilfe („Wal, Frosch, Küken“).
-   - Fehler: Flo spielt die Folge in Ruhe nochmal vor, das Kind beginnt von
-     vorn. Nach 2 Fehlern geführtes Nachspielen: Das nächste Feld leuchtet
-     sanft auf, bevor das Kind tippt – so endet jede Aufgabe mit Erfolg.
+   - Hilfe-Leiter: 1. Fehler → Flo benennt das angetippte Tier und sagt, an
+     welcher Stelle es nicht passt, dann spielt er die Folge nochmal vor;
+     2. Fehler → Merkstrategie: „Sag die Tiernamen leise mit“ – Flo spielt
+     vor und spricht die Namen dazu (sprachliches Kodieren);
+     3. Fehler → geführtes Nachspielen: Das nächste Feld leuchtet sanft auf,
+     bevor das Kind tippt – so endet jede Aufgabe mit Erfolg.
+   - Lerninhalt = die Merkspanne (Schlüssel '4 Töne', ctx.track); die Länge
+     folgt ctx.taskLevel, passt sich also innerhalb der Runde an.
    - Jederzeit „Nochmal anhören“ (👂) ohne Fehlerwertung – kein Zeitdruck.
    - Stufen: 2 → 3 → 4 → 5 → 6 Töne (Merkspanne von Vorschulkindern liegt
      typischerweise bei 3–5 Elementen).
@@ -63,8 +68,10 @@
     },
 
     async task(ctx) {
-      const len = LEVELS[ctx.level] || 2;
+      const len = LEVELS[ctx.taskLevel] || 2;
       const seq = makeSequence(len);
+      // Lerninhalt: die Merkspanne (keine festen Folgen – die sind zufällig)
+      ctx.track(`${len} Töne`);
 
       // --- Spielfeld ---
       const board = el('div.tm-board');
@@ -88,7 +95,8 @@
       let busy = true;
       let pos = 0;          // nächste erwartete Stelle
       let errors = 0;
-      let guided = false;   // nach 2 Fehlern: nächstes Feld wird angezeigt
+      let guided = false;   // nach 3 Fehlern: nächstes Feld wird angezeigt
+      let named = false;    // ab dem 2. Fehler: Flo sagt die Tiernamen beim Vorspielen
       let done = null;
       const finished = new Promise((r) => { done = r; });
 
@@ -125,8 +133,14 @@
         await ctx.sleep(450);
         for (const k of seq) {
           if (!ctx.active) return;
-          await flash(k, len > 4 ? 480 : 560);
-          await ctx.sleep(len > 4 ? 200 : 260);
+          if (named) {
+            // Merkstrategie: Ton + Tiername gleichzeitig
+            await Promise.all([flash(k, 560), ctx.say(PADS[k].short + '.')]);
+            await ctx.sleep(150);
+          } else {
+            await flash(k, len > 4 ? 480 : 560);
+            await ctx.sleep(len > 4 ? 200 : 260);
+          }
         }
         if (!ctx.active) return;
         board.classList.remove('tm-listening');
@@ -169,7 +183,9 @@
             if (pos >= seq.length) {
               const names = seq.map((i) => PADS[i].short).join(', ');
               await ctx.correct(board, {
-                say: len <= 3 ? `Super! ${names}. Genau richtig!` : `Super! Du hast dir alle ${U.numberWord(len)} Töne gemerkt!`,
+                say: errors === 0 && U.chance(0.3)
+                  ? 'Super, du hast genau zugehört und dir die Reihenfolge gemerkt!'
+                  : len <= 3 ? `Super! ${names}. Genau richtig!` : `Super! Du hast dir alle ${U.numberWord(len)} Töne gemerkt!`,
               });
               done();
               return;
@@ -181,9 +197,16 @@
             clearMarks();
             errors++;
             LT.ui.animate(b, 'shake');
-            await ctx.wrong(null, { say: errors >= 2 ? 'Ich helfe dir. Hör nochmal zu – danach zeige ich dir, wohin du tippst.' : 'Hoppla! Hör nochmal genau zu.' });
+            // Hilfe-Leiter: 1 erklären · 2 Merkstrategie · 3 geführt nachspielen
+            let say;
+            if (errors === 1) say = `Das war ${PADS[k].name}. ${pos === 0 ? 'Zuerst kommt ein anderes Tier.' : 'An dieser Stelle kommt ein anderes Tier.'} Hör nochmal genau zu.`;
+            else if (errors === 2) say = 'Tipp: Sag die Tiernamen leise mit, dann merkst du sie dir besser. Hör zu.';
+            else if (errors === 3) say = 'Ich helfe dir. Hör nochmal zu. Danach zeige ich dir, wohin du tippst.';
+            else say = 'Hör nochmal zu.';
+            await ctx.wrong(null, { say });
             if (!ctx.active) return;
-            if (errors >= 2) guided = true;
+            if (errors >= 2) named = true;
+            if (errors >= 3) { guided = true; ctx.modelShown = true; }
             await playSequence();
           }
         });

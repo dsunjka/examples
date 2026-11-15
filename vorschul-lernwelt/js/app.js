@@ -336,7 +336,9 @@
           })),
           el('span.reise-cta-meter', { title: `${sum.done} von ${sum.total}` }, el('i', { style: { width: pct + '%' } }))
         ),
-        el('span.reise-cta-deco.emoji', { 'aria-hidden': 'true' }, '🏰')
+        el('span.reise-cta-deco.emoji', { 'aria-hidden': 'true' }, '🏰'),
+        // Hinweis: Flo hat heute persönliche Tipps (Extra-Stationen auf der Reise)
+        LT.reise.tips && LT.reise.tips().some((t) => !t.done) ? el('span.reise-cta-tip.emoji', { 'aria-hidden': 'true', title: 'Flos Tipps' }, '💡') : null
       );
       box.appendChild(cta);
     }
@@ -676,6 +678,11 @@
     );
     card.appendChild(el('div.p-bar', { style: { height: '14px' } }, el('i', { style: { width: (sum.total ? Math.round((sum.done / sum.total) * 100) : 0) + '%' } })));
     card.appendChild(el('p.p-muted', 'Acht Kapitel, in denen die Fähigkeiten aufeinander aufbauen (Spiralcurriculum): Jede Fähigkeit kommt zuerst leicht und später auf höherer Stufe wieder. Eine Station gilt nach einer beendeten Runde als geschafft; die Stufe der Station wird fest gespielt, eine bereits höhere Stufe Ihres Kindes bleibt erhalten.'));
+    const tipList = LT.reise.tips ? LT.reise.tips() : [];
+    card.appendChild(el('p', el('b', '💡 Flos Tipps heute: '), tipList.length
+      ? tipList.map((t) => `${t.label}: ${t.def.title}${t.done ? ' ✓' : ''}`).join(' · ')
+      : 'erscheinen, sobald Ihr Kind die ersten Spiele gespielt hat.'));
+    card.appendChild(el('p.p-muted', 'Bis zu drei freiwillige Extra-Stationen, berechnet aus dem Lernstand: Wiederholen (Spiel mit den meisten fälligen Inhalten), Üben (schwächster Bereich, aktuelle Stufe) und Stärke (ein sicher gekonntes Spiel für ein Erfolgserlebnis). Sie blockieren die Reise nicht.'));
     const list = el('ul.p-reise-list');
     sum.chapters.forEach((c, i) => {
       list.appendChild(
@@ -715,12 +722,46 @@
     solid: ['solid', 'sicher'],
   };
 
+  /** Lerninhalte eines Spiels für die Eltern: sicher gelernt, fällig, übt gerade (lesbare Schlüssel). */
+  function itemInfo(id) {
+    const sum = P.itemSummary(id);
+    if (!sum.total) return null;
+    const items = P.items(id);
+    const learned = Object.keys(items).filter((k) => items[k].b >= 4);
+    const due = P.dueItems(id);
+    const list = (keys, n = 8) => keys.slice(0, n).join(', ') + (keys.length > n ? ' …' : '');
+    return { sum, learned, due, list };
+  }
+
   function renderProgress(body) {
     body.appendChild(el('p.p-muted', 'Die Stufe passt sich automatisch an (≥ 80 % auf Anhieb → höher, < 50 % → leichter). Sie können sie hier auch selbst festlegen.'));
+    body.appendChild(
+      el('details.p-card.p-details',
+        el('summary', 'So passt sich die Lernwelt an Ihr Kind an'),
+        el('ul',
+          el('li', el('b', 'Innerhalb der Runde: '), 'Nach drei Aufgaben in Folge auf Anhieb kommt eine Knobel-Aufgabe der nächsten Stufe; nach Fehlern wird die nächste Aufgabe etwas leichter.'),
+          el('li', el('b', 'Hilfe-Leiter: '), 'Nach einem Fehler erklärt Flo kurz, warum es nicht passt. Danach gibt es einen Denkanstoß, dann macht Flo es vor. Später in der Runde kommt eine ähnliche Aufgabe noch einmal.'),
+          el('li', el('b', 'Verteiltes Wiederholen: '), 'Jeder Lerninhalt (z. B. ein Buchstabe oder eine Zahl) wandert nach dem Leitner-Prinzip durch Kästchen: Richtig gelöste Inhalte kommen nach 1, 2, 4, 8 und 16 Tagen wieder, bei einem Fehler geht es von vorn los. Fällige Inhalte werden in die Runden eingestreut.')
+        )
+      )
+    );
+    // Heute fällige Wiederholungen
+    const dueGames = LT.gameOrder.map((id) => LT.games[id])
+      .filter((g) => g && P.profile.games[g.id] && P.profile.games[g.id].rounds)
+      .map((g) => ({ g, info: itemInfo(g.id) }))
+      .filter((x) => x.info && x.info.due.length)
+      .sort((a, b) => b.info.due.length - a.info.due.length);
+    const dueCard = el('div.p-card', el('h3', '🔁 Heute zum Wiederholen fällig'));
+    if (dueGames.length) {
+      dueCard.appendChild(el('ul.p-due-list', dueGames.slice(0, 8).map(({ g, info }) => el('li', el('b', `${g.icon} ${g.title}`), ` (${info.due.length}): ${info.list(info.due, 6)}`))));
+      if (dueGames.length > 8) dueCard.appendChild(el('p.p-muted', `… und ${dueGames.length - 8} weitere Spiele.`));
+      dueCard.appendChild(el('p.p-muted', 'Fällige Inhalte kommen beim nächsten Spielen automatisch dran; Flos Reise schlägt außerdem das Spiel mit den meisten fälligen Inhalten als Tipp vor.'));
+    } else dueCard.appendChild(el('p', 'Heute ist nichts fällig.'));
+    body.appendChild(dueCard);
     LT.areas.forEach((a) => {
       const gs = LT.gamesOfArea(a.id);
       if (!gs.length) return;
-      const table = el('table.p-table', el('tr', el('th', 'Spiel'), el('th', 'Stufe'), el('th', 'Runden'), el('th', 'Auf Anhieb'), el('th', 'Verlauf'), el('th', 'Status')));
+      const table = el('table.p-table.p-progress', el('tr', el('th', 'Spiel'), el('th', 'Stufe'), el('th', 'Runden'), el('th', 'Auf Anhieb'), el('th', 'Verlauf'), el('th', 'Status')));
       gs.forEach((g) => {
         const rec = P.profile.games[g.id];
         const acc = P.accuracy(g.id);
@@ -742,8 +783,22 @@
             el('td', el('span.p-badge.' + st[0], st[1]))
           )
         );
+        const info = rec && rec.rounds ? itemInfo(g.id) : null;
+        if (info) {
+          table.appendChild(
+            el('tr.p-items-row',
+              el('td', { colSpan: 6 },
+                el('div.p-items',
+                  el('span', el('b', '✅ sicher: '), info.learned.length ? `${info.learned.length} (${info.list(info.learned)})` : '–'),
+                  el('span', el('b', '🔁 fällig: '), info.due.length ? `${info.due.length} (${info.list(info.due)})` : '–'),
+                  info.sum.tricky.length ? el('span', el('b', '🎯 übt gerade: '), info.sum.tricky.join(', ')) : null
+                )
+              )
+            )
+          );
+        }
       });
-      body.appendChild(el('div.p-card', el('h3', `${a.icon} ${a.title}`), table));
+      body.appendChild(el('div.p-card', el('h3', `${a.icon} ${a.title}`), el('div.p-table-wrap', table)));
     });
   }
 
@@ -855,12 +910,14 @@
         el('ul',
           el('li', el('b', 'Alles wird vorgelesen. '), 'Ihr Kind braucht keine Lesefähigkeit. Mit 🔊 oder einem Tipp auf Flo wird die Aufgabe wiederholt.'),
           el('li', el('b', 'Passende Schwierigkeit. '), 'Jedes Spiel hat mehrere Stufen. Die App passt sie nach jeder Runde automatisch an (Zone der nächsten Entwicklung): nicht zu leicht, nicht zu schwer.'),
-          el('li', el('b', 'Fehler sind erlaubt. '), 'Falsche Antworten werden sanft kommentiert, nie bestraft. Nach zwei Fehlversuchen hilft Flo mit einem Hinweis – so endet jede Aufgabe mit einem Erfolgserlebnis.'),
+          el('li', el('b', 'Fehler sind erlaubt. '), 'Falsche Antworten werden sanft kommentiert, nie bestraft. Flo hilft in Stufen (Hilfe-Leiter): erst eine kurze Erklärung, warum die Antwort nicht passt, dann ein Denkanstoß, dann macht Flo es vor – und später in der Runde kommt eine ähnliche Aufgabe. So endet jede Aufgabe mit einem Erfolgserlebnis.'),
+          el('li', el('b', 'Anpassung in der Runde. '), 'Klappt es gut, kommt zwischendurch eine Knobel-Aufgabe der nächsten Stufe; nach Fehlern wird die nächste Aufgabe etwas leichter.'),
+          el('li', el('b', 'Verteiltes Wiederholen. '), 'Die App merkt sich einzelne Lerninhalte (z. B. Buchstaben, Zahlen, Reimpaare) und holt sie nach dem Leitner-Prinzip nach 1, 2, 4, 8 und 16 Tagen wieder hervor. Die erste Aufgabe einer Runde ist ein Aufwärmen mit Bekanntem. Was gerade fällig ist, sehen Sie im Tab „Lernstand“.'),
           el('li', el('b', 'Lob für Anstrengung. '), 'Gelobt wird das Dranbleiben und genaue Hinschauen (wachstumsorientierte Haltung), nicht „Du bist schlau“.'),
           el('li', el('b', 'Kurze Einheiten. '), 'Eine Runde dauert 2–4 Minuten. Bewegungspausen und ein optionales Tageslimit helfen bei einem gesunden Umgang mit Bildschirmzeit.'),
           el('li', el('b', 'Konkret – bildlich – symbolisch. '), 'Zahlen und Buchstaben werden immer mit Bildern, Mengen und Lauten verknüpft (EIS-Prinzip nach Bruner).'),
           el('li', el('b', 'Ausgewogen üben. '), 'Das Tagesabenteuer schlägt jeden Tag drei Spiele aus verschiedenen Bereichen vor und bevorzugt Neues sowie Spiele mit Übungsbedarf.'),
-          el('li', el('b', 'Schritt für Schritt: Flos Reise. '), 'Ein Lernpfad mit acht Kapitel-Orten führt durch ein aufeinander aufbauendes Curriculum (Spiralcurriculum nach Bruner): Jede Fähigkeit wird zuerst auf der leichtesten Stufe eingeführt und kommt später auf höherer Stufe wieder. Jedes Kapitel mischt Zahlen, Sprache, Formen, Denken, Sachwissen und Malen (verschachteltes Üben). Eine kleine Geschichte je Ort gibt dem Lernen einen roten Faden.'),
+          el('li', el('b', 'Schritt für Schritt: Flos Reise. '), 'Ein Lernpfad mit acht Kapitel-Orten führt durch ein aufeinander aufbauendes Curriculum (Spiralcurriculum nach Bruner): Jede Fähigkeit wird zuerst auf der leichtesten Stufe eingeführt und kommt später auf höherer Stufe wieder. Jedes Kapitel mischt Zahlen, Sprache, Formen, Denken, Sachwissen und Malen (verschachteltes Üben). Eine kleine Geschichte je Ort gibt dem Lernen einen roten Faden. Dazu bietet Flo bis zu drei freiwillige, persönliche Tipps an (Wiederholen, Üben, Stärke).'),
           el('li', el('b', 'Sachwissen mit Geschichten. '), 'In der Forscherwelt folgt jede Wissensreise dem Ablauf Entdecken (Bildergeschichte zum Mitmachen) – Verstehen (Fragen mit kurzer Begründung) – Anwenden (Mitmachspiel) – Sichern (Wissenskarte fürs Forscherbuch). Das Forscherbuch lädt zum Wiederholen und Erzählen ein.'),
           el('li', el('b', 'Motivation. '), 'Sterne und ein Sticker-Album belohnen das Dranbleiben – ohne Zeitdruck, Werbung oder In-App-Käufe.')
         ),
@@ -892,7 +949,8 @@
         el('h3', 'So funktioniert die Lernwelt'),
         el('ul',
           el('li', 'Auf der Weltkarte wählt Ihr Kind eine Insel und dann ein Spiel. Eine Runde hat meist 5 Aufgaben.'),
-          el('li', 'Der große Knopf „Flos Reise“ führt Schritt für Schritt über einen Pfad: Die leuchtende Station ist die nächste, verschlossene Stationen öffnen sich nacheinander. Am Ende jedes Kapitels wartet eine Schatzkiste mit Bonus-Sticker.'),
+          el('li', 'Der große Knopf „Flos Reise“ führt Schritt für Schritt über einen Pfad: Die leuchtende Station ist die nächste, verschlossene Stationen öffnen sich nacheinander. Am Ende jedes Kapitels wartet eine Schatzkiste mit Bonus-Sticker. Oben bei der 💡 stehen bis zu drei freiwillige Extra-Stationen „Flos Tipp“: 🔁 Wiederholen, 💪 Üben, ⭐ Stärke.'),
+          el('li', 'So hilft die App: Innerhalb einer Runde wird es nach Fehlern leichter, bei vielen Treffern gibt es eine Knobel-Aufgabe. Nach Fehlern hilft Flo in Stufen (erklären → Denkanstoß → vormachen → ähnliche Aufgabe). Gelernte Inhalte kommen nach 1, 2, 4, 8 und 16 Tagen zur Wiederholung (Leitner-Prinzip).'),
           el('li', 'Im Forscherbuch sammelt Ihr Kind die Wissenskarten aus der Forscherwelt.'),
           el('li', 'Die Punkte oben zeigen den Fortschritt der Runde. Gelbe Punkte = auf Anhieb richtig.'),
           el('li', 'Für jede Runde gibt es 1–3 Sterne, für je 4 Sterne einen neuen Sticker im Album.'),

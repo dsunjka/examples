@@ -16,13 +16,16 @@
        3  nur gesprochen, ohne Ausgangsbild: „Was ist das Gegenteil von laut?“
           – unter den Bildern ist auch „laut“ selbst als Falle
        4  Satz ergänzen: „Eis ist kalt, Feuer ist …“ mit gesprochenen Wortkarten
-   - Hilfe nach 2 Fehlversuchen: Flo nennt das Gegenteil und zeigt das Bild.
+   - Hilfe-Leiter: Flo sagt, was das gewählte Bild zeigt („Die Sonne ist hell.
+     Wir suchen …“) → Denkanstoß („Was ist ganz anders als heiß?“) → Flo nennt
+     das Gegenteil und zeigt das Bild. Lerninhalt = Paar („heiß – kalt“).
    ========================================================================== */
 (function () {
   'use strict';
   const LT = window.LT;
   const U = LT.util;
   const el = U.el;
+  const S2 = LT.s2;
 
   /* ---------------- Bild-Bausteine ---------------- */
   const emo = (e, size = 1.3) => el('span', { class: 'emoji', 'aria-hidden': 'true', style: { fontSize: size + 'em' } }, e);
@@ -188,9 +191,12 @@
 
   /* ---------------- Aufgabenbausteine ---------------- */
 
-  /** Aufgabe wählen: Paar + Richtung (welcher Pol ist gegeben?). */
-  function pickPair(key) {
-    const pair = U.pickFresh(key, PAIRS, 6, (p) => p.id);
+  /** Lerninhalt = Gegensatzpaar, Schlüssel alphabetisch („heiß – kalt“), gleich für Bild- und Satzaufgaben. */
+  const pairKey = (w1, w2) => [w1, w2].sort((x, y) => x.localeCompare(y, 'de')).join(' – ');
+
+  /** Aufgabe wählen: Paar (über ctx.item) + Richtung (welcher Pol ist gegeben?). */
+  function pickPair(ctx) {
+    const pair = ctx.item(PAIRS, (p) => pairKey(p.a.w, p.b.w), { avoid: 6 });
     const flip = U.chance(0.5);
     const given = flip ? pair.b : pair.a;
     const target = flip ? pair.a : pair.b;
@@ -234,18 +240,19 @@
 
   // Stufen 1–3: Bilder
   async function pictureTask(ctx, level) {
-    const { pair, given, target, v } = pickPair('gg-pair-' + level);
-    const nDist = level === 1 ? 1 : level === 2 ? 2 : 1;
+    const { pair, given, target, v } = pickPair(ctx);
+    // Knobel-Aufgabe auf Stufe 3 (Stufe 4 ist eine andere Aufgabenart): ein Bild mehr
+    const nDist = level === 1 ? 1 : level === 2 ? 2 : ctx.flow > 0 && ctx.level === 3 ? 2 : 1;
     const dists = distractorPoles(pair, nDist);
     const items = [{ content: el('div.gg-tilepic', target.pic(v)), correct: true, say: target.w, aria: target.w }];
     if (level === 3) items.push({ content: el('div.gg-tilepic', given.pic(v)), correct: false, say: given.w, aria: given.w, sentence: sayOf(given, v), trap: true });
     dists.forEach((d) => items.push({ content: el('div.gg-tilepic', d.pole.pic(d.v)), correct: false, say: d.pole.w, aria: d.pole.w, sentence: sayOf(d.pole, d.v) }));
-    // Hilfe nach einem Fehler: Flo sagt, was das gewählte Bild zeigt, und wiederholt die Frage
-    const wrongSay = (item) => {
+    // Hilfe-Leiter 1: Flo sagt, was das gewählte Bild zeigt, und was gesucht ist
+    const explain = (item) => {
       if (item.trap) return `${item.sentence} Das ist ja genau ${given.w}! Wir suchen das Gegenteil.`;
       if (level === 1) return `${item.sentence} Aber ${pair.who ? 'wer' : 'was'} ist ${target.w}?`;
       if (level === 2) return `${item.sentence} Was ist das Gegenteil von ${given.w}?`;
-      return item.sentence;
+      return `${item.sentence} Wir suchen das Gegenteil von ${given.w}.`;
     };
 
     let card = null;
@@ -266,21 +273,22 @@
       sayButton: level === 2,
       size: 'large',
       hintAfter: 2,
-      wrongSay,
-      hintSay: `Das Gegenteil von ${given.w} ist ${target.w}. ${sayOf(target, v)}`,
-      correctSay: level === 1
-        ? `Richtig! ${Cap(given.w)} und ${target.w} sind Gegenteile.`
-        : `Richtig! Das Gegenteil von ${given.w} ist ${target.w}.`,
-      onWrong: async (item, tile, n) => {
-        if (n === 1 && level === 3 && !item.trap) await ctx.say(`Überleg mal: Was ist ganz anders als ${given.w}?`);
-      },
+      explain,
+      // 2 Denkanstoß (nicht die Lösung), 3 vormachen mit Begründung
+      hintSay: level === 1
+        ? `Schau dir jedes Bild genau an und frag dich: Ist das ${target.w}?`
+        : `Überleg mal: Was ist ganz anders als ${given.w}?`,
+      modelSay: `Schau: Das Gegenteil von ${given.w} ist ${target.w}. ${sayOf(target, v)}`,
+      correctSay: S2.vary('gg-ok', level === 1
+        ? [`Richtig! ${Cap(given.w)} und ${target.w} sind Gegenteile.`, `Richtig! ${Cap(given.w)} und ${target.w} sind Gegenteile.`, `Genau, du hast gut hingeschaut. ${sayOf(target, v)}`]
+        : [`Richtig! Das Gegenteil von ${given.w} ist ${target.w}.`, `Richtig! Das Gegenteil von ${given.w} ist ${target.w}.`, `Genau, du hast gut überlegt. ${sayOf(target, v)}`]),
       onCorrect: () => { if (level !== 3) completeCard(card, target, v); },
     });
   }
 
   // Stufe 4: Satz ergänzen mit gesprochenen Wortkarten
   async function sentenceTask(ctx) {
-    const s = U.pickFresh('gg-sent', SENTENCES, 6, (x) => x.a.w);
+    const s = ctx.item(SENTENCES, (x) => pairKey(x.a.w, x.b.w), { avoid: 6 });
     const flip = U.chance(0.5);
     const first = flip ? s.b : s.a;
     const second = flip ? s.a : s.b;
@@ -309,10 +317,11 @@
       nameFirst: true,
       sayButton: true,
       hintAfter: 2,
-      wrongSay: (item) => (item.say === first.w
+      explain: (item) => (item.say === first.w
         ? `${Cap(first.w)} steht schon vorne im Satz. Wir suchen das Gegenteil von ${first.w}.`
         : `${Cap(item.say)} passt hier nicht. Wir suchen das Gegenteil von ${first.w}.`),
-      hintSay: `Das Gegenteil von ${first.w} ist ${second.w}.`,
+      hintSay: `Überleg mal: Was ist ganz anders als ${first.w}?`,
+      modelSay: `Schau: Das Gegenteil von ${first.w} ist ${second.w}.`,
       correctSay: `Richtig! ${full}`,
       onCorrect: () => {
         gap.textContent = second.w;
@@ -342,7 +351,8 @@
     },
 
     async task(ctx) {
-      if (ctx.level <= 3) return pictureTask(ctx, ctx.level);
+      const lv = S2.lv(ctx, (l) => (l <= 3 ? 'picture' : 'sentence'));
+      if (lv <= 3) return pictureTask(ctx, lv);
       return sentenceTask(ctx);
     },
   });

@@ -10,8 +10,13 @@
    - Wortschatz der Vergleiche: groß/klein, lang/kurz, hoch/niedrig mit
      Steigerung („größer“, „am größten“) – korrekt dekliniert vorgelesen.
    - Ein kleines Richtungsbild (klein ➜ groß) zeigt ohne Lesen, wo begonnen
-     wird. Fehler werden freundlich kommentiert („Gibt es noch einen
-     kleineren?“); nach 2 Fehlversuchen leuchtet das gesuchte Ding auf.
+     wird. Hilfe-Leiter: 1. Fehler → Flo erklärt am angetippten Ding, was
+     nicht stimmt („Dieser Stift ist noch zu lang. Gibt es noch einen
+     kürzeren?“); 2. Fehler → Denkanstoß „Vergleiche immer zwei miteinander“;
+     3. Fehler → das gesuchte Ding leuchtet und Flo begründet.
+   - Lerninhalt = die Vergleichsaufgabe (Schlüssel 'am größten',
+     'Länge, 4 Dinge', 'Höhe, 5 Dinge, rückwärts' …) über ctx.item;
+     Stufe je Aufgabe aus ctx.taskLevel.
    - Progression:
        1  Welcher ist der größte / kleinste? (3 Dinge, deutliche Unterschiede)
        2  3 Dinge vom kleinsten zum größten ordnen
@@ -53,6 +58,11 @@
   const accCmp = (art, cmp) => (art === 'der' ? `einen ${cmp}en` : art === 'die' ? `eine ${cmp}e` : `ein ${cmp}es`);
   /** Dativ Plural: „den Bären“, „den Stiften“, „den Türmen“ (+n außer nach -n/-s) */
   const datPl = (p) => (/[ns]$/.test(p) ? p : p + 'n');
+  /** „Dieser“ / „Diese“ / „Dieses“ und „Welcher“ / „Welche“ / „Welches“ (Satzanfang) */
+  const dies = (art) => (art === 'der' ? 'Dieser' : art === 'die' ? 'Diese' : 'Dieses');
+  const welch = (art) => (art === 'der' ? 'Welcher' : art === 'die' ? 'Welche' : 'Welches');
+  /** Grundform der Adjektive je Merkmal (für „noch zu lang“) */
+  const BASE = { groesse: ['klein', 'groß'], laenge: ['kurz', 'lang'], hoehe: ['niedrig', 'hoch'] };
   /** „vom kleinsten bis zum größten“ */
   const fromTo = (first, last) => `vom ${first}en bis zum ${last}en`;
 
@@ -95,13 +105,15 @@
      ------------------------------------------------------------------ */
   async function pickExtreme(ctx) {
     const w = U.pickFresh('groessen-thing', things(), 8, (x) => x.id);
-    const big = U.chance(0.5);
+    // Lerninhalt: größter oder kleinster (verteiltes Wiederholen)
+    const big = ctx.item(['am größten', 'am kleinsten'], (x) => x, { avoid: 0 }) === 'am größten';
     const d = DIM.groesse;
     const stem = big ? d.supB : d.supS;
     const scales = SCALES[3];
     const items = scales.map((s, i) => ({
       content: el('span.groessen-tilebox', emojiThing(w, s)),
       correct: big ? i === 2 : i === 0,
+      rank: i,
       aria: w.w,
     }));
     const q = `Wo ist ${nomSup(w.a, stem)} ${w.w}?`;
@@ -110,11 +122,15 @@
     await ctx.choices(items, {
       size: 'large',
       className: 'groessen-choices',
-      correctSay: `Richtig! Das ist ${nomSup(w.a, stem)} ${w.w}.`,
-      wrongSay: `Hmm, gibt es noch ${accCmp(w.a, big ? d.cmpB : d.cmpS)}?`,
-      onWrong: async (it, tile, n) => {
-        if (n === 2) await ctx.say('Vergleiche mal alle drei ganz genau.');
-      },
+      correctSay: () => (!ctx.modelShown && ctx.wrongCount === 0 && U.chance(0.3)
+        ? `Richtig, du hast genau verglichen! Das ist ${nomSup(w.a, stem)} ${w.w}.`
+        : `Richtig! Das ist ${nomSup(w.a, stem)} ${w.w}.`),
+      // 1. Hilfe: am gewählten Ding erklären
+      explain: () => `${dies(w.a)} ${w.w} ist nicht ${nomSup(w.a, stem)}. Es gibt noch ${accCmp(w.a, big ? d.cmpB : d.cmpS)}.`,
+      // 2. Hilfe: Vergleichsstrategie
+      hintSay: () => `Vergleiche immer zwei miteinander. ${welch(w.a)} ist ${big ? d.cmpB : d.cmpS}?`,
+      // 3. Hilfe: zeigen und begründen
+      modelSay: () => `Schau, das ist ${nomSup(w.a, stem)} ${w.w}. Alle anderen sind ${big ? d.cmpS : d.cmpB}.`,
     });
   }
 
@@ -122,13 +138,14 @@
      Stufen 2–5: der Reihe nach ordnen
      ------------------------------------------------------------------ */
   async function orderTask(ctx) {
-    const lv = ctx.level;
-    let mode = 'groesse';
-    let n = 3;
-    let asc = true;
-    if (lv === 3) n = U.pick([4, 4, 5]);
-    if (lv === 4) { mode = U.pickFresh('groessen-mode4', ['groesse', 'laenge', 'hoehe'], 2); n = 4; }
-    if (lv === 5) { mode = U.pickFresh('groessen-mode5', ['groesse', 'laenge', 'hoehe'], 2); n = 5; asc = U.chance(0.5); }
+    const lv = ctx.taskLevel;
+    // Lerninhalt: Merkmal × Anzahl × Richtung (verteiltes Wiederholen über ctx.item)
+    let pool;
+    if (lv === 2) pool = [['groesse', 3, true]];
+    else if (lv === 3) pool = [['groesse', 4, true], ['groesse', 4, true], ['groesse', 5, true]];
+    else if (lv === 4) pool = [['groesse', 4, true], ['laenge', 4, true], ['hoehe', 4, true]];
+    else pool = ['groesse', 'laenge', 'hoehe'].flatMap((m) => [[m, 5, true], [m, 5, false]]);
+    const [mode, n, asc] = ctx.item(pool, ([m, k, up]) => `${DIM[m].noun}, ${k} Dinge${up ? '' : ', rückwärts'}`, { avoid: 2 });
     const d = DIM[mode];
     const thing = mode === 'laenge' ? STIFT : mode === 'hoehe' ? TURM : U.pickFresh('groessen-thing', things(), 8, (x) => x.id);
     const art = thing.a;
@@ -229,10 +246,16 @@
           } else {
             busy = true;
             stepErrors++;
-            await ctx.wrong(it.node, { say: `Hmm, gibt es noch ${accCmp(art, asc ? d.cmpS : d.cmpB)}?` });
-            if (stepErrors >= 2) {
+            // Hilfe-Leiter je Platz: 1 erklären, 2 Denkanstoß, 3 zeigen und begründen
+            const cmp = asc ? d.cmpS : d.cmpB;
+            await ctx.wrong(it.node, { say: `${dies(art)} ${thing.w} ist noch zu ${BASE[mode][asc ? 1 : 0]}. Gibt es noch ${accCmp(art, cmp)}?` });
+            if (!ctx.active) return;
+            if (stepErrors === 2) {
+              await ctx.say(`Vergleiche immer zwei miteinander. ${welch(art)} ist ${cmp}?`);
+            } else if (stepErrors >= 3) {
               ctx.hint(order[step].node);
-              if (stepErrors === 2) {
+              if (stepErrors === 3) {
+                ctx.modelShown = true;
                 await ctx.say(step === 0
                   ? `Schau, das ist ${nomSup(art, firstStem)} ${thing.w}.`
                   : `Schau: Von den übrigen ${datPl(pl)} ist das hier ${nomSup(art, firstStem)}.`);
@@ -267,7 +290,7 @@
     },
 
     async task(ctx) {
-      if (ctx.level === 1) return pickExtreme(ctx);
+      if (ctx.taskLevel === 1) return pickExtreme(ctx);
       return orderTask(ctx);
     },
   });

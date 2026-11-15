@@ -5,8 +5,13 @@
    - Farbwörter werden mit Alltagsbeispielen verankert („Rot wie eine
      Erdbeere“) – das Beispiel erscheint nach der richtigen Antwort und als
      Hilfe nach 2 Fehlversuchen.
-   - Tippt das Kind daneben, nennt Flo die angetippte Farbe („Das ist Blau.“):
-     So lernt es auch aus dem Fehler ein Farbwort.
+   - Tippt das Kind daneben, nennt Flo die angetippte Farbe mit Beispiel
+     („Das ist Blau. Blau wie das Meer.“): So lernt es auch aus dem Fehler
+     ein Farbwort. Hilfe-Leiter: 1. erklären, 2. Denkanstoß (Beispiel bzw.
+     halb umrühren), 3. Lösung zeigen und begründen.
+   - Lerninhalt über ctx.item: Farbe ('Rot'), Ding ('Banane') bzw. Mischung
+     ('Rot + Gelb = Orange' – gleicher Schlüssel auf Stufe 4 und 5).
+     Stufe je Aufgabe aus ctx.taskLevel.
    - Progression:
        1  Grundfarben Rot, Blau, Gelb, Grün (Farbkleckse, 3 zur Wahl)
        2  alle elf Farben inkl. Orange, Lila, Rosa, Braun, Schwarz, Weiß, Grau
@@ -108,6 +113,8 @@
   const RESULTS = ['orange', 'gruen', 'lila', 'rosa', 'grau', 'braun'];
 
   const name = (id) => C(id).name;
+  /** Lesbarer Lern-Schlüssel einer Mischung (Elternbereich) */
+  const recipeKey = (r) => `${C(r.a).name} + ${C(r.b).name} = ${C(r.r).name}`;
   const adj = (id) => C(id).adj;
   /** „Rot wie eine Erdbeere“ */
   const exSay = (id) => `${name(id)} wie ${C(id).ex[0][1]}`;
@@ -185,9 +192,9 @@
      Stufen 1 + 2: Farbe antippen
      ------------------------------------------------------------------ */
   async function tapColor(ctx) {
-    const lv = ctx.level;
+    const lv = ctx.taskLevel;
     const pool = lv === 1 ? FM.BASIC : FM.ALL;
-    const target = U.pickFresh('farben-t' + lv, pool, lv === 1 ? 2 : 5);
+    const target = ctx.item(pool, name, { avoid: lv === 1 ? 2 : 5 });
     const others = U.sample(pool.filter((c) => c !== target), lv === 1 ? 2 : 3);
     const kinds = [target].concat(others);
     const phrase = U.pick([`Tippe auf ${name(target)}!`, `Wo ist ${name(target)}?`, `Finde ${name(target)}!`]);
@@ -205,15 +212,19 @@
       size: 'large',
       className: 'farben-choices',
       columns: items.length === 4 && ctx.stage.clientHeight > ctx.stage.clientWidth ? 2 : undefined,
-      correctSay: () => `Richtig, das ist ${name(target)}! ${exSay(target)}.`,
-      wrongSay: (it) => `Das ist ${name(it.kind)}. Wo ist ${name(target)}?`,
-      onCorrect: () => { if (!line.querySelector('.farben-ex')) line.appendChild(exampleBadge(target)); },
-      onWrong: async (it, tile, n) => {
-        if (n === 2) {
-          if (!line.querySelector('.farben-ex')) line.appendChild(exampleBadge(target));
-          await ctx.say(`Ein Tipp: ${exSay(target)}.`);
-        }
+      correctSay: () => (ctx.modelShown ? `Richtig, das ist ${name(target)}!` : `Richtig, das ist ${name(target)}! ${exSay(target)}.`),
+      // 1. Hilfe: angetippte Farbe benennen und mit Beispiel verankern
+      explain: (it) => (C(it.kind).ex
+        ? `Das ist ${name(it.kind)}. ${exSay(it.kind)}. Wir suchen ${name(target)}.`
+        : `Das ist ${name(it.kind)}. Wir suchen ${name(target)}.`),
+      // 2. Hilfe: Alltagsbeispiel als Merkhilfe (Bild erscheint)
+      hintSay: () => {
+        if (!line.querySelector('.farben-ex')) line.appendChild(exampleBadge(target));
+        return `Ein Tipp: ${exSay(target)}.`;
       },
+      // 3. Hilfe: zeigen
+      modelSay: () => `Schau, das hier ist ${name(target)}. Genau wie ${C(target).ex[0][1]}.`,
+      onCorrect: () => { if (!line.querySelector('.farben-ex')) line.appendChild(exampleBadge(target)); },
     });
   }
 
@@ -221,7 +232,7 @@
      Stufe 3: Ding → Farbe
      ------------------------------------------------------------------ */
   async function thingColor(ctx) {
-    const t = U.pickFresh('farben-thing', THINGS, 10, (x) => x.w);
+    const t = ctx.item(THINGS, (x) => x.w, { avoid: 10 });
     const ok = FM.ALL.filter((c) => c !== t.c && !t.also.includes(c));
     const kinds = [t.c].concat(U.sample(ok, 3));
     const box = el('div.prompt-box.farben-thing-box', U.emoji(t.e, 'farben-thing-emoji'), el('span.farben-thing-name', t.w));
@@ -235,16 +246,19 @@
       sayButton: true,
       className: 'farben-choices',
       columns: ctx.stage.clientHeight > ctx.stage.clientWidth ? 2 : undefined,
-      correctSay: `Richtig! ${Def} ${t.pl ? 'sind' : 'ist'} ${adj(t.c)}.`,
-      wrongSay: (it) => `Das ist ${name(it.kind)}. Schau dir ${t.a === 'der' && !t.pl ? 'den' : t.a} ${t.w} noch mal genau an.`,
-      onWrong: async (it, tile, n) => {
-        if (n === 2) {
-          // Hilfe: ein anderes Ding mit derselben Farbe zum Vergleich zeigen
-          const ex = otherExample(t.c, t.e);
-          box.appendChild(el('span.farben-thing-hint', el('span', '='), exampleBadge(t.c, ex)));
-          await ctx.say(`Ein Tipp: ${Def} ${t.pl ? 'haben' : 'hat'} die gleiche Farbe wie ${ex[1]}.`);
-        }
+      correctSay: () => (!ctx.modelShown && ctx.wrongCount === 0 && U.chance(0.3)
+        ? `Richtig, du hast genau hingeschaut! ${Def} ${t.pl ? 'sind' : 'ist'} ${adj(t.c)}.`
+        : `Richtig! ${Def} ${t.pl ? 'sind' : 'ist'} ${adj(t.c)}.`),
+      // 1. Hilfe: konkret sagen, dass das Ding diese Farbe nicht hat
+      explain: (it) => `Das ist ${name(it.kind)}. ${Def} ${t.pl ? 'sind' : 'ist'} nicht ${adj(it.kind)}.`,
+      // 2. Hilfe: ein anderes Ding mit derselben Farbe zum Vergleich zeigen
+      hintSay: () => {
+        const ex = otherExample(t.c, t.e);
+        if (!box.querySelector('.farben-thing-hint')) box.appendChild(el('span.farben-thing-hint', el('span', '='), exampleBadge(t.c, ex)));
+        return `Ein Tipp: ${Def} ${t.pl ? 'haben' : 'hat'} die gleiche Farbe wie ${ex[1]}.`;
       },
+      // 3. Hilfe: zeigen
+      modelSay: () => `Schau, das hier ist ${name(t.c)}.`,
     });
   }
 
@@ -252,7 +266,7 @@
      Stufe 4: Farbmischen – „Was entsteht?“
      ------------------------------------------------------------------ */
   async function predictMix(ctx) {
-    const rcp = U.pickFresh('farben-mix', RECIPES, 2, (r) => r.r);
+    const rcp = ctx.item(RECIPES, recipeKey, { avoid: 2 });
     const [a, b] = U.shuffle([rcp.a, rcp.b]);
     const res = rcp.r;
 
@@ -280,19 +294,21 @@
       sayButton: true,
       size: 'small',
       className: 'farben-choices farben-choices-mix',
-      correctSay: `Richtig! Aus ${name(a)} und ${name(b)} wird ${name(res)}!`,
-      wrongSay: (it) => `Aus ${name(a)} und ${name(b)} wird nicht ${name(it.kind)}. Überleg noch mal!`,
+      correctSay: () => (ctx.modelShown ? `Richtig, ${name(res)}!` : `Richtig! Aus ${name(a)} und ${name(b)} wird ${name(res)}!`),
+      // 1. Hilfe: die gewählte Farbe entsteht hier nicht
+      explain: (it) => `Aus ${name(a)} und ${name(b)} wird nicht ${name(it.kind)}. Überleg noch mal!`,
+      // 2. Hilfe: Flo rührt halb um – die neue Farbe wird schon sichtbar
+      hintSay: () => {
+        scene.blend(res, true);
+        return 'Ich rühre schon mal ein bisschen um. Schau genau hin, welche Farbe in der Mitte entsteht!';
+      },
+      // 3. Hilfe: Ergebnis nennen
+      modelSay: () => `Schau: Aus ${name(a)} und ${name(b)} wird ${name(res)}.`,
       onCorrect: () => {
         scene.blend(res);
         const r = eq.querySelector('.farben-eq-res');
         U.clear(r).appendChild(FM.blob(res));
         r.classList.add('joy');
-      },
-      onWrong: async (it, tile, n) => {
-        if (n === 2) {
-          await ctx.say('Ich rühre schon mal ein bisschen um. Schau genau hin!');
-          await scene.blend(res, true);
-        }
       },
     });
     await ctx.sleep(400);
@@ -302,7 +318,7 @@
      Stufe 5: Rückwärts – „Welche zwei Farben brauchst du für Grün?“
      ------------------------------------------------------------------ */
   async function findRecipe(ctx) {
-    const rcp = U.pickFresh('farben-recipe', RECIPES, 2, (r) => r.r);
+    const rcp = ctx.item(RECIPES, recipeKey, { avoid: 2 });
     const target = rcp.r;
     const need = [rcp.a, rcp.b];
 
@@ -326,7 +342,6 @@
 
     let selected = [];
     let busy = false;
-    let wrongs = 0;
     const markNext = () => {
       tiles.forEach((t) => ctx.markTest(t, false));
       const next = tiles.find((t) => need.includes(t._kind) && !selected.includes(t));
@@ -367,16 +382,17 @@
             resolve();
             return;
           }
-          wrongs++;
+          // 1. Hilfe: das Ergebnis des Versuchs erklären (entdeckendes Lernen)
           await ctx.wrong(null, { say: `Aus ${name(a)} und ${name(b)} wird ${name(res)}. Wir brauchen aber ${name(target)}. Probier es noch einmal!` });
           selected.forEach((x) => x.classList.remove('farben-picked'));
           selected = [];
           scene.reset();
-          if (wrongs >= 2) {
-            // Hilfe: erst eine, beim nächsten Mal beide nötigen Farben zeigen
-            const show = wrongs === 2 ? [need[0]] : need;
+          if (ctx.helpStep >= 2) {
+            // 2. Hilfe: eine nötige Farbe zeigen; 3. Hilfe: beide zeigen
+            const show = ctx.helpStep === 2 ? [need[0]] : need;
             tiles.filter((x) => show.includes(x._kind)).forEach((x) => ctx.hint(x));
-            await ctx.say(wrongs === 2
+            if (ctx.helpStep >= 3) ctx.modelShown = true;
+            await ctx.say(ctx.helpStep === 2
               ? `Ein Tipp: Eine Farbe ist ${name(need[0])}.`
               : `Schau: Wir brauchen ${name(need[0])} und ${name(need[1])}.`);
           }
@@ -410,9 +426,9 @@
     },
 
     async task(ctx) {
-      if (ctx.level <= 2) return tapColor(ctx);
-      if (ctx.level === 3) return thingColor(ctx);
-      if (ctx.level === 4) return predictMix(ctx);
+      if (ctx.taskLevel <= 2) return tapColor(ctx);
+      if (ctx.taskLevel === 3) return thingColor(ctx);
+      if (ctx.taskLevel === 4) return predictMix(ctx);
       return findRecipe(ctx);
     },
   });

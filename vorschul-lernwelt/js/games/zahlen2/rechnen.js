@@ -17,8 +17,12 @@
        3  Minus bis 5        („Jetzt sind noch 3 Enten da“)
        4  Minus bis 10       (nach der Lösung erscheint die Rechnung 7 − 3 = 4)
        5  gemischt; die Rechnung „3 + 2 = ?“ steht UNTER dem Bild
-   - Hilfe nach 2 Fehlversuchen: Flo zählt gemeinsam mit dem Kind ab und
-     zeigt dabei auf jedes Ding. Nach dem 3. Fehlversuch leuchtet die Lösung.
+   - Lerninhalt = die Rechnung (Schlüssel '3 + 2', '7 - 3') über ctx.item.
+   - Hilfe-Leiter: 1. Fehler → informative Rückmeldung zur GEWÄHLTEN Zahl
+     („So viele waren es am Anfang. Dann sind welche dazugekommen.“);
+     2. Fehler → Denkanstoß: Das Bild bleibt im Endzustand stehen und das
+     Kind wird zum Abzählen ermuntert; 3. Fehler → Flo zählt gemeinsam mit
+     dem Kind ab und nennt das Ergebnis. (Bei drei Zahlen eine Stufe früher.)
    ========================================================================== */
 (function () {
   'use strict';
@@ -166,11 +170,16 @@
     5: 'Jetzt schreiben wir die Rechnung dazu! Plus heißt: Es kommen welche dazu. Minus heißt: Es gehen welche weg.',
   };
 
-  function makeTask(level) {
-    let key = String(level);
-    if (level === 5) key = U.chance(0.5) ? '5+' : '5-';
-    return U.pickFresh('rc-' + key, POOLS[key], 6, (t) => t.op + t.a + '-' + t.b);
+  function makeTask(ctx, level) {
+    let pool = level === 5 ? POOLS['5+'].concat(POOLS['5-']) : POOLS[level];
+    // wenn es gerade hakt: auf Stufe 1 und 3 nur bis vier
+    if (ctx.flow < 0 && level === 1) pool = pool.filter((t) => t.c <= 4);
+    if (ctx.flow < 0 && level === 3) pool = pool.filter((t) => t.a <= 4);
+    return ctx.item(pool, (t) => `${t.a} ${t.op} ${t.b}`, { avoid: 6 });
   }
+
+  // Einführung je Stufe: zu Rundenbeginn und wenn eine andere Stufe drankommt
+  let introduced = new Set();
 
   /* ---------------- Animation: Start-/Zielversatz relativ zur Szene ---------------- */
   function offset(kind, r, sr, i, dir) {
@@ -219,8 +228,8 @@
     },
 
     async task(ctx) {
-      const level = ctx.level;
-      const t = makeTask(level);
+      const level = ctx.taskLevel;
+      const t = makeTask(ctx, level);
       const scene = U.pickFresh('rc-scene', SCENES, 6, (x) => x.id);
       const person = Z.name();
       const s = { nom: (n) => Z.nom(n, scene), acc: (n) => Z.acc(n, scene) };
@@ -373,7 +382,11 @@
       }
 
       // --- Ablauf ---
-      if (ctx.index === 0) await ctx.say(INTRO[level]);
+      if (ctx.index === 0) introduced = new Set();
+      if (!introduced.has(level)) {
+        introduced.add(level);
+        await ctx.say(INTRO[level]);
+      }
       if (!ctx.active) return;
       await ctx.sleep(150);
       await playStory();
@@ -398,13 +411,34 @@
         if (k === t.b) return `${Z.oops()} So viele sind ${moved}. ${what}`;
         return `${Z.oops()} Es sind ${k > t.c ? 'weniger' : 'mehr'} als ${Z.word(k)}.`;
       };
+      // Bild in den Endzustand bringen (laufende Wiederholung abbrechen), Zählung zurücksetzen
+      const settle = () => {
+        storyToken++;
+        if (plus) {
+          itemsB.forEach((n) => { n.classList.remove('rc-away'); n.style.transition = 'none'; n.style.transform = ''; n.style.opacity = '1'; });
+        } else {
+          leaving.forEach((n) => n.classList.add('rc-gone'));
+        }
+        resetCount();
+      };
+      const ha = Z.hintAfterFor(ctx, options.length);
       await ctx.choices(options, {
         container: choicesBox,
         shuffle: false,
         size: 'small',
-        hintAfter: 3,
-        correctSay: okText,
-        wrongSay,
+        hintAfter: ha,
+        // ab und zu Prozess-Lob, das die Strategie benennt
+        correctSay: () => (ctx.wrongCount === 0 && U.chance(0.25)
+          ? `${okText} ${plus ? 'Du hast alle zusammengezählt.' : 'Du hast genau gezählt, wie viele noch da sind.'}`
+          : okText),
+        // 1. Hilfe: was die GEWÄHLTE Zahl bedeutet
+        explain: wrongSay,
+        // 2. Hilfe: Denkanstoß zum Abzählen (Bild steht still, onWrong)
+        hintSay: plus ? 'Tippe jedes Ding einmal an und zähle alle zusammen.' : 'Tippe nur die an, die noch da sind, und zähle mit.',
+        // 3. Hilfe: Flo zählt vor (onWrong) und nennt das Ergebnis
+        modelSay: () => (plus
+          ? `${Z.Word(t.a)} und ${Z.word(t.b)} sind zusammen ${Z.word(t.c)}.`
+          : t.c === 1 ? 'Es ist nur noch eins da.' : `Es sind noch ${Z.word(t.c)} da.`),
         onCorrect: () => {
           resetCount();
           if (showEqFirst && eqQ) {
@@ -414,18 +448,13 @@
             showEquation(true);
           }
         },
-        // nach dem 2. Fehlversuch zählt Flo gemeinsam mit dem Kind ab
         onWrong: async (item, tile, wrongs) => {
-          if (wrongs !== 2) return;
-          storyToken++; // laufende Wiederholung abbrechen
-          if (plus) {
-            itemsB.forEach((n) => { n.classList.remove('rc-away'); n.style.transition = 'none'; n.style.transform = ''; n.style.opacity = '1'; });
-          } else {
-            leaving.forEach((n) => n.classList.add('rc-gone'));
+          if (wrongs === ha) settle();
+          else if (wrongs === ha + 1) {
+            settle();
+            await ctx.say(plus ? 'Komm, wir zählen alle zusammen!' : 'Komm, wir zählen zusammen, wie viele noch da sind!');
+            await Z.countAlong(ctx, remaining);
           }
-          resetCount();
-          await ctx.say(plus ? 'Komm, wir zählen alle zusammen!' : 'Komm, wir zählen zusammen, wie viele noch da sind!');
-          await Z.countAlong(ctx, remaining);
         },
       });
       if (!ctx.active) return;

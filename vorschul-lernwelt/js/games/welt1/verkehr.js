@@ -18,6 +18,9 @@
      so stimmen links und rechts mit seiner eigenen Sicht überein. Erst wenn
      die Straße frei ist, wird gegangen. In Deutschland kommen die Autos auf
      der nahen Fahrbahnseite von links – darum zuerst nach links schauen.
+   - Lerninhalt = Regel/Zeichen (Schlüssel 'rotes Männchen', 'Helm', 'Stopp',
+     'links, rechts, links') über ctx.item/ctx.track. Bei nur zwei Antworten
+     erklärt Flo sofort die Regel; bei Schildern: Tipp zu Form und Farbe.
    - Stufen: Ampel → richtig/falsch im Straßenverkehr → Verkehrszeichen →
      links-rechts-links beim Überqueren.
    ========================================================================== */
@@ -178,7 +181,7 @@
      ====================================================================== */
   const SCENES = [
     {
-      id: 'helm', q: 'Welches Kind fährt sicher Fahrrad?',
+      id: 'helm', k: 'Helm', q: 'Welches Kind fährt sicher Fahrrad?',
       learn: 'Richtig! Mit dem Helm ist dein Kopf geschützt. Setz ihn beim Fahrradfahren immer auf.',
       bad: 'Oh! Ohne Helm kann sich das Kind bei einem Sturz am Kopf wehtun.',
       draw: (safe) => `<rect width="240" height="160" fill="#cdeeff"/><rect y="100" width="240" height="60" fill="#9ad66b"/>
@@ -187,19 +190,19 @@
         ${kid(114, 126, { helmet: safe, shirt: '#8e6cef', hair: '#c98a2e' })}${bike(120, 134)}`,
     },
     {
-      id: 'bordstein', q: 'Da kommt ein Auto. Welches Kind macht es richtig?',
+      id: 'bordstein', k: 'Bordstein', q: 'Da kommt ein Auto. Welches Kind macht es richtig?',
       learn: 'Richtig! Am Bordstein bleibst du stehen und schaust, ob ein Auto kommt.',
       bad: 'Oh, das ist gefährlich! Das Kind rennt einfach auf die Straße.',
       draw: (safe) => street() + car(50, 108, '#e53935', 1) + (safe ? kid(160, 138, { stop: true }) : kid(160, 102, { run: true })),
     },
     {
-      id: 'zebra', q: 'Welches Kind geht richtig über die Straße?',
+      id: 'zebra', k: 'Zebrastreifen', q: 'Welches Kind geht richtig über die Straße?',
       learn: 'Richtig! Am Zebrastreifen gehst du über die Straße. Warte, bis die Autos angehalten haben.',
       bad: 'Oh! Das Kind geht nicht über den Zebrastreifen. Das ist gefährlich.',
       draw: (safe) => street({ zebra: 160 }) + car(70, 108, '#4a90e2', 1) + (safe ? kid(182, 100) : kid(118, 96, { run: true })),
     },
     {
-      id: 'parken', q: 'Welches Kind geht sicher über die Straße?',
+      id: 'parken', k: 'parkende Autos', q: 'Welches Kind geht sicher über die Straße?',
       learn: 'Richtig! Zwischen parkenden Autos sehen dich die Autofahrer nicht. Geh lieber am Zebrastreifen über die Straße.',
       bad: 'Oh! Zwischen den parkenden Autos sieht der Autofahrer das Kind nicht.',
       draw: (safe) => street({ zebra: 186 }) + car(40, 80, '#3dbe6b', 1) +
@@ -207,26 +210,26 @@
           : car(64, 112, '#f2b705', 1) + kid(96, 108, { run: true }) + car(130, 112, '#8e6cef', 1)),
     },
     {
-      id: 'ball', q: 'Oh, der Ball rollt auf die Straße! Welches Kind macht es richtig?',
+      id: 'ball', k: 'Ball auf der Straße', q: 'Oh, der Ball rollt auf die Straße! Welches Kind macht es richtig?',
       learn: 'Richtig! Bleib stehen und lauf nicht hinterher. Ein Erwachsener holt den Ball.',
       bad: 'Oh, das ist gefährlich! Das Kind rennt dem Ball hinterher, und ein Auto kommt.',
       draw: (safe) => street() + ball(120, 90) + car(40, 108, '#e53935', 1) + (safe ? kid(150, 138, { stop: true }) : kid(152, 102, { run: true })),
     },
     {
-      id: 'dunkel', q: 'Es ist dunkel. Welches Kind sehen die Autofahrer gut?',
+      id: 'dunkel', k: 'im Dunkeln', q: 'Es ist dunkel. Welches Kind sehen die Autofahrer gut?',
       learn: 'Richtig! Helle Kleidung und Leuchtstreifen sieht man im Dunkeln schon von weitem.',
       bad: 'Hm, das Kind in dunkler Kleidung sieht man im Dunkeln kaum.',
       draw: (safe) => street({ night: true }) + car(46, 106, '#4a90e2', 1, { beam: true }) +
         kid(166, 140, safe ? { vest: true, night: true } : { dark: true }),
     },
     {
-      id: 'gehweg', q: 'Welches Kind geht an der richtigen Stelle?',
+      id: 'gehweg', k: 'Gehweg', q: 'Welches Kind geht an der richtigen Stelle?',
       learn: 'Richtig! Zu Fuß gehst du auf dem Gehweg.',
       bad: 'Oh! Das Kind läuft auf der Fahrbahn. Da fahren die Autos.',
       draw: (safe) => street() + car(48, 108, '#f2b705', 1) + (safe ? kid(140, 146) : kid(140, 106)),
     },
     {
-      id: 'gurt', q: 'Welches Kind ist im Auto richtig angeschnallt?',
+      id: 'gurt', k: 'Anschnallen', q: 'Welches Kind ist im Auto richtig angeschnallt?',
       learn: 'Richtig! Im Auto schnallst du dich immer an. Kinder sitzen auf einem Kindersitz.',
       bad: 'Oh! Dieses Kind hat keinen Gurt an. Das ist gefährlich.',
       draw: (safe) => `<rect width="240" height="160" fill="#cdeeff"/><rect y="128" width="240" height="32" fill="#666b78"/>
@@ -245,7 +248,7 @@
         </g>`,
     },
     {
-      id: 'ampel', q: 'Die Ampel zeigt das rote Männchen. Welches Kind macht es richtig?',
+      id: 'ampel', k: 'rote Ampel', q: 'Die Ampel zeigt das rote Männchen. Welches Kind macht es richtig?',
       learn: 'Richtig! Beim roten Männchen bleibst du stehen und wartest auf Grün.',
       bad: 'Oh! Das Kind geht bei Rot über die Straße. Das ist gefährlich.',
       draw: (safe) => street({ furt: 120 }) + miniAmpel(196, 128, false) + car(50, 108, '#3dbe6b', 1) +
@@ -333,6 +336,15 @@
         <text x="50" y="66" text-anchor="middle" font-size="46" font-weight="700" fill="#2e9e4a" font-family="Arial, Helvetica, sans-serif">H</text>`,
     },
   };
+  /** Woran man das Schild erkennt (Form und Farbe) – Denkanstoß. */
+  const SIGN_LOOK = {
+    zebra: 'Dieses Schild ist blau und eckig. Darauf geht ein Mensch über die Streifen.',
+    gehweg: 'Dieses Schild ist blau und rund. Darauf gehen ein Erwachsener und ein Kind.',
+    radweg: 'Dieses Schild ist blau und rund. Darauf ist ein Fahrrad.',
+    stopp: 'Dieses Schild ist rot und hat acht Ecken.',
+    kinder: 'Dieses Schild ist ein Dreieck mit rotem Rand. Darauf laufen zwei Kinder.',
+    haltestelle: 'Dieses Schild ist rund und gelb und hat einen grünen Rand.',
+  };
   const signNode = (id) => W.svg('0 0 100 100', SIGNS[id].svg, 'verk-sign');
 
   /* ======================================================================
@@ -358,9 +370,9 @@
     },
 
     async task(ctx) {
-      if (ctx.level === 1) return ampelTask(ctx);
-      if (ctx.level === 2) return sceneTask(ctx);
-      if (ctx.level === 3) return signTask(ctx);
+      if (ctx.taskLevel === 1) return ampelTask(ctx);
+      if (ctx.taskLevel === 2) return sceneTask(ctx);
+      if (ctx.taskLevel === 3) return signTask(ctx);
       return crossTask(ctx);
     },
   });
@@ -370,9 +382,11 @@
 
   /** Stufe 1: Fußgängerampel. */
   async function ampelTask(ctx) {
-    const kind = U.pickFresh('verk-a', ['single', 'single', 'two', 'nocar'], 2);
+    // Lerninhalt = die Ampel-Regel (verteiltes Wiederholen über ctx.item); die Darstellung wechselt
+    const rule = ctx.item(['rotes Männchen', 'grünes Männchen', 'Rot ohne Auto'], (x) => x);
+    const kind = rule === 'Rot ohne Auto' ? 'nocar' : U.chance(0.35) ? 'two' : 'single';
     if (kind === 'two') {
-      const wantGo = U.chance(0.5);
+      const wantGo = rule === 'grünes Männchen';
       const q = wantGo ? 'Bei welcher Ampel darfst du gehen?' : 'Bei welcher Ampel musst du warten?';
       ctx.stage.appendChild(el('div.w1-prompt', U.emoji('🚦'), el('span.w1-q', q)));
       const items = [true, false].map((g) => ({
@@ -383,14 +397,16 @@
         value: g,
       }));
       ctx.instruct(q);
+      // zwei Ampeln: nach einem Fehler bleibt nur noch die richtige – darum erklärt Flo gleich die Regel
       await ctx.choices(items, {
         correctSay: () => wantGo ? 'Richtig! Beim grünen Männchen darfst du gehen.' : 'Richtig! Beim roten Männchen musst du warten.',
-        wrongSay: (it) => it.value ? 'Hier ist das grüne Männchen. Da darfst du gehen.' : 'Hier ist das rote Männchen. Da musst du warten.',
+        explain: (it) => it.value ? 'Hier ist das grüne Männchen. Da darfst du gehen. Wir suchen die Ampel zum Warten.' : 'Hier ist das rote Männchen. Da musst du warten. Wir suchen die Ampel zum Gehen.',
         hintSay: wantGo ? 'Such das grüne Männchen. Es geht los.' : 'Such das rote Männchen. Es steht still.',
+        modelSay: wantGo ? 'Schau: Hier geht das grüne Männchen. Da darfst du gehen.' : 'Schau: Hier steht das rote Männchen. Da wartest du.',
       });
       return;
     }
-    const green = kind === 'nocar' ? false : U.chance(0.5);
+    const green = rule === 'grünes Männchen';
     const q = kind === 'nocar'
       ? 'Die Ampel ist rot. Es kommt gar kein Auto. Darfst du trotzdem gehen?'
       : 'Darfst du jetzt gehen?';
@@ -408,17 +424,19 @@
       shuffle: false,
       nameFirst: ctx.index === 0,
       correctSay: () => kind === 'nocar'
-        ? 'Richtig! Bei Rot wartest du immer – auch wenn kein Auto kommt. Andere Kinder machen es dir nach.'
-        : green ? 'Richtig! Das grüne Männchen geht – du darfst gehen. Schau trotzdem nach Autos.' : 'Richtig! Das rote Männchen steht – du bleibst stehen und wartest.',
-      wrongSay: () => kind === 'nocar'
-        ? 'Schau genau: Das rote Männchen leuchtet. Bei Rot wartest du – auch wenn kein Auto kommt.'
+        ? 'Richtig! Bei Rot wartest du immer, auch wenn kein Auto kommt. Andere Kinder machen es dir nach.'
+        : green ? 'Richtig! Das grüne Männchen geht. Du darfst gehen. Schau trotzdem nach Autos.' : 'Richtig! Das rote Männchen steht. Du bleibst stehen und wartest.',
+      // nur zwei Knöpfe: der Fehler wird gleich mit der Regel erklärt
+      explain: () => kind === 'nocar'
+        ? 'Schau genau: Das rote Männchen leuchtet. Bei Rot wartest du, auch wenn kein Auto kommt.'
         : green ? 'Schau genau: Das grüne Männchen leuchtet. Es geht los.' : 'Schau genau: Das rote Männchen leuchtet. Es steht still.',
     });
   }
 
   /** Stufe 2: Welches Kind macht es richtig? */
   async function sceneTask(ctx) {
-    const sc = U.pickFresh('verk-scene', SCENES, 5, (s) => s.id);
+    // Lerninhalt = die Verkehrsregel der Szene
+    const sc = ctx.item(SCENES, (x) => x.k, { avoid: 4 });
     ctx.stage.appendChild(el('div.w1-prompt', U.emoji('🤔'), el('span.w1-q', sc.q)));
     const box = el('div.choices.verk-choices');
     ctx.stage.appendChild(box);
@@ -431,19 +449,23 @@
     ctx.instruct(sc.q);
     await ctx.choices(items, {
       container: box,
-      correctSay: () => sc.learn,
-      wrongSay: () => sc.bad,
-      hintSay: 'Schau mal, dieses Kind macht es richtig.',
+      // nur zwei Bilder: Flo erklärt sofort die Gefahr auf dem gewählten Bild
+      correctSay: () => (ctx.modelShown ? 'Genau, so ist es sicher.' : sc.learn),
+      explain: () => sc.bad,
+      hintSay: 'Schau dir das andere Kind genau an. Was macht es anders?',
+      modelSay: () => sc.learn.replace(/^Richtig! /, 'Schau: '),
     });
   }
 
   /** Stufe 3: Verkehrszeichen erkennen. */
   async function signTask(ctx) {
     const ids = Object.keys(SIGNS);
-    const target = U.pickFresh('verk-sign', ids, 3);
+    // Lerninhalt = das Verkehrszeichen
+    const target = ctx.item(ids, (id) => SIGNS[id].title, { avoid: 2 });
     const S = SIGNS[target];
-    const q = U.chance(0.5) ? S.q1 : S.q2;
-    const others = U.sample(ids.filter((i) => i !== target), 2);
+    // nach Fehlern in der Runde: Name des Schilds und nur zwei Schilder; wenn es gut läuft: Bedeutung erklären lassen
+    const q = ctx.flow < 0 ? S.q1 : ctx.flow > 0 ? S.q2 : U.chance(0.5) ? S.q1 : S.q2;
+    const others = U.sample(ids.filter((i) => i !== target), ctx.flow < 0 ? 1 : 2);
     ctx.stage.appendChild(el('div.w1-prompt', U.emoji('👀'), el('span.w1-q', q)));
     const items = [target].concat(others).map((id) => ({
       content: signNode(id),
@@ -455,9 +477,13 @@
     ctx.instruct(q);
     await ctx.choices(items, {
       size: 'large',
-      correctSay: () => `Richtig! ${S.learn}`,
-      wrongSay: (it) => `Das ist ${SIGNS[it.value].name.replace(/!$/, '')}. Probier es nochmal.`,
-      hintSay: `Schau mal, hier ist ${S.name.replace(/!$/, '')}.`,
+      hintAfter: W.hintAfter(ctx, items.length),
+      correctSay: () => (ctx.modelShown ? 'Genau, das ist es.' : `Richtig! ${S.learn}`),
+      // 1. Hilfe: sagen, was das gewählte Schild bedeutet
+      explain: (it) => `${SIGNS[it.value].learn} Wir suchen ein anderes Schild.`,
+      // 2. Hilfe: auf Form und Farbe achten
+      hintSay: () => `Ein Tipp: ${SIGN_LOOK[target]}`,
+      modelSay: () => `Schau, hier ist ${S.name.replace(/!$/, '')}. ${SIGN_LOOK[target]}`,
     });
   }
 
@@ -474,7 +500,8 @@
   }
 
   async function crossTask(ctx) {
-    const carSide = U.pick([null, 'l', 'r']); // kommt am Ende ein Auto? von welcher Seite?
+    // kommt am Ende ein Auto? von welcher Seite? (wenn es gut läuft: immer ein Auto)
+    const carSide = ctx.flow > 0 ? U.pick(['l', 'r']) : U.pick([null, 'l', 'r']);
     ctx.stage.classList.add('verk-cross-stage');
     const prompt = el('div.w1-prompt', U.emoji('👀'), el('span.w1-q', 'Links – rechts – links'));
     ctx.stage.appendChild(prompt);
@@ -491,7 +518,7 @@
     const LEFT = { content: '⬅️', say: 'links', label: 'links' };
     const RIGHT = { content: '➡️', say: 'rechts', label: 'rechts' };
 
-    async function step(want, text, ok) {
+    async function step(want, text, ok, why) {
       if (!ctx.active) return;
       U.clear(bar);
       const box = el('div.choices.verk-arrows');
@@ -504,14 +531,19 @@
         container: box,
         shuffle: false,
         correctSay: ok,
-        wrongSay: 'Erst links, dann rechts, dann noch einmal links.',
+        // zwei Pfeile: Flo erklärt gleich, warum diese Richtung dran ist
+        explain: () => `${why} Erst links, dann rechts, dann noch einmal links.`,
+        modelSay: () => (want === 'l' ? 'Schau: Dieser Pfeil zeigt nach links.' : 'Schau: Dieser Pfeil zeigt nach rechts.'),
         onCorrect: () => look(want),
       });
     }
 
-    await step('l', 'Du willst über die Straße und stehst am Bordstein. Wohin schaust du zuerst? Tippe auf den Pfeil.', 'Richtig! Zuerst nach links.');
-    await step('r', 'Und wohin schaust du jetzt?', 'Genau! Jetzt nach rechts.');
-    await step('l', 'Und dann?', 'Super! Noch einmal nach links.');
+    await step('l', 'Du willst über die Straße und stehst am Bordstein. Wohin schaust du zuerst? Tippe auf den Pfeil.', 'Richtig! Zuerst nach links.',
+      'Zuerst schaust du nach links. Von links kommen die Autos auf deiner Straßenseite.');
+    await step('r', 'Und wohin schaust du jetzt?', 'Genau! Jetzt nach rechts.', 'Nach links hast du schon geschaut. Jetzt ist rechts dran.');
+    await step('l', 'Und dann?', 'Super! Noch einmal nach links.', 'Zum Schluss schaust du noch einmal nach links. Da kommen die Autos am nächsten an dir vorbei.');
+    // Lerninhalt: die Reihenfolge links, rechts, links (ohne Fehler = gewusst)
+    ctx.track('links, rechts, links', ctx.wrongCount === 0);
     if (!ctx.active) return;
 
     // Kommt ein Auto?
@@ -537,11 +569,13 @@
         container: box,
         shuffle: false,
         correctSay: () => carNow ? 'Richtig! Du wartest, bis das Auto vorbei ist.' : 'Richtig! Jetzt gehst du zügig geradeaus über die Straße.',
-        wrongSay: () => carNow ? 'Halt! Das Auto ist noch da. Warte lieber.' : 'Die Straße ist frei. Du darfst jetzt gehen.',
+        explain: () => carNow ? 'Halt! Das Auto ist noch da. Warte lieber, bis es vorbei ist.' : 'Die Straße ist frei, links und rechts kommt kein Auto. Du darfst jetzt gehen.',
       });
     }
     if (carEl) {
+      const before = ctx.wrongCount;
       await decide(true);
+      ctx.track('warten, wenn ein Auto kommt', ctx.wrongCount === before);
       if (!ctx.active) return;
       carEl.style.transition = 'transform ' + (1.4 * LT.config.speed + 0.01) + 's ease-in';
       carEl.style.transform = carSide === 'l' ? 'translate(320px, 0)' : 'translate(-80px, 0)';

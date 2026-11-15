@@ -16,14 +16,17 @@
        2  Dinge in 2 Körbe sortieren (antippen + Korb antippen ODER ziehen)
        3  Dinge in 3 Körbe sortieren
        4  Oberbegriff finden: „Apfel, Birne, Banane – das sind alles …?“
-   - Hilfe: Nach 2 Fehlversuchen nennt Flo das Merkmal der Kategorie bzw. die
-     richtige Zuordnung und hebt den passenden Korb hervor.
+   - Hilfe-Leiter: 1. sagen, wohin das Gewählte gehört („Das Puzzle ist ein
+     Spielzeug. Wir suchen Kleidung.“), 2. Denkanstoß (Merkmal der Kategorie,
+     beim Oberbegriff ohne ihn zu verraten), 3. richtige Zuordnung zeigen und
+     begründen. Lerninhalt für ctx.item ist die Kategorie („Obst“).
    ========================================================================== */
 (function () {
   'use strict';
   const LT = window.LT;
   const U = LT.util;
   const el = U.el;
+  const S2 = LT.s2;
 
   /* ---------------- Kategorien ---------------- */
   const CATS = {
@@ -72,7 +75,23 @@
       ids: ['baum', 'tanne', 'tulpe', 'sonnenblume', 'rose', 'kaktus', 'kleeblatt'],
     },
   };
+  /* find: was gesucht ist (Erklärung nach Fehlern); clue: Denkanstoß, ohne den Oberbegriff zu verraten */
+  const EXTRA = {
+    tiere: { find: 'Wir suchen ein Tier.', clue: 'Alle drei leben und können sich bewegen.' },
+    obst: { find: 'Wir suchen Obst.', clue: 'Alle drei sind süße Früchte.' },
+    gemuese: { find: 'Wir suchen Gemüse.', clue: 'Alle drei kann man kochen, zum Beispiel für eine Suppe.' },
+    essen: { find: 'Wir suchen etwas zum Essen oder Trinken.', clue: 'Alle drei kommen auf den Tisch, wenn wir Hunger oder Durst haben.' },
+    fahrzeuge: { find: 'Wir suchen ein Fahrzeug.', clue: 'Mit allen dreien kommt man von einem Ort zum anderen.' },
+    kleidung: { find: 'Wir suchen Kleidung.', clue: 'Alle drei zieht man an.' },
+    spielzeug: { find: 'Wir suchen ein Spielzeug.', clue: 'Mit allen dreien kann man spielen.' },
+    musik: { find: 'Wir suchen ein Musikinstrument.', clue: 'Mit allen dreien kann man Musik machen.' },
+    pflanzen: { find: 'Wir suchen eine Pflanze.', clue: 'Alle drei wachsen aus der Erde.' },
+  };
+  Object.keys(EXTRA).forEach((c) => Object.assign(CATS[c], EXTRA[c]));
   const CAT_IDS = Object.keys(CATS);
+  /** Lerninhalt = Kategorie (Schlüssel „Obst“, „Tiere“ …) */
+  const catKey = (c) => CATS[c].name;
+  const kindOf = (lv) => (lv === 1 ? 'which' : lv === 4 ? 'term' : 'sort');
   /** Kategorien, die sich überschneiden (nie gemeinsam in einer Aufgabe). */
   const CONFLICT = [['essen', 'obst'], ['essen', 'gemuese'], ['pflanzen', 'obst'], ['pflanzen', 'gemuese'], ['spielzeug', 'fahrzeuge'], ['spielzeug', 'musik']];
   /** Einzelne Dinge, die neben einer bestimmten Kategorie missverständlich wären. */
@@ -90,10 +109,10 @@
     others.forEach((o) => (EXCLUDE_NEXT_TO[o] || []).forEach((id) => ex.add(id)));
     return list.filter((w) => !ex.has(w.id));
   }
-  /** k verträgliche Kategorien zufällig wählen (die erste ohne direkte Wiederholung). */
-  function pickCats(k, key) {
+  /** k verträgliche Kategorien: die erste wählt ctx.item (Wiederholung schwieriger Kategorien). */
+  function pickCats(ctx, k) {
+    const first = ctx.item(CAT_IDS, catKey, { avoid: 3 });
     for (let tries = 0; tries < 50; tries++) {
-      const first = U.pickFresh(key, CAT_IDS, 3);
       const rest = U.shuffle(CAT_IDS.filter((c) => !conflicts(first, c)));
       const res = [first];
       for (const c of rest) {
@@ -102,7 +121,7 @@
       }
       if (res.length === k) return res;
     }
-    return ['tiere', 'fahrzeuge', 'kleidung'].slice(0, k);
+    return [first].concat(['tiere', 'fahrzeuge', 'kleidung'].filter((c) => !conflicts(first, c))).slice(0, k);
   }
 
   const Art = (w) => U.cap(w.a) + ' ' + w.w;
@@ -140,7 +159,7 @@
 
   /* ---------------- Stufe 1: Was gehört dazu? ---------------- */
   async function whichBelongs(ctx) {
-    const [cat, o1, o2] = pickCats(3, 'sort-l1');
+    const [cat, o1, o2] = pickCats(ctx, 3);
     const target = U.pickFresh('sort-item-' + cat, itemsOf(cat, [o1, o2]), 4, (w) => w.id);
     const d1 = U.pick(itemsOf(o1, [cat]));
     const d2 = U.pick(itemsOf(o2, [cat]));
@@ -148,22 +167,24 @@
     ctx.stage.appendChild(card);
     await ctx.instruct(CATS[cat].q);
     if (!ctx.active) return;
-    const items = [target, d1, d2].map((w) => ({ content: w.e, correct: w === target, say: art(w), w }));
+    const items = [[target, cat], [d1, o1], [d2, o2]].map(([w, c]) => ({ content: w.e, correct: w === target, say: art(w), w, cat: c }));
     await ctx.choices(items, {
       nameFirst: true,
       sayButton: true,
       size: 'large',
       hintAfter: 2,
-      wrongSay: (item) => `Hmm, ${notIn(item.w, cat, true)}`,
+      // Hilfe-Leiter: wohin das Gewählte gehört + was gesucht ist → Merkmal der Kategorie → zeigen
+      explain: (item) => `${because(item.w, item.cat)} ${CATS[cat].find}`,
       hintSay: CATS[cat].tip,
-      correctSay: `Richtig! ${because(target, cat)}`,
+      modelSay: `Schau: ${because(target, cat)}`,
+      correctSay: S2.vary('sort-l1-ok', [`Richtig! ${because(target, cat)}`, `Richtig! ${because(target, cat)}`, `Genau, du hast gut überlegt. ${because(target, cat)}`]),
     });
   }
 
   /* ---------------- Stufe 4: Oberbegriff finden ---------------- */
   async function findTerm(ctx) {
-    const [cat, o1, o2] = pickCats(3, 'sort-l4');
-    const words = U.sample(itemsOf(cat, []), 3);
+    const [cat, o1, o2] = pickCats(ctx, 3);
+    const words = U.sample(itemsOf(cat, [o1, o2]), 3);
     const row = el('div.sort-trio', words.map((w) => el('div.sort-trio-item', U.emoji(w.e), el('span', w.w))));
     ctx.stage.appendChild(el('div.prompt-box.sort-trio-card', row));
     await ctx.instruct(`${words.map((w) => w.w).join(', ')}. Das sind alles …?`);
@@ -173,16 +194,19 @@
       nameFirst: true,
       sayButton: true,
       hintAfter: 2,
-      wrongSay: (item) => `Hmm, ${CATS[item.value].name}? Das passt nicht zu allen drei.`,
-      hintSay: `${CATS[cat].tip}`,
-      correctSay: `Richtig! ${allText(words, cat)}`,
+      // Hilfe-Leiter: konkret am ersten Ding erklären → Denkanstoß ohne den Begriff → zeigen
+      explain: (item) => `${notIn(words[0], item.value)} Was haben alle drei gemeinsam?`,
+      hintSay: CATS[cat].clue,
+      modelSay: `Schau, hier: ${CATS[cat].name}. ${CATS[cat].tip}`,
+      correctSay: S2.vary('sort-l4-ok', [`Richtig! ${allText(words, cat)}`, `Richtig! ${allText(words, cat)}`, `Genau, du hast gut überlegt. ${allText(words, cat)}`]),
     });
   }
 
   /* ---------------- Stufe 2 + 3: In Körbe sortieren ---------------- */
   async function sortIntoBaskets(ctx, nCats) {
-    const cats = pickCats(nCats, 'sort-bins-' + nCats);
-    const perCat = nCats === 2 ? 3 : 2;
+    const cats = pickCats(ctx, nCats);
+    // leichter (Anpassung innerhalb der Runde): bei zwei Körben nur vier Dinge
+    const perCat = nCats === 2 ? (ctx.flow < 0 ? 2 : 3) : 2;
     const things = [];
     cats.forEach((c) => {
       U.sample(itemsOf(c, cats.filter((x) => x !== c)), perCat).forEach((w) => things.push({ w, cat: c }));
@@ -249,7 +273,7 @@
         selected = t;
         t.node.classList.add('selected');
         bins.forEach((b) => ctx.unhint(b));
-        if (t.wrong >= 2) ctx.hint(bins.find((b) => b._cat === t.cat));
+        if (t.wrong >= 3) ctx.hint(bins.find((b) => b._cat === t.cat));
         LT.sfx.play('pop');
         ctx.say(art(t.w));
         updateTestMarks();
@@ -272,6 +296,8 @@
           updateTestMarks();
           if (left === 0) {
             busy = true;
+            // Lerninhalte protokollieren: Kategorie gewusst, wenn kein Ding daraus falsch einsortiert wurde
+            cats.forEach((c) => ctx.track(catKey(c), list.every((x) => x.cat !== c || x.wrong === 0)));
             await ctx.say(because(t.w, t.cat));
             await ctx.correct(binsRow, { say: U.pick(['Super sortiert! Alles ist im richtigen Korb.', 'Toll! Du bist ein echter Sortier-Profi!', 'Prima! Alles ist richtig sortiert.']) });
             resolve();
@@ -282,12 +308,16 @@
           busy = true;
           t.wrong++;
           LT.ui.animate(bin, 'shake');
+          // Hilfe-Leiter je Ding: 1 erklären → 2 Denkanstoß → 3 richtigen Korb zeigen und begründen
           await ctx.wrong(t.node, { say: `Hmm, ${notIn(t.w, bin._cat, true)} Probier einen anderen Korb!` });
           t.node.classList.remove('is-wrong');
-          if (t.wrong >= 2 && ctx.active) {
+          if (t.wrong === 2 && ctx.active) {
+            await ctx.say(`Überleg mal, wozu ${art(t.w)} gehört. Welcher Korb passt?`);
+          } else if (t.wrong >= 3 && ctx.active) {
             const right = bins.find((b) => b._cat === t.cat);
             ctx.hint(right);
-            await ctx.say(`${because(t.w, t.cat)} ${CATS[t.cat].tip}`);
+            ctx.modelShown = true;
+            await ctx.say(`Schau: ${because(t.w, t.cat)} ${CATS[t.cat].tip}`);
           }
           busy = false;
           if (!t.done) { t.node.classList.add('selected'); updateTestMarks(); }
@@ -406,9 +436,10 @@
     },
 
     async task(ctx) {
-      if (ctx.level === 1) return whichBelongs(ctx);
-      if (ctx.level === 2) return sortIntoBaskets(ctx, 2);
-      if (ctx.level === 3) return sortIntoBaskets(ctx, 3);
+      const lv = S2.lv(ctx, kindOf);
+      if (lv === 1) return whichBelongs(ctx);
+      if (lv === 2) return sortIntoBaskets(ctx, 2);
+      if (lv === 3) return sortIntoBaskets(ctx, 3);
       return findTerm(ctx);
     },
   });

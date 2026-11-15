@@ -87,7 +87,7 @@
     dreieck: { name: 'Dreieck', g: 'n', pl: 'Dreiecke', fact: 'Es hat drei Ecken.', hint: 'Ein Dreieck hat drei Ecken und drei Seiten. Zähl mal mit: eins, zwei, drei.' },
     quadrat: { name: 'Quadrat', g: 'n', pl: 'Quadrate', fact: 'Alle vier Seiten sind gleich lang.', hint: 'Ein Quadrat hat vier Ecken. Alle vier Seiten sind gleich lang.' },
     rechteck: { name: 'Rechteck', g: 'n', pl: 'Rechtecke', fact: 'Es hat zwei lange und zwei kurze Seiten.', hint: 'Ein Rechteck hat vier Ecken: zwei lange Seiten und zwei kurze Seiten.' },
-    oval: { name: 'Oval', g: 'n', pl: 'Ovale', fact: 'Es ist rund, aber länglich – wie ein Ei.', hint: 'Ein Oval ist rund, aber länglich – so wie ein Ei.' },
+    oval: { name: 'Oval', g: 'n', pl: 'Ovale', fact: 'Es ist rund, aber länglich, wie ein Ei.', hint: 'Ein Oval ist rund, aber länglich, so wie ein Ei.' },
     stern: { name: 'Stern', g: 'm', pl: 'Sterne', fact: 'Er hat fünf Zacken.', hint: 'Ein Stern hat spitze Zacken. Unser Stern hat fünf Zacken.' },
     herz: { name: 'Herz', g: 'n', pl: 'Herzen', fact: 'Es hat oben zwei Bögen und unten eine Spitze.', hint: 'Ein Herz hat oben zwei runde Bögen und unten eine Spitze.' },
     raute: { name: 'Raute', g: 'f', pl: 'Rauten', fact: 'Sie hat vier gleich lange Seiten und steht auf der Spitze.', hint: 'Eine Raute hat vier Ecken und vier gleich lange Seiten. Sie steht auf einer Spitze.' },
