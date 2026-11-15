@@ -617,20 +617,23 @@
     U.clear(ui.area);
     let tracer = null;
     let wrongBusy = false;
+    let misses = 0;       // Fehlversuche bei DIESEM Zeichen (Stufe 5: je Buchstabe neu)
+    let shown = false;    // bei diesem Zeichen schon vorgemacht?
     tracer = createTracer(ctx, strokes, Object.assign({}, opts, {
       // Hilfe-Leiter: 1 erklären · 2 Denkanstoß (Straße breiter, Start pulsiert) · 3 vormachen
       onMiss: async (why) => {
         if (wrongBusy || tracer.finished) return;
         wrongBusy = true;
-        const step = Math.min(3, ctx.wrongCount + 1);
+        misses++;
+        const step = Math.min(3, misses);
         let say;
         if (step === 1) say = why === 'dir' ? 'Fast! Fahr in Pfeilrichtung weiter.' : 'Fast! Fang beim grünen Punkt an.';
         else if (step === 2) say = 'Tipp: Fahr ganz langsam und bleib auf der gelben Straße. Der Pfeil zeigt dir den Weg.';
-        else say = ctx.modelShown ? 'Schau nochmal genau hin.' : 'Schau, ich zeige es dir. Dann machst du es nach.';
+        else say = shown ? 'Schau nochmal genau hin.' : 'Schau, ich zeige es dir. Dann machst du es nach.';
         await ctx.wrong(null, { say });
         if (!ctx.active) { wrongBusy = false; return; }
         if (step >= 2) { tracer.widen(); tracer.hintStart(); }
-        if (step === 3) { ctx.modelShown = true; await tracer.demo(); }
+        if (step === 3) { shown = true; ctx.modelShown = true; await tracer.demo(); }
         wrongBusy = false;
       },
     }));

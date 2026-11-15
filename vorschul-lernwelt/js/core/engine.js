@@ -345,7 +345,8 @@
         if (pick) value = byKey.get(pick);
         else {
           const avoid = o.avoid == null ? 3 : o.avoid;
-          let pool2 = list.length > 1 ? list.filter((x) => kf(x) !== last) : list;
+          // bei nur zwei Inhalten nicht streng abwechseln (sonst vorhersagbar)
+          let pool2 = list.length > 2 ? list.filter((x) => kf(x) !== last) : list;
           const unseen = pool2.filter((x) => !session.usedKeys.includes(kf(x)));
           if (unseen.length) pool2 = unseen; // in einer Runde möglichst Abwechslung
           value = U.pickFresh(o.fresh || 'item-' + def.id, pool2, avoid, kf);
@@ -426,7 +427,11 @@
             if (opts.onWrong) {
               try { await opts.onWrong(item, t, n); } catch (e) { console.error(e); }
             }
-            if (right && !session.aborted) {
+            const stillOpen = tiles.filter((x) => !x.classList.contains('is-wrong') && !x.classList.contains('is-out'));
+            if (right && !session.aborted && stillOpen.length === 1 && localWrong < hintAfter) {
+              // nur noch die richtige Kachel übrig (z. B. bei zwei Kacheln): sanft darauf zeigen
+              ctx.hint(right);
+            } else if (right && !session.aborted) {
               if (localWrong === hintAfter) {
                 // Stufe 2: Denkanstoß + eine falsche Kachel verschwindet
                 const open = tiles.filter((x) => !x._item.correct && !x.classList.contains('is-wrong') && !x.classList.contains('is-out'));

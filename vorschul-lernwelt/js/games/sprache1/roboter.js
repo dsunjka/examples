@@ -208,16 +208,13 @@
         size: items.length <= 3 ? 'large' : undefined,
         className: items.length === 4 ? 's1-grid4' : '',
         correctSay: mode === 'start'
-          ? () => S.vary('robo-start-ok', [
+          ? () => S.proc(ctx,
             `Richtig! ${t.w} fängt mit ${startOf(t)} an.`,
-            `Richtig! ${t.w} fängt mit ${startOf(t)} an.`,
-            `Genau, du hast gut auf den Anfang gehört: ${t.w}.`,
-          ])
-          : () => S.vary('robo-ok', [
+            `Genau, du hast gut auf den Anfang gehört: ${t.w}.`)
+          : () => S.proc(ctx, S.vary('robo-ok', [
             `Richtig! ${S.joinSyl(t.s)}: ${t.w}!`,
             `Genau! Robo meint ${S.withArticleAcc(t)}.`,
-            `Richtig, du hast die Silben zusammengesetzt: ${t.w}!`,
-          ]),
+          ]), `Richtig, du hast die Silben zusammengesetzt: ${t.w}!`),
         // Hilfe-Leiter: 1 gewähltes Bild benennen + Robo wiederholt → 2 Denkanstoß → 3 vormachen
         explain: (it) => {
           const again = ctx.wrongCount + 1 < 3 ? ' Hör noch mal, was Robo sagt.' : '';

@@ -527,6 +527,11 @@
     return all.filter((x) => filter(x) || due.has(String(keyFn(x))));
   };
   /** „einmal“, „zweimal“ … (für „Du hast zweimal geklatscht.“) */
+  /**
+   * Gelegentliches Prozess-Lob: nur bei Lösung auf Anhieb und nur etwa jedes dritte Mal,
+   * sonst der normale Lobsatz.
+   */
+  S.proc = (ctx, normal, process) => (ctx.wrongCount === 0 && U.chance(0.3) ? process : normal);
   S.times = (n) => (n === 1 ? 'einmal' : U.numberWord(n) + 'mal');
 
   LT.s1 = S;

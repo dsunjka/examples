@@ -387,13 +387,13 @@
       container: box,
       nameFirst: true,
       sayButton: true,
-      hintAfter: 2,
+      hintAfter: 1, // nur 2–3 Bilder: Denkanstoß schon nach dem 1. Fehler, sonst bliebe nichts zum Nachdenken
       // 1. Fehler: das gewählte Bild benennen und sagen, warum es nicht passt
       explain: (chosen) => `${bare(chosen.say)}. Das gehört zu einer anderen Geschichte.`,
       // 2. Fehler: Denkanstoß – den letzten Satz nochmal hören und weiterdenken
       hintSay: () => `Hör nochmal genau hin. ${steps[n - 2].t} Was passiert dann?`,
       // 3. Fehler: vormachen und begründen
-      modelSay: () => `Schau, das passt zur Geschichte: ${bare(answer.n)}. Tipp es an!`,
+      modelSay: () => `Schau, das passiert als Nächstes. ${answer.t}`,
       correctSay: () => (ctx.wrongCount === 0 && U.chance(0.35)
         ? 'Genau, du hast die Geschichte im Kopf weitergedacht! Hör mal die ganze Geschichte:'
         : 'Genau, das passiert als Nächstes! Hör mal die ganze Geschichte:'),

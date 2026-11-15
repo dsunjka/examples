@@ -116,11 +116,9 @@
     ctx.stage.appendChild(card);
     const items = [match].concat(dis).map((x) => ({ content: x.e, say: x.w, correct: x === match, x }));
     await ask(ctx, items, `Welches Bild fängt so an wie ${prompt.w}?`, {
-      correctSay: (it) => S.vary('anl-pic-ok', [
+      correctSay: (it) => S.proc(ctx,
         `Richtig! ${prompt.w} und ${it.x.w} fangen beide mit ${T} an.`,
-        `Richtig! ${prompt.w} und ${it.x.w} fangen beide mit ${T} an.`,
-        `Genau, du hast gut auf den Anfang gehört. ${prompt.w} und ${it.x.w} fangen mit ${T} an.`,
-      ]),
+        `Genau, du hast gut auf den Anfang gehört. ${prompt.w} und ${it.x.w} fangen mit ${T} an.`),
       // Hilfe-Leiter: Klangvergleich → Denkanstoß (langsam sprechen) → vormachen
       explain: (it) => (lv === 4
         ? `Hör genau: ${prompt.w} fängt mit ${T} an, ${it.x.w} mit ${S.letterOf(it.x)}.`

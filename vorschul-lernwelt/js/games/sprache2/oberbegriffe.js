@@ -177,7 +177,7 @@
       explain: (item) => `${because(item.w, item.cat)} ${CATS[cat].find}`,
       hintSay: CATS[cat].tip,
       modelSay: `Schau: ${because(target, cat)}`,
-      correctSay: S2.vary('sort-l1-ok', [`Richtig! ${because(target, cat)}`, `Richtig! ${because(target, cat)}`, `Genau, du hast gut überlegt. ${because(target, cat)}`]),
+      correctSay: () => S2.proc(ctx, `Richtig! ${because(target, cat)}`, `Genau, du hast gut überlegt. ${because(target, cat)}`),
     });
   }
 
@@ -198,7 +198,7 @@
       explain: (item) => `${notIn(words[0], item.value)} Was haben alle drei gemeinsam?`,
       hintSay: CATS[cat].clue,
       modelSay: `Schau, hier: ${CATS[cat].name}. ${CATS[cat].tip}`,
-      correctSay: S2.vary('sort-l4-ok', [`Richtig! ${allText(words, cat)}`, `Richtig! ${allText(words, cat)}`, `Genau, du hast gut überlegt. ${allText(words, cat)}`]),
+      correctSay: () => S2.proc(ctx, `Richtig! ${allText(words, cat)}`, `Genau, du hast gut überlegt. ${allText(words, cat)}`),
     });
   }
 

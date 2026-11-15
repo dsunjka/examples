@@ -298,6 +298,8 @@
    */
   S2.lv = (ctx, kindOf) => (kindOf(ctx.taskLevel) === kindOf(ctx.level) ? ctx.taskLevel : ctx.level);
   /** Einen von mehreren Sätzen (Abwechslung, z. B. gelegentliches Prozess-Lob). */
+  /** Gelegentliches Prozess-Lob: nur auf Anhieb und etwa jedes dritte Mal, sonst normal. */
+  S2.proc = (ctx, normal, process) => (ctx.wrongCount === 0 && U.chance(0.3) ? process : normal);
   S2.vary = (key, list) => U.pickFresh('s2-' + key, list, Math.min(2, list.length - 1));
 
   LT.s2 = S2;

@@ -237,18 +237,18 @@
   };
   /** Fällige Inhalte eines Spiels: schwächste und am längsten überfällige zuerst. */
   P.dueItems = function (id, now = Date.now()) {
-    const items = P.items(id);
+    const items = (P.profile.items && P.profile.items[id]) || {};
     return Object.keys(items).filter((k) => items[k].d <= now)
       .sort((a, b) => items[a].b - items[b].b || items[a].d - items[b].d);
   };
   /** Sicher gekonnte Inhalte (zum Aufwärmen). */
   P.knownItems = function (id) {
-    const items = P.items(id);
+    const items = (P.profile.items && P.profile.items[id]) || {};
     return Object.keys(items).filter((k) => items[k].b >= 3);
   };
   /** Überblick für Eltern und Reise: { total, due, learned, tricky: [key …] } */
   P.itemSummary = function (id, now = Date.now()) {
-    const items = P.items(id);
+    const items = (P.profile.items && P.profile.items[id]) || {}; // nur lesen, nichts anlegen
     const keys = Object.keys(items);
     return {
       total: keys.length,

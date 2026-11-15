@@ -279,9 +279,10 @@
         ? `Schau dir jedes Bild genau an und frag dich: Ist das ${target.w}?`
         : `Überleg mal: Was ist ganz anders als ${given.w}?`,
       modelSay: `Schau: Das Gegenteil von ${given.w} ist ${target.w}. ${sayOf(target, v)}`,
-      correctSay: S2.vary('gg-ok', level === 1
-        ? [`Richtig! ${Cap(given.w)} und ${target.w} sind Gegenteile.`, `Richtig! ${Cap(given.w)} und ${target.w} sind Gegenteile.`, `Genau, du hast gut hingeschaut. ${sayOf(target, v)}`]
-        : [`Richtig! Das Gegenteil von ${given.w} ist ${target.w}.`, `Richtig! Das Gegenteil von ${given.w} ist ${target.w}.`, `Genau, du hast gut überlegt. ${sayOf(target, v)}`]),
+      correctSay: () => S2.proc(ctx, level === 1
+        ? `Richtig! ${Cap(given.w)} und ${target.w} sind Gegenteile.`
+        : `Richtig! Das Gegenteil von ${given.w} ist ${target.w}.`,
+      `Genau, du hast gut hingeschaut. ${sayOf(target, v)}`),
       onCorrect: () => { if (level !== 3) completeCard(card, target, v); },
     });
   }

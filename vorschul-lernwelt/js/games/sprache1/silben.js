@@ -213,11 +213,9 @@
         finished = true;
         update();
         await ctx.correct(clapper.tray, {
-          say: n === 1 ? `Richtig! ${word.w} hat nur eine Silbe.` : S.vary('silben-clap-ok', [
+          say: n === 1 ? `Richtig! ${word.w} hat nur eine Silbe.` : S.proc(ctx,
             `Richtig! ${U.cap(S.silben(n))}!`,
-            `Richtig! ${U.cap(S.silben(n))}!`,
-            `Richtig, du hast bei jeder Silbe geklatscht: ${S.silben(n)}.`,
-          ]),
+            `Richtig, du hast bei jeder Silbe geklatscht: ${S.silben(n)}.`),
         });
         await consolidate(ctx, card, word, Array.from(clapper.tray.children));
         finish();
@@ -281,13 +279,12 @@
       shuffle: false,
       size: 'small',
       hintAfter: 2,
-      correctSay: () => S.vary('silben-count-ok', [
+      correctSay: () => S.proc(ctx,
         `Richtig! ${word.w} hat ${S.silben(n)}.`,
-        `Richtig! ${word.w} hat ${S.silben(n)}.`,
-        `Richtig, du hast genau mitgeklatscht: ${word.w} hat ${S.silben(n)}.`,
-      ]),
+        `Richtig, du hast die Silben genau gezählt: ${word.w} hat ${S.silben(n)}.`),
       // Hilfe-Leiter: 1 zu wenig oder zu viel? → 2 Denkanstoß (Kinn) → 3 Flo klatscht vor
-      explain: (it) => `${word.w} hat ${it.k < n ? 'mehr' : 'weniger'} als ${S.silben(it.k)}. ` + S.vary('silben-wrong', ['Klatsch noch mal mit!', 'Sprich langsam mit und klatsche!']),
+      // (beim 3. Fehler klatscht gleich Flo vor – dann keine Aufforderung zum Selberklatschen)
+      explain: (it) => `${word.w} hat ${it.k < n ? 'mehr' : 'weniger'} als ${S.silben(it.k)}.` + (ctx.wrongCount >= 2 ? '' : ' ' + S.vary('silben-wrong', ['Klatsch noch mal mit!', 'Sprich langsam mit und klatsche!'])),
       hintSay: () => 'Leg deine Hand unter das Kinn und sprich das Wort langsam. Zähl, wie oft dein Kinn nach unten geht.',
       onWrong: async (it, tile, k) => {
         if (k === 3) {
@@ -295,7 +292,7 @@
           await demonstrate(ctx, card, word, clapper);
         }
       },
-      modelSay: () => `Das waren ${S.silben(n)}. Tipp auf die ${U.cap(U.numberWord(n))}.`,
+      modelSay: () => (n === 1 ? 'Das war nur eine Silbe. Tipp auf die Eins.' : `Das waren ${S.silben(n)}. Tipp auf die ${U.cap(U.numberWord(n))}.`),
     });
     if (ctx.index === 0) await ctx.say('Wie viele Silben hat das Wort? Du kannst zuerst klatschen. Dann tippe auf die richtige Zahl.');
     await ctx.instruct(`Wie viele Silben hat ${word.w}?`);

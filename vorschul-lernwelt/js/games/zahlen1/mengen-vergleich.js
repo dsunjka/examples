@@ -119,6 +119,9 @@
     container.querySelectorAll('.mv-plate-tile.is-wrong, .mv-row-tile.is-wrong').forEach((t) => {
       t.classList.remove('is-wrong');
       t.classList.add('mv-was-wrong');
+      // wieder sichtbar (zum Paare-Bilden), aber nicht noch einmal als Fehler antippbar
+      t.style.pointerEvents = 'none';
+      t.setAttribute('aria-disabled', 'true');
     });
   }
 
@@ -226,7 +229,8 @@
       // 1. Hilfe: sagen, was am GEWÄHLTEN Teller nicht passt
       explain: (item) => {
         if (item.side === 'eq') return `Es sind nicht gleich viele. Auf einem Teller sind ${word} ${thing.p}.`;
-        if (answer === 'eq') return 'Schau genau: Auf beiden Tellern sind gleich viele.';
+        // gleich viele: nicht gleich verraten, sondern zum Zählen beider Teller lenken
+        if (answer === 'eq') return `Auf diesem Teller sind nicht ${word} ${thing.p}. Zähle beide Teller genau.`;
         return `Auf diesem Teller sind ${ask === 'more' ? 'weniger' : 'mehr'} ${thing.p}.`;
       },
       // danach: Paare bilden (onWrong) – Flo macht die Vergleichsstrategie vor
@@ -441,6 +445,8 @@
         if (wrongs !== 1) return;
         tile.classList.remove('is-wrong');
         tile.classList.add('mv-was-wrong');
+        tile.style.pointerEvents = 'none'; // nicht noch einmal als Fehler antippbar
+        tile.setAttribute('aria-disabled', 'true');
         colorize();
         await ctx.say(`Schau auf den Zahlenstrahl: Die ${NW(small)} kommt zuerst, die ${NW(big)} kommt später. Je weiter rechts eine Zahl steht, desto größer ist sie.`);
         if (!ctx.active) return;

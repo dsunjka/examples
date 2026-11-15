@@ -140,8 +140,8 @@
       size: 'large',
       hintAfter: 2,
       praise: false,
-      correctSay: () => S2.vary('lesen-ok', ['Richtig gelesen!', 'Super gelesen!', 'Toll, du hast es gelesen!',
-        multi ? 'Richtig, du hast Silbe für Silbe gelesen!' : 'Richtig, du hast jeden Buchstaben gelesen!']),
+      correctSay: () => S2.proc(ctx, S2.vary('lesen-ok', ['Richtig gelesen!', 'Super gelesen!', 'Toll, du hast es gelesen!']),
+        multi ? 'Richtig, du hast Silbe für Silbe gelesen!' : 'Richtig, du hast jeden Buchstaben gelesen!'),
       // Hilfe-Leiter (das Zielwort wird erst beim Vormachen vorgelesen – sonst wäre es kein Lesen):
       // 1 gewähltes Bild benennen und mit dem Wortanfang vergleichen + Lesefinger
       explain: (item) => (item.w.plain[0] !== target.plain[0]
@@ -185,7 +185,7 @@
       columns: 1,
       hintAfter: 2,
       praise: false,
-      correctSay: () => S2.vary('lesen-rev-ok', ['Richtig gelesen!', 'Genau, da steht es!', 'Super gelesen!', 'Richtig, du hast jedes Wort bis zum Ende gelesen!']),
+      correctSay: () => S2.proc(ctx, S2.vary('lesen-rev-ok', ['Richtig gelesen!', 'Genau, da steht es!', 'Super gelesen!']), 'Richtig, du hast jedes Wort bis zum Ende gelesen!'),
       // Hilfe-Leiter: 1 gewähltes Wort vorlesen und Ziel nennen → 2 Lesestrategie → 3 zeigen
       explain: (item) => `Da steht ${S2.spoken(item.t)}. Wir suchen ${target.say}.`,
       hintSay: unique

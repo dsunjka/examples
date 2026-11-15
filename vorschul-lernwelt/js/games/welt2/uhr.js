@@ -213,7 +213,7 @@
         // Hilfe-Leiter über ctx.helpStep: 1 erklären, 2 Denkanstoß, 3 vormachen
         await ctx.wrong(wrap, { say: `Jetzt zeigt die Uhr ${tw(h, 0).say}. Wir brauchen ${words.say}.` });
         if (ctx.active && ctx.helpStep === 2) {
-          await ctx.say(`Ein Tipp: Bei ${words.say} zeigt der kleine Zeiger auf die ${Z(target)}.`);
+          await ctx.say(`Ein Tipp: Der kleine Zeiger zeigt die Stunde. Such die Zahl für ${words.say}.`);
         } else if (ctx.active && ctx.helpStep >= 3) {
           targetHit.classList.add('is-hint');
           if (!ctx.modelShown) {

@@ -191,11 +191,9 @@
       explain: (item) => `Das ist das ${item.value} wie ${S2.abc(item.value).w}. Wir suchen das ${L} wie ${entry.w}.`,
       hintSay: SHAPE[L] || `Schau genau auf die Form. ${L} wie ${entry.w}.`,
       modelSay: `Schau, hier ist das ${L}. ${L} wie ${entry.w}.`,
-      correctSay: S2.vary('abc-find-ok', [
+      correctSay: () => S2.proc(ctx,
         `Richtig! ${L} wie ${entry.w}.`,
-        `Richtig! ${L} wie ${entry.w}.`,
-        `Richtig, du hast genau auf die Form geschaut: ${L} wie ${entry.w}.`,
-      ]),
+        `Richtig, du hast genau auf die Form geschaut: ${L} wie ${entry.w}.`),
       onCorrect: () => fillSlot(slot, L),
     });
   }
@@ -250,11 +248,9 @@
       explain: (item) => `Das ist das ${item.value} wie ${S2.abc(item.value).w}. ${word.w} fängt anders an.`,
       hintSay: `Schau in dein ABC. Welches Bild fängt so an wie ${word.w}?`,
       modelSay: table.w === word.w ? `Schau: ${L} wie ${table.w}!` : `${word.w} fängt an wie ${table.w}. ${L} wie ${table.w}!`,
-      correctSay: S2.vary('abc-anlaut-ok', [
+      correctSay: () => S2.proc(ctx,
         `Richtig! ${word.w} fängt mit ${L} an.`,
-        `Richtig! ${word.w} fängt mit ${L} an.`,
-        `Genau, du hast gut auf den Anfang gehört: ${word.w} fängt mit ${L} an.`,
-      ]),
+        `Genau, du hast gut auf den Anfang gehört: ${word.w} fängt mit ${L} an.`),
       onWrong: async (item, tile, n) => {
         if (n === 1) {
           await ctx.say('Hör ganz genau auf den Anfang:');
@@ -336,11 +332,9 @@
       explain: (item) => `Das ist ${S2.isLower(item.value) ? 'das kleine' : 'das'} ${S2.upper(item.value)}. ${SHAPE[item.value] || ''}`.trim(),
       hintSay: SHAPE[target] || `Schau genau auf die Form. ${U.cap(label)} wie ${entry.w}.`,
       modelSay: `Schau, hier ist ${label} wie ${entry.w}.`,
-      correctSay: S2.vary('abc-confuse-ok', [
+      correctSay: () => S2.proc(ctx,
         `Richtig! ${U.cap(label)} wie ${entry.w}.`,
-        `Richtig! ${U.cap(label)} wie ${entry.w}.`,
-        `Richtig, du hast genau auf die Form geschaut: ${label} wie ${entry.w}.`,
-      ]),
+        `Richtig, du hast genau auf die Form geschaut: ${label} wie ${entry.w}.`),
       onCorrect: () => fillSlot(slot, target),
     });
   }

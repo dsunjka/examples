@@ -169,12 +169,11 @@
     ctx.stage.appendChild(card);
     const items = [rhyme].concat(dis).map((x) => ({ content: x.e, say: x.w, correct: x === rhyme, x }));
     await askChoices(ctx, items, `Was reimt sich auf ${target.w}?`, {
-      correctSay: (it) => S.vary('reime-ok', [
+      correctSay: (it) => S.proc(ctx, S.vary('reime-ok', [
         `Richtig! ${target.w} reimt sich auf ${it.x.w}.`,
         `Genau! ${target.w} – ${it.x.w}. Das reimt sich!`,
         `Super! ${target.w} und ${it.x.w} klingen am Ende gleich.`,
-        `Richtig, du hast genau auf das Ende gehört: ${target.w} – ${it.x.w}.`,
-      ]),
+      ]), `Richtig, du hast genau auf das Ende gehört: ${target.w} – ${it.x.w}.`),
       // Hilfe-Leiter: Klangvergleich → Denkanstoß (aufs Ende hören) → vormachen
       explain: (it) => `${target.w} – ${it.x.w}. Das klingt am Ende anders.`,
       hintSay: () => `Sprich die Wörter leise nach und hör genau auf das Ende: ${target.w}.`,
@@ -198,11 +197,10 @@
     ctx.stage.appendChild(el('div.s1-head', U.emoji('👂'), el('span', 'Was reimt sich nicht?')));
     const names = rhymers.map((x) => x.w);
     await askChoices(ctx, items, 'Hör gut zu! Welches Wort reimt sich nicht?', {
-      correctSay: () => S.vary('reime-odd-ok', [
+      correctSay: () => S.proc(ctx, S.vary('reime-odd-ok', [
         `Richtig! ${join(names)} reimen sich – ${odd.w} nicht.`,
         `Genau! ${odd.w} klingt am Ende anders.`,
-        `Richtig, du hast genau auf das Ende gehört: ${odd.w} reimt sich nicht.`,
-      ]),
+      ]), `Richtig, du hast genau auf das Ende gehört: ${odd.w} reimt sich nicht.`),
       explain: (it) => {
         const other = rhymers.find((x) => x !== it.x);
         return `${it.x.w} – ${other.w}. Die zwei reimen sich. Wir suchen das Wort, das am Ende anders klingt.`;
