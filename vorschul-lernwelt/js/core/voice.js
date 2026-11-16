@@ -118,7 +118,7 @@
     p.promise = new Promise((resolve) => {
       p.resolve = resolve;
       const s = document.createElement('script');
-      s.src = V.base + name + '.js';
+      s.src = (window.LT_VOICE_URLS && window.LT_VOICE_URLS[name]) || V.base + name + '.js'; // Veröffentlichung: einzelne Pakete an eigener Adresse
       s.async = true;
       s.charset = 'utf-8';
       s.onerror = () => { p.failed = true; p.promise = null; V.stats.errors.push(name); resolve(false); };
