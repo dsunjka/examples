@@ -1,0 +1,4 @@
+/* 3D-Welt: Ebenen (wird vom Integrations-Schritt ausgebaut) */
+#w3d-bg { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; display: block; }
+body.w3d #app { z-index: 1; }
+body.w3d-live { background: #9fd8ff; }
