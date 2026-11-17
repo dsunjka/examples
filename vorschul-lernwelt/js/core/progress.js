@@ -59,7 +59,12 @@
   P.save = function (immediate) {
     clearTimeout(saveTimer);
     if (immediate) LT.store.set('profile', profile);
-    else saveTimer = setTimeout(() => LT.store.set('profile', profile), 250);
+    else saveTimer = setTimeout(() => { saveTimer = null; LT.store.set('profile', profile); }, 250);
+  };
+  /** Ausstehendes Speichern sofort ausführen (z. B. wenn die App geschlossen wird). */
+  P.flush = function () {
+    if (saveTimer && profile) P.save(true);
+    saveTimer = null;
   };
   Object.defineProperty(P, 'profile', { get: () => profile || P.load() });
   P.settings = () => P.profile.settings;
@@ -159,6 +164,14 @@
       }
     }
     P.save();
+    return fresh;
+  };
+  /** Sterne auf einen festen Wert setzen (Elternbereich, z. B. nach Datenverlust). */
+  P.setStars = function (n) {
+    const v = Math.max(0, Math.min(99999, Math.round(Number(n) || 0)));
+    P.profile.stars = v;
+    const fresh = P.syncStickers();
+    P.save(true);
     return fresh;
   };
   P.giveBonusSticker = function () {

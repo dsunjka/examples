@@ -942,7 +942,18 @@
     body.appendChild(time);
 
     const data = el('div.p-card', el('h3', 'Daten'));
-    data.appendChild(el('p.p-muted', LT.store.persistent ? 'Alle Daten bleiben ausschließlich auf diesem Gerät (im Browser gespeichert). Es wird nichts ins Internet übertragen.' : 'Achtung: Dieser Browser erlaubt keine dauerhafte Speicherung – der Fortschritt geht beim Schließen verloren.'));
+    data.appendChild(el('p.p-muted', LT.store.persistent ? 'Alle Daten (Sterne, Sticker, Stufen, Reise, Forscherbuch, Einstellungen) bleiben ausschließlich auf diesem Gerät: im Browser gespeichert und zusätzlich doppelt gesichert. Es wird nichts ins Internet übertragen. Tipp: Ab und zu „Fortschritt sichern“ tippen – dann lässt sich alles jederzeit wiederherstellen.' : 'Achtung: Dieser Browser erlaubt keine dauerhafte Speicherung – der Fortschritt geht beim Schließen verloren.'));
+    // Sterne nachtragen (z. B. wenn der Browser den Speicher geleert hat)
+    const starsIn = el('input', { type: 'number', min: '0', max: '99999', step: '1', value: String(P.profile.stars || 0), style: { width: '110px' }, 'aria-label': 'Anzahl Sterne' });
+    data.appendChild(row('⭐ Sterne', starsIn, el('button.p-btn.light', { on: { click: () => {
+      const n = Math.max(0, Math.round(Number(starsIn.value) || 0));
+      if (n === P.profile.stars) return LT.ui.toast('Sterne sind schon ' + n);
+      if (!confirm('Sterne auf ' + n + ' setzen?')) return;
+      P.setStars(n);
+      LT.ui.toast('⭐ ' + n + ' Sterne eingetragen');
+      A.showParents('settings');
+    } } }, 'Eintragen')));
+    data.appendChild(el('p.p-muted', 'Falls Sterne verloren gegangen sind, hier einfach die richtige Zahl eintragen. Passende Sticker werden automatisch wieder freigeschaltet.'));
     const fileIn = el('input', { type: 'file', accept: 'application/json', style: { display: 'none' } });
     fileIn.addEventListener('change', async () => {
       const f = fileIn.files[0];
@@ -1072,6 +1083,7 @@
      ------------------------------------------------------------------ */
   function boot() {
     P.load();
+    if (LT.store.restored && LT.voice) LT.voice.enabled = LT.store.get('naturalVoiceOn', true) !== false;
     P.applySettings();
     P.syncStickers();
     LT.ui.initMascot();
@@ -1085,6 +1097,8 @@
       navigator.serviceWorker.register('sw.js').catch(() => {});
     }
   }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-  else boot();
+  // Erst starten, wenn eine evtl. neuere Sicherung (IndexedDB) übernommen wurde.
+  const bootWhenReady = () => Promise.resolve(LT.store.ready).then(boot, boot);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', bootWhenReady);
+  else bootWhenReady();
 })();
