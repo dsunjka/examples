@@ -228,6 +228,24 @@
     return ov;
   };
 
+  /** Eigene Rückfrage statt confirm()/alert(): diese werden in eingebetteten
+      Ansichten (z. B. Chrome im iframe) oft stillschweigend unterdrückt.
+      Liefert ein Promise<boolean>. Ohne `no` ist es ein reiner Hinweis. */
+  UI.ask = function (question, { yes = 'Ja', no = 'Abbrechen', danger = false } = {}) {
+    return new Promise((resolve) => {
+      let done = false;
+      const finish = (v) => { if (done) return; done = true; ov.remove(); resolve(v); };
+      const buttons = el('div.ask-buttons',
+        no ? el('button.p-btn.light', { on: { click: () => finish(false) } }, no) : null,
+        el('button.p-btn' + (danger ? '.danger' : ''), { on: { click: () => finish(true) } }, yes)
+      );
+      const ov = UI.overlay([el('p.ask-text', question), buttons], { className: 'ask' });
+      ov.addEventListener('click', (e) => { if (e.target === ov) finish(false); });
+      const first = buttons.querySelector('button:last-child');
+      if (first) setTimeout(() => first.focus(), 0);
+    });
+  };
+
   UI.toast = function (text, ms = 2200) {
     document.querySelectorAll('.toast').forEach((t) => t.remove());
     const t = el('div.toast', text);

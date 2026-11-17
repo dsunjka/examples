@@ -768,11 +768,11 @@
         el('div.p-row',
           el('button.p-btn.light', { on: { click: () => { A.screen = null; R.show({ onBack: A.showHome, journey: jr.id }); } } }, `${jr.icon} Teil ${jr.part} ansehen`),
           el('button.p-btn.danger', { on: { click: () => {
-            if (confirm(`Teil ${jr.part} („${jr.title}“) wirklich zurücksetzen? Sterne, Sticker und Stufen bleiben erhalten.`)) {
+            LT.ui.ask(`Teil ${jr.part} („${jr.title}“) wirklich zurücksetzen? Sterne, Sticker und Stufen bleiben erhalten.`, { yes: 'Zurücksetzen', danger: true }).then((ok) => { if (ok) {
               R.reset(jr.id);
               LT.ui.toast('Reise zurückgesetzt');
               A.showParents('overview');
-            }
+            } });
           } } }, `↺ Teil ${jr.part} zurücksetzen`)
         )
       );
@@ -948,10 +948,12 @@
     data.appendChild(row('⭐ Sterne', starsIn, el('button.p-btn.light', { on: { click: () => {
       const n = Math.max(0, Math.round(Number(starsIn.value) || 0));
       if (n === P.profile.stars) return LT.ui.toast('Sterne sind schon ' + n);
-      if (!confirm('Sterne auf ' + n + ' setzen?')) return;
-      P.setStars(n);
-      LT.ui.toast('⭐ ' + n + ' Sterne eingetragen');
-      A.showParents('settings');
+      LT.ui.ask('Sterne auf ' + n + ' setzen?', { yes: 'Eintragen' }).then((ok) => {
+        if (!ok) return;
+        P.setStars(n);
+        LT.ui.toast('⭐ ' + n + ' Sterne eingetragen');
+        A.showParents('settings');
+      });
     } } }, 'Eintragen')));
     data.appendChild(el('p.p-muted', 'Falls Sterne verloren gegangen sind, hier einfach die richtige Zahl eintragen. Passende Sticker werden automatisch wieder freigeschaltet.'));
     const fileIn = el('input', { type: 'file', accept: 'application/json', style: { display: 'none' } });
@@ -963,7 +965,7 @@
         LT.ui.toast('Fortschritt geladen');
         A.showParents('settings');
       } catch (e) {
-        alert('Die Datei konnte nicht gelesen werden.');
+        LT.ui.ask('Die Datei konnte nicht gelesen werden.', { yes: 'OK', no: null });
       }
     });
     data.appendChild(
@@ -972,12 +974,12 @@
         el('button.p-btn.light', { on: { click: () => fileIn.click() } }, '⬆ Sicherung laden'),
         fileIn,
         el('button.p-btn.danger', { on: { click: () => {
-          if (confirm('Wirklich den gesamten Fortschritt (Sterne, Sticker, Stufen) löschen?')) {
+          LT.ui.ask('Wirklich den gesamten Fortschritt (Sterne, Sticker, Stufen) löschen?', { yes: 'Alles löschen', danger: true }).then((ok) => { if (ok) {
             P.reset();
             if (LT.reise) LT.reise.reset();
             LT.ui.toast('Alles zurückgesetzt');
             A.showParents('settings');
-          }
+          } });
         } } }, '🗑 Alles zurücksetzen')
       )
     );
