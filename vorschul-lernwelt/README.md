@@ -263,7 +263,7 @@ vorschul-lernwelt/
 ├── js/games/wissen/        Forscherwelt: Wissens-Engine (_shared.js), Inhalte (natur/mensch/welt.js), Forscherbuch (buch.js)
 ├── js/voice/             Vorab erzeugte Sprachaufnahmen (index.js + ein Paket je Spiel)
 ├── js/app.js               Bildschirme: Start, Weltkarte, Insel, Album, Pause, Eltern (+ Einbindung Reise/Forscherbuch)
-├── tests/smoke.js          Automatischer Test aller Spiele und Stufen
+├── tests/smoke.js          Automatische Tests (parallel; Suiten in tests/suites/)
 └── tools/                  Erzeugen der Sprachaufnahmen (siehe unten)
 ```
 
@@ -273,18 +273,30 @@ vorschul-lernwelt/
 2. In `index.html` einbinden und die `id` in `js/core/areas.js` beim passenden Bereich eintragen.
    Soll das Spiel auf Flos Reise vorkommen, `[id, stufe]` in `js/core/reise.js` beim passenden
    Kapitel ergänzen (fehlende Spiele werden dort automatisch übersprungen).
-3. Testen: `node tests/smoke.js --game=<id> --repeat=3`.
+3. Testen: `node tests/smoke.js --game=<id> --repeat=3`, danach einmal alles: `node tests/smoke.js --quiet`.
 
 ### Tests
 ```bash
 cd vorschul-lernwelt
-node tests/smoke.js              # spielt jedes Spiel auf jeder Stufe automatisch durch
-node tests/smoke.js --app        # prüft zusätzlich Weltkarte, Inseln, Flos Reise (Einleitung, Station
-                                 # spielen, Nochmal mit fester Stufe, Wiederholen, Schatzkiste),
-                                 # Forscherbuch (Zähler, Karten, Spielen aus dem Buch, Insel-Knopf),
-                                 # Album und Elternbereich
-node tests/smoke.js --shots=out  # speichert Screenshots
+node tests/smoke.js                     # alles, parallel (≈ 790 Prüfungen, gut 1 Minute)
+node tests/smoke.js --quiet             # nur Fehler und Zusammenfassung ausgeben
+node tests/smoke.js --suite=games,unit  # nur bestimmte Suiten
+node tests/smoke.js --game=<id> --repeat=3
+node tests/smoke.js --workers=8         # mehr parallele Browser-Seiten (Standard: CPU-Kerne, max. 6)
+node tests/smoke.js --real              # echte Mausklicks statt Klicks im Seitenkontext (langsamer)
+node tests/smoke.js --shots=out         # Screenshots je Spiel und Stufe (mit echten Klicks)
 ```
+| Suite | Prüft |
+|---|---|
+| `games` | jedes Spiel auf jeder Stufe automatisch durchspielen, ohne Konsolenfehler |
+| `app` | Weltkarte, Inseln, Flos Reise Teil 1 und 2, Kino, Forscherbuch, Album, Elternbereich |
+| `data` | Inseln ↔ Spiele, Metadaten jedes Spiels, Filme (Quiz mit genau einer richtigen Antwort, Video und Vorschaubild erreichbar), Reise-Stationen, Sticker |
+| `unit` | Zahlwörter, Sterne/Sticker, Sterne nachtragen, Wiederholungsplan, Stufen-Grenzen, Export/Import, Rückfrage-Dialog |
+| `storage` | Fortschritt bleibt nach Neuladen, Wiederherstellen aus IndexedDB (ganz/teilweise geleert), Sofort-Sichern, Zurücksetzen |
+| `embed` | App eingebettet wie im Artefakt (fremder Ursprung, iframe ohne Pop-ups); kein `confirm()/alert()` im Code |
+| `layout` | Handy, Tablet hoch/quer: kein Bildschirm und kein Spiel ragt seitlich heraus |
+| `voice` | Stimmpakete vollständig und benutzt, Spiel-Einleitungen und Film-Sätze aufgenommen |
+
 Voraussetzung: Node.js und Playwright mit Chromium.
 
 ### Sprachaufnahmen neu erzeugen
