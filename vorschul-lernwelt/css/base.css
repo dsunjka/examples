@@ -656,6 +656,7 @@ body.mascot-big .content { padding-bottom: calc(var(--gap) + clamp(130px, 25vmin
 .p-row label { min-width: 210px; font-weight: 600; font-size: 15px; }
 .p-row input[type=text], .p-row select { font-size: 16px; padding: 8px 12px; border-radius: 10px; border: 2px solid var(--line); min-width: 200px; background: #fff; }
 .p-row input[type=range] { width: 220px; }
+.p-row input[type=number] { font-size: 16px; padding: 8px 12px; border-radius: 10px; border: 2px solid var(--line); background: #fff; }
 .p-btn { appearance: none; border: 0; border-radius: 10px; padding: 10px 16px; font-size: 15px; font-weight: 600; background: var(--ink); color: #fff; cursor: pointer; }
 .p-btn.light { background: #eef0f7; color: var(--ink); }
 .p-btn.danger { background: #c0392b; }
@@ -707,3 +708,9 @@ body.mascot-big .content { padding-bottom: calc(var(--gap) + clamp(130px, 25vmin
 /* Hilfe-Leiter: ausgeblendete falsche Kachel; Knobel-Aufgabe im Fortschritt */
 .tile.is-out { opacity: .18; transform: scale(.86); pointer-events: none; filter: grayscale(1); transition: opacity .35s, transform .35s; }
 .dots .dot.stretch { box-shadow: 0 0 0 3px var(--gold); }
+
+/* Rückfrage (LT.ui.ask) */
+.overlay.ask .panel { max-width: 440px; text-align: center; }
+.ask-text { font-size: 18px; line-height: 1.4; margin: 4px 0 18px; color: var(--ink); }
+.ask-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+.ask-buttons .p-btn { min-width: 120px; padding: 12px 18px; font-size: 16px; }
