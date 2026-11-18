@@ -36,15 +36,15 @@
   height: 56px;
   border: 0;
   border-radius: 50%;
-  background: var(--area-soft, #e3efff);
-  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.14);
+  background: radial-gradient(90% 60% at 50% 8%, #ffffff 0%, rgba(255, 255, 255, 0) 70%), var(--area-soft, #e3efff);
+  box-shadow: inset 0 -3px 0 rgba(29, 37, 80, 0.06), 0 4px 0 color-mix(in srgb, var(--area) 28%, var(--edge-dark)), 0 10px 16px -8px rgba(29, 37, 80, 0.45);
   font-size: 26px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
 }
-.les-help:active { transform: translateY(3px); box-shadow: none; }
+.les-help:active { transform: translateY(3px); box-shadow: var(--sh-round-press); }
 .les-help.les-used { opacity: 0.55; }
 
 /* ---------- Lesetext: Wörter einzeln antippbar (Lupe) ---------- */
@@ -257,4 +257,29 @@
   .les-word { font-size: clamp(40px, 12vw, 64px); letter-spacing: 0.03em; }
   .les-sent { font-size: clamp(24px, 7vw, 32px); }
   .les-lupe { font-size: 22px; }
+}
+
+/* ---------- Tablet: Lesekarte, Formen, Stifte und Antworten größer ---------- */
+@media (min-width: 700px) and (min-height: 700px) {
+  .les-stage .prompt-box.les-card { max-width: min(100%, 1080px); }
+  .les-lupe { font-size: clamp(26px, 6.2vmin, 58px); }
+  .les-text { font-size: clamp(26px, 6.2vmin, 58px); }
+  .les-sent { font-size: clamp(28px, 6.8vmin, 64px); }
+  .les-word { font-size: clamp(54px, 16vmin, 150px); }
+  .les-shape { width: clamp(76px, 22vmin, 200px); height: clamp(76px, 22vmin, 200px); }
+  .les-crayon { min-width: clamp(64px, 16vmin, 140px); min-height: 80px; }
+  .les-cname { font-size: clamp(16px, 3.4vmin, 30px); }
+  .les-answers .tile { --tile: clamp(92px, 23vmin, 210px); }
+  .les-answers .tile.wide.les-wordans { min-height: 92px; }
+  .les-wordans .tile-text { font-size: clamp(24px, 5.6vmin, 52px); }
+  .btn.les-ready { min-height: 76px; font-size: clamp(20px, 4vmin, 36px); }
+  .tile.wide.les-yntile { min-height: clamp(84px, 17vmin, 160px); width: clamp(150px, 36vmin, 320px); }
+  .les-yn { font-size: clamp(24px, 5.4vmin, 50px); }
+  .les-oddtitle { font-size: clamp(24px, 5.6vmin, 52px); }
+  .les-opttext { font-size: clamp(22px, 5vmin, 46px); }
+}
+/* Tablet quer: Geschichten mit Frage darunter – Text und Bilder etwas flacher */
+@media (min-width: 700px) and (min-height: 700px) and (orientation: landscape) {
+  .les-text, .les-sent { font-size: clamp(26px, 5.4vmin, 52px); }
+  .les-answers .tile { --tile: clamp(92px, 20.5vmin, 190px); }
 }

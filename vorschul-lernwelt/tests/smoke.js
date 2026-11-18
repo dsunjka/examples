@@ -14,8 +14,12 @@
      node tests/smoke.js --json=ergebnis.json # Ergebnisse als JSON
 
    Suiten: games (jedes Spiel auf jeder Stufe), app (Menüs, Reise, Kino,
-   Forscherbuch, Elternbereich), data, unit, storage, embed, layout, voice
-   (siehe tests/suites/checks.js). --app wird noch akzeptiert (alter Aufruf).
+   Forscherbuch, Elternbereich), data, unit, storage, embed, layout, voice,
+   3d (3D-Welt mit ?test&3d=1, siehe tests/suites/checks.js).
+   --app wird noch akzeptiert (alter Aufruf).
+
+   Chromium läuft mit SwiftShader (WebGL ohne Grafikkarte), damit die
+   3D-Welt auch auf Servern ohne GPU geprüft werden kann.
 
    Funktionsweise: Die App läuft mit ?test. Dann markiert ctx.choices die
    richtige Kachel mit [data-test-correct]; Spiele mit eigener Bedienung
@@ -37,7 +41,7 @@ const args = Object.fromEntries(
 );
 const ROOT = path.resolve(__dirname, '..');
 const TIMEOUT = Number(args.timeout || 45000);
-const ALL_SUITES = ['games', 'app', 'data', 'unit', 'storage', 'embed', 'layout', 'voice'];
+const ALL_SUITES = ['games', 'app', 'data', 'unit', 'storage', 'embed', 'layout', 'voice', '3d'];
 const suites = args.suite ? String(args.suite).split(',') : args.game || args.level ? ['games'].concat(args.app ? ['app'] : []) : ALL_SUITES;
 const REAL = !!(args.real || args.shots);
 const WORKERS = Math.max(1, Number(args.workers || Math.min(6, Math.max(2, os.cpus().length))));
@@ -50,7 +54,8 @@ const fmt = (ms) => (ms / 1000).toFixed(1) + ' s';
   const { server, port } = await serve(ROOT, { '/__host.html': () => checks.hostPage(port) });
   const url = (p, host = 'localhost') => `http://${host}:${port}${p}`;
   const URL = url('/index.html?test');
-  const browser = await chromium.launch();
+  // WebGL per Software (SwiftShader) – für die Suite 3d; schadet den anderen Suiten nicht
+  const browser = await chromium.launch({ args: ['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist'] });
 
   /* Fehler pro Seite sammeln */
   const watch = (page, errors) => {
@@ -61,7 +66,8 @@ const fmt = (ms) => (ms / 1000).toFixed(1) + ' s';
     page.on('requestfailed', (r) => { if (!/\.mp4($|\?)/.test(r.url())) errors.push({ type: 'requestfailed', text: r.url() + ' ' + ((r.failure() && r.failure().errorText) || '') }); });
     page.on('response', (r) => { if (r.status() >= 400 && !/favicon|sw\.js/.test(r.url())) errors.push({ type: 'http ' + r.status(), text: r.url() }); });
   };
-  const relevant = (errs) => errs.filter((e) => !/favicon|sw\.js|ERR_ABORTED/.test(e.text));
+  // Leistungshinweise des Software-Grafiktreibers (z. B. „GPU stall due to ReadPixels“) sind keine App-Fehler
+  const relevant = (errs) => errs.filter((e) => !/favicon|sw\.js|ERR_ABORTED/.test(e.text) && !/GL Driver Message \(OpenGL, Performance/.test(e.text));
 
   /* Spiele ermitteln */
   let games = [];

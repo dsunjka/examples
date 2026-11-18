@@ -3,6 +3,11 @@
    Start → Weltkarte (Flos Reise + Tagesabenteuer + Inseln) → Insel (Spiele) → Spiel
    außerdem: Flos Reise (Lernpfad, js/core/reise.js), Forscherbuch,
    Sticker-Album, Bewegungspause, Tageslimit, Elternbereich.
+
+   3D-Welt (js/world3d, LT.w3d): Jeder Bildschirm nennt LT.ui.screen seinen
+   Ort ({place, frame}); die Kamera fliegt dorthin. Mit 3D ist die Weltkarte
+   die Inselwelt selbst: die Inselkarten (.area-card) schweben als Schilder
+   über den Inseln (.w3d-map). Ohne 3D bleibt alles wie in der flachen Ansicht.
    ========================================================================== */
 (function () {
   'use strict';
@@ -13,6 +18,134 @@
 
   const A = { screen: null, greeted: {} };
   LT.app = A;
+
+  /* ------------------------------------------------------------------
+     3D-Welt: kleine Hilfen (alle Aufrufe sind ohne 3D harmlos)
+     ------------------------------------------------------------------ */
+  /** Läuft (oder startet gerade) die 3D-Welt? Entscheidung fällt sofort in LT.w3d.start(). */
+  const world = () => !!(LT.w3d && LT.w3d.enabled);
+  /** fn(ok) nach dem Aufbau der Welt – sofort, wenn sie schon steht; ok=false: doch ohne 3D */
+  function whenWorld(fn) {
+    const W = LT.w3d;
+    if (!W || !W.enabled || !W.ready) return;
+    if (W.started) fn(true);
+    else W.ready.then(fn);
+  }
+  const rectOf = (node) => (node && node.isConnected ? node.getBoundingClientRect() : null);
+  const current = (sel) => document.querySelector('#app > .screen' + sel);
+  /* Freie Bildbereiche (frame) je Bildschirm: Dort zeigt die Kamera ihren Ort. */
+  function splashFrame() {
+    const scr = current('.splash-screen');
+    const h = rectOf(scr && scr.querySelector('.splash h1'));
+    const b = rectOf(scr && scr.querySelector('.splash .btn'));
+    return { top: h ? h.bottom + 4 : 0, bottom: b ? window.innerHeight - b.top + 6 : 0 };
+  }
+  /** Weltkarte: frei ist alles unter der HUD (Unterkante der HUD-Karten, live aus dem DOM) */
+  function homeFrame() {
+    const scr = current('.home');
+    const top = rectOf(scr && scr.querySelector('.home-top')) || rectOf(scr && scr.querySelector('.topbar'));
+    return { top: top ? Math.round(top.bottom + 6) : 0, bottom: 6 };
+  }
+  /** Sicherer Bereich der Inselschilder: nie unter der HUD, nie unter den Pfeilen (Hochformat) */
+  function homeSafe() {
+    const f = homeFrame();
+    const side = document.body.classList.contains('w3d-pan') ? 62 : 8;
+    return { top: f.top, bottom: 6, left: side, right: side };
+  }
+  /** Hindernisse für die Schilder: Flo in der Ecke */
+  function homeObstacles() {
+    const m = LT.ui.mascot();
+    if (!m || m.classList.contains('hidden')) return [];
+    const r = m.getBoundingClientRect();
+    return r.width ? [{ left: r.left, right: r.right, top: r.top + r.height * 0.1, bottom: r.bottom }] : [];
+  }
+  function areaFrame() {
+    const scr = current('.area-screen');
+    const bar = rectOf(scr && scr.querySelector('.topbar'));
+    const hero = rectOf(scr && scr.querySelector('.area-hero'));
+    return { top: bar ? bar.bottom : 0, bottom: hero && hero.height ? window.innerHeight - hero.bottom : 0 };
+  }
+  /** Was Flo unten links auf einer Insel nie verdecken soll (Titel, Symbole, Überschriften) */
+  const FLO_AVOID = '.game-title, .game-icon, .kino-ticket-title, .kino-group > h3, .kino-head h2, .area-book-row .btn, .school-note';
+  /**
+   * Insel: Höhe des freien Bereichs (.area-hero) so wählen, dass Flo in der Ecke beim
+   * Öffnen (oben gescrollt) keinen Kartentitel und kein Kartensymbol verdeckt. 3D: bevorzugt
+   * wird der Bereich etwas niedriger (mehr Karten im Bild), sonst etwas höher, bis die Reihe
+   * ganz unter Flo hindurch aus dem Bild rutscht. Flach ist er sonst 0 hoch und wächst nur
+   * um höchstens 40 px. Liefert true, wenn sich etwas änderte.
+   */
+  function fitAreaHero(scr) {
+    const hero = scr && scr.isConnected && scr.querySelector('.area-hero');
+    const m = LT.ui.mascot();
+    if (!hero) return false;
+    const before = hero.style.height;
+    hero.style.height = '';
+    const flat = !document.body.classList.contains('w3d');
+    const h0 = hero.offsetHeight;
+    // Lage ohne Bewegung: Flo ohne Hüpfer/Einblenden (offset*), Karten im Endzustand ihres
+    // Einflug-Effekts (kurz vorgespult, danach zurückgesetzt – es ruckelt nichts)
+    if ((!h0 && !flat) || !m || m.classList.contains('hidden') || !m.offsetWidth) return hero.style.height !== before;
+    const mr = { left: m.offsetLeft, top: m.offsetTop, width: m.offsetWidth, height: m.offsetHeight };
+    const content = hero.parentElement;
+    const sy = content ? content.scrollTop : 0;
+    const vh = window.innerHeight;
+    // die sichtbare Figur (etwas kleiner als ihr Feld) plus Luft über den Ohren – bis zum
+    // Bildrand: ein Titel halb unter Flo und halb unter dem Rand wäre ebenso abgeschnitten
+    const flo = { left: mr.left + mr.width * 0.06, right: mr.left + mr.width * 0.9, top: mr.top - 8, bottom: vh };
+    const anims = scr.getAnimations ? scr.getAnimations({ subtree: true }) : [];
+    const held = anims.map((a) => {
+      const t = a.currentTime;
+      try { const end = a.effect && a.effect.getComputedTiming().endTime; if (Number.isFinite(end)) a.currentTime = end; } catch (e) { /* egal */ }
+      return t;
+    });
+    const items = [];
+    scr.querySelectorAll(FLO_AVOID).forEach((n) => {
+      const r = n.getBoundingClientRect();
+      // Schrift zählt voll; ein Symbol, das Flo nur am Rand streift, wenig
+      if (r.width && r.height && r.right > flo.left && r.left < flo.right) items.push({ top: r.top + sy, bottom: r.bottom + sy, k: n.matches('.game-icon') ? 0.2 : 1 });
+    });
+    anims.forEach((a, i) => { try { a.currentTime = held[i] == null ? 0 : held[i]; } catch (e) { /* egal */ } });
+    const hit = (s) => {
+      let a = 0;
+      for (const it of items) {
+        const t = it.top + s, b = Math.min(vh, it.bottom + s);
+        if (t < vh) a += Math.max(0, Math.min(b, flo.bottom) - Math.max(t, flo.top)) * it.k;
+      }
+      return a;
+    };
+    if (!hit(0)) return hero.style.height !== before;
+    const lo = flat ? 0 : Math.round(Math.max(130, h0 * 0.72)) - h0;
+    const hi = flat ? 40 : Math.round(Math.min(vh * 0.52, h0 * 1.25)) - h0;
+    let best = 0, bestCost = Infinity;
+    for (let s = Math.ceil(lo); s <= hi; s += 2) {
+      const cost = hit(s) * 1000 + Math.abs(s) * (s > 0 ? 3 : 1);
+      if (cost < bestCost) { bestCost = cost; best = s; }
+    }
+    // flach nur, wenn es ganz frei wird (sonst bliebe bloß eine Lücke unter der Kopfleiste)
+    if (best && (!flat || bestCost < 1000)) hero.style.height = Math.round(h0 + best) + 'px';
+    return hero.style.height !== before;
+  }
+  window.addEventListener('resize', () => {
+    // vor dem nächsten Bild der Welt (dort liest die Kamera den freien Bereich neu)
+    if (A.screen === 'area') fitAreaHero(current('.area-screen'));
+  });
+  /** Antippen einer 3D-Insel (js/world3d/core.js) */
+  A.onIslandTap = function (id) {
+    if (A.screen === 'home') {
+      if (id === 'hub') {
+        LT.sfx.play('pop');
+        LT.ui.cheer();
+        if (LT.ui.onMascotTap) LT.ui.onMascotTap();
+      } else if (LT.areaById(id)) {
+        LT.sfx.play('click');
+        A.showArea(id);
+      }
+    } else if (A.screen === 'area' && id === A.lastArea) {
+      const a = LT.areaById(id);
+      LT.sfx.play('pop');
+      if (a) LT.speech.say(a.hello);
+    }
+  };
 
   /* ------------------------------------------------------------------
      Zeitmessung, Bewegungspause, Tageslimit
@@ -97,6 +230,7 @@
       counter,
       el('div.actions', btn),
     ]);
+    if (LT.w3d) LT.w3d.go('sky');
     LT.speech.say('Zeit für eine kleine Bewegungspause! ' + text);
     let left = LT.config.test ? 1 : 20;
     counter.textContent = `Noch ${left} Sekunden …`;
@@ -115,8 +249,18 @@
     if (A.screen === 'limit') return;
     A.screen = 'limit';
     LT.engine.stop();
-    const { screen } = LT.ui.screen({});
+    const { screen } = LT.ui.screen({ className: 'limit-screen', place: 'sky' });
     LT.ui.setMascot({ big: true });
+    // 3D: Nacht über der Inselwelt, Flo macht sein Nickerchen – beim nächsten Bildschirm wieder Tag
+    const W = LT.w3d;
+    if (world() && W.env && W.env.setMood) {
+      W.env.setMood('night', { instant: !!W.fastFlights }); // Testmodus: ohne Überblendung (wie die Kamera)
+      if (W.flo && W.flo.sleep) W.flo.sleep(true);
+      LT.ui.onLeave = () => {
+        if (W.env && W.env.setMood) W.env.setMood('day', { instant: !!W.fastFlights });
+        if (W.flo && W.flo.sleep) W.flo.sleep(false);
+      };
+    }
     screen.appendChild(
       el('div.splash',
         el('div.flo-big', { html: LT.ui.floSVG(), style: { animation: 'none', opacity: '0.9' } }),
@@ -140,7 +284,8 @@
      ------------------------------------------------------------------ */
   A.showSplash = function () {
     A.screen = 'splash';
-    const { screen } = LT.ui.screen({});
+    // 3D: Flos Heimatinsel ist die Bühne zwischen Titel und Knopf (dort steht später der 3D-Flo)
+    const { screen } = LT.ui.screen({ className: 'splash-screen', place: 'splash', frame: splashFrame });
     LT.ui.setMascot({ hidden: true });
     const start = () => {
       LT.sfx.unlock();
@@ -386,13 +531,17 @@
     if (!gate(A.showHome)) return;
     A.screen = 'home';
     LT.engine.stop();
+    // Mit 3D ist die Inselwelt die Karte: Schilder über den Inseln statt Kartenraster
+    const map3d = world();
     const albumBtn = el('button.btn-round', { title: 'Sticker-Album', 'aria-label': 'Sticker-Album', on: { click: () => { LT.sfx.play('click'); A.showAlbum(); } } }, U.emoji('📒'));
     const parentBtn = el('button.btn-round', { title: 'Elternbereich', 'aria-label': 'Elternbereich', style: { opacity: '0.8' }, on: { click: () => parentGate(A.showParents) } }, U.emoji('🔒'));
-    const { screen } = LT.ui.screen({ title: 'Lernwelt mit Flo', icon: '🦊', right: [LT.ui.starCounter(), albumBtn, parentBtn] });
+    const { screen } = LT.ui.screen({ className: 'home' + (map3d ? ' is-map' : ''), title: 'Lernwelt mit Flo', icon: '🦊', right: [LT.ui.starCounter(), albumBtn, parentBtn], place: 'home', frame: homeFrame, live: true });
     screen.style.setProperty('--area', '#4a90e2');
     const content = el('div.content');
     screen.appendChild(content);
-    LT.ui.setMascot({ big: true });
+    // Flo bleibt klein in der Ecke: groß läge er beim Öffnen auf der ersten Inselkarte
+    // (flach) – in 3D wohnt er ohnehin auf seiner Insel
+    LT.ui.setMascot({ big: false });
     LT.ui.onMascotTap = () => LT.speech.say(LT.reise ? 'Tippe auf eine Insel! Oder spiel das Tagesabenteuer mit den drei Stationen. Auf Flos Reise gehen wir Schritt für Schritt immer weiter.' : 'Tippe auf eine Insel! Oder spiel das Tagesabenteuer mit den drei Stationen.');
 
     const name = P.name();
@@ -404,6 +553,74 @@
     if (adv) top.appendChild(adv);
     content.appendChild(top);
 
+    const { grid, school } = areaCards();
+    const flat = () => { content.appendChild(grid); if (school) content.appendChild(school); };
+    if (map3d) {
+      // Schilder-Ebene über der Leinwand; Inseln selbst sind auch antippbar (core: W.interactive)
+      const map = el('div.w3d-map', { role: 'group', 'aria-label': 'Weltkarte' }, grid, school);
+      const pan = (dx) => { if (LT.w3d.pan(dx)) LT.sfx.play('click'); };
+      map.appendChild(el('button.w3d-pan-btn.is-left', { type: 'button', 'aria-label': 'Karte nach links', title: 'Karte nach links', on: { click: () => pan(-0.6) } }, el('span', { 'aria-hidden': 'true' }, '‹')));
+      map.appendChild(el('button.w3d-pan-btn.is-right', { type: 'button', 'aria-label': 'Karte nach rechts', title: 'Karte nach rechts', on: { click: () => pan(0.6) } }, el('span', { 'aria-hidden': 'true' }, '›')));
+      screen.appendChild(map);
+      whenWorld((ok) => {
+        if (!screen.isConnected) return;
+        if (!ok) { // 3D doch nicht verfügbar → flache Weltkarte
+          screen.classList.remove('is-map');
+          map.remove();
+          flat();
+          return;
+        }
+        // Schilder am Strand vor jeder Insel; sie weichen einander, den Wahrzeichen und Flo aus
+        const opts = { shore: true, depth: true, scale: [0.82, 1.06], avoid: 'map', safe: homeSafe, obstacles: homeObstacles };
+        map.querySelectorAll('.area-card[data-area]').forEach((card) => LT.w3d.labelIsland(card.dataset.area, card, opts));
+        map.classList.add('is-ready');
+        peekIslands(map);
+      });
+    } else flat();
+
+    const adv2 = P.profile.adventure;
+    if (!fromSplash && adv2 && adv2.done.every(Boolean) && !adv2.rewarded) {
+      setTimeout(() => LT.speech.say('Du hast alle drei Stationen geschafft! Tippe auf die Schatzkiste!'), 400);
+    }
+  };
+
+  /**
+   * Geschobene 3D-Weltkarte (Hochformat): In den Pfeil-Knöpfen zeigen kleine Symbole, welche
+   * Inseln auf dieser Seite außer Sicht liegen (die nächste zuerst, gesperrte Schul-Inseln
+   * nicht). core.js setzt dafür data-w3d-off an den Schildern.
+   */
+  function peekIslands(map) {
+    const btns = { left: map.querySelector('.w3d-pan-btn.is-left'), right: map.querySelector('.w3d-pan-btn.is-right') };
+    const boxes = {};
+    Object.keys(btns).forEach((k) => { if (btns[k]) btns[k].appendChild((boxes[k] = el('span.w3d-pan-peek', { 'aria-hidden': 'true' }))); });
+    let queued = false;
+    const update = () => {
+      queued = false;
+      if (!map.isConnected) return;
+      const I = LT.w3d.islands || {};
+      const x = (c) => (I[c.dataset.area] ? I[c.dataset.area].pos.x : 0);
+      Object.keys(boxes).forEach((side) => {
+        const cards = [...map.querySelectorAll(`.area-card[data-w3d-off="${side}"]`)].filter((c) => !c.closest('.school-section.is-locked'));
+        cards.sort((a, b) => (side === 'left' ? x(b) - x(a) : x(a) - x(b)));
+        const list = cards.slice(0, 3).map((c) => c.dataset.area);
+        btns[side].classList.toggle('is-empty', !list.length); // auf dieser Seite kommt nichts mehr
+        if (boxes[side].dataset.ids === list.join(',')) return;
+        boxes[side].dataset.ids = list.join(',');
+        boxes[side].replaceChildren(...list.map((id) => {
+          const a = LT.areaById(id);
+          const chip = el('span.w3d-peek-chip', U.emoji(a ? a.icon : '🏝️'));
+          if (a) LT.ui.applyArea(chip, a);
+          return chip;
+        }));
+      });
+    };
+    const schedule = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
+    new MutationObserver(schedule).observe(map, { subtree: true, attributes: true, attributeFilter: ['data-w3d-off'] });
+    schedule();
+  }
+
+  /** Inselkarten der Weltkarte: Kita-Inseln (.areas) und Schul-Reihe (.school-section). */
+  function areaCards() {
     const grid = el('div.areas');
     const schoolOpen = schoolUnlocked();
     const schoolGrid = el('div.areas.school-areas');
@@ -416,6 +633,8 @@
       const pct = possible ? Math.round((reached / possible) * 100) : 0;
       const card = el('button.card-btn.area-card', {
         'aria-label': a.title,
+        title: school && !schoolOpen ? a.title + ' – ab Schulkind-Stufe' : null, // Schloss-Hinweis (3D: nur als Symbol)
+        data: { area: a.id },
         on: { click: () => { LT.sfx.play('click'); A.showArea(a.id); } },
       },
         el('span.area-deco', { style: { left: '8%', top: '10%' } }, a.deco[0]),
@@ -431,28 +650,22 @@
       if (school) card.classList.add('school-card');
       (school ? schoolGrid : grid).appendChild(card);
     });
-    content.appendChild(grid);
+    let section = null;
     if (schoolGrid.children.length) {
-      content.appendChild(
-        el('section.school-section' + (schoolOpen ? '' : '.is-locked'), { 'aria-label': 'Schule – für Schulkinder' },
-          el('header.school-banner',
-            U.emoji('🎒', 'school-banner-icon'),
-            el('div.school-banner-text',
-              el('h2', 'Schule'),
-              el('p', 'für Schulkinder · Klasse 1')
-            ),
-            schoolOpen ? U.emoji('⭐', 'school-banner-star') : el('span.school-lock.is-banner', U.emoji('🔒'), ' ab Schulkind-Stufe')
+      section = el('section.school-section' + (schoolOpen ? '' : '.is-locked'), { 'aria-label': 'Schule – für Schulkinder' },
+        el('header.school-banner',
+          U.emoji('🎒', 'school-banner-icon'),
+          el('div.school-banner-text',
+            el('h2', 'Schule'),
+            el('p', 'für Schulkinder · Klasse 1')
           ),
-          schoolGrid
-        )
+          schoolOpen ? U.emoji('⭐', 'school-banner-star') : el('span.school-lock.is-banner', U.emoji('🔒'), ' ab Schulkind-Stufe')
+        ),
+        schoolGrid
       );
     }
-
-    const adv2 = P.profile.adventure;
-    if (!fromSplash && adv2 && adv2.done.every(Boolean) && !adv2.rewarded) {
-      setTimeout(() => LT.speech.say('Du hast alle drei Stationen geschafft! Tippe auf die Schatzkiste!'), 400);
-    }
-  };
+    return { grid, school: section };
+  }
 
   /* ------------------------------------------------------------------
      Insel (Bereich) mit Spielkarten
@@ -464,9 +677,12 @@
     A.screen = 'area';
     A.lastArea = areaId;
     LT.engine.stop();
-    const { screen } = LT.ui.screen({ area: a, title: a.title, icon: a.icon, onBack: A.showHome, right: [LT.ui.starCounter()] });
+    // 3D: Die Insel steht oben im freien Bereich (.area-hero), darunter scrollen die Spielkarten
+    const { screen } = LT.ui.screen({ area: a, className: 'area-screen', title: a.title, icon: a.icon, onBack: A.showHome, right: [LT.ui.starCounter()], place: { kind: 'area', id: areaId }, frame: areaFrame });
+    screen.dataset.area = areaId;
     const content = el('div.content');
     screen.appendChild(content);
+    content.appendChild(el('div.area-hero', { 'aria-hidden': 'true' }));
     LT.ui.setMascot({ big: false });
     LT.ui.onMascotTap = () => LT.speech.say(a.hello + ' Tippe auf ein Spiel!');
 
@@ -481,8 +697,16 @@
     if (isSchool(a) && !schoolUnlocked()) {
       content.appendChild(el('p.school-note', U.emoji('🎒'), ' Das ist schon Schulstoff. Probier ruhig mal aus!'));
     }
+    // Flo in der Ecke soll beim Öffnen keine Karte verdecken (Schrift lädt evtl. später)
+    const fitHero = () => {
+      fitAreaHero(screen);
+      if (document.fonts && document.fonts.status !== 'loaded') {
+        document.fonts.ready.then(() => { if (A.screen === 'area' && fitAreaHero(screen) && world() && LT.w3d.refreshPlace) LT.w3d.refreshPlace(); });
+      }
+    };
     if (areaId === 'kino' && LT.kino && LT.kino.renderIsland) {
       LT.kino.renderIsland(content, { onPlay: (id) => startGame(id, { from: 'area' }) });
+      fitHero();
       if (!A.greeted[areaId]) { A.greeted[areaId] = true; LT.speech.say(a.hello); } else LT.speech.say('Welchen Film möchtest du sehen?');
       return;
     }
@@ -505,6 +729,7 @@
       grid.appendChild(card);
     });
     content.appendChild(grid);
+    fitHero();
 
     if (!A.greeted[areaId]) {
       A.greeted[areaId] = true;
@@ -548,7 +773,7 @@
   A.showAlbum = function () {
     A.screen = 'album';
     LT.engine.stop();
-    const { screen } = LT.ui.screen({ title: 'Mein Sticker-Album', icon: '📒', onBack: A.showHome, right: [LT.ui.starCounter()] });
+    const { screen } = LT.ui.screen({ className: 'album-screen', title: 'Mein Sticker-Album', icon: '📒', onBack: A.showHome, right: [LT.ui.starCounter()], place: 'sky' });
     screen.style.setProperty('--area', '#ff5fa2');
     const content = el('div.content');
     screen.appendChild(content);
@@ -634,9 +859,10 @@
     A.screen = 'parents';
     LT.engine.stop();
     LT.speech.stop();
-    const { screen } = LT.ui.screen({ className: 'parents', title: 'Elternbereich', icon: '👪', onBack: () => { A.screen = null; A.showHome(); } });
+    const { screen } = LT.ui.screen({ className: 'parents', title: 'Elternbereich', icon: '👪', onBack: () => { A.screen = null; if (LT.w3d) LT.w3d.wake(); A.showHome(); }, place: 'sky' });
     screen.style.setProperty('--area', '#2b2d42');
     LT.ui.setMascot({ hidden: true });
+    if (LT.w3d) LT.w3d.sleep(); // Akku sparen: nach dem Flug zum Himmel bleibt das Bild stehen
     const content = el('div.content');
     screen.appendChild(content);
     const tabs = [
@@ -941,6 +1167,8 @@
     time.appendChild(el('p.p-muted', 'Empfehlung für 5–6-Jährige: kurze Einheiten von 10–20 Minuten, am besten gemeinsam mit einem Erwachsenen, und insgesamt höchstens 30–60 Minuten Bildschirmzeit pro Tag.'));
     body.appendChild(time);
 
+    body.appendChild(renderGraphicsCard(s));
+
     const data = el('div.p-card', el('h3', 'Daten'));
     data.appendChild(el('p.p-muted', LT.store.persistent ? 'Alle Daten (Sterne, Sticker, Stufen, Reise, Forscherbuch, Einstellungen) bleiben ausschließlich auf diesem Gerät: im Browser gespeichert und zusätzlich doppelt gesichert. Es wird nichts ins Internet übertragen. Tipp: Ab und zu „Fortschritt sichern“ tippen – dann lässt sich alles jederzeit wiederherstellen.' : 'Achtung: Dieser Browser erlaubt keine dauerhafte Speicherung – der Fortschritt geht beim Schließen verloren.'));
     // Sterne nachtragen (z. B. wenn der Browser den Speicher geleert hat)
@@ -985,6 +1213,47 @@
     );
     body.appendChild(data);
   }
+  /** Einstellung „Grafik“: 3D-Welt Automatisch / An / Aus (wirkt nach dem Neuladen) */
+  function renderGraphicsCard(s) {
+    const card = el('div.p-card.p-graphics', el('h3', '✨ Grafik'));
+    const sel = el('select', { 'aria-label': '3D-Welt' });
+    [['auto', 'Automatisch (empfohlen)'], ['on', 'An'], ['off', 'Aus']].forEach(([v, l]) => sel.appendChild(el('option', { value: v, selected: (s.graphics || 'auto') === v }, l)));
+    const note = el('p.p-graphics-note', { role: 'status' });
+    sel.addEventListener('change', () => {
+      P.setSetting('graphics', sel.value);
+      P.save(true);
+      if (LT.store.flush) LT.store.flush();
+      sel.disabled = true;
+      note.textContent = 'Gespeichert. Die Lernwelt startet gleich neu – der Fortschritt bleibt erhalten.';
+      setTimeout(() => location.reload(), LT.config.test ? 250 : 1400);
+    });
+    card.appendChild(row('3D-Welt', sel));
+    card.appendChild(note);
+    card.appendChild(el('p.p-muted.p-graphics-diag', graphicsStatus()));
+    card.appendChild(el('p.p-muted', '„Automatisch“ zeigt die Inselwelt in 3D, wenn das Gerät eine Grafikbeschleunigung hat – sonst die flache Ansicht. „Aus“ hilft auf älteren Tablets, wenn es ruckelt oder der Akku schnell leer ist. Die Bildqualität passt sich außerdem selbst an die Bildrate an. Nach dem Ändern startet die Lernwelt kurz neu.'));
+    return card;
+  }
+  /** Kurzer Diagnose-Text zur 3D-Welt */
+  function graphicsStatus() {
+    const W = LT.w3d;
+    if (!W) return '3D-Welt: nicht eingebaut.';
+    if (W.enabled && W.started) {
+      const q = { high: 'hoch', medium: 'mittel', low: 'niedrig' }[W.quality] || W.quality;
+      const fps = W.stats.fps ? `${W.stats.fps} Bilder/s` : 'Bildrate wird noch gemessen';
+      return `Diagnose: 3D-Welt läuft · Qualität ${q} · Auflösung ${String(W.stats.dpr).replace('.', ',')}× · ${fps}.`;
+    }
+    if (W.enabled) return 'Diagnose: 3D-Welt wird geladen …';
+    const why = {
+      test: 'Testmodus',
+      setting: 'hier ausgeschaltet',
+      webgl: 'dieser Browser kann kein WebGL',
+      slow: 'keine Grafikbeschleunigung gefunden – mit „An“ trotzdem einschalten',
+      param: 'über die Adresse ausgeschaltet',
+      error: 'konnte nicht gestartet werden',
+    }[W.reason];
+    return 'Diagnose: 3D-Welt ist aus' + (why ? ` (${why})` : '') + '.';
+  }
+
   function exportData() {
     const blob = new Blob([P.exportJSON()], { type: 'application/json' });
     const a = el('a', { href: URL.createObjectURL(blob), download: `lernwelt-fortschritt-${U.today()}.json` });
@@ -1090,6 +1359,11 @@
     P.syncStickers();
     LT.ui.initMascot();
     document.addEventListener('pointerdown', () => { LT.sfx.unlock(); LT.speech.unlock(); }, { once: true });
+    // 3D-Welt im Hintergrund aufbauen (nicht blockierend: die App ist sofort bedienbar)
+    if (LT.w3d) {
+      LT.w3d.start();
+      whenWorld((ok) => { if (ok) document.body.classList.toggle('w3d-flo', !!LT.w3d.flo); });
+    }
     if (LT.config.test) {
       A.showHome();
       return;

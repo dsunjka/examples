@@ -23,6 +23,7 @@
     dailyLimit: 0, // Minuten, 0 = aus
     praiseName: true,
     stage: 'vorschule', // Lernstufe: 'vorschule' | 'klasse1' (schaltet Schule + Reise Teil 2 frei)
+    graphics: 'auto', // 3D-Welt (js/world3d): 'auto' | 'on' | 'off' – wirkt nach dem Neuladen
   };
 
   function freshProfile() {

@@ -1,0 +1,29 @@
+/* ==========================================================================
+   3D-Flo (js/world3d/flo.js)
+
+   Das Maskottchen-Element (.mascot) bleibt Klickziel, Größe und Lage
+   (.big/.hidden). Darin liegt eine durchsichtige Leinwand, größer als das
+   Feld (Platz für Sprung, Pirouette und erhobene Arme). Erst wenn die
+   3D-Figur wirklich gerendert hat, setzt flo.js .mascot.is-3d: dann wird
+   das SVG ausgeblendet. Ohne 3D bleibt alles wie bisher.
+   ========================================================================== */
+.mascot > canvas.flo3d-canvas {
+  position: absolute;
+  left: -30%;
+  top: -50%;
+  width: 160%;
+  height: 156%;
+  display: block;
+  pointer-events: none; /* das .mascot-Feld bleibt das Klickziel */
+  opacity: 0;
+  transition: opacity 0.35s ease-out;
+}
+.mascot.is-3d > canvas.flo3d-canvas { opacity: 1; }
+.mascot.is-3d > svg { display: none; }
+
+/* Die 3D-Figur bringt Kontaktschatten, Sprung und Drehung selbst mit:
+   kein CSS-Schatten (teuer über einer laufenden Leinwand), keine CSS-Hüpfer */
+.mascot.is-3d { filter: none; }
+.mascot.is-3d::before { content: none; }
+.mascot.is-3d.cheer,
+.mascot.is-3d.think { animation: none; }

@@ -152,11 +152,11 @@
   /* nach Höhe begrenzt: zwei Punktreihen dürfen nicht unter Flos Sprechblase rutschen */
   --d: clamp(50px, min(9vmin, 7vh), 70px);
   width: var(--d); height: var(--d); border-radius: 50%; border: none; padding: 0; cursor: pointer;
-  background: #1d64d8; box-shadow: inset 0 -5px 0 rgba(0, 0, 0, .2), 0 4px 0 rgba(43, 45, 66, .15);
+  background: radial-gradient(circle at 35% 28%, #8fbcff 0%, #3a86ff 45%, #1d64d8 100%); box-shadow: inset 0 -5px 0 rgba(0, 0, 0, .18), inset 0 2px 0 rgba(255, 255, 255, 0.35), 0 4px 0 #1747a6, var(--drop-s);
   transition: transform .15s, background .15s;
 }
 .zbr-dot:active { transform: translateY(3px); }
-.zbr-dot.zbr-sel { background: #ff8a3d; transform: translateY(-4px); }
+.zbr-dot.zbr-sel { background: radial-gradient(circle at 35% 28%, #ffc08f 0%, #ff8a3d 50%, #ec6a1c 100%); box-shadow: inset 0 -5px 0 rgba(0, 0, 0, .14), inset 0 2px 0 rgba(255, 255, 255, 0.4), 0 4px 0 #c2561a, var(--drop-s); transform: translateY(-4px); }
 .zbr-dot:focus-visible, .zbr-okbtn:focus-visible { outline: 4px solid #2b7bff; outline-offset: 3px; }
 .zbr-okbtn {
   min-width: 72px; min-height: 72px; border-radius: 22px; border: none; cursor: pointer;

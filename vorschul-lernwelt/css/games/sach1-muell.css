@@ -190,7 +190,8 @@
   padding: 8px 4px;
   border-radius: 18px;
   background: var(--card);
-  box-shadow: 0 4px 0 rgba(0, 0, 0, .25);
+  background-image: var(--gloss);
+  box-shadow: inset 0 2px 0 #fff, var(--shadow);
   color: var(--ink);
   font-family: inherit;
   touch-action: none;
@@ -205,7 +206,7 @@
   font-size: clamp(14px, 2.2vmin, 18px); font-weight: 800; line-height: 1.1; text-align: center; pointer-events: none;
   hyphens: manual; overflow-wrap: anywhere;
 }
-.mue-thing.mue-sel { box-shadow: 0 0 0 5px var(--gold), 0 4px 0 rgba(0, 0, 0, .25); transform: translateY(-6px); }
+.mue-thing.mue-sel { box-shadow: 0 0 0 5px var(--gold), 0 0 22px 4px rgba(255, 196, 40, 0.5), var(--shadow); transform: translateY(-6px); }
 .mue-thing.mue-drag { z-index: 20; transition: none; box-shadow: 0 0 0 5px var(--gold), 0 14px 24px rgba(0, 0, 0, .3); pointer-events: none; }
 .mue-thing.mue-gone { visibility: hidden; pointer-events: none; }
 
@@ -246,4 +247,30 @@
   .mue-av-pics { flex: none; width: 124px; }
   .mue-av-l { text-align: left; }
   .choices.mue-avs { flex-direction: column; align-items: center; }
+}
+
+/* ---------- Tablet: Ding, Frage und Tonnen größer ---------- */
+@media (min-width: 700px) and (min-height: 700px) {
+  .mue-ask-e.emoji, .mue-ask-pic .emoji { font-size: clamp(60px, 15.4vmin, 144px); }
+  .mue-ask-pic .mue-svg { width: clamp(52px, 12.6vmin, 118px); height: clamp(104px, 25vmin, 236px); }
+  .mue-ask-l { font-size: clamp(22px, 5.2vmin, 48px); }
+  .mue-ask-q { font-size: clamp(16px, 3.4vmin, 30px); }
+  .mue-avq .mue-ask-l { font-size: clamp(19px, 4.2vmin, 38px); }
+  .choices.mue-bins, .mue-bins { gap: clamp(8px, 2.4vmin, 24px); max-width: min(100%, 1140px); }
+  .tile.mue-bintile { width: clamp(98px, 20vw, 214px); }
+  .mue-bins-3 .tile.mue-bintile { width: clamp(100px, 22vw, 236px); }
+  .mue-bins-4 .tile.mue-bintile { width: clamp(80px, 18vw, 214px); }
+  .mue-lid { height: clamp(10px, 2.6vmin, 22px); }
+  .mue-sym { font-size: clamp(22px, 6vmin, 54px); }
+  .mue-wheels i { width: clamp(10px, 2.6vmin, 20px); }
+  .mue-name { font-size: clamp(15px, 3.4vmin, 30px); }
+  .mue-dome .mue-sym { font-size: clamp(18px, 4.6vmin, 40px); }
+  .mue-coin { font-size: clamp(14px, 3.2vmin, 28px); }
+}
+/* Tablet quer: fünf Tonnen passen in eine Reihe, das Ding-Band bleibt flach */
+@media (min-width: 700px) and (min-height: 700px) and (orientation: landscape) {
+  .mue-bins-5 .tile.mue-bintile { width: clamp(80px, 15.6vw, 190px); }
+  .mue-bins-5 .mue-sym { font-size: clamp(22px, 5vmin, 46px); }
+  .mue-bins-5 .mue-name { font-size: clamp(15px, 3vmin, 26px); }
+  .mue-ask-e.emoji, .mue-ask-pic .emoji { font-size: clamp(60px, 13.4vmin, 124px); }
 }

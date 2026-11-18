@@ -47,6 +47,19 @@
     .zaehlen-block { display: flex; flex-direction: column; gap: clamp(4px, 1.2vmin, 12px); padding: clamp(4px, 1vmin, 8px); border-radius: 18px; background: var(--area-soft); }
     .zaehlen-block .zaehlen-row { justify-content: flex-start; }
     .zaehlen-tip { font-size: clamp(15px, 2.4vmin, 20px); color: var(--ink-soft); font-weight: 700; text-align: center; }
+    /* Zellgröße je Anordnung (antippbar → mindestens 56 px) */
+    .zaehlen-field { --cell: clamp(56px, min(11vmin, 15vw), 96px); }
+    .zaehlen-field.k-scatter { --cell: clamp(56px, min(8.6vmin, 15vw), 84px); }
+    .zaehlen-field.k-many { --cell: clamp(56px, min(8vmin, 7.4vw), 72px); }
+    /* Tablet: Dinge und Zahlen deutlich größer – die Glasbühne hat Platz */
+    @media (min-width: 700px) and (min-height: 700px) {
+      .zaehlen-field { --cell: clamp(56px, min(15.5vmin, 14.5vw), 140px); }
+      .zaehlen-field.k-five { --cell: clamp(56px, min(12vmin, 13vw), 112px); }
+      .zaehlen-field.k-scatter { --cell: clamp(56px, min(8.6vmin, 15vw), 84px); }
+      .zaehlen-field.k-many { --cell: clamp(56px, min(8.4vmin, 7.6vw), 80px); }
+      .zaehlen-item .num { min-width: 32px; height: 32px; border-radius: 16px; font-size: 20px; }
+      .zaehlen-tip { font-size: clamp(15px, 2.8vmin, 24px); }
+    }
   `);
 
   /** Zählbare Bilder: haben einen Plural, sind gut erkennbar und eindeutig EIN Ding
@@ -104,10 +117,9 @@
       // --- Spielfeld aufbauen ---
       // Dinge sind antippbar (Mitzählen) → mindestens 56 px; bei 11–20 brechen die
       // Zehnerblöcke auf schmalen Bildschirmen untereinander um.
-      const cellSize = n > 10 ? 'clamp(56px, min(8vmin, 7.4vw), 72px)'
-        : cfg.layout === 'scatter' ? 'clamp(56px, min(8.6vmin, 15vw), 84px)' // 4 Rasterzeilen
-          : 'clamp(56px, min(11vmin, 15vw), 96px)';
-      const field = el('div.zaehlen-field', { style: { '--cell': cellSize } });
+      // (Zellgröße --cell je Anordnung im Stylesheet oben; Tablet größer)
+      const kind = n > 10 ? 'many' : cfg.layout === 'scatter' ? 'scatter' : cfg.layout === 'five' ? 'five' : 'row';
+      const field = el('div.zaehlen-field.k-' + kind);
       const items = [];
       const makeItem = () => {
         const b = el('button.zaehlen-item', { type: 'button', 'aria-label': item.w }, U.emoji(item.e));

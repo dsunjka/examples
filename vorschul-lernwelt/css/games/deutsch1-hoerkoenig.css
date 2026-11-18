@@ -173,3 +173,24 @@
   .hoe-num-n { font-size: 52px; }
   .hoe-box { min-width: 44px; height: 52px; font-size: 30px; }
 }
+
+/* Tablet: Bild, Laut-Blasen, Kästchen und Kacheln größer */
+@media (min-width: 700px) and (min-height: 700px) {
+  .hoe-card { min-width: min(100%, clamp(220px, 48vmin, 460px)); }
+  .hoe-pic-e { font-size: clamp(64px, 18vmin, 170px); }
+  .hoe-word { font-size: clamp(28px, 6.6vmin, 64px); }
+  .hoe-bubble { min-width: clamp(64px, 15vmin, 136px); min-height: clamp(64px, 15vmin, 136px); font-size: clamp(36px, 9.4vmin, 86px); }
+  .hoe-box { min-width: clamp(34px, 8vmin, 72px); height: clamp(40px, 9.2vmin, 84px); font-size: clamp(22px, 5.2vmin, 48px); }
+  .hoe-choices { gap: clamp(10px, 2.6vmin, 26px); }
+  .tile.hoe-postile { width: clamp(104px, 25vw, 290px); height: clamp(96px, 22vmin, 200px); }
+  .hoe-cell { max-width: 72px; height: clamp(30px, 7.6vmin, 68px); font-size: clamp(18px, 4.4vmin, 40px); }
+  .hoe-pos-label { font-size: clamp(17px, 3.4vmin, 32px); }
+  .tile.hoe-ltile, .tile.hoe-ntile { --tile: clamp(76px, 19vmin, 172px); }
+  .hoe-letter { font-size: clamp(40px, 10vmin, 96px); }
+  .hoe-num-n { font-size: clamp(38px, 9.4vmin, 90px); }
+  .hoe-dots i { width: clamp(7px, 1.7vmin, 16px); height: clamp(7px, 1.7vmin, 16px); }
+  .tile.hoe-ptile { --tile: clamp(96px, 25vmin, 226px); }
+  .tile.hoe-lentile { --tile: clamp(110px, 27vmin, 246px); }
+  .hoe-len-label { font-size: clamp(18px, 3.6vmin, 34px); }
+  .hoe-v.big { font-size: clamp(44px, 10.4vmin, 100px); }
+}

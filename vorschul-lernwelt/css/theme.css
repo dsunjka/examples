@@ -1,0 +1,1132 @@
+/* ==========================================================================
+   Lernwelt mit Flo – Design „Glas & Bonbon“ (Flos Inselwelt)
+
+   Wird nach base.css, allen Spiel-Stylesheets und reise.css geladen (vor
+   world3d.css). Gestaltet das „Chrom“ der App: Kopfleiste, Knöpfe, Karten,
+   Spielbühne, Kacheln, Sprechblase, Overlays, Album, Elternbereich, Start.
+
+   Leitlinien
+   - Schwebende Milchglas-Flächen (Weiß 75–90 %, helle Innenkante, große
+     weiche Schatten) und dicke „Bonbon“-Knöpfe mit 3D-Unterkante.
+   - Spielkacheln sind greifbare Spielsteine: Dicke (Unterkante), Glanzlicht,
+     Kippen beim Zeigen, Federn + Gold-Glühen bei „richtig“, Wackeln bei „falsch“.
+   - Schrift: Fredoka für Titel, Knöpfe und Zahlen in Leisten (--font-display);
+     Andika (--font) bleibt für ALLE Lese-Inhalte: Buchstaben, Wörter, Sätze
+     in Spielen, .prompt-text, Sprechblase (einstöckiges a, klare Formen).
+   - Akzentfarbe = --area (Inselfarbe). Touch-Ziele ≥ 56 px.
+   - Zwei Modi: mit 3D (body.w3d-live: Bildschirme durchsichtig, Feinschliff
+     in world3d.css) und ohne 3D (gemalter Hintergrund aus Verläufen und
+     Inline-SVG: Himmel, Wolken, Meer, Inseln).
+
+   Kaskade: Spiel-CSS liegt VOR dieser Datei. Damit Spiele ihre Kacheln und
+   Knöpfe weiter selbst einfärben können, bleiben die Selektoren hier flach
+   (meist eine Klasse) und setzen nur Optik (Hintergrund, Schatten, Radius,
+   Schrift) – keine Größen oder Abstände, die Spiele verwenden.
+   ========================================================================== */
+
+/* ---------- Schriften ---------- */
+@font-face { font-family: "Fredoka"; font-style: normal; font-weight: 500; font-display: swap; src: url("../assets/fonts/fredoka-500.woff2") format("woff2"); }
+@font-face { font-family: "Fredoka"; font-style: normal; font-weight: 600; font-display: swap; src: url("../assets/fonts/fredoka-600.woff2") format("woff2"); }
+@font-face { font-family: "Fredoka"; font-style: normal; font-weight: 700; font-display: swap; src: url("../assets/fonts/fredoka-700.woff2") format("woff2"); }
+
+/* ---------- Design-Tokens ---------- */
+:root {
+  --font-display: "Fredoka", "Andika", "Trebuchet MS", "Segoe UI", system-ui, sans-serif;
+  --font-ui: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+
+  --navy: #1d2550;
+  --ink: #2a2d4a;
+  --ink-soft: #565b80;
+  --sky-top: #5fbfff;
+  --sky-low: #cdeeff;
+  --sun: #fff1d0;
+  --sea: #27c2d6;
+  --sea-deep: #1477a8;
+  --sand: #fff4dc;
+  --gold: #ffc533;
+  --gold-dark: #e09b00;
+
+  /* Glas */
+  --glass: rgba(255, 255, 255, 0.76);
+  --glass-strong: rgba(255, 255, 255, 0.9);
+  --glass-edge: rgba(255, 255, 255, 0.95);
+  --glass-blur: blur(18px) saturate(1.45);
+  --glass-line: inset 0 0 0 1px rgba(255, 255, 255, 0.9), inset 0 1.5px 0 #fff;
+
+  /* Kanten und Schatten-Stufen */
+  --edge: #d3daee;
+  --edge-dark: #b4bfdf;
+  --sh-1: 0 2px 6px rgba(29, 37, 80, 0.1);
+  --sh-2: 0 12px 24px -10px rgba(29, 37, 80, 0.32), 0 2px 6px rgba(29, 37, 80, 0.07);
+  --sh-3: 0 28px 60px -20px rgba(29, 37, 80, 0.48), 0 6px 16px rgba(29, 37, 80, 0.1);
+  /* Standard-Schatten (auch von Spielen benutzt): Spielstein mit Unterkante */
+  --shadow: 0 5px 0 var(--edge), 0 14px 24px -10px rgba(29, 37, 80, 0.34);
+  --shadow-press: 0 1px 0 var(--edge), 0 4px 10px -4px rgba(29, 37, 80, 0.3);
+  --gold-glow: 0 0 0 4px #ffd65a, 0 0 28px 6px rgba(255, 190, 40, 0.6);
+  /* Kleine Teile (auch für Spiel-CSS): weiße Plättchen/Schilder, weiße runde
+     Knöpfe (wie .btn-round) und – zu einer farbigen Unterkante – der weiche
+     Fallschatten farbiger Abzeichen/Steine. Farbige Kanten schreiben Spiele
+     selbst: 0 3px 0 color-mix(in srgb, <Farbe> 62%, var(--navy)), var(--drop-s) */
+  --sh-chip: 0 3px 0 var(--edge-dark), 0 7px 12px -6px rgba(29, 37, 80, 0.42);
+  --sh-round: inset 0 -3px 0 rgba(29, 37, 80, 0.06), 0 4px 0 var(--edge-dark), 0 10px 16px -8px rgba(29, 37, 80, 0.5);
+  --sh-round-press: inset 0 -2px 0 rgba(29, 37, 80, 0.06), 0 1px 0 var(--edge-dark), 0 3px 6px -3px rgba(29, 37, 80, 0.45);
+  --drop-s: 0 5px 9px -4px rgba(29, 37, 80, 0.42);
+  --gloss: radial-gradient(120% 70% at 30% -10%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 55%);
+
+  /* Radien */
+  --radius-s: 16px;
+  --radius: 26px;
+  --radius-l: 34px;
+
+  /* Bewegung */
+  --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Kopfleiste schwebt mit Abstand zum Rand */
+  --topbar-h: clamp(62px, 9vmin, 84px);
+  --bar-top: max(8px, env(safe-area-inset-top));
+  --bar-side: 10px;
+  --bar-bottom: calc(var(--bar-top) + var(--topbar-h));
+}
+
+/* Tablet (und größer): Spielinhalte wachsen mit der Bühne. Die Grenzen der
+   Größen aus base.css passen fürs Handy; auf dem Tablet blieb sonst um Kacheln
+   von ~150 px viel leere Glasbühne. Nur Größen-Tokens – Spiele mit eigenen
+   Maßen haben dazu je einen Tablet-Block in ihrem Stylesheet.
+   Quer: vier Kacheln passen nebeneinander (21.6vw), bei 5/6/7+ Kacheln in einer
+   Reihe werden sie schmaler statt umzubrechen. Hoch: drei passen nebeneinander
+   (28.5vw), genau vier stehen 2 × 2 (Regel in base.css, damit Spiele mit
+   eigener Reihe Vorrang behalten). Alles in :where() – Spiele, die ihre
+   Kachelgröße selbst setzen, behalten Vorrang. */
+@media (min-width: 700px) and (min-height: 700px) {
+  :root {
+    --tile: clamp(92px, 27vmin, 250px);
+    --tile-s: clamp(70px, 20vmin, 180px);
+    --tile-l: clamp(110px, 33vmin, 300px);
+    --tile-label: clamp(14px, 3.2vmin, 30px);
+    --emoji-big: clamp(56px, 18vmin, 170px);
+    --emoji-mid: clamp(36px, 10.5vmin, 100px);
+    --emoji-small: clamp(26px, 6.6vmin, 64px);
+    --prompt-font: clamp(26px, 6.4vmin, 60px);
+    --prompt-min-h: clamp(110px, 24vmin, 240px);
+    --gap: clamp(10px, 2.8vmin, 28px);
+  }
+}
+@media (min-width: 700px) and (min-height: 700px) and (orientation: landscape) {
+  :root {
+    --tile: clamp(92px, min(27vmin, 21.6vw), 250px);
+    --tile-l: clamp(110px, min(33vmin, 21.6vw), 300px);
+  }
+  :where(.choices:has(> .tile:nth-child(5))) { --tile: clamp(92px, min(27vmin, 17vw), 250px); --tile-l: clamp(92px, min(33vmin, 17vw), 300px); }
+  :where(.choices:has(> .tile:nth-child(6))) { --tile: clamp(80px, min(27vmin, 13.8vw), 250px); --tile-l: clamp(80px, min(33vmin, 13.8vw), 300px); --tile-s: clamp(70px, min(20vmin, 13.8vw), 180px); }
+  :where(.choices:has(> .tile:nth-child(7))) { --tile: clamp(70px, min(27vmin, 11.8vw), 250px); --tile-l: clamp(70px, min(33vmin, 11.8vw), 300px); --tile-s: clamp(70px, min(20vmin, 11.8vw), 180px); }
+}
+@media (min-width: 700px) and (min-height: 700px) and (orientation: portrait) {
+  :root {
+    --tile: clamp(92px, min(27vmin, 28.5vw), 250px);
+    --tile-l: clamp(110px, min(33vmin, 28.5vw), 300px);
+  }
+}
+
+/* ==========================================================================
+   Hintergrund ohne 3D: gemalte Inselwelt (Himmel, Sonne, Wolken, Meer, Inseln)
+   Mit 3D liegt die Leinwand darüber (world3d.css); bis sie da ist, sieht man
+   dasselbe Bild – der Übergang ist weich.
+   ========================================================================== */
+html { background: var(--sky-low); }
+body {
+  min-height: 100%;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1400 260'%3E%3Cg opacity='.95'%3E%3Cg fill='%23e4f3ff'%3E%3Crect x='86' y='104' width='250' height='50' rx='25'/%3E%3C/g%3E%3Cg fill='%23fff'%3E%3Ccircle cx='150' cy='112' r='38'/%3E%3Ccircle cx='212' cy='90' r='50'/%3E%3Ccircle cx='278' cy='112' r='38'/%3E%3Crect x='86' y='100' width='250' height='44' rx='22'/%3E%3C/g%3E%3C/g%3E%3Cg opacity='.8'%3E%3Cg fill='%23e4f3ff'%3E%3Crect x='640' y='62' width='160' height='34' rx='17'/%3E%3C/g%3E%3Cg fill='%23fff'%3E%3Ccircle cx='684' cy='66' r='26'/%3E%3Ccircle cx='726' cy='50' r='34'/%3E%3Ccircle cx='770' cy='68' r='24'/%3E%3Crect x='640' y='60' width='160' height='30' rx='15'/%3E%3C/g%3E%3C/g%3E%3Cg opacity='.9'%3E%3Cg fill='%23e4f3ff'%3E%3Crect x='1030' y='150' width='290' height='54' rx='27'/%3E%3C/g%3E%3Cg fill='%23fff'%3E%3Ccircle cx='1100' cy='154' r='42'/%3E%3Ccircle cx='1170' cy='128' r='56'/%3E%3Ccircle cx='1246' cy='150' r='44'/%3E%3Crect x='1030' y='146' width='290' height='48' rx='24'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat-x 0 max(4vh, 70px) / max(900px, 100vw) auto,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1600 420'%3E%3Cdefs%3E%3ClinearGradient id='s' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%237fdcec'/%3E%3Cstop offset='.18' stop-color='%233ccbdc'/%3E%3Cstop offset='.55' stop-color='%2322aed0'/%3E%3Cstop offset='1' stop-color='%231477a8'/%3E%3C/linearGradient%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%239be36f'/%3E%3Cstop offset='.55' stop-color='%237fd35a'/%3E%3Cstop offset='1' stop-color='%235bb944'/%3E%3C/linearGradient%3E%3ClinearGradient id='d' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23fbe6bd'/%3E%3Cstop offset='1' stop-color='%23e8bf7f'/%3E%3C/linearGradient%3E%3ClinearGradient id='f' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%23b6e6dc'/%3E%3Cstop offset='1' stop-color='%239fd6d2'/%3E%3C/linearGradient%3E%3CradialGradient id='l' cx='.3' cy='.25' r='.8'%3E%3Cstop offset='0' stop-color='%23fff' stop-opacity='.55'/%3E%3Cstop offset='1' stop-color='%23fff' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Cpath d='M0 170h1600v250H0z' fill='url(%23s)'/%3E%3Cpath d='M0 170h1600v7H0z' fill='%23fff' opacity='.35'/%3E%3Cg fill='url(%23f)'%3E%3Cpath d='M250 172c22-26 58-38 96-36 40 2 66 18 84 36z'/%3E%3Cpath d='M1090 172c26-30 70-44 112-40 46 4 80 20 100 40z'/%3E%3Cpath d='M690 172c14-14 34-20 56-19 24 1 40 8 52 19z'/%3E%3C/g%3E%3Cg opacity='.5' fill='none' stroke='%23fff' stroke-width='3' stroke-linecap='round'%3E%3Cpath d='M560 236q14-7 28 0t28 0'/%3E%3Cpath d='M940 262q16-8 32 0t32 0'/%3E%3Cpath d='M760 318q18-9 36 0t36 0'/%3E%3Cpath d='M120 352q18-9 36 0t36 0'/%3E%3Cpath d='M1300 372q18-9 36 0t36 0'/%3E%3Cpath d='M430 300q14-7 28 0'/%3E%3Cpath d='M1120 300q14-7 28 0'/%3E%3C/g%3E%3Cg%3E%3Cellipse cx='230' cy='262' rx='212' ry='40' fill='%23fff' opacity='.55'/%3E%3Cellipse cx='230' cy='252' rx='196' ry='36' fill='url(%23d)'/%3E%3Cpath d='M60 250c10-62 70-108 150-112 92-4 160 44 178 108-58 18-270 22-328 4z' fill='url(%23g)'/%3E%3Cpath d='M60 250c10-62 70-108 150-112 92-4 160 44 178 108-58 18-270 22-328 4z' fill='url(%23l)'/%3E%3Cpath d='M236 150c-4-34 4-70 22-96' stroke='%23b97a4a' stroke-width='10' fill='none' stroke-linecap='round'/%3E%3Cg fill='%234caf47'%3E%3Cpath d='M258 56c-30-12-62-4-80 16 26-8 52-6 80-16z'/%3E%3Cpath d='M258 56c24-24 60-28 84-14-30 0-54 4-84 14z'/%3E%3Cpath d='M258 56c-12 26-34 44-60 52 18-20 36-34 60-52z'/%3E%3Cpath d='M258 56c22 14 36 36 40 62-14-22-24-40-40-62z'/%3E%3C/g%3E%3Ccircle cx='130' cy='196' r='26' fill='%235bb944'/%3E%3Ccircle cx='118' cy='186' r='12' fill='%239be36f' opacity='.7'/%3E%3C/g%3E%3Cg%3E%3Cellipse cx='1395' cy='292' rx='250' ry='46' fill='%23fff' opacity='.55'/%3E%3Cellipse cx='1395' cy='282' rx='232' ry='42' fill='url(%23d)'/%3E%3Cpath d='M1180 280c6-52 54-92 120-98 40-4 70 6 92 20 24-34 70-52 118-44 64 10 104 60 108 120-80 22-370 26-438 2z' fill='url(%23g)'/%3E%3Cpath d='M1180 280c6-52 54-92 120-98 40-4 70 6 92 20 24-34 70-52 118-44 64 10 104 60 108 120-80 22-370 26-438 2z' fill='url(%23l)'/%3E%3Crect x='1286' y='196' width='12' height='40' rx='5' fill='%23b97a4a'/%3E%3Ccircle cx='1292' cy='182' r='34' fill='%234fae45'/%3E%3Ccircle cx='1280' cy='170' r='14' fill='%238fdc63' opacity='.75'/%3E%3Cpath d='M1452 208h56v34h-56z' fill='%23fff4e0'/%3E%3Cpath d='M1444 212l36-30 36 30z' fill='%23ff7a59'/%3E%3Crect x='1472' y='220' width='14' height='22' rx='4' fill='%23b97a4a'/%3E%3C/g%3E%3Cg%3E%3Cellipse cx='1010' cy='214' rx='92' ry='18' fill='%23fff' opacity='.5'/%3E%3Cellipse cx='1010' cy='209' rx='84' ry='16' fill='url(%23d)'/%3E%3Cpath d='M936 208c4-30 34-52 74-52s70 22 74 52c-36 8-112 8-148 0z' fill='url(%23g)'/%3E%3Cpath d='M1032 158v-36' stroke='%23fff' stroke-width='12' stroke-linecap='round'/%3E%3Cpath d='M1032 136v-8' stroke='%23ff6b6b' stroke-width='12'/%3E%3Ccircle cx='1032' cy='116' r='7' fill='%23ffd75e'/%3E%3C/g%3E%3Cg fill='%23fff' opacity='.8'%3E%3Ccircle cx='640' cy='280' r='2.5'/%3E%3Ccircle cx='880' cy='230' r='2'/%3E%3Ccircle cx='520' cy='360' r='3'/%3E%3Ccircle cx='1180' cy='350' r='2.5'/%3E%3Ccircle cx='360' cy='330' r='2'/%3E%3C/g%3E%3C/svg%3E") no-repeat 50% 100% / max(1240px, 100vw) auto,
+    radial-gradient(70% 55% at 10% -6%, rgba(255, 241, 208, 0.95), rgba(255, 241, 208, 0) 70%),
+    linear-gradient(180deg, var(--sky-top) 0%, #8fd3ff 42%, var(--sky-low) 74%, var(--sky-low) 100%);
+  background-color: var(--sky-low);
+}
+
+/* ==========================================================================
+   Kopfleiste: schwebende Bonbon-Glasleiste in Inselfarbe
+   ========================================================================== */
+.topbar {
+  position: relative;
+  margin: var(--bar-top) max(var(--bar-side), env(safe-area-inset-right)) 0 max(var(--bar-side), env(safe-area-inset-left));
+  padding: 0 8px;
+  border-radius: calc(var(--topbar-h) / 2);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--area) 78%, #fff) 0%, var(--area) 52%, color-mix(in srgb, var(--area) 90%, #000) 100%);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.08),
+    0 5px 0 color-mix(in srgb, var(--area) 60%, var(--navy)),
+    0 18px 30px -12px color-mix(in srgb, var(--area) 40%, rgba(29, 37, 80, 0.6));
+  isolation: isolate;
+}
+/* Glanzlicht oben (Bonbon) */
+.topbar::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: calc(var(--topbar-h) * 0.35);
+  right: calc(var(--topbar-h) * 0.35);
+  top: 3px;
+  height: 42%;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+.topbar .title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-shadow: 0 2px 0 color-mix(in srgb, var(--area) 55%, var(--navy));
+}
+/* Symbol der Insel als kleine Glas-Plakette */
+.topbar .title .emoji {
+  font-size: 1.02em;
+  width: 1.7em;
+  height: 1.7em;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.16) 70%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), inset 0 -2px 0 rgba(0, 0, 0, 0.08);
+  text-shadow: none;
+}
+
+/* ==========================================================================
+   Knöpfe: Bonbons mit Glanzkante oben und dunklerer Unterkante
+   --btn-c = Grundfarbe, --btn-ink = Schrift
+   ========================================================================== */
+.btn {
+  --btn-c: #ffffff;
+  --btn-ink: var(--ink);
+  --btn-edge: var(--edge-dark);
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--btn-ink);
+  background:
+    radial-gradient(130% 80% at 50% -12%, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 58%),
+    linear-gradient(180deg, color-mix(in srgb, var(--btn-c) 86%, #fff) 0%, var(--btn-c) 55%, color-mix(in srgb, var(--btn-c) 93%, #000) 100%);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.07),
+    0 6px 0 var(--btn-edge),
+    0 16px 24px -10px rgba(29, 37, 80, 0.45);
+  transition: transform 0.18s var(--spring), box-shadow 0.18s var(--ease-out), filter 0.15s;
+}
+.btn:active, .btn.pressed {
+  transform: translateY(5px);
+  transition-duration: 0.06s;
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.07),
+    0 1px 0 var(--btn-edge),
+    0 5px 10px -6px rgba(29, 37, 80, 0.45);
+}
+.btn[disabled] { opacity: 0.55; filter: saturate(0.6); }
+.btn .emoji { filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.12)); }
+/* Farbige Bonbons: Unterkante aus der Grundfarbe (weiße: kühle, helle Kante) */
+.btn-primary { --btn-c: var(--area); --btn-ink: #fff; --btn-edge: color-mix(in srgb, var(--area) 66%, var(--navy)); text-shadow: 0 2px 0 color-mix(in srgb, var(--area) 55%, var(--navy)); }
+.btn-green { --btn-c: #2fbf72; --btn-ink: #fff; --btn-edge: #178a4e; text-shadow: 0 2px 0 #178a4e; }
+.btn-gold { --btn-c: var(--gold); --btn-ink: #5a3d00; --btn-edge: #d18a00; }
+.btn-big { font-weight: 700; letter-spacing: 0.015em; }
+
+@media (hover: hover) {
+  .btn:hover, .btn-round:hover, .card-btn:hover { filter: brightness(1.04) saturate(1.06); }
+}
+
+/* Runde Knöpfe (Zurück, Album, Vorlesen …): weiße Glas-Bonbons
+   (Ausnahmen: Spiele mit eigenem Rand-Design) */
+.btn-round:not(:where(.s1-card-say)) {
+  color: var(--ink);
+  background:
+    radial-gradient(90% 60% at 50% 8%, #ffffff 0%, rgba(255, 255, 255, 0) 70%),
+    linear-gradient(180deg, #ffffff 0%, #eef2fb 100%);
+  box-shadow:
+    inset 0 -3px 0 rgba(29, 37, 80, 0.06),
+    0 4px 0 var(--edge-dark),
+    0 10px 16px -8px rgba(29, 37, 80, 0.5);
+  transition: transform 0.18s var(--spring), box-shadow 0.18s var(--ease-out), filter 0.15s;
+}
+.btn-round:active { transform: translateY(4px); }
+.btn-round:not(:where(.s1-card-say)):active {
+  transition-duration: 0.06s;
+  box-shadow: inset 0 -2px 0 rgba(29, 37, 80, 0.06), 0 0 0 var(--edge-dark), 0 3px 6px -3px rgba(29, 37, 80, 0.45);
+}
+.btn-round .emoji { filter: drop-shadow(0 1px 0 rgba(0, 0, 0, 0.12)); }
+@keyframes pulse-ring {
+  0% { box-shadow: 0 4px 0 var(--edge-dark), 0 0 0 0 rgba(255, 196, 0, 0.95); }
+  70% { box-shadow: 0 4px 0 var(--edge-dark), 0 0 0 16px rgba(255, 196, 0, 0); }
+  100% { box-shadow: 0 4px 0 var(--edge-dark), 0 0 0 0 rgba(255, 196, 0, 0); }
+}
+
+/* Sternzähler: weiße Pille, Zahl in Fredoka */
+.star-counter {
+  font-family: var(--font-display);
+  font-weight: 700;
+  min-height: 48px;
+  padding: 4px 16px 4px 8px;
+  background: linear-gradient(180deg, #ffffff 0%, #f1f4fb 100%);
+  box-shadow: inset 0 -3px 0 rgba(29, 37, 80, 0.06), 0 4px 0 var(--edge-dark), 0 10px 16px -8px rgba(29, 37, 80, 0.5);
+}
+.star-counter .emoji {
+  width: 1.5em;
+  height: 1.5em;
+  font-size: 1em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 40%, #fff6cf 0%, #ffe28a 70%);
+  box-shadow: inset 0 -2px 0 rgba(224, 155, 0, 0.25);
+}
+.star-counter .count { min-width: 1ch; font-variant-numeric: tabular-nums; }
+@keyframes bump { 0%, 100% { transform: scale(1); } 35% { transform: scale(1.22); } 65% { transform: scale(0.96); } }
+
+/* Fortschritts-Perlen in der Kopfleiste */
+.topbar .dots {
+  padding: 5px 8px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.13);
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.14), 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+.dot {
+  border: 0;
+  background: rgba(255, 255, 255, 0.3);
+  box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.16);
+  transition: background 0.3s, transform 0.35s var(--spring), box-shadow 0.3s;
+}
+.dot.current { background: rgba(255, 255, 255, 0.6); box-shadow: 0 0 0 2.5px #fff, inset 0 2px 2px rgba(0, 0, 0, 0.1); }
+.dot.done { background: linear-gradient(180deg, #fff, #e9eefa); box-shadow: 0 2px 0 rgba(0, 0, 0, 0.16); }
+.dot.star {
+  background: radial-gradient(circle at 35% 30%, #fffbe0 0%, #ffd84a 45%, #f0a500 100%);
+  box-shadow: 0 2px 0 rgba(150, 90, 0, 0.35), 0 0 10px 1px rgba(255, 214, 70, 0.9);
+}
+.dots .dot.stretch { box-shadow: 0 0 0 3px var(--gold), 0 0 10px rgba(255, 214, 70, 0.8); }
+
+/* ==========================================================================
+   Karten (allgemein): weiße, dicke Glas-Karten
+   ========================================================================== */
+.card-btn {
+  border-radius: 28px;
+  background:
+    radial-gradient(120% 60% at 50% -5%, #ffffff 0%, rgba(255, 255, 255, 0) 60%),
+    linear-gradient(180deg, #ffffff 0%, #f6f8fd 100%);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.9), 0 6px 0 var(--edge), 0 18px 30px -14px rgba(29, 37, 80, 0.4);
+  transition: transform 0.2s var(--spring), box-shadow 0.18s var(--ease-out), filter 0.15s;
+}
+.card-btn:active {
+  transform: translateY(5px) scale(0.99);
+  transition-duration: 0.06s;
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.9), 0 1px 0 var(--edge), 0 6px 12px -6px rgba(29, 37, 80, 0.4);
+}
+
+/* ---------- Inselkarten (Weltkarte ohne 3D) ---------- */
+.area-card {
+  border-radius: 32px;
+  color: #fff;
+  background:
+    radial-gradient(110% 70% at 50% -12%, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0) 56%),
+    radial-gradient(90% 60% at 50% 115%, color-mix(in srgb, var(--area) 70%, #000) 0%, rgba(0, 0, 0, 0) 70%),
+    linear-gradient(180deg, color-mix(in srgb, var(--area) 82%, #fff) 0%, var(--area) 58%);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.08),
+    0 7px 0 color-mix(in srgb, var(--area) 60%, var(--navy)),
+    0 22px 34px -14px color-mix(in srgb, var(--area) 45%, rgba(29, 37, 80, 0.7));
+  gap: 6px;
+}
+.area-card:active {
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.45), 0 2px 0 color-mix(in srgb, var(--area) 60%, var(--navy)), 0 8px 14px -8px rgba(29, 37, 80, 0.5);
+}
+.area-card .area-icon {
+  font-size: clamp(42px, 8vmin, 74px);
+  width: 1.62em;
+  height: 1.62em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 32%, rgba(255, 255, 255, 0.98) 0%, rgba(255, 255, 255, 0.82) 62%, rgba(255, 255, 255, 0.62) 100%);
+  box-shadow: inset 0 -4px 0 color-mix(in srgb, var(--area) 22%, transparent), 0 5px 0 color-mix(in srgb, var(--area) 62%, var(--navy)), 0 10px 18px -6px rgba(0, 0, 0, 0.3);
+  filter: none;
+  position: relative;
+  z-index: 1;
+}
+.area-card .area-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1.05;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 0 color-mix(in srgb, var(--area) 50%, var(--navy)), 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.area-card .area-deco { color: #fff; opacity: 0.3; filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.1)); font-family: var(--font-display); font-weight: 700; }
+.area-card .area-meter {
+  position: relative;
+  z-index: 1;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.16);
+  box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.16), 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+.area-card .area-meter > i { background: linear-gradient(180deg, #fff, #f1f5ff); box-shadow: 0 0 8px rgba(255, 255, 255, 0.8); border-radius: 999px; }
+
+/* Schul-Inseln: Platz für das Schloss-Schildchen oben */
+.content .school-card:has(> .school-lock) { padding-top: clamp(40px, 6vmin, 52px); }
+
+/* ---------- Spielkarten (Insel) ---------- */
+.game-card {
+  border-top: 0;
+  padding-top: clamp(16px, 2.8vmin, 26px);
+  background:
+    radial-gradient(120% 55% at 50% -8%, #ffffff 0%, rgba(255, 255, 255, 0) 60%),
+    linear-gradient(180deg, #ffffff 0%, #fbfcff 55%, color-mix(in srgb, var(--area-soft) 45%, #fff) 100%);
+  box-shadow:
+    inset 0 0 0 1.5px rgba(255, 255, 255, 0.95),
+    0 6px 0 color-mix(in srgb, var(--area) 22%, var(--edge)),
+    0 20px 30px -14px rgba(29, 37, 80, 0.4);
+}
+/* Akzent-Reiter in Inselfarbe */
+.game-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 22%;
+  right: 22%;
+  height: 7px;
+  border-radius: 0 0 8px 8px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--area) 80%, #fff), var(--area));
+  box-shadow: 0 2px 6px color-mix(in srgb, var(--area) 40%, transparent);
+}
+.game-card .game-icon {
+  font-size: clamp(38px, 7.4vmin, 62px);
+  width: 1.7em;
+  height: 1.7em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 36%, #ffffff 0%, var(--area-soft) 72%, color-mix(in srgb, var(--area-soft) 70%, var(--area)) 100%);
+  box-shadow: inset 0 -4px 0 color-mix(in srgb, var(--area) 14%, transparent), 0 0 0 4px #fff, 0 6px 14px -4px color-mix(in srgb, var(--area) 45%, rgba(29, 37, 80, 0.4));
+  transition: transform 0.3s var(--spring);
+}
+@media (hover: hover) {
+  .game-card:hover .game-icon { transform: translateY(-3px) rotate(-4deg) scale(1.05); }
+}
+.game-card .game-title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  color: var(--ink);
+}
+.level-pips { gap: 5px; }
+.level-pips i {
+  width: 13px;
+  height: 13px;
+  background: #e2e6f2;
+  box-shadow: inset 0 2px 2px rgba(29, 37, 80, 0.14);
+}
+.level-pips i.on {
+  background: radial-gradient(circle at 35% 30%, #fffbe0 0%, #ffd84a 45%, #eea300 100%);
+  box-shadow: 0 0 0 2px #fff, 0 2px 4px rgba(214, 140, 0, 0.55);
+}
+.game-card .new-badge {
+  top: 12px;
+  left: 12px;
+  padding: 4px 11px 3px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #ff86bd, #ff4f97);
+  box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, 0.5), 0 3px 0 #cf3a7b, 0 6px 10px -4px rgba(207, 58, 123, 0.6);
+  transform: rotate(-6deg);
+}
+.game-card .crown {
+  filter: drop-shadow(0 4px 0 rgba(160, 100, 0, 0.3)) drop-shadow(0 0 10px rgba(255, 210, 60, 0.7));
+  animation: crown-float 3.2s ease-in-out infinite;
+}
+@keyframes crown-float { 0%, 100% { transform: rotate(14deg) translateY(0); } 50% { transform: rotate(10deg) translateY(-4px); } }
+
+/* Auftritt: Karten federn nacheinander herein (nur „backwards“, damit
+   Drücken/Hover danach ungestört bleiben; Schilder der 3D-Karte nicht) */
+@keyframes card-in { from { opacity: 0; transform: translateY(18px) scale(0.94); } to { opacity: 1; transform: none; } }
+:where(.content > .grid > .card-btn, .content .areas > .area-card, .home-top > *, .album-page, .kino-group) {
+  animation: card-in 0.5s var(--spring) backwards;
+}
+:where(.content > .grid, .content .areas, .home-top, .album-pages) > :nth-child(2) { animation-delay: 0.04s; }
+:where(.content > .grid, .content .areas, .home-top, .album-pages) > :nth-child(3) { animation-delay: 0.08s; }
+:where(.content > .grid, .content .areas, .home-top, .album-pages) > :nth-child(4) { animation-delay: 0.12s; }
+:where(.content > .grid, .content .areas, .home-top, .album-pages) > :nth-child(5) { animation-delay: 0.16s; }
+:where(.content > .grid, .content .areas, .home-top, .album-pages) > :nth-child(6) { animation-delay: 0.2s; }
+:where(.content > .grid, .content .areas, .home-top, .album-pages) > :nth-child(7) { animation-delay: 0.24s; }
+:where(.content > .grid, .content .areas, .home-top, .album-pages) > :nth-child(n+8) { animation-delay: 0.28s; }
+
+/* ==========================================================================
+   Startbildschirm: großer Titel mit Tiefe und Glanz
+   ========================================================================== */
+.splash h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(44px, 10vmin, 104px);
+  line-height: 1.02;
+  letter-spacing: 0.01em;
+  padding: 0 0.08em 0.12em;
+  color: #fff;
+  background: linear-gradient(180deg, #ffffff 0%, #ffffff 44%, #fff4d2 56%, #ffe39a 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: none;
+  text-wrap: balance;
+  /* Kante und Tiefe als gestapelte Schatten (text-shadow würde die Füllung überdecken) */
+  filter:
+    drop-shadow(0 0 1.5px #e9671f)
+    drop-shadow(0 2px 0 #f58a35)
+    drop-shadow(0 2px 0 #e2701f)
+    drop-shadow(0 2px 0 #c85c16)
+    drop-shadow(0 12px 16px rgba(110, 45, 10, 0.32));
+}
+.splash .btn-primary.btn-big { position: relative; animation: cta-breathe 2.6s ease-in-out infinite; }
+.splash .btn-primary.btn-big::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  pointer-events: none;
+  animation: cta-ring 2.6s ease-out infinite;
+}
+@keyframes cta-breathe { 0%, 100% { scale: 1; } 50% { scale: 1.035; } }
+@keyframes cta-ring {
+  0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.85); }
+  70%, 100% { box-shadow: 0 0 0 18px rgba(255, 255, 255, 0); }
+}
+/* Ohne 3D: Flo steht auf einer kleinen Insel mit Lichthof */
+body:not(.w3d) .splash .flo-big { position: relative; }
+body:not(.w3d) .splash .flo-big::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: -22%;
+  right: -22%;
+  top: -14%;
+  bottom: -10%;
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 246, 214, 0.95) 0%, rgba(255, 246, 214, 0.45) 40%, rgba(255, 246, 214, 0) 70%);
+  pointer-events: none;
+}
+body:not(.w3d) .splash .flo-big::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 4%;
+  right: 4%;
+  bottom: -9%;
+  height: 22%;
+  border-radius: 50%;
+  background:
+    radial-gradient(60% 46% at 50% 38%, #8fdc63 0%, #6cc64b 62%, rgba(108, 198, 75, 0) 64%),
+    radial-gradient(70% 55% at 50% 52%, #f6d9a3 0%, #e8bf7f 63%, rgba(232, 191, 127, 0) 65%),
+    radial-gradient(80% 60% at 50% 58%, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0) 70%);
+  animation: float-shadow 3s ease-in-out infinite;
+}
+@keyframes float-shadow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(14px); } }
+.splash-screen, .limit-screen { isolation: isolate; }
+
+/* ==========================================================================
+   Weltkarte (ohne 3D): Begrüßung, Reise, Tagesabenteuer, Inseln
+   ========================================================================== */
+/* Begrüßung als Glas-Pille mit Tinten-Schrift: Weiß auf hellem Himmel (oft vor
+   einer Wolke) war kaum lesbar (≈ 1,6 : 1) */
+.home-head h1 {
+  flex: 0 1 auto;
+  max-width: 100%;
+  padding: 0.12em 0.72em 0.16em;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--navy);
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-line), var(--sh-2);
+  text-shadow: none;
+}
+.daily {
+  border-radius: 30px;
+  background:
+    radial-gradient(80% 120% at 0% 0%, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0) 60%),
+    linear-gradient(135deg, rgba(255, 251, 234, 0.95), rgba(255, 233, 176, 0.92));
+  box-shadow: var(--glass-line), 0 6px 0 #edc670, 0 20px 32px -14px rgba(120, 80, 0, 0.45);
+}
+.daily .daily-title { font-family: var(--font-display); font-weight: 600; color: #5d4300; }
+.station {
+  background:
+    radial-gradient(90% 60% at 50% 8%, #ffffff 0%, rgba(255, 255, 255, 0) 70%),
+    linear-gradient(180deg, #ffffff 0%, #f1f4fb 100%);
+  box-shadow: inset 0 -3px 0 rgba(29, 37, 80, 0.06), 0 5px 0 var(--edge-dark), 0 12px 18px -8px rgba(29, 37, 80, 0.45);
+  transition: transform 0.2s var(--spring);
+}
+.station:active { transform: translateY(4px); }
+.station.next { box-shadow: 0 0 0 5px var(--gold), 0 0 22px 4px rgba(255, 196, 40, 0.55), 0 5px 0 5px #d99a00; }
+.station.done::after {
+  background: linear-gradient(180deg, #45d58a, #22b26b);
+  box-shadow: 0 0 0 3px #fff, 0 3px 0 3px #178a4e;
+  font-family: var(--font-display);
+}
+.station-arrow { color: #d18a00; text-shadow: 0 2px 0 rgba(255, 255, 255, 0.7); }
+.daily .chest { filter: drop-shadow(0 6px 6px rgba(120, 80, 0, 0.3)); cursor: pointer; }
+
+/* ==========================================================================
+   Insel-Seite
+   ========================================================================== */
+.area-screen .grid { gap: clamp(14px, 2.6vmin, 26px); }
+.school-note { font-family: var(--font-display); }
+
+/* ==========================================================================
+   Spielbühne: Glas-Bühne, Aufgabentafel, Spielsteine
+   ========================================================================== */
+.game-screen { isolation: isolate; }
+/* Ohne 3D: helle Glas-Bühne über dem gemalten Hintergrund (in 3D: world3d.css) */
+body:not(.w3d) .game-screen::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: calc(var(--bar-bottom) + 10px);
+  right: max(8px, env(safe-area-inset-right));
+  bottom: max(8px, env(safe-area-inset-bottom));
+  left: max(8px, env(safe-area-inset-left));
+  border-radius: 32px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.8) 60%, rgba(255, 255, 255, 0.86) 100%);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.85), inset 0 2px 0 #fff, 0 26px 60px -24px rgba(29, 37, 80, 0.4);
+  pointer-events: none;
+}
+/* Die Spielfläche liegt deckungsgleich auf der Glas-Bühne (gleiche Abstände wie
+   ::before hier und in world3d.css): Inhalte halten so immer den Innenabstand
+   der Bühne ein, statt an ihre Kante zu stoßen; Überstand wird an der Glaskante
+   abgeschnitten statt am Bildschirmrand. */
+.game-screen > .stage {
+  margin: 10px max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+}
+
+/* Aufgabentafel: Milchglas, weiche Innenkante
+   (Ausnahmen: Spiele, deren Tafel ein eigenes Motiv hat – Heft, Wand, Farbfeld) */
+.prompt-box:not(:where(.bli-card, .sch-wall, .farben-thing-box, .koe-riddle)) {
+  /* nur Glanz/Schattierung als Bild – die Grundfarbe (base: var(--card)) dürfen Spiele setzen */
+  background-image:
+    radial-gradient(120% 70% at 50% -10%, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 60%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0) 55%, rgba(40, 60, 130, 0.035) 100%);
+  box-shadow:
+    inset 0 0 0 1.5px rgba(255, 255, 255, 0.95),
+    inset 0 -3px 0 rgba(29, 37, 80, 0.04),
+    0 4px 0 rgba(211, 218, 238, 0.85),
+    0 24px 44px -18px rgba(29, 37, 80, 0.38);
+}
+.prompt-text { font-family: var(--font); color: var(--ink); }
+
+/* Spielsteine: Glanzlicht oben, Schattierung unten als Bild über der Grundfarbe
+   (base: var(--card)) – Spiele dürfen die Farbe weiter selbst setzen */
+.tile {
+  border-radius: var(--radius);
+  color: var(--ink);
+  background-image:
+    radial-gradient(120% 70% at 30% -10%, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0) 55%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0) 46%, rgba(40, 60, 130, 0.07) 100%);
+  box-shadow:
+    inset 0 2px 0 #ffffff,
+    inset 0 -4px 0 rgba(29, 37, 80, 0.05),
+    0 6px 0 var(--edge),
+    0 7px 0 var(--edge-dark),
+    0 18px 26px -12px rgba(29, 37, 80, 0.42);
+  transition: transform 0.22s var(--spring), translate 0.25s var(--spring), rotate 0.25s var(--spring), box-shadow 0.2s var(--ease-out), opacity 0.3s, background 0.3s, filter 0.3s;
+}
+/* Zeigen (Maus/Stift): Spielstein hebt sich und kippt leicht.
+   Einzel-Eigenschaften translate/rotate setzen sich mit transform der Spiele zusammen. */
+@media (hover: hover) and (pointer: fine) {
+  .tile:where(:not(.is-wrong, .is-out, .locked)):hover { translate: 0 -4px; rotate: -1.2deg; }
+  .choices.locked .tile:hover { translate: none; rotate: none; }
+}
+.tile:active {
+  transform: translateY(6px);
+  transition-duration: 0.06s;
+  box-shadow: inset 0 2px 0 #fff, inset 0 -3px 0 rgba(29, 37, 80, 0.05), 0 1px 0 var(--edge-dark), 0 6px 10px -6px rgba(29, 37, 80, 0.4);
+}
+.tile .label { font-family: var(--font); }
+.tile.is-correct {
+  background:
+    radial-gradient(120% 70% at 30% -10%, #ffffff 0%, rgba(255, 255, 255, 0) 55%),
+    linear-gradient(180deg, #f2fff7 0%, #c9f3db 100%);
+  box-shadow:
+    inset 0 2px 0 #fff,
+    0 0 0 5px #3fd184,
+    0 0 0 9px rgba(255, 214, 90, 0.95),
+    0 0 36px 10px rgba(255, 196, 40, 0.55),
+    0 7px 0 9px #c99200;
+  animation: tile-joy 0.7s var(--ease-out);
+}
+.tile.is-wrong { opacity: 0.4; filter: grayscale(0.7); }
+.tile.is-hint {
+  box-shadow: inset 0 2px 0 #fff, 0 0 0 5px var(--gold), 0 0 26px 6px rgba(255, 196, 40, 0.55), 0 6px 0 5px #d99a00;
+}
+.tile.speaking {
+  box-shadow: inset 0 2px 0 #fff, 0 0 0 5px var(--area), 0 0 22px 4px color-mix(in srgb, var(--area) 45%, transparent), 0 6px 0 5px color-mix(in srgb, var(--area) 60%, var(--navy));
+}
+.tile .say-btn {
+  background: linear-gradient(180deg, color-mix(in srgb, var(--area) 80%, #fff), var(--area));
+  box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, 0.5), 0 3px 0 color-mix(in srgb, var(--area) 60%, var(--navy)), 0 6px 10px -4px rgba(29, 37, 80, 0.5);
+  border: 2px solid #fff;
+}
+/* unsichtbar vergrößerte Trefferfläche (34–40 px sichtbar → ≥ 50 px zum Tippen) */
+.tile .say-btn::after { content: ""; position: absolute; inset: -8px; border-radius: 50%; }
+/* Federn mit Überschwingen, Wackeln, Hinweis-Puls */
+@keyframes tile-joy {
+  0% { transform: scale(1); }
+  28% { transform: scale(1.16) rotate(-4deg) translateY(-6px); }
+  55% { transform: scale(0.95) rotate(2deg); }
+  78% { transform: scale(1.04) rotate(-1deg); }
+  100% { transform: scale(1); }
+}
+@keyframes tile-shake {
+  0%, 100% { transform: translateX(0); }
+  15% { transform: translateX(-11px) rotate(-4deg); }
+  35% { transform: translateX(10px) rotate(3deg); }
+  55% { transform: translateX(-7px) rotate(-2deg); }
+  75% { transform: translateX(4px) rotate(1deg); }
+}
+@keyframes tile-hint { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.07); } }
+.hint-glow { outline-color: var(--gold); box-shadow: 0 0 26px 6px rgba(255, 196, 40, 0.5); }
+
+/* ==========================================================================
+   Flo und Sprechblase (Lesetext: Andika)
+   ========================================================================== */
+.mascot { filter: drop-shadow(0 10px 8px rgba(29, 37, 80, 0.22)); }
+/* Ohne 3D-Flo: weicher Bodenschatten unter dem SVG-Flo */
+body:not(.w3d-flo) .mascot::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 16%;
+  right: 16%;
+  bottom: -3%;
+  height: 13%;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(29, 37, 80, 0.3), rgba(29, 37, 80, 0));
+  pointer-events: none;
+}
+.bubble {
+  font-family: var(--font);
+  color: var(--ink);
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: inset 0 0 0 1.5px #fff, 0 4px 0 var(--edge), 0 18px 34px -14px rgba(29, 37, 80, 0.5);
+  transition: opacity 0.25s, transform 0.35s var(--spring);
+}
+.bubble::before { border-right-color: rgba(255, 255, 255, 0.96); filter: drop-shadow(-2px 2px 0 rgba(211, 218, 238, 0.5)); }
+
+/* ==========================================================================
+   Overlays und Panels
+   ========================================================================== */
+.overlay {
+  background: radial-gradient(120% 90% at 50% 40%, rgba(29, 37, 80, 0.28), rgba(20, 26, 60, 0.58));
+  -webkit-backdrop-filter: blur(5px) saturate(1.1);
+  backdrop-filter: blur(5px) saturate(1.1);
+}
+.overlay .panel {
+  border-radius: 38px;
+  background:
+    radial-gradient(90% 38% at 50% 0%, color-mix(in srgb, var(--area-soft) 85%, #fff) 0%, rgba(255, 255, 255, 0) 100%),
+    linear-gradient(180deg, #ffffff 0%, #fbfcff 70%, #f2f5fc 100%);
+  box-shadow:
+    inset 0 0 0 2px #fff,
+    inset 0 -4px 0 rgba(29, 37, 80, 0.05),
+    0 7px 0 #c6cee6,
+    0 44px 90px -24px rgba(10, 16, 50, 0.65);
+  animation: pop-in 0.5s var(--spring);
+}
+@keyframes pop-in { from { transform: scale(0.72) translateY(24px); opacity: 0; } 60% { opacity: 1; } to { transform: none; opacity: 1; } }
+.panel h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+}
+.panel .actions { gap: 16px; margin-top: 22px; }
+
+/* Rundenende: Sieger-Banner und Sterne mit Strahlenkranz */
+.round-end .panel > h2:first-child {
+  display: inline-block;
+  max-width: 100%;
+  margin: 0 auto 6px;
+  padding: 8px clamp(20px, 4vmin, 36px) 10px;
+  border-radius: 20px;
+  color: #fff;
+  line-height: 1.15;
+  background:
+    radial-gradient(110% 80% at 50% -20%, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0) 55%),
+    linear-gradient(180deg, color-mix(in srgb, var(--area) 80%, #fff) 0%, var(--area) 58%, color-mix(in srgb, var(--area) 90%, #000) 100%);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.45), inset 0 -3px 0 rgba(0, 0, 0, 0.08), 0 5px 0 color-mix(in srgb, var(--area) 58%, var(--navy)), 0 14px 22px -10px color-mix(in srgb, var(--area) 50%, rgba(29, 37, 80, 0.6));
+  text-shadow: 0 2px 0 color-mix(in srgb, var(--area) 50%, var(--navy));
+  transform: rotate(-1.5deg);
+}
+.round-stars { position: relative; isolation: isolate; padding: 6px 0; }
+.round-stars::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 50%;
+  width: clamp(240px, 46vmin, 400px);
+  aspect-ratio: 1;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: repeating-conic-gradient(from 0deg, rgba(255, 205, 70, 0.32) 0deg 9deg, rgba(255, 205, 70, 0) 9deg 22.5deg);
+  -webkit-mask-image: radial-gradient(circle, #000 0%, #000 22%, transparent 68%);
+  mask-image: radial-gradient(circle, #000 0%, #000 22%, transparent 68%);
+  animation: rays 22s linear infinite;
+  pointer-events: none;
+}
+@keyframes rays { to { rotate: 360deg; } }
+.round-stars .emoji { opacity: 0.55; filter: grayscale(1) brightness(0.92) contrast(0.85) drop-shadow(0 3px 0 rgba(29, 37, 80, 0.15)); }
+.round-stars .emoji.on { filter: drop-shadow(0 6px 0 rgba(190, 120, 0, 0.35)) drop-shadow(0 0 16px rgba(255, 205, 60, 0.85)); }
+.round-stars .emoji:nth-child(2) { translate: 0 -10px; }
+.sticker-reveal { filter: drop-shadow(0 10px 10px rgba(29, 37, 80, 0.25)) drop-shadow(0 0 24px rgba(255, 214, 90, 0.7)); }
+/* Stufen-Hinweis als goldene Plakette (Text bleibt in Andika) */
+.round-end .panel > p {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px auto 2px;
+  padding: 7px 18px 8px;
+  border-radius: 999px;
+  font-weight: 700;
+  color: #5d4300;
+  background: linear-gradient(180deg, #fffaf0 0%, #ffecb0 100%);
+  box-shadow: inset 0 1.5px 0 #fff, 0 3px 0 #edc670, var(--drop-s);
+}
+/* Neuer Sticker: liegt auf einer kleinen Glanz-Bühne */
+.round-end .panel > div:has(> .sticker-reveal) {
+  margin: 12px auto 0;
+  padding: 10px 18px 16px;
+  max-width: 420px;
+  border-radius: 28px;
+  background: radial-gradient(70% 80% at 50% 70%, rgba(255, 226, 120, 0.45) 0%, rgba(255, 226, 120, 0) 70%), linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 246, 214, 0.7) 100%);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 220, 120, 0.55);
+}
+.round-end .panel > div > p { margin: 0 0 4px; font-weight: 700; color: var(--ink-soft); }
+/* Luft über dem Sticker: die 3D-Stickerkarte (fx.js) ist größer als das Emoji
+   und deckte sonst beim Hereindrehen die Zeile darüber ab */
+.round-end .sticker-reveal { margin: 14px 0 6px; }
+
+/* Rückfrage und Eltern-Schranke */
+.ask-text { font-family: var(--font-ui); font-size: 18px; color: var(--ink); }
+.gate-display {
+  font-family: var(--font-display);
+  font-weight: 600;
+  min-width: 180px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 18px;
+  border-radius: 18px;
+  background: #eef1f9;
+  box-shadow: inset 0 3px 6px rgba(29, 37, 80, 0.12);
+}
+.keypad button {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--ink);
+  border-radius: 20px;
+  background: radial-gradient(90% 60% at 50% 8%, #ffffff 0%, rgba(255, 255, 255, 0) 70%), linear-gradient(180deg, #ffffff 0%, #eef2fb 100%);
+  box-shadow: inset 0 -3px 0 rgba(29, 37, 80, 0.06), 0 5px 0 var(--edge-dark), 0 12px 16px -10px rgba(29, 37, 80, 0.5);
+  transition: transform 0.15s var(--spring), box-shadow 0.12s;
+}
+.keypad button:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--edge-dark), 0 4px 8px -4px rgba(29, 37, 80, 0.4); }
+.keypad button:last-child { color: #fff; background: linear-gradient(180deg, #45d58a, #22b26b); box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.4), 0 5px 0 #178a4e, 0 12px 16px -10px rgba(29, 37, 80, 0.5); }
+
+/* Kleine Hinweise */
+.toast {
+  top: calc(var(--bar-bottom) + 14px);
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  padding: 12px 24px;
+  background: rgba(29, 37, 80, 0.86);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 14px 30px -10px rgba(10, 16, 50, 0.6);
+  animation: toast-in 0.4s var(--spring);
+}
+@keyframes toast-in { from { opacity: 0; transform: translate(-50%, -12px) scale(0.9); } to { opacity: 1; transform: translate(-50%, 0); } }
+
+/* ==========================================================================
+   Sticker-Album
+   ========================================================================== */
+.album-progress {
+  font-family: var(--font-display);
+  font-weight: 600;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: var(--glass-strong);
+  box-shadow: var(--glass-line), var(--sh-2);
+}
+.meter { background: #eef1f9; box-shadow: inset 0 2px 4px rgba(29, 37, 80, 0.12); }
+.meter > i { background: linear-gradient(180deg, #ffe07a, #ffb21c); box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.5), 0 0 10px rgba(255, 190, 40, 0.6); }
+.album-page {
+  padding: clamp(14px, 2.6vmin, 24px);
+  border-radius: 32px;
+  background: var(--glass);
+  box-shadow: var(--glass-line), var(--sh-2);
+}
+.album-page h3 { font-family: var(--font-display); font-weight: 600; color: var(--ink); }
+.sticker {
+  border-radius: 24px;
+  background: radial-gradient(90% 60% at 50% 6%, #ffffff 0%, rgba(255, 255, 255, 0) 70%), linear-gradient(180deg, #ffffff 0%, #f0f3fb 100%);
+  box-shadow: inset 0 -3px 0 rgba(29, 37, 80, 0.05), 0 5px 0 var(--edge-dark), 0 14px 20px -10px rgba(29, 37, 80, 0.45);
+  transition: transform 0.2s var(--spring);
+}
+.sticker:active { transform: translateY(4px); }
+.sticker.locked {
+  font-family: var(--font-display);
+  background: repeating-linear-gradient(45deg, rgba(235, 239, 248, 0.9) 0 10px, rgba(226, 231, 243, 0.9) 10px 20px);
+  box-shadow: inset 0 0 0 3px rgba(205, 212, 233, 0.9), inset 0 4px 8px rgba(29, 37, 80, 0.1);
+}
+.sticker.fresh::after {
+  font-family: var(--font-display);
+  letter-spacing: 0.06em;
+  background: linear-gradient(180deg, #ff86bd, #ff4f97);
+  box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, 0.5), 0 3px 0 #cf3a7b;
+  transform: rotate(8deg);
+}
+
+/* ==========================================================================
+   Pause und Tageslimit
+   ========================================================================== */
+.break-emoji { filter: drop-shadow(0 10px 10px rgba(29, 37, 80, 0.25)); }
+/* Bewegungspause: Countdown als ruhige Zähler-Pille */
+.panel:has(> .break-emoji) > p.p-muted {
+  display: inline-block;
+  min-width: 180px;
+  margin-top: 4px;
+  padding: 5px 16px;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+  background: #eef1f9;
+  box-shadow: inset 0 2px 4px rgba(29, 37, 80, 0.1);
+}
+.limit-screen .splash p {
+  font-family: var(--font);
+  font-weight: 700;
+  line-height: 1.4;
+  padding: 14px 22px;
+  border-radius: 26px;
+  background: var(--glass-strong);
+  box-shadow: var(--glass-line), var(--sh-2);
+}
+/* Inhalt bleibt über Flos Sprechblase (der Eltern-Knopf lag sonst darunter) */
+.limit-screen .splash { padding-bottom: clamp(120px, 20vh, 200px); }
+/* Ohne 3D-Flo steht der große Flo schon in der Mitte: kein zweiter Flo in der
+   Ecke, und die Blase wiederholte nur den Text darüber */
+body:not(.w3d-flo):has(.limit-screen) :is(.mascot, .bubble) { display: none; }
+body:not(.w3d-flo):has(.limit-screen) .limit-screen .splash { padding-bottom: 20px; }
+.limit-screen .p-btn.light {
+  min-height: 48px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-line), var(--sh-1);
+}
+
+/* ==========================================================================
+   Elternbereich: sachlich-elegant, gut lesbar
+   ========================================================================== */
+.parents { font-family: var(--font-ui); }
+.parents .topbar .title { font-family: var(--font-ui); font-weight: 650; letter-spacing: 0; text-shadow: none; }
+.parents .topbar { background: linear-gradient(180deg, #3a3f63 0%, #2b2f4f 100%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), 0 4px 0 #191c33, 0 18px 30px -14px rgba(10, 16, 50, 0.6); }
+.parents .topbar::before { opacity: 0.35; }
+body:not(.w3d) .parents > .content { background: linear-gradient(180deg, rgba(246, 248, 252, 0.96), rgba(242, 245, 251, 0.98)); }
+.parents > .content { margin-top: 10px; }
+.parents .content > * { max-width: 1060px; margin-left: auto; margin-right: auto; }
+.parents h2 { font-weight: 700; letter-spacing: -0.01em; }
+.parents h3 { font-weight: 650; letter-spacing: -0.005em; }
+.tabs {
+  padding: 5px;
+  gap: 4px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.85);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 0 0 1px rgba(29, 37, 80, 0.06), 0 8px 20px -12px rgba(29, 37, 80, 0.3);
+  top: 6px;
+}
+.tab { background: transparent; box-shadow: none; border-radius: 12px; color: var(--ink-soft); font-family: var(--font-ui); min-height: 44px; transition: background 0.15s, color 0.15s; }
+.tab:hover { background: rgba(29, 37, 80, 0.05); color: var(--ink); }
+.tab.active { background: linear-gradient(180deg, #3a3f63, #2a2d4a); color: #fff; box-shadow: 0 2px 6px rgba(29, 37, 80, 0.3); }
+.p-card, .p-kpi {
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(29, 37, 80, 0.06), 0 10px 26px -16px rgba(29, 37, 80, 0.35);
+}
+.p-kpi { position: relative; overflow: hidden; }
+.p-kpi::before { content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: linear-gradient(180deg, #4a90e2, #8e6cef); }
+.p-kpi b { font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+.p-table th { color: #6b7095; }
+.p-btn { border-radius: 12px; background: linear-gradient(180deg, #3a3f63, #2a2d4a); box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1) inset, 0 4px 10px -6px rgba(29, 37, 80, 0.6); font-family: var(--font-ui); min-height: 44px; transition: filter 0.15s, transform 0.1s; }
+.p-btn:active { transform: translateY(1px); }
+.p-btn.light { background: #eef0f7; color: var(--ink); box-shadow: inset 0 0 0 1px rgba(29, 37, 80, 0.08); }
+.p-btn.danger { background: linear-gradient(180deg, #d9483b, #b9372b); }
+.p-btn.small { min-height: 0; }
+.p-row input[type=text], .p-row select, .p-row input[type=number], .p-progress select {
+  border-radius: 12px;
+  border: 1.5px solid #dde1ee;
+  background-color: #fff;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.parents input:focus-visible, .parents select:focus-visible { outline: none; border-color: #4a90e2; box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.2); }
+
+/* Eigene Steuerelemente statt Systemoptik (Glas & Bonbon, ruhig) */
+.parents { accent-color: #22b26b; }
+/* Auswahllisten: eigener Rahmen, Radius und Pfeil */
+.parents select {
+  -webkit-appearance: none;
+  appearance: none;
+  min-height: 44px;
+  padding: 8px 42px 8px 14px;
+  border-radius: 12px;
+  border: 1.5px solid #dde1ee;
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  cursor: pointer;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 7.5l5 5 5-5' fill='none' stroke='%23565b80' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center / 18px 18px;
+  box-shadow: 0 1px 0 rgba(29, 37, 80, 0.04), 0 6px 14px -10px rgba(29, 37, 80, 0.35);
+}
+.parents select:hover { border-color: #c5cbe0; }
+/* Ja/Nein als Schalter (30 px hoch). Die Größe steht in app.js inline (24 px) –
+   darum hier mit !important */
+.parents input[type=checkbox] {
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  flex: 0 0 auto;
+  width: 54px !important;
+  height: 32px !important;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  background: #d8dcea;
+  box-shadow: inset 0 2px 4px rgba(29, 37, 80, 0.18);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.parents input[type=checkbox]::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #ffffff, #f1f4fb);
+  box-shadow: 0 2px 5px rgba(29, 37, 80, 0.35);
+  transition: transform 0.22s var(--spring);
+}
+.parents input[type=checkbox]:checked { background: linear-gradient(180deg, #45d58a, #22b26b); box-shadow: inset 0 2px 3px rgba(10, 90, 50, 0.3); }
+.parents input[type=checkbox]:checked::before { transform: translateX(22px); }
+.parents input[type=checkbox]:focus-visible { outline: 3px solid #4a90e2; outline-offset: 3px; box-shadow: inset 0 2px 4px rgba(29, 37, 80, 0.18); }
+/* Schieberegler: Spur und Griff in App-Optik */
+.parents input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 32px;
+  background: transparent;
+  cursor: pointer;
+}
+.parents input[type=range]::-webkit-slider-runnable-track {
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #cfe9ff, #b9d4ff);
+  box-shadow: inset 0 2px 3px rgba(29, 37, 80, 0.16);
+}
+.parents input[type=range]::-moz-range-track {
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #cfe9ff, #b9d4ff);
+  box-shadow: inset 0 2px 3px rgba(29, 37, 80, 0.16);
+}
+.parents input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  margin-top: -9px;
+  border-radius: 50%;
+  border: 3px solid #4a7fe2;
+  background: #fff;
+  box-shadow: 0 3px 8px rgba(29, 37, 80, 0.35);
+}
+.parents input[type=range]::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 3px solid #4a7fe2;
+  background: #fff;
+  box-shadow: 0 3px 8px rgba(29, 37, 80, 0.35);
+}
+.parents input[type=range]:focus-visible { outline: 3px solid #4a90e2; outline-offset: 4px; border-radius: 999px; box-shadow: none; }
+.p-bar { background: #edf0f7; }
+.p-bar > i { background: linear-gradient(90deg, #35c47c, #22b26b); border-radius: inherit; }
+.p-week .col i { background: linear-gradient(180deg, #6aa8ff, #4a7fe2); border-radius: 8px 8px 3px 3px; }
+
+/* Ask-/Gate-Overlays bleiben sachlich (Systemschrift) */
+.overlay.ask .panel, .overlay.gate .panel { font-family: var(--font-ui); }
+.overlay.gate .panel h2 { font-family: var(--font-ui); letter-spacing: -0.01em; }
+
+/* ==========================================================================
+   Fokus, Bewegung, kleine Bildschirme
+   ========================================================================== */
+.btn:focus-visible, .tile:focus-visible, .card-btn:focus-visible, .btn-round:focus-visible, .station:focus-visible, .sticker:focus-visible { outline: 4px solid #2b7bff; outline-offset: 4px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .game-card .crown, .round-stars::before, body:not(.w3d) .splash .flo-big::after, .splash .btn-primary.btn-big, .splash .btn-primary.btn-big::after { animation: none; }
+  .tile:hover { translate: none; rotate: none; }
+}
+
+@media (max-width: 520px) {
+  :root { --bar-side: 6px; --topbar-h: 62px; }
+  /* Lange Spieltitel („Über die Zehner-Brücke“) zweizeilig statt abgeschnitten */
+  .topbar .title > span {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    white-space: normal;
+    line-height: 1.04;
+    padding-bottom: 0.06em;
+    overflow-wrap: break-word;
+  }
+  /* Hochformat: Titel zweizeilig und groß („Lernwelt / mit Flo“) */
+  .splash h1 { font-size: clamp(54px, 16.5vw, 76px); }
+  .topbar { padding: 0 6px; }
+  .topbar .dots { padding: 4px 6px; }
+  .star-counter { min-height: 44px; padding: 3px 12px 3px 6px; }
+  .area-card { border-radius: 28px; }
+  .round-stars .emoji:nth-child(2) { translate: 0 -6px; }
+}
+@media (max-width: 420px) {
+  .topbar .dots { padding: 3px 5px; background: rgba(0, 0, 0, 0.1); }
+  .topbar .title .emoji { display: none; }
+}

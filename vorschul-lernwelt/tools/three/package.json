@@ -1,0 +1,8 @@
+{
+  "name": "lernwelt-three-bundle",
+  "private": true,
+  "description": "Baut vendor/three.min.js (three.js + benötigte Addons als klassisches Skript, damit die App auch per file:// offline läuft).",
+  "scripts": { "build": "node build.mjs" },
+  "dependencies": { "three": "0.187.0" },
+  "devDependencies": { "esbuild": "0.25.10" }
+}

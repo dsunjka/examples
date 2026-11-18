@@ -223,3 +223,17 @@
   .tile.sil-scene-tile { width: calc(var(--tile) * 1.25); }
   .sil-sent { font-size: clamp(28px, 8.4vw, 40px); }
 }
+
+/* ---------- Tablet: Silbenwort, Bogen, Bilder und Silben-Kärtchen größer ---------- */
+@media (min-width: 700px) and (min-height: 700px) {
+  .sil-big { font-size: clamp(40px, min(23vmin, calc(150vw / (var(--n) + 2))), 180px); }
+  .prompt-box.sil-card { max-width: min(100%, 1060px); }
+  .sil-bow { width: min(100%, 700px); height: clamp(64px, 14vmin, 124px); }
+  .sil-bow-label { font-size: clamp(15px, 3vmin, 26px); }
+  .sil-bow-ball { font-size: 32px; }
+  .choices.sil-pics .tile.large { --tile: clamp(96px, min(28vmin, 21vw), 250px); }
+  .sil-slots { font-size: clamp(34px, min(13vmin, 12vw), 110px); }
+  .sil-chip { min-width: clamp(84px, 20vmin, 180px); min-height: clamp(64px, 14vmin, 120px); font-size: clamp(30px, 8.2vmin, 70px); }
+  .sil-sentcard { max-width: min(100%, 1080px); }
+  .sil-sent { font-size: clamp(30px, min(8.4vmin, 9vw), 76px); }
+}

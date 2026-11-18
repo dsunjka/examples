@@ -9,11 +9,11 @@
   padding: clamp(12px, 2.4vmin, 22px) clamp(12px, 2.4vmin, 22px) clamp(14px, 2.6vmin, 24px) clamp(18px, 4vmin, 48px);
   border-radius: var(--radius-l);
   /* Heftseite: Rand links, blaue Linien */
-  background-color: #fffef7;
+  background-color: rgba(255, 254, 247, 0.94);
   background-image:
     linear-gradient(90deg, transparent clamp(8px, 2.4vmin, 30px), rgba(230, 73, 73, 0.4) clamp(8px, 2.4vmin, 30px), rgba(230, 73, 73, 0.4) calc(clamp(8px, 2.4vmin, 30px) + 2px), transparent calc(clamp(8px, 2.4vmin, 30px) + 2px)),
     repeating-linear-gradient(180deg, transparent 0 31px, rgba(66, 133, 244, 0.16) 31px 32px);
-  box-shadow: var(--shadow), inset 0 0 0 3px #e4e9f5;
+  box-shadow: inset 0 0 0 3px rgba(228, 233, 245, 0.9), 0 7px 0 #d6dcec, 0 24px 40px -18px rgba(29, 37, 80, 0.4);
 }
 .school-banner {
   display: flex;
@@ -25,14 +25,15 @@
   border-radius: 20px;
   color: #fff;
   background:
-    radial-gradient(ellipse 30% 70% at 90% 20%, rgba(255, 255, 255, 0.25), transparent 70%),
+    radial-gradient(110% 80% at 50% -20%, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 55%),
+    radial-gradient(ellipse 30% 70% at 90% 20%, rgba(255, 255, 255, 0.22), transparent 70%),
     linear-gradient(135deg, #1c7ed6, #4dabf7);
-  box-shadow: 0 5px 0 rgba(20, 70, 140, 0.25);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.4), inset 0 -3px 0 rgba(0, 0, 0, 0.08), 0 5px 0 #145ea3, 0 16px 26px -12px rgba(20, 94, 163, 0.55);
 }
 .school-banner-icon { font-size: clamp(40px, 8vmin, 64px); filter: drop-shadow(0 3px 0 rgba(0, 0, 0, 0.15)); }
 .school-banner-text { flex: 1 1 140px; min-width: 0; }
-.school-banner h2 { margin: 0; font-size: clamp(26px, 4.6vmin, 40px); line-height: 1.1; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15); }
-.school-banner p { margin: 2px 0 0; font-size: clamp(15px, 2.6vmin, 20px); font-weight: 700; opacity: 0.95; }
+.school-banner h2 { margin: 0; font-family: var(--font-display, inherit); font-weight: 700; letter-spacing: 0.01em; font-size: clamp(26px, 4.6vmin, 40px); line-height: 1.1; text-shadow: 0 2px 0 #145ea3; }
+.school-banner p { margin: 2px 0 0; font-family: var(--font-display, inherit); font-size: clamp(15px, 2.6vmin, 20px); font-weight: 600; opacity: 0.95; }
 .school-banner-star { font-size: clamp(30px, 6vmin, 46px); animation: reise-bob 2.4s ease-in-out infinite; }
 
 .school-lock {
@@ -43,10 +44,11 @@
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.94);
   color: #4a4e69;
+  font-family: var(--font-display, inherit);
   font-size: clamp(13px, 2.1vmin, 16px);
-  font-weight: 700;
+  font-weight: 600;
   white-space: nowrap;
-  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.12);
+  box-shadow: inset 0 0 0 1px #fff, 0 2px 0 rgba(29, 37, 80, 0.14), 0 6px 10px -6px rgba(29, 37, 80, 0.35);
 }
 .school-lock .emoji { font-size: 1.05em; }
 .area-card .school-lock { position: absolute; top: 10px; left: 10px; z-index: 1; }
@@ -69,9 +71,9 @@
   max-width: 760px;
   margin: 0 auto var(--gap);
   padding: 10px 16px;
-  border-radius: 18px;
-  background: #fffef7;
-  box-shadow: inset 0 0 0 3px #e4e9f5;
+  border-radius: 999px;
+  background: rgba(255, 254, 247, 0.9);
+  box-shadow: inset 0 0 0 2px rgba(228, 233, 245, 0.95), 0 10px 22px -12px rgba(29, 37, 80, 0.35);
   font-size: clamp(16px, 2.8vmin, 22px);
   font-weight: 700;
   text-align: center;

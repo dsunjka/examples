@@ -35,7 +35,7 @@
   padding: 4px 12px; border-radius: 999px;
   background: var(--koe-lab); color: #fff;
   font-size: clamp(15px, 2.6vmin, 22px); font-weight: 800;
-  box-shadow: 0 3px 0 rgba(0, 0, 0, .15);
+  box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, 0.35), 0 3px 0 color-mix(in srgb, var(--koe-lab) 62%, var(--navy)), var(--drop-s);
   animation: koe-pop .45s ease-out;
 }
 
@@ -130,7 +130,7 @@
   background: var(--koe-blue); color: #fff;
   font-size: clamp(22px, 4.2vmin, 34px); font-weight: 900;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 3px 0 rgba(0, 0, 0, .18);
+  box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, 0.35), 0 3px 0 color-mix(in srgb, var(--koe-blue) 62%, var(--navy)), var(--drop-s);
 }
 .tile.koe-card.koe-done { opacity: .55; pointer-events: none; border-color: var(--koe-g); background: var(--koe-g-soft); }
 .tile.koe-card.koe-brushing { opacity: 1; }
@@ -223,4 +223,33 @@
   .koe-q-t { font-size: 15px; letter-spacing: -0.2px; }
   .tile.koe-qtile { width: calc(33vw - 14px); min-width: 104px; }
   .tile.koe-qtile.koe-qlong { width: calc(45vw - 14px); min-width: 132px; }
+}
+
+/* ---------- Tablet: Karten, Sinnesorgane und Antwort-Kacheln größer ---------- */
+@media (min-width: 700px) and (min-height: 700px) {
+  .koe-thing, .koe-riddle, .koe-ask { max-width: min(100%, 980px); }
+  .koe-thing-e { font-size: clamp(58px, 15vmin, 140px); }
+  .koe-shield { font-size: clamp(30px, 7.4vmin, 68px); }
+  .koe-riddle-e, .koe-ask-e { font-size: clamp(40px, 10.4vmin, 96px); }
+  .koe-thing-txt, .koe-riddle-txt, .koe-ask-txt { font-size: clamp(21px, 4.8vmin, 44px); }
+  .koe-orgs { gap: clamp(8px, 2.6vmin, 26px); max-width: min(100%, 1100px); }
+  .tile.koe-orgtile { width: clamp(92px, 23vw, 220px); height: clamp(104px, 27vmin, 236px); }
+  .koe-org-e { font-size: clamp(44px, 12vmin, 110px); }
+  .koe-org-name { font-size: clamp(17px, 3.8vmin, 34px); }
+  .koe-qbox { gap: clamp(8px, 2.6vmin, 26px); max-width: min(100%, 1120px); }
+  .tile.koe-qtile { width: clamp(104px, 22vw, 260px); min-height: clamp(108px, 25vmin, 230px); }
+  .tile.koe-qtile.koe-qlong { width: clamp(132px, 30vw, 300px); }
+  .koe-q-e { font-size: clamp(40px, 10.4vmin, 96px); }
+  .koe-q-t { font-size: clamp(16px, 3.6vmin, 32px); }
+  .koe-qnum .koe-q-t { font-size: clamp(30px, 7.4vmin, 66px); }
+  .koe-q .koe-tooth { width: clamp(70px, 17vmin, 156px); }
+  .tile.koe-daytile { width: clamp(132px, 30vw, 280px); }
+  .koe-tooth { width: clamp(76px, 18vmin, 170px); }
+}
+/* Tablet quer: fünf Sinnesorgane in einer Reihe, Kacheln etwas flacher */
+@media (min-width: 700px) and (min-height: 700px) and (orientation: landscape) {
+  .tile.koe-orgtile { width: clamp(92px, 16.2vw, 200px); height: clamp(104px, 24vmin, 210px); }
+  .koe-org-e { font-size: clamp(44px, 10.4vmin, 96px); }
+  .tile.koe-qtile { min-height: clamp(108px, 22vmin, 200px); }
+  .koe-thing-e { font-size: clamp(58px, 13.4vmin, 124px); }
 }

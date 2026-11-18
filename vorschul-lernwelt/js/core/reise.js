@@ -658,6 +658,15 @@
   R.part1Done = part1Done;
   R.current = () => viewing || R.defaultJourney();
 
+  /* 3D-Welt (js/world3d): vor welcher Insel steht die Kamera im jeweiligen Kapitel?
+     Thematisch passend (Wald → Entdecker-Welt, Weltraum → Forscherwelt …),
+     die Abschluss-Kapitel enden bei Flos Heimatinsel bzw. im Kino (Schulfest). */
+  const ISLAND_OF = {
+    wald: 'welt', hof: 'zahlen', meer: 'denken', berge: 'sprache', wueste: 'formen', eis: 'werkstatt', weltall: 'wissen', schloss: 'hub',
+    klasse: 'deutsch1', buecherei: 'deutsch1', markt: 'mathe1', labor: 'wissen', garten: 'sach1', ausflug: 'welt', fest: 'kino',
+  };
+  R.islandOf = (chapterId) => ISLAND_OF[chapterId] || 'hub';
+
   /**
    * Reise-Bildschirm zeigen.
    * opts: { onBack (Standard: Weltkarte), journey: 'reise' | 'schule' (Standard: zuletzt gezeigter bzw. aktueller Teil) }
@@ -679,6 +688,7 @@
       icon: jr.icon,
       onBack: () => { viewing = null; back(); },
       right: [LT.ui.starCounter(), replay],
+      place: { kind: 'reise', id: R.islandOf(sit.current ? sit.current.chapter.id : null) },
     });
     screen.style.setProperty('--area', jr.area);
     screen.style.setProperty('--area-soft', jr.areaSoft);

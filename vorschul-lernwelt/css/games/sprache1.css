@@ -31,7 +31,7 @@
   width: 56px;
   height: 56px;
   font-size: 24px;
-  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15), 0 0 0 3px var(--area-soft);
+  box-shadow: 0 0 0 3px var(--area-soft), 0 4px 0 color-mix(in srgb, var(--area) 28%, var(--edge-dark)), 0 10px 16px -8px rgba(29, 37, 80, 0.45);
 }
 
 /* ---------- Wort in Sprechsilben mit Silbenbögen ---------- */
@@ -243,7 +243,7 @@
   height: 40px;
   border-radius: 50%;
   background: var(--card);
-  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
+  box-shadow: var(--sh-chip);
   font-family: var(--emoji);
   font-size: 20px;
   display: flex;
@@ -305,7 +305,8 @@
   background: var(--area);
   border-radius: 16px;
   padding: 4px 14px 6px;
-  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0) 60%);
+  box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, 0.35), 0 3px 0 color-mix(in srgb, var(--area) 62%, var(--navy)), var(--drop-s);
   animation: s1-pop 0.3s cubic-bezier(0.2, 1.6, 0.4, 1);
   white-space: nowrap;
 }
@@ -355,4 +356,38 @@ body.s1-robo-voice .mascot.talking .mouth-open { animation: none; }
   .s1-choices:not(.s1-numbox) .tile,
   .s1-pairs { --tile: clamp(92px, min(28vw, 14.5vh), 190px); }
   .s1-numbox .tile.small { --tile: clamp(70px, min(20vw, 11vh), 130px); }
+}
+
+/* ---------- Tablet: Bildkarte, Klatsch-Knopf, Roboter und Kacheln füllen
+   die Glasbühne (quer begrenzt die Höhe, hoch die Breite) ---------- */
+@media (min-width: 700px) and (min-height: 700px) {
+  .s1-card-pic { font-size: clamp(60px, 16vmin, 150px); }
+  .s1-card-word, .s1-syl { font-size: clamp(26px, 6.2vmin, 58px); }
+  .s1-card.s1-nolabel { min-width: clamp(190px, 38vmin, 340px); }
+  .s1-card-say { width: 64px; height: 64px; font-size: 28px; }
+  .s1-tarc { width: clamp(44px, 10vmin, 96px); height: clamp(18px, 3.8vmin, 36px); }
+  .s1-arcrow.big .s1-tarc { width: clamp(40px, 9.5vmin, 92px); height: clamp(16px, 3.6vmin, 34px); }
+  .s1-tray { min-height: clamp(54px, 10.5vmin, 100px); min-width: min(100%, clamp(220px, 56vmin, 540px)); }
+  .s1-clap { width: clamp(112px, 23vmin, 220px); height: clamp(112px, 23vmin, 220px); font-size: clamp(56px, 12vmin, 116px); }
+  .s1-clap.small { width: clamp(80px, 17vmin, 160px); height: clamp(80px, 17vmin, 160px); font-size: clamp(40px, 9vmin, 84px); }
+  .s1-reset { width: clamp(56px, 10vmin, 88px); height: clamp(56px, 10vmin, 88px); }
+  .s1-done { width: clamp(80px, 15vmin, 144px); height: clamp(80px, 15vmin, 144px); font-size: clamp(40px, 8vmin, 76px); }
+  .s1-target b { font-size: clamp(48px, 12.5vmin, 120px); }
+  .s1-head { font-size: clamp(17px, 3.4vmin, 32px); }
+  .s1-robo { width: clamp(112px, 29vmin, 270px); }
+  .s1-balloon { min-width: clamp(130px, 32vmin, 320px); max-width: min(58vw, 600px); min-height: clamp(62px, 13vmin, 124px); }
+  .s1-chip { font-size: clamp(20px, 5vmin, 48px); }
+}
+@media (min-width: 700px) and (min-height: 700px) and (orientation: portrait) {
+  .s1-card-pic { font-size: clamp(64px, min(19vw, 13vh), 170px); }
+  .s1-card-word, .s1-syl { font-size: clamp(28px, min(8vw, 5vh), 62px); }
+  .s1-clap { width: clamp(112px, min(32vw, 20vh), 250px); height: clamp(112px, min(32vw, 20vh), 250px); font-size: clamp(56px, min(16vw, 10vh), 128px); }
+  .s1-done { width: clamp(80px, min(21vw, 13vh), 150px); height: clamp(80px, min(21vw, 13vh), 150px); }
+  .s1-tarc { width: clamp(44px, min(12vw, 8vh), 100px); height: clamp(18px, min(4.6vw, 3vh), 38px); }
+  .s1-tray { min-height: clamp(56px, min(14vw, 9vh), 106px); }
+  .s1-robo { width: clamp(112px, min(34vw, 25vh), 290px); }
+  .s1-choices:not(.s1-numbox) .tile,
+  .s1-pairs { --tile: clamp(92px, min(28vw, 20vh), 250px); }
+  .s1-numbox .tile.small { --tile: clamp(70px, min(20vw, 14vh), 170px); }
+  .choices.s1-grid4 { grid-template-columns: repeat(2, auto); }
 }
