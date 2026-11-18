@@ -161,7 +161,7 @@
         const availH = h - bar.offsetHeight - stageGap;
         const N = cards.length;
         const g = Math.round(U.clamp(Math.min(w, availH) * 0.022, 8, 16));
-        const MAX = 176;
+        const MAX = window.innerWidth >= 700 && window.innerHeight >= 700 ? 236 : 176; // Tablet: größere Karten
         let best = null;
         for (let cols = 2; cols <= N; cols++) {
           const rows = Math.ceil(N / cols);

@@ -53,10 +53,10 @@
       [-0.85, 0.85].forEach((ry) => {
         const x = Math.sin(ry) * (BR + 0.01), z = Math.cos(ry) * (BR + 0.01);
         P.add(xf(geo.cyl(0.18, 0.18, 0.08, 12).rotateX(PI / 2), [x, 1.05, z], [0, ry, 0]), '#ffffff', {});
-        P.addRaw(kit.paint(xf(geo.cyl(0.13, 0.13, 0.08, 12).rotateX(PI / 2), [x + Math.sin(ry) * 0.025, 1.05, z + Math.cos(ry) * 0.025], [0, ry, 0]), '#ffffff', { grad: [1, 1] }), 'window');
+        P.addRaw(kit.paint(xf(new T.CircleGeometry(0.13, 12), [x + Math.sin(ry) * 0.065, 1.05, z + Math.cos(ry) * 0.065], [0, ry, 0]), '#ffffff', { grad: [1, 1] }), 'window'); // Glas: nur die sichtbare Vorderseite
       });
       // Kuppel-Kranz (Schiene)
-      P.add(xf(new T.TorusGeometry(BR + 0.02, 0.06, 4, 24), [0, 0.22 + BH + 0.03, 0], [PI / 2, 0, 0]), '#dfe6ee', { gloss: true });
+      P.add(xf(new T.TorusGeometry(BR + 0.02, 0.06, 3, 20), [0, 0.22 + BH + 0.03, 0], [PI / 2, 0, 0]), '#dfe6ee', { gloss: true });
       P.build(grp);
 
       // Drehbare Kuppel mit Spalt und Teleskop
@@ -110,9 +110,9 @@
       // Rakete (Mitte bei x = 0)
       const y0 = 0.62;
       const body = [[0, 0], [0.3, 0], [0.4, 0.22], [0.45, 0.6], [0.46, 1.35], [0.42, 1.95], [0.36, 2.2], [0, 2.2]].map((p) => new T.Vector2(p[0], p[1]));
-      P.add(new T.LatheGeometry(body, 14).translate(0, y0, 0), WHITE, { gloss: true, smooth: true, grad: [0.86, 1.06] });
+      P.add(new T.LatheGeometry(body, 12).translate(0, y0, 0), WHITE, { gloss: true, smooth: true, grad: [0.86, 1.06] });
       const nose = [[0, 0], [0.37, 0], [0.33, 0.32], [0.22, 0.6], [0.09, 0.8], [0, 0.86]].map((p) => new T.Vector2(p[0], p[1]));
-      P.add(new T.LatheGeometry(nose, 14).translate(0, y0 + 2.18, 0), RED, { gloss: true, smooth: true, grad: [0.85, 1.08] });
+      P.add(new T.LatheGeometry(nose, 12).translate(0, y0 + 2.18, 0), RED, { gloss: true, smooth: true, grad: [0.85, 1.08] });
       P.add(xf(geo.cyl(0.465, 0.465, 0.16, 16), [0, y0 + 0.62, 0]), ACC, { gloss: true, smooth: true });
       P.add(xf(geo.cyl(0.445, 0.445, 0.08, 16), [0, y0 + 1.95, 0]), ACC, { gloss: true, smooth: true });
       // Bullauge
@@ -248,24 +248,28 @@
       P.add(xf(geo.roundBox(2.5, 0.22, 0.95, 0.07), [0, 0.11, 0]), '#e9e2d6', { grad: [0.75, 1.02] });
       P.add(xf(geo.roundBox(2.56, 0.05, 1.0, 0.02, 1), [0, 0.24, 0]), ACC, { gloss: true });
       P.add(xf(geo.roundBox(0.5, 0.16, 0.04, 0.02, 1), [-0.6, 0.13, 0.48]), C.gold, { gloss: true });
-      const spine = new T.CatmullRomCurve3([[-1.25, 0.45], [-0.85, 0.7], [-0.35, 1.05], [0.25, 1.08], [0.55, 1.22], [0.85, 1.65], [1.06, 2.08], [1.3, 2.28]].map((p) => new T.Vector3(p[0], p[1], 0)));
-      const n = 22;
+      // Wirbelsäule: Schwanz → Becken → Rücken → kurzer, gebogener Hals. Der Schädel bleibt
+      // über der Sockelplatte (Platte ±1,25), die Wirbel überlappen auf einem durchgehenden Strang.
+      const spine = new T.CatmullRomCurve3([[-1.22, 0.42], [-0.9, 0.62], [-0.52, 0.94], [-0.3, 1.04], [0.2, 1.08], [0.5, 1.15], [0.72, 1.36], [0.87, 1.6], [0.97, 1.8]].map((p) => new T.Vector3(p[0], p[1], 0)));
+      P.add(new T.TubeGeometry(spine, 40, 0.038, 5, false), BONE, { grad: [0.85, 1.05] });
+      const n = 30;
       const v = new T.Vector3();
+      // Wirbelgröße: Schwanzspitze klein, Rücken kräftig, Hals mittel
+      const vert = (t) => (t < 0.32 ? 0.045 + 0.07 * (t / 0.32) : t < 0.66 ? 0.115 : 0.115 - 0.04 * ((t - 0.66) / 0.34));
       for (let i = 0; i <= n; i++) {
         const t = i / n;
         spine.getPointAt(t, v);
-        const sz = 0.05 + 0.075 * Math.sin(Math.min(1, t * 1.35) * PI) + (t > 0.95 ? 0 : 0);
-        P.add(xf(new T.IcosahedronGeometry(sz, 0), [v.x, v.y, 0], [i, i * 0.7, 0]), BONE, { grad: [0.85, 1.05] });
+        P.add(xf(new T.IcosahedronGeometry(vert(t), 0), [v.x, v.y, 0], [i, i * 0.7, 0]), BONE, { grad: [0.85, 1.05] });
       }
-      // Kopf
-      P.add(xf(geo.blob(0.15, { seed: 3, noise: 0.06, sx: 1.6, sy: 0.85, detail: 1 }), [1.38, 2.31, 0], [0, 0, -0.15]), BONE, { grad: [0.85, 1.05] });
-      [-1, 1].forEach((s) => P.add(xf(new T.SphereGeometry(0.035, 5, 4), [1.42, 2.36, s * 0.1]), '#4a4136', {}));
-      // Rippen
+      // Kopf: sitzt auf dem Halsende, leicht nach unten geneigt
+      P.add(xf(geo.blob(0.15, { seed: 3, noise: 0.06, sx: 1.6, sy: 0.85, detail: 1 }), [1.1, 1.86, 0], [0, 0, -0.3]), BONE, { grad: [0.85, 1.05] });
+      [-1, 1].forEach((s) => P.add(xf(new T.SphereGeometry(0.035, 5, 4), [1.15, 1.9, s * 0.1]), '#4a4136', {}));
+      // Rippen zwischen Becken und Schultern (Lage über x gesucht, Kurve steigt in x)
+      const atX = (x) => { let lo = 0, hi = 1; for (let k = 0; k < 18; k++) { const m = (lo + hi) / 2; spine.getPointAt(m, v); if (v.x < x) lo = m; else hi = m; } spine.getPointAt(lo, v); return v; };
       for (let k = 0; k < 6; k++) {
-        const t = 0.26 + k * 0.055;
-        spine.getPointAt(t, v);
+        atX(-0.16 + k * 0.12);
         const rr = 0.3 - Math.abs(k - 2.5) * 0.035;
-        const rib = new T.TorusGeometry(rr, 0.03, 4, 9, PI * 1.25);
+        const rib = new T.TorusGeometry(rr, 0.03, 3, 9, PI * 1.25);
         rib.rotateZ(-PI * 0.125); // Öffnung nach unten
         rib.rotateY(PI / 2);
         P.add(xf(rib, [v.x, v.y - rr * 0.92, 0]), BONE, { grad: [0.85, 1.05] });
@@ -311,7 +315,7 @@
         const arm = geo.cyl(0.018, 0.018, r, 4).rotateZ(PI / 2).translate(r / 2, 0, 0);
         R.add(xf(arm, [0, -0.06 * i, 0], [0, -a, 0]), C.gold, { gloss: true, smooth: true });
         R.add(xf(geo.cyl(0.018, 0.018, 0.22, 4), [x, -0.06 * i + 0.11, z]), C.gold, { gloss: true, smooth: true });
-        R.add(xf(new T.SphereGeometry(s, 10, 6), [x, -0.06 * i + 0.22 + s, z]), col, { gloss: true, smooth: true, grad: [0.8, 1.1] });
+        R.add(xf(new T.SphereGeometry(s, 9, 5), [x, -0.06 * i + 0.22 + s, z]), col, { gloss: true, smooth: true, grad: [0.8, 1.1] });
         if (i === 2) R.add(xf(new T.TorusGeometry(s * 1.75, s * 0.32, 3, 18).scale(1, 1, 0.18), [x, -0.06 * i + 0.22 + s, z], [PI / 2 - 0.35, 0, 0.2]), '#f7dfa8', { gloss: true, smooth: true });
         if (i === 0) R.add(xf(new T.SphereGeometry(0.045, 6, 4), [x + 0.2, -0.06 * i + 0.3, z]), '#e8ecf2', { gloss: true, smooth: true });
       });
@@ -369,6 +373,7 @@
     kit.flowers(base, 9, [ACC, '#ffffff', '#ffd23f', '#9b7bff'], 97);
 
     kit.merge(g);
+    kit.batchDynamic(g); // Bewegtes (Ballons, Boote, Räder …) in wenige Draw-Calls bündeln
     g.userData.update = (dt, t) => { for (let i = 0; i < updates.length; i++) updates[i](dt, t); };
 
     return {

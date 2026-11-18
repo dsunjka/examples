@@ -512,3 +512,53 @@
   background: linear-gradient(90deg, #f3d3a1 0 62%, var(--pd) 62%);
   clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
+
+/* ==========================================================================
+   Tablet: Formen, Kleckse, Perlen und Dinge füllen die Glasbühne
+   (quer begrenzt die Höhe, hoch die Breite)
+   ========================================================================== */
+@media (min-width: 700px) and (min-height: 700px) {
+  .fm-line { font-size: clamp(20px, 4.2vmin, 40px); padding: clamp(8px, 1.8vmin, 18px) clamp(16px, 3.4vmin, 34px); }
+  .formen-prompt .prompt-text { font-size: clamp(24px, 5.4vmin, 52px); }
+  .formen-thing { width: clamp(110px, 29vmin, 260px); height: clamp(110px, 29vmin, 260px); }
+  .formen-thing-emoji { font-size: clamp(84px, 23vmin, 210px); }
+  .formen-thing-name, .farben-thing-name { font-size: clamp(18px, 3.6vmin, 32px); }
+  .formen-find-text { font-size: clamp(20px, 4vmin, 38px); }
+  .farben-thing-emoji { font-size: clamp(84px, 23vmin, 210px); }
+  .farben-eq-blob { width: clamp(46px, 11vmin, 100px); height: clamp(46px, 11vmin, 100px); }
+  .farben-eq-op { font-size: clamp(28px, 6vmin, 56px); }
+  .farben-choices-mix .tile { --tile: clamp(80px, 19vmin, 170px); }
+  .farben-goal-blob { width: clamp(80px, 19vmin, 170px); height: clamp(80px, 19vmin, 170px); }
+  .farben-goal-name { font-size: clamp(20px, 4vmin, 38px); }
+  .farben-pots .tile { --tile: clamp(78px, 18vmin, 160px); }
+  .muster-chain { --cell: min(120px, calc((100vw - 120px) / (var(--n) * 1.1 + 0.3)), 14vh); }
+  .muster-choices .tile { --tile: clamp(84px, 22vmin, 200px); }
+  .muster-grow { --blk: min(44px, 4.6vh, calc((100vw - 140px) / (var(--g) * 1.75))); }
+  .muster-gopts { --blk: min(38px, 3.6vh); }
+  .muster-gnum { font-size: 24px; height: 28px; }
+  .groessen-field.mode-groesse { --box: min(170px, 19vh, calc((100vw - 80px) / var(--cols) - 16px)); }
+  .groessen-shelf.mode-groesse { --box: min(160px, 18vh, calc((100vw - 80px) / var(--n) - 16px)); }
+  .groessen-field.mode-laenge, .groessen-shelf.mode-laenge { --plen: min(680px, calc(100vw - 130px)); }
+}
+@media (min-width: 700px) and (min-height: 700px) and (orientation: landscape) {
+  /* Farben mischen: Schüssel etwas flacher, damit die größeren Töpfe darunter passen */
+  .farben-mix { --mw: min(440px, 82vw, calc((100vh - 580px) * 1.4)); }
+  /* Stifte ordnen (Feld + Regal, je bis zu 6 Reihen): Bühnenabstand wie bisher */
+  .game-groessen .stage { --gap: clamp(10px, 2.2vmin, 22px); }
+}
+@media (min-width: 700px) and (min-height: 700px) and (orientation: portrait) {
+  .formen-choices .tile, .farben-choices .tile { --tile: clamp(92px, min(28.5vw, 21vh), 250px); }
+  /* drei große Kacheln bleiben nebeneinander (der Abstand ist auf dem Tablet größer) */
+  .formen-choices .tile.large, .farben-choices .tile.large { --tile: clamp(110px, min(28.5vw, 24vh), 240px); }
+  .formen-thing { width: clamp(110px, min(40vw, 24vh), 290px); height: clamp(110px, min(40vw, 24vh), 290px); }
+  .formen-thing-emoji, .farben-thing-emoji { font-size: clamp(84px, min(34vw, 20vh), 240px); }
+  .farben-choices-mix .tile { --tile: clamp(84px, min(25vw, 16vh), 200px); }
+  .farben-goal-blob { width: clamp(64px, min(20vw, 12vh), 150px); height: clamp(64px, min(20vw, 12vh), 150px); }
+  .muster-choices .tile { --tile: clamp(72px, min(22vw, 16vh), 200px); }
+  .groessen-choices .tile.large { --tile: clamp(104px, min(28.5vw, 24vh), 260px); }
+  .groessen-field.mode-laenge, .groessen-shelf.mode-laenge { --ph: clamp(20px, 3.4vh, 44px); }
+  .groessen-field.mode-hoehe, .groessen-shelf.mode-hoehe { --blk: min(40px, 3.6vh, calc((100vw - 90px) / (var(--n) * 1.75))); }
+  .groessen-dir { min-height: 60px; padding: 8px 24px; }
+  .groessen-dir .gd-small { font-size: 24px; }
+  .groessen-dir .gd-big { font-size: 48px; }
+}

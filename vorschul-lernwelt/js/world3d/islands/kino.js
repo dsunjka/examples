@@ -251,77 +251,6 @@
     drawLive(0, true);
     updates.push((dt, t) => drawLive(t, false));
 
-    /**
-     * Bewegliche starre Teile je Material in EINEM Mesh (CPU, ohne Allokationen).
-     * objs: [Group, Drehpunkt im Ursprung] → { group, set(i, Matrix4), apply() }
-     */
-    function rigidBatch(objs, sphere) {
-      const buckets = new Map();
-      objs.forEach((obj, oi) => {
-        obj.updateMatrixWorld(true);
-        obj.traverse((m) => {
-          if (!m.isMesh) return;
-          let q = m.geometry.clone();
-          if (q.index) q = q.toNonIndexed();
-          for (const k of Object.keys(q.attributes)) if (!['position', 'normal', 'uv', 'color'].includes(k)) q.deleteAttribute(k);
-          const n = q.attributes.position.count;
-          if (!q.attributes.uv) q.setAttribute('uv', new T.BufferAttribute(new Float32Array(n * 2), 2));
-          if (m.material.vertexColors && !q.attributes.color) q.setAttribute('color', new T.BufferAttribute(new Float32Array(n * 3).fill(1), 3));
-          if (!m.material.vertexColors && q.attributes.color) q.deleteAttribute('color');
-          q.applyMatrix4(m.matrixWorld);
-          const key = m.material.uuid;
-          if (!buckets.has(key)) buckets.set(key, { mat: m.material, cast: m.castShadow, order: m.renderOrder, geos: [], ids: [] });
-          const b = buckets.get(key);
-          b.geos.push(q);
-          b.ids.push([oi, n]);
-        });
-      });
-      const grp = new T.Group();
-      grp.name = 'beweglich';
-      grp.userData.dynamic = true;
-      const parts = [];
-      buckets.forEach((b) => {
-        const gm = b.geos.length > 1 ? merge(b.geos, false) : b.geos[0];
-        gm.attributes.position.setUsage(T.DynamicDrawUsage);
-        gm.attributes.normal.setUsage(T.DynamicDrawUsage);
-        const id = new Uint8Array(gm.attributes.position.count);
-        let o = 0;
-        b.ids.forEach(([oi, n]) => { id.fill(oi, o, o + n); o += n; });
-        gm.boundingSphere = sphere.clone();
-        const mesh = new T.Mesh(gm, b.mat);
-        mesh.castShadow = b.cast;
-        mesh.receiveShadow = !b.mat.transparent;
-        mesh.renderOrder = b.order;
-        grp.add(mesh);
-        parts.push({ pos: gm.attributes.position, nrm: gm.attributes.normal, p0: Float32Array.from(gm.attributes.position.array), n0: Float32Array.from(gm.attributes.normal.array), id });
-      });
-      const M = new Float32Array(objs.length * 16);
-      const I = new T.Matrix4();
-      objs.forEach((o, i) => M.set(I.elements, i * 16));
-      return {
-        group: grp,
-        set(i, m4) { M.set(m4.elements, i * 16); },
-        apply() {
-          for (let p = 0; p < parts.length; p++) {
-            const { pos, nrm, p0, n0, id } = parts[p];
-            const pa = pos.array, na = nrm.array;
-            for (let v = 0, n = id.length; v < n; v++) {
-              const o = id[v] * 16, i3 = v * 3;
-              const x = p0[i3], y = p0[i3 + 1], z = p0[i3 + 2];
-              pa[i3] = M[o] * x + M[o + 4] * y + M[o + 8] * z + M[o + 12];
-              pa[i3 + 1] = M[o + 1] * x + M[o + 5] * y + M[o + 9] * z + M[o + 13];
-              pa[i3 + 2] = M[o + 2] * x + M[o + 6] * y + M[o + 10] * z + M[o + 14];
-              const a = n0[i3], b2 = n0[i3 + 1], c = n0[i3 + 2];
-              na[i3] = M[o] * a + M[o + 4] * b2 + M[o + 8] * c;
-              na[i3 + 1] = M[o + 1] * a + M[o + 5] * b2 + M[o + 9] * c;
-              na[i3 + 2] = M[o + 2] * a + M[o + 6] * b2 + M[o + 10] * c;
-            }
-            pos.needsUpdate = true;
-            nrm.needsUpdate = true;
-          }
-        },
-      };
-    }
     const movers = []; // { obj, update(t, m4) } – Matrix in Insel-Koordinaten
     /** geraffter Vorhang (dir = +1: reicht vom Rand nach +x, -1: nach -x), Unterkante y = 0 */
     function curtain(dir, w0, wMid, w1, h, depth) {
@@ -775,7 +704,7 @@
     /* ------------------------------------------------------------------
        Bewegliches zusammenführen, Pflanzen, Licht
        ------------------------------------------------------------------ */
-    const batch = rigidBatch(movers.map((m) => m.obj), new T.Sphere(new T.Vector3(0, 2, 0), 8));
+    const batch = kit.batch(movers.map((m) => m.obj), { sphere: new T.Sphere(new T.Vector3(0, 2, 0), 8) });
     g.add(batch.group);
     const m4 = new T.Matrix4();
     function moveAll(t) {
@@ -808,9 +737,8 @@
     tm.userData.noMerge = true;
     g.add(tm);
 
-    // Messhaken für Entwicklungs-Werkzeuge: Dreiecke je Teil vor dem Zusammenführen
-    if (window.__w3dTris) window.__w3dTris('kino', g);
     kit.merge(g);
+    kit.batchDynamic(g); // Bewegtes (Ballons, Boote, Räder …) in wenige Draw-Calls bündeln
     g.userData.update = (dt, t) => { for (let i = 0; i < updates.length; i++) updates[i](dt, t); };
 
     return {

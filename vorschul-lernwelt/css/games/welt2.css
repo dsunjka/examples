@@ -143,3 +143,24 @@
   .tile.w2-scene-tile { --tile: clamp(84px, 24vmin, 130px); }
   .w2-set-wrap { width: 62vh; height: 62vh; }
 }
+
+/* ---------- Tablet: Wochenzug, Szenen, Uhren und Wort-Kacheln größer ---------- */
+@media (min-width: 700px) and (min-height: 700px) {
+  .w2-tadpole { width: clamp(70px, 18vmin, 170px); }
+  .w2-prompt-scene .w2-scene { width: clamp(150px, 38vmin, 340px); height: clamp(130px, 31vmin, 280px); }
+  .w2-mini .w2-scene, .w2-q-scene { width: clamp(110px, 27vmin, 240px); height: clamp(100px, 25vmin, 220px); }
+  .tile.w2-clock-tile { --tile: clamp(112px, 31vmin, 280px); }
+  .w2-clock-show { width: clamp(170px, 42vmin, 380px); height: clamp(170px, 42vmin, 380px); }
+  .w2-loco { font-size: clamp(36px, 10vmin, 92px); }
+  .w2-car { width: clamp(36px, 10.4vmin, 98px); height: clamp(36px, 10.4vmin, 98px); font-size: clamp(14px, 3.8vmin, 36px); border-radius: 16px; }
+  .w2-car.is-q { font-size: clamp(20px, 5.4vmin, 50px); }
+  .tile.w2-day-tile { min-width: clamp(130px, 28vmin, 270px); height: clamp(70px, 16vmin, 140px); font-size: clamp(20px, 4.8vmin, 44px); }
+  .tile.w2-time-tile { min-width: clamp(120px, 25vmin, 250px); height: clamp(72px, 15vmin, 136px); font-size: clamp(22px, 5vmin, 46px); }
+  .w2-legend { font-size: clamp(15px, 3.2vmin, 28px); }
+}
+/* Tablet hoch: drei Tages-/Uhr-Kacheln bleiben nebeneinander */
+@media (min-width: 700px) and (min-height: 700px) and (orientation: portrait) {
+  .tile.w2-day-tile { min-width: clamp(130px, min(28vmin, 26vw), 270px); font-size: clamp(20px, min(4.8vmin, 4.2vw), 44px); }
+  .tile.w2-time-tile { min-width: clamp(120px, min(25vmin, 26vw), 250px); font-size: clamp(22px, min(5vmin, 4.4vw), 46px); }
+  .tile.w2-clock-tile { --tile: clamp(112px, min(31vmin, 28.5vw), 280px); }
+}

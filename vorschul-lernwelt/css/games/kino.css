@@ -4,6 +4,7 @@
 
 /* ---------- Film-Spiel ---------- */
 .stage.kino-stage {
+  border-radius: 32px;
   overflow-y: auto;
   justify-content: flex-start;
   gap: clamp(10px, 2vmin, 20px);
@@ -73,7 +74,7 @@
   border-radius: 50%;
   background: radial-gradient(90% 60% at 50% 10%, #ffffff 0%, rgba(255, 255, 255, 0) 70%), linear-gradient(180deg, #ffffff, #f1f3fa);
   color: #c2255c;
-  box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.45), 0 8px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.45), 0 7px 0 var(--edge-dark), 0 22px 34px -12px rgba(10, 16, 50, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -83,8 +84,8 @@
 .kino-play-tri { font-size: clamp(48px, 10vmin, 80px); line-height: 1; margin-left: 0.12em; }
 .kino-play:active { transform: translate(-50%, calc(-50% + 4px)); }
 @keyframes kino-pulse {
-  0%, 100% { box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.45), 0 8px 0 rgba(0, 0, 0, 0.2); }
-  50% { box-shadow: 0 0 0 18px rgba(255, 255, 255, 0.2), 0 8px 0 rgba(0, 0, 0, 0.2); }
+  0%, 100% { box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.45), 0 7px 0 var(--edge-dark), 0 22px 34px -12px rgba(10, 16, 50, 0.6); }
+  50% { box-shadow: 0 0 0 18px rgba(255, 255, 255, 0.2), 0 7px 0 var(--edge-dark), 0 22px 34px -12px rgba(10, 16, 50, 0.6); }
 }
 
 /* „Dieser Film kommt bald“ */

@@ -53,16 +53,16 @@
   bottom: 10px;
   width: 68px;
   height: 68px;
-  background: var(--area);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--area) 80%, #fff) 0%, var(--area) 60%);
   color: #fff;
   z-index: 3;
-  box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.4), inset 0 -3px 0 rgba(0, 0, 0, 0.08), 0 4px 0 color-mix(in srgb, var(--area) 62%, var(--navy)), 0 10px 16px -8px rgba(29, 37, 80, 0.5);
 }
 /* Vorstellung beim ersten Mal: gut sichtbarer, goldener Leuchtring (der weiße Standard-Puls geht auf hellem Grund unter) */
 .btn-round.s2-abc-btn.pulse { animation: s2-abc-glow 1.2s ease-in-out infinite; }
 @keyframes s2-abc-glow {
-  0%, 100% { box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2), 0 0 0 0 rgba(255, 197, 51, 0.95); transform: scale(1); }
-  50% { box-shadow: 0 4px 0 rgba(0, 0, 0, 0.2), 0 0 0 12px rgba(255, 197, 51, 0.35); transform: scale(1.1); }
+  0%, 100% { box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.4), 0 4px 0 color-mix(in srgb, var(--area) 62%, var(--navy)), 0 0 0 0 rgba(255, 197, 51, 0.95); transform: scale(1); }
+  50% { box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.4), 0 4px 0 color-mix(in srgb, var(--area) 62%, var(--navy)), 0 0 0 12px rgba(255, 197, 51, 0.35); transform: scale(1.1); }
 }
 .s2-abc-btn-txt { font: 700 21px/1 var(--font); letter-spacing: 0.02em; text-shadow: 0 2px 0 rgba(0, 0, 0, 0.15); }
 @media (max-width: 600px) {
@@ -125,7 +125,7 @@
 .abc-case-given { display: flex; align-items: baseline; gap: 0.12em; }
 .s2-letter.abc-case-letter { font-size: clamp(80px, 17vmin, 160px); color: var(--area); }
 .s2-letter.abc-case-letter.partner { color: var(--ok); animation: tile-joy 0.6s ease-out; }
-.btn-round.abc-ear { width: 64px; height: 64px; background: var(--area-soft); box-shadow: 0 3px 0 rgba(0, 0, 0, 0.12); }
+.btn-round.abc-ear { width: 64px; height: 64px; background: radial-gradient(90% 60% at 50% 8%, #ffffff 0%, rgba(255, 255, 255, 0) 70%), var(--area-soft); box-shadow: inset 0 -3px 0 rgba(29, 37, 80, 0.06), 0 4px 0 color-mix(in srgb, var(--area) 28%, var(--edge-dark)), 0 10px 16px -8px rgba(29, 37, 80, 0.45); }
 /* Handy hochkant: vier Buchstabenkacheln passen in eine Reihe */
 @media (max-width: 430px) {
   .game-buchstaben .choices .tile { --tile: clamp(76px, 20vw, 92px); }
@@ -178,7 +178,7 @@
   padding-right: clamp(16px, 4vmin, 40px);
 }
 .s2-word.lesen-big { font-size: clamp(36px, min(18vmin, calc(96vw / var(--n))), 140px); }
-.lesen-finger { display: flex; align-items: center; gap: 6px; font-size: clamp(13px, 2vmin, 17px); font-weight: 700; color: var(--ink-faint); }
+.lesen-finger { display: flex; align-items: center; gap: 6px; font-size: clamp(14px, 2vmin, 17px); font-weight: 700; color: var(--ink-soft); }
 .lesen-finger .emoji { font-size: 1.3em; }
 .lesen-pic-card { min-width: clamp(140px, 26vmin, 240px); }
 .tile.lesen-wordtile { width: min(86vw, 460px); height: clamp(70px, 12vmin, 108px); }
@@ -336,4 +336,43 @@
   .game-erstes-lesen .stage { flex-direction: row; flex-wrap: wrap; align-content: center; }
   .tile.lesen-wordtile { width: min(44vw, 360px); height: 62px; }
   .lesen-pic-card { min-width: 0; }
+}
+
+/* ---------- Tablet: Sortier-Bilder, Körbe, Wort- und Bildkarten größer ---------- */
+@media (min-width: 700px) and (min-height: 700px) {
+  .sort-pile { max-width: min(100%, 1060px); gap: clamp(8px, 2.2vmin, 22px); }
+  .sort-item { --sz: clamp(70px, 17.5vmin, 160px); }
+  .sort-bins { gap: clamp(10px, 2.6vmin, 28px); }
+  .sort-bin { max-width: 400px; }
+  .sort-bin .sort-badge-icon { font-size: clamp(26px, 6.4vmin, 60px); }
+  .sort-bin .sort-badge-name { font-size: clamp(14px, 3.2vmin, 30px); }
+  .sort-bin-basket { min-height: clamp(64px, 19vmin, 180px); }
+  .sort-trio-item { font-size: clamp(46px, 12.5vmin, 120px); }
+  .sort-trio-item span:not(.emoji) { font-size: clamp(15px, 3.2vmin, 30px); }
+  .sort-badge-icon { font-size: clamp(30px, 7.6vmin, 72px); }
+  .sort-badge-name { font-size: clamp(18px, 4vmin, 38px); }
+  .sort-basket-emoji { font-size: clamp(56px, 14vmin, 130px); }
+  .tile.sort-termtile { width: clamp(150px, 32vmin, 290px); height: clamp(112px, 24vmin, 220px); }
+  .sort-badge.in-tile .sort-badge-name { font-size: clamp(16px, 3.4vmin, 32px); }
+  .lesen-pic-card { min-width: clamp(140px, 32vmin, 300px); }
+  .tile.lesen-wordtile { width: min(86vw, 600px); height: clamp(70px, 15vmin, 136px); }
+  .s2-word.lesen-opt { font-size: clamp(28px, min(11.4vmin, calc(64vw / var(--n))), 86px); }
+  .s2-word.lesen-big { font-size: clamp(36px, min(21vmin, calc(96vw / var(--n))), 180px); }
+  .gg-half { min-width: clamp(96px, 22vmin, 210px); }
+  .gg-pic, .gg-q, .gg-spic { font-size: clamp(46px, 12vmin, 116px); }
+  .gg-word, .gg-sword { font-size: clamp(20px, 4.4vmin, 42px); }
+  .gg-arrow { font-size: clamp(26px, 6.2vmin, 58px); }
+  .gg-listen-icon { font-size: clamp(46px, 11.4vmin, 106px); }
+  .gg-listen-word { font-size: clamp(22px, 5vmin, 48px); }
+  .gg-shalf { min-width: clamp(110px, 26vmin, 260px); }
+  .tile.gg-wordtile { width: clamp(150px, 36vmin, 320px); height: clamp(72px, 15vmin, 136px); }
+  .gg-wordcard { font-size: clamp(19px, 5vmin, 46px); }
+}
+/* Tablet quer: drei Wort-Kacheln untereinander passen über Flos Sprechblase */
+@media (min-width: 700px) and (min-height: 700px) and (orientation: landscape) {
+  .tile.lesen-wordtile { height: clamp(70px, 12.4vmin, 112px); }
+  .lesen-choices-col .s2-word.lesen-opt, .tile.lesen-wordtile .s2-word.lesen-opt { font-size: clamp(28px, min(9.6vmin, calc(64vw / var(--n))), 76px); }
+}
+@media (min-width: 700px) and (min-height: 700px) and (orientation: portrait) {
+  .tile.sort-termtile { width: clamp(150px, min(32vmin, 28.5vw), 290px); }
 }

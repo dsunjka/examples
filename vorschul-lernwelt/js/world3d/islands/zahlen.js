@@ -107,7 +107,7 @@
       P.build(grp);
       // Kugeln
       const prof = [[0.025, -0.08], [0.1, -0.065], [0.13, 0], [0.1, 0.065], [0.025, 0.08]].map((p) => new T.Vector2(p[0], p[1]));
-      const bead = kit.paint(new T.LatheGeometry(prof, 6).rotateZ(PI / 2), '#ffffff', { grad: [0.9, 1.05] });
+      const bead = kit.paint(new T.LatheGeometry(prof, 5).rotateZ(PI / 2), '#ffffff', { grad: [0.9, 1.05] });
       bead.computeVertexNormals();
       const beads = new T.InstancedMesh(bead, kit.mats.gloss, rows * per);
       beads.name = 'kugeln';
@@ -261,10 +261,10 @@
       const D = 0.9, h = D / 2;
       P.add(xf(geo.roundBox(D, D, D, 0.16, 2), [0, h, 0]), '#fffaf0', { gloss: true, smooth: true, grad: [0.86, 1.04] });
       const pip = (u, v, face) => {
-        const q = geo.cyl(0.075, 0.075, 0.03, 7);
+        const q = new T.CircleGeometry(0.075, 8).rotateX(-PI / 2); // flacher Punkt knapp über der Fläche (Normale +y wie der Zylinder-Deckel)
         const o = 0.25;
         if (face === 'front') xf(q, [u * o, h + v * o, h + 0.005], [PI / 2, 0, 0]);
-        else if (face === 'right') xf(q, [h + 0.005, h + v * o, -u * o], [0, 0, PI / 2]);
+        else if (face === 'right') xf(q, [h + 0.005, h + v * o, -u * o], [0, 0, -PI / 2]);
         else if (face === 'left') xf(q, [-h - 0.005, h + v * o, u * o], [0, 0, PI / 2]);
         else xf(q, [u * o, D + 0.005, -v * o]);
         P.add(q, '#2f3f6b', { gloss: true, grad: [1, 1] });
@@ -303,6 +303,7 @@
     });
 
     kit.merge(g);
+    kit.batchDynamic(g); // Bewegtes (Ballons, Boote, Räder …) in wenige Draw-Calls bündeln
     g.userData.update = (dt, t) => { for (let i = 0; i < updates.length; i++) updates[i](dt, t); };
 
     return {

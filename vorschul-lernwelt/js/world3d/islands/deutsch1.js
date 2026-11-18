@@ -457,75 +457,21 @@
     })();
 
     /**
-     * Fahrzeuge auf der Bahn: alle Wagen je Material in EINEM Mesh; pro Bild
-     * werden die Eckpunkte jedes Wagens auf der CPU gedreht und verschoben
-     * (keine Allokationen). cars: [Group (lokales +x = vorn)]
+     * Fahrzeuge auf der Bahn: alle Wagen je Material in EINEM Mesh (kit.batch – die
+     * Grafikkarte bewegt die Wagen). cars: [Group (lokales +x = vorn)];
+     * set(i, [x, y, z, cos, sin]) = Lage auf der Bahn (Drehung um y, Maßstab TS).
      */
     function convoy(cars) {
-      const buckets = new Map();
-      cars.forEach((car, ci) => {
-        car.scale.setScalar(TS);
-        car.updateMatrixWorld(true);
-        car.traverse((m) => {
-          if (!m.isMesh) return;
-          let q = m.geometry.clone();
-          if (q.index) q = q.toNonIndexed();
-          for (const k of Object.keys(q.attributes)) if (!['position', 'normal', 'uv', 'color'].includes(k)) q.deleteAttribute(k);
-          const n = q.attributes.position.count;
-          if (!q.attributes.uv) q.setAttribute('uv', new T.BufferAttribute(new Float32Array(n * 2), 2));
-          if (m.material.vertexColors && !q.attributes.color) q.setAttribute('color', new T.BufferAttribute(new Float32Array(n * 3).fill(1), 3));
-          if (!m.material.vertexColors && q.attributes.color) q.deleteAttribute('color');
-          q.applyMatrix4(m.matrixWorld);
-          const key = m.material.uuid + '|' + m.renderOrder;
-          if (!buckets.has(key)) buckets.set(key, { mat: m.material, order: m.renderOrder, cast: m.castShadow, geos: [], cars: [] });
-          const b = buckets.get(key);
-          b.geos.push(q);
-          b.cars.push([ci, n]);
-        });
-      });
-      const parts = [];
-      const grp = new T.Group();
-      grp.name = 'zug';
-      grp.userData.dynamic = true;
-      buckets.forEach((b) => {
-        const gm = b.geos.length > 1 ? merge(b.geos, false) : b.geos[0];
-        const pos = gm.attributes.position, nrm = gm.attributes.normal;
-        pos.setUsage(T.DynamicDrawUsage);
-        nrm.setUsage(T.DynamicDrawUsage);
-        const car = new Uint8Array(pos.count);
-        let o = 0;
-        b.cars.forEach(([ci, n]) => { car.fill(ci, o, o + n); o += n; });
-        gm.boundingSphere = new T.Sphere(new T.Vector3(TR.cx, ground(TR.cx, TR.cz) + 0.3, TR.cz), TR.a + 0.6);
-        const mesh = new T.Mesh(gm, b.mat);
-        mesh.castShadow = b.cast;
-        mesh.receiveShadow = true;
-        mesh.renderOrder = b.order;
-        grp.add(mesh);
-        parts.push({ pos, nrm, p0: Float32Array.from(pos.array), n0: Float32Array.from(nrm.array), car });
-      });
-      const tf = new Float32Array(cars.length * 5);
+      const B = kit.batch(cars, { name: 'zug', sphere: new T.Sphere(new T.Vector3(TR.cx, ground(TR.cx, TR.cz) + 0.3, TR.cz), TR.a + 0.6) });
+      const m4 = new T.Matrix4();
       return {
-        group: grp,
-        set(i, v) { tf.set(v, i * 5); },
-        apply() {
-          for (let p = 0; p < parts.length; p++) {
-            const { pos, nrm, p0, n0, car } = parts[p];
-            const pa = pos.array, na = nrm.array;
-            for (let v = 0, n = car.length; v < n; v++) {
-              const o = car[v] * 5, i3 = v * 3;
-              const x = p0[i3], z = p0[i3 + 2], c = tf[o + 3], s = tf[o + 4];
-              pa[i3] = tf[o] + x * c + z * s;
-              pa[i3 + 1] = tf[o + 1] + p0[i3 + 1];
-              pa[i3 + 2] = tf[o + 2] - x * s + z * c;
-              const nx = n0[i3], nz = n0[i3 + 2];
-              na[i3] = nx * c + nz * s;
-              na[i3 + 1] = n0[i3 + 1];
-              na[i3 + 2] = -nx * s + nz * c;
-            }
-            pos.needsUpdate = true;
-            nrm.needsUpdate = true;
-          }
+        group: B.group,
+        set(i, v) {
+          const c = v[3] * TS, s = v[4] * TS;
+          m4.set(c, 0, s, v[0], 0, TS, 0, v[1], -s, 0, c, v[2], 0, 0, 0, 1);
+          B.set(i, m4);
         },
+        apply() { B.apply(); },
       };
     }
     // Lok (lokales +x = vorn, Räder auf y = 0)
@@ -734,9 +680,8 @@
     tm.userData.noMerge = true;
     g.add(tm);
 
-    // Messhaken für Entwicklungs-Werkzeuge: Dreiecke je Teil vor dem Zusammenführen
-    if (window.__w3dTris) window.__w3dTris('deutsch1', g);
     kit.merge(g);
+    kit.batchDynamic(g); // Bewegtes (Ballons, Boote, Räder …) in wenige Draw-Calls bündeln
     g.userData.update = (dt, t) => { for (let i = 0; i < updates.length; i++) updates[i](dt, t); };
 
     return {

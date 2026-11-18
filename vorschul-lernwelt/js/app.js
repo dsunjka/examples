@@ -40,12 +40,24 @@
     const b = rectOf(scr && scr.querySelector('.splash .btn'));
     return { top: h ? h.bottom + 4 : 0, bottom: b ? window.innerHeight - b.top + 6 : 0 };
   }
+  /** Weltkarte: frei ist alles unter der HUD (Unterkante der HUD-Karten, live aus dem DOM) */
   function homeFrame() {
     const scr = current('.home');
     const top = rectOf(scr && scr.querySelector('.home-top')) || rectOf(scr && scr.querySelector('.topbar'));
-    // Hochformat: unten etwas Platz für Flo in der Ecke
-    const flo = window.innerWidth < window.innerHeight ? rectOf(LT.ui.mascot()) : null;
-    return { top: top ? top.bottom + 4 : 0, bottom: flo && flo.height ? Math.round(flo.height * 0.55) : 10 };
+    return { top: top ? Math.round(top.bottom + 6) : 0, bottom: 6 };
+  }
+  /** Sicherer Bereich der Inselschilder: nie unter der HUD, nie unter den Pfeilen (Hochformat) */
+  function homeSafe() {
+    const f = homeFrame();
+    const side = document.body.classList.contains('w3d-pan') ? 62 : 8;
+    return { top: f.top, bottom: 6, left: side, right: side };
+  }
+  /** Hindernisse für die Schilder: Flo in der Ecke */
+  function homeObstacles() {
+    const m = LT.ui.mascot();
+    if (!m || m.classList.contains('hidden')) return [];
+    const r = m.getBoundingClientRect();
+    return r.width ? [{ left: r.left, right: r.right, top: r.top + r.height * 0.1, bottom: r.bottom }] : [];
   }
   function areaFrame() {
     const scr = current('.area-screen');
@@ -53,6 +65,70 @@
     const hero = rectOf(scr && scr.querySelector('.area-hero'));
     return { top: bar ? bar.bottom : 0, bottom: hero && hero.height ? window.innerHeight - hero.bottom : 0 };
   }
+  /** Was Flo unten links auf einer Insel nie verdecken soll (Titel, Symbole, Überschriften) */
+  const FLO_AVOID = '.game-title, .game-icon, .kino-ticket-title, .kino-group > h3, .kino-head h2, .area-book-row .btn, .school-note';
+  /**
+   * Insel: Höhe des freien Bereichs (.area-hero) so wählen, dass Flo in der Ecke beim
+   * Öffnen (oben gescrollt) keinen Kartentitel und kein Kartensymbol verdeckt. 3D: bevorzugt
+   * wird der Bereich etwas niedriger (mehr Karten im Bild), sonst etwas höher, bis die Reihe
+   * ganz unter Flo hindurch aus dem Bild rutscht. Flach ist er sonst 0 hoch und wächst nur
+   * um höchstens 40 px. Liefert true, wenn sich etwas änderte.
+   */
+  function fitAreaHero(scr) {
+    const hero = scr && scr.isConnected && scr.querySelector('.area-hero');
+    const m = LT.ui.mascot();
+    if (!hero) return false;
+    const before = hero.style.height;
+    hero.style.height = '';
+    const flat = !document.body.classList.contains('w3d');
+    const h0 = hero.offsetHeight;
+    // Lage ohne Bewegung: Flo ohne Hüpfer/Einblenden (offset*), Karten im Endzustand ihres
+    // Einflug-Effekts (kurz vorgespult, danach zurückgesetzt – es ruckelt nichts)
+    if ((!h0 && !flat) || !m || m.classList.contains('hidden') || !m.offsetWidth) return hero.style.height !== before;
+    const mr = { left: m.offsetLeft, top: m.offsetTop, width: m.offsetWidth, height: m.offsetHeight };
+    const content = hero.parentElement;
+    const sy = content ? content.scrollTop : 0;
+    const vh = window.innerHeight;
+    // die sichtbare Figur (etwas kleiner als ihr Feld) plus Luft über den Ohren – bis zum
+    // Bildrand: ein Titel halb unter Flo und halb unter dem Rand wäre ebenso abgeschnitten
+    const flo = { left: mr.left + mr.width * 0.06, right: mr.left + mr.width * 0.9, top: mr.top - 8, bottom: vh };
+    const anims = scr.getAnimations ? scr.getAnimations({ subtree: true }) : [];
+    const held = anims.map((a) => {
+      const t = a.currentTime;
+      try { const end = a.effect && a.effect.getComputedTiming().endTime; if (Number.isFinite(end)) a.currentTime = end; } catch (e) { /* egal */ }
+      return t;
+    });
+    const items = [];
+    scr.querySelectorAll(FLO_AVOID).forEach((n) => {
+      const r = n.getBoundingClientRect();
+      // Schrift zählt voll; ein Symbol, das Flo nur am Rand streift, wenig
+      if (r.width && r.height && r.right > flo.left && r.left < flo.right) items.push({ top: r.top + sy, bottom: r.bottom + sy, k: n.matches('.game-icon') ? 0.2 : 1 });
+    });
+    anims.forEach((a, i) => { try { a.currentTime = held[i] == null ? 0 : held[i]; } catch (e) { /* egal */ } });
+    const hit = (s) => {
+      let a = 0;
+      for (const it of items) {
+        const t = it.top + s, b = Math.min(vh, it.bottom + s);
+        if (t < vh) a += Math.max(0, Math.min(b, flo.bottom) - Math.max(t, flo.top)) * it.k;
+      }
+      return a;
+    };
+    if (!hit(0)) return hero.style.height !== before;
+    const lo = flat ? 0 : Math.round(Math.max(130, h0 * 0.72)) - h0;
+    const hi = flat ? 40 : Math.round(Math.min(vh * 0.52, h0 * 1.25)) - h0;
+    let best = 0, bestCost = Infinity;
+    for (let s = Math.ceil(lo); s <= hi; s += 2) {
+      const cost = hit(s) * 1000 + Math.abs(s) * (s > 0 ? 3 : 1);
+      if (cost < bestCost) { bestCost = cost; best = s; }
+    }
+    // flach nur, wenn es ganz frei wird (sonst bliebe bloß eine Lücke unter der Kopfleiste)
+    if (best && (!flat || bestCost < 1000)) hero.style.height = Math.round(h0 + best) + 'px';
+    return hero.style.height !== before;
+  }
+  window.addEventListener('resize', () => {
+    // vor dem nächsten Bild der Welt (dort liest die Kamera den freien Bereich neu)
+    if (A.screen === 'area') fitAreaHero(current('.area-screen'));
+  });
   /** Antippen einer 3D-Insel (js/world3d/core.js) */
   A.onIslandTap = function (id) {
     if (A.screen === 'home') {
@@ -175,6 +251,16 @@
     LT.engine.stop();
     const { screen } = LT.ui.screen({ className: 'limit-screen', place: 'sky' });
     LT.ui.setMascot({ big: true });
+    // 3D: Nacht über der Inselwelt, Flo macht sein Nickerchen – beim nächsten Bildschirm wieder Tag
+    const W = LT.w3d;
+    if (world() && W.env && W.env.setMood) {
+      W.env.setMood('night', { instant: !!W.fastFlights }); // Testmodus: ohne Überblendung (wie die Kamera)
+      if (W.flo && W.flo.sleep) W.flo.sleep(true);
+      LT.ui.onLeave = () => {
+        if (W.env && W.env.setMood) W.env.setMood('day', { instant: !!W.fastFlights });
+        if (W.flo && W.flo.sleep) W.flo.sleep(false);
+      };
+    }
     screen.appendChild(
       el('div.splash',
         el('div.flo-big', { html: LT.ui.floSVG(), style: { animation: 'none', opacity: '0.9' } }),
@@ -449,11 +535,13 @@
     const map3d = world();
     const albumBtn = el('button.btn-round', { title: 'Sticker-Album', 'aria-label': 'Sticker-Album', on: { click: () => { LT.sfx.play('click'); A.showAlbum(); } } }, U.emoji('📒'));
     const parentBtn = el('button.btn-round', { title: 'Elternbereich', 'aria-label': 'Elternbereich', style: { opacity: '0.8' }, on: { click: () => parentGate(A.showParents) } }, U.emoji('🔒'));
-    const { screen } = LT.ui.screen({ className: 'home' + (map3d ? ' is-map' : ''), title: 'Lernwelt mit Flo', icon: '🦊', right: [LT.ui.starCounter(), albumBtn, parentBtn], place: 'home', frame: homeFrame });
+    const { screen } = LT.ui.screen({ className: 'home' + (map3d ? ' is-map' : ''), title: 'Lernwelt mit Flo', icon: '🦊', right: [LT.ui.starCounter(), albumBtn, parentBtn], place: 'home', frame: homeFrame, live: true });
     screen.style.setProperty('--area', '#4a90e2');
     const content = el('div.content');
     screen.appendChild(content);
-    LT.ui.setMascot({ big: !map3d }); // 3D: Flo wohnt auf seiner Insel, die Ecke bleibt klein
+    // Flo bleibt klein in der Ecke: groß läge er beim Öffnen auf der ersten Inselkarte
+    // (flach) – in 3D wohnt er ohnehin auf seiner Insel
+    LT.ui.setMascot({ big: false });
     LT.ui.onMascotTap = () => LT.speech.say(LT.reise ? 'Tippe auf eine Insel! Oder spiel das Tagesabenteuer mit den drei Stationen. Auf Flos Reise gehen wir Schritt für Schritt immer weiter.' : 'Tippe auf eine Insel! Oder spiel das Tagesabenteuer mit den drei Stationen.');
 
     const name = P.name();
@@ -482,8 +570,11 @@
           flat();
           return;
         }
-        map.querySelectorAll('.area-card[data-area]').forEach((card) => LT.w3d.labelIsland(card.dataset.area, card, { depth: true }));
+        // Schilder am Strand vor jeder Insel; sie weichen einander, den Wahrzeichen und Flo aus
+        const opts = { shore: true, depth: true, scale: [0.82, 1.06], avoid: 'map', safe: homeSafe, obstacles: homeObstacles };
+        map.querySelectorAll('.area-card[data-area]').forEach((card) => LT.w3d.labelIsland(card.dataset.area, card, opts));
         map.classList.add('is-ready');
+        peekIslands(map);
       });
     } else flat();
 
@@ -492,6 +583,41 @@
       setTimeout(() => LT.speech.say('Du hast alle drei Stationen geschafft! Tippe auf die Schatzkiste!'), 400);
     }
   };
+
+  /**
+   * Geschobene 3D-Weltkarte (Hochformat): In den Pfeil-Knöpfen zeigen kleine Symbole, welche
+   * Inseln auf dieser Seite außer Sicht liegen (die nächste zuerst, gesperrte Schul-Inseln
+   * nicht). core.js setzt dafür data-w3d-off an den Schildern.
+   */
+  function peekIslands(map) {
+    const btns = { left: map.querySelector('.w3d-pan-btn.is-left'), right: map.querySelector('.w3d-pan-btn.is-right') };
+    const boxes = {};
+    Object.keys(btns).forEach((k) => { if (btns[k]) btns[k].appendChild((boxes[k] = el('span.w3d-pan-peek', { 'aria-hidden': 'true' }))); });
+    let queued = false;
+    const update = () => {
+      queued = false;
+      if (!map.isConnected) return;
+      const I = LT.w3d.islands || {};
+      const x = (c) => (I[c.dataset.area] ? I[c.dataset.area].pos.x : 0);
+      Object.keys(boxes).forEach((side) => {
+        const cards = [...map.querySelectorAll(`.area-card[data-w3d-off="${side}"]`)].filter((c) => !c.closest('.school-section.is-locked'));
+        cards.sort((a, b) => (side === 'left' ? x(b) - x(a) : x(a) - x(b)));
+        const list = cards.slice(0, 3).map((c) => c.dataset.area);
+        btns[side].classList.toggle('is-empty', !list.length); // auf dieser Seite kommt nichts mehr
+        if (boxes[side].dataset.ids === list.join(',')) return;
+        boxes[side].dataset.ids = list.join(',');
+        boxes[side].replaceChildren(...list.map((id) => {
+          const a = LT.areaById(id);
+          const chip = el('span.w3d-peek-chip', U.emoji(a ? a.icon : '🏝️'));
+          if (a) LT.ui.applyArea(chip, a);
+          return chip;
+        }));
+      });
+    };
+    const schedule = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
+    new MutationObserver(schedule).observe(map, { subtree: true, attributes: true, attributeFilter: ['data-w3d-off'] });
+    schedule();
+  }
 
   /** Inselkarten der Weltkarte: Kita-Inseln (.areas) und Schul-Reihe (.school-section). */
   function areaCards() {
@@ -507,6 +633,7 @@
       const pct = possible ? Math.round((reached / possible) * 100) : 0;
       const card = el('button.card-btn.area-card', {
         'aria-label': a.title,
+        title: school && !schoolOpen ? a.title + ' – ab Schulkind-Stufe' : null, // Schloss-Hinweis (3D: nur als Symbol)
         data: { area: a.id },
         on: { click: () => { LT.sfx.play('click'); A.showArea(a.id); } },
       },
@@ -570,8 +697,16 @@
     if (isSchool(a) && !schoolUnlocked()) {
       content.appendChild(el('p.school-note', U.emoji('🎒'), ' Das ist schon Schulstoff. Probier ruhig mal aus!'));
     }
+    // Flo in der Ecke soll beim Öffnen keine Karte verdecken (Schrift lädt evtl. später)
+    const fitHero = () => {
+      fitAreaHero(screen);
+      if (document.fonts && document.fonts.status !== 'loaded') {
+        document.fonts.ready.then(() => { if (A.screen === 'area' && fitAreaHero(screen) && world() && LT.w3d.refreshPlace) LT.w3d.refreshPlace(); });
+      }
+    };
     if (areaId === 'kino' && LT.kino && LT.kino.renderIsland) {
       LT.kino.renderIsland(content, { onPlay: (id) => startGame(id, { from: 'area' }) });
+      fitHero();
       if (!A.greeted[areaId]) { A.greeted[areaId] = true; LT.speech.say(a.hello); } else LT.speech.say('Welchen Film möchtest du sehen?');
       return;
     }
@@ -594,6 +729,7 @@
       grid.appendChild(card);
     });
     content.appendChild(grid);
+    fitHero();
 
     if (!A.greeted[areaId]) {
       A.greeted[areaId] = true;

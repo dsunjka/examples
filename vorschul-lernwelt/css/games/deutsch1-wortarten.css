@@ -116,3 +116,34 @@
 @media (prefers-reduced-motion: reduce) {
   .wor-anim-T, .wor-anim-W, .wor-anim-N .wor-txt, .wor-gap-done { animation: none; }
 }
+
+/* ---------- Tablet: Wort-Kacheln, Körbe und Wortkarte größer ---------- */
+@media (min-width: 700px) and (min-height: 700px) {
+  .wor-badge { font-size: clamp(22px, 5.2vmin, 48px); }
+  .wor-ask { font-size: clamp(22px, 5vmin, 46px); }
+  .wor-pic { font-size: clamp(40px, 11vmin, 100px); }
+  .wor-txt { font-size: clamp(22px, 5.6vmin, 50px); }
+  .tile.wor-wtile { min-width: clamp(118px, 30vmin, 270px); min-height: clamp(96px, 23vmin, 210px); }
+  .wor-choices { max-width: min(100%, 1100px); }
+  .wor-word-big .wor-pic { font-size: clamp(64px, 18vmin, 170px); }
+  .wor-word-big .wor-txt { font-size: clamp(34px, 8.6vmin, 80px); }
+  .tile.wor-basket { width: clamp(104px, 28vw, 290px); height: clamp(132px, 29vmin, 260px); }
+  .wor-bin-icon { font-size: clamp(34px, 9vmin, 80px); }
+  .wor-bin-name { font-size: clamp(17px, 4vmin, 38px); }
+  .wor-bin-q { font-size: clamp(14px, 3vmin, 28px); }
+  .wor-opp-e { font-size: clamp(54px, 15vmin, 140px); }
+  .wor-opp-w, .wor-pl-w { font-size: clamp(26px, 6.4vmin, 58px); }
+  .wor-opp-arrow { font-size: clamp(30px, 7.2vmin, 68px); }
+  .wor-pl-lbl { font-size: clamp(18px, 4vmin, 36px); }
+  .wor-pl-e { font-size: clamp(48px, 12.5vmin, 120px); }
+  .wor-pl-e2 { font-size: clamp(30px, 8.6vmin, 82px); }
+  .tile.wor-stile { min-height: clamp(64px, 13.6vmin, 124px); }
+  .tile.wor-stile .tile-text { font-size: clamp(26px, 6.2vmin, 58px); }
+  .wor-cw { font-size: clamp(28px, 7vmin, 64px); }
+  .tile.wor-captile .wor-txt { font-size: clamp(28px, 7vmin, 62px); }
+}
+/* Tablet hoch: drei Wort-Kacheln bleiben nebeneinander */
+@media (min-width: 700px) and (min-height: 700px) and (orientation: portrait) {
+  .tile.wor-wtile { min-width: clamp(118px, min(30vmin, 26vw), 270px); }
+  .wor-txt { font-size: clamp(22px, min(5.6vmin, 4.3vw), 50px); }
+}

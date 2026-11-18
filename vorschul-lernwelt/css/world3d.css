@@ -94,6 +94,8 @@ body.w3d .splash-screen .flo-big svg {
   filter: drop-shadow(0 10px 10px rgba(16, 52, 96, 0.22));
 }
 body.w3d-flo .splash-screen .flo-big svg { visibility: hidden; }
+/* Tageslimit: Flo steht als 3D-Maskottchen groß in der Ecke – das große SVG nicht doppelt zeigen */
+body.w3d-flo .limit-screen .flo-big { display: none; }
 
 /* ==========================================================================
    Weltkarte in 3D (.screen.home.is-map)
@@ -201,100 +203,119 @@ body.w3d #app > .screen.is-map,
 }
 .w3d-map:not(.is-ready) .area-card { visibility: hidden; }
 
-/* Inselschild: Glas-Pille mit Symbol-Plakette, Titel und Fortschritt */
+/* Inselschild: kompakte Glas-Pille am Strand vor der Insel (W.labelIsland shore) –
+   Symbol-Plakette, Name, dünner Fortschrittsbalken; die Spitze zeigt nach oben
+   zur Insel. Lage, Größe (Tiefe) und Ausweichen setzt core.js per transform. */
 .w3d-map .area-card {
   position: absolute;
   left: 0;
   top: 0;
-  min-height: 58px;
   width: max-content;
-  max-width: 176px;
+  max-width: 220px;
+  min-height: 0;
   display: grid;
-  grid-template-columns: 46px minmax(0, auto);
+  grid-template-columns: 30px minmax(0, auto);
   grid-template-rows: auto auto;
-  grid-template-areas: "icon title" "icon meter" "lock lock";
+  grid-template-areas: "icon title" "icon meter";
   align-items: center;
   justify-items: start;
-  column-gap: 8px;
-  row-gap: 5px;
-  padding: 6px 14px 8px 6px;
-  border-radius: 29px;
+  column-gap: 7px;
+  row-gap: 3px;
+  padding: 4px 13px 4px 4px;
+  border-radius: 999px;
   overflow: visible;
   text-align: left;
   color: var(--ink);
-  background: var(--w3d-glass-strong);
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0.86) 100%);
-  border: 2px solid var(--w3d-glass-edge);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.8) 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.98);
   -webkit-backdrop-filter: var(--w3d-blur);
   backdrop-filter: var(--w3d-blur);
-  box-shadow: 0 5px 0 color-mix(in srgb, var(--area) 55%, #22304a), 0 14px 26px rgba(16, 52, 96, 0.22);
-  transition: box-shadow 0.15s, filter 0.15s, scale 0.12s;
+  box-shadow:
+    inset 0 1px 0 #fff,
+    0 3px 0 color-mix(in srgb, var(--area) 62%, #22304a),
+    0 10px 18px -6px rgba(16, 52, 96, 0.38);
+  transition: box-shadow 0.15s, filter 0.15s, scale 0.12s, opacity 0.25s;
   will-change: transform;
 }
 .w3d-map .area-card::after {
-  /* kleine Spitze zur Insel */
+  /* Spitze nach oben, zur Insel */
   content: "";
   position: absolute;
   left: 50%;
-  bottom: -11px;
-  width: 16px;
-  height: 16px;
-  margin-left: -8px;
-  background: var(--w3d-glass-strong);
-  border-right: 2px solid var(--w3d-glass-edge);
-  border-bottom: 2px solid var(--w3d-glass-edge);
-  border-bottom-right-radius: 4px;
+  top: -6px;
+  width: 11px;
+  height: 11px;
+  margin-left: -5.5px;
+  background: rgba(255, 255, 255, 0.95);
+  border-left: 1.5px solid #fff;
+  border-top: 1.5px solid #fff;
+  border-top-left-radius: 3px;
   transform: rotate(45deg);
-  box-shadow: 4px 4px 0 color-mix(in srgb, var(--area) 55%, #22304a);
   z-index: -1;
 }
 .w3d-map .area-card::before { display: none; }
 .w3d-map .area-card .area-deco { display: none; }
 .w3d-map .area-card .area-icon {
   grid-area: icon;
-  width: 46px;
-  height: 46px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
-  background: radial-gradient(circle at 50% 26%, color-mix(in srgb, var(--area) 48%, #fff), var(--area) 72%);
-  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.14), inset 0 2px 0 rgba(255, 255, 255, 0.45), 0 0 0 3px #fff, 0 4px 8px -2px rgba(29, 37, 80, 0.35);
+  font-size: 17px;
+  background: radial-gradient(circle at 50% 28%, color-mix(in srgb, var(--area) 42%, #fff), var(--area) 74%);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.14), inset 0 1.5px 0 rgba(255, 255, 255, 0.5), 0 0 0 2px #fff;
   filter: none;
+  position: relative;
 }
 .w3d-map .area-card .area-title {
   grid-area: title;
+  align-self: end;
   font-family: var(--w3d-title);
   font-weight: 600;
-  font-size: 17px;
-  line-height: 1.08;
+  font-size: 15px;
+  line-height: 1.05;
+  letter-spacing: 0.005em;
   text-shadow: none;
   color: var(--ink);
+  white-space: nowrap;
 }
 .w3d-map .area-card .area-meter {
   grid-area: meter;
+  align-self: start;
   width: 100%;
-  min-width: 64px;
-  height: 7px;
-  border-radius: 4px;
-  background: rgba(43, 45, 66, 0.1);
-}
-.w3d-map .area-card .area-meter > i { background: var(--area); border-radius: 4px; }
-.w3d-map .area-card .school-lock {
-  grid-area: lock;
-  position: static;
-  justify-self: center;
-  margin: 0 0 -2px;
-  padding: 2px 8px;
-  font-size: 11.5px;
-  background: rgba(43, 45, 66, 0.08);
+  min-width: 48px;
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(43, 45, 66, 0.12);
   box-shadow: none;
 }
-.w3d-map .school-section.is-locked .area-card .area-icon { filter: saturate(0.55); }
-.w3d-map .area-card:hover { filter: brightness(1.04); box-shadow: 0 5px 0 color-mix(in srgb, var(--area) 55%, #22304a), 0 0 0 4px color-mix(in srgb, var(--area) 45%, #fff), 0 16px 30px rgba(16, 52, 96, 0.26); }
-.w3d-map .area-card:active { scale: 0.95; }
-.w3d-map .area-card:focus-visible { outline: 4px solid #2b7bff; outline-offset: 3px; }
+.w3d-map .area-card .area-meter > i { background: var(--area); border-radius: 2px; box-shadow: none; }
+/* gesperrte Schul-Insel: kleines Schloss an der Plakette (Text bleibt für Vorleser im title) */
+.w3d-map .area-card .school-lock {
+  position: absolute;
+  left: 20px;
+  top: -5px;
+  width: 17px;
+  height: 17px;
+  padding: 0;
+  gap: 0;
+  justify-content: center;
+  font-size: 0;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(29, 37, 80, 0.35);
+}
+.w3d-map .area-card .school-lock .emoji { font-size: 10px; line-height: 1; }
+.w3d-map .school-section.is-locked .area-card .area-icon { filter: saturate(0.5) brightness(1.04); }
+.w3d-map .school-section.is-locked .area-card .area-title { color: color-mix(in srgb, var(--ink) 78%, #fff); }
+.w3d-map .area-card:hover { filter: brightness(1.04); box-shadow: inset 0 1px 0 #fff, 0 3px 0 color-mix(in srgb, var(--area) 62%, #22304a), 0 0 0 3px color-mix(in srgb, var(--area) 40%, #fff), 0 12px 22px -6px rgba(16, 52, 96, 0.42); }
+.w3d-map .area-card:active { scale: 0.94; }
+.w3d-map .area-card:focus-visible { outline: 3px solid #2b7bff; outline-offset: 2px; }
+/* Insel seitlich außer Sicht (geschobene Karte): Schild aus, bleibt aber fokussierbar */
+.w3d-map .area-card.w3d-off { opacity: 0; pointer-events: none; }
+.w3d-map .area-card.w3d-off:focus-visible { opacity: 1; }
 
 /* Pfeile zum Schieben der Karte (Hochformat) */
 .w3d-pan-btn { display: none; }
@@ -319,13 +340,32 @@ body.w3d-pan .screen.is-map .w3d-pan-btn {
   cursor: pointer;
 }
 body.w3d-pan .screen.is-map .w3d-pan-btn:active { scale: 0.92; }
+/* Randhinweis: Symbole der Inseln, die auf dieser Seite außer Sicht liegen (app.js peekIslands) –
+   der Knopf wächst nach unten, die nächste Insel steht oben */
+body.w3d-pan .screen.is-map .w3d-pan-btn { flex-direction: column; gap: 6px; height: auto; min-height: 64px; padding: 8px 0 10px; }
+.w3d-pan-btn > span:first-child { display: block; margin-top: -4px; }
+.w3d-pan-peek { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.w3d-pan-peek:empty { display: none; }
+body.w3d-pan .screen.is-map .w3d-pan-btn.is-empty { opacity: 0.6; box-shadow: none; }
+.w3d-peek-chip {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 28%, color-mix(in srgb, var(--area, #4a90e2) 42%, #fff), var(--area, #4a90e2) 74%);
+  box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.14), inset 0 1.5px 0 rgba(255, 255, 255, 0.5), 0 0 0 2px #fff, 0 3px 6px rgba(16, 52, 96, 0.25);
+}
+.w3d-peek-chip .emoji { font-size: 18px; line-height: 1; }
 .w3d-pan-btn.is-left { left: max(6px, env(safe-area-inset-left)); }
 .w3d-pan-btn.is-right { right: max(6px, env(safe-area-inset-right)); }
 
 /* ==========================================================================
    Insel: oben die Insel (freier Bereich), darunter Glas-Raster der Spielkarten
    ========================================================================== */
-.area-hero { display: none; }
+/* flach: Abstandhalter, sonst 0 hoch (app.js fitAreaHero schiebt Karten unter Flo hervor) */
+.area-hero { height: 0; pointer-events: none; }
 body.w3d .area-screen .area-hero {
   display: block;
   height: clamp(170px, 36vh, 420px);
@@ -333,6 +373,9 @@ body.w3d .area-screen .area-hero {
 }
 body.w3d .area-screen > .content {
   padding-top: 0;
+  /* ganz unten gescrollt steht die letzte Reihe frei über Flo (Maskottchen-Ecke + Luft);
+     beim Öffnen passt app.js (fitAreaHero) die Höhe von .area-hero an */
+  padding-bottom: calc(max(10px, env(safe-area-inset-bottom)) + clamp(70px, 12vmin, 110px) + 26px);
   /* Karten verschwinden oben weich unter der Kopfleiste */
   -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 14px);
   mask-image: linear-gradient(180deg, transparent 0, #000 14px);
@@ -410,7 +453,7 @@ body.w3d .album-screen > .content { background: rgba(255, 255, 255, 0.5); }
   .screen.is-map .daily .daily-title > span:not(.emoji) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   .screen.is-map .daily .station { width: 50px; height: 50px; font-size: 26px; }
   .screen.is-map .daily .chest { font-size: 34px; }
-  .w3d-map .area-card { max-width: 150px; min-height: 52px; grid-template-columns: 40px minmax(0, auto); padding: 5px 12px 7px 5px; }
-  .w3d-map .area-card .area-icon { width: 40px; height: 40px; font-size: 22px; }
-  .w3d-map .area-card .area-title { font-size: 15px; }
+  .w3d-map .area-card { max-width: 190px; grid-template-columns: 28px minmax(0, auto); padding: 3px 11px 3px 3px; column-gap: 6px; }
+  .w3d-map .area-card .area-icon { width: 28px; height: 28px; font-size: 16px; }
+  .w3d-map .area-card .area-title { font-size: 14px; }
 }

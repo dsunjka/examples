@@ -28,7 +28,7 @@
   background: #ffe6b8; border: 4px solid #c98b3a; border-top: 0;
   padding: calc(var(--w) * 0.28) calc(var(--w) * 0.24);
   border-radius: 0 0 10px 10px;
-  box-shadow: 0 5px 0 rgba(43, 45, 66, 0.14);
+  box-shadow: 0 5px 0 #a8702c, 0 14px 22px -12px rgba(29, 37, 80, 0.4);
 }
 .znb-floor { display: flex; gap: calc(var(--w) * 0.16); justify-content: center; }
 .znb-floor + .znb-floor { border-top: 3px dashed rgba(201, 139, 58, 0.55); padding-top: calc(var(--w) * 0.24); }
@@ -88,7 +88,7 @@
 .znb-rods { display: flex; gap: calc(var(--u) * 0.4); align-items: flex-end; }
 .znb-rod {
   display: flex; flex-direction: column; gap: 2px; padding: 3px;
-  background: #1d5fd1; border-radius: 6px; box-shadow: 0 3px 0 rgba(0, 0, 0, 0.18);
+  background: #1d5fd1; border-radius: 6px; box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, 0.3), 0 3px 0 #123f94, var(--drop-s);
 }
 .znb-rod i { display: block; width: var(--u); height: calc(var(--u) * 0.86); background: #6aa6ff; border-radius: 3px; }
 .znb-cubes { display: grid; grid-template-columns: repeat(5, var(--u)); gap: calc(var(--u) * 0.22); align-content: end; }
@@ -184,4 +184,23 @@
 
 @media (prefers-reduced-motion: reduce) {
   .znb-win.is-active, .znb-cell.is-active, .znb-arrow, .znb-glow { animation: none; }
+}
+
+/* ---------- Tablet: Zahlen, Haus, Streifen und Antworten größer ---------- */
+@media (min-width: 700px) and (min-height: 700px) {
+  .znb-holder { min-height: clamp(76px, 16vmin, 150px); }
+  .znb-choices .tile.small { --tile: clamp(72px, 17vmin, 150px); }
+  .znb-choices .tile.znb-num .tile-text { font-size: clamp(30px, 7.8vmin, 70px); }
+  .znb-choices .tile.znb-num.is-long .tile-text { font-size: clamp(24px, 6vmin, 54px); }
+  .znb-cell { --c: clamp(72px, 17vmin, 150px); }
+  .znb-strip.is-five .znb-cell { --c: min(16vw, 17vmin, 136px); }
+  .znb-slots .znb-cell { --c: min(17vw, 17vmin, 140px); }
+  .znb-lt { font-size: clamp(20px, 5vmin, 46px); }
+  .znb-dots { font-size: clamp(24px, 6vmin, 52px); }
+  .znb-sortlbl { font-size: clamp(20px, 4.2vmin, 38px); }
+  .znb-goal-lbl { font-size: clamp(22px, 4.8vmin, 44px); }
+  .znb-goal-num { font-size: clamp(46px, 11vmin, 104px); }
+  .znb-goal-word { font-size: clamp(32px, 7.6vmin, 70px); }
+  .znb-dig { font-size: clamp(34px, 7.4vmin, 66px); }
+  .znb-linebox { width: min(100%, 1080px); }
 }

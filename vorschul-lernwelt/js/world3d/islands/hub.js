@@ -20,7 +20,7 @@
     const calm = W.reducedMotion ? 0.12 : 1;
     const updates = []; // eigene Animationen (group.userData.update)
 
-    const base = kit.islandBase({ seed: 5, radius: 6.3, grassRadius: 4.85, stones: 4, hills: 0.8, segments: 48 });
+    const base = kit.islandBase({ seed: 5, radius: 6.3, grassRadius: 4.85, stones: 4, hills: 0.8, segments: 44 });
     const g = base.group;
     const ground = (x, z) => base.surfaceAt(x, z);
 
@@ -77,7 +77,7 @@
         const a = (i / 12) * TAU + PI / 12;
         const d = Math.abs(((a - PI / 2 + PI) % TAU) - PI);
         if (d < gap) continue;
-        P.add(xf(geo.cyl(0.035, 0.04, 0.48, 4), [Math.cos(a) * 1.3, PY + 0.32, Math.sin(a) * 1.3]), plankLight, { grad: [0.8, 1.05] });
+        P.add(xf(new T.CylinderGeometry(0.035, 0.04, 0.48, 4, 1, true), [Math.cos(a) * 1.3, PY + 0.32, Math.sin(a) * 1.3]), plankLight, { grad: [0.8, 1.05] }); // Enden in Boden und Handlauf
       }
       P.add(new T.TorusGeometry(1.3, 0.04, 3, 22, TAU - gap * 2 - 0.08).rotateX(PI / 2).rotateY(-(PI / 2 + gap + 0.04)).translate(0, PY + 0.56, 0), plankLight, { grad: [0.95, 1.05] });
       // runde Hütte
@@ -108,6 +108,8 @@
       crown.forEach(([x, y, z, s], i) => {
         P.add(xf(geo.blob(s, { seed: 40 + i, noise: 0.16, sy: 0.9 }), [x, y, z], [0, i, 0]), kit.shade(leaf, 0.92 + (i % 3) * 0.06), { grad: [0.58, 1.16], jitter: 0.05, seed: 30 + i, range: [PY + 1.1, PY + 3.7] });
       });
+      // verdeckte Innenflächen der Krone (und der Stamm darin) entfallen
+      P.cullInside(crown.map(([x, y, z, s]) => [x, y, z, s * 0.72]));
       // Leiter (vorne)
       const lb = [0, 0, 1.95], lt = [0, PY + 0.02, 1.32];
       const len = Math.hypot(lt[1] - lb[1], lt[2] - lb[2]);
@@ -115,7 +117,7 @@
       [-0.24, 0.24].forEach((x) => P.add(xf(geo.cyl(0.04, 0.045, len + 0.2, 5), [x, (lb[1] + lt[1]) / 2, (lb[2] + lt[2]) / 2], [tilt, 0, 0]), kit.shade(plank, 0.9), { grad: [0.85, 1.05] }));
       for (let i = 1; i < 7; i++) {
         const t = i / 7;
-        P.add(xf(geo.cyl(0.03, 0.03, 0.5, 5), [0, lb[1] + (lt[1] - lb[1]) * t, lb[2] + (lt[2] - lb[2]) * t], [0, 0, PI / 2]), plankLight, {});
+        P.add(xf(new T.CylinderGeometry(0.03, 0.03, 0.5, 5, 1, true), [0, lb[1] + (lt[1] - lb[1]) * t, lb[2] + (lt[2] - lb[2]) * t], [0, 0, PI / 2]), plankLight, {}); // Enden stecken in den Holmen
       }
       P.build(grp);
       // Schaukel (hängt unter der Plattform, schwingt)
@@ -444,6 +446,7 @@
     });
 
     kit.merge(g);
+    kit.batchDynamic(g); // Bewegtes (Ballons, Boote, Räder …) in wenige Draw-Calls bündeln
 
     g.userData.update = (dt, t) => { for (let i = 0; i < updates.length; i++) updates[i](dt, t); };
 

@@ -35,9 +35,9 @@
   display: flex;
   gap: clamp(5px, 1vmin, 10px);
   padding: clamp(5px, 1vmin, 9px) clamp(10px, 2vmin, 18px);
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.88);
   border-radius: 999px;
-  box-shadow: 0 3px 0 rgba(43, 45, 66, 0.08);
+  box-shadow: inset 0 0 0 1.5px #fff, var(--sh-chip);
 }
 .mem-slot {
   width: clamp(28px, 5vmin, 46px);
@@ -108,24 +108,48 @@
     radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.22) 0 9%, transparent 10%),
     radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.12) 0 6%, transparent 7%),
     radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.12) 0 6%, transparent 7%),
-    linear-gradient(145deg, #2cc6da, #1597aa);
-  box-shadow: inset 0 0 0 calc(var(--mem-size) * 0.05) rgba(255, 255, 255, 0.55), var(--shadow);
+    linear-gradient(165deg, #45d6e8 0%, #1fb5c9 48%, #1597aa 100%);
+  /* Bonbon-Spielstein wie die Kacheln: Glanzlicht, helle Innenkante, Unterkante in Türkis */
+  box-shadow:
+    inset 0 0 0 calc(var(--mem-size) * 0.04) rgba(255, 255, 255, 0.36),
+    inset 0 2px 0 calc(var(--mem-size) * 0.04) rgba(255, 255, 255, 0.3),
+    inset 0 -5px 0 rgba(0, 70, 90, 0.16),
+    0 6px 0 #0f7f8f,
+    0 18px 26px -12px rgba(29, 37, 80, 0.45);
+}
+.mem-back::after {
+  content: "";
+  position: absolute;
+  left: 9%;
+  right: 9%;
+  top: 6%;
+  height: 38%;
+  border-radius: calc(var(--mem-size) * 0.12) calc(var(--mem-size) * 0.12) 50% 50% / calc(var(--mem-size) * 0.12) calc(var(--mem-size) * 0.12) 30% 30%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.42), rgba(255, 255, 255, 0));
+  pointer-events: none;
 }
 .mem-back-mark {
-  font: 700 calc(var(--mem-size) * 0.44) var(--font);
+  position: relative;
+  z-index: 1;
+  font: 700 calc(var(--mem-size) * 0.46) var(--font-display, var(--font));
   color: #fff;
-  text-shadow: 0 3px 0 rgba(0, 0, 0, 0.15);
+  text-shadow: 0 3px 0 #0f7f8f, 0 6px 12px rgba(0, 60, 80, 0.25);
   line-height: 1;
 }
 .mem-front {
-  background: #fff;
+  background:
+    radial-gradient(120% 70% at 30% -10%, #ffffff 0%, rgba(255, 255, 255, 0) 55%),
+    linear-gradient(180deg, #ffffff 46%, #f1f4fb 100%);
+  box-shadow: inset 0 2px 0 #fff, inset 0 -4px 0 rgba(29, 37, 80, 0.05), 0 6px 0 var(--edge), 0 7px 0 var(--edge-dark), 0 18px 26px -12px rgba(29, 37, 80, 0.42);
   transform: rotateY(180deg);
   font-size: calc(var(--mem-size) * 0.6);
 }
 .mem-card.is-matched { cursor: default; }
 .mem-card.is-matched .mem-front {
-  background: var(--ok-soft);
-  box-shadow: inset 0 0 0 calc(var(--mem-size) * 0.045) var(--ok), var(--shadow);
+  background:
+    radial-gradient(120% 70% at 30% -10%, #ffffff 0%, rgba(255, 255, 255, 0) 55%),
+    linear-gradient(180deg, #f2fff7 0%, #c9f3db 100%);
+  box-shadow: inset 0 0 0 calc(var(--mem-size) * 0.045) #3fd184, inset 0 2px 0 calc(var(--mem-size) * 0.045) #fff, 0 6px 0 #22a862, 0 18px 26px -12px rgba(29, 37, 80, 0.42);
 }
 .mem-digit {
   font: 700 calc(var(--mem-size) * 0.62) var(--font);
@@ -229,7 +253,8 @@
   flex: 0 0 auto;
   border-radius: calc(var(--wf-slot) * 0.2);
   background: #fff;
-  box-shadow: 0 5px 0 rgba(43, 45, 66, 0.12), 0 8px 16px rgba(43, 45, 66, 0.1);
+  background-image: var(--gloss);
+  box-shadow: inset 0 2px 0 #fff, var(--shadow);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -309,4 +334,16 @@
 }
 @media (max-width: 420px) {
   .wf-ready.btn-big { font-size: 20px; padding: 14px 22px; }
+}
+
+/* ---------- Tablet hoch: Bilder füllen die Breite (2 × 2 bzw. 3 + 2) ---------- */
+@media (min-width: 700px) and (min-height: 700px) {
+  .pn-prompt .mid-emoji { font-size: clamp(30px, 7.4vmin, 70px); }
+  .pn-prompt .prompt-text { font-size: clamp(22px, 5.2vmin, 50px); }
+  .sch-prompt-pic { font-size: clamp(80px, min(24vw, 19vh), 200px); }
+}
+@media (min-width: 700px) and (min-height: 700px) and (orientation: portrait) {
+  .pn-choices .tile.large { --tile: min(40vw, 23vh, 260px); }
+  .pn-choices.n5 .tile.large { --tile: min(40vw, 19vh, 230px); }
+  .sch-choices .tile.large { --tile: min(40vw, 23vh, 260px); }
 }

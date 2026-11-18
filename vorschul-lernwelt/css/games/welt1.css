@@ -43,10 +43,12 @@
   font-size: clamp(30px, 6.4vmin, 56px);
   font-weight: 700;
   color: #fff;
-  background: var(--area);
+  /* etwas dunkler als die Inselfarbe: weiße Schrift bleibt gut lesbar (Kontrast ≥ 3:1) */
+  background: linear-gradient(180deg, color-mix(in srgb, var(--area) 88%, #fff) 0%, color-mix(in srgb, var(--area) 74%, var(--navy)) 100%);
   border-radius: 18px;
   padding: 2px 18px 6px;
-  text-shadow: 0 2px 0 rgba(0, 0, 0, .15);
+  text-shadow: 0 2px 0 color-mix(in srgb, var(--area) 45%, var(--navy));
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.35), 0 3px 0 color-mix(in srgb, var(--area) 55%, var(--navy)), var(--drop-s);
 }
 .raum-sentence { font-size: clamp(16px, 2.8vmin, 26px); font-weight: 700; color: var(--ink-soft); }
 .raum-arrow, .raum-who { font-size: clamp(34px, 6.4vmin, 56px); }
@@ -183,4 +185,20 @@
   .stage.verk-cross-stage > .w1-prompt { grid-column: 1 / span 2; justify-self: center; }
   .verk-cross-stage .verk-cross { width: min(calc(100vw - 420px), calc((100vh - 430px) * 1.5), 720px); }
   .verk-cross-stage .verk-bar { min-height: 0; }
+}
+
+/* ---------- Tablet: Frage, Gesichter, Ampeln und Pfeile größer ---------- */
+@media (min-width: 700px) and (min-height: 700px) {
+  .w1-prompt .w1-q { font-size: clamp(18px, 4vmin, 38px); }
+  .w1-prompt .emoji { font-size: clamp(34px, 9vmin, 84px); }
+  .gef-face-model { width: clamp(70px, 16vmin, 150px); height: clamp(70px, 16vmin, 150px); }
+  .gef-story { max-width: min(1080px, 100%); }
+  .gef-scene .emoji { font-size: clamp(36px, 9.4vmin, 88px); }
+  .tile.gef-tile.large { --tile: clamp(120px, min(33vmin, 21.6vw), 290px); }
+  .tile.verk-ampel-tile { width: clamp(110px, min(22vw, 22vh), 230px); height: calc(clamp(110px, min(22vw, 22vh), 230px) * 1.9); }
+  .verk-go-choices .tile, .verk-arrows .tile { --tile: clamp(96px, 21vmin, 190px); }
+  .raum-sentence { font-size: clamp(16px, 3.4vmin, 32px); }
+}
+@media (min-width: 700px) and (min-height: 700px) and (orientation: portrait) {
+  .tile.gef-tile.large { --tile: clamp(120px, min(33vmin, 28.5vw), 290px); }
 }

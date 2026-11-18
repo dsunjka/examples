@@ -26,76 +26,7 @@
     const g = base.group;
     const ground = (x, z) => base.surfaceAt(x, z);
 
-    /**
-     * Schwebende Teile in wenige Draw-Calls zusammenführen: Jeder Teil wippt
-     * und dreht sich im Vertex-Shader mit eigener Phase (keine Allokationen pro Bild).
-     * items: [{ obj, phase, amp, rot, spin }] – obj in Insel-Koordinaten (nicht eingehängt).
-     */
-    const floatMats = new Map();
-    function floatMat(m) {
-      if (floatMats.has(m.uuid)) return floatMats.get(m.uuid);
-      const fm = m.clone();
-      fm.onBeforeCompile = (sh) => {
-        sh.uniforms.uKitTime = kit.uniforms.time;
-        const pre = `float bobK = uKitTime * 1.2 + aBob.x;
-          float bobA = sin(bobK * 0.5) * aSpin.x + uKitTime * aSpin.y;
-          float bobC = cos(bobA), bobS = sin(bobA);`;
-        sh.vertexShader = 'uniform float uKitTime;\nattribute vec4 aBob;\nattribute vec2 aSpin;\n' + sh.vertexShader
-          .replace('#include <beginnormal_vertex>', `#include <beginnormal_vertex>
-            ${pre}
-            objectNormal.xz = vec2(objectNormal.x * bobC - objectNormal.z * bobS, objectNormal.x * bobS + objectNormal.z * bobC);`)
-          .replace('#include <begin_vertex>', `#include <begin_vertex>
-            {
-              vec2 bobD = transformed.xz - aBob.zw;
-              transformed.xz = aBob.zw + vec2(bobD.x * bobC - bobD.y * bobS, bobD.x * bobS + bobD.y * bobC);
-              transformed.y += sin(bobK) * aBob.y;
-            }`);
-      };
-      fm.customProgramCacheKey = () => 'insel-schweben-' + m.uuid;
-      floatMats.set(m.uuid, fm);
-      return fm;
-    }
-    function floatMerge(items) {
-      const buckets = new Map();
-      items.forEach((it) => {
-        it.obj.updateMatrixWorld(true);
-        const cx = it.obj.position.x, cz = it.obj.position.z;
-        it.obj.traverse((m) => {
-          if (!m.isMesh) return;
-          let q = m.geometry.clone();
-          if (q.index) q = q.toNonIndexed();
-          for (const k of Object.keys(q.attributes)) if (!['position', 'normal', 'uv', 'color'].includes(k)) q.deleteAttribute(k);
-          if (!q.attributes.uv) q.setAttribute('uv', new T.BufferAttribute(new Float32Array(q.attributes.position.count * 2), 2));
-          if (m.material.vertexColors && !q.attributes.color) q.setAttribute('color', new T.BufferAttribute(new Float32Array(q.attributes.position.count * 3).fill(1), 3));
-          if (!m.material.vertexColors && q.attributes.color) q.deleteAttribute('color');
-          q.applyMatrix4(m.matrixWorld);
-          const n = q.attributes.position.count;
-          const a = new Float32Array(n * 4), s = new Float32Array(n * 2);
-          for (let i = 0; i < n; i++) {
-            a[i * 4] = it.phase || 0; a[i * 4 + 1] = (it.amp == null ? 0.12 : it.amp) * calm; a[i * 4 + 2] = cx; a[i * 4 + 3] = cz;
-            s[i * 2] = (it.rot || 0) * calm; s[i * 2 + 1] = (it.spin || 0) * calm;
-          }
-          q.setAttribute('aBob', new T.BufferAttribute(a, 4));
-          q.setAttribute('aSpin', new T.BufferAttribute(s, 2));
-          const key = m.material.uuid;
-          if (!buckets.has(key)) buckets.set(key, { mat: m.material, geos: [], order: m.renderOrder });
-          buckets.get(key).geos.push(q);
-        });
-      });
-      const grp = new T.Group();
-      grp.name = 'schwebend';
-      grp.userData.dynamic = true;
-      buckets.forEach((b) => {
-        const mesh = new T.Mesh(b.geos.length > 1 ? T.addons.mergeGeometries(b.geos, false) : b.geos[0], floatMat(b.mat));
-        mesh.castShadow = false;
-        mesh.receiveShadow = true;
-        mesh.renderOrder = b.order;
-        mesh.geometry.computeBoundingSphere();
-        mesh.geometry.boundingSphere.radius += 0.5;
-        grp.add(mesh);
-      });
-      return grp;
-    }
+    // Schwebende Teile: kit.floatMerge (wippen/drehen im Vertex-Shader, wenige Draw-Calls)
 
     /** Dreiecke aus Vierecken bauen, nach außen (n) ausgerichtet. */
     function quadBuilder() {
@@ -193,7 +124,7 @@
     const pm = ped.build();
     pm.name = 'sockel';
     g.add(pm);
-    g.add(floatMerge(floaters));
+    g.add(kit.floatMerge(floaters));
 
     /* ------------------------------------------------------------------
        Staffelei mit Bild aus Formen (vorne rechts)
@@ -437,6 +368,7 @@
     ]);
 
     kit.merge(g);
+    kit.batchDynamic(g); // Bewegtes (Ballons, Boote, Räder …) in wenige Draw-Calls bündeln
     g.userData.update = (dt, t) => { for (let i = 0; i < updates.length; i++) updates[i](dt, t); };
 
     return {

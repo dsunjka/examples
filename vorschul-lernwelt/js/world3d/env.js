@@ -24,6 +24,13 @@
    Flachwasser, durchscheinender Sand und die Schaumringe, passend zu jeder
    Inselform. Die Sonnen-Schattenkamera folgt dem Blickpunkt der Kamera
    (scharfe Schatten in der Nähe, ganze Welt in der Übersicht).
+
+   Leistung: Schattenkarte 2048 (high) / 1536 (medium), bei 'low' ohne Schatten
+   (Kern); sie wird nur neu gezeichnet, wenn Kamera oder Sonne wandern, sonst
+   jedes zweite Bild. Qualität 'low': keine Möwen und Pollen, Wasser ohne
+   Kaustik, Schaumringe und Glitzern. Möwen: ein instanziertes Mesh (Flügel
+   schlagen im Vertex-Shader). Inselchen: je eigene Meshes (fallen außerhalb
+   des Bildes weg). Wolken: verdeckte Innenflächen der Bausche entfallen.
    ========================================================================== */
 (function () {
   'use strict';
@@ -206,6 +213,8 @@
       uIsl: { value: Array.from({ length: MAX_ISL }, () => new T.Vector4(0, 0, -100, 0)) }, uIslN: { value: 0 },
       uShore: { value: null }, uShoreBox: { value: new T.Vector4(0, 0, 1, 1) }, uShoreOn: { value: 0 },
       uArch: { value: new T.Vector4(0, 0, 0.8, 1.15) },
+      uLow: { value: 0 }, // Qualitätsstufe 'low': ohne Kaustik, Schaumringe und Glitzern
+      uSunDirW: { value: S.sunDir.clone() }, // zur Sonne (Welt) – Glitzerpfad
     };
     const waterMat = new T.MeshStandardMaterial({ color: '#ffffff', roughness: 0.16, metalness: 0, transparent: true, depthWrite: true });
     waterMat.onBeforeCompile = (sh) => {
@@ -217,9 +226,9 @@
           transformed.y += (sin(wp0.x * 0.09 + tt * 0.8) * 0.6 + sin(wp0.z * 0.12 - tt * 0.6 + wp0.x * 0.04) * 0.4) * uWaveAmp;
           vWPos = (modelMatrix * vec4(transformed, 1.0)).xyz;
         }`);
-      sh.fragmentShader = `uniform float uTime, uSpeed, uGlint, uShoreOn;
+      sh.fragmentShader = `uniform float uTime, uSpeed, uGlint, uShoreOn, uLow;
         uniform vec4 uArch;
-        uniform vec3 uDeep, uMid, uShallow, uFoamCol, uGlintCol;
+        uniform vec3 uDeep, uMid, uShallow, uFoamCol, uGlintCol, uSunDirW;
         uniform vec4 uIsl[${MAX_ISL}];
         uniform int uIslN;
         uniform sampler2D uShore;
@@ -256,18 +265,20 @@
             vec3 wc = mix(uDeep, uMid, clamp(arch * 0.78 + halo * 0.55, 0.0, 1.0));
             wc *= 0.93 + 0.12 * wNoise(p * 0.035 + 3.7);
             wc = mix(wc, uShallow, sh * 0.92);
-            // feine Lichtadern (Kaustik-Andeutung) im Flachwasser
-            float caus = smoothstep(0.55, 0.95, wNoise(p * 1.6 + vec2(tt * 0.2, tt * 0.13)) * 0.6 + wNoise(p * 3.1 - vec2(tt * 0.17, -tt * 0.1)) * 0.5);
-            wc += uShallow * caus * sh * 0.22;
             float edge = 1.0 - smoothstep(0.04, 0.15 + 0.12 * n1, depth);
             float rings = 0.0;
-            for (int k = 0; k < 2; k++) {
-              float ph = fract(tt * 0.075 + float(k) * 0.5);
-              float dk = (1.0 - ph) * 1.25 + 0.12;
-              float w = 0.05 + 0.04 * (1.0 - ph);
-              float band = 1.0 - smoothstep(w * 0.4, w, abs(depth - dk + (n2 - 0.5) * 0.14));
-              float brk = smoothstep(0.38, 0.7, wNoise(p * 1.1 + float(k) * 7.3 + vec2(0.0, tt * 0.05)) + 0.12);
-              rings += band * smoothstep(0.0, 0.2, ph) * (1.0 - smoothstep(0.65, 1.0, ph)) * brk;
+            if (uLow < 0.5 && sh > 0.0) {
+              // feine Lichtadern (Kaustik-Andeutung) im Flachwasser
+              float caus = smoothstep(0.55, 0.95, wNoise(p * 1.6 + vec2(tt * 0.2, tt * 0.13)) * 0.6 + wNoise(p * 3.1 - vec2(tt * 0.17, -tt * 0.1)) * 0.5);
+              wc += uShallow * caus * sh * 0.22;
+              for (int k = 0; k < 2; k++) {
+                float ph = fract(tt * 0.075 + float(k) * 0.5);
+                float dk = (1.0 - ph) * 1.25 + 0.12;
+                float w = 0.05 + 0.04 * (1.0 - ph);
+                float band = 1.0 - smoothstep(w * 0.4, w, abs(depth - dk + (n2 - 0.5) * 0.14));
+                float brk = smoothstep(0.38, 0.7, wNoise(p * 1.1 + float(k) * 7.3 + vec2(0.0, tt * 0.05)) + 0.12);
+                rings += band * smoothstep(0.0, 0.2, ph) * (1.0 - smoothstep(0.65, 1.0, ph)) * brk;
+              }
             }
             wFoam = clamp(max(edge, rings * 0.8), 0.0, 1.0);
             wShallow = sh;
@@ -286,29 +297,48 @@
             vec2 g = vec2(0.0);
             g += wRip(p, normalize(vec2(0.8, 0.6)), 0.55, 1.1, 0.06, tt);
             g += wRip(p, normalize(vec2(-0.5, 0.86)), 0.9, 1.5, 0.05, tt);
-            g += wRip(p, normalize(vec2(0.2, -1.0)), 1.7, 2.1, 0.035, tt);
-            g += wRip(p, normalize(vec2(-0.95, -0.3)), 2.9, 2.7, 0.02, tt);
+            if (uLow < 0.5) {
+              g += wRip(p, normalize(vec2(0.2, -1.0)), 1.7, 2.1, 0.035, tt);
+              g += wRip(p, normalize(vec2(-0.95, -0.3)), 2.9, 2.7, 0.02, tt);
+            }
             g *= mix(0.12, 1.0, fade) * (1.0 - wFoam * 0.7);
             vec3 nW = normalize(vec3(-g.x, 1.0, -g.y));
             normal = normalize((viewMatrix * vec4(nW, 0.0)).xyz);
           }`)
         .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
-          {
-            vec2 cp = vWPos.xz * 1.3;
+          if (uLow < 0.5) {
+            // Glitzern: kurze Lichtblitze einzelner Wellenfacetten – vor allem im Sonnenpfad
+            // (Blickrichtung zur Sonne) und unter flachem Blickwinkel (Ferne, Fresnel), sonst selten.
+            // In der Ferne werden die Zellen durch die Perspektive von selbst kleiner und dichter.
+            vec2 cp = vWPos.xz * 1.6;
             vec2 cid = floor(cp);
             vec2 cf = fract(cp) - 0.5;
             float hs = wHash(cid);
-            float tw = sin(uTime * (1.7 + hs * 2.5) + hs * 40.0);
+            float hs2 = wHash(cid + 17.31);
+            cf -= (vec2(hs2, fract(hs2 * 7.13)) - 0.5) * 0.5; // nicht im Raster
+            vec3 V = normalize(cameraPosition - vWPos);
             float dist = length(cameraPosition - vWPos);
-            float spark = step(0.935, hs) * smoothstep(0.2, 0.0, length(cf)) * smoothstep(0.55, 1.0, tw);
-            spark *= (1.0 - smoothstep(45.0, 140.0, dist)) * (1.0 - wFoam) * (1.0 - wShallow * 0.6);
-            totalEmissiveRadiance += uGlintCol * spark * uGlint * 1.4;
-            totalEmissiveRadiance += uFoamCol * wFoam * 0.16;
-          }`);
+            vec2 toSun = normalize(uSunDirW.xz + vec2(1e-4));
+            vec2 look = normalize(vWPos.xz - cameraPosition.xz + vec2(1e-4));
+            float path = smoothstep(0.15, 0.95, dot(look, toSun));
+            float fres = pow(1.0 - clamp(V.y, 0.0, 1.0), 2.4);
+            float k = clamp(path * 0.85 + fres * 0.45, 0.0, 1.0);
+            // seltener, wo k klein ist (Schwelle 0.995 → 0.95), dazu ein kurzer Blitz statt Dauerlicht
+            float on = step(mix(0.995, 0.95, k), hs);
+            float tw = sin(uTime * uSpeed * (2.2 + hs2 * 2.8) + hs2 * 40.0);
+            float flash = pow(max(tw, 0.0), 10.0);
+            float r = length(cf);
+            float spark = on * flash * (smoothstep(0.13, 0.0, r) + 0.35 * smoothstep(0.3, 0.0, r));
+            spark *= (0.35 + 0.65 * k) * (1.0 - smoothstep(60.0, 170.0, dist)) * (1.0 - wFoam) * (1.0 - wShallow * 0.7);
+            totalEmissiveRadiance += uGlintCol * spark * uGlint * 1.5;
+          }
+          totalEmissiveRadiance += uFoamCol * wFoam * 0.16;`);
     };
-    waterMat.customProgramCacheKey = () => 'lt-water-1';
+    waterMat.customProgramCacheKey = () => 'lt-water-3';
+    /* Scheibe aus Ringen, nach außen immer gröber (die Wellen sind lang, das feine Kräuseln
+       entsteht im Pixel-Shader): ≈ 3k Dreiecke. */
     function waterGeometry() {
-      const segs = 96, rings = 50, Rmax = 980;
+      const segs = 48, rings = 32, Rmax = 980;
       const pos = [0, 0, 0];
       const idx = [];
       for (let r = 1; r <= rings; r++) {
@@ -355,14 +385,37 @@
         g.computeVertexNormals();
         return g.toNonIndexed();
       };
+      const balls = []; // [x, y, z, r] je Bausch
       for (let i = 0; i < n; i++) {
         const c = i - (n - 1) / 2;
         const s = (1 - Math.abs(c) / n) * 1.0 + 0.45 + r() * 0.25;
         const g = puff(s, seed * 13 + i);
-        g.translate(c * 0.95 + (r() - 0.5) * 0.3, s * 0.35 + r() * 0.15, (r() - 0.5) * 0.9);
+        const tx = c * 0.95 + (r() - 0.5) * 0.3, ty = s * 0.35 + r() * 0.15, tz = (r() - 0.5) * 0.9;
+        g.translate(tx, ty, tz);
         parts.push(g);
+        balls.push([tx, ty, tz, s]);
       }
-      if (r() < 0.7) { const g = puff(0.8, seed * 7); g.translate(0.2, 1.0, 0); parts.push(g); }
+      if (r() < 0.7) { const g = puff(0.8, seed * 7); g.translate(0.2, 1.0, 0); parts.push(g); balls.push([0.2, 1.0, 0, 0.8]); }
+      // Dreiecke, die ganz in einem anderen Bausch stecken, sieht man nie: weglassen (≈ 15 %)
+      const inside = (x, y, z, j) => { const b = balls[j]; const dx = x - b[0], dy = y - b[1], dz = z - b[2]; return dy > -0.28 * b[3] && dx * dx + dy * dy + dz * dz < 0.88 * 0.88 * b[3] * b[3]; };
+      for (let i = 0; i < parts.length; i++) {
+        const pa = parts[i].attributes.position.array, na = parts[i].attributes.normal.array;
+        const keepP = [], keepN = [];
+        for (let t = 0; t < pa.length; t += 9) {
+          let hidden = false;
+          for (let j = 0; j < balls.length && !hidden; j++) {
+            if (j === i) continue;
+            hidden = inside(pa[t], pa[t + 1], pa[t + 2], j) && inside(pa[t + 3], pa[t + 4], pa[t + 5], j) && inside(pa[t + 6], pa[t + 7], pa[t + 8], j);
+          }
+          if (!hidden) for (let k = 0; k < 9; k++) { keepP.push(pa[t + k]); keepN.push(na[t + k]); }
+        }
+        if (keepP.length === pa.length) continue;
+        const q = new T.BufferGeometry();
+        q.setAttribute('position', new T.Float32BufferAttribute(keepP, 3));
+        q.setAttribute('normal', new T.Float32BufferAttribute(keepN, 3));
+        parts[i].dispose();
+        parts[i] = q;
+      }
       const g = T.addons.mergeGeometries(parts, false);
       g.computeBoundingBox();
       const y0 = g.boundingBox.min.y, y1 = g.boundingBox.max.y;
@@ -420,7 +473,9 @@
       projM.multiplyMatrices(cam.projectionMatrix, cam.matrixWorldInverse);
       frustum.setFromProjectionMatrix(projM);
       slot[0] = slot[1] = slot[2] = 0;
+      const thin = W.quality === 'low'; // 'low': nur jede zweite Horizont-Wolke
       for (const it of cloudItems) {
+        if (thin && it.drift && it.i % 2) continue;
         if (it.drift) {
           let x = it.base.x + t * it.drift * m;
           x = ((x + 560) % 1120 + 1120) % 1120 - 560;
@@ -517,22 +572,25 @@
       all.name = 'islets';
       [[-84, -50, 2.6, 5], [88, -56, 2.2, 6], [-80, 38, 1.9, 7], [84, 32, 2.3, 8]].forEach(([x, z, r, seed]) => {
         try {
-          const b = kit.islandBase({ seed, radius: r * 1.9, grassRadius: r, height: 0.7, segments: 24, stones: 2, cliffs: 0.4 });
+          // weit draußen und klein im Bild: grobes Gitter, einfache Palmen
+          const b = kit.islandBase({ seed, radius: r * 1.9, grassRadius: r, height: 0.7, segments: 20, rings: 3, stones: 2, cliffs: 0.4 });
           const g = b.group;
           const n = 1 + (seed % 2);
-          for (let i = 0; i < n; i++) b.place(kit.tree({ type: 'palm', seed: seed * 10 + i, scale: 1.1 }), (i - (n - 1) / 2) * 1.2, (i % 2) * 0.6 - 0.3);
+          for (let i = 0; i < n; i++) b.place(kit.tree({ type: 'palm', seed: seed * 10 + i, scale: 1.1, lod: true }), (i - (n - 1) / 2) * 1.2, (i % 2) * 0.6 - 0.3);
           b.place(kit.bush({ seed }), 0.9, 0.6);
+          kit.merge(g); // je Inselchen eigene Meshes: außerhalb des Bildes fallen sie weg
           g.position.set(x, 0, z);
           g.rotation.y = seed;
           all.add(g);
           islets.push({ x, z, r: r * 1.9 });
         } catch (e) { /* ohne Inselchen */ }
       });
-      kit.merge(all);
       scene.add(all);
     }
 
-    /* ---------------- Möwen ---------------- */
+    /* ---------------- Möwen ----------------
+       Körper und beide Flügel in EINEM instanzierten Mesh: Die Flügel schlagen im
+       Vertex-Shader (aWing = −1 links, +1 rechts, 0 Körper; Phase je Möwe in aFl). */
     const gulls = (function () {
       const N = 6;
       if (!kit) return null;
@@ -553,19 +611,37 @@
         g.setAttribute('uv', new T.BufferAttribute(new Float32Array(18), 2));
         return g;
       };
-      const wingR = wingShape(1), wingL = wingShape(-1);
-      const mB = new T.InstancedMesh(body, kit.mats.matte, N);
-      const mL = new T.InstancedMesh(wingL, kit.mats.matteDouble, N);
-      const mR = new T.InstancedMesh(wingR, kit.mats.matteDouble, N);
-      const grp = new T.Group();
-      grp.name = 'gulls';
-      [mB, mL, mR].forEach((m) => { m.frustumCulled = false; m.castShadow = false; grp.add(m); });
+      const parts = [body, wingShape(-1), wingShape(1)];
+      parts.forEach((g, k) => {
+        const n = g.attributes.position.count;
+        g.setAttribute('aWing', new T.BufferAttribute(new Float32Array(n).fill(k === 0 ? 0 : k === 1 ? -1 : 1), 1));
+        for (const key of Object.keys(g.attributes)) if (!['position', 'normal', 'uv', 'color', 'aWing'].includes(key)) g.deleteAttribute(key);
+      });
+      const geo = T.addons.mergeGeometries(parts.map((g) => (g.index ? g.toNonIndexed() : g)), false);
       const rr = W.rng(77);
       const birds = [];
       for (let i = 0; i < N; i++) birds.push({ cx: (rr() - 0.5) * 80, cz: (rr() - 0.5) * 50, rad: 10 + rr() * 16, y: 9 + rr() * 7, sp: (0.18 + rr() * 0.12) * (rr() < 0.5 ? -1 : 1), ph: rr() * 6.28, fl: rr() * 6.28 });
-      const root = new T.Object3D(), wl = new T.Object3D(), wr = new T.Object3D();
-      root.add(wl, wr);
-      grp.userData.update = (t) => {
+      geo.setAttribute('aFl', new T.InstancedBufferAttribute(new Float32Array(birds.map((b) => b.fl)), 1));
+      const flap = { value: W.reducedMotion ? 0.15 : 1 };
+      const mat = kit.mats.matteDouble.clone();
+      mat.onBeforeCompile = (sh) => {
+        sh.uniforms.uKitTime = kit.uniforms.time;
+        sh.uniforms.uFlap = flap;
+        sh.vertexShader = 'uniform float uKitTime;\nuniform float uFlap;\nattribute float aWing;\nattribute float aFl;\n' + sh.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>
+          if (aWing != 0.0) {
+            float flapOn = max(0.0, sin(uKitTime * 0.45 + aFl));
+            float fl = (sin(uKitTime * 9.0 * uFlap + aFl) * 0.55 * min(1.0, flapOn * 2.0) + 0.12) * aWing;
+            float c = cos(fl), s = sin(fl);
+            transformed.xy = vec2(transformed.x * c - transformed.y * s, transformed.x * s + transformed.y * c);
+          }`);
+      };
+      mat.customProgramCacheKey = () => 'lt-moewe';
+      const mesh = new T.InstancedMesh(geo, mat, N);
+      mesh.name = 'gulls';
+      mesh.frustumCulled = false;
+      mesh.castShadow = false;
+      const root = new T.Object3D();
+      mesh.userData.update = (t) => {
         const m = W.reducedMotion ? 0.15 : 1;
         birds.forEach((b, i) => {
           const a = b.ph + t * b.sp * m;
@@ -574,19 +650,13 @@
           root.position.set(x, b.y + Math.sin(t * 0.7 + b.fl) * 0.6, z);
           root.rotation.set(0, Math.atan2(dx, dz), -0.28 * Math.sign(b.sp), 'YXZ');
           root.scale.setScalar(1.4);
-          const flapOn = Math.max(0, Math.sin(t * 0.45 + b.fl));
-          const fl = Math.sin(t * 9 * m + b.fl) * 0.55 * Math.min(1, flapOn * 2) + 0.12;
-          wl.rotation.set(0, 0, -fl);
-          wr.rotation.set(0, 0, fl);
-          root.updateMatrixWorld(true);
-          mB.setMatrixAt(i, root.matrixWorld);
-          mL.setMatrixAt(i, wl.matrixWorld);
-          mR.setMatrixAt(i, wr.matrixWorld);
+          root.updateMatrix();
+          mesh.setMatrixAt(i, root.matrix);
         });
-        mB.instanceMatrix.needsUpdate = mL.instanceMatrix.needsUpdate = mR.instanceMatrix.needsUpdate = true;
+        mesh.instanceMatrix.needsUpdate = true;
       };
-      grp.userData.update(0);
-      return grp;
+      mesh.userData.update(0);
+      return mesh;
     })();
     if (gulls) scene.add(gulls);
 
@@ -675,6 +745,7 @@
       waterU.uShallow.value.copy(S.shallow);
       waterU.uFoamCol.value.copy(S.foam);
       waterU.uGlint.value = S.glint;
+      waterU.uSunDirW.value.copy(S.sunDir);
       waterU.uGlintCol.value.copy(S.sunColor).lerp(col('#ffffff'), 0.5);
       cloudMat.color.copy(S.cloud);
       cloudMat.emissive.copy(S.cloud);
@@ -735,9 +806,10 @@
     apply();
 
     /* ---------------- Schatten folgen dem Blick ---------------- */
-    const sh = { fwd: V3(0, 0, -1), focus: V3(), x: V3(), y: V3(), z: V3(), up: V3(0, 1, 0), ext: 0 };
+    const sh = { fwd: V3(0, 0, -1), focus: V3(), x: V3(), y: V3(), z: V3(), up: V3(0, 1, 0), ext: 0, last: [NaN, NaN, NaN, 0, NaN, NaN, NaN] };
+    /** Schattenkamera an den Blick anpassen → true, wenn sie sich bewegt hat (Karte neu zeichnen). */
     function fitShadow() {
-      if (!L || !L.sun) return;
+      if (!L || !L.sun) return false;
       const cam = W.camera;
       cam.getWorldDirection(sh.fwd);
       let t = sh.fwd.y < -0.03 ? (1.0 - cam.position.y) / sh.fwd.y : 80;
@@ -755,7 +827,7 @@
       const texel = (2 * ext) / size;
       const fx = Math.round(sh.focus.dot(sh.x) / texel) * texel;
       const fy = Math.round(sh.focus.dot(sh.y) / texel) * texel;
-      const fz = sh.focus.dot(sh.z);
+      const fz = Math.round(sh.focus.dot(sh.z)); // nur Tiefe: auf 1 Einheit runden genügt
       sh.focus.copy(sh.x).multiplyScalar(fx).addScaledVector(sh.y, fy).addScaledVector(sh.z, fz);
       L.sun.target.position.copy(sh.focus);
       L.sun.position.copy(sh.focus).addScaledVector(sh.z, 130);
@@ -770,6 +842,35 @@
         L.sun.shadow.normalBias = 0.012 + texel * 0.9;
         L.sun.shadow.radius = ext > 40 ? 3 : 4.5;
       }
+      const v = sh.last;
+      const moved = v[0] !== fx || v[1] !== fy || v[2] !== fz || v[3] !== ext || v[4] !== sh.z.x || v[5] !== sh.z.y || v[6] !== sh.z.z;
+      v[0] = fx; v[1] = fy; v[2] = fz; v[3] = ext; v[4] = sh.z.x; v[5] = sh.z.y; v[6] = sh.z.z;
+      return moved;
+    }
+
+    /* Schattenkarte: Größe je Qualitätsstufe ('low' hat keine Schatten) und nur bei Bedarf
+       neu zeichnen – sofort, wenn Kamera oder Sonne wandern, sonst jedes zweite Bild
+       (bewegte Teile werfen weiter Schatten, ruhige Szenen kosten den Pass nur halb so oft). */
+    const SHADOW_SIZE = { high: 2048, medium: 1536, low: 1024 };
+    const shadowRun = { q: null, n: 0 };
+    function scheduleShadow(moved) {
+      const sm = R.shadowMap;
+      if (!L || !L.sun) return;
+      if (W.quality !== shadowRun.q) {
+        shadowRun.q = W.quality;
+        const size = SHADOW_SIZE[W.quality] || 2048;
+        const shd = L.sun.shadow;
+        if (shd.mapSize.x !== size) {
+          shd.mapSize.set(size, size);
+          if (shd.map) { shd.map.dispose(); shd.map = null; }
+          sh.ext = 0;
+          sh.last[3] = 0;
+          moved = true;
+        }
+      }
+      sm.autoUpdate = false;
+      if (!sm.enabled) return;
+      if (moved || ++shadowRun.n % 2 === 0) sm.needsUpdate = true;
     }
 
     /* ---------------- Ufer-Höhenkarte ---------------- */
@@ -911,7 +1012,8 @@
       pollen.visible = !lowQ;
       updateClouds(t);
       if (gulls) { gulls.visible = !lowQ; if (!lowQ) gulls.userData.update(t); }
-      fitShadow();
+      waterU.uLow.value = lowQ ? 1 : 0;
+      scheduleShadow(fitShadow() || !!trans);
     });
 
     // nach Verlust des WebGL-Kontexts: Uferkarte und Reflexe neu erzeugen

@@ -20,7 +20,7 @@
     const calm = W.reducedMotion ? 0.12 : 1;
     const updates = [];
 
-    const base = kit.islandBase({ seed: 71, radius: 6.1, grassRadius: 4.8, grass: '#86d65c', stones: 4, segments: 50 });
+    const base = kit.islandBase({ seed: 71, radius: 6.1, grassRadius: 4.8, grass: '#86d65c', stones: 4, segments: 40 });
     const g = base.group;
     const ground = (x, z) => base.surfaceAt(x, z);
 
@@ -97,11 +97,11 @@
       P.add(xf(new T.SphereGeometry(0.17, 8, 5), [0, 1.02, 0]), C.gold, { gloss: true, smooth: true });
       // Meridian-Halbring (geneigt wie die Erdachse)
       const tilt = 0.41;
-      const ring = new T.TorusGeometry(R + 0.13, 0.055, 5, 22, PI * 1.12);
+      const ring = new T.TorusGeometry(R + 0.13, 0.055, 4, 20, PI * 1.12);
       ring.rotateZ(-PI * 0.06 - PI / 2 + PI); // offen zur Kamera-abgewandten Seite unten
       P.add(xf(ring, [0, CY, 0], [0, 0, tilt]), C.gold, { gloss: true, smooth: true, grad: [0.85, 1.1] });
       // Achsenkappen
-      [-1, 1].forEach((s) => P.add(xf(new T.SphereGeometry(0.08, 8, 6), [Math.sin(-tilt) * (R + 0.13) * s, CY + Math.cos(tilt) * (R + 0.13) * s, 0]), C.gold, { gloss: true, smooth: true }));
+      [-1, 1].forEach((s) => P.add(xf(new T.SphereGeometry(0.08, 7, 5), [Math.sin(-tilt) * (R + 0.13) * s, CY + Math.cos(tilt) * (R + 0.13) * s, 0]), C.gold, { gloss: true, smooth: true }));
       // Verbindung Ständer → Ring unten
       P.add(xf(geo.cyl(0.05, 0.05, 0.25, 6), [-Math.sin(-tilt) * (R + 0.13) * 0.92, CY - Math.cos(tilt) * (R + 0.13) * 0.92 - 0.02, 0], [0, 0, tilt]), C.gold, { gloss: true, smooth: true });
       P.build(grp);
@@ -109,7 +109,7 @@
       axis.position.set(0, CY, 0);
       axis.rotation.z = tilt;
       axis.userData.dynamic = true;
-      const ball = new T.Mesh(new T.SphereGeometry(R, 22, 14), new T.MeshStandardMaterial({ map: globeTex, roughness: 0.42, metalness: 0, envMapIntensity: 0.8 }));
+      const ball = new T.Mesh(new T.SphereGeometry(R, 20, 12), new T.MeshStandardMaterial({ map: globeTex, roughness: 0.42, metalness: 0, envMapIntensity: 0.8 }));
       ball.castShadow = true;
       ball.receiveShadow = true;
       ball.rotation.y = -1.2;
@@ -260,7 +260,7 @@
     function sheep(seed) {
       const P = new kit.Parts();
       P.add(geo.blob(0.33, { seed, noise: 0.18, freq: 2.6, sx: 1.25, sy: 0.85, detail: 1 }).translate(0, 0.42, 0), '#fbf8f2', { grad: [0.72, 1.06], jitter: 0.04 });
-      for (let i = 0; i < 4; i++) P.add(xf(geo.cyl(0.04, 0.035, 0.26, 5), [(i < 2 ? -1 : 1) * 0.2, 0.13, (i % 2 ? -1 : 1) * 0.12]), '#3d3f4a', { grad: [0.8, 1] });
+      for (let i = 0; i < 4; i++) P.add(xf(new T.CylinderGeometry(0.04, 0.035, 0.26, 5, 1, true), [(i < 2 ? -1 : 1) * 0.2, 0.13, (i % 2 ? -1 : 1) * 0.12]), '#3d3f4a', { grad: [0.8, 1] }); // Enden in Wolle und Boden
       P.add(xf(geo.blob(0.13, { seed: seed + 1, noise: 0.05, sx: 1.35, detail: 0 }), [0.42, 0.5, 0], [0, 0, -0.3]), '#3d3f4a', { grad: [0.85, 1.1] });
       P.add(xf(geo.blob(0.12, { seed: seed + 2, noise: 0.2, detail: 0 }), [0.36, 0.64, 0]), '#fbf8f2', {});
       [-1, 1].forEach((s) => P.add(xf(new T.SphereGeometry(0.04, 5, 4), [0.38, 0.55, s * 0.14], [0, 0, 0], [1.6, 0.6, 1]), '#3d3f4a', {}));
@@ -278,7 +278,7 @@
         const d = new T.Vector3(Math.cos(a) * Math.cos(el) * 1.25, Math.sin(el) * 0.95, Math.sin(a) * Math.cos(el));
         if (d.x > 0.85) continue; // Gesicht frei
         d.normalize();
-        const cone = new T.ConeGeometry(0.06, 0.2, 4).translate(0, 0.1, 0);
+        const cone = new T.ConeGeometry(0.06, 0.2, 4, 1, true).translate(0, 0.1, 0); // Fuß steckt im Körper
         cone.applyQuaternion(new T.Quaternion().setFromUnitVectors(new T.Vector3(0, 1, 0), d));
         cone.translate(d.x * 0.3, d.y * 0.24, d.z * 0.26);
         P.add(cone, '#6e4a32', { grad: [0.8, 1.1] });
@@ -357,9 +357,10 @@
       P.add(xf(geo.cyl(0.21, 0.21, 0.06, 10), [0, 1.27, 0]), '#2f3a4a', { gloss: true });
       P.add(xf(geo.cyl(0.13, 0.14, 0.22, 10), [0, 1.39, 0]), '#2f3a4a', { gloss: true });
       P.add(xf(geo.cyl(0.142, 0.142, 0.05, 10), [0, 1.31, 0]), '#e2554a', {});
-      P.add(xf(new T.TorusGeometry(0.17, 0.05, 5, 12), [0, 0.96, 0], [PI / 2, 0, 0]), '#e2554a', { gloss: true });
+      P.add(xf(new T.TorusGeometry(0.17, 0.05, 4, 12), [0, 0.96, 0], [PI / 2, 0, 0]), '#e2554a', { gloss: true });
       P.add(xf(geo.roundBox(0.09, 0.3, 0.04, 0.02, 1), [0.12, 0.8, 0.16], [0.2, 0, -0.2]), '#e2554a', {});
       [-1, 1].forEach((s) => P.add(xf(geo.cyl(0.018, 0.022, 0.42, 4), [s * 0.36, 0.86, 0], [0, 0, s * -1.0]), '#7a5233', {}));
+      P.cullInside([[0, 0.3, 0, 0.3], [0, 0.76, 0, 0.22], [0, 1.12, 0, 0.16]]); // Schneekugeln stecken ineinander
       const m = P.build();
       m.name = 'schneemann';
       return m;
@@ -509,6 +510,7 @@
     kit.flowers(base, 12, ['#ffffff', '#ffd23f', '#ff7aa8', '#b28dff'], 71);
 
     kit.merge(g);
+    kit.batchDynamic(g); // Bewegtes (Ballons, Boote, Räder …) in wenige Draw-Calls bündeln
     g.userData.update = (dt, t) => { for (let i = 0; i < updates.length; i++) updates[i](dt, t); };
 
     return {

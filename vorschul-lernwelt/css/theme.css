@@ -63,6 +63,15 @@
   --shadow: 0 5px 0 var(--edge), 0 14px 24px -10px rgba(29, 37, 80, 0.34);
   --shadow-press: 0 1px 0 var(--edge), 0 4px 10px -4px rgba(29, 37, 80, 0.3);
   --gold-glow: 0 0 0 4px #ffd65a, 0 0 28px 6px rgba(255, 190, 40, 0.6);
+  /* Kleine Teile (auch für Spiel-CSS): weiße Plättchen/Schilder, weiße runde
+     Knöpfe (wie .btn-round) und – zu einer farbigen Unterkante – der weiche
+     Fallschatten farbiger Abzeichen/Steine. Farbige Kanten schreiben Spiele
+     selbst: 0 3px 0 color-mix(in srgb, <Farbe> 62%, var(--navy)), var(--drop-s) */
+  --sh-chip: 0 3px 0 var(--edge-dark), 0 7px 12px -6px rgba(29, 37, 80, 0.42);
+  --sh-round: inset 0 -3px 0 rgba(29, 37, 80, 0.06), 0 4px 0 var(--edge-dark), 0 10px 16px -8px rgba(29, 37, 80, 0.5);
+  --sh-round-press: inset 0 -2px 0 rgba(29, 37, 80, 0.06), 0 1px 0 var(--edge-dark), 0 3px 6px -3px rgba(29, 37, 80, 0.45);
+  --drop-s: 0 5px 9px -4px rgba(29, 37, 80, 0.42);
+  --gloss: radial-gradient(120% 70% at 30% -10%, rgba(255, 255, 255, 0.55) 0%, rgba(255, 255, 255, 0) 55%);
 
   /* Radien */
   --radius-s: 16px;
@@ -78,6 +87,45 @@
   --bar-top: max(8px, env(safe-area-inset-top));
   --bar-side: 10px;
   --bar-bottom: calc(var(--bar-top) + var(--topbar-h));
+}
+
+/* Tablet (und größer): Spielinhalte wachsen mit der Bühne. Die Grenzen der
+   Größen aus base.css passen fürs Handy; auf dem Tablet blieb sonst um Kacheln
+   von ~150 px viel leere Glasbühne. Nur Größen-Tokens – Spiele mit eigenen
+   Maßen haben dazu je einen Tablet-Block in ihrem Stylesheet.
+   Quer: vier Kacheln passen nebeneinander (21.6vw), bei 5/6/7+ Kacheln in einer
+   Reihe werden sie schmaler statt umzubrechen. Hoch: drei passen nebeneinander
+   (28.5vw), genau vier stehen 2 × 2 (Regel in base.css, damit Spiele mit
+   eigener Reihe Vorrang behalten). Alles in :where() – Spiele, die ihre
+   Kachelgröße selbst setzen, behalten Vorrang. */
+@media (min-width: 700px) and (min-height: 700px) {
+  :root {
+    --tile: clamp(92px, 27vmin, 250px);
+    --tile-s: clamp(70px, 20vmin, 180px);
+    --tile-l: clamp(110px, 33vmin, 300px);
+    --tile-label: clamp(14px, 3.2vmin, 30px);
+    --emoji-big: clamp(56px, 18vmin, 170px);
+    --emoji-mid: clamp(36px, 10.5vmin, 100px);
+    --emoji-small: clamp(26px, 6.6vmin, 64px);
+    --prompt-font: clamp(26px, 6.4vmin, 60px);
+    --prompt-min-h: clamp(110px, 24vmin, 240px);
+    --gap: clamp(10px, 2.8vmin, 28px);
+  }
+}
+@media (min-width: 700px) and (min-height: 700px) and (orientation: landscape) {
+  :root {
+    --tile: clamp(92px, min(27vmin, 21.6vw), 250px);
+    --tile-l: clamp(110px, min(33vmin, 21.6vw), 300px);
+  }
+  :where(.choices:has(> .tile:nth-child(5))) { --tile: clamp(92px, min(27vmin, 17vw), 250px); --tile-l: clamp(92px, min(33vmin, 17vw), 300px); }
+  :where(.choices:has(> .tile:nth-child(6))) { --tile: clamp(80px, min(27vmin, 13.8vw), 250px); --tile-l: clamp(80px, min(33vmin, 13.8vw), 300px); --tile-s: clamp(70px, min(20vmin, 13.8vw), 180px); }
+  :where(.choices:has(> .tile:nth-child(7))) { --tile: clamp(70px, min(27vmin, 11.8vw), 250px); --tile-l: clamp(70px, min(33vmin, 11.8vw), 300px); --tile-s: clamp(70px, min(20vmin, 11.8vw), 180px); }
+}
+@media (min-width: 700px) and (min-height: 700px) and (orientation: portrait) {
+  :root {
+    --tile: clamp(92px, min(27vmin, 28.5vw), 250px);
+    --tile-l: clamp(110px, min(33vmin, 28.5vw), 300px);
+  }
 }
 
 /* ==========================================================================
@@ -494,12 +542,22 @@ body:not(.w3d) .splash .flo-big::after {
 /* ==========================================================================
    Weltkarte (ohne 3D): Begrüßung, Reise, Tagesabenteuer, Inseln
    ========================================================================== */
+/* Begrüßung als Glas-Pille mit Tinten-Schrift: Weiß auf hellem Himmel (oft vor
+   einer Wolke) war kaum lesbar (≈ 1,6 : 1) */
 .home-head h1 {
+  flex: 0 1 auto;
+  max-width: 100%;
+  padding: 0.12em 0.72em 0.16em;
+  border-radius: 999px;
   font-family: var(--font-display);
   font-weight: 700;
   letter-spacing: 0.01em;
-  color: #fff;
-  text-shadow: 0 3px 0 rgba(29, 37, 80, 0.22), 0 8px 18px rgba(29, 37, 80, 0.18);
+  color: var(--navy);
+  background: var(--glass-strong);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-line), var(--sh-2);
+  text-shadow: none;
 }
 .daily {
   border-radius: 30px;
@@ -549,6 +607,13 @@ body:not(.w3d) .game-screen::before {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.8) 60%, rgba(255, 255, 255, 0.86) 100%);
   box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.85), inset 0 2px 0 #fff, 0 26px 60px -24px rgba(29, 37, 80, 0.4);
   pointer-events: none;
+}
+/* Die Spielfläche liegt deckungsgleich auf der Glas-Bühne (gleiche Abstände wie
+   ::before hier und in world3d.css): Inhalte halten so immer den Innenabstand
+   der Bühne ein, statt an ihre Kante zu stoßen; Überstand wird an der Glaskante
+   abgeschnitten statt am Bildschirmrand. */
+.game-screen > .stage {
+  margin: 10px max(8px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
 }
 
 /* Aufgabentafel: Milchglas, weiche Innenkante
@@ -618,6 +683,8 @@ body:not(.w3d) .game-screen::before {
   box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, 0.5), 0 3px 0 color-mix(in srgb, var(--area) 60%, var(--navy)), 0 6px 10px -4px rgba(29, 37, 80, 0.5);
   border: 2px solid #fff;
 }
+/* unsichtbar vergrößerte Trefferfläche (34–40 px sichtbar → ≥ 50 px zum Tippen) */
+.tile .say-btn::after { content: ""; position: absolute; inset: -8px; border-radius: 50%; }
 /* Federn mit Überschwingen, Wackeln, Hinweis-Puls */
 @keyframes tile-joy {
   0% { transform: scale(1); }
@@ -730,6 +797,32 @@ body:not(.w3d-flo) .mascot::before {
 .round-stars .emoji.on { filter: drop-shadow(0 6px 0 rgba(190, 120, 0, 0.35)) drop-shadow(0 0 16px rgba(255, 205, 60, 0.85)); }
 .round-stars .emoji:nth-child(2) { translate: 0 -10px; }
 .sticker-reveal { filter: drop-shadow(0 10px 10px rgba(29, 37, 80, 0.25)) drop-shadow(0 0 24px rgba(255, 214, 90, 0.7)); }
+/* Stufen-Hinweis als goldene Plakette (Text bleibt in Andika) */
+.round-end .panel > p {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px auto 2px;
+  padding: 7px 18px 8px;
+  border-radius: 999px;
+  font-weight: 700;
+  color: #5d4300;
+  background: linear-gradient(180deg, #fffaf0 0%, #ffecb0 100%);
+  box-shadow: inset 0 1.5px 0 #fff, 0 3px 0 #edc670, var(--drop-s);
+}
+/* Neuer Sticker: liegt auf einer kleinen Glanz-Bühne */
+.round-end .panel > div:has(> .sticker-reveal) {
+  margin: 12px auto 0;
+  padding: 10px 18px 16px;
+  max-width: 420px;
+  border-radius: 28px;
+  background: radial-gradient(70% 80% at 50% 70%, rgba(255, 226, 120, 0.45) 0%, rgba(255, 226, 120, 0) 70%), linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 246, 214, 0.7) 100%);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 220, 120, 0.55);
+}
+.round-end .panel > div > p { margin: 0 0 4px; font-weight: 700; color: var(--ink-soft); }
+/* Luft über dem Sticker: die 3D-Stickerkarte (fx.js) ist größer als das Emoji
+   und deckte sonst beim Hereindrehen die Zeile darüber ab */
+.round-end .sticker-reveal { margin: 14px 0 6px; }
 
 /* Rückfrage und Eltern-Schranke */
 .ask-text { font-family: var(--font-ui); font-size: 18px; color: var(--ink); }
@@ -816,6 +909,21 @@ body:not(.w3d-flo) .mascot::before {
    Pause und Tageslimit
    ========================================================================== */
 .break-emoji { filter: drop-shadow(0 10px 10px rgba(29, 37, 80, 0.25)); }
+/* Bewegungspause: Countdown als ruhige Zähler-Pille */
+.panel:has(> .break-emoji) > p.p-muted {
+  display: inline-block;
+  min-width: 180px;
+  margin-top: 4px;
+  padding: 5px 16px;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+  background: #eef1f9;
+  box-shadow: inset 0 2px 4px rgba(29, 37, 80, 0.1);
+}
 .limit-screen .splash p {
   font-family: var(--font);
   font-weight: 700;
@@ -824,6 +932,22 @@ body:not(.w3d-flo) .mascot::before {
   border-radius: 26px;
   background: var(--glass-strong);
   box-shadow: var(--glass-line), var(--sh-2);
+}
+/* Inhalt bleibt über Flos Sprechblase (der Eltern-Knopf lag sonst darunter) */
+.limit-screen .splash { padding-bottom: clamp(120px, 20vh, 200px); }
+/* Ohne 3D-Flo steht der große Flo schon in der Mitte: kein zweiter Flo in der
+   Ecke, und die Blase wiederholte nur den Text darüber */
+body:not(.w3d-flo):has(.limit-screen) :is(.mascot, .bubble) { display: none; }
+body:not(.w3d-flo):has(.limit-screen) .limit-screen .splash { padding-bottom: 20px; }
+.limit-screen .p-btn.light {
+  min-height: 48px;
+  padding: 10px 20px;
+  border-radius: 999px;
+  color: var(--ink-soft);
+  background: var(--glass);
+  -webkit-backdrop-filter: var(--glass-blur);
+  backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-line), var(--sh-1);
 }
 
 /* ==========================================================================
@@ -872,6 +996,97 @@ body:not(.w3d) .parents > .content { background: linear-gradient(180deg, rgba(24
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 .parents input:focus-visible, .parents select:focus-visible { outline: none; border-color: #4a90e2; box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.2); }
+
+/* Eigene Steuerelemente statt Systemoptik (Glas & Bonbon, ruhig) */
+.parents { accent-color: #22b26b; }
+/* Auswahllisten: eigener Rahmen, Radius und Pfeil */
+.parents select {
+  -webkit-appearance: none;
+  appearance: none;
+  min-height: 44px;
+  padding: 8px 42px 8px 14px;
+  border-radius: 12px;
+  border: 1.5px solid #dde1ee;
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  cursor: pointer;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5 7.5l5 5 5-5' fill='none' stroke='%23565b80' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 12px center / 18px 18px;
+  box-shadow: 0 1px 0 rgba(29, 37, 80, 0.04), 0 6px 14px -10px rgba(29, 37, 80, 0.35);
+}
+.parents select:hover { border-color: #c5cbe0; }
+/* Ja/Nein als Schalter (30 px hoch). Die Größe steht in app.js inline (24 px) –
+   darum hier mit !important */
+.parents input[type=checkbox] {
+  -webkit-appearance: none;
+  appearance: none;
+  position: relative;
+  flex: 0 0 auto;
+  width: 54px !important;
+  height: 32px !important;
+  margin: 0;
+  border: 0;
+  border-radius: 999px;
+  background: #d8dcea;
+  box-shadow: inset 0 2px 4px rgba(29, 37, 80, 0.18);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.parents input[type=checkbox]::before {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #ffffff, #f1f4fb);
+  box-shadow: 0 2px 5px rgba(29, 37, 80, 0.35);
+  transition: transform 0.22s var(--spring);
+}
+.parents input[type=checkbox]:checked { background: linear-gradient(180deg, #45d58a, #22b26b); box-shadow: inset 0 2px 3px rgba(10, 90, 50, 0.3); }
+.parents input[type=checkbox]:checked::before { transform: translateX(22px); }
+.parents input[type=checkbox]:focus-visible { outline: 3px solid #4a90e2; outline-offset: 3px; box-shadow: inset 0 2px 4px rgba(29, 37, 80, 0.18); }
+/* Schieberegler: Spur und Griff in App-Optik */
+.parents input[type=range] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 32px;
+  background: transparent;
+  cursor: pointer;
+}
+.parents input[type=range]::-webkit-slider-runnable-track {
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #cfe9ff, #b9d4ff);
+  box-shadow: inset 0 2px 3px rgba(29, 37, 80, 0.16);
+}
+.parents input[type=range]::-moz-range-track {
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #cfe9ff, #b9d4ff);
+  box-shadow: inset 0 2px 3px rgba(29, 37, 80, 0.16);
+}
+.parents input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 28px;
+  margin-top: -9px;
+  border-radius: 50%;
+  border: 3px solid #4a7fe2;
+  background: #fff;
+  box-shadow: 0 3px 8px rgba(29, 37, 80, 0.35);
+}
+.parents input[type=range]::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 3px solid #4a7fe2;
+  background: #fff;
+  box-shadow: 0 3px 8px rgba(29, 37, 80, 0.35);
+}
+.parents input[type=range]:focus-visible { outline: 3px solid #4a90e2; outline-offset: 4px; border-radius: 999px; box-shadow: none; }
 .p-bar { background: #edf0f7; }
 .p-bar > i { background: linear-gradient(90deg, #35c47c, #22b26b); border-radius: inherit; }
 .p-week .col i { background: linear-gradient(180deg, #6aa8ff, #4a7fe2); border-radius: 8px 8px 3px 3px; }
@@ -892,6 +1107,17 @@ body:not(.w3d) .parents > .content { background: linear-gradient(180deg, rgba(24
 
 @media (max-width: 520px) {
   :root { --bar-side: 6px; --topbar-h: 62px; }
+  /* Lange Spieltitel („Über die Zehner-Brücke“) zweizeilig statt abgeschnitten */
+  .topbar .title > span {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    white-space: normal;
+    line-height: 1.04;
+    padding-bottom: 0.06em;
+    overflow-wrap: break-word;
+  }
   /* Hochformat: Titel zweizeilig und groß („Lernwelt / mit Flo“) */
   .splash h1 { font-size: clamp(54px, 16.5vw, 76px); }
   .topbar { padding: 0 6px; }

@@ -22,16 +22,23 @@
      organischen Formen je Fläche leicht variiert (lebendiger Low-Poly-Look).
      Farbangaben: CSS-Farbe ('#ff8a3d') oder THREE.Color.
 
-   LEISTUNG (Budget je Insel): ≈ 8–10k Dreiecke, ≤ 12 Draw-Calls nach
-     kit.merge(group). Animierte Teile (kit.float/kit.sway) und antippbare
-     Teile (W.interactive) werden beim Zusammenführen ausgelassen.
-     Ungefähre Kosten (Dreiecke): islandBase 2.6k · house 950 · lighthouse 850 ·
+   LEISTUNG (Budget je Insel): ≤ 10k Dreiecke, ≤ 12 Draw-Calls nach
+     kit.merge(group) + kit.batchDynamic(group). Animierte Teile (kit.float/kit.sway)
+     und antippbare Teile (W.interactive) werden beim Zusammenführen ausgelassen –
+     kit.batchDynamic bündelt die Bewegten danach (GPU, je Material ein Draw-Call).
+     Schatten werfen nur große Teile (halbe Diagonale ≥ 0.42, ≥ 0.16 hoch): Im
+     zusammengeführten Mesh stehen sie vorn, der Schatten-Pass zeichnet nur sie
+     (kit.shadowPrefix). Gras, Blumen, Wege, Kleinkram werfen nie Schatten.
+     Unsichtbares fällt beim Zusammenführen weg: Dreiecke im Boden, Unterseiten
+     auf dem Boden, Dreiecke ohne Fläche.
+     Ungefähre Kosten (Dreiecke): islandBase 1.5k · house 950 · lighthouse 750 ·
      pier(4) 700 · tree round 370 / fruit 530 / blossom 510 / palm 450 / pine 80 ·
      bench 400 · boat 360 · bush 320 · block 310 · balloon 280 · mushroom 260 ·
      lamp 220 · flag 200 · star 120 · sign 100 · rock 80 · grassTufts 6 je Büschel ·
-     flowers 42 je Blume. Draw-Calls nach kit.merge: alles Matte 1, Glanz 1–2,
-     Doppelseitiges (Palmblätter) 1, Fenster 1, Leuchten 1, Würfel-Zeichen 1,
-     je Schild 1, je Fahne 1, Gras 1, Blumen 1, je Emoji-Sorte 1, je bewegtes Teil 1–2.
+     flowers 24 je Blume. Draw-Calls nach kit.merge: alle Bausatz-Materialien (matt,
+     Glanz, glatt, Fenster, Leuchten) zusammen 1, Doppelseitiges (Palmblätter) 1,
+     Würfel-Zeichen 1, je Schild 1, je Fahne 1, Wiese (Gras + Blumen) 1, je Emoji-Sorte 1,
+     Bewegtes nach kit.batchDynamic 1 je Material.
 
    ------------------------------------------------------------------------
    API (alle Optionen optional; seed = Zahl für deterministischen Zufall)
@@ -41,8 +48,11 @@
      kit.rng(seed) → r()            Zufall 0..1, dazu r.range(a,b), r.pick(arr)
      kit.shade(color, k) → '#hex'   heller (k > 1) / dunkler (k < 1)
      kit.mix(a, b, t) → '#hex'      Farben mischen
-     kit.mats                       { matte, gloss, glossSmooth, matteDouble, glow, window, wind, windDouble, windPetal }
-                                    (alle mit vertexColors außer glow/window; für eigene Meshes: kit.mesh)
+     kit.mats                       { matte, gloss, glossSmooth, matteDouble, glow, window, wind, windDouble, windPetal,
+                                      surface, surfaceDouble }
+                                    (alle mit vertexColors außer glow/window; für eigene Meshes: kit.mesh).
+                                    surface: Oberflächen-Material der zusammengeführten Meshes (Rauheit/Metall/
+                                    Fenster/Leuchte je Eckpunkt im Attribut aSurf) – nicht selbst verwenden.
      kit.uniforms.time              gemeinsame Zeit-Uniform (Wind, Fahnen)
      kit.fonts                      { num: Fredoka-Stapel, read: Andika-Stapel } für eigene Canvas-Texte
      kit.canvasTexture(w, h, draw(g, w, h)) → CanvasTexture   wird nach dem Laden der Schriften neu gezeichnet
@@ -50,10 +60,11 @@
    Gelände
      kit.islandBase({ seed, radius=6, grassRadius=radius*0.75, height=1,
                       grass, grassDark, grassLight, sand, cliff, cliffs=1 (0 = keine Klippen),
-                      hills=1, stones=5, segments=56 })
+                      hills=1, stones=5, segments=40, rings=6 (Innenringe 3–8), shadow=true })
        Organisches Wiesen-Plateau mit gerundeter Kante, Felsband (Klippen je nach Winkel),
-       Sandstrand bis zur Wasserlinie, Unterwasser-Sockel (bis y ≈ -2.9) und Steine am Ufer.
+       Sandstrand bis zur Wasserlinie, Unterwasser-Sockel (bis y ≈ -1.9) und Steine am Ufer.
        Jeder seed ergibt eine andere Form. Ein Mesh, Vertex-Farben (1 Draw-Call).
+       Schatten wirft nur der Rand (Wiesenkante bis Klippenfuß) mit den Klippen-Brocken.
        → base = {
            group,                 THREE.Group – hier alles hineinhängen
            mesh,                  Gelände-Mesh (Vertex-Farben, kit.mats.matte)
@@ -71,13 +82,16 @@
            shore(angle, out=0) → { x, y:0, z, rotY }  Punkt an der Wasserlinie; rotY dreht +x nach außen
            beach(angle, t=0.5) → Vector3              Punkt auf dem Sandstrand (t: 0 Fels … 1 Wasser)
          }
-     kit.grassTufts(base, count=60, seed, { scale=1, margin=0.25 }) → InstancedMesh (wiegt im Wind, hängt sich ein)
-     kit.flowers(base, count=24, colors=[…], seed, { scale=1 })   → Group (instanziert, wiegt, hängt sich ein)
+     kit.grassTufts(base, count=60, seed, { scale=1, margin=0.25 }) → Mesh „Wiese“ (wiegt im Wind, hängt sich ein)
+     kit.flowers(base, count=24, colors=[…], seed, { scale=1 })   → Mesh „Wiese“
+                                  Gras und Blumen einer Insel teilen sich EIN Mesh (1 Draw-Call); es wird je nach
+                                  Qualitätsstufe (high 100 %, medium 80 %, low 45 %) und Entfernung ausgedünnt.
      kit.path(base, points, { width=0.62, spacing=0.62, style='stones'|'sand', color, seed }) → Group (hängt sich ein)
                                   points = [[x, z], …] lokal; glatte Kurve hindurch
 
    Pflanzen (alle: Fuß im Ursprung)
-     kit.tree({ type='round'|'pine'|'palm'|'fruit'|'blossom', scale=1, seed, color, fruitColor, trunk, lean })
+     kit.tree({ type='round'|'pine'|'palm'|'fruit'|'blossom', scale=1, seed, color, fruitColor, trunk, lean, lod })
+                                  lod: true = gröbere Palme für weit entfernte Inselchen
      kit.bush({ size=1, seed, color, berries: '#hex' | null })
      kit.flower(color, { scale=1 })            einzelne Blume (für viele: kit.flowers)
      kit.mushroom({ color='#ff5a5f', size=1, seed })
@@ -104,9 +118,24 @@
      kit.emojiProp(emoji, size=1) Billboard (Sprite) mit weichem Bodenschatten – sparsam einsetzen!
 
    Werkzeuge
-     kit.merge(group) → group     statische Meshes je Material zusammenführen (Schatten-Flags bleiben).
+     kit.merge(group, { minShadow=0.42, ground }) → group
+                                  statische Meshes je Material zusammenführen (Bausatz-Materialien gemeinsam).
                                   Lässt aus: userData.dynamic / noMerge / onTap (ganze Teilbäume),
-                                  InstancedMesh, Sprites, Points, SkinnedMesh.
+                                  InstancedMesh, Sprites, Points, SkinnedMesh. userData.noShadow: wirft keinen Schatten.
+                                  Mit kit.islandBase (group.userData.groundAt) fallen verdeckte Dreiecke unter dem
+                                  Boden weg (ground: false schaltet das ab).
+     kit.batchDynamic(group) → api|null   NACH kit.merge: alle bewegten Meshes (userData.dynamic, nicht
+                                  antippbar, keine Instanzen/Sprites/Points, nicht noMerge/noBatch) per kit.batch
+                                  { live: true } bündeln. Teile, deren Geometrie/Farbe sich zur Laufzeit ändert:
+                                  mesh.userData.noBatch = true.
+     kit.batch(objs, { live, sphere, margin, shadow, name }) → { group, bones, set(i, m4), apply(), fit() }
+                                  Bewegte starre Teile je Material in EINEM SkinnedMesh (jedes Teil = „Knochen“, die
+                                  Grafikkarte bewegt die Eckpunkte). Ohne live: objs sind lose Gruppen (Drehpunkt im
+                                  Ursprung), set(i, m4) setzt die Lage in Insel-Koordinaten; group einhängen.
+                                  live: objs hängen in der Szene und werden wie gewohnt bewegt.
+     kit.floatMerge(items) → Group  schwebende Teile [{ obj, phase, amp=0.12, rot, spin }] (obj in Insel-
+                                  Koordinaten, nicht eingehängt): wippen/drehen im Vertex-Shader, keine CPU-Arbeit.
+     kit.shadowPrefix(mesh, n)    Schatten-Pass zeichnet nur die ersten n Eckpunkte/Indizes
      WICHTIG: kit.float / kit.sway / kit.spin VOR kit.merge aufrufen (markiert das Objekt als
      beweglich, damit es nicht in die Insel „eingebacken“ wird) – oder obj.userData.dynamic = true.
      kit.float(obj, { amp=0.12, speed=1, phase=0, rot=0 }) → stop()   schweben (y), rot = Drehung je s
@@ -126,6 +155,8 @@
      kit.mesh(geo, color, { gloss, smooth, double, grad, jitter, shadow=true }) → Mesh
      kit.xf(geo, [x,y,z], [rx,ry,rz], s) → geo   Geometrie verschieben/drehen/skalieren
      new kit.Parts().add(geo, color, opts).add(…).build() → Group  (ein Mesh je Material)
+       .cullInside([[x, y, z, r], …])  Dreiecke ganz innerhalb der Kugeln weglassen (z. B. verdeckte
+                                  Innenflächen überlappender Laub-Kleckse; r = sicherer Innenradius)
 
    BEISPIEL (js/world3d/islands/<id>.js)
      LT.w3d.register('island', 'zahlen', (W, area) => {
@@ -141,6 +172,7 @@
        const balloon = kit.balloon(area.color); base.place(balloon, 2.6, 1.4);
        kit.float(balloon, { amp: 0.15 });  // animierte Teile ZUERST anmelden …
        kit.merge(g);                       // … dann alles Statische zusammenführen
+       kit.batchDynamic(g);                // … und das Bewegte bündeln
        return { group: g, anchors: { label: new T.Vector3(0, 4.6, 0), focus: new T.Vector3(0, 1.4, 0) } };
      });
    ========================================================================== */
@@ -255,6 +287,58 @@
     mats.wind = windMaterial(mats.matte, 1.4);
     mats.windDouble = windMaterial(mats.matteDouble, 1.4);
     mats.windPetal = windMaterial(mats.matte, 1.4, true);
+
+    /* Oberflächen-Material für Zusammengeführtes (kit.merge, kit.batch, kit.floatMerge):
+       Rauheit, Metall und Art (0 Fläche, 1 Fenster, 2 Leuchte) stehen je Eckpunkt im
+       Attribut aSurf, flache Schattierung steckt in den Normalen. So kosten matte,
+       glänzende und glatte Teile, Fenster und Leuchten einer Insel EINEN Draw-Call. */
+    const SU = {
+      uWinColor: { value: new T.Color('#a6dcff') },
+      uWinEmissive: { value: new T.Color(0, 0, 0) },
+      uGlowEmissive: { value: new T.Color('#ffc35a').multiplyScalar(0.45) },
+    };
+    function surfaceInject(sh) {
+      Object.assign(sh.uniforms, SU);
+      sh.vertexShader = 'attribute vec3 aSurf;\nvarying vec3 vKitSurf;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n  vKitSurf = aSurf;');
+      sh.fragmentShader = 'uniform vec3 uWinColor;\nuniform vec3 uWinEmissive;\nuniform vec3 uGlowEmissive;\nvarying vec3 vKitSurf;\n' + sh.fragmentShader
+        .replace('#include <color_fragment>', `#include <color_fragment>
+          float kitWin = step(0.5, vKitSurf.z) * (1.0 - step(1.5, vKitSurf.z));
+          float kitGlow = step(1.5, vKitSurf.z);
+          diffuseColor.rgb = mix(diffuseColor.rgb, uWinColor, kitWin);`)
+        .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\n  roughnessFactor = vKitSurf.x;')
+        .replace('#include <metalnessmap_fragment>', '#include <metalnessmap_fragment>\n  metalnessFactor = vKitSurf.y;')
+        .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\n  totalEmissiveRadiance += uWinEmissive * kitWin + uGlowEmissive * kitGlow;');
+    }
+    function surfaceMaterial(side, name) {
+      const m = new T.MeshStandardMaterial({ vertexColors: true, roughness: 0.86, metalness: 0, side });
+      m.onBeforeCompile = surfaceInject;
+      m.customProgramCacheKey = () => 'kit-surface';
+      m.name = name;
+      return m;
+    }
+    mats.surface = surfaceMaterial(T.FrontSide, 'kit-surface');
+    mats.surfaceDouble = surfaceMaterial(T.DoubleSide, 'kit-surface-double');
+    /** [Rauheit, Metall, Art] der geteilten Bausatz-Materialien (werden beim Zusammenführen zu mats.surface). */
+    const SURF_OF = new Map([
+      [mats.matte, [0.86, 0, 0]], [mats.matteDouble, [0.84, 0, 0]], [mats.gloss, [0.34, 0.05, 0]],
+      [mats.glossSmooth, [0.26, 0.02, 0]], [mats.window, [0.18, 0.1, 1]], [mats.glow, [0.4, 0, 2]],
+    ]);
+    const surfaceTarget = (m) => (SURF_OF.has(m) ? (m.side === T.DoubleSide ? mats.surfaceDouble : mats.surface) : m);
+    /** Geometrie (nicht indiziert, fertig transformiert) für mats.surface vorbereiten: flache Normalen, Farbe, aSurf. */
+    function toSurface(g, m) {
+      const s = SURF_OF.get(m);
+      const n = g.attributes.position.count;
+      if (m.flatShading) g.computeVertexNormals(); // nicht indiziert → Normale je Dreieck (wie flatShading)
+      if (!m.vertexColors) {
+        const c = new Float32Array(n * 3);
+        for (let i = 0; i < n; i++) { c[i * 3] = m.color.r; c[i * 3 + 1] = m.color.g; c[i * 3 + 2] = m.color.b; }
+        g.setAttribute('color', new T.BufferAttribute(c, 3));
+      } else if (!g.attributes.color) g.setAttribute('color', new T.BufferAttribute(new Float32Array(n * 3).fill(1), 3));
+      const a = new Float32Array(n * 3);
+      for (let i = 0; i < n; i++) { a[i * 3] = s[0]; a[i * 3 + 1] = s[1]; a[i * 3 + 2] = s[2]; }
+      g.setAttribute('aSurf', new T.BufferAttribute(a, 3));
+      return g;
+    }
 
     /* ------------------------------------------------------------------
        Schriften für Canvas-Texturen (Fredoka für Zahlen/Schilder,
@@ -381,6 +465,43 @@
     /** Bereits bemalte/fertige Geometrie (mit color-Attribut) hinzufügen. */
     Parts.prototype.addRaw = function (geo, key = 'matte') {
       (this.m[key] || (this.m[key] = [])).push(geo);
+      return this;
+    };
+    /**
+     * Dreiecke entfernen, die ganz in einer der Kugeln liegen (balls = [[x, y, z, r], …]) –
+     * z. B. Innenflächen sich überlappender Laub-Kleckse. r = sicherer Innenradius.
+     */
+    Parts.prototype.cullInside = function (balls) {
+      if (!balls.length) return this;
+      const inside = (pa, i) => {
+        for (let j = 0; j < balls.length; j++) {
+          const b = balls[j], r2 = b[3] * b[3];
+          let ok = true;
+          for (let v = 0; v < 3 && ok; v++) {
+            const dx = pa[i + v * 3] - b[0], dy = pa[i + v * 3 + 1] - b[1], dz = pa[i + v * 3 + 2] - b[2];
+            ok = dx * dx + dy * dy + dz * dz < r2;
+          }
+          if (ok) return true;
+        }
+        return false;
+      };
+      for (const key in this.m) {
+        this.m[key] = this.m[key].map((g) => {
+          const pa = g.attributes.position.array, nt = g.attributes.position.count / 3;
+          const keep = [];
+          for (let t = 0; t < nt; t++) if (!inside(pa, t * 9)) keep.push(t);
+          if (keep.length === nt) return g;
+          const out = new T.BufferGeometry();
+          for (const k of Object.keys(g.attributes)) {
+            const at = g.attributes[k], sz = at.itemSize * 3;
+            const arr = new at.array.constructor(keep.length * sz);
+            keep.forEach((t, o) => arr.set(at.array.subarray(t * sz, t * sz + sz), o * sz));
+            out.setAttribute(k, new T.BufferAttribute(arr, at.itemSize, at.normalized));
+          }
+          g.dispose();
+          return out;
+        }).filter((g) => g.attributes.position.count > 0);
+      }
       return this;
     };
     Parts.prototype.build = function (group, o = {}) {
@@ -531,46 +652,166 @@
     /* ------------------------------------------------------------------
        Zusammenführen
        ------------------------------------------------------------------ */
-    kit.merge = function (root) {
+    /** Kopie als nicht indizierte Geometrie mit einheitlichen Attributen (position/normal/uv[/color]). */
+    function cleanGeo(src, vc) {
+      let g = src.clone();
+      if (g.index) { const ni = g.toNonIndexed(); g.dispose(); g = ni; }
+      for (const k of Object.keys(g.attributes)) if (!KEEP[k] || (k === 'color' && !vc)) g.deleteAttribute(k);
+      if (!g.attributes.normal) g.computeVertexNormals();
+      if (!g.attributes.uv) g.setAttribute('uv', new T.BufferAttribute(new Float32Array(g.attributes.position.count * 2), 2));
+      if (vc && !g.attributes.color) g.setAttribute('color', new T.BufferAttribute(new Float32Array(g.attributes.position.count * 3).fill(1), 3));
+      g.morphAttributes = {};
+      g.clearGroups();
+      return g;
+    }
+    /** Eckpunkte [a, b) als eigene Geometrie (nicht indiziert). */
+    function sliceGeo(g, a, b) {
+      const out = new T.BufferGeometry();
+      for (const k of Object.keys(g.attributes)) {
+        const at = g.attributes[k];
+        out.setAttribute(k, new T.BufferAttribute(at.array.slice(a * at.itemSize, b * at.itemSize), at.itemSize, at.normalized));
+      }
+      return out;
+    }
+    /**
+     * Schatten nur aus den ersten count Eckpunkten: Im Schatten-Pass wird die Zeichen-
+     * Spanne gekürzt (onBeforeShadow), im normalen Bild bleibt es EIN Draw-Call.
+     */
+    function shadowPrefix(mesh, count) {
+      const g = mesh.geometry;
+      mesh.userData.shadowCount = count;
+      mesh.onBeforeShadow = function () { g.drawRange.start = 0; g.drawRange.count = count; };
+      mesh.onAfterShadow = function () { g.drawRange.count = Infinity; };
+    }
+    kit.shadowPrefix = shadowPrefix;
+    const _bb = new T.Box3(), _sz = new T.Vector3();
+    /**
+     * Wie viele Eckpunkte (von vorn) werfen Schatten? 0 bei castShadow = false,
+     * userData.noShadow, kleinen (halbe Diagonale < minShadow) oder flachen (< 0.16 hoch)
+     * Teilen; geometry.userData.castCount begrenzt (z. B. Gelände: nur Klippenband).
+     * box: Bounding-Box in Ziel-Koordinaten.
+     */
+    function castCount(o, n, box, minShadow) {
+      if (!o.castShadow || o.userData.noShadow) return 0;
+      if (minShadow > 0) {
+        box.getSize(_sz);
+        if (_sz.length() / 2 < minShadow || _sz.y < 0.16) return 0;
+      }
+      const cc = o.geometry.userData.castCount;
+      return cc == null ? n : Math.max(0, Math.min(n, cc));
+    }
+    /**
+     * Unsichtbare Dreiecke entfernen (statische Teile einer Insel): ganz im Boden
+     * versunkene und nach unten zeigende direkt auf dem Boden (Unterseiten, Sockel,
+     * vergrabene Stein-Hälften). groundAt(x, z) = Bodenhöhe in denselben Koordinaten.
+     * Die Kamera ist immer über dem Boden – im Bild ändert sich nichts.
+     */
+    function dropHidden(g, groundAt) {
+      const pa = g.attributes.position.array;
+      const nt = g.attributes.position.count / 3;
+      g.computeBoundingBox();
+      const bb = g.boundingBox;
+      // Obergrenze des Bodens unter dem Teil (grob): Dreiecke darüber prüft niemand auf den Boden
+      let gMax = -Infinity;
+      if (groundAt) for (let i = 0; i <= 2; i++) for (let k = 0; k <= 2; k++) gMax = Math.max(gMax, groundAt(lerp(bb.min.x, bb.max.x, i / 2), lerp(bb.min.z, bb.max.z, k / 2)));
+      const keep = new Uint8Array(nt);
+      let kept = 0;
+      for (let t = 0; t < nt; t++) {
+        const i = t * 9;
+        const ay = pa[i + 1], by = pa[i + 4], cy = pa[i + 7];
+        const ux = pa[i + 3] - pa[i], uy = by - ay, uz = pa[i + 5] - pa[i + 2];
+        const vx = pa[i + 6] - pa[i], vy = cy - ay, vz = pa[i + 8] - pa[i + 2];
+        const nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx;
+        const len = Math.sqrt(nx * nx + ny * ny + nz * nz);
+        let hide = !(len > 1e-9); // entartet (Fläche 0, z. B. Drehkörper-Spitzen) – zeichnet nie ein Pixel
+        if (!hide && groundAt && Math.min(ay, by, cy) < gMax + 0.2) {
+          const ga = groundAt(pa[i], pa[i + 2]), gb = groundAt(pa[i + 3], pa[i + 5]), gc = groundAt(pa[i + 6], pa[i + 8]);
+          if (ay < ga - 0.03 && by < gb - 0.03 && cy < gc - 0.03) hide = true;
+          else if (ay < ga + 0.06 && by < gb + 0.06 && cy < gc + 0.06 && ny < -0.3 * len) hide = true;
+        }
+        if (!hide) { keep[t] = 1; kept++; }
+      }
+      if (kept === nt) return g;
+      const out = new T.BufferGeometry();
+      for (const k of Object.keys(g.attributes)) {
+        const at = g.attributes[k], sz = at.itemSize * 3;
+        const arr = new at.array.constructor(kept * sz);
+        for (let t = 0, o = 0; t < nt; t++) if (keep[t]) { arr.set(at.array.subarray(t * sz, t * sz + sz), o); o += sz; }
+        out.setAttribute(k, new T.BufferAttribute(arr, at.itemSize, at.normalized));
+      }
+      g.dispose();
+      return out;
+    }
+    const mergeable = (o) => o.isMesh && !o.isInstancedMesh && !o.isSkinnedMesh && !o.isBatchedMesh && o.visible && o.layers.mask !== 0 && o.geometry && !Array.isArray(o.material) && !o.morphTargetInfluences && o.geometry.attributes.position;
+
+    /**
+     * Statische Meshes je Material zusammenführen. Die geteilten Bausatz-Materialien
+     * (matte, gloss, glossSmooth, matteDouble, window, glow) landen gemeinsam im
+     * Oberflächen-Material (ein Draw-Call). Schatten werfen nur große Teile
+     * (opt.minShadow = halbe Diagonale, Standard 0.42); im zusammengeführten Mesh stehen
+     * die Schattenwerfer vorn, der Schatten-Pass zeichnet nur sie.
+     */
+    kit.merge = function (root, opt = {}) {
       if (!mergeGeos) return root;
+      const minShadow = opt.minShadow == null ? 0.42 : opt.minShadow;
+      const groundAt = opt.ground === false ? null : root.userData.groundAt || null; // von kit.islandBase
       root.updateMatrixWorld(true);
       const inv = new T.Matrix4().copy(root.matrixWorld).invert();
       const buckets = new Map();
       (function walk(o) {
         if (o !== root && (o.userData.dynamic || o.userData.noMerge || o.userData.onTap)) return;
-        if (o.isMesh && !o.isInstancedMesh && !o.isSkinnedMesh && !o.isBatchedMesh && o.visible && o.geometry && !Array.isArray(o.material) && !o.morphTargetInfluences && o.geometry.attributes.position) {
-          const vc = !!o.material.vertexColors;
-          const key = o.material.uuid + '|' + (o.castShadow ? 1 : 0) + (o.receiveShadow ? 1 : 0) + '|' + o.renderOrder + '|' + vc;
+        if (mergeable(o)) {
+          const mat = surfaceTarget(o.material);
+          const vc = !!mat.vertexColors;
+          const key = mat.uuid + '|' + (o.receiveShadow ? 1 : 0) + '|' + o.renderOrder + '|' + vc;
           let b = buckets.get(key);
-          if (!b) buckets.set(key, (b = { mat: o.material, cast: o.castShadow, recv: o.receiveShadow, order: o.renderOrder, vc, items: [] }));
+          if (!b) buckets.set(key, (b = { mat, recv: o.receiveShadow, order: o.renderOrder, vc, items: [] }));
           b.items.push(o);
         }
         for (let i = 0; i < o.children.length; i++) walk(o.children[i]);
       })(root);
       const mtx = new T.Matrix4();
       buckets.forEach((b) => {
-        if (b.items.length < 2) return;
-        const geos = b.items.map((o) => {
-          let g = o.geometry.clone();
-          g = g.index ? g.toNonIndexed() : g;
-          for (const k of Object.keys(g.attributes)) if (!KEEP[k] || (k === 'color' && !b.vc)) g.deleteAttribute(k);
-          if (!g.attributes.normal) g.computeVertexNormals();
-          if (!g.attributes.uv) g.setAttribute('uv', new T.BufferAttribute(new Float32Array(g.attributes.position.count * 2), 2));
-          if (b.vc && !g.attributes.color) g.setAttribute('color', new T.BufferAttribute(new Float32Array(g.attributes.position.count * 3).fill(1), 3));
-          g.morphAttributes = {};
-          g.clearGroups();
+        const surf = b.mat === mats.surface || b.mat === mats.surfaceDouble;
+        if (b.items.length < 2 && !surf) {
+          // einzeln lassen – nur die Schatten-Regel anwenden
+          const o = b.items[0];
+          const g = o.geometry;
+          if (!g.boundingBox) g.computeBoundingBox();
+          mtx.multiplyMatrices(inv, o.matrixWorld);
+          const n = g.index ? g.index.count : g.attributes.position.count;
+          const cc = castCount(o, n, _bb.copy(g.boundingBox).applyMatrix4(mtx), minShadow);
+          o.castShadow = cc > 0;
+          if (cc > 0 && cc < n) shadowPrefix(o, cc);
+          return;
+        }
+        const cast = [], rest = [];
+        let castVerts = 0;
+        b.items.forEach((o) => {
+          let g = cleanGeo(o.geometry, b.vc);
           mtx.multiplyMatrices(inv, o.matrixWorld);
           g.applyMatrix4(mtx);
-          return g;
+          if (!o.geometry.userData.terrain) g = dropHidden(g, groundAt);
+          if (!g.attributes.position.count) return;
+          if (surf) toSurface(g, o.material);
+          const n = g.attributes.position.count;
+          g.computeBoundingBox();
+          const cc = castCount(o, n, g.boundingBox, minShadow);
+          if (cc >= n) cast.push(g);
+          else if (cc <= 0) rest.push(g);
+          else { cast.push(sliceGeo(g, 0, cc)); rest.push(sliceGeo(g, cc, n)); g.dispose(); }
+          castVerts += cc;
         });
-        const merged = mergeGeos(geos, false);
-        geos.forEach((g) => g.dispose());
+        const geos = cast.concat(rest);
+        const merged = geos.length > 1 ? mergeGeos(geos, false) : geos[0];
+        if (geos.length > 1) geos.forEach((g) => g.dispose());
         if (!merged) return;
         const mesh = new T.Mesh(merged, b.mat);
-        mesh.castShadow = b.cast;
+        mesh.castShadow = castVerts > 0;
         mesh.receiveShadow = b.recv;
         mesh.renderOrder = b.order;
         mesh.name = 'merged';
+        if (castVerts > 0 && castVerts < merged.attributes.position.count) shadowPrefix(mesh, castVerts);
         b.items.forEach((o) => {
           if (o.parent) o.parent.remove(o);
           if (!o.geometry.userData.shared) o.geometry.dispose();
@@ -586,6 +827,202 @@
         }
       })(root);
       return root;
+    };
+
+    /* ------------------------------------------------------------------
+       Bewegte starre Teile in wenigen Draw-Calls (GPU, ohne Eckpunkt-Arbeit pro Bild)
+       ------------------------------------------------------------------ */
+    const batchable = (m) => mergeable(m) && !m.userData.noBatch;
+    /**
+     * kit.batch(objs, opt) → { group, bones, set(i, matrix4), apply() }
+     * Alle Meshes unter den Objekten werden je Material (Bausatz-Materialien gemeinsam)
+     * zu EINEM SkinnedMesh; jedes Teil hängt starr an einem „Knochen“ – die Grafikkarte
+     * bewegt die Eckpunkte, pro Bild werden nur die Matrizen hochgeladen.
+     *   Standard: objs sind lose Gruppen (Drehpunkt im Ursprung, nicht eingehängt);
+     *     set(i, m4) setzt die Lage von objs[i] in Insel-Koordinaten. group einhängen!
+     *   opt.live = true: objs hängen schon in der Szene und werden weiter wie gewohnt
+     *     bewegt (kit.float/sway/spin, eigene Animation); ihre Meshes werden unsichtbar
+     *     (layers) und dienen selbst als Knochen. group einhängen!
+     *   opt.sphere: Hüll-Kugel (Insel-Koordinaten) für Sichtbarkeit/Antippen,
+     *     sonst aus der Startlage + opt.margin (0.6).
+     *   opt.shadow = false: wirft keinen Schatten.
+     */
+    kit.batch = function (objs, opt = {}) {
+      const grp = new T.Group();
+      grp.name = opt.name || 'beweglich';
+      grp.userData.dynamic = true;
+      const bones = [];
+      const buckets = new Map();
+      const add = (m, bone, bake) => {
+        const mat = surfaceTarget(m.material);
+        const vc = !!mat.vertexColors;
+        const key = mat.uuid + '|' + m.renderOrder + '|' + (m.receiveShadow ? 1 : 0) + '|' + vc;
+        let b = buckets.get(key);
+        if (!b) buckets.set(key, (b = { mat, vc, order: m.renderOrder, recv: m.receiveShadow, cast: false, geos: [] }));
+        const g = cleanGeo(m.geometry, vc);
+        if (bake) g.applyMatrix4(bake);
+        if (mat !== m.material) toSurface(g, m.material);
+        const n = g.attributes.position.count;
+        const si = new Uint16Array(n * 4), sw = new Float32Array(n * 4);
+        for (let i = 0; i < n; i++) { si[i * 4] = bone; sw[i * 4] = 1; }
+        g.setAttribute('skinIndex', new T.Uint16BufferAttribute(si, 4));
+        g.setAttribute('skinWeight', new T.Float32BufferAttribute(sw, 4));
+        b.cast = b.cast || (m.castShadow && !m.userData.noShadow);
+        b.geos.push(g);
+      };
+      if (opt.live) {
+        objs.forEach((obj) => obj.traverse((m) => {
+          if (!batchable(m)) return;
+          let p = m;
+          while (p && p !== obj) { if (p.userData.onTap) return; p = p.parent; }
+          add(m, bones.length, null);
+          bones.push(m);
+          m.layers.disableAll(); // bleibt im Szenengraph (Matrizen laufen weiter), wird aber nicht mehr gezeichnet
+        }));
+      } else {
+        const inv = new T.Matrix4(), bk = new T.Matrix4();
+        objs.forEach((obj, i) => {
+          const bone = new T.Object3D();
+          bone.matrixAutoUpdate = false;
+          bone.userData.bone = true; // leer, aber nötig: kit.merge räumt sie nicht weg
+          grp.add(bone);
+          bones.push(bone);
+          obj.updateMatrixWorld(true);
+          inv.copy(obj.matrixWorld).invert();
+          obj.traverse((m) => { if (batchable(m)) add(m, i, bk.multiplyMatrices(inv, m.matrixWorld)); });
+        });
+      }
+      const skeleton = new T.Skeleton(bones, bones.map(() => new T.Matrix4()));
+      const meshes = [];
+      buckets.forEach((b) => {
+        const geo = b.geos.length > 1 ? mergeGeos(b.geos, false) : b.geos[0];
+        if (b.geos.length > 1) b.geos.forEach((g) => g.dispose());
+        const mesh = new T.SkinnedMesh(geo, b.mat);
+        mesh.bind(skeleton, new T.Matrix4());
+        mesh.castShadow = b.cast && opt.shadow !== false;
+        mesh.receiveShadow = b.recv;
+        mesh.renderOrder = b.order;
+        mesh.name = grp.name;
+        grp.add(mesh);
+        meshes.push(mesh);
+      });
+      const api = {
+        group: grp, bones, meshes, skeleton,
+        set(i, m4) { const b = bones[i]; b.matrix.copy(m4); b.matrixWorldNeedsUpdate = true; },
+        apply() { /* nichts zu tun: die Grafikkarte bewegt die Eckpunkte */ },
+        /** Hüll-Kugel neu bestimmen (aus der aktuellen Lage, Insel-Koordinaten) */
+        fit(sphere, margin = 0.6) {
+          meshes.forEach((mesh) => {
+            if (sphere) { mesh.boundingSphere = sphere.clone(); return; }
+            const root = mesh.parent ? (function top(o) { return o.parent ? top(o.parent) : o; })(mesh) : grp;
+            root.updateMatrixWorld(true);
+            bones.forEach((bn) => bn.updateMatrixWorld(true));
+            mesh.boundingSphere = null;
+            mesh.computeBoundingSphere();
+            mesh.boundingSphere.radius += margin;
+          });
+        },
+      };
+      if (opt.sphere) api.fit(opt.sphere);
+      else api.needsFit = true; // nach dem Einhängen: api.fit() (kit.merge erledigt das für Gruppen in der Insel)
+      grp.userData.batch = api;
+      return api;
+    };
+
+    /**
+     * Alle beweglichen Meshes einer Insel (unter userData.dynamic, nicht antippbar, keine
+     * Instanzen/Partikel/Sprites, nicht noMerge/noBatch) in kit.batch({ live: true })
+     * bündeln. Aufruf NACH kit.merge(root). → api oder null
+     */
+    kit.batchDynamic = function (root, opt = {}) {
+      const objs = [];
+      (function walk(o) {
+        if (o.userData.onTap && o !== root) return;
+        if (o !== root && o.userData.noMerge) return;
+        if (o !== root && o.userData.dynamic && !o.userData.batch) { objs.push(o); return; }
+        for (let i = 0; i < o.children.length; i++) walk(o.children[i]);
+      })(root);
+      let n = 0;
+      objs.forEach((o) => o.traverse((m) => { if (batchable(m)) n++; }));
+      if (n < 2) return null;
+      const api = kit.batch(objs, Object.assign({ live: true, name: 'beweglich' }, opt));
+      root.add(api.group);
+      api.fit(opt.sphere, opt.margin);
+      return api;
+    };
+
+    /**
+     * Schwebende Teile in wenige Draw-Calls zusammenführen: Jedes Teil wippt und dreht
+     * sich im Vertex-Shader mit eigener Phase (keine Arbeit pro Bild auf der CPU).
+     * items: [{ obj, phase, amp=0.12, rot, spin }] – obj in Insel-Koordinaten (nicht eingehängt).
+     *   rot: Pendel-Drehung (Bogenmaß-Amplitude), spin: Drehung je s; um die senkrechte Achse durch obj.
+     * → Group (wirft keinen Schatten)
+     */
+    const floatMats = new Map();
+    function floatMat(m) {
+      if (floatMats.has(m.uuid)) return floatMats.get(m.uuid);
+      const fm = m.clone();
+      const surf = m === mats.surface || m === mats.surfaceDouble;
+      fm.onBeforeCompile = (sh) => {
+        if (surf) surfaceInject(sh);
+        sh.uniforms.uKitTime = U.time;
+        const pre = `float bobK = uKitTime * 1.2 + aBob.x;
+          float bobA = sin(bobK * 0.5) * aSpin.x + uKitTime * aSpin.y;
+          float bobC = cos(bobA), bobS = sin(bobA);`;
+        sh.vertexShader = 'uniform float uKitTime;\nattribute vec4 aBob;\nattribute vec2 aSpin;\n' + sh.vertexShader
+          .replace('#include <beginnormal_vertex>', `#include <beginnormal_vertex>
+            ${pre}
+            objectNormal.xz = vec2(objectNormal.x * bobC - objectNormal.z * bobS, objectNormal.x * bobS + objectNormal.z * bobC);`)
+          .replace('#include <begin_vertex>', `#include <begin_vertex>
+            {
+              vec2 bobD = transformed.xz - aBob.zw;
+              transformed.xz = aBob.zw + vec2(bobD.x * bobC - bobD.y * bobS, bobD.x * bobS + bobD.y * bobC);
+              transformed.y += sin(bobK) * aBob.y;
+            }`);
+      };
+      fm.customProgramCacheKey = () => 'kit-schweben-' + (surf ? 'surface' : m.uuid);
+      floatMats.set(m.uuid, fm);
+      return fm;
+    }
+    kit.floatMerge = function (items) {
+      const calm = W.reducedMotion ? 0.12 : 1;
+      const buckets = new Map();
+      items.forEach((it) => {
+        it.obj.updateMatrixWorld(true);
+        const cx = it.obj.position.x, cz = it.obj.position.z;
+        it.obj.traverse((m) => {
+          if (!m.isMesh) return;
+          const mat = surfaceTarget(m.material);
+          const q = cleanGeo(m.geometry, !!mat.vertexColors);
+          q.applyMatrix4(m.matrixWorld);
+          if (mat !== m.material) toSurface(q, m.material);
+          const n = q.attributes.position.count;
+          const a = new Float32Array(n * 4), s = new Float32Array(n * 2);
+          for (let i = 0; i < n; i++) {
+            a[i * 4] = it.phase || 0; a[i * 4 + 1] = (it.amp == null ? 0.12 : it.amp) * calm; a[i * 4 + 2] = cx; a[i * 4 + 3] = cz;
+            s[i * 2] = (it.rot || 0) * calm; s[i * 2 + 1] = (it.spin || 0) * calm;
+          }
+          q.setAttribute('aBob', new T.BufferAttribute(a, 4));
+          q.setAttribute('aSpin', new T.BufferAttribute(s, 2));
+          const key = mat.uuid + '|' + m.renderOrder;
+          if (!buckets.has(key)) buckets.set(key, { mat, geos: [], order: m.renderOrder });
+          buckets.get(key).geos.push(q);
+        });
+      });
+      const grp = new T.Group();
+      grp.name = 'schwebend';
+      grp.userData.dynamic = true;
+      buckets.forEach((b) => {
+        const mesh = new T.Mesh(b.geos.length > 1 ? mergeGeos(b.geos, false) : b.geos[0], floatMat(b.mat));
+        mesh.castShadow = false;
+        mesh.receiveShadow = true;
+        mesh.renderOrder = b.order;
+        mesh.geometry.computeBoundingSphere();
+        mesh.geometry.boundingSphere.radius += 0.5;
+        mesh.userData.noBatch = true; // eigener Vertex-Shader – nicht in kit.batch bündeln
+        grp.add(mesh);
+      });
+      return grp;
     };
 
     /* ------------------------------------------------------------------
@@ -622,7 +1059,7 @@
       const R = o.radius || 6;
       const G0 = o.grassRadius || R * 0.75;
       const H = o.height == null ? 1 : o.height;
-      const S = o.segments || 56;
+      const S = o.segments || 40;
       const rng = W.rng(seedOf(seed, 1));
       const sx = A.SimplexNoise ? new A.SimplexNoise({ random: rng }) : { noise: () => 0, noise3d: () => 0 };
       const col = {
@@ -659,7 +1096,10 @@
         const r2 = (x * x + z * z) / (G0 * G0);
         return H + hillAmt * (0.09 * sx.noise(x * 0.21 + 3.1, z * 0.21 - 1.7) + 0.035 * sx.noise(x * 0.6, z * 0.6) + 0.08 * Math.max(0, 1 - r2));
       };
-      const IN = [0.18, 0.35, 0.5, 0.63, 0.75, 0.85, 0.93, 1];
+      // Innenringe der Wiese (zur Kante hin dichter); o.rings = Anzahl (3–8, Standard 6)
+      const RINGS = { 3: [0.45, 0.8, 1], 4: [0.35, 0.65, 0.87, 1], 5: [0.28, 0.52, 0.73, 0.9, 1], 6: [0.24, 0.45, 0.63, 0.79, 0.92, 1],
+        7: [0.2, 0.38, 0.54, 0.68, 0.81, 0.92, 1], 8: [0.18, 0.35, 0.5, 0.63, 0.75, 0.85, 0.93, 1] };
+      const IN = RINGS[clamp(Math.round(o.rings || 6), 3, 8)];
       const INNER = 0.34; // Abstand der letzten Innen-Ringe zur Kante
       /** Stationen [r, y] außerhalb der Wiese für einen Winkel. */
       function stations(a) {
@@ -717,7 +1157,11 @@
         }
         rings.push(ring);
       }
-      const nSt = 13;
+      // Zufallsfolge wie beim früheren, feineren Gitter fortsetzen (7 Innenringe à 56 Segmente):
+      // Klippen-Brocken und Ufersteine bleiben an ihren gewohnten Plätzen.
+      for (let k = (nIn - 1) * S * 2, n = 7 * (o.segments || 56) * 2; k < n; k++) rng();
+      // Stationen bis 1.9 unter Wasser (tiefer ist das Meer undurchsichtig; surfaceAt kennt alle 13)
+      const nSt = 12;
       for (let s = 0; s < nSt; s++) rings.push([]);
       for (let j = 0; j < S; j++) {
         const a = (j / S) * TAU;
@@ -775,13 +1219,7 @@
         const j = 1 + (jr() * 2 - 1) * 0.035;
         for (let k = 0; k < 3; k++) cols.push(color.r * j, color.g * j, color.b * j);
       }
-      // Fächer in der Mitte
-      for (let j = 0; j < S; j++) {
-        const p1 = rings[0][j], p2 = rings[0][(j + 1) % S];
-        grassAt((p1[0] + p2[0]) / 3, (p1[2] + p2[2]) / 3, cA);
-        tri(center, p2, p1, cA);
-      }
-      for (let i = 0; i < rings.length - 1; i++) {
+      function band(i) {
         const A0 = rings[i], B0 = rings[i + 1];
         for (let j = 0; j < S; j++) {
           const j1 = (j + 1) % S;
@@ -792,15 +1230,33 @@
           if ((i + j) % 2) { tri(a, b, d, cA); tri(a, d, c, cA); } else { tri(a, b, c, cA); tri(b, d, c, cA); }
         }
       }
-      let terrain = new T.BufferGeometry();
-      terrain.setAttribute('position', new T.Float32BufferAttribute(pos, 3));
-      terrain.setAttribute('color', new T.Float32BufferAttribute(cols, 3));
-      terrain.setAttribute('uv', new T.BufferAttribute(new Float32Array((pos.length / 3) * 2), 2));
-      terrain.computeVertexNormals();
+      const toGeo = (from) => {
+        const t = new T.BufferGeometry();
+        t.setAttribute('position', new T.Float32BufferAttribute(pos.slice(from), 3));
+        t.setAttribute('color', new T.Float32BufferAttribute(cols.slice(from), 3));
+        t.setAttribute('uv', new T.BufferAttribute(new Float32Array(((pos.length - from) / 3) * 2), 2));
+        t.computeVertexNormals();
+        return t;
+      };
+      // Zuerst der Rand (Wiesenkante bis Klippenfuß): nur er wirft Schatten – die flache Wiese
+      // und der Strand zeigen zur Sonne und fallen im Schatten-Pass ohnehin weg.
+      const EDGE0 = nIn - 1, EDGE1 = nIn + 5;
+      for (let i = EDGE0; i < EDGE1; i++) band(i);
+      const edgeGeo = toGeo(0);
+      const mark = pos.length;
+      // Fächer in der Mitte, Wiese, Strand und Unterwasser-Sockel
+      for (let j = 0; j < S; j++) {
+        const p1 = rings[0][j], p2 = rings[0][(j + 1) % S];
+        grassAt((p1[0] + p2[0]) / 3, (p1[2] + p2[2]) / 3, cA);
+        tri(center, p2, p1, cA);
+      }
+      for (let i = 0; i < rings.length - 1; i++) if (i < EDGE0 || i >= EDGE1) band(i);
+      const restGeo = toGeo(mark);
 
       /* Felsbrocken in Klippen und Steine am Ufer */
       const P = new Parts();
-      P.addRaw(terrain);
+      P.addRaw(edgeGeo);
+      let castVerts = edgeGeo.attributes.position.count;
       for (let i = 0, placed = 0; i < 10 && placed < 4; i++) {
         const a = rng() * TAU;
         const c = cliffK(a);
@@ -809,8 +1265,11 @@
         const st = stations(a);
         const r = st[3][0] + 0.05, y = st[3][1];
         const s = 0.28 + rng() * 0.2;
-        P.add(xf(geo.blob(s, { seed: seed * 31 + i, noise: 0.22, sy: 0.8 }), [Math.cos(a) * r, y, Math.sin(a) * r], [0, rng() * TAU, 0]), col.cliff, { grad: [0.72, 1.08], jitter: 0.06, seed: i });
+        const bg = xf(geo.blob(s, { seed: seed * 31 + i, noise: 0.22, sy: 0.8 }), [Math.cos(a) * r, y, Math.sin(a) * r], [0, rng() * TAU, 0]);
+        P.add(bg, col.cliff, { grad: [0.72, 1.08], jitter: 0.06, seed: i });
+        castVerts += bg.index ? bg.index.count : bg.attributes.position.count;
       }
+      P.addRaw(restGeo);
       const nStones = o.stones == null ? 5 : o.stones;
       for (let i = 0; i < nStones; i++) {
         const a = rng() * TAU;
@@ -824,6 +1283,10 @@
       P.build(group);
       const mesh = group.children[0];
       mesh.name = 'terrain';
+      mesh.geometry.userData.castCount = castVerts; // Schatten nur vom Rand und den Klippen-Brocken (kit.merge)
+      mesh.geometry.userData.terrain = true;
+      group.userData.groundAt = surfaceAt; // kit.merge entfernt damit verdeckte Dreiecke unter dem Boden
+      if (o.shadow === false) mesh.castShadow = false;
 
       /* belegte Plätze */
       const occupied = [];
@@ -891,7 +1354,7 @@
       const sd = (i) => seedOf(o.seed || 1, 50 + i);
       const lean = o.lean == null ? (rng() - 0.5) * 0.16 : o.lean;
       if (type === 'pine') {
-        P.add(xf(geo.cyl(0.09, 0.15, 0.75, 7), [0, 0.37, 0]), kit.shade(trunk, 0.9), { grad: [0.65, 1] });
+        P.add(xf(new T.CylinderGeometry(0.09, 0.15, 0.75, 7, 1, true), [0, 0.37, 0]), kit.shade(trunk, 0.9), { grad: [0.65, 1] });
         const green = o.color || C.pine;
         const tiers = 3 + (rng() < 0.45 ? 1 : 0);
         let y = 0.45, r = 1.0, h = 1.15;
@@ -902,14 +1365,15 @@
           y += h * 0.5; r *= 0.74; h *= 0.84;
         }
       } else if (type === 'palm') {
-        const N = 7, hgt = 2.7 * (0.9 + rng() * 0.2);
+        const lod = !!o.lod; // fern (Inselchen): gröberer Stamm und Wedel
+        const N = lod ? 5 : 7, hgt = 2.7 * (0.9 + rng() * 0.2);
         const bend = (o.lean == null ? 0.35 + rng() * 0.3 : o.lean * 3) * (rng() < 0.5 ? -1 : 1);
         const pt = (t) => new T.Vector3(bend * t * t, t * hgt, bend * 0.3 * t * t);
         for (let i = 0; i < N; i++) {
           const a = pt(i / N), b = pt((i + 1) / N);
           const len = a.distanceTo(b);
-          const r0 = 0.17 - i * 0.012, r1 = r0 - 0.03;
-          const g = geo.cyl(r1 + 0.012, r0, len * 1.04, 7);
+          const r0 = 0.17 - i * 0.012 * (7 / N), r1 = r0 - 0.03 * (7 / N);
+          const g = new T.CylinderGeometry(r1 + 0.012, r0, len * 1.04, lod ? 5 : 7, 1, true); // Deckel liegen verdeckt im Stamm
           g.translate(0, len / 2, 0);
           const dir = b.clone().sub(a).normalize();
           const q = new T.Quaternion().setFromUnitVectors(new T.Vector3(0, 1, 0), dir);
@@ -923,7 +1387,7 @@
           const ang = (i / nL) * TAU + rng() * 0.4;
           const L = 1.35 + rng() * 0.35;
           const droop = 0.75 + rng() * 0.35;
-          const seg = 7, posA = [], colA = [];
+          const seg = lod ? 4 : 7, posA = [], colA = [];
           const lc = toColor(kit.shade(leaf, 0.92 + rng() * 0.16)), mid = lc.clone().multiplyScalar(0.72);
           const ptL = (t, side) => {
             const w = 0.3 * Math.sin(PI * Math.pow(t, 0.75)) * side;
@@ -953,8 +1417,9 @@
       } else {
         // round / fruit / blossom
         const th = 1.15 + rng() * 0.25;
-        P.add(xf(geo.cyl(0.11, 0.18, th, 7), [lean * 0.5, th / 2, 0], [0, 0, -lean]), trunk, { grad: [0.6, 1.0] });
-        P.add(xf(geo.cyl(0.04, 0.07, 0.55, 5), [0.18, th * 0.72, 0.05], [0.2, 0, -0.9]), trunk, { grad: [0.8, 1] });
+        // Stamm und Ast ohne Deckel (unten im Boden, oben in der Krone verborgen)
+        P.add(xf(new T.CylinderGeometry(0.11, 0.18, th, 7, 1, true), [lean * 0.5, th / 2, 0], [0, 0, -lean]), trunk, { grad: [0.6, 1.0] });
+        P.add(xf(new T.CylinderGeometry(0.04, 0.07, 0.55, 5, 1, true), [0.18, th * 0.72, 0.05], [0.2, 0, -0.9]), trunk, { grad: [0.8, 1] });
         const isBlossom = type === 'blossom';
         const base = o.color || (isBlossom ? C.blossom : C.leaf);
         const cy = th + 0.62;
@@ -962,9 +1427,11 @@
         const blobs = [[cx, cy, 0, 0.92], [cx + 0.62, cy - 0.25, 0.18, 0.6], [cx - 0.58, cy - 0.18, -0.12, 0.64], [cx + 0.1, cy + 0.55, -0.1, 0.6], [cx - 0.15, cy - 0.3, 0.55, 0.55]];
         const nb = 3 + Math.floor(rng() * 3);
         const range = [cy - 0.95, cy + 1.15];
+        const inner = []; // sichere Innenkugeln der Kleckse (Rauschen 0.16, sy 0.92) → verdeckte Dreiecke weg
         for (let i = 0; i < nb; i++) {
           const b = blobs[i];
           const s = b[3] * (0.9 + rng() * 0.2);
+          inner.push([b[0], b[1], b[2], s * 0.74]);
           const g = geo.blob(s, { seed: sd(i), noise: 0.16, sy: 0.92 });
           xf(g, [b[0], b[1], b[2]], [rng(), rng() * TAU, 0]);
           const shadeK = isBlossom ? (i % 2 ? 1.04 : 0.97) : 0.92 + rng() * 0.16;
@@ -987,6 +1454,7 @@
             P.add(xf(new T.IcosahedronGeometry(0.07, 0), [x, y, z], [rng(), rng(), 0]), '#ffe6f1', { grad: [0.95, 1.05] });
           }
         }
+        P.cullInside(inner);
       }
       const g = P.build();
       g.name = 'tree-' + type;
@@ -1000,12 +1468,14 @@
       const P = new Parts();
       const base = o.color || C.leaf;
       const n = 3 + Math.floor(rng() * 2);
+      const inner = [];
       for (let i = 0; i < n; i++) {
         const a = (i / n) * TAU + rng();
         const d = i === 0 ? 0 : 0.32;
         const r = (i === 0 ? 0.48 : 0.34 + rng() * 0.08) * s;
         const g = geo.blob(r, { seed: seedOf(o.seed || 1, 60 + i), noise: 0.16, sy: 0.85 });
         xf(g, [Math.cos(a) * d * s, r * 0.72, Math.sin(a) * d * s], [0, rng() * TAU, 0]);
+        inner.push([Math.cos(a) * d * s, r * 0.72, Math.sin(a) * d * s, r * 0.69]); // sichere Innenkugel (Rauschen, sy 0.85)
         P.add(g, kit.shade(base, 0.92 + rng() * 0.16), { grad: [0.6, 1.14], jitter: 0.05, seed: i + 3, range: [0, 0.95 * s] });
       }
       if (o.berries) {
@@ -1015,6 +1485,7 @@
           P.add(xf(new T.IcosahedronGeometry(0.06 * s, 0), [Math.cos(a) * Math.cos(el) * r, 0.42 * s + Math.sin(el) * r * 0.75, Math.sin(a) * Math.cos(el) * r]), o.berries, { gloss: true, grad: [0.85, 1.1] });
         }
       }
+      P.cullInside(inner);
       const g = P.build();
       g.name = 'bush';
       return g;
@@ -1062,7 +1533,7 @@
       for (let i = 0; i < 5; i++) {
         const a = rng() * TAU, el = 0.35 + rng() * 0.75;
         const x = Math.cos(a) * Math.cos(el) * 0.25 * s, y = 0.3 * s + Math.sin(el) * 0.185 * s, z = Math.sin(a) * Math.cos(el) * 0.25 * s;
-        const g = new T.IcosahedronGeometry(0.035 * s, 0);
+        const g = new T.OctahedronGeometry(0.035 * s, 0); // flacher Tupfen (8 Dreiecke genügen)
         const q = new T.Quaternion().setFromUnitVectors(new T.Vector3(0, 1, 0), new T.Vector3(x, (y - 0.3 * s) / 0.72, z).normalize());
         g.scale(1, 0.35, 1).applyQuaternion(q).translate(x, y, z);
         P.add(g, '#ffffff', { grad: [0.95, 1.05] });
@@ -1083,7 +1554,7 @@
       return m;
     };
 
-    /* ---------------- Gräser & Blumen (instanziert) ---------------- */
+    /* ---------------- Gräser & Blumen ---------------- */
     let tuftGeo = null;
     function getTuftGeo() {
       if (tuftGeo) return tuftGeo;
@@ -1107,47 +1578,147 @@
       tuftGeo.userData.shared = true;
       return tuftGeo;
     }
+    /* Wiese: Grasbüschel und Blumen einer Insel stecken zusammen in EINEM Mesh (ein
+       Draw-Call), Wind im Vertex-Shader (Wurzelpunkt je Eckpunkt in aRoot). Die Teile stehen
+       in zufälliger Reihenfolge → für niedrigere Qualitätsstufen wird nur ein Anfangsstück
+       gezeichnet (gleichmäßig ausgedünnt). */
+    let meadowMat = null;
+    function getMeadowMat() {
+      if (meadowMat) return meadowMat;
+      const m = mats.matteDouble.clone();
+      m.onBeforeCompile = (sh) => {
+        sh.uniforms.uKitTime = U.time;
+        sh.uniforms.uKitWind = U.wind;
+        sh.vertexShader = 'uniform float uKitTime;\nuniform float uKitWind;\nattribute vec4 aRoot;\n' + sh.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>
+          {
+            float hh = max(position.y - aRoot.y, 0.0) * aRoot.w;
+            vec4 root = modelMatrix * vec4(aRoot.xyz, 1.0);
+            float ph = root.x * 0.37 + root.z * 0.29;
+            float sw = sin(uKitTime * 1.7 + ph) * 0.7 + sin(uKitTime * 2.9 + ph * 1.9) * 0.3;
+            float k = hh * hh * 1.4 * uKitWind / max(aRoot.w, 0.05);
+            transformed.x += sw * k;
+            transformed.z += cos(uKitTime * 1.3 + ph * 1.3) * 0.5 * k;
+          }`);
+      };
+      m.customProgramCacheKey = () => 'kit-wiese';
+      m.name = 'kit-wiese';
+      meadowMat = m;
+      return m;
+    }
+    /** Dichte der Wiese je Qualitätsstufe (Anteil der Büschel/Blumen) … */
+    const MEADOW_DENSITY = { high: 1, medium: 0.8, low: 0.45 };
+    /** … und nach Entfernung: ab 60 Einheiten dünner, ab 110 nur noch gut die Hälfte (Halme sind dort 2–3 px groß) */
+    const meadowFar = (d) => (d <= 60 ? 1 : d >= 110 ? 0.55 : 1 - 0.45 * (d - 60) / 50);
+    const meadows = [];
+    function meadowDensity(md, far = 1) {
+      const d = (MEADOW_DENSITY[W.quality] == null ? 1 : MEADOW_DENSITY[W.quality]) * far;
+      const k = Math.max(0, Math.min(md.cum.length - 1, Math.round(d * (md.cum.length - 1))));
+      if (md.k === k) return;
+      md.k = k;
+      md.mesh.geometry.setDrawRange(0, md.cum[k]);
+    }
+    W.onFrame(() => {
+      const cam = W.camera;
+      if (!cam || !meadows.length) return;
+      const cp = cam.position;
+      for (let i = 0; i < meadows.length; i++) {
+        const md = meadows[i], e = md.mesh.matrixWorld.elements;
+        const d = Math.hypot(e[12] - cp.x, e[13] - cp.y, e[14] - cp.z);
+        meadowDensity(md, Math.round(meadowFar(d) * 20) / 20);
+      }
+    });
+    function meadowOf(base) {
+      if (!base._meadow) base._meadow = { items: [], mesh: null, cum: [0] };
+      return base._meadow;
+    }
+    function rebuildMeadow(base) {
+      const md = meadowOf(base);
+      const items = md.items.slice().sort((p, q) => p.key - q.key);
+      const geos = [];
+      const cum = [0];
+      const cc = new T.Color();
+      items.forEach((it) => {
+        const g = it.tpl.clone();
+        g.applyMatrix4(it.m);
+        const n = g.attributes.position.count;
+        const col = g.attributes.color;
+        for (let i = 0; i < n; i++) {
+          cc.fromBufferAttribute(col, i);
+          if (!it.petal) cc.multiply(it.c);
+          else if (Math.min(cc.r, cc.g, cc.b) >= 0.985) cc.copy(it.c); // Blütenblätter (weiß) einfärben
+          col.setXYZ(i, cc.r, cc.g, cc.b);
+        }
+        const root = new Float32Array(n * 4);
+        for (let i = 0; i < n; i++) { root[i * 4] = it.x; root[i * 4 + 1] = it.y; root[i * 4 + 2] = it.z; root[i * 4 + 3] = 1 / it.s; }
+        g.setAttribute('aRoot', new T.BufferAttribute(root, 4));
+        geos.push(g);
+        cum.push(cum[cum.length - 1] + n);
+      });
+      if (md.mesh) { md.mesh.geometry.dispose(); md.mesh.removeFromParent(); }
+      if (!geos.length) return null;
+      const geo = geos.length > 1 ? mergeGeos(geos, false) : geos[0];
+      if (geos.length > 1) geos.forEach((g) => g.dispose());
+      const mesh = new T.Mesh(geo, getMeadowMat());
+      mesh.name = 'wiese';
+      mesh.castShadow = false;
+      mesh.receiveShadow = true;
+      mesh.userData.noMerge = true;
+      geo.computeBoundingSphere();
+      geo.boundingSphere.radius += 0.3;
+      base.group.add(mesh);
+      if (!md.mesh) meadows.push(md);
+      md.mesh = mesh;
+      md.cum = cum;
+      md.k = -1;
+      meadowDensity(md);
+      return mesh;
+    }
+    let meadowSeq = 0;
+    const _mm = new T.Object3D();
+    function meadowItem(md, tpl, petal, color) {
+      _mm.updateMatrix();
+      md.items.push({ tpl, m: _mm.matrix.clone(), c: color.clone(), petal, x: _mm.position.x, y: _mm.position.y, z: _mm.position.z, s: _mm.scale.x, key: W.rng(9173 + (meadowSeq++) * 31)() });
+    }
     kit.grassTufts = function (base, count = 60, seed = 1, o = {}) {
       const rng = W.rng(seedOf(seed, 7));
-      const mesh = new T.InstancedMesh(getTuftGeo(), mats.windDouble, count);
-      const dummy = new T.Object3D();
+      const md = meadowOf(base);
+      const tpl = getTuftGeo();
       const cBase = toColor(o.color || '#8fdc62');
       const cc = new T.Color();
       for (let i = 0; i < count; i++) {
         const p = base.randomPointOnGrass(rng, o.margin == null ? 0.25 : o.margin);
-        dummy.position.set(p.x, p.y - 0.02, p.z);
-        dummy.rotation.set(0, rng() * TAU, 0);
-        dummy.scale.setScalar((0.75 + rng() * 0.6) * (o.scale || 1));
-        dummy.updateMatrix();
-        mesh.setMatrixAt(i, dummy.matrix);
+        _mm.position.set(p.x, p.y - 0.02, p.z);
+        _mm.rotation.set(0, rng() * TAU, 0);
+        _mm.scale.setScalar((0.75 + rng() * 0.6) * (o.scale || 1));
         cc.copy(cBase).multiplyScalar(0.85 + rng() * 0.3);
-        mesh.setColorAt(i, cc);
+        meadowItem(md, tpl, false, cc);
       }
-      mesh.instanceMatrix.needsUpdate = true;
-      if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
-      mesh.computeBoundingSphere();
-      mesh.castShadow = false;
-      mesh.receiveShadow = true;
-      mesh.name = 'grassTufts';
-      base.group.add(mesh);
-      return mesh;
+      return rebuildMeadow(base);
     };
     let flowerGeo = null;
     kit.flowers = function (base, count = 24, colors, seed = 1, o = {}) {
       colors = colors && colors.length ? colors : ['#ff7aa8', '#ffd23f', '#ffffff', '#b28dff', '#ff8a5c'];
       if (!flowerGeo) {
-        // Blütenblätter exakt weiß → werden im Shader mit der Instanzfarbe getönt
+        // Blütenblätter exakt weiß → werden beim Aufbau mit der Blumenfarbe getönt.
+        // Nur die Oberseite der Blüte, offene Kegel (die Wiese ist doppelseitig): 24 Dreiecke.
+        const top = flowerHead(0.1);
+        const tp = top.attributes.position;
+        const headTop = new T.BufferGeometry(); // je Blatt-Segment nur das obere Dreieck
+        const arr = [];
+        for (let f = 0; f < tp.count; f += 6) for (let v = 0; v < 3; v++) arr.push(tp.getX(f + v), tp.getY(f + v), tp.getZ(f + v));
+        headTop.setAttribute('position', new T.Float32BufferAttribute(arr, 3));
+        headTop.computeVertexNormals();
         flowerGeo = mergeGeos([
-          paint(xf(flowerHead(0.1), [0, 0.3, 0], [0.18, 0, 0]), '#ffffff', { grad: [1, 1] }),
+          paint(xf(headTop, [0, 0.3, 0], [0.18, 0, 0]), '#ffffff', { grad: [1, 1] }),
           paint(xf(new T.CylinderGeometry(0.012, 0.016, 0.3, 3, 1, true), [0, 0.15, 0]), C.leafDark, { grad: [0.8, 1.1] }),
-          paint(xf(new T.ConeGeometry(0.04, 0.12, 3), [0.045, 0.09, 0], [0, 0, -1.0], [1, 1, 0.4]), C.leaf, {}),
-          paint(xf(new T.ConeGeometry(0.032, 0.035, 5), [0, 0.33, 0]), '#ffcf3a', { grad: [0.95, 1.1] }),
+          paint(xf(new T.ConeGeometry(0.04, 0.12, 3, 1, true), [0.045, 0.09, 0], [0, 0, -1.0], [1, 1, 0.4]), C.leaf, {}),
+          paint(xf(new T.ConeGeometry(0.032, 0.035, 5, 1, true), [0, 0.33, 0]), '#ffcf3a', { grad: [0.95, 1.1] }),
         ], false);
         flowerGeo.userData.shared = true;
+        top.dispose();
       }
       const rng = W.rng(seedOf(seed, 8));
-      const mesh = new T.InstancedMesh(flowerGeo, mats.windPetal, count);
-      const dummy = new T.Object3D();
+      const md = meadowOf(base);
       const cc = new T.Color();
       // in kleinen Gruppen streuen (wirkt natürlicher)
       let cx = 0, cz = 0;
@@ -1155,26 +1726,13 @@
         if (i % 4 === 0) { const p = base.randomPointOnGrass(rng, 0.45); cx = p.x; cz = p.z; }
         let x = cx + (rng() - 0.5) * 0.7, z = cz + (rng() - 0.5) * 0.7;
         if (!base.isOnGrass(x, z, 0.1)) { x = cx; z = cz; }
-        dummy.position.set(x, base.surfaceAt(x, z) - 0.01, z);
-        dummy.rotation.set((rng() - 0.5) * 0.2, rng() * TAU, (rng() - 0.5) * 0.2);
-        dummy.scale.setScalar((0.8 + rng() * 0.5) * (o.scale || 1));
-        dummy.updateMatrix();
-        mesh.setMatrixAt(i, dummy.matrix);
-        mesh.setColorAt(i, cc.set(colors[Math.floor(rng() * colors.length)]));
+        _mm.position.set(x, base.surfaceAt(x, z) - 0.01, z);
+        _mm.rotation.set((rng() - 0.5) * 0.2, rng() * TAU, (rng() - 0.5) * 0.2);
+        _mm.scale.setScalar((0.8 + rng() * 0.5) * (o.scale || 1));
+        cc.set(colors[Math.floor(rng() * colors.length)]);
+        meadowItem(md, flowerGeo, true, cc);
       }
-      const petals = mesh;
-      const grp = new T.Group();
-      grp.name = 'flowers';
-      [petals].forEach((m) => {
-        m.instanceMatrix.needsUpdate = true;
-        if (m.instanceColor) m.instanceColor.needsUpdate = true;
-        m.computeBoundingSphere();
-        m.castShadow = false;
-        m.receiveShadow = true;
-        grp.add(m);
-      });
-      base.group.add(grp);
-      return grp;
+      return rebuildMeadow(base);
     };
 
     /* ---------------- Weg ---------------- */
@@ -1217,7 +1775,7 @@
           base.keep(x, z, r * 0.9);
         }
       }
-      const grp = P.build();
+      const grp = P.build(null, { castShadow: false }); // flach: kein Schatten
       grp.name = 'path';
       base.group.add(grp);
       return grp;
@@ -1248,7 +1806,7 @@
             P.add(xf(geo.box(0.11, h * 0.86, 0.05), [x, y + h * 0.43 - 0.05, z], [0, -ang, 0]), colr, { grad: [0.78, 1.04] });
             P.add(xf(new T.ConeGeometry(0.078, 0.12, 4, 1, true), [x, y + h * 0.86 + 0.01, z], [0, -ang + PI / 4, 0], [1, 1, 0.45]), colr, { grad: [0.95, 1.05] });
           } else {
-            P.add(xf(geo.cyl(0.06, 0.07, h + 0.1, 6), [x, y + (h + 0.1) / 2 - 0.08, z]), colr, { grad: [0.7, 1.05] });
+            P.add(xf(new T.CylinderGeometry(0.06, 0.07, h + 0.1, 6, 1, true), [x, y + (h + 0.1) / 2 - 0.08, z]), colr, { grad: [0.7, 1.05] }); // oben die Kappe, unten der Boden
             P.add(xf(geo.cyl(0.075, 0.075, 0.04, 6), [x, y + h, z]), kit.shade(colr, 1.1), {});
           }
         }
@@ -1407,7 +1965,7 @@
       const h = o.height || 2.2;
       const P = new Parts();
       P.add(xf(geo.cyl(0.035, 0.045, h, 6), [0, h / 2, 0]), '#eef2f6', { grad: [0.75, 1.05] });
-      P.add(xf(new T.IcosahedronGeometry(0.075, 1), [0, h + 0.04, 0]), C.gold, { gloss: true });
+      P.add(xf(new T.OctahedronGeometry(0.075, 1), [0, h + 0.04, 0]), C.gold, { gloss: true });
       P.add(xf(geo.cyl(0.1, 0.13, 0.12, 8), [0, 0.06, 0]), C.stone, {});
       const grp = P.build();
       const cg = new T.PlaneGeometry(0.85, 0.52, 10, 3);
@@ -1431,7 +1989,7 @@
       P.add(xf(new T.IcosahedronGeometry(0.04, 0), [0, h + 0.13, 0]), C.gold, { gloss: true });
       for (let i = 0; i < 4; i++) {
         const a = (i / 4) * TAU + PI / 4;
-        P.add(xf(geo.cyl(0.012, 0.012, 0.28, 4), [Math.cos(a) * 0.105, h - 0.16, Math.sin(a) * 0.105]), metal, {});
+        P.add(xf(new T.CylinderGeometry(0.012, 0.012, 0.28, 4, 1, true), [Math.cos(a) * 0.105, h - 0.16, Math.sin(a) * 0.105]), metal, {});
       }
       P.addRaw(paint(xf(geo.cyl(0.09, 0.075, 0.26, 8), [0, h - 0.16, 0]), '#ffffff', { grad: [1, 1] }), 'glow');
       const g = P.build();
@@ -1513,13 +2071,13 @@
       const H = 2.7, r0 = 0.66, r1 = 0.44, bands = 5;
       for (let i = 0; i < bands; i++) {
         const t0 = i / bands, t1 = (i + 1) / bands;
-        const g = geo.cyl(lerp(r0, r1, t1), lerp(r0, r1, t0), (H / bands) + 0.002, 12, 1);
+        const g = new T.CylinderGeometry(lerp(r0, r1, t1), lerp(r0, r1, t0), (H / bands) + 0.002, 12, 1, true); // Deckel innen verdeckt
         g.translate(0, 0.25 + (t0 + t1) / 2 * H, 0);
         P.add(g, i % 2 ? '#ffffff' : stripe, { grad: [0.9, 1.04] });
       }
       P.add(xf(geo.cyl(0.85, 0.95, 0.3, 12), [0, 0.15, 0]), C.stone, { grad: [0.75, 1.02] });
       P.add(xf(geo.cyl(0.66, 0.6, 0.12, 12), [0, H + 0.3, 0]), C.metal, { grad: [0.85, 1.05] });
-      P.add(xf(new T.TorusGeometry(0.6, 0.022, 4, 16), [0, H + 0.62, 0], [PI / 2, 0, 0]), C.metal, {});
+      P.add(xf(new T.TorusGeometry(0.6, 0.022, 3, 16), [0, H + 0.62, 0], [PI / 2, 0, 0]), C.metal, {});
       for (let i = 0; i < 10; i++) { const a = (i / 10) * TAU; P.add(xf(geo.box(0.03, 0.3, 0.03), [Math.cos(a) * 0.6, H + 0.48, Math.sin(a) * 0.6], [0, -a, 0]), C.metal, {}); }
       P.addRaw(paint(xf(geo.cyl(0.32, 0.32, 0.5, 8), [0, H + 0.62, 0]), '#ffffff', { grad: [1, 1] }), 'glow');
       for (let i = 0; i < 4; i++) { const a = (i / 4) * TAU + PI / 8; P.add(xf(geo.cyl(0.025, 0.025, 0.5, 3), [Math.cos(a) * 0.33, H + 0.62, Math.sin(a) * 0.33]), C.metal, {}); }
@@ -1715,12 +2273,17 @@
       sp.name = 'halo';
       return sp;
     };
+    const nightWin = new T.Color('#ffe2a0');
     kit.setNight = function (k) {
       k = clamp(k, 0, 1);
       if (haloMat) { haloMat.opacity = smooth(0.35, 1, k) * 0.9; haloMat.visible = k > 0.3; }
       mats.glow.emissiveIntensity = 0.45 + k * 2.6;
       mats.window.emissiveIntensity = k * 1.25;
-      mats.window.color.set('#a6dcff').lerp(new T.Color('#ffe2a0'), k);
+      mats.window.color.set('#a6dcff').lerp(nightWin, k);
+      // dasselbe für zusammengeführte Meshes (mats.surface)
+      SU.uWinColor.value.copy(mats.window.color);
+      SU.uWinEmissive.value.copy(mats.window.emissive).multiplyScalar(mats.window.emissiveIntensity);
+      SU.uGlowEmissive.value.copy(mats.glow.emissive).multiplyScalar(mats.glow.emissiveIntensity);
     };
 
     return kit;

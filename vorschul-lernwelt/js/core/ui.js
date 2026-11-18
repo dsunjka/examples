@@ -174,9 +174,13 @@
   /**
    * Neuen Bildschirm anlegen. Liefert {screen, topbar, body}.
    * 3D-Welt: place = Ort der Kamera (siehe LT.w3d.go; ohne Angabe ruhiger Himmel 'sky',
-   * null = Kamera bleibt), frame = freier Bildbereich bzw. Funktion, die ihn liefert.
+   * null = Kamera bleibt), frame = freier Bildbereich bzw. Funktion, die ihn liefert,
+   * live = frame laufend nachlesen (z. B. HUD wächst nach dem Laden der Schrift).
+   * UI.onLeave (einmalig): läuft, bevor der nächste Bildschirm entsteht (z. B. Nachtstimmung beenden).
    */
-  UI.screen = function ({ area, className = '', title, icon, onBack, backIcon = '🏠', right = [], place, frame } = {}) {
+  UI.onLeave = null;
+  UI.screen = function ({ area, className = '', title, icon, onBack, backIcon = '🏠', right = [], place, frame, live } = {}) {
+    if (UI.onLeave) { const f = UI.onLeave; UI.onLeave = null; try { f(); } catch (e) { console.error(e); } }
     const root = UI.root();
     U.clear(root);
     document.querySelectorAll('.overlay').forEach((o) => o.remove());
@@ -195,7 +199,7 @@
       screen.appendChild(topbar);
     }
     root.appendChild(screen);
-    if (LT.w3d && place !== null) LT.w3d.go(place === undefined ? 'sky' : place, frame ? { frame } : {});
+    if (LT.w3d && place !== null) LT.w3d.go(place === undefined ? 'sky' : place, frame ? { frame, live: !!live } : {});
     return { screen, topbar };
   };
   UI.applyArea = function (node, area) {

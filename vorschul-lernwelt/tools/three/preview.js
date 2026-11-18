@@ -16,7 +16,9 @@ const ROOT = path.resolve(__dirname, '..', '..');
   const errs = [];
   p.on('pageerror', (e) => errs.push(String(e)));
   p.on('console', (m) => { if (m.type() === 'error') errs.push(m.text()); });
-  await p.goto('file://' + path.join(ROOT, 'index.html') + '?test&3d=1');
+  p.setDefaultTimeout(120000);
+  // „load“ wartet auf das Übersetzen aller Shader – mit SwiftShader dauert das
+  await p.goto('file://' + path.join(ROOT, 'index.html') + '?test&3d=1', { waitUntil: 'domcontentloaded', timeout: 120000 });
   await p.waitForFunction(() => window.LT && LT.app && LT.w3d);
   const ok = await p.evaluate(() => LT.w3d.start());
   if (!ok) { console.error('3D startet nicht'); process.exit(1); }
@@ -39,10 +41,12 @@ const ROOT = path.resolve(__dirname, '..', '..');
     }, [kind, id, a, d, h]);
   }
   if (args.eval) await p.evaluate(args.eval);
+  // erst ein paar Bilder mit der neuen Pose abwarten (SwiftShader ist langsam), dann die Wartezeit
+  await p.evaluate(() => new Promise((res) => { const W = LT.w3d, f = W.stats.frames, t0 = performance.now(); (function poll() { if ((W.stats.frames >= f + 4 && !W.rig.pending) || performance.now() - t0 > 60000) res(); else setTimeout(poll, 50); })(); }));
   await p.waitForTimeout(Number(args.wait || 2500));
   if (!args.ui) await p.evaluate(() => { document.getElementById('app').style.visibility = 'hidden'; document.querySelectorAll('.mascot,.bubble').forEach((n) => (n.style.visibility = 'hidden')); });
   await p.screenshot({ path: args.out || 'preview.png' });
-  const dbg = await p.evaluate(() => LT.w3d.debug());
+  const dbg = await p.evaluate(() => Object.assign(LT.w3d.debug(), { pose: LT.w3d.rig.pose }));
   const info = await p.evaluate(() => { const r = LT.w3d.renderer.info; return { calls: r.render.calls, triangles: r.render.triangles, geometries: r.memory.geometries, textures: r.memory.textures }; });
   console.log(JSON.stringify({ out: args.out, dbg, info, errors: errs.slice(0, 10) }));
   await b.close();

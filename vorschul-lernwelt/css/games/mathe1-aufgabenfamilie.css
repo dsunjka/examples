@@ -210,3 +210,49 @@
 .auf-swapshow .auf-dots { gap: 6px 12px; }
 .auf-swapshow .auf-dgrp { gap: 5px; }
 .auf-dot.auf-none { background: #fff; border: 3px dashed #c4c9de; }
+
+/* ---------- Tablet: Zahlenhaus, Kärtchen und Gleichungen größer ---------- */
+@media (min-width: 700px) and (min-height: 700px) {
+  .auf-main { max-width: 1060px; gap: clamp(10px, 2.6vmin, 26px); }
+  .auf-house { --auf-w: min(94vw, 640px); }
+  .auf-house.auf-small { --auf-w: min(70vw, 460px); }
+  .auf-roof { height: clamp(66px, 12.5vh, 140px); }
+  .auf-small .auf-roof { height: clamp(54px, 10vh, 110px); }
+  .auf-room { min-height: clamp(52px, 9.5vh, 110px); }
+  .auf-num { font-size: clamp(32px, min(8.5vw, 7.4vh), 72px); }
+  .auf-small .auf-num { font-size: clamp(28px, min(7vw, 6.2vh), 58px); }
+  .auf-dot { --d: clamp(10px, 3vmin, 22px); }
+  .auf-slot { min-height: 76px; }
+  .auf-withdots .auf-slot { min-height: 96px; }
+  .auf-slotq { font-size: 32px; }
+  .auf-pile, .auf-cchoices { max-width: 860px; gap: clamp(8px, 2.2vmin, 22px); }
+  .auf-card { min-width: clamp(112px, 22vw, 210px); min-height: 84px; padding: 10px 18px; }
+  .tile.auf-ctile { min-width: clamp(120px, 22vw, 220px); min-height: 90px; }
+  .auf-lab { font-size: clamp(24px, min(6.4vw, 5.8vh), 50px); }
+  .auf-res { font-size: clamp(22px, min(5.6vw, 5vh), 42px); }
+  .auf-in .auf-lab, .auf-in .auf-res { font-size: clamp(20px, min(5.4vw, 4.6vh), 40px); }
+  .auf-cdots { max-width: 200px; }
+  .auf-cdots .auf-dot { --d: clamp(9px, 2.6vmin, 18px); }
+  .auf-eq { font-size: clamp(30px, min(8.4vw, 7vh), 68px); }
+  .auf-eq2 { font-size: clamp(26px, min(7vw, 5.8vh), 56px); }
+  .auf-eq-big { font-size: clamp(36px, min(10vw, 8.6vh), 84px); }
+  .tile.auf-ntile { --tile: clamp(64px, 19vmin, 160px); }
+  .tile.auf-ntile .tile-text { font-size: clamp(30px, 9vmin, 76px); }
+  .auf-swaplab { font-size: clamp(28px, min(7vw, 6.2vh), 56px); }
+  .auf-swapshow .auf-dot { --d: clamp(20px, 5.6vmin, 40px); }
+}
+/* Tablet quer: die Höhe ist knapp (Haus + Kärtchen in zwei Reihen) – Höhen
+   bleiben nahe am Grundmaß, Breiten und Schrift wachsen */
+@media (min-width: 700px) and (min-height: 700px) and (orientation: landscape) {
+  .auf-roof { height: clamp(66px, 11vh, 108px); }
+  .auf-small .auf-roof { height: clamp(54px, 8.5vh, 84px); }
+  .auf-room { min-height: clamp(52px, 8vh, 80px); }
+  .auf-num { font-size: clamp(32px, min(8.5vw, 6.4vh), 60px); }
+  .auf-small .auf-num { font-size: clamp(28px, min(7vw, 5.4vh), 50px); }
+  .auf-dot { --d: clamp(10px, 2.6vmin, 20px); }
+  .auf-slot { min-height: 62px; }
+  .auf-withdots .auf-slot { min-height: 82px; }
+  .auf-card { min-height: 68px; padding: 8px 16px; }
+  .auf-lab { font-size: clamp(24px, min(6.4vw, 5vh), 44px); }
+  .auf-cdots .auf-dot { --d: clamp(9px, 2.2vmin, 16px); }
+}

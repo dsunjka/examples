@@ -47,7 +47,12 @@
      onPlace(place)              vom Kern bei jedem W.go: laufende Feiern enden
      stop()                      alles sofort beenden
      live()                      3D-Effekte möglich?
-     debug()                     Zähler, Draw-Calls, Größe (Diagnose)
+     debug()                     Zähler, Draw-Calls, Größe, Dialog-Loch (Diagnose)
+
+   Offener Dialog (.overlay .panel): Konfetti und Feuerwerk fliegen HINTER ihm
+   vorbei (Loch im Shader, abgerundetes Rechteck); Funkeln an Elementen, Stern-
+   Flüge und die Stickerkarte bleiben davor. Die Stickerkarte passt in ihren
+   Kasten unter der Beschriftung (cardSlot).
 
    W.reducedMotion: sehr reduzierte, ruhige Effekte (kein Flug, kein
    Feuerwerk, wenige still verglimmende Funken). W.quality 'low': halbe Mengen,
@@ -183,12 +188,31 @@
       return g;
     }
 
-    /** Material leuchtet mit k × eigener Farbe (inkl. Instanzfarbe) selbst */
-    function selfLit(mat, k) {
+    /* Dialog-Loch: Konfetti und Feuerwerk fliegen HINTER dem offenen Dialog (.overlay .panel)
+       vorbei – Teile über seinem (abgerundeten) Rechteck werden nicht gezeichnet. Funkeln an
+       Elementen (Sterne, Sticker) und die Stickerkarte bleiben sichtbar. Gerätepixel der
+       Leinwand: Mitte (x, y von unten) und halbe Größe; z = 0: kein Dialog. */
+    const HOLE = { value: new T.Vector4(0, 0, 0, 0) };
+    const HOLE_R = { value: 0 };
+    const HOLE_GLSL = [
+      'uniform vec4 uHole; uniform float uHoleR;',
+      'float fxHole(vec2 p) {',
+      '  if (uHole.z <= 0.0) return 1e4;',
+      '  vec2 q = abs(p - uHole.xy) - uHole.zw + vec2(uHoleR);',
+      '  return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - uHoleR;',
+      '}',
+    ].join('\n');
+    /** Material leuchtet mit k × eigener Farbe (inkl. Instanzfarbe) selbst; clip: hinter dem Dialog */
+    function selfLit(mat, k, clip) {
       mat.onBeforeCompile = (sh) => {
         sh.fragmentShader = sh.fragmentShader.replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\n\ttotalEmissiveRadiance += diffuseColor.rgb * ' + k.toFixed(3) + ';');
+        if (clip) {
+          sh.uniforms.uHole = HOLE;
+          sh.uniforms.uHoleR = HOLE_R;
+          sh.fragmentShader = sh.fragmentShader.replace('void main() {', HOLE_GLSL + '\nvoid main() {\n\tif (fxHole(gl_FragCoord.xy) < 0.0) discard;');
+        }
       };
-      mat.customProgramCacheKey = () => 'fx-selflit-' + k;
+      mat.customProgramCacheKey = () => 'fx-selflit-' + k + (clip ? '-clip' : '');
       return mat;
     }
 
@@ -291,19 +315,22 @@
 
     /* ---------------- Funken (ein Points-System) ---------------- */
     const SPARK_VS = [
-      'attribute vec3 aColor; attribute float aSize; attribute float aAlpha; attribute float aRot; attribute float aShape;',
+      'attribute vec3 aColor; attribute float aSize; attribute float aAlpha; attribute float aRot; attribute float aShape; attribute float aClip;',
       'uniform float uScale;',
-      'varying vec3 vColor; varying float vAlpha; varying float vShape; varying float vRot;',
+      'varying vec3 vColor; varying float vAlpha; varying float vShape; varying float vRot; varying float vClip;',
       'void main() {',
       '  vec4 mv = modelViewMatrix * vec4(position, 1.0);',
       '  gl_Position = projectionMatrix * mv;',
       '  gl_PointSize = max(0.0, aSize * uScale / -mv.z);',
-      '  vColor = aColor; vAlpha = aAlpha; vShape = aShape; vRot = aRot;',
+      '  vColor = aColor; vAlpha = aAlpha; vShape = aShape; vRot = aRot; vClip = aClip;',
       '}',
     ].join('\n');
     const SPARK_FS = [
-      'varying vec3 vColor; varying float vAlpha; varying float vShape; varying float vRot;',
+      'varying vec3 vColor; varying float vAlpha; varying float vShape; varying float vRot; varying float vClip;',
+      HOLE_GLSL,
       'void main() {',
+      '  float hole = vClip > 0.5 ? smoothstep(-1.5, 1.5, fxHole(gl_FragCoord.xy)) : 1.0;',
+      '  if (hole <= 0.0) discard;',
       '  vec2 p = gl_PointCoord * 2.0 - 1.0;',
       '  float cr = cos(vRot), sr = sin(vRot);',
       '  p = vec2(cr * p.x - sr * p.y, sr * p.x + cr * p.y);',
@@ -326,7 +353,7 @@
       '    a = glow * glow;',
       '    hot = glow * 0.55;',
       '  }',
-      '  a *= vAlpha;',
+      '  a *= vAlpha * hole;',
       '  if (a < 0.004) discard;',
       '  vec3 col = mix(vColor, vec3(1.0), clamp(hot, 0.0, 1.0));',
       // vormultipliert, Alpha etwas kleiner → teils additiv (leuchtet auf Himmel, sichtbar auf Weiß)
@@ -338,17 +365,17 @@
     function makeSparks(cap) {
       const geo = new T.BufferGeometry();
       const mk = (n, name) => { const a = new T.BufferAttribute(new Float32Array(cap * n), n); a.setUsage(T.DynamicDrawUsage); geo.setAttribute(name, a); return a; };
-      const aP = mk(3, 'position'), aC = mk(3, 'aColor'), aS = mk(1, 'aSize'), aA = mk(1, 'aAlpha'), aR = mk(1, 'aRot'), aSh = mk(1, 'aShape');
+      const aP = mk(3, 'position'), aC = mk(3, 'aColor'), aS = mk(1, 'aSize'), aA = mk(1, 'aAlpha'), aR = mk(1, 'aRot'), aSh = mk(1, 'aShape'), aCl = mk(1, 'aClip');
       geo.setDrawRange(0, 0);
-      const mat = new T.ShaderMaterial(Object.assign({ uniforms: { uScale: { value: 1 } }, vertexShader: SPARK_VS, fragmentShader: SPARK_FS, depthWrite: false, depthTest: true }, PREMUL));
+      const mat = new T.ShaderMaterial(Object.assign({ uniforms: { uScale: { value: 1 }, uHole: HOLE, uHoleR: HOLE_R }, vertexShader: SPARK_VS, fragmentShader: SPARK_FS, depthWrite: false, depthTest: true }, PREMUL));
       const pts = new T.Points(geo, mat);
       pts.name = 'fx-sparks';
       pts.frustumCulled = false;
       pts.renderOrder = 30;
       S.L.scene.add(pts);
       return {
-        cap, n: 0, geo, mat, pts, attrs: [aP, aC, aS, aA, aR, aSh],
-        P: aP.array, C: aC.array, SZ: aS.array, AL: aA.array, RO: aR.array, SH: aSh.array,
+        cap, n: 0, geo, mat, pts, attrs: [aP, aC, aS, aA, aR, aSh, aCl],
+        P: aP.array, C: aC.array, SZ: aS.array, AL: aA.array, RO: aR.array, SH: aSh.array, CL: aCl.array,
         V: new Float32Array(cap * 3), life: new Float32Array(cap), max: new Float32Array(cap), s0: new Float32Array(cap), a0: new Float32Array(cap),
         drag: new Float32Array(cap), grav: new Float32Array(cap), spin: new Float32Array(cap), mode: new Uint8Array(cap), ph: new Float32Array(cap),
       };
@@ -357,7 +384,9 @@
      * Funke anlegen (Welt-Koordinaten, px). mode: 0 Burst, 1 Spur, 2 Schein/Blitz,
      * 3 Funkeln (wächst und schrumpft), 4 Knistern (Burst, flackert am Ende), 5 Regen.
      * shape: 0 Perle, 1 Funkelstern, 2 weicher Schein. delay: Sekunden bis sichtbar.
+     * Solange CLIP gesetzt ist, fliegt der Funke hinter dem offenen Dialog (Konfetti, Feuerwerk).
      */
+    let CLIP = 0;
     function spark(x, y, z, vx, vy, vz, size, life, rgb, shape, mode, drag, grav, alpha, delay) {
       const s = SP;
       if (!s || s.n >= s.cap) return;
@@ -365,7 +394,7 @@
       s.P[i3] = x; s.P[i3 + 1] = y; s.P[i3 + 2] = z;
       s.V[i3] = vx; s.V[i3 + 1] = vy; s.V[i3 + 2] = vz;
       s.C[i3] = rgb[0]; s.C[i3 + 1] = rgb[1]; s.C[i3 + 2] = rgb[2];
-      s.SZ[i] = 0; s.AL[i] = 0; s.RO[i] = R() * TAU; s.SH[i] = shape;
+      s.SZ[i] = 0; s.AL[i] = 0; s.RO[i] = R() * TAU; s.SH[i] = shape; s.CL[i] = CLIP;
       s.life[i] = -(delay || 0); s.max[i] = life; s.s0[i] = size; s.a0[i] = alpha == null ? 1 : alpha;
       s.drag[i] = drag || 0; s.grav[i] = grav || 0; s.mode[i] = mode;
       s.spin[i] = shape === 1 ? rnd(-2.5, 2.5) : 0;
@@ -375,7 +404,7 @@
       const s = SP, j = --s.n;
       if (i === j) return;
       cp(s.P, 3, i, j); cp(s.V, 3, i, j); cp(s.C, 3, i, j);
-      s.SZ[i] = s.SZ[j]; s.AL[i] = s.AL[j]; s.RO[i] = s.RO[j]; s.SH[i] = s.SH[j];
+      s.SZ[i] = s.SZ[j]; s.AL[i] = s.AL[j]; s.RO[i] = s.RO[j]; s.SH[i] = s.SH[j]; s.CL[i] = s.CL[j];
       s.life[i] = s.life[j]; s.max[i] = s.max[j]; s.s0[i] = s.s0[j]; s.a0[i] = s.a0[j];
       s.drag[i] = s.drag[j]; s.grav[i] = s.grav[j]; s.mode[i] = s.mode[j]; s.spin[i] = s.spin[j]; s.ph[i] = s.ph[j];
     }
@@ -418,14 +447,15 @@
       }
       s.geo.setDrawRange(0, s.n);
       if (s.n) {
-        const sizes = [3, 3, 1, 1, 1, 1];
+        const sizes = [3, 3, 1, 1, 1, 1, 1];
         for (let a = 0; a < s.attrs.length; a++) { const at = s.attrs[a]; at.clearUpdateRanges(); at.addUpdateRange(0, s.n * sizes[a]); at.needsUpdate = true; }
       }
     }
 
     /* ---------------- Aufbau ---------------- */
     function build() {
-      const L = W.layer({ parent: document.body, className: 'fx3d-canvas', dprCap: 2, fov: FOV });
+      // Effekte sind weich und bewegt: ohne Kantenglättung (spart Speicher/Füllrate; ältere Kerne ignorieren die Option)
+      const L = W.layer({ parent: document.body, className: 'fx3d-canvas', dprCap: 2, fov: FOV, antialias: false });
       S.L = L;
       L.canvas.setAttribute('aria-hidden', 'true');
       L.renderer.toneMapping = T.NeutralToneMapping != null ? T.NeutralToneMapping : T.ACESFilmicToneMapping;
@@ -440,10 +470,10 @@
       // Konfetti (selbstleuchtender Anteil: kein Stück wird im Schatten dunkel – Spielzeug-Look)
       const paperGeo = paperGeometry();
       const starGeo = starGeometry();
-      PAPER = makePool('paper', paperGeo, selfLit(new T.MeshStandardMaterial({ color: '#ffffff', roughness: 0.55, metalness: 0, side: T.DoubleSide, flatShading: true, envMapIntensity: 0.6 }), 0.3), 420);
-      FOILS = makePool('foil', paperGeo, selfLit(new T.MeshStandardMaterial({ color: '#ffffff', roughness: 0.26, metalness: 0.55, side: T.DoubleSide, flatShading: true, envMapIntensity: 1.3 }), 0.22), 80);
-      RIBBON = makePool('ribbon', ribbonGeometry(), selfLit(new T.MeshStandardMaterial({ color: '#ffffff', roughness: 0.4, metalness: 0.1, side: T.DoubleSide, envMapIntensity: 0.8 }), 0.28), 60);
-      STARS = makePool('star', starGeo, selfLit(new T.MeshStandardMaterial({ color: '#ffffff', roughness: 0.3, metalness: 0.4, flatShading: true, envMapIntensity: 1.2 }), 0.22), 60);
+      PAPER = makePool('paper', paperGeo, selfLit(new T.MeshStandardMaterial({ color: '#ffffff', roughness: 0.55, metalness: 0, side: T.DoubleSide, flatShading: true, envMapIntensity: 0.6 }), 0.3, true), 420);
+      FOILS = makePool('foil', paperGeo, selfLit(new T.MeshStandardMaterial({ color: '#ffffff', roughness: 0.26, metalness: 0.55, side: T.DoubleSide, flatShading: true, envMapIntensity: 1.3 }), 0.22, true), 80);
+      RIBBON = makePool('ribbon', ribbonGeometry(), selfLit(new T.MeshStandardMaterial({ color: '#ffffff', roughness: 0.4, metalness: 0.1, side: T.DoubleSide, envMapIntensity: 0.8 }), 0.28, true), 60);
+      STARS = makePool('star', starGeo, selfLit(new T.MeshStandardMaterial({ color: '#ffffff', roughness: 0.3, metalness: 0.4, flatShading: true, envMapIntensity: 1.2 }), 0.22, true), 60);
 
       // Stern-Flug: goldene Sterne (Instanzen)
       const goldMat = selfLit(new T.MeshStandardMaterial({ color: '#ffc928', roughness: 0.24, metalness: 0.38, emissive: '#ff9f00', emissiveIntensity: 0.35, flatShading: true, envMapIntensity: 1.25 }), 0.12);
@@ -532,10 +562,32 @@
       if (!S.raf && !S.frozen) { S.last = performance.now(); S.raf = requestAnimationFrame(frame); }
       return true;
     }
+    /** Rechteck des obersten offenen Dialogs (px, mit seiner 7-px-Unterkante) oder null */
+    function dialogRect() {
+      const ps = document.querySelectorAll('.overlay .panel');
+      const p = ps.length ? ps[ps.length - 1] : null;
+      const r = rectOf(p);
+      if (!r) return null;
+      if (p !== S.holeEl) { S.holeEl = p; S.holeR = parseFloat(getComputedStyle(p).borderTopLeftRadius) || 0; }
+      return { left: r.left, right: r.right, top: r.top, bottom: r.bottom + 7, rad: S.holeR };
+    }
+    function updateHole() {
+      const r = dialogRect(), v = HOLE.value, d = S.dpr;
+      if (!r) { v.set(0, 0, 0, 0); return; }
+      const hx = (r.right - r.left) / 2, hy = (r.bottom - r.top) / 2;
+      v.set((r.left + hx) * d, (S.h - r.top - hy) * d, hx * d, hy * d);
+      HOLE_R.value = Math.min(r.rad, hx, hy) * d;
+    }
+    /** Punkt (px) außerhalb des Dialogs? (ruhige Effekte legen ihre Teile nur dorthin) */
+    function outsideDialog(x, y, pad) {
+      const r = dialogRect();
+      return !r || x < r.left - pad || x > r.right + pad || y < r.top - pad || y > r.bottom + pad;
+    }
     function step(dt) {
       S.t += dt;
       const t = S.t;
       size();
+      updateHole();
       stepFlights(dt);
       stepRockets(dt);
       stepRain(dt);
@@ -613,7 +665,14 @@
         // ruhig: wenige Papierstücke erscheinen oben, sinken kaum und verglimmen
         const m = Math.max(6, Math.round(n / 6));
         for (let k = 0; k < m; k++) {
-          const i = addBody(PAPER, rnd(-0.45, 0.45) * w, rnd(0.05, 0.42) * h, rnd(-60, 60), 0, 0, 0, rnd(10, 14) * U, pick(pal), rnd(0.3, 0.8));
+          // nicht auf den Dialog: bis zu 12 Versuche, sonst fällt das Stück aus
+          let px = 0, py = 0, ok = false;
+          for (let tries = 0; tries < 12 && !ok; tries++) {
+            px = rnd(-0.45, 0.45) * w; py = rnd(0.05, 0.42) * h;
+            ok = outsideDialog(px + w / 2, h / 2 - py, 16 * U);
+          }
+          if (!ok) continue;
+          const i = addBody(PAPER, px, py, rnd(-60, 60), 0, 0, 0, rnd(10, 14) * U, pick(pal), rnd(0.3, 0.8));
           if (i < 0) break;
           PAPER.drag[i] = 6; PAPER.grav[i] = 90 * U; PAPER.max[i] = rnd(1.4, 2.0); PAPER.delay[i] = rnd(0, 0.3);
         }
@@ -664,6 +723,7 @@
       }
       // Knall: Lichtblitz und Glitzer, der mitfliegt
       const mouths = at ? [[bx, by, 0]] : [[-w / 2, -h / 2, -1], [w / 2, -h / 2, 1]];
+      CLIP = 1;
       for (const [mx, my, side] of mouths) {
         spark(mx, my, 0, 0, 0, 0, 260 * U, 0.35, WHITE, 2, 2, 0, 0, 0.75, 0);
         spark(mx, my, 0, 0, 0, 0, 140 * U, 0.5, GOLD[0], 2, 2, 0, 0, 0.6, 0);
@@ -674,6 +734,7 @@
           spark(mx, my, rnd(-0.03, 0.03) * D, vx, vy, rnd(-0.05, 0.05) * D, rnd(9, 16) * U, rnd(1.1, 2.0), pick(GLITTER), R() < 0.45 ? 1 : 0, 4, 1.6, 260 * U, 1, rnd(0, 0.15));
         }
       }
+      CLIP = 0;
       return true;
     }
 
@@ -881,11 +942,15 @@
       const U = S.U, h = S.h, w = S.w;
       const el = opts.el || null;
       if (W.reducedMotion) {
+        // wenige ruhige Funkelsterne neben dem Fenster (nicht auf Text und Knöpfen)
         const r = rectOf(el);
-        for (let k = 0; k < 8; k++) {
-          const x = r ? r.left + rnd(-0.05, 1.05) * r.width : rnd(0.1, 0.9) * w;
-          const y = r ? r.top + rnd(-0.05, 0.25) * r.height : rnd(0.1, 0.4) * h;
+        let k = 0;
+        for (let tries = 0; tries < 40 && k < 8; tries++) {
+          const x = r ? r.left + rnd(-0.12, 1.12) * r.width : rnd(0.1, 0.9) * w;
+          const y = r ? r.top + rnd(-0.1, 0.4) * r.height : rnd(0.1, 0.4) * h;
+          if (x < 12 || x > w - 12 || y < 12 || !outsideDialog(x, y, 14 * U)) continue;
           spark(wx(x), wy(y), 20, 0, 0, 0, rnd(20, 30) * U, 1.2, pick(GOLD), 1, 3, 0, 0, 0.9, k * 0.12);
+          k++;
         }
         return true;
       }
@@ -905,6 +970,7 @@
     }
     function stepRockets(dt) {
       const U = S.U;
+      CLIP = 1;
       for (const r of ROCKETS) {
         if (!r.on) continue;
         if (r.delay > 0) { r.delay -= dt; continue; }
@@ -932,6 +998,7 @@
         }
         if (u >= 1) { r.on = false; explode(r); }
       }
+      CLIP = 0;
     }
     function explode(r) {
       const U = S.U, x = r.x1, y = r.y1, z = r.z;
@@ -971,12 +1038,14 @@
       RAIN.t += dt;
       if (RAIN.t >= RAIN.dur) { RAIN.on = false; return; }
       RAIN.acc += dt * RAIN.rate;
+      CLIP = 1;
       while (RAIN.acc >= 1) {
         RAIN.acc -= 1;
         const vy = -rnd(70, 150) * U;
         const life = Math.min(5.5, (S.h + 60) / -vy);
         spark(rnd(-0.5, 0.5) * S.w, S.h / 2 + 10, rnd(-0.06, 0.06) * S.D, rnd(-20, 20) * U, vy, 0, rnd(9, 18) * U, life, pick(GLITTER), R() < 0.6 ? 1 : 0, 5, 0, 0, 1, 0);
       }
+      CLIP = 0;
     }
 
     /* ==================================================================
@@ -1122,9 +1191,12 @@
       // Kartenbreite in px: Emoji auf der Karte = 0,74 × Emoji im DOM (das DOM-Emoji
       // federt beim Übergang von 0,74 auf 1 – siehe .fx3d-pop in css/fx3d.css)
       CARD.size = (0.74 * fs * tf.image.height) / (info.px * CARD_H);
+      CARD.emojiK = (info.px * CARD_H) / (tf.image.height * fs); // Emoji der Karte : DOM-Emoji je px Kartenbreite
       el.classList.add('fx3d-hold');
+      el.style.removeProperty('--fx3d-pop-from');
       clearTimeout(CARD.timer);
-      CARD.timer = setTimeout(() => revealSticker(el), 3200); // falls die Schleife ruht (Tab im Hintergrund)
+      // falls die Schleife ruht (Tab im Hintergrund) oder sehr langsam läuft: Karte weg, Sticker zeigen
+      CARD.timer = setTimeout(() => { if (CARD.on && CARD.el === el) endCard(); else revealSticker(el); }, 3200);
       CARD.g.visible = true;
       return true;
     }
@@ -1143,6 +1215,22 @@
       revealSticker(CARD.el);
       CARD.el = null;
     }
+    /**
+     * Platz der Karte (px): im Kasten des Stickers (Elternelement), unter der Beschriftung
+     * davor, mit 12 px Luft oben und unten – die Karte bleibt darin, auch beim Wippen.
+     */
+    function cardSlot(el, r) {
+      const box = el.parentElement;
+      const br = rectOf(box);
+      if (!br) return null;
+      let top = br.top + 12;
+      for (let p = el.previousElementSibling; p; p = p.previousElementSibling) {
+        const pr = p.getBoundingClientRect();
+        if (pr.height) { top = Math.max(top, pr.bottom + 12); break; }
+      }
+      const bottom = Math.max(r.bottom, br.bottom - 12);
+      return bottom - top > 40 ? { top, bottom } : null;
+    }
     function stepCard(dt) {
       if (!CARD || !CARD.on) return;
       const c = CARD;
@@ -1150,7 +1238,17 @@
       const r = rectOf(c.el);
       if (!r) { endCard(); return; }
       const U = S.U, t = c.t;
-      const x = wx(r.left + r.width / 2), y = wy(r.top + r.height / 2);
+      // Größe aus dem Emoji, aber höchstens so hoch wie der freie Platz im Kasten (minus Wippen);
+      // die Mitte bleibt beim Emoji, rückt aber in den Platz hinein
+      const slot = cardSlot(c.el, r);
+      let size = c.size, cy = r.top + r.height / 2;
+      if (slot) {
+        const room = slot.bottom - slot.top - 8 * U;
+        size = Math.max(Math.min(size, room / BODY_H), Math.min(size, 0.6 * r.height));
+        const hh = (size * BODY_H) / 2;
+        cy = Math.max(slot.top + hh + 4 * U, Math.min(slot.bottom - hh - 4 * U, cy));
+      }
+      const x = wx(r.left + r.width / 2), y = wy(cy);
       const IN = 1.0, HOLD = 2.0, OUT = 0.3;
       let s = 1, ry = 0, rx = 0, z = 0, op = 1, by = 0;
       if (t < IN) {
@@ -1168,6 +1266,8 @@
         const u = Math.min(1, (t - HOLD) / OUT);
         if (!c.revealed) {
           c.revealed = true;
+          // das DOM-Emoji federt von der Größe des Karten-Emojis aus auf (css/fx3d.css)
+          c.el.style.setProperty('--fx3d-pop-from', clamp(c.emojiK * size, 0.3, 1).toFixed(3));
           revealSticker(c.el);
           sparkle(c.el, { gold: true, n: 22 });
         }
@@ -1183,12 +1283,12 @@
       c.front.material.uniforms.uOpacity.value = op;
       c.back.material.uniforms.uOpacity.value = op;
       c.body.material.opacity = op;
-      const wd = c.size * s;
+      const wd = size * s;
       c.g.position.set(x, y + by, z);
       c.g.rotation.set(rx, ry, 0);
       c.g.scale.set(wd, wd, wd);
       // Schein hinter der Karte, solange sie hereindreht
-      if (t < IN + 0.2) spark(x, y, z - 30, 0, 0, 0, c.size * 2.8 * s, 0.07, GOLD[3], 2, 2, 0, 0, 0.45, 0);
+      if (t < IN + 0.2) spark(x, y, z - 30, 0, 0, 0, size * 2.8 * s, 0.07, GOLD[3], 2, 2, 0, 0, 0.45, 0);
     }
 
     /* ==================================================================
@@ -1271,6 +1371,7 @@
           size: [S.w, S.h, S.dpr], frames: S.frames,
           n: S.L ? { paper: PAPER.n, foil: FOILS.n, ribbon: RIBBON.n, star: STARS.n, sparks: SP.n, flights: FLY.list.filter((f) => f.on).length, rockets: ROCKETS.filter((r) => r.on).length, rain: RAIN.on, card: CARD.on } : null,
           calls: info.calls, triangles: info.triangles,
+          hole: HOLE.value.z > 0 ? HOLE.value.toArray().map(Math.round).concat(Math.round(HOLE_R.value)) : null,
         };
       },
     };

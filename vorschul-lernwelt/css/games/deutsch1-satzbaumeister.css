@@ -144,12 +144,13 @@
 .sat-wagon.sat-filled {
   border: 3px solid transparent;
   background: var(--card);
-  box-shadow: 0 5px 0 rgba(43, 45, 66, .16);
+  background-image: var(--gloss);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.9), var(--shadow);
 }
-.sat-train .sat-wagon.sat-filled:nth-of-type(4n+1) { background: #ffe1e1; }
-.sat-train .sat-wagon.sat-filled:nth-of-type(4n+2) { background: #dff1ff; }
-.sat-train .sat-wagon.sat-filled:nth-of-type(4n+3) { background: #e3f8d8; }
-.sat-train .sat-wagon.sat-filled:nth-of-type(4n+4) { background: #f0e4ff; }
+.sat-train .sat-wagon.sat-filled:nth-of-type(4n+1) { background-color: #ffe1e1; }
+.sat-train .sat-wagon.sat-filled:nth-of-type(4n+2) { background-color: #dff1ff; }
+.sat-train .sat-wagon.sat-filled:nth-of-type(4n+3) { background-color: #e3f8d8; }
+.sat-train .sat-wagon.sat-filled:nth-of-type(4n+4) { background-color: #f0e4ff; }
 .sat-wagon.sat-tail {
   min-width: calc(var(--sat-h) * 0.95);
   border-radius: 14px 26px 10px 10px;
@@ -232,4 +233,18 @@
   .sat-wagon.sat-tail, .sat-train.sat-fix .tile.sat-ftile.sat-tail { min-width: 56px; }
   .sat-wagon::before { left: 8%; }
   .sat-wagon::after { right: 8%; }
+}
+
+/* ---------- Tablet: Zug, Wagen, Wortkarten und Bild größer ---------- */
+@media (min-width: 700px) and (min-height: 700px) {
+  .stage.sat-stage { --sat-h: clamp(60px, 12.4vmin, 116px); --sat-fs: clamp(22px, 5.3vmin, 50px); }
+  .sat-pic { font-size: clamp(48px, 13.4vmin, 126px); }
+  .sat-pic.sat-pic-s { font-size: clamp(36px, 9.4vmin, 86px); }
+  .sat-mode { font-size: clamp(22px, 4.8vmin, 44px); }
+  .sat-listen { min-height: 72px; font-size: clamp(18px, 3.6vmin, 32px); }
+  .sat-pro { font-size: clamp(16px, 3vmin, 26px); }
+  .sat-train { --sat-gap: clamp(16px, 3.4vmin, 30px); column-gap: clamp(6px, 1.4vmin, 14px); }
+  .sat-pool { gap: clamp(10px, 2.4vmin, 22px); max-width: min(100%, 1100px); }
+  .sat-card { min-width: 92px; min-height: clamp(64px, 13vmin, 120px); padding: 6px clamp(14px, 3vmin, 30px); border-radius: 22px; }
+  .sat-pchoices .tile.large { --tile: clamp(96px, 25vmin, 220px); }
 }

@@ -358,6 +358,7 @@ async function voice(env) {
 /**
  * 3D-Welt (js/world3d) mit ?test&3d=1: Start, alle Inseln, laufende Bilder,
  * Ort je Bildschirm, Ruhemodus im Elternbereich, Weltkarte mit Schildern,
+ * Schilder (unter der HUD, nicht übereinander, im Hochformat nie angeschnitten),
  * Antippen (Schild und 3D-Insel), Kamerafahrt, Hochformat-Schieben,
  * Bildinhalt und Budget, Einstellung „Aus“ (Elternbereich) nach dem Neuladen.
  * Sparsam: SwiftShader rendert auf der CPU – zwei Seiten, kurze Wartezeiten.
@@ -414,11 +415,16 @@ async function threeD(env) {
     A.showPause(A.showHome); check('Bewegungspause', 'sky');
     A.showHome();
     A.showLimit(); check('Tageslimit', 'sky');
+    // Tageslimit: Nacht über der Welt, Flo schläft – der nächste Bildschirm bringt den Tag zurück
+    const night = { mood: W.env && W.env.mood, sleep: !!(W.flo && W.flo._sleep) };
     A.screen = null;
     A.showParents('overview'); check('Elternbereich', 'sky');
-    return list;
-  });
+    list.night = Object.assign(night, { after: W.env && W.env.mood, awake: !(W.flo && W.flo._sleep) });
+    return { list, night: list.night };
+  }).then((r) => { r.list.night = r.night; return r.list; });
   for (const p of places) add(`Ort: ${p.name} → ${p.want}`, p.got === p.want, 'ist ' + p.got);
+  const nt = places.night || {};
+  add('Tageslimit: Nachtstimmung, Flo schläft; danach wieder Tag', nt.mood === 'night' && nt.sleep && nt.after === 'day' && nt.awake, JSON.stringify(nt));
 
   // Elternbereich: Welt ruht (Akku), beim Verlassen wieder wach
   const sl = await page.evaluate(async () => {
@@ -457,14 +463,37 @@ async function threeD(env) {
   add(`Weltkarte: Schild für jede Insel (${map.n})`, map.isMap && !map.missing.length, 'fehlen: ' + map.missing.join(', '));
   add('Weltkarte (quer): alle Schilder im Bild', !map.off.length, 'außerhalb: ' + map.off.join(', '));
 
+  // Schilder (am Strand vor den Inseln): nie unter der HUD, nicht übereinander
+  const labelCheck = () => page.evaluate(() => {
+    const hud = document.querySelector('#app .screen.home .home-top');
+    const hb = hud ? hud.getBoundingClientRect().bottom : 0;
+    const btns = [...document.querySelectorAll('.w3d-pan-btn')].filter((b) => getComputedStyle(b).display !== 'none').map((b) => b.getBoundingClientRect());
+    const cards = [...document.querySelectorAll('.w3d-map .area-card.w3d-label')].filter((c) => !c.classList.contains('w3d-off') && c.style.visibility !== 'hidden');
+    const rs = cards.map((c) => ({ id: c.dataset.area, r: c.getBoundingClientRect() }));
+    const hit = (a, b, m = 0) => Math.min(a.right, b.right) - Math.max(a.left, b.left) > m && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > m;
+    const over = [];
+    for (let i = 0; i < rs.length; i++) for (let j = i + 1; j < rs.length; j++) if (hit(rs[i].r, rs[j].r, 6)) over.push(rs[i].id + '/' + rs[j].id);
+    return {
+      n: rs.length, hud: Math.round(hb), over,
+      under: rs.filter((x) => x.r.top < hb - 1).map((x) => x.id),
+      cut: rs.filter((x) => x.r.left < 0 || x.r.right > innerWidth || x.r.bottom > innerHeight).map((x) => x.id),
+      arrows: rs.filter((x) => btns.some((b) => hit(x.r, b))).map((x) => x.id),
+    };
+  });
+  const lq = await labelCheck();
+  add('Weltkarte (quer): Schilder unter der HUD, nicht übereinander', lq.n === map.n && !lq.under.length && !lq.over.length && !lq.cut.length, JSON.stringify(lq));
+
   // Bild nicht leer; Budget ohne Schatten-Pass
   const px = await page.evaluate(() => LT.w3d.debugPixels());
   add('Bild hat Inhalt (Pixel gelesen)', !!(px && px.ok), JSON.stringify(px));
   add(`Budget Weltkarte: ${px && px.calls} Draw-Calls (< 250), ${px && px.triangles} Dreiecke (< 160000)`, !!(px && px.calls < 250 && px.triangles < 160000), JSON.stringify(px));
 
   // Tippen auf ein Schild (echter Mausklick: prüft Ebenen und pointer-events)
+  // (Mausklick auf die Mitte: die Schilder folgen der sanft schwankenden Kamera und sind
+  // für Playwrights Stabilitätsprüfung nie ganz ruhig)
   const card = await page.$('.w3d-map .area-card[data-area="formen"]');
-  if (card) await card.click({ timeout: 3000 }).catch(() => {});
+  const bb = card ? await card.boundingBox() : null;
+  if (bb) await page.mouse.click(bb.x + bb.width / 2, bb.y + bb.height / 2);
   await page.waitForTimeout(150);
   const tap1 = await page.evaluate(() => ({ screen: LT.app.screen, place: LT.w3d.place }));
   add('Tippen auf ein Schild öffnet die Insel', tap1.screen === 'area' && !!tap1.place && tap1.place.id === 'formen', JSON.stringify(tap1));
@@ -505,9 +534,60 @@ async function threeD(env) {
   add('Kamerafahrt startet und läuft', fl.flying && fl.t2 > fl.t1 && fl.dur >= 0.9, JSON.stringify(fl));
   await frames(1);
 
+  // Insel-Bildschirm: Flo (Maskottchen-Ecke) verdeckt beim Öffnen keinen Kartentitel
+  const floCovers = () => page.evaluate(async () => {
+    const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+    for (let i = 0; i < 100 && document.getAnimations().some((a) => a.playState === 'running' && Number.isFinite(a.effect.getComputedTiming().endTime)); i++) await wait(50);
+    const m = LT.ui.mascot().getBoundingClientRect();
+    const fr = { left: m.left + m.width * 0.08, right: m.right - m.width * 0.12, top: m.top + m.height * 0.04, bottom: m.bottom };
+    return [...document.querySelectorAll('#app .area-screen .game-title')].filter((n) => {
+      const r = n.getBoundingClientRect();
+      return Math.min(r.right, fr.right) - Math.max(r.left, fr.left) > 2 && Math.min(r.bottom, fr.bottom, innerHeight) - Math.max(r.top, fr.top) > 2;
+    }).map((n) => n.textContent.trim());
+  });
+  const covered = [];
+  for (const id of ['sprache', 'denken', 'welt']) {
+    await page.evaluate((id) => LT.app.showArea(id), id);
+    covered.push(...(await floCovers()).map((t) => id + ': ' + t));
+  }
+  add('Insel (quer): Flo verdeckt keinen Kartentitel', !covered.length, covered.join(', '));
+
+  // Effekte: Konfetti fliegt hinter einem offenen Dialog (Loch im Shader = Rechteck des Dialogs)
+  const hole = await page.evaluate(() => {
+    const W = LT.w3d;
+    if (!W.fx || !W.fx.debugStep) return { none: true };
+    const ov = LT.ui.overlay([document.createElement('p')]);
+    ov.querySelector('.panel').style.cssText = 'width:300px;height:200px;animation:none';
+    LT.ui.confetti(20);
+    const d = W.fx.debugStep(0.05);
+    const r = ov.querySelector('.panel').getBoundingClientRect();
+    ov.remove();
+    W.fx.debugStep(null);
+    W.fx.stop();
+    return { hole: d && d.hole, w: Math.round(r.width), dpr: W.fx.debug().size[2] };
+  });
+  add('Effekte: Konfetti hinter dem offenen Dialog (Dialog-Loch gesetzt)', !!(hole.hole && Math.abs(hole.hole[2] * 2 - hole.w * hole.dpr) <= 2 * hole.dpr + 1), JSON.stringify(hole));
+  await page.evaluate(() => LT.app.showHome());
+
   // Hochformat: Karte lässt sich schieben (Pfeil-Knopf)
   await page.setViewportSize({ width: 390, height: 844 });
   await page.waitForTimeout(100);
+  await frames(2);
+  // sichtbare Schilder ganz im Bild, nicht unter HUD und Pfeilen; Inseln am Rand: Schild aus
+  const lp = await labelCheck();
+  add('Hochformat: sichtbare Schilder ganz im Bild, nicht unter HUD und Pfeilen', lp.n > 0 && !lp.under.length && !lp.over.length && !lp.cut.length && !lp.arrows.length, JSON.stringify(lp));
+  // Tastatur: Fokus auf ein ausgeblendetes Schild schiebt die Karte zu seiner Insel
+  const fp = await page.evaluate(() => {
+    const W = LT.w3d, off = document.querySelector('.w3d-map .area-card.w3d-off');
+    if (!off) return { none: true };
+    const x0 = W.canPan().x;
+    off.focus();
+    const x1 = W.canPan().x;
+    off.blur();
+    W.panTo(0);
+    return { id: off.dataset.area, x0, x1: +x1.toFixed(1) };
+  });
+  add('Hochformat: Fokus auf ein ausgeblendetes Schild schiebt die Karte hin', !fp.none && Math.abs(fp.x1 - fp.x0) > 1, JSON.stringify(fp));
   await frames(2);
   const pan = await page.evaluate(async () => {
     const W = LT.w3d;
@@ -518,6 +598,19 @@ async function threeD(env) {
     return { on, vis, x: W.canPan().x };
   });
   add('Hochformat: Karte schiebbar (Pfeil-Knopf)', pan.on && pan.vis && pan.x > 0, JSON.stringify(pan));
+  // Hochformat: beim Betreten (vom Start) steht die erste Kita-Insel (Zahlenland) mit Schild im Bild,
+  // die Pfeile zeigen Symbole der Inseln, die seitlich außer Sicht liegen
+  await page.evaluate(() => { LT.app.showSplash(); LT.app.showHome(); });
+  await frames(3);
+  await page.waitForTimeout(200);
+  const first = await page.evaluate(() => {
+    const id = LT.areas.find((a) => !a.grade).id;
+    const c = document.querySelector(`.w3d-map .area-card[data-area="${id}"]`);
+    const r = c ? c.getBoundingClientRect() : null;
+    const peek = [...document.querySelectorAll('.w3d-pan-btn .w3d-peek-chip')].length;
+    return { id, shown: !!c && !c.classList.contains('w3d-off') && c.style.visibility !== 'hidden' && r.left >= 0 && r.right <= innerWidth, x: +LT.w3d.canPan().x.toFixed(1), peek };
+  });
+  add('Hochformat: Weltkarte zeigt zuerst die erste Kita-Insel, Pfeile mit Insel-Symbolen', first.shown && first.peek > 0, JSON.stringify(first));
   await page.setViewportSize({ width: 1180, height: 820 });
 
   // Einstellung „Aus“ im Elternbereich → App lädt neu; danach startet keine 3D-Welt,

@@ -207,3 +207,32 @@
   .ver-side { min-height: 100px; }
   .ver-plate { min-height: 84px; }
 }
+
+/* ---------- Tablet: Spiegel, Dinge, Knöpfe und Antworten größer ---------- */
+@media (min-width: 700px) and (min-height: 700px) {
+  .ver-main { max-width: 1060px; }
+  .ver-eq { font-size: clamp(34px, min(9vw, 7.6vh), 76px); }
+  .ver-help { font-size: clamp(18px, min(4.8vw, 4.2vh), 38px); }
+  .ver-mirror { max-width: 960px; }
+  .ver-side { min-height: clamp(120px, 27vh, 320px); }
+  .ver-it { font-size: clamp(20px, min(6.4vw, 6.6vh), 70px); }
+  .ver-dots .ver-it { font-size: clamp(22px, min(6vw, 6.2vh), 60px); }
+  .ver-count { font-size: clamp(16px, 3.4vmin, 30px); }
+  .ver-fog { font-size: clamp(24px, 6.2vmin, 52px); }
+  .ver-frametop { font-size: clamp(22px, 4vw, 40px); }
+  .ver-btn { min-width: 88px; min-height: 88px; font-size: clamp(28px, 7.4vmin, 56px); }
+  .ver-basket { min-width: 136px; }
+  .ver-wandlbl { font-size: clamp(18px, 4.2vmin, 32px); }
+  .ver-choices { gap: clamp(8px, 2vw, 22px); }
+  .ver-choices .tile.small { --tile: clamp(66px, 19vmin, 160px); }
+  .ver-choices .tile.ver-num .tile-text { font-size: clamp(30px, 8.4vmin, 72px); }
+  .ver-choices .tile.ver-dbl .tile-text { font-size: clamp(19px, 5.4vmin, 48px); }
+  .ver-choices .tile.ver-par { --tile: clamp(84px, 21vmin, 180px); }
+  .ver-table { max-width: 960px; }
+  .ver-tray { min-height: clamp(70px, 13vh, 150px); }
+  .ver-tray .ver-it { font-size: clamp(20px, min(5.8vw, 5.4vh), 54px); }
+  .ver-plates { gap: clamp(10px, 3vw, 36px); }
+  .ver-plate { max-width: 380px; min-height: clamp(96px, 17vh, 200px); }
+  .ver-plate .ver-it { font-size: clamp(18px, min(4.8vw, 4.6vh), 46px); }
+  .ver-who { width: clamp(36px, 7.4vmin, 64px); height: clamp(36px, 7.4vmin, 64px); font-size: clamp(30px, 6.2vmin, 54px); }
+}

@@ -26,6 +26,7 @@
      world             Figur auf Flos Insel
      cheer() / think() / wave()    Aktion auf beiden Figuren
      talk(on)          Maul bewegen (zusätzlich zu LT.speech)
+     sleep(on)         Nickerchen: Augen zu, Kopf sinkt, ruhiger Atem (Tageslimit)
      onPlace(place)    vom Kern bei jedem W.go
      pose(name, t)     nur Diagnose/Vorschau: Aktion zum Zeitpunkt t einfrieren
                        (name = null hebt das auf)
@@ -626,6 +627,7 @@
         wander: { t: 0, yaw: 0, pitch: 0 },
         facingYaw: 0, facingTarget: 0,
         freeze: null,
+        sleepOn: false, sleep: 0, // Nickerchen (Tageslimit): Augen zu, Kopf sinkt, ruhiger Atem
       };
       const qRestL = new T.Quaternion(), qRestR = new T.Quaternion(), qUpL = new T.Quaternion(), qUpR = new T.Quaternion();
       qRestL.setFromUnitVectors(DOWN, V3(-0.36, -0.93, 0.08).normalize());
@@ -652,12 +654,15 @@
           for (let i = st.acts.length - 1; i >= 0; i--) { st.acts[i].t += dt; if (st.acts[i].t >= st.acts[i].dur) st.acts.splice(i, 1); }
         }
         const cheer = act('cheer'), think = act('think'), wave = act('wave');
+        /* Nickerchen: während Flo noch spricht nur schläfrig, danach schläft er ein */
+        const sl = (st.sleep = damp(st.sleep, st.sleepOn ? (st.talking || st.talkExtra ? 0.5 : 1) : 0, st.sleepOn ? 1.1 : 3, dt));
 
-        /* Grundbewegung: Atmen, Wiegen */
-        const br = Math.sin(t * 2.1);
-        body.scale.set(1 + 0.014 * br * calm, 1 + 0.022 * br * calm, 1 + 0.014 * br * calm);
-        let tz = Math.sin(t * 0.85) * 0.03 * calm, tx = 0;
-        let hx = 0, hy = 0, hz = Math.sin(t * 0.85 + 0.6) * -0.03 * calm, hyPos = 0.004 * br * calm;
+        /* Grundbewegung: Atmen (im Schlaf langsamer und tiefer), Wiegen */
+        const br = Math.sin(t * (2.1 - 0.95 * sl));
+        const brA = 1 + 1.3 * sl;
+        body.scale.set(1 + 0.014 * br * calm * brA, 1 + 0.022 * br * calm * brA, 1 + 0.014 * br * calm * brA);
+        let tz = Math.sin(t * 0.85) * 0.03 * calm * (1 - sl), tx = 0.07 * sl;
+        let hx = 0.3 * sl, hy = 0, hz = Math.sin(t * 0.85 + 0.6) * -0.03 * calm * (1 - sl) + 0.17 * sl, hyPos = 0.004 * br * calm * brA - 0.02 * sl;
 
         /* Jubeln: ausholen, Sprung mit Pirouette, landen; Arme hoch, Freude-Augen */
         let jumpY = 0, spin = 0, sq = 0, armsUp = 0, happy = 0, legTuck = 0, wagBoost = 0;
@@ -699,9 +704,9 @@
         const L = st.look;
         L.yaw = damp(L.yaw, clamp(L.ty, -0.65, 0.65), 5, dt);
         L.pitch = damp(L.pitch, clamp(L.tp, -0.35, 0.3), 5, dt);
-        hy += L.yaw * (1 - thinkW * 0.6);
-        hx += L.pitch * (1 - thinkW * 0.6);
-        tz -= L.yaw * 0.04;
+        hy += L.yaw * (1 - thinkW * 0.6) * (1 - sl);
+        hx += L.pitch * (1 - thinkW * 0.6) * (1 - sl);
+        tz -= L.yaw * 0.04 * (1 - sl);
 
         /* Sprechen: Maul öffnet/schließt, Kopf nickt leicht */
         const talking = st.talking || st.talkExtra;
@@ -726,6 +731,7 @@
             else { st.blinkDouble = false; st.blinkT = 2.2 + Math.random() * 3.6; }
           }
         }
+        lid = Math.min(lid, 1 - 0.9 * sl); // schläfrig: Lider sinken, schlafend zu
         const useHappy = happy > 0.5;
         for (let i = 0; i < 2; i++) {
           const e = eyes[i];
@@ -747,13 +753,13 @@
           if (st.earT[i] <= 0 && st.earK[i] <= 0) { st.earK[i] = 0.3; st.earT[i] = 3 + Math.random() * 6; }
           let tw = 0;
           if (st.earK[i] > 0) { st.earK[i] -= dt; tw = Math.sin(Math.PI * (1 - st.earK[i] / 0.3)) * calm; }
-          ear.rotation.z = s * (0.32 * tw + 0.05 * Math.sin(t * 1.3 + i) * calm) - s * 0.12 * armsUp;
+          ear.rotation.z = s * (0.32 * tw * (1 - sl) + 0.05 * Math.sin(t * 1.3 + i) * calm * (1 - sl)) - s * 0.12 * armsUp + s * 0.3 * sl; // im Schlaf hängen die Ohren seitlich
           ear.rotation.x = -0.25 * tw - 0.22 * happy + (s < 0 ? 0.3 : 0) * thinkW;
         }
 
         /* Schwanz wedelt (Welle über die Knochen) */
-        const wagA = (0.2 + 0.32 * wagBoost) * calm;
-        const wagF = 2.4 + 7 * wagBoost;
+        const wagA = (0.2 + 0.32 * wagBoost) * calm * (1 - 0.85 * sl);
+        const wagF = (2.4 + 7 * wagBoost) * (1 - 0.5 * sl);
         for (let i = 0; i < tail.bones.length; i++) {
           const b = tail.bones[i];
           const ph = t * wagF - i * 0.75;
@@ -802,6 +808,7 @@
         /** Blickziel relativ zum Körper (Bogenmaß): yaw + = nach rechts im Bild, pitch + = nach unten */
         lookAt(yaw, pitch) { st.look.ty = yaw; st.look.tp = pitch; },
         setTalking(on) { st.talking = !!on; },
+        setSleep(on) { st.sleepOn = !!on; },
         headWorld(out) { return head.getWorldPosition(out); },
       };
     }
@@ -950,6 +957,7 @@
       L.scene.add(fox.root);
       MS.fox = fox;
       api.mascot = fox;
+      if (api._sleep) fox.setSleep(true);
       MS.rendered = false;
       MS.dirty = true;
       // Größe, Sichtbarkeit, Sprechen beobachten
@@ -1030,6 +1038,8 @@
       think() { if (MS.fox) MS.fox.play('think'); if (inWorldPlace()) world.play('think'); kick(); },
       wave() { if (MS.fox) MS.fox.play('wave'); world.play('wave'); kick(); },
       talk(on) { if (MS.fox) MS.fox.state.talkExtra = !!on; world.state.talkExtra = !!on; kick(); },
+      /** Nickerchen (z. B. Tageslimit): beide Figuren schlafen ein (true) bzw. wachen auf */
+      sleep(on) { api._sleep = !!on; if (MS.fox) MS.fox.setSleep(on); world.setSleep(on); kick(); },
       onPlace(place) {
         // Start: Flo winkt, sobald die Kamera da ist; Weltkarte: noch einmal kurz
         if (place === 'splash') worldWaveAt = W.time + 0.9;

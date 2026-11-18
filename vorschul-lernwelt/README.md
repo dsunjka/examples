@@ -320,14 +320,29 @@ tools/three/preview.js       Vorschau als Bild, z. B. --screen=home --ui --w=390
 Jeder Bildschirm nennt seinen Ort über `LT.ui.screen({ place, frame })`; `frame` ist der freie
 Bildbereich, in den die Kamera den Ort einpasst. Ohne WebGL, im Testmodus und mit der
 Einstellung „Aus“ bleibt die flache Ansicht (alle Aufrufe sind dann harmlos).
+
+**Weltkarte:** Die Inseln stehen in drei versetzten Reihen (vorne die mittleren Vorschul-Inseln,
+in der Mitte Flos Insel mit je zwei Nachbarn, hinten Schule und Kino) – jede vor einer Lücke
+der Reihe dahinter. Die Kamera blickt filmisch schräg (3/4-Blick wie der Startbildschirm): Quer
+liegen der Horizont und die fernen Berge knapp unter bzw. hinter der HUD, alle Inseln sind im
+Bild und unten angelegt. Hoch füllt ein mittlerer Streifen den freien Bereich, der Rest wird mit
+Pfeilen oder Wischen geschoben. Der freie Bereich beginnt an der Unterkante der HUD-Karten (live
+aus dem DOM). Die Schilder sind kompakte Glas-Pillen am Strand vor jeder Insel; sie weichen
+einander, den Wahrzeichen und Flo in der Ecke aus, bleiben unter der HUD und neben den Pfeilen
+und blenden aus, wenn ihre Insel seitlich aus dem Bild geschoben ist (per Tastatur-Fokus schiebt
+die Karte wieder hin). **Insel:** möglichst flacher Blick, aber steil genug, dass keine
+Nachbarinsel oben angeschnitten wird. **Start hoch:** enger auf Flo, damit er groß und mittig steht.
 **Schalter:** Elternbereich → Einstellungen → Grafik → „3D-Welt: Automatisch / An / Aus“
 (Automatisch = nur mit Grafikbeschleunigung; wirkt nach kurzem Neuladen, Diagnose mit Qualität
 und Bildrate). Für Entwickler: `?3d=1` erzwingt 3D (auch mit `?test`), `?3d=0` schaltet aus,
 `?3d=auto` beachtet im Testmodus die Einstellung. Die Bildqualität (Auflösung, Schatten) passt
 sich selbst an die Bildrate an. **Tests:** Suite `3d` (`node tests/smoke.js --suite=3d`) startet
 die Welt per SwiftShader (WebGL ohne Grafikkarte) und prüft Inseln, Bilder, den Ort jedes
-Bildschirms, Schilder der Weltkarte, Antippen von Schild und Insel, Ruhemodus, Bildinhalt und
-Budget (< 250 Draw-Calls, < 160 000 Dreiecke) sowie die Einstellung „Aus“.
+Bildschirms, Schilder der Weltkarte (quer alle im Bild, unter der HUD, nicht übereinander; hoch
+nie angeschnitten und nicht unter den Pfeilen, Fokus schiebt die Karte), Antippen von Schild und
+Insel, Ruhemodus, Bildinhalt und Budget (< 250 Draw-Calls, < 160 000 Dreiecke) sowie die
+Einstellung „Aus“. Mehrere Vorschaubilder: `tools/three/preview.js --screen=home --ui` je
+Viewport (`--w/--h`).
 
 ### Sprachaufnahmen neu erzeugen
 Nötig, wenn Texte geändert oder Spiele hinzugefügt wurden, oder für eine andere Stimme.

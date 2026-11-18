@@ -153,9 +153,10 @@
 
   /* Größe der Karten je nach Anzahl (passt auch aufs Handy hochkant) */
   const CELL = {
-    2: 'clamp(96px, min(34vw, 24vh), 190px)',
-    3: 'clamp(84px, min(27vw, 23vh), 180px)',
-    4: 'clamp(66px, min(19vw, 21vh), 168px)',
+    // Obergrenzen greifen nur auf großen Bildschirmen (Tablet hoch: Karten größer)
+    2: 'clamp(96px, min(34vw, 24vh), 250px)',
+    3: 'clamp(84px, min(27vw, 23vh), 230px)',
+    4: 'clamp(66px, min(19vw, 21vh), 200px)',
   };
 
   /** Schlüssel eines Schritts für Vergleiche (Emoji oder SVG) */

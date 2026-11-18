@@ -254,3 +254,31 @@
 @media (max-height: 560px) {
   .sws-tank { height: clamp(140px, 30vh, 200px); }
 }
+
+/* ---------- Tablet: Becken, Frage und Kacheln größer ---------- */
+@media (min-width: 700px) and (min-height: 700px) {
+  .prompt-box.sws-card { max-width: min(100%, 860px); min-height: clamp(56px, 9.4vh, 104px); }
+  .sws-qtext { font-size: clamp(19px, 4.2vmin, 40px); }
+  .sws-cardpic { width: clamp(40px, 8vh, 80px); height: clamp(40px, 8vh, 80px); }
+  .sws-cardpic .sws-emo { font-size: clamp(32px, 6.8vh, 68px); }
+  .sws-qtag, .sws-chip { font-size: clamp(14px, 2.8vmin, 25px); }
+  .sws-tank { --h: clamp(44px, 9.4vh, 96px); width: min(100%, 720px); height: clamp(170px, 34vh, 340px); }
+  .sws-tank.sws-many { --h: clamp(36px, min(8vh, 12.5vw), 80px); }
+  .tile.sws-pbtn { width: clamp(130px, 30vw, 270px); height: clamp(92px, 18vh, 180px); }
+  .sws-pb .sws-icon { width: clamp(46px, 9vh, 90px); height: clamp(46px, 9vh, 90px); }
+  .sws-pb-t { font-size: clamp(20px, 4.2vmin, 40px); }
+  .tile.sws-otile { width: clamp(100px, 22vw, 240px); height: clamp(110px, 20vh, 210px); }
+  .sws-ot-pic { width: clamp(48px, 10vh, 96px); height: clamp(48px, 10vh, 96px); }
+  .sws-ot-pic .sws-emo { font-size: clamp(40px, 8.6vh, 84px); }
+  .sws-ot-t, .sws-mt-t { font-size: clamp(16px, 3.4vmin, 30px); }
+  .tile.sws-mtile { width: clamp(78px, 17vw, 196px); min-height: clamp(96px, 18vh, 196px); }
+  .sws-sw { width: clamp(48px, 10vh, 96px); height: clamp(48px, 10vh, 96px); }
+  .tile.sws-rtile { width: clamp(150px, 24vw, 330px); min-height: clamp(64px, 13vh, 150px); }
+  .tile.sws-rtile .tile-text { font-size: clamp(17px, 3.4vmin, 32px); }
+}
+/* Tablet quer: Becken flacher, drei Warum-Antworten passen nebeneinander */
+@media (min-width: 700px) and (min-height: 700px) and (orientation: landscape) {
+  .sws-tank { --h: clamp(44px, 8.6vh, 86px); height: clamp(170px, 30vh, 280px); }
+  .tile.sws-rtile { width: clamp(150px, 18.4vw, 240px); }
+  .tile.sws-rtile .tile-text { font-size: clamp(17px, 3vmin, 28px); }
+}

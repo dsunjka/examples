@@ -29,12 +29,14 @@ canvas.fx3d-canvas.is-on { visibility: visible; }
 }
 
 /* Sticker: solange die 3D-Karte hereindreht, wartet das DOM-Emoji unsichtbar;
-   danach ein kurzes Nachfedern */
+   danach ein kurzes Nachfedern. Die Karte bleibt im Kasten unter der Beschriftung
+   (fx.js cardSlot) und kann darum kleiner sein als das Emoji – das Nachfedern
+   beginnt bei der Größe ihres Emojis (--fx3d-pop-from). */
 .sticker-reveal.fx3d-hold { opacity: 0; animation: none; }
 .sticker-reveal.fx3d-shown { animation: none; }
 .sticker-reveal.fx3d-shown.fx3d-pop { animation: fx3d-sticker-pop 0.5s cubic-bezier(0.2, 1.4, 0.4, 1); }
 @keyframes fx3d-sticker-pop {
-  0% { scale: 0.74; }
+  0% { scale: var(--fx3d-pop-from, 0.74); } /* Größe des Emojis auf der 3D-Karte (fx.js) */
   50% { scale: 1.07; }
   100% { scale: 1; }
 }

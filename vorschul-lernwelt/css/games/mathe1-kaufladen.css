@@ -56,7 +56,7 @@
   position: absolute; top: -12px; right: -10px; z-index: 2;
   min-width: 34px; height: 28px; padding: 0 6px; border-radius: 14px;
   background: var(--gold); color: #5a3d00; font: 700 16px/28px var(--font); text-align: center;
-  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.18);
+  box-shadow: inset 0 1.5px 0 rgba(255, 255, 255, 0.5), 0 2px 0 #d18a00, var(--drop-s);
   animation: kau-pop 0.25s ease-out;
 }
 @keyframes kau-pop { 0% { transform: scale(0.3); } 70% { transform: scale(1.15); } 100% { transform: scale(1); } }
@@ -114,7 +114,7 @@
   padding: clamp(22px, 3.4vmin, 30px) clamp(12px, 2.4vmin, 22px) clamp(12px, 2vmin, 18px);
   background: radial-gradient(ellipse at 50% 40%, #fffaf0, #f3e3c4);
   border: 4px solid #d9b77c; border-radius: 56px;
-  box-shadow: inset 0 4px 10px rgba(122, 77, 0, 0.12), 0 4px 0 rgba(43, 45, 66, 0.12);
+  box-shadow: inset 0 4px 10px rgba(122, 77, 0, 0.12), 0 4px 0 #c79f5c, 0 14px 22px -12px rgba(29, 37, 80, 0.35);
   transition: box-shadow 0.3s, border-color 0.3s;
 }
 .kau-tray.is-done { border-color: var(--ok); box-shadow: 0 0 0 5px var(--ok-soft), inset 0 4px 10px rgba(0, 0, 0, 0.06); }
@@ -141,7 +141,7 @@
   display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
   gap: clamp(6px, 1.4vmin, 12px);
   background: linear-gradient(180deg, #b5835a, #8f603c); border-radius: 22px;
-  padding: clamp(8px, 1.4vmin, 12px); box-shadow: 0 4px 0 rgba(43, 45, 66, 0.2);
+  padding: clamp(8px, 1.4vmin, 12px); box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.25), 0 4px 0 #6e4528, 0 14px 22px -10px rgba(29, 37, 80, 0.45);
   max-width: 100%;
 }
 .kau-wgrp { display: flex; align-items: center; justify-content: center; gap: inherit; }
@@ -234,4 +234,41 @@
 @media (max-height: 640px) {
   .kau-good-emoji { font-size: 44px; }
   .kau-tray { min-height: 92px; }
+}
+
+/* ---------- Tablet: Ware, Geld, Teller und Knöpfe größer ---------- */
+@media (min-width: 700px) and (min-height: 700px) {
+  .kau-m { --u: clamp(52px, 11.4vmin, 104px); }
+  .kau-intro .kau-m { --u: clamp(90px, 23vmin, 210px); }
+  .kau-good-emoji { font-size: clamp(52px, 14vmin, 128px); }
+  .kau-tag { font-size: clamp(24px, 5.8vmin, 52px); }
+  .kau-op { font-size: clamp(36px, 9vmin, 80px); }
+  .kau-who-emoji .emoji { font-size: clamp(38px, 9vmin, 80px); }
+  .kau-flo .kau-m { --u: clamp(42px, 8.6vmin, 80px); }
+  .kau-flo .kau-row { max-width: min(80vw, 560px); }
+  .kau-small { font-size: clamp(16px, 3vmin, 26px); }
+  .kau-tray { width: min(100%, 880px); min-height: clamp(104px, 21vmin, 190px); }
+  .kau-tray-row { min-height: calc(clamp(52px, 11.4vmin, 104px) * 0.9); }
+  .kau-tray-lbl { font-size: clamp(14px, 2.6vmin, 22px); }
+  .kau-sum { font-size: clamp(18px, 3.6vmin, 30px); }
+  .kau-badge { min-width: 40px; height: 34px; border-radius: 17px; font-size: 20px; line-height: 34px; }
+  .kau-wb { min-width: 80px; min-height: 80px; }
+  .kau-tool, .kau-pay { min-height: 76px; min-width: 76px; font-size: clamp(20px, 3.8vmin, 34px); }
+  .kau-tool .emoji { font-size: 34px; }
+  .kau-count .kau-m { --u: clamp(58px, 13vmin, 120px); }
+  .kau-num .tile-text { font-size: clamp(28px, 6.4vmin, 58px); }
+  .tile.small.kau-num { --tile: clamp(76px, 17vmin, 152px); }
+  .tile.kau-purse-tile { max-width: min(100%, 560px); min-height: 120px; }
+  .kau-purse-who .emoji { font-size: clamp(34px, 7.6vmin, 70px); }
+  .kau-purse-name { font-size: clamp(20px, 3.8vmin, 34px); }
+  .kau-purse-row .kau-m { --u: clamp(44px, 9vmin, 86px); }
+  .kau-equal .emoji { font-size: clamp(36px, 7.6vmin, 70px); }
+  .kau-backbox { min-height: 104px; }
+  .kau-backbox .kau-m { --u: clamp(46px, 9.4vmin, 86px); }
+  .kau-q { font-size: clamp(36px, 7.6vmin, 66px); }
+}
+/* Tablet quer: Geldbeutel und Knöpfe bleiben in einer Reihe */
+@media (min-width: 700px) and (min-height: 700px) and (orientation: landscape) {
+  .kau-m { --u: clamp(52px, min(11.4vmin, 7.6vw), 104px); }
+  .kau-tray-row { min-height: calc(clamp(52px, min(11.4vmin, 7.6vw), 104px) * 0.9); }
 }

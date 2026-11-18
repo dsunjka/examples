@@ -127,3 +127,26 @@
 /* Laut-Hüpfer beim Lautieren: grau, bis Flo den Laut spricht */
 .swk-hops.swk-wait .swk-hop { background: var(--ink-faint); box-shadow: none; animation: none; opacity: 0.55; transition: background 0.2s, transform 0.2s, opacity 0.2s; }
 .swk-hops.swk-wait .swk-hop.swk-lit { background: var(--gold); box-shadow: 0 2px 0 var(--gold-dark); opacity: 1; transform: translateY(-6px) scale(1.25); }
+
+/* Tablet: Bild, Schreibzeile, Tastatur und Knöpfe größer */
+@media (min-width: 700px) and (min-height: 700px) {
+  .swk-pic .emoji { font-size: clamp(64px, 16vmin, 150px); }
+  .swk-diktat .swk-pic .emoji { font-size: clamp(52px, 12.5vmin, 116px); }
+  .swk-dik-lbl { font-size: clamp(22px, 5vmin, 46px); }
+  .btn-round.swk-ear { width: 72px; height: 72px; }
+  .btn-round.swk-ear .emoji { font-size: 34px; }
+  .swk-line { --cell: clamp(46px, 12vmin, 112px); }
+  .swk-kb { gap: clamp(8px, 2vmin, 18px); max-width: min(100%, 1000px); }
+  .tile.swk-key { --tile: clamp(62px, 13.6vmin, 124px); border-radius: 22px; }
+  .btn.swk-back, .btn.swk-check { min-width: clamp(72px, 15vmin, 136px); min-height: 76px; }
+  .swk-back-ico { font-size: clamp(28px, 5.4vmin, 48px); }
+  .swk-check-mark { font-size: clamp(32px, 6.2vmin, 56px); }
+  .swk-actions .btn-round.s2-abc-btn { width: 76px; height: 76px; }
+}
+/* Tablet quer: Bild, Zeile, Tastatur (ggf. zwei Reihen) und Knöpfe passen über die Sprechblase */
+@media (min-width: 700px) and (min-height: 700px) and (orientation: landscape) {
+  .swk-pic .emoji { font-size: clamp(64px, 13.6vmin, 124px); }
+  .swk-line { --cell: clamp(46px, 10.8vmin, 100px); }
+  .swk-kb { max-width: min(100%, 1120px); }
+  .tile.swk-key { --tile: clamp(62px, 12vmin, 108px); }
+}

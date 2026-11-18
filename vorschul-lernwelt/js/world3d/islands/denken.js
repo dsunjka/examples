@@ -456,6 +456,7 @@
     kit.flowers(base, 16, [ACC, '#ffffff', PAL.yellow, PAL.violet, '#ff8a5c'], 53);
 
     kit.merge(g);
+    kit.batchDynamic(g); // Bewegtes (Ballons, Boote, Räder …) in wenige Draw-Calls bündeln
     g.userData.update = (dt, t) => { for (let i = 0; i < updates.length; i++) updates[i](dt, t); };
 
     return {
