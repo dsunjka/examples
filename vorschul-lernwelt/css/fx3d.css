@@ -1,1 +1,45 @@
-/* 3D-Effekte (js/world3d/fx.js) */
+/* ==========================================================================
+   3D-Effekte (js/world3d/fx.js)
+
+   Eine durchsichtige Vollbild-Leinwand über allem (auch über Overlays, unter
+   den Hinweis-Toasts). Sie fängt keine Klicks und ist nur sichtbar, solange
+   ein Effekt läuft (.is-on) – sonst muss der Browser sie nicht mischen.
+   Ohne 3D-Welt gibt es sie nicht; dann gelten die flachen Effekte aus
+   base.css (.fx-layer, .confetti, .fly-star).
+   ========================================================================== */
+canvas.fx3d-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 75; /* Overlays 60, alte Effekt-Ebene 70, Toast 80 */
+  pointer-events: none;
+  visibility: hidden;
+  contain: strict;
+}
+canvas.fx3d-canvas.is-on { visibility: visible; }
+
+/* Stern ist am Fortschrittspunkt angekommen: der Punkt hüpft kurz */
+.dot.fx3d-hit { animation: fx3d-hit 0.5s cubic-bezier(0.2, 1.6, 0.4, 1); }
+@keyframes fx3d-hit {
+  0% { scale: 1; }
+  35% { scale: 1.75; }
+  100% { scale: 1; }
+}
+
+/* Sticker: solange die 3D-Karte hereindreht, wartet das DOM-Emoji unsichtbar;
+   danach ein kurzes Nachfedern */
+.sticker-reveal.fx3d-hold { opacity: 0; animation: none; }
+.sticker-reveal.fx3d-shown { animation: none; }
+.sticker-reveal.fx3d-shown.fx3d-pop { animation: fx3d-sticker-pop 0.5s cubic-bezier(0.2, 1.4, 0.4, 1); }
+@keyframes fx3d-sticker-pop {
+  0% { scale: 0.74; }
+  50% { scale: 1.07; }
+  100% { scale: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot.fx3d-hit,
+  .sticker-reveal.fx3d-pop { animation: none; }
+}

@@ -26,7 +26,7 @@
     const calm = W.reducedMotion ? 0.12 : 1;
     const updates = [];
 
-    const base = kit.islandBase({ seed: 131, radius: 6.1, grassRadius: 4.75, grass: '#88d65c', stones: 4, segments: 48 });
+    const base = kit.islandBase({ seed: 131, radius: 6.1, grassRadius: 4.75, grass: '#88d65c', stones: 4, segments: 30 });
     const g = base.group;
     const ground = (x, z) => base.surfaceAt(x, z);
 
@@ -289,9 +289,9 @@
       grp.name = 'rakete';
       const P = new kit.Parts();
       const body = [[0.18, 0.0], [0.26, 0.12], [0.3, 0.38], [0.31, 0.72], [0.29, 1.0]].map((p) => new T.Vector2(p[0], p[1]));
-      P.add(new T.LatheGeometry(body, 14), '#fbfbff', { gloss: true, smooth: true, grad: [0.8, 1.04] });
+      P.add(new T.LatheGeometry(body, 11), '#fbfbff', { gloss: true, smooth: true, grad: [0.8, 1.04] });
       const nose = [[0.29, 1.0], [0.25, 1.22], [0.17, 1.42], [0.08, 1.56], [0.001, 1.62]].map((p) => new T.Vector2(p[0], p[1]));
-      P.add(new T.LatheGeometry(nose, 14), ACC, { gloss: true, smooth: true, grad: [0.85, 1.1] });
+      P.add(new T.LatheGeometry(nose, 11), ACC, { gloss: true, smooth: true, grad: [0.85, 1.1] });
       P.add(xf(geo.cyl(0.305, 0.305, 0.12, 14), [0, 0.2, 0]), ACC, { gloss: true, smooth: true });
       P.add(xf(geo.cyl(0.315, 0.315, 0.05, 14), [0, 0.98, 0]), C.gold, { gloss: true, smooth: true });
       // Bullauge (vorn)
@@ -398,7 +398,7 @@
       grp.userData.boardMatrix = new T.Matrix4().compose(new T.Vector3(0, cy, 0), new T.Quaternion().setFromEuler(new T.Euler(lean, 0, 0)), new T.Vector3(1, 1, 1));
       text(grp, 'zehn', 0.34, [0, fh / 2 + 0.22, 0.036], null);
       // Kugeln (instanziert): oben 5 rot, unten 5 blau
-      const ballGeo = kit.paint(new T.SphereGeometry(0.15, 8, 5), '#ffffff', { grad: [0.78, 1.08] });
+      const ballGeo = kit.paint(new T.SphereGeometry(0.15, 7, 4), '#ffffff', { grad: [0.78, 1.08] });
       const balls = new T.InstancedMesh(ballGeo, kit.mats.glossSmooth, 10);
       balls.name = 'kugeln';
       balls.castShadow = true;
@@ -452,7 +452,7 @@
       for (let i = 0; i < nS; i++) {
         const x = -aw / 2 + (i + 0.5) * (aw / nS);
         const col = i % 2 ? '#ffffff' : ACC;
-        P.add(xf(geo.roundBox(aw / nS + 0.005, 0.05, ad, 0.02, 1), [x, 2.0, 0.12], [slope, 0, 0]), col, { grad: [0.88, 1.05] });
+        P.add(xf(geo.box(aw / nS + 0.005, 0.05, ad), [x, 2.0, 0.12], [slope, 0, 0]), col, { grad: [0.88, 1.05] });
         const sc = new T.CylinderGeometry(aw / nS / 2, aw / nS / 2, 0.05, 6, 1, false, -PI / 2, PI);
         P.add(xf(sc, [x, 2.0 - Math.sin(slope) * (ad / 2) - 0.02, 0.12 + Math.cos(slope) * (ad / 2) + 0.0], [PI / 2 + slope, 0, 0]), col, { grad: [0.88, 1.05] });
       }
@@ -487,9 +487,9 @@
     // große Goldmünze über dem Stand (dreht sich)
     (function bigCoin() {
       const P = new kit.Parts();
-      P.add(xf(geo.cyl(0.42, 0.42, 0.1, 18), [0, 0, 0], [PI / 2, 0, 0]), C.gold, { gloss: true, grad: [0.85, 1.1] });
+      P.add(xf(geo.cyl(0.42, 0.42, 0.1, 14), [0, 0, 0], [PI / 2, 0, 0]), C.gold, { gloss: true, grad: [0.85, 1.1] });
       [-1, 1].forEach((s) => {
-        P.add(xf(new T.TorusGeometry(0.34, 0.025, 3, 16), [0, 0, s * 0.052]), '#f0b81f', { gloss: true });
+        P.add(xf(new T.TorusGeometry(0.34, 0.025, 3, 12), [0, 0, s * 0.052]), '#f0b81f', { gloss: true });
         // erhabene „1“ (hinten gespiegelt, damit sie von beiden Seiten richtig herum steht)
         P.add(xf(geo.box(0.09, 0.4, 0.04), [s * 0.02, -0.01, s * 0.06]), '#f0b81f', { gloss: true });
         P.add(xf(geo.box(0.06, 0.16, 0.04), [s * -0.06, 0.13, s * 0.06], [0, 0, s * -0.9]), '#f0b81f', { gloss: true });
@@ -576,15 +576,13 @@
     kit.path(base, [[0.55, 4.75], [0.3, 3.2], [-0.25, 1.6], [-0.2, 0.2], [-0.15, -0.6]], { seed: 131, width: 0.66 });
 
     base.place(kit.tree({ type: 'pine', seed: 1311, scale: 1.05 }), -3.05, -2.45, { keep: 0.7 });
-    base.place(kit.tree({ type: 'fruit', seed: 1312, fruitColor: '#ff9a2e', scale: 0.95 }), 3.25, -2.45, { keep: 0.8 });
+    base.place(kit.tree({ type: 'round', seed: 1312, scale: 0.95 }), 3.25, -2.45, { keep: 0.8 });
     base.place(kit.tree({ type: 'pine', seed: 1313, scale: 0.9 }), -1.85, -3.65, { keep: 0.6 });
     base.place(kit.tree({ type: 'pine', seed: 1314, scale: 0.75 }), 1.65, -3.55, { keep: 0.5 });
-        base.place(kit.bush({ seed: 1316, size: 0.7 }), 1.45, 0.75, { keep: 0.45 });
-    base.place(kit.bush({ seed: 1317, size: 0.65, berries: '#ff7aa8' }), -3.75, 0.95, { keep: 0.4 });
+    base.place(kit.bush({ seed: 1316, size: 0.7 }), 1.45, 0.75, { keep: 0.45 });
     base.place(kit.rock({ size: 0.45, seed: 1318, moss: true }), 3.65, 0.6, { keep: 0.35 });
-    base.place(kit.lamp({}), 1.2, 3.75, { keep: 0.3 });
-    kit.grassTufts(base, 42, 131);
-    kit.flowers(base, 12, ['#ffd23f', '#ffffff', '#ff7aa8', ACC_L], 131);
+    kit.grassTufts(base, 34, 131);
+    kit.flowers(base, 5, ['#ffd23f', '#ffffff', '#ff7aa8', ACC_L], 131);
 
     // Kontaktschatten
     [[SCH.x, SCH.z + 0.2, 2.0], [RAMP.x + 0.6, RAMP.z, 1.1], [-2.85, -0.7, 1.1], [-2.4, 1.75, 1.0], [2.35, 2.0, 1.2]].forEach(([x, z, r]) => {
@@ -602,6 +600,7 @@
     tm.userData.noMerge = true;
     g.add(tm);
 
+    // Messhaken für Entwicklungs-Werkzeuge: Dreiecke je Teil vor dem Zusammenführen
     if (window.__w3dTris) window.__w3dTris('mathe1', g);
     kit.merge(g);
     g.userData.update = (dt, t) => { for (let i = 0; i < updates.length; i++) updates[i](dt, t); };
