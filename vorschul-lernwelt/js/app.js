@@ -52,12 +52,13 @@
     const side = document.body.classList.contains('w3d-pan') ? 62 : 8;
     return { top: f.top, bottom: 6, left: side, right: side };
   }
-  /** Hindernisse für die Schilder: Flo in der Ecke */
+  /** Hindernisse für die Schilder: Flo in der Ecke – der 3D-Flo ragt mit den Ohren (und beim
+      Hüpfen) über sein .mascot-Feld hinaus, darum oben etwas Luft dazu */
   function homeObstacles() {
     const m = LT.ui.mascot();
     if (!m || m.classList.contains('hidden')) return [];
     const r = m.getBoundingClientRect();
-    return r.width ? [{ left: r.left, right: r.right, top: r.top + r.height * 0.1, bottom: r.bottom }] : [];
+    return r.width ? [{ left: r.left - 4, right: r.right + 6, top: r.top - r.height * 0.24, bottom: r.bottom }] : [];
   }
   function areaFrame() {
     const scr = current('.area-screen');
@@ -71,8 +72,9 @@
    * Insel: Höhe des freien Bereichs (.area-hero) so wählen, dass Flo in der Ecke beim
    * Öffnen (oben gescrollt) keinen Kartentitel und kein Kartensymbol verdeckt. 3D: bevorzugt
    * wird der Bereich etwas niedriger (mehr Karten im Bild), sonst etwas höher, bis die Reihe
-   * ganz unter Flo hindurch aus dem Bild rutscht. Flach ist er sonst 0 hoch und wächst nur
-   * um höchstens 40 px. Liefert true, wenn sich etwas änderte.
+   * ganz unter Flo hindurch aus dem Bild rutscht. Flach ist er sonst 0 hoch und wächst nur,
+   * wenn die Reihe dadurch ganz frei wird (höchstens 14 % der Höhe, 150 px – oben bleibt
+   * dann etwas mehr Himmel). Liefert true, wenn sich etwas änderte.
    */
   function fitAreaHero(scr) {
     const hero = scr && scr.isConnected && scr.querySelector('.area-hero');
@@ -105,9 +107,10 @@
       if (r.width && r.height && r.right > flo.left && r.left < flo.right) items.push({ top: r.top + sy, bottom: r.bottom + sy, k: n.matches('.game-icon') ? 0.2 : 1 });
     });
     anims.forEach((a, i) => { try { a.currentTime = held[i] == null ? 0 : held[i]; } catch (e) { /* egal */ } });
-    const hit = (s) => {
+    const hit = (s, titles) => {
       let a = 0;
       for (const it of items) {
+        if (titles && it.k < 1) continue;
         const t = it.top + s, b = Math.min(vh, it.bottom + s);
         if (t < vh) a += Math.max(0, Math.min(b, flo.bottom) - Math.max(t, flo.top)) * it.k;
       }
@@ -115,19 +118,70 @@
     };
     if (!hit(0)) return hero.style.height !== before;
     const lo = flat ? 0 : Math.round(Math.max(130, h0 * 0.72)) - h0;
-    const hi = flat ? 40 : Math.round(Math.min(vh * 0.52, h0 * 1.25)) - h0;
+    const hi = flat ? Math.round(Math.min(150, vh * 0.14)) : Math.round(Math.min(vh * 0.52, h0 * 1.25)) - h0;
     let best = 0, bestCost = Infinity;
     for (let s = Math.ceil(lo); s <= hi; s += 2) {
       const cost = hit(s) * 1000 + Math.abs(s) * (s > 0 ? 3 : 1);
       if (cost < bestCost) { bestCost = cost; best = s; }
     }
-    // flach nur, wenn es ganz frei wird (sonst bliebe bloß eine Lücke unter der Kopfleiste)
-    if (best && (!flat || bestCost < 1000)) hero.style.height = Math.round(h0 + best) + 'px';
+    // flach nur, wenn dann keine Schrift mehr unter Flo liegt (sonst bliebe bloß eine Lücke
+    // unter der Kopfleiste); ein Symbol am Rand darf Flo streifen
+    if (best && (!flat || !hit(best, true))) hero.style.height = Math.round(h0 + best) + 'px';
     return hero.style.height !== before;
+  }
+  /**
+   * Sticker-Album: Flo steht unten links über der Liste. Beim Öffnen wird ein kleiner Abstand
+   * oben (gap) so gewählt, dass er möglichst wenig Sticker verdeckt (Überschriften und Lücken
+   * zwischen den Seiten liegen dann unter ihm); am Ende hält ein Abstand in Flo-Höhe jede
+   * Reihe frei schiebbar (app.js showAlbum).
+   */
+  function fitAlbumGap(scr) {
+    const gap = scr && scr.isConnected && scr.querySelector('.album-gap');
+    const end = scr && scr.querySelector('.album-end');
+    const m = LT.ui.mascot();
+    if (!gap) return;
+    gap.style.height = '';
+    if (!m || m.classList.contains('hidden') || !m.offsetWidth) return;
+    const content = gap.parentElement;
+    const sy = content ? content.scrollTop : 0;
+    const vh = window.innerHeight;
+    const flo = { left: m.offsetLeft + m.offsetWidth * 0.06, right: m.offsetLeft + m.offsetWidth * 0.9, top: m.offsetTop - 8 };
+    // am Ende so viel Platz, dass die letzte Reihe ganz über Flo (mit Ohren) geschoben werden kann
+    if (end) {
+      const pb = content ? parseFloat(getComputedStyle(content).paddingBottom) || 0 : 0;
+      end.style.height = Math.max(0, Math.round(vh - flo.top + 10 - pb)) + 'px';
+    }
+    const anims = scr.getAnimations ? scr.getAnimations({ subtree: true }) : [];
+    const held = anims.map((a) => {
+      const t = a.currentTime;
+      try { const end = a.effect && a.effect.getComputedTiming().endTime; if (Number.isFinite(end)) a.currentTime = end; } catch (e) { /* egal */ }
+      return t;
+    });
+    const items = [];
+    scr.querySelectorAll('.sticker').forEach((n) => {
+      const r = n.getBoundingClientRect();
+      // gezählt wird die mittlere Hälfte: ein Rand, den Flo streift, lässt sich noch antippen
+      if (r.width && r.right > flo.left && r.left < flo.right) items.push({ top: r.top + sy + r.height * 0.25, bottom: r.bottom + sy - r.height * 0.25 });
+    });
+    anims.forEach((a, i) => { try { a.currentTime = held[i] == null ? 0 : held[i]; } catch (e) { /* egal */ } });
+    const hit = (s) => {
+      let a = 0;
+      for (const it of items) { const t = it.top + s, b = Math.min(vh, it.bottom + s); if (t < vh) a += Math.max(0, b - Math.max(t, flo.top)); }
+      return a;
+    };
+    const h0 = hit(0);
+    if (!h0) return;
+    let best = 0, bestCost = h0 * 10;
+    for (let s = 2, hi = Math.round(Math.min(130, vh * 0.16)); s <= hi; s += 2) {
+      const c = hit(s) * 10 + s * 1.5;
+      if (c < bestCost) { bestCost = c; best = s; }
+    }
+    if (best) gap.style.height = best + 'px';
   }
   window.addEventListener('resize', () => {
     // vor dem nächsten Bild der Welt (dort liest die Kamera den freien Bereich neu)
     if (A.screen === 'area') fitAreaHero(current('.area-screen'));
+    else if (A.screen === 'album') fitAlbumGap(current('.album-screen'));
   });
   /** Antippen einer 3D-Insel (js/world3d/core.js) */
   A.onIslandTap = function (id) {
@@ -778,6 +832,7 @@
     const content = el('div.content');
     screen.appendChild(content);
     LT.ui.setMascot({ big: false });
+    content.appendChild(el('div.album-gap', { 'aria-hidden': 'true' }));
     const have = new Set(P.profile.stickers);
     const fresh = new Set(P.profile.freshStickers || []);
     const total = LT.stickers.length;
@@ -812,9 +867,15 @@
       pages.appendChild(el('div.album-page', el('h3', U.emoji(t.icon), t.title), grid));
     });
     content.appendChild(pages);
+    // am Ende Platz in Flo-Höhe: jede Reihe lässt sich unter ihm hervorschieben
+    content.appendChild(el('div.album-end', { 'aria-hidden': 'true' }));
+    fitAlbumGap(screen);
+    if (document.fonts && document.fonts.status !== 'loaded') document.fonts.ready.then(() => { if (A.screen === 'album') fitAlbumGap(screen); });
     P.profile.freshStickers = [];
     P.save();
-    LT.speech.say(have.size ? `Du hast schon ${have.size} Sticker gesammelt!` : 'Hier kommen deine Sticker hinein. Spiele und sammle Sterne!');
+    const hello = have.size ? `Du hast schon ${have.size} Sticker gesammelt!` : 'Hier kommen deine Sticker hinein. Spiele und sammle Sterne!';
+    LT.speech.say(hello);
+    LT.ui.onMascotTap = () => LT.speech.say(hello); // (nicht den Hinweis des vorigen Bildschirms)
   };
 
   /* ------------------------------------------------------------------
@@ -847,7 +908,7 @@
       display,
       keys,
       el('div.actions', el('button.p-btn.light', { on: { click: () => ov.remove() } }, 'Abbrechen')),
-    ], { className: 'gate' });
+    ], { className: 'gate', cancel: () => ov.remove() });
     if (LT.config.test) ov.dataset.answer = String(a * b);
   }
   A.parentGate = parentGate;
@@ -1261,11 +1322,20 @@
     a.click();
     setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
   }
+  /** Zeile im Elternbereich: Beschriftung mit dem ersten Eingabefeld verknüpft (label for) */
+  let rowSeq = 0;
   function row(label, ...controls) {
-    return el('div.p-row', el('label', label), ...controls);
+    const lab = el('label', label);
+    const field = controls.find((c) => c && c.matches && c.matches('input, select, textarea'));
+    if (field) {
+      if (!field.id) field.id = 'p-field-' + ++rowSeq;
+      lab.htmlFor = field.id;
+    }
+    return el('div.p-row', lab, ...controls);
   }
+  /** Schalter (Kontrollkästchen; Größe und Aussehen: theme.css .parents input[type=checkbox]) */
   function toggle(value, onChange) {
-    const cb = el('input', { type: 'checkbox', checked: !!value, style: { width: '24px', height: '24px' } });
+    const cb = el('input', { type: 'checkbox', checked: !!value });
     cb.addEventListener('change', () => onChange(cb.checked));
     return cb;
   }

@@ -272,3 +272,30 @@
   .kau-m { --u: clamp(52px, min(11.4vmin, 7.6vw), 104px); }
   .kau-tray-row { min-height: calc(clamp(52px, min(11.4vmin, 7.6vw), 104px) * 0.9); }
 }
+
+/* Handy quer (≤ 520 px hoch): Ware links neben dem Teller, Geldbeutel und
+   Knöpfe in einer Zeile darunter – übereinander waren „Bezahlen“ und der
+   Geldbeutel unter dem Bühnenrand */
+@media (max-height: 520px) and (orientation: landscape) {
+  .kau-m { --u: clamp(46px, 13vh, 58px); }
+  .kau-good { padding: 6px 14px 8px; }
+  .kau-good-emoji { font-size: clamp(36px, 11vh, 48px); }
+  .kau-tag { font-size: clamp(20px, 6vh, 26px); }
+  .kau-tray { min-height: 84px; padding: 22px 12px 10px; }
+  .kau-wallet { padding: 6px; gap: 6px; }
+  .kau-wb { min-width: 56px; min-height: 56px; padding: 4px; }
+  .kau-actions .btn { min-height: 56px; padding: 8px 18px; }
+  .stage.kau-stage:has(> .kau-tray) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas: "top tray" "bottom bottom";
+    align-content: center;
+    align-items: center;
+    justify-items: center;
+    column-gap: 14px;
+    row-gap: 12px;
+  }
+  .kau-stage:has(> .kau-tray) > .kau-top { grid-area: top; }
+  .kau-stage:has(> .kau-tray) > .kau-tray { grid-area: tray; width: 100%; }
+  .kau-stage:has(> .kau-tray) > .kau-bottom { grid-area: bottom; flex-wrap: nowrap; }
+}

@@ -236,3 +236,10 @@
   .ver-plate .ver-it { font-size: clamp(18px, min(4.8vw, 4.6vh), 46px); }
   .ver-who { width: clamp(36px, 7.4vmin, 64px); height: clamp(36px, 7.4vmin, 64px); font-size: clamp(30px, 6.2vmin, 54px); }
 }
+
+/* Handy quer (≤ 520 px hoch): Teller etwas flacher, damit die Antworten ganz
+   auf der ~290 px hohen Bühne stehen */
+@media (max-height: 520px) and (orientation: landscape) {
+  .ver-side { min-height: 84px; }
+  .ver-plate { min-height: 72px; }
+}

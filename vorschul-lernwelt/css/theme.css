@@ -939,6 +939,36 @@ body:not(.w3d-flo) .mascot::before {
    Ecke, und die Blase wiederholte nur den Text darüber */
 body:not(.w3d-flo):has(.limit-screen) :is(.mascot, .bubble) { display: none; }
 body:not(.w3d-flo):has(.limit-screen) .limit-screen .splash { padding-bottom: 20px; }
+/* Ohne 3D: Nacht über der gemalten Inselwelt (Sterne, Mond, dunkler Schleier –
+   die Inseln bleiben gedämpft sichtbar), passend zu „Flo macht ein Nickerchen“ */
+body:not(.w3d) .limit-screen {
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 480 320'%3E%3Cg fill='%23fff'%3E%3Ccircle cx='24' cy='30' r='1.6' opacity='.9'/%3E%3Ccircle cx='96' cy='84' r='1.1' opacity='.6'/%3E%3Ccircle cx='150' cy='22' r='1.4' opacity='.8'/%3E%3Ccircle cx='212' cy='112' r='1' opacity='.5'/%3E%3Ccircle cx='268' cy='48' r='1.8' opacity='.95'/%3E%3Ccircle cx='330' cy='140' r='1.1' opacity='.55'/%3E%3Ccircle cx='392' cy='36' r='1.3' opacity='.75'/%3E%3Ccircle cx='446' cy='98' r='1.6' opacity='.85'/%3E%3Ccircle cx='58' cy='170' r='1' opacity='.45'/%3E%3Ccircle cx='182' cy='200' r='1.3' opacity='.5'/%3E%3Ccircle cx='410' cy='210' r='1' opacity='.4'/%3E%3Cpath d='M300 92l2.2 5.2 5.2 2.2-5.2 2.2-2.2 5.2-2.2-5.2-5.2-2.2 5.2-2.2z' opacity='.9'/%3E%3Cpath d='M70 120l1.6 3.8 3.8 1.6-3.8 1.6-1.6 3.8-1.6-3.8-3.8-1.6 3.8-1.6z' opacity='.75'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 480px 320px repeat,
+    radial-gradient(circle at 84% 15%, #fff7d6 0 min(5vmin, 40px), rgba(255, 240, 190, 0.35) calc(min(5vmin, 40px) + 2px), rgba(255, 240, 190, 0) min(16vmin, 130px)),
+    linear-gradient(180deg, rgba(18, 24, 72, 0.94) 0%, rgba(32, 42, 108, 0.88) 48%, rgba(60, 56, 130, 0.62) 78%, rgba(70, 60, 130, 0.5) 100%);
+}
+body:not(.w3d) .limit-screen .splash h1 { filter: drop-shadow(0 0 1.5px #e9671f) drop-shadow(0 2px 0 #f58a35) drop-shadow(0 2px 0 #c85c16) drop-shadow(0 10px 18px rgba(5, 8, 40, 0.6)); }
+/* Flo schläft: Augen zu, Mund zu, im Mondlicht etwas dunkler, 💤 daneben */
+.limit-screen .flo-big { filter: brightness(0.86) saturate(0.88) drop-shadow(0 0 26px rgba(170, 190, 255, 0.35)); }
+.limit-screen .flo-big .eye { transform-box: fill-box; transform-origin: center 60%; transform: scaleY(0.14); animation: none; }
+.limit-screen .flo-big .eye circle { display: none; }
+.limit-screen .flo-big .mouth-open { display: none; }
+body:not(.w3d) .limit-screen .flo-big::before {
+  content: "💤";
+  z-index: 1;
+  inset: auto;
+  top: -6%;
+  right: -14%;
+  border-radius: 0;
+  background: none;
+  font-family: var(--emoji);
+  font-size: clamp(30px, 7vmin, 58px);
+  line-height: 1;
+  filter: drop-shadow(0 3px 6px rgba(5, 8, 40, 0.45));
+  animation: zzz 3.2s ease-in-out infinite;
+}
+@keyframes zzz { 0%, 100% { transform: translate(0, 0) rotate(-4deg); opacity: 0.85; } 50% { transform: translate(4px, -10px) rotate(4deg); opacity: 1; } }
+body:not(.w3d) .limit-screen .flo-big::after { filter: brightness(0.7) saturate(0.8); animation: none; }
 .limit-screen .p-btn.light {
   min-height: 48px;
   padding: 10px 20px;
@@ -970,7 +1000,14 @@ body:not(.w3d) .parents > .content { background: linear-gradient(180deg, rgba(24
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   box-shadow: 0 0 0 1px rgba(29, 37, 80, 0.06), 0 8px 20px -12px rgba(29, 37, 80, 0.3);
-  top: 6px;
+  /* klebt 6 px unter der Oberkante des Inhalts (sticky zählt ab dem Innenabstand) … */
+  top: calc(6px - var(--gap));
+}
+/* … und dieser 6-px-Streifen bleibt leer: darin lief sonst beim Scrollen eine
+   halbe Textzeile über den Tabs durch */
+.parents > .content {
+  -webkit-mask-image: linear-gradient(180deg, transparent 6px, #000 6px);
+  mask-image: linear-gradient(180deg, transparent 6px, #000 6px);
 }
 .tab { background: transparent; box-shadow: none; border-radius: 12px; color: var(--ink-soft); font-family: var(--font-ui); min-height: 44px; transition: background 0.15s, color 0.15s; }
 .tab:hover { background: rgba(29, 37, 80, 0.05); color: var(--ink); }
@@ -1015,15 +1052,14 @@ body:not(.w3d) .parents > .content { background: linear-gradient(180deg, rgba(24
   box-shadow: 0 1px 0 rgba(29, 37, 80, 0.04), 0 6px 14px -10px rgba(29, 37, 80, 0.35);
 }
 .parents select:hover { border-color: #c5cbe0; }
-/* Ja/Nein als Schalter (30 px hoch). Die Größe steht in app.js inline (24 px) –
-   darum hier mit !important */
+/* Ja/Nein als Schalter (32 px hoch) */
 .parents input[type=checkbox] {
   -webkit-appearance: none;
   appearance: none;
   position: relative;
   flex: 0 0 auto;
-  width: 54px !important;
-  height: 32px !important;
+  width: 54px;
+  height: 32px;
   margin: 0;
   border: 0;
   border-radius: 999px;
@@ -1044,6 +1080,10 @@ body:not(.w3d) .parents > .content { background: linear-gradient(180deg, rgba(24
   box-shadow: 0 2px 5px rgba(29, 37, 80, 0.35);
   transition: transform 0.22s var(--spring);
 }
+/* unsichtbar vergrößerte Trefferfläche: 32 px sichtbar → 42 px zum Tippen (füllt den Zeilenabstand, ohne in die Nachbarzeile zu ragen) */
+.parents input[type=checkbox]::after { content: ""; position: absolute; inset: -5px -6px; border-radius: 999px; }
+/* Beschriftungen sind mit ihrem Feld verknüpft (label for): Tippen auf den Text schaltet mit */
+.parents .p-row label[for] { cursor: pointer; }
 .parents input[type=checkbox]:checked { background: linear-gradient(180deg, #45d58a, #22b26b); box-shadow: inset 0 2px 3px rgba(10, 90, 50, 0.3); }
 .parents input[type=checkbox]:checked::before { transform: translateX(22px); }
 .parents input[type=checkbox]:focus-visible { outline: 3px solid #4a90e2; outline-offset: 3px; box-shadow: inset 0 2px 4px rgba(29, 37, 80, 0.18); }
@@ -1051,7 +1091,7 @@ body:not(.w3d) .parents > .content { background: linear-gradient(180deg, rgba(24
 .parents input[type=range] {
   -webkit-appearance: none;
   appearance: none;
-  height: 32px;
+  height: 44px;
   background: transparent;
   cursor: pointer;
 }
@@ -1129,4 +1169,116 @@ body:not(.w3d) .parents > .content { background: linear-gradient(180deg, rgba(24
 @media (max-width: 420px) {
   .topbar .dots { padding: 3px 5px; background: rgba(0, 0, 0, 0.1); }
   .topbar .title .emoji { display: none; }
+}
+
+/* ==========================================================================
+   Handy quer (≤ 520 px hoch): Flo-Spalte statt Blase unten
+   Die Bühne ist nur ~300 px hoch; eine Blase unten nahm davon 90 px und lag
+   trotzdem auf den Antworten. Im Spiel steht Flo darum links unten und seine
+   Blase schmal darüber; die Bühne hält links diese Spalte (--flo-col) frei.
+   Ragt ein Spiel dennoch heraus, scrollt die Bühne (base.css: safe center).
+   Steht hinter den Spiel-Stylesheets: gilt auch für Spiele mit eigenem
+   Bühnen-Innenabstand (Rakete, Malwerkstatt, Denk-Insel).
+   ========================================================================== */
+@media (max-height: 520px) and (orientation: landscape) {
+  :root { --flo-col: clamp(150px, 21vw, 200px); --bar-top: max(6px, env(safe-area-inset-top)); }
+  body.no-bubble { --flo-col: 88px; }
+  .game-screen > .stage {
+    --bubble-safe: 0px;
+    padding: 8px max(10px, env(safe-area-inset-right)) 10px var(--flo-col);
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  body:has(.game-screen) .mascot { left: max(12px, env(safe-area-inset-left)); bottom: max(12px, env(safe-area-inset-bottom)); }
+  body:has(.game-screen) .bubble {
+    left: max(12px, env(safe-area-inset-left));
+    bottom: calc(max(12px, env(safe-area-inset-bottom)) + 78px);
+    max-width: calc(var(--flo-col) - 16px);
+    font-size: 15px;
+    line-height: 1.28;
+    padding: 9px 12px 10px;
+    border-radius: 18px;
+    transform-origin: 20px bottom;
+  }
+  /* Spitze zeigt nach unten auf Flo */
+  body:has(.game-screen) .bubble::before {
+    left: 20px;
+    bottom: -12px;
+    border: 11px solid transparent;
+    border-top: 13px solid rgba(255, 255, 255, 0.96);
+    border-bottom: 0;
+    filter: drop-shadow(0 2px 0 rgba(211, 218, 238, 0.6));
+  }
+
+  /* Startseite ohne 3D: kein zweiter Fuchs in der Ecke – Flo steht schon auf
+     der Reise-Karte, und die Ecke lag auf dem Tagesabenteuer bzw. den Inseln */
+  body:not(.w3d):has(#app > .screen.home) :is(.mascot, .bubble) { display: none; }
+
+  /* Rundenende: kompakt; mit neuem Sticker stehen Sterne und Sticker
+     nebeneinander. „Nochmal“/„Fertig“ bleiben immer sichtbar (klebt unten,
+     falls das Fenster doch scrollen muss). */
+  .overlay.round-end { padding: 10px; }
+  .round-end .panel { padding: 12px clamp(18px, 4vw, 34px) 0; max-width: min(720px, 100%); }
+  .round-end .panel > h2:first-child { font-size: clamp(22px, 6.4vh, 28px); padding: 5px 22px 7px; margin-bottom: 2px; }
+  .round-end .round-stars { margin: 4px 0; padding: 2px 0; }
+  .round-end .round-stars .emoji { font-size: clamp(40px, 12vh, 54px); }
+  .round-end .round-stars .emoji:nth-child(2) { translate: 0 -6px; }
+  .round-end .round-stars::before { width: clamp(180px, 50vh, 240px); }
+  .round-end .panel > p { margin: 2px auto; padding: 5px 14px 6px; font-size: 16px; }
+  .round-end .panel > div:has(> .sticker-reveal) { margin: 0 auto; padding: 6px 14px 8px; }
+  .round-end .panel > div > p { font-size: 15px; margin: 0; }
+  .round-end .sticker-reveal { font-size: clamp(54px, 16vh, 70px); margin: 6px 0 2px; }
+  .round-end .panel > .actions {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    margin: 6px calc(-1 * clamp(18px, 4vw, 34px)) 0;
+    padding: 10px 14px 14px;
+    gap: 14px;
+    background: linear-gradient(180deg, rgba(246, 248, 253, 0) 0%, #f6f8fd 26%);
+  }
+  .round-end .actions .btn-big { min-height: 58px; padding: 10px 26px; font-size: clamp(19px, 5.4vh, 23px); }
+  .round-end .panel:has(> div > .sticker-reveal) {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    align-items: center;
+    column-gap: 20px;
+  }
+  .round-end .panel:has(> div > .sticker-reveal) > :is(h2:first-child, .actions) { grid-column: 1 / -1; justify-self: stretch; }
+  .round-end .panel:has(> div > .sticker-reveal) > h2:first-child { justify-self: center; }
+  .round-end .panel:has(> div > .sticker-reveal) > :is(.round-stars, p) { grid-column: 1; }
+  .round-end .panel > div:has(> .sticker-reveal) { grid-column: 2; grid-row: 2 / span 2; }
+
+  /* Eltern-Schranke: Aufgabe links, Ziffernblock rechts (untereinander lagen
+     die unteren Tasten und „Abbrechen“ außer Sicht) */
+  .overlay.gate .panel {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto auto 1fr;
+    align-items: center;
+    column-gap: 24px;
+    padding: 14px 22px;
+    max-width: min(640px, 100%);
+  }
+  .overlay.gate .panel > :not(.keypad) { grid-column: 1; }
+  .overlay.gate .panel > h2 { margin: 0 0 4px; }
+  .overlay.gate .panel > p { margin: 0 0 6px; }
+  .overlay.gate .panel > .actions { margin-top: 10px; align-self: start; }
+  .overlay.gate .keypad { grid-column: 2; grid-row: 1 / -1; margin: 0; grid-template-columns: repeat(3, 62px); gap: 8px; }
+  .overlay.gate .keypad button { height: clamp(48px, 14vh, 60px); }
+  /* Bewegungspause: Tier etwas kleiner, damit „Fertig – weiter!“ ganz zu sehen ist */
+  .panel:has(> .break-emoji) { padding-top: 14px; padding-bottom: 16px; }
+  .break-emoji { font-size: clamp(56px, 16vh, 72px); }
+}
+/* Sehr niedrig (≤ 380 px, z. B. iPhone SE quer): Kopfleiste und Bühnenränder
+   etwas schmaler, Blasen-Schrift eine Stufe kleiner (lange Ansagen passen
+   sonst nicht zwischen Kopfleiste und Flo) */
+@media (max-height: 380px) and (orientation: landscape) {
+  :root { --topbar-h: 54px; }
+  .topbar .btn-round { width: 48px; height: 48px; font-size: 22px; }
+  .topbar .star-counter { min-height: 44px; }
+  .game-screen > .stage { padding-top: 4px; padding-bottom: 6px; }
+  body:has(.game-screen) .bubble { font-size: 14px; line-height: 1.22; padding: 7px 10px 8px; }
 }

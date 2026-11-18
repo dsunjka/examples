@@ -56,7 +56,9 @@
                                                   koordinaten), safe(), obstacles() – siehe W.label
      W.labelIsland(areaId, element, opts)         Schild am anchors.label einer Insel; opts.shore:
                                                   am Strand vor der Insel (Weltkarte)
-     W.interactive(object3d, onTap)               antippbar (Raycast)
+     W.interactive(object3d, onTap)               antippbar (Raycast; ausgeführt im click der Leinwand,
+                                                  nicht bei pointerup – sonst landete der Kompatibilitäts-
+                                                  Klick des Browsers auf dem neuen Bildschirm)
      W.pan(dx) / W.canPan() / W.panTo(x)          Weltkarte im Hochformat seitlich schieben
                                                   (dx in Bildschirmbreiten, auch per Wischen).
                                                   Beim Betreten schaut sie auf die Insel, von der
@@ -64,6 +66,7 @@
      W.sleep() / W.wake()                         Ruhemodus (nach der laufenden Kamerafahrt)
      W.debugPixels()                              einmal rendern + Pixel lesen (Tests, Diagnose):
                                                   {colors, std, calls, triangles, ok}
+     W.smoothShadows                              true: weiche PCF-Schatten ohne Bildschirm-Rauschen aktiv
      W.mat(color, opts)                           geteilte MeshStandardMaterial
      W.textTexture(text, opts) / W.emojiTexture(emoji, px)
      W.tween(obj, props, {dur, ease, delay, onUpdate, onDone})
@@ -645,47 +648,50 @@
   }
 
   /**
-   * Insel: oben im freien Bereich (darunter die Spielkarten). Möglichst flacher,
-   * filmischer Blick – aber steil genug, dass keine Nachbarinsel oben am Rand
-   * angeschnitten wird und keine nähere Insel die Insel verdeckt.
+   * Insel: oben im freien Bereich (darunter die Spielkarten). Gewählt wird unter
+   * mehreren Blickrichtungen und Neigungen die ruhigste Rahmung: keine nähere Insel
+   * verdeckt die eigene, keine Nachbarinsel liegt groß im Vordergrund (unter den
+   * Karten) und möglichst keine wird oben an der Kopfleiste angeschnitten.
    */
   function areaPose(I, fr) {
     const fov = 34;
     const pts = islandPoints(I);
     const { w, h } = viewSize();
-    // Hochformat: unter den Spielkarten bleibt viel Bild frei – dort soll keine angeschnittene
-    // Nachbarinsel groß im Vordergrund liegen. Darum auch seitlich versetzte Blickrichtungen
-    // prüfen und die sichtbare Fläche der Nachbarn unterhalb des freien Bereichs mitzählen.
-    const tall = w / h < 0.9;
-    const yaws = tall ? [0.12, -0.3, 0.5, -0.65, 0.85] : [0.12];
+    // Unter und neben den Spielkarten bleibt Bild frei – dort soll keine (angeschnittene)
+    // Nachbarinsel groß im Vordergrund liegen und der eigenen Insel die Schau stehlen.
+    // Darum auch seitlich versetzte Blickrichtungen prüfen und bewerten, wie groß nähere
+    // Nachbarn im Bild erscheinen (gemessen an der eigenen Insel).
+    const yaws = [0.12, -0.3, 0.5, -0.65, 0.85];
     let best = null;
     for (const yaw of yaws) {
       for (const elev of [24, 28, 32, 36, 41, 47, 54]) {
         const p = fitPose(focusOf(I), frontDir(I, elev, yaw), fov, pts, fr, { margin: 8 });
         const own = screenRectOf(I, p.cam);
-        let bad = 0, seen = 0;
+        if (!own) continue;
+        const ownA = Math.max(1, (own.right - own.left) * (own.bottom - own.top));
+        let bad = 0, seen = 0, front = 0;
         for (const id in W.islands) {
           const O = W.islands[id];
-          if (O === I || !own) continue;
+          if (O === I) continue;
           const r = screenRectOf(O, p.cam);
           if (!r) continue;
-          // oben angeschnitten (an der Kopfleiste oder am Bildrand)?
-          if ((r.top < fr.top - 2 && r.bottom > fr.top + 14) || (r.top < -2 && r.bottom > 14)) bad += 2;
+          // oben angeschnitten (an der Kopfleiste oder am Bildrand)? Stört weniger als eine
+          // große Insel im Vordergrund – die Welt geht hinter der Glas-Kopfleiste weiter
+          if ((r.top < fr.top - 2 && r.bottom > fr.top + 14) || (r.top < -2 && r.bottom > 14)) bad += 1.2;
           // verdeckt eine nähere Insel die eigene?
           const ix = Math.max(0, Math.min(r.right, own.right) - Math.max(r.left, own.left));
           const iy = Math.max(0, Math.min(r.bottom, own.bottom) - Math.max(r.top, own.top));
           const closer = O.pos.distanceTo(p.pos) < I.pos.distanceTo(p.pos);
-          if (closer && ix * iy > 0.06 * (own.right - own.left) * (own.bottom - own.top)) bad += 3;
-          if (tall) {
-            // sichtbarer Teil unterhalb des freien Bereichs (Anteil am Bild)
-            const vx = Math.max(0, Math.min(r.right, w) - Math.max(r.left, 0));
-            const vy = Math.max(0, Math.min(r.bottom, h) - Math.max(r.top, h - fr.bottom));
-            seen += (vx * vy) / (w * h);
-          }
+          if (closer && ix * iy > 0.06 * ownA) bad += 3;
+          // sichtbarer Teil unterhalb des freien Bereichs (Anteil am Bild)
+          const vx = Math.max(0, Math.min(r.right, w) - Math.max(r.left, 0));
+          const vy = Math.max(0, Math.min(r.bottom, h) - Math.max(r.top, h - fr.bottom));
+          seen += (vx * vy) / (w * h);
+          // nähere Nachbarn: sichtbare Fläche im Verhältnis zur eigenen Insel (ab halb so groß)
+          if (closer) front += Math.max(0, (vx * Math.max(0, Math.min(r.bottom, h) - Math.max(r.top, 0))) / ownA - 0.5);
         }
-        const score = bad + seen * 6 + Math.abs(yaw - 0.12) * 0.6;
+        const score = bad + seen * 8 + Math.min(front, 3) + Math.abs(yaw - 0.12) * 0.6;
         if (!best || score < best.score) best = { p, score };
-        if (!bad && !tall) break;
       }
     }
     return { pos: best.p.pos, look: best.p.look, fov, sway: 0.7 };
@@ -881,8 +887,11 @@
    *                nachgeführt) und bleiben im sicheren Bereich opts.safe() →
    *                {top, right, bottom, left} (px vom Rand). Liegt der Punkt seitlich
    *                außerhalb (Weltkarte geschoben), blendet das Schild aus (.w3d-off) –
-   *                es bleibt fokussierbar; Fokus schiebt die Karte zur Insel. Dazu
-   *                data-w3d-off = 'left' | 'right': auf welcher Seite es liegt.
+   *                es bleibt fokussierbar; Fokus (Tastatur) schiebt die Karte zur Insel. Dazu
+   *                data-w3d-off = 'left' | 'right': auf welcher Seite es liegt. Ein Wischen,
+   *                das auf dem Schild beginnt, schiebt die Karte (der click danach entfällt).
+   *                Liegt ein Schild auf der geschobenen Karte auch ausgewichen noch unter
+   *                einem Hindernis (Flo), blendet es ebenso aus.
    */
   W.label = function (target, element, opts = {}) {
     const L = { target, element, opts, last: '', vis: null, off: { x: 0, y: 0 }, goal: { x: 0, y: 0 }, fresh: true };
@@ -892,8 +901,11 @@
     if (opts.avoid) {
       element.addEventListener('focus', () => {
         if (!rig.pan || !L.wp) return;
+        // nicht beim Antippen/Wischen (Fokus durch den Finger): die Karte soll dabei nicht verspringen
+        if (performance.now() - (element.w3dPointerAt || -1e9) < 800) return;
         W.panTo(L.wp.x);
       });
+      dragOnLabel(element);
     }
     if (W.started && W.camera) {
       screenRect = null;
@@ -980,7 +992,7 @@
     return marks.list;
   }
   const overlap = (a, b) => Math.max(0, Math.min(a.right, b.right) - Math.max(a.left, b.left)) * Math.max(0, Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top));
-  const CAND_DX = [0, -22, 22, -44, 44, -70, 70];
+  const CAND_DX = [0, -22, 22, -44, 44, -70, 70, -100, 100, -140, 140];
   const CAND_DY = [0, 12, 26, 42, -10];
   const CAND_DY_NARROW = CAND_DY.concat([-24, -40]); // Handy: auch ein Stück auf die eigene Insel
   /** Gewicht der Überdeckung eines Wahrzeichens. Handy (schmal): die Schilder der Schulreihe
@@ -996,6 +1008,7 @@
     try { if (o.obstacles) obs = (o.obstacles() || []).filter(Boolean); } catch (e) { obs = []; }
     const isl = landmarkRects();
     const narrow = w < 560;
+    const tight = narrow || h < 520; // Handy hoch oder quer: auch ein Stück auf die eigene Insel ausweichen
     const placed = [];
     const xMin = safe.left, xMax = w - safe.right, yMin = safe.top, yMax = h - safe.bottom;
     list.sort((a, b) => (a.dist || 0) - (b.dist || 0));
@@ -1004,7 +1017,9 @@
       if (!L.size || L.sizeAge++ > 90) { L.size = { w: L.element.offsetWidth || 120, h: L.element.offsetHeight || 40 }; L.sizeAge = 0; }
       const lw = L.size.w * L.k, lh = L.size.h * L.k;
       // seitlich außerhalb des sicheren Bereichs (geschobene Karte): ausblenden statt abschneiden
-      L.isOff = L.sx < xMin + lw * 0.12 || L.sx > xMax - lw * 0.12;
+      // (mit Abstand zwischen Aus- und Einblenden: die schwankende Kamera ließe es sonst flackern)
+      const edge = lw * (L.isOff ? 0.18 : 0.1);
+      L.isOff = L.sx < xMin + edge || L.sx > xMax - edge;
       if (L.isOff) continue;
       const top = L.opts.align === 'top';
       const bx = L.sx - lw / 2, by = top ? L.sy + 3 * L.k : L.sy - lh;
@@ -1019,13 +1034,18 @@
         for (const m of isl) cost += overlap(r, m) * markWeight(m, L, narrow);
         return { dx, dy, x: x - bx, y: y - by, r, cost };
       };
-      for (const dy of narrow ? CAND_DY_NARROW : CAND_DY) for (const dx of CAND_DX) {
+      for (const dy of tight ? CAND_DY_NARROW : CAND_DY) for (const dx of CAND_DX) {
         const c = evalAt(dx, dy);
         if (!best || c.cost < best.cost) best = c;
       }
       // Beharrung: die bisherige Lage behalten, solange sie kaum schlechter ist (kein Flackern)
       if (L.cand) { const c = evalAt(L.cand.dx, L.cand.dy); if (c.cost <= best.cost * 1.2 + 60) best = c; }
       L.cand = best;
+      // geschobene Karte: Liegt das Schild am Rand auch so noch unter Flo, blendet es aus –
+      // die Insel steht dann als Symbol im Pfeil-Knopf (app.js peekIslands)
+      // (Abstand zwischen Aus und Ein wie oben: einmal ausgeblendet erst bei fast freier Lage zurück)
+      L.offObs = rig.pan && obs.some((p) => overlap(best.r, p) > (L.offObs ? 0.04 : 0.15) * lw * lh);
+      if (L.offObs) { L.isOff = true; continue; }
       L.goal.x = best.x; L.goal.y = best.y;
       if (L.fresh) { L.off.x = L.goal.x; L.off.y = L.goal.y; L.fresh = false; }
       placed.push(best.r);
@@ -1068,6 +1088,50 @@
     for (const L of list) if (L.element.isConnected) writeLabel(L);
     screenRect = null;
   }
+  /**
+   * Zeiger-Gesten: Wischen schiebt die Weltkarte (Hochformat), kurzes Antippen der Leinwand
+   * wählt ein 3D-Objekt (ausgeführt im click, siehe init). Ein Wischen darf auch auf einem
+   * Inselschild beginnen (W.label mit avoid): ab 12 px Bewegung schiebt es die Karte, und der
+   * folgende click des Schilds wird verworfen.
+   */
+  const drag = { down: null, tap: null, src: null };
+  function dragStart(e, src) {
+    if (e.button > 0 || !e.isPrimary) return;
+    drag.down = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now(), pan: rig.panTarget, moved: 0, src };
+    drag.tap = null;
+    if (rig.pan) { try { src.setPointerCapture(e.pointerId); } catch (err) { /* egal */ } }
+  }
+  function dragMove(e) {
+    const d = drag.down;
+    if (!d || e.pointerId !== d.id) return;
+    d.moved = Math.max(d.moved, Math.hypot(e.clientX - d.x, e.clientY - d.y));
+    if (!rig.pan || (d.src !== drag.src && d.moved < 12)) return; // Schild: erst ab 12 px schieben
+    const dx = (e.clientX - d.x) / Math.max(1, window.innerWidth);
+    rig.panTarget = Math.max(-rig.panMax, Math.min(rig.panMax, d.pan - dx * rig.unitsPerScreen));
+    W.wake();
+  }
+  function dragEnd(e, ok) {
+    const d = drag.down;
+    if (!d || e.pointerId !== d.id) return;
+    const moved = Math.max(d.moved, Math.hypot(e.clientX - d.x, e.clientY - d.y));
+    drag.down = null;
+    if (d.src === drag.src) {
+      if (ok && moved < 12 && performance.now() - d.t < 600) drag.tap = { x: e.clientX, y: e.clientY, t: performance.now() };
+    } else if (moved >= 12 && rig.pan) d.src.w3dSwiped = performance.now(); // Wischen, kein Antippen
+  }
+  /** Schild (W.label mit avoid): Wischen auf dem Schild schiebt die Karte */
+  function dragOnLabel(element) {
+    element.addEventListener('pointerdown', (e) => { element.w3dPointerAt = performance.now(); if (rig.pan) dragStart(e, element); });
+    element.addEventListener('pointermove', dragMove);
+    element.addEventListener('pointerup', (e) => dragEnd(e, true));
+    element.addEventListener('pointercancel', (e) => dragEnd(e, false));
+    element.addEventListener('click', (e) => {
+      const t = element.w3dSwiped;
+      element.w3dSwiped = 0;
+      if (t && performance.now() - t < 800) { e.preventDefault(); e.stopImmediatePropagation(); }
+    }, true);
+  }
+
   const pickables = [];
   W.interactive = function (obj, onTap) {
     obj.userData.onTap = onTap;
@@ -1256,8 +1320,33 @@
     return W.ready;
   };
 
+  /**
+   * Weiche Schattenkanten ohne Bildschirm-Rauschen: three.js filtert PCF-Schatten mit fünf
+   * pro Pixel zufällig gedrehten Abtastungen (Vogel-Scheibe, interleaved gradient noise) –
+   * bei DPR 1 wirkt der Halbschatten wie körniges Pixelrauschen und passt nicht zum glatten
+   * Low-Poly-Stil. Ersatz: 3×3 Hardware-PCF-Abtastungen auf festem Raster mit Zeltgewichten
+   * (1-2-1), Abstand nach shadow.radius. Findet sich die Stelle nicht (andere three-Version),
+   * bleibt alles wie es ist.
+   */
+  function smoothShadows(T) {
+    try {
+      const SC = T.ShaderChunk, key = 'shadowmap_pars_fragment', src = SC && SC[key];
+      if (!src) return false;
+      const a = src.indexOf('float phi = interleavedGradientNoise( gl_FragCoord.xy ) * PI2;');
+      const b = a < 0 ? -1 : src.indexOf(') * 0.2;', a);
+      if (a < 0 || b < 0 || b - a > 1200) return false;
+      const tap = (x, y, wt) => `texture( shadowMap, vec3( shadowCoord.xy + vec2( ${x}, ${y} ) * d, shadowCoord.z ) ) * ${wt}`;
+      const taps = [];
+      [-1, 0, 1].forEach((y) => [-1, 0, 1].forEach((x) => taps.push(tap(x.toFixed(1), y.toFixed(1), ((2 - Math.abs(x)) * (2 - Math.abs(y))).toFixed(1)))));
+      const body = `vec2 d = texelSize * clamp( shadowRadius * 0.45, 0.75, 2.0 );\n\t\t\t\tshadow = (\n\t\t\t\t\t${taps.join(' +\n\t\t\t\t\t')}\n\t\t\t\t) * 0.0625;`;
+      SC[key] = src.slice(0, a) + body + src.slice(b + ') * 0.2;'.length);
+      return true;
+    } catch (e) { return false; }
+  }
+
   function init(T) {
     W.THREE = T;
+    W.smoothShadows = smoothShadows(T);
     W.reducedMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     const canvas = document.createElement('canvas');
     canvas.id = 'w3d-bg';
@@ -1367,32 +1456,22 @@
     canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); W.lost = true; document.body.classList.remove('w3d-live'); }, false);
     canvas.addEventListener('webglcontextrestored', () => { W.lost = false; W.stats.frames = 0; W.wake(); }, false);
 
-    // Antippen von 3D-Objekten und Wischen (nur wenn das Ereignis die Leinwand trifft)
-    let down = null;
-    canvas.addEventListener('pointerdown', (e) => {
-      down = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now(), pan: rig.panTarget, moved: 0 };
-      if (rig.pan) { try { canvas.setPointerCapture(e.pointerId); } catch (err) { /* egal */ } }
+    // Antippen von 3D-Objekten und Wischen (Leinwand; Wischen auch auf den Schildern, W.label)
+    drag.src = canvas;
+    canvas.addEventListener('pointerdown', (e) => dragStart(e, canvas));
+    canvas.addEventListener('pointermove', dragMove);
+    canvas.addEventListener('pointerup', (e) => dragEnd(e, true));
+    canvas.addEventListener('pointercancel', (e) => dragEnd(e, false));
+    // Ausgeführt wird ein Antippen erst im click der Leinwand: Würde schon pointerup den
+    // Bildschirm wechseln, träfe der Kompatibilitäts-Klick des Browsers (Touch) danach den
+    // neuen Knopf unter dem Finger – z. B. startete sofort ein Spiel statt der Insel.
+    canvas.addEventListener('click', (e) => {
+      const t = drag.tap;
+      drag.tap = null;
+      if (!t || performance.now() - t.t > 1000 || Math.hypot(e.clientX - t.x, e.clientY - t.y) > 24) return;
+      const o = pick(e.clientX, e.clientY);
+      if (o) o.userData.onTap(o);
     });
-    canvas.addEventListener('pointermove', (e) => {
-      if (!down || e.pointerId !== down.id) return;
-      down.moved = Math.max(down.moved, Math.hypot(e.clientX - down.x, e.clientY - down.y));
-      if (!rig.pan) return;
-      const dx = (e.clientX - down.x) / Math.max(1, window.innerWidth);
-      rig.panTarget = Math.max(-rig.panMax, Math.min(rig.panMax, down.pan - dx * rig.unitsPerScreen));
-      W.wake();
-    });
-    const end = (e, tap) => {
-      if (!down || e.pointerId !== down.id) return;
-      const moved = Math.max(down.moved, Math.hypot(e.clientX - down.x, e.clientY - down.y));
-      const quick = performance.now() - down.t < 600;
-      down = null;
-      if (tap && moved < 12 && quick) {
-        const o = pick(e.clientX, e.clientY);
-        if (o) o.userData.onTap(o);
-      }
-    };
-    canvas.addEventListener('pointerup', (e) => end(e, true));
-    canvas.addEventListener('pointercancel', (e) => end(e, false));
 
     W.started = true;
     const p0 = rig.pending || { place: W.place || 'splash', opts: {} };

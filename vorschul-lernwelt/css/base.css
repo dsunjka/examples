@@ -714,10 +714,28 @@ body.mascot-big .content { padding-bottom: calc(var(--gap) + clamp(130px, 25vmin
   .dots { gap: 3px; }
   .dot { border-width: 2px; }
 }
+/* Handy quer (≤ 520 px hoch): Größen richten sich nach der Höhe. Die Bühne
+   ist nur ~300 px hoch; Flo und seine Blase stehen im Spiel in einer Spalte
+   links (theme.css „Handy quer“), unten bleibt kein Blasen-Platz frei.
+   „safe center“: ragt ein Spiel doch heraus, beginnt es oben (scrollbar)
+   statt oben abgeschnitten zu werden. */
 @media (max-height: 520px) and (orientation: landscape) {
-  :root { --tile: clamp(70px, 22vmin, 130px); }
+  :root {
+    --tile: clamp(66px, 22vh, 118px);
+    --tile-s: clamp(58px, 16vh, 96px);
+    --tile-l: clamp(76px, 26vh, 140px);
+    --tile-label: clamp(13px, 3.6vh, 18px);
+    --emoji-big: clamp(42px, 12.5vh, 80px);
+    --emoji-mid: clamp(30px, 8.5vh, 54px);
+    --emoji-small: clamp(22px, 6vh, 38px);
+    --prompt-font: clamp(22px, 6.4vh, 36px);
+    --prompt-min-h: clamp(64px, 19vh, 110px);
+    --gap: clamp(8px, 2.4vh, 14px);
+  }
   .mascot { width: 64px; height: 64px; }
   .bubble { left: 82px; bottom: 30px; }
+  .stage { justify-content: safe center; gap: clamp(8px, 2.8vh, 16px); }
+  .prompt-box { padding: clamp(8px, 2.6vh, 16px) clamp(12px, 3.4vh, 20px); }
 }
 
 /* Hilfe-Leiter: ausgeblendete falsche Kachel; Knobel-Aufgabe im Fortschritt */

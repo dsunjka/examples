@@ -248,3 +248,9 @@
   .sat-card { min-width: 92px; min-height: clamp(64px, 13vmin, 120px); padding: 6px clamp(14px, 3vmin, 30px); border-radius: 22px; }
   .sat-pchoices .tile.large { --tile: clamp(96px, 25vmin, 220px); }
 }
+
+/* Handy quer (≤ 520 px hoch): ragt der Zug doch heraus, beginnt er oben
+   (scrollbar) statt oben abgeschnitten zu werden */
+@media (max-height: 520px) and (orientation: landscape) {
+  .stage.sat-stage { justify-content: safe center; gap: 10px; }
+}

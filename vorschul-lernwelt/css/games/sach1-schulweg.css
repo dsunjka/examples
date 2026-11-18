@@ -319,3 +319,25 @@
   .swg-scene { max-height: 26vh; }
   .swg-key { width: 54px; height: 54px; }
 }
+
+/* Handy quer (≤ 520 px hoch): Notruf-Telefon flacher – Anzeige oben, Tasten
+   links, grüner Hörer rechts daneben (hoch gestellt ragte es aus der Bühne) */
+@media (max-height: 520px) and (orientation: landscape) {
+  .swg-phone:has(> .swg-pad) {
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+    justify-items: center;
+    gap: 8px 14px;
+    padding: 10px 14px;
+  }
+  .swg-phone:has(> .swg-pad) > .swg-display { grid-column: 1 / -1; min-height: 40px; line-height: 30px; font-size: 26px; }
+  .swg-phone:has(> .swg-pad) > .swg-pad { grid-column: 1; gap: 6px; }
+  .swg-phone:has(> .swg-pad) > .swg-callbtn { grid-column: 2; grid-row: 2; }
+  .swg-key { width: 46px; height: 46px; font-size: 22px; }
+  .swg-callbtn { width: 60px; height: 60px; font-size: 28px; }
+  .swg-scene { max-height: 46vh; }
+  /* Notruf: Geschichte links, Telefon rechts (auch unter 700 px Breite) */
+  .swg-callwrap { flex-direction: row; align-items: center; justify-content: center; gap: 14px; }
+  .swg-callwrap .swg-story { flex: 1 1 40%; }
+}

@@ -450,6 +450,29 @@
 @media (max-height: 520px) and (orientation: landscape) {
   .reise-screen { --row: 96px; --st: 66px; }
   .reise-tips { position: relative; }
+  /* Startseite ohne 3D: Reise (mit Forscherbuch) und Tagesabenteuer in einer
+     Zeile und flacher – die Inseln sind so ohne Scrollen zu sehen
+     (die 3D-Weltkarte ordnet world3d.css) */
+  body:not(.w3d) .screen.home .home-head { margin-bottom: 6px; }
+  body:not(.w3d) .screen.home .home-head h1 { font-size: 22px; }
+  body:not(.w3d) .screen.home .home-top { grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 10px; margin-bottom: 12px; }
+  body:not(.w3d) .screen.home .home-quest { gap: 10px; }
+  body:not(.w3d) .screen.home .reise-cta { min-height: 98px; padding: 8px 12px 8px 8px; gap: 8px; }
+  body:not(.w3d) .screen.home .reise-cta .reise-cta-flo { width: 54px; height: 54px; }
+  body:not(.w3d) .screen.home .reise-cta .reise-cta-title { font-size: 20px; }
+  body:not(.w3d) .screen.home .reise-cta .reise-cta-place { font-size: 20px; }
+  body:not(.w3d) .screen.home .reise-cta .reise-cta-place.now { font-size: 26px; padding: 4px; }
+  body:not(.w3d) .screen.home .reise-cta .reise-cta-place.far { display: none; }
+  body:not(.w3d) .screen.home .reise-cta .reise-cta-deco { font-size: 30px; }
+  body:not(.w3d) .screen.home .book-cta { width: 82px; min-height: 98px; padding: 8px 6px; gap: 4px; }
+  body:not(.w3d) .screen.home .book-cta .emoji { font-size: 34px; }
+  body:not(.w3d) .screen.home .book-cta span:not(.emoji) { font-size: 14px; }
+  body:not(.w3d) .screen.home .home-top .daily { padding: 8px 10px; gap: 6px; flex-wrap: wrap; justify-content: center; align-content: center; }
+  body:not(.w3d) .screen.home .home-top .daily .daily-title { font-size: 18px; flex: 1 1 100%; justify-content: center; }
+  body:not(.w3d) .screen.home .home-top .daily .stations { gap: 6px; flex-wrap: nowrap; }
+  body:not(.w3d) .screen.home .home-top .daily .station { width: 54px; height: 54px; font-size: 27px; }
+  body:not(.w3d) .screen.home .home-top .daily .station-arrow { font-size: 18px; }
+  body:not(.w3d) .screen.home .home-top .daily .chest { font-size: 36px; }
 }
 /* Startseite: Hinweis auf Flos Tipps */
 .reise-cta .reise-cta-tip {

@@ -43,12 +43,18 @@
   let bubbleTimer = null;
 
   UI.initMascot = function () {
-    mascotEl = el('div.mascot', { html: UI.floSVG(), title: 'Flo – nochmal hören', role: 'button', 'aria-label': 'Flo – nochmal hören' });
+    mascotEl = el('div.mascot', { html: UI.floSVG(), title: 'Flo – nochmal hören', role: 'button', tabindex: '0', 'aria-label': 'Flo – nochmal hören' });
     bubbleEl = el('div.bubble', { role: 'status', 'aria-live': 'polite' });
     mascotEl.addEventListener('click', () => {
       LT.sfx.play('pop');
       UI.cheer();
       if (UI.onMascotTap) UI.onMascotTap();
+    });
+    // per Tastatur bedienbar wie ein Knopf (Enter, Leertaste)
+    mascotEl.addEventListener('keydown', (e) => {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      e.preventDefault();
+      mascotEl.click();
     });
     document.body.appendChild(mascotEl);
     document.body.appendChild(bubbleEl);
@@ -71,6 +77,9 @@
     if (!mascotEl) return;
     mascotEl.classList.toggle('big', !!big);
     mascotEl.classList.toggle('hidden', !!hidden);
+    // ausgeblendet (aus dem Bild geschoben): nicht per Tab erreichbar, für Vorleser stumm
+    mascotEl.tabIndex = hidden ? -1 : 0;
+    if (hidden) mascotEl.setAttribute('aria-hidden', 'true'); else mascotEl.removeAttribute('aria-hidden');
     document.body.classList.toggle('mascot-big', !!big && !hidden);
     if (hidden) bubbleEl.classList.remove('show');
   };
@@ -179,8 +188,33 @@
    * UI.onLeave (einmalig): läuft, bevor der nächste Bildschirm entsteht (z. B. Nachtstimmung beenden).
    */
   UI.onLeave = null;
+
+  /**
+   * Schutz vor Geister- und Doppeltipps: Nach einem Bildschirmwechsel (oder einem neuen Dialog)
+   * liegt unter dem Finger oft schon ein neuer Knopf – ein zweiter schneller Tipp des Kindes
+   * (oder der Kompatibilitäts-Klick des Browsers nach einem Touch) würde ihn auslösen. Klicks aus
+   * Zeigereingaben, die in den ersten UI.tapGuard ms ankommen, werden darum verworfen.
+   * Tastatur (click.detail 0) und programmatische Klicks (element.click(), Tests) bleiben
+   * unberührt. Im Testmodus aus (0), Tests können es mit LT.ui.tapGuard = 450 einschalten.
+   */
+  UI.tapGuard = LT.config && LT.config.test ? 0 : 450;
+  let guardUntil = 0;
+  UI.guardTaps = function (ms = UI.tapGuard) {
+    if (ms > 0) guardUntil = Math.max(guardUntil, performance.now() + ms);
+  };
+  document.addEventListener('click', (e) => {
+    // Zeitpunkt der Eingabe selbst (nicht der Verarbeitung): auf einem ausgelasteten Gerät
+    // kommt der zweite Tipp sonst „zu spät“ an und rutschte durch
+    const now = performance.now();
+    const t = e.timeStamp > 0 && e.timeStamp <= now + 1 ? e.timeStamp : now;
+    if (!e.isTrusted || e.detail === 0 || t >= guardUntil) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+  }, true);
+
   UI.screen = function ({ area, className = '', title, icon, onBack, backIcon = '🏠', right = [], place, frame, live } = {}) {
     if (UI.onLeave) { const f = UI.onLeave; UI.onLeave = null; try { f(); } catch (e) { console.error(e); } }
+    UI.guardTaps();
     const root = UI.root();
     U.clear(root);
     document.querySelectorAll('.overlay').forEach((o) => o.remove());
@@ -200,6 +234,16 @@
     }
     root.appendChild(screen);
     if (LT.w3d && place !== null) LT.w3d.go(place === undefined ? 'sky' : place, frame ? { frame, live: !!live } : {});
+    // Fokus an den Anfang des neuen Bildschirms (Tastatur, Vorleser) – sonst fiele er auf body.
+    // Erst nach dem Aufbau (Mikroaufgabe) und nur, wenn der Bildschirm nicht selbst fokussiert.
+    queueMicrotask(() => {
+      const a = document.activeElement;
+      if (!screen.isConnected || (a && a !== document.body && a !== document.documentElement)) return;
+      const head = screen.querySelector('.topbar .title, h1, h2');
+      if (!head) return;
+      if (!head.hasAttribute('tabindex')) { head.tabIndex = -1; head.style.outline = 'none'; } // nur Lesezeichen, kein Knopf: ohne Fokusrahmen
+      try { head.focus({ preventScroll: true }); } catch (e) { /* egal */ }
+    });
     return { screen, topbar };
   };
   UI.applyArea = function (node, area) {
@@ -221,12 +265,42 @@
     });
   };
 
-  UI.overlay = function (content, { onClose, className = '' } = {}) {
-    const ov = el('div.overlay' + (className ? '.' + className : ''), el('div.panel', content));
+  /**
+   * Dialog über dem Bildschirm (role=dialog, aria-modal). Der Fokus springt auf den ersten
+   * Knopf, bleibt im Dialog (Tab/Umschalt+Tab) und kehrt beim Schließen zurück.
+   * opts.cancel: Funktion für Escape (z. B. „Abbrechen“); ohne cancel schließt Escape nicht
+   * (Bewegungspause, Belohnung: dort entscheidet der Knopf).
+   */
+  let dialogSeq = 0;
+  const FOCUSABLE = 'button:not([disabled]), [href], input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  UI.overlay = function (content, { onClose, className = '', cancel } = {}) {
+    const panel = el('div.panel', content);
+    const ov = el('div.overlay' + (className ? '.' + className : ''), { role: 'dialog', 'aria-modal': 'true' }, panel);
+    const head = panel.querySelector('h1, h2, h3, .ask-text, p');
+    if (head) {
+      if (!head.id) head.id = 'dlg-title-' + ++dialogSeq;
+      ov.setAttribute('aria-labelledby', head.id);
+    }
+    const before = document.activeElement;
     ov.close = () => {
       ov.remove();
       if (onClose) onClose();
     };
+    // Schließen (auch direkt per ov.remove()): Fokus zurück, wo er vorher war
+    ov.remove = function () {
+      const had = ov.contains(document.activeElement);
+      Element.prototype.remove.call(ov);
+      if (had && before && before.isConnected && typeof before.focus === 'function') { try { before.focus({ preventScroll: true }); } catch (e) { /* egal */ } }
+    };
+    ov.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && typeof cancel === 'function') { e.preventDefault(); e.stopPropagation(); cancel(); return; }
+      if (e.key !== 'Tab') return;
+      const list = [...ov.querySelectorAll(FOCUSABLE)].filter((n) => n.offsetParent !== null || n === document.activeElement);
+      if (!list.length) { e.preventDefault(); return; }
+      const first = list[0], last = list[list.length - 1];
+      if (e.shiftKey && (document.activeElement === first || !ov.contains(document.activeElement))) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && (document.activeElement === last || !ov.contains(document.activeElement))) { e.preventDefault(); first.focus(); }
+    });
     // Farbe der aktuellen Welt übernehmen (Overlays liegen außerhalb des Bildschirms)
     const scr = document.querySelector('.screen');
     if (scr) {
@@ -234,8 +308,22 @@
       ['--area', '--area-soft'].forEach((v) => { const val = cs.getPropertyValue(v); if (val) ov.style.setProperty(v, val.trim()); });
     }
     document.body.appendChild(ov);
+    UI.guardTaps();
+    // Fokus in den Dialog (der Knopf dahinter bliebe sonst fokussiert)
+    const first = ov.querySelector(FOCUSABLE);
+    if (first) { try { first.focus({ preventScroll: true }); } catch (e) { /* egal */ } } else {
+      panel.tabIndex = -1;
+      try { panel.focus({ preventScroll: true }); } catch (e) { /* egal */ }
+    }
     return ov;
   };
+  /** Escape irgendwo im Dokument: oberster Dialog mit cancel (Fokus kann außerhalb liegen) */
+  document.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape' || e.defaultPrevented) return;
+    const ovs = document.querySelectorAll('.overlay[role="dialog"]');
+    const top = ovs[ovs.length - 1];
+    if (top && !top.contains(e.target)) top.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: false, cancelable: true }));
+  });
 
   /** Eigene Rückfrage statt confirm()/alert(): diese werden in eingebetteten
       Ansichten (z. B. Chrome im iframe) oft stillschweigend unterdrückt.
@@ -248,7 +336,7 @@
         no ? el('button.p-btn.light', { on: { click: () => finish(false) } }, no) : null,
         el('button.p-btn' + (danger ? '.danger' : ''), { on: { click: () => finish(true) } }, yes)
       );
-      const ov = UI.overlay([el('p.ask-text', question), buttons], { className: 'ask' });
+      const ov = UI.overlay([el('p.ask-text', question), buttons], { className: 'ask', cancel: () => finish(!no) });
       ov.addEventListener('click', (e) => { if (e.target === ov) finish(false); });
       const first = buttons.querySelector('button:last-child');
       if (first) setTimeout(() => first.focus(), 0);

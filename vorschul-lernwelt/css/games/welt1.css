@@ -202,3 +202,23 @@
 @media (min-width: 700px) and (min-height: 700px) and (orientation: portrait) {
   .tile.gef-tile.large { --tile: clamp(120px, min(33vmin, 28.5vw), 290px); }
 }
+
+/* ---------- Handy quer (≤ 520 px hoch, Flo-Spalte links) ----------
+   Die Formeln oben ziehen Platz für eine Blase unten ab (100vh − 330 px …);
+   bei ~390 px Höhe wurden Bilder winzig oder verschwanden ganz (Raum-Bild,
+   Straßenkreuzung). Hier zählen nur Kopfleiste und Frage. */
+@media (max-height: 520px) and (orientation: landscape) {
+  .raum-choices { --rw: min(calc((100vw - var(--flo-col, 180px) - 70px) / 3), calc((100vh - 196px) * 1.4), 240px); gap: 12px; }
+  .raum-big { width: min(calc(100vw - var(--flo-col, 180px) - 40px), calc((100vh - 190px) * 1.395), 760px); }
+  .raum-word { font-size: clamp(24px, 7vh, 34px); padding: 0 14px 4px; }
+  .raum-arrow, .raum-who { font-size: clamp(28px, 8vh, 40px); }
+  /* Ampel mit Straße: Gehen/Warten rechts daneben statt darunter */
+  .stage:has(> .verk-ampel-row) { flex-direction: row; gap: clamp(16px, 3vw, 32px); }
+  .stage:has(> .verk-ampel-row) > .verk-go-choices { flex-direction: column; flex-wrap: nowrap; }
+  .verk-ampel-big, .verk-ampel-row.with-street .verk-ampel-big { height: clamp(150px, calc(100vh - 140px), 260px); }
+  .verk-empty { width: min(30vw, 260px); }
+  .verk-go-choices .tile, .verk-arrows .tile { --tile: clamp(76px, 22vh, 104px); }
+  .verk-choices { --vw: min(calc((100vw - var(--flo-col, 180px) - 60px) / 2), calc((100vh - 196px) * 1.5), 320px); }
+  .verk-cross-stage .verk-cross { width: min(calc(100vw - var(--flo-col, 180px) - 260px), calc((100vh - 180px) * 1.5), 720px); }
+  .verk-cross-stage .verk-bar { min-height: 0; }
+}

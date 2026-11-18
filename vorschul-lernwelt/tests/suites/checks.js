@@ -5,13 +5,15 @@
 
    Suiten:
      data    – Datenkonsistenz: Inseln, Spiele, Filme, Reise-Stationen, Sticker
-     unit    – Logik: Zahlwörter, Sterne/Sticker, Wiederholungsplan, Export/Import, Rückfrage-Dialog
+     unit    – Logik: Zahlwörter, Sterne/Sticker, Wiederholungsplan, Export/Import, Rückfrage-Dialog,
+               Dialoge/Fokus (Barrierefreiheit), Beschriftungen im Elternbereich, Doppeltipp-Schutz
      storage – Speichern: Neuladen, Wiederherstellen aus IndexedDB, Sofort-Sichern, Zurücksetzen
      embed   – eingebettete Ansicht wie im Artefakt (fremder Ursprung, iframe ohne Pop-ups)
      layout  – Handy/Tablet: nichts ragt seitlich heraus (Bildschirme und jedes Spiel)
      voice   – Stimmpakete vollständig, Filme und Spiel-Einleitungen haben Aufnahmen
      3d      – 3D-Welt (?test&3d=1): Start, Inseln, Orte je Bildschirm, Weltkarte mit
-               Schildern, Antippen, Ruhemodus, Bildinhalt/Budget, Einstellung „Aus“
+               Schildern (quer, hoch, Handy quer), Antippen, Ruhemodus, Bildinhalt/Budget,
+               leichter Welt-Flo, Einstellung „Aus“
    ========================================================================== */
 const fs = require('fs');
 const path = require('path');
@@ -164,7 +166,44 @@ async function unit(env) {
       document.querySelector('.overlay.ask button').click();
       add('Hinweis: OK schließt', (await p3) === true, 'falsch');
     }
+    // Dialoge: role=dialog, aria-modal, Überschrift verknüpft, Fokus im Dialog, Escape = Abbrechen
+    if (LT.ui.ask) {
+      const p4 = LT.ui.ask('Wirklich?', { yes: 'Ja' });
+      const ov = document.querySelector('.overlay.ask');
+      const lab = ov && document.getElementById(ov.getAttribute('aria-labelledby') || '-');
+      add('Dialog: role=dialog, aria-modal, Titel, Fokus im Dialog', !!ov && ov.getAttribute('role') === 'dialog' && ov.getAttribute('aria-modal') === 'true' && !!lab && ov.contains(document.activeElement), ov ? ov.outerHTML.slice(0, 120) : 'kein Dialog');
+      ov.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true, cancelable: true }));
+      add('Dialog: Escape bricht ab', (await p4) === false && !document.querySelector('.overlay.ask'), 'offen');
+    }
+    // Bildschirmwechsel: Fokus auf der Überschrift; Flo per Tastatur bedienbar
+    LT.app.showArea('zahlen');
+    await new Promise((r) => setTimeout(r, 0));
+    const fa = document.activeElement;
+    add('Bildschirmwechsel: Fokus auf der Überschrift', !!fa && fa.matches('.topbar .title'), fa ? fa.tagName + '.' + fa.className : 'keiner');
+    const ms = LT.ui.mascot();
+    add('Flo ist per Tastatur erreichbar (tabindex 0)', !!ms && ms.tabIndex === 0, ms ? String(ms.tabIndex) : 'kein Flo');
+    // Elternbereich: jede Beschriftung gehört zu ihrem Eingabefeld
+    LT.app.showParents('settings');
+    const loose = [...document.querySelectorAll('.p-row')].filter((r) => r.querySelector(':scope > label') && r.querySelector('input:not([type=file]), select, textarea')).filter((r) => { const l = r.querySelector(':scope > label'); const f = l.htmlFor && document.getElementById(l.htmlFor); return !f || !r.contains(f); }).map((r) => r.textContent.trim().slice(0, 24));
+    add('Elternbereich: Beschriftungen mit den Feldern verknüpft', !loose.length, loose.join(' | '));
+    LT.app.screen = null;
+    LT.app.showHome();
     P.reset();
+    return out;
+  }).then(async (out) => {
+    // Doppeltipp-/Geister-Klick-Schutz (im Testmodus sonst aus): ein echter Klick direkt nach dem
+    // Bildschirmwechsel wird verworfen, ein späterer nicht; programmatische Klicks immer
+    const at = async () => page.evaluate(() => { const n = document.querySelector('#app .game-card'); const r = n.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
+    await page.evaluate(() => { LT.ui.tapGuard = 1500; LT.app.showArea('zahlen'); });
+    let c = await at();
+    await page.mouse.click(c.x, c.y);
+    const s1 = await page.evaluate(() => LT.app.screen);
+    await page.waitForTimeout(1600);
+    c = await at();
+    await page.mouse.click(c.x, c.y);
+    await page.waitForTimeout(100);
+    const s2 = await page.evaluate(() => { const s = LT.app.screen; LT.engine.stop(); LT.ui.tapGuard = 0; LT.app.showArea('zahlen'); document.querySelector('#app .game-card').click(); const s3 = LT.app.screen; LT.engine.stop(); LT.app.showHome(); return [s, s3]; });
+    out.push(res('Doppeltipp: Klick direkt nach dem Wechsel verworfen, danach wirksam', s1 === 'area' && s2[0] === 'game' && s2[1] === 'game', JSON.stringify({ s1, s2 })));
     return out;
   });
 }
@@ -486,7 +525,10 @@ async function threeD(env) {
   // Bild nicht leer; Budget ohne Schatten-Pass
   const px = await page.evaluate(() => LT.w3d.debugPixels());
   add('Bild hat Inhalt (Pixel gelesen)', !!(px && px.ok), JSON.stringify(px));
-  add(`Budget Weltkarte: ${px && px.calls} Draw-Calls (< 250), ${px && px.triangles} Dreiecke (< 160000)`, !!(px && px.calls < 250 && px.triangles < 160000), JSON.stringify(px));
+  add(`Budget Weltkarte: ${px && px.calls} Draw-Calls (< 200), ${px && px.triangles} Dreiecke (< 150000)`, !!(px && px.calls < 200 && px.triangles < 150000), JSON.stringify(px));
+  // Welt-Flo ist auf der Karte nur wenige Dutzend Pixel groß: leichte Fassung; weiche Schatten ohne Rauschen
+  const lod = await page.evaluate(() => ({ lod: LT.w3d.flo && LT.w3d.flo.lod ? LT.w3d.flo.lod() : null, smooth: LT.w3d.smoothShadows }));
+  add('Weltkarte: leichte Fassung des Welt-Flo; Schatten ohne Rausch-Filter', !!(lod.lod && lod.lod.lite && lod.lod.px < 66) && lod.smooth === true, JSON.stringify(lod));
 
   // Tippen auf ein Schild (echter Mausklick: prüft Ebenen und pointer-events)
   // (Mausklick auf die Mitte: die Schilder folgen der sanft schwankenden Kamera und sind
@@ -588,6 +630,9 @@ async function threeD(env) {
     return { id: off.dataset.area, x0, x1: +x1.toFixed(1) };
   });
   add('Hochformat: Fokus auf ein ausgeblendetes Schild schiebt die Karte hin', !fp.none && Math.abs(fp.x1 - fp.x0) > 1, JSON.stringify(fp));
+  // ausgeblendete Schilder (opacity 0) fangen keine Antipper oder Wischer ab
+  const offPe = await page.evaluate(() => [...document.querySelectorAll('.w3d-map .area-card.w3d-off')].map((c) => c.dataset.area + ':' + getComputedStyle(c).pointerEvents).filter((x) => !/:none$/.test(x)));
+  add('Hochformat: ausgeblendete Schilder sind nicht antippbar', !offPe.length, offPe.join(', '));
   await frames(2);
   const pan = await page.evaluate(async () => {
     const W = LT.w3d;
@@ -611,6 +656,17 @@ async function threeD(env) {
     return { id, shown: !!c && !c.classList.contains('w3d-off') && c.style.visibility !== 'hidden' && r.left >= 0 && r.right <= innerWidth, x: +LT.w3d.canPan().x.toFixed(1), peek };
   });
   add('Hochformat: Weltkarte zeigt zuerst die erste Kita-Insel, Pfeile mit Insel-Symbolen', first.shown && first.peek > 0, JSON.stringify(first));
+  // Handy quer (niedrig): HUD in einer Zeile, Inseln mit Schildern bedienbar
+  await page.setViewportSize({ width: 844, height: 390 });
+  await page.evaluate(() => LT.app.showHome());
+  await frames(3);
+  const low = await labelCheck();
+  const lowHit = await page.evaluate(() => {
+    const cards = [...document.querySelectorAll('.w3d-map .area-card.w3d-label')].filter((c) => !c.classList.contains('w3d-off') && c.style.visibility !== 'hidden');
+    const bad = cards.filter((c) => { const r = c.getBoundingClientRect(); const at = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return !at || !(at === c || c.contains(at)); }).map((c) => c.dataset.area);
+    return { bad, n: cards.length };
+  });
+  add('Handy quer: HUD kompakt, Schilder nicht übereinander und antippbar', low.n === map.n && low.hud < 390 * 0.4 && !low.over.length && !low.under.length && !low.cut.length && !lowHit.bad.length, JSON.stringify({ low, lowHit }));
   await page.setViewportSize({ width: 1180, height: 820 });
 
   // Einstellung „Aus“ im Elternbereich → App lädt neu; danach startet keine 3D-Welt,

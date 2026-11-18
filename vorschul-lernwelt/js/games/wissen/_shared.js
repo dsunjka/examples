@@ -90,7 +90,7 @@
     { id: 'entdecken', icon: '📖', name: 'Entdecken' },
     { id: 'verstehen', icon: '❓', name: 'Verstehen' },
     { id: 'spielen', icon: '🎲', name: 'Spielen' },
-    { id: 'karte', icon: '🃏', name: 'Wissenskarte' },
+    { id: 'karte', icon: '📇', name: 'Wissenskarte' },
   ];
 
   /* ------------------------------------------------------------------

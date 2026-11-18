@@ -434,7 +434,10 @@
   background: rgba(255, 255, 255, 0.86); -webkit-backdrop-filter: blur(14px) saturate(1.3); backdrop-filter: blur(14px) saturate(1.3);
   box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.95), 0 12px 24px -10px rgba(29, 37, 80, 0.32);
 }
+.wz-book-meter { gap: 12px; }
 .wz-book-meter .meter { height: 14px; }
+.wz-book-meter .wz-meter-icon, .wz-book-meter .wz-meter-goal { font-size: clamp(22px, 3.4vmin, 28px); flex: 0 0 auto; }
+.wz-book-meter .wz-meter-goal { opacity: 0.85; }
 .wz-book-meter .meter i { background: linear-gradient(90deg, var(--area), #7a5cff); }
 .wz-chapter { position: relative; max-width: 1100px; margin: 0 auto calc(var(--gap) * 1.5); background: rgba(255, 255, 255, 0.72); -webkit-backdrop-filter: blur(14px) saturate(1.3); backdrop-filter: blur(14px) saturate(1.3); border-radius: var(--radius-l); padding: clamp(12px, 2.4vmin, 24px); box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.9), 0 18px 36px -18px rgba(29, 37, 80, 0.38); }
 /* Themenfarbe als Reiter oben (wie die Spielkarten) statt Randstreifen */
@@ -554,4 +557,54 @@
   .wz-lens { width: 120px; height: 120px; }
   .wz-lens-icon { font-size: 60px; }
   .wz-flip { width: 200px; min-width: 0; }
+}
+/* Handy quer (≤ 520 px hoch, Flo-Spalte links): Weiter-Pfeil und Seitenpunkte
+   stehen rechts neben Karte/Geschichte statt darunter – darunter war auf der
+   ~290 px hohen Bühne kein Platz mehr (Pfeil halb abgeschnitten) */
+@media (max-height: 520px) and (orientation: landscape) {
+  .wz-stage { gap: 8px; padding-top: 6px; }
+  .wz-step { min-width: 44px; }
+  .wz-step-icon { width: 36px; height: 36px; font-size: 20px; }
+  .wz-prints { margin-top: 6px; }
+  .wz-body { gap: 8px; }
+  .wz-body:has(> .wz-nav) { flex-direction: row; gap: 14px; }
+  .wz-body > .wz-nav { flex: 0 0 auto; flex-direction: column; flex-wrap: nowrap; min-width: 64px; min-height: 0; gap: 12px; }
+  .wz-body > .wz-nav .wz-mini { flex-wrap: wrap; max-width: 96px; }
+  .wz-next { width: 60px; height: 60px; font-size: 30px; }
+  .wz-story-card { flex: 1 1 auto; min-width: 0; border-top-width: 8px; padding: 10px 14px 12px; gap: 6px; }
+  .wz-scene-big { font-size: clamp(44px, 14vh, 64px); }
+  .wz-story-text { font-size: clamp(16px, 4.8vh, 21px); }
+  .wz-replay { width: 52px; height: 52px; font-size: 24px; top: 8px; right: 8px; }
+  .wz-corner { font-size: 20px; }
+  .wz-fact-row { flex: 1 1 auto; min-width: 0; }
+  .wz-fact-mini { padding: 10px 12px; gap: 6px; border-width: 5px; }
+  .wz-fact-mini p { font-size: clamp(15px, 4.4vh, 19px); }
+  .wz-fact-mini-e { font-size: clamp(32px, 10vh, 46px); }
+  .wz-title-card { gap: 6px; }
+  .wz-title { font-size: clamp(22px, 6.4vh, 30px); }
+  .wz-level-badge { font-size: 24px; }
+  .wz-flip { width: min(250px, calc(100vh - 150px)); aspect-ratio: 1 / 1; }
+  .wz-back { border-width: 6px; }
+  .wz-back-lens { font-size: 52px; }
+  .wz-back-q { font-size: 42px; }
+  .wz-front, .wz-bigcard { border-width: 6px; padding: 10px; gap: 6px; }
+  .wz-front-head { font-size: 14px; padding: 3px 10px; }
+  .wz-front-e { font-size: clamp(36px, 11vh, 52px); }
+  .wz-front-text { font-size: clamp(14px, 4.2vh, 18px); line-height: 1.25; }
+  .wz-card-pips i { width: 13px; height: 13px; }
+  .wz-bookfly { bottom: 12px; font-size: 52px; }
+  .wz-basket { min-height: clamp(96px, 28vh, 140px); padding: 6px; }
+  .wz-basket-e { font-size: clamp(30px, 9vh, 44px); }
+  .wz-basket-label { font-size: 15px; }
+  .wz-tf-card { padding: 10px 16px; gap: 14px; }
+  .wz-tf-e { font-size: clamp(44px, 13vh, 64px); }
+  .wz-tf-text { font-size: clamp(17px, 5vh, 22px); }
+  .wz-stage .tile.wide.wz-yes, .wz-stage .tile.wide.wz-no { --tile: clamp(76px, 24vh, 104px); width: clamp(130px, 22vw, 190px); }
+  .wz-prompt { padding: 8px 16px; }
+  .wz-q-text { font-size: clamp(18px, 5.2vh, 24px); }
+  .wz-stage .tile.wz-scene-choice { --tile: clamp(84px, 26vh, 116px); width: clamp(150px, 24vw, 220px); }
+  .wz-scene-tile { font-size: clamp(30px, 9vh, 44px); }
+  .wz-slot, .wz-stage .tile.small { --tile: clamp(64px, 19vh, 92px); }
+  .wz-pool { min-height: clamp(64px, 19vh, 92px); }
+  .wz-order-row { padding: 6px 8px; }
 }
