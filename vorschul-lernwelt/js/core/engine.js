@@ -171,6 +171,7 @@
       onBack: () => exit(session, null),
       backIcon: '⬅️',
       right: [total ? dots : null, replayBtn],
+      place: { kind: 'game', id: def.area }, // 3D: Insel des Spiels als ruhiger Hintergrund
     });
     const stage = el('div.stage');
     screen.appendChild(stage);

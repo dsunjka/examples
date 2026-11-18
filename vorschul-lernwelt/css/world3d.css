@@ -1,4 +1,416 @@
-/* 3D-Welt: Ebenen (wird vom Integrations-Schritt ausgebaut) */
-#w3d-bg { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 0; display: block; }
-body.w3d #app { z-index: 1; }
+/* ==========================================================================
+   3D-Welt: Ebenen und Bildschirme im 3D-Modus (js/world3d/core.js)
+
+   Body-Klassen (von core.js / app.js gesetzt):
+     body.w3d        3D ist gewählt (sofort beim Start) – Bildschirme werden
+                     durchsichtig, die Welt scheint durch
+     body.w3d-live   die ersten Bilder sind gerendert (Leinwand blendet ein)
+     body.w3d-flo    das 3D-Flo-Modul ist da (SVG-Flo des Startbildschirms aus)
+     body.w3d-pan     die Weltkarte lässt sich seitlich schieben (Hochformat)
+
+   Bildschirm-Klassen (app.js):
+     .screen.splash-screen   Start: Titel oben, Flos Insel als Bühne, Knopf unten
+     .screen.home.is-map     Weltkarte in 3D: HUD (.home-top) oben, Inselschilder
+                             (.w3d-map > .area-card.w3d-label) folgen den Inseln
+     .screen.area-screen     Insel: .area-hero (freier Bereich für die Insel),
+                             darunter das Glas-Raster der Spielkarten
+     .screen.game-screen     Spiel: Glas-Bühne (::before) hinter .stage
+
+   Farben/Knöpfe/Schrift im Detail gestaltet css/theme.css – hier steht nur,
+   was die 3D-Welt braucht: Ebenen, Durchklicken, Schilder, Glas-Flächen.
+   ========================================================================== */
+
+/* Fredoka (Titel, Knöpfe, Zahlen; auch für Canvas-Texturen W.textTexture)
+   wird in css/theme.css per @font-face eingebunden. */
+
+:root {
+  --w3d-glass: rgba(255, 255, 255, 0.76);
+  --w3d-glass-strong: rgba(255, 255, 255, 0.88);
+  --w3d-glass-edge: rgba(255, 255, 255, 0.95);
+  --w3d-blur: blur(16px) saturate(1.4);
+  --w3d-shadow: 0 14px 30px -10px rgba(29, 37, 80, 0.32), 0 2px 6px rgba(29, 37, 80, 0.08);
+  --w3d-title: "Fredoka", "Andika", "Trebuchet MS", system-ui, sans-serif;
+}
+
+/* ---------- Ebenen ---------- */
+#w3d-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  display: block;
+  touch-action: none; /* Wischen über die Karte gehört der Welt */
+  outline: none;
+  opacity: 0;
+  transition: opacity 0.7s ease-out;
+}
+body.w3d-live #w3d-bg { opacity: 1; }
+body.w3d #app { z-index: 1; pointer-events: none; }
+body.w3d #app > .screen { pointer-events: auto; }
 body.w3d-live { background: #9fd8ff; }
+body.w3d .screen { background: transparent; }
+
+/* Kopfleiste als farbiges Glas (Form, Kante und Schatten: theme.css) */
+body.w3d .topbar {
+  background: var(--area);
+  background: linear-gradient(180deg,
+    color-mix(in srgb, color-mix(in srgb, var(--area) 76%, #fff) 96%, transparent) 0%,
+    color-mix(in srgb, var(--area) 93%, transparent) 55%,
+    color-mix(in srgb, color-mix(in srgb, var(--area) 90%, #000) 95%, transparent) 100%);
+  -webkit-backdrop-filter: var(--w3d-blur);
+  backdrop-filter: var(--w3d-blur);
+}
+body.w3d .overlay { -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+
+/* ==========================================================================
+   Startbildschirm: Flos Heimatinsel ist die Bühne zwischen Titel und Knopf
+   ========================================================================== */
+body.w3d .splash-screen .splash {
+  justify-content: space-between;
+  gap: 12px;
+  padding: max(24px, 5vh) 20px max(26px, 6vh);
+}
+body.w3d .splash-screen .splash h1 {
+  /* Füllung, Kante und Tiefe: theme.css (.splash h1) – hier nur die Größe */
+  font-size: clamp(40px, 9vmin, 92px);
+  line-height: 1.02;
+}
+/* freier Platz über der Insel: Tippen auf Flo startet auch */
+body.w3d .splash-screen .flo-big {
+  flex: 1 1 auto;
+  width: min(92vw, 720px);
+  height: auto;
+  min-height: 120px;
+  animation: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+body.w3d .splash-screen .flo-big svg {
+  width: clamp(110px, 24vmin, 210px);
+  height: clamp(110px, 24vmin, 210px);
+  animation: float 3s ease-in-out infinite;
+  filter: drop-shadow(0 10px 10px rgba(16, 52, 96, 0.22));
+}
+body.w3d-flo .splash-screen .flo-big svg { visibility: hidden; }
+
+/* ==========================================================================
+   Weltkarte in 3D (.screen.home.is-map)
+   Inhalt lässt Klicks auf die Leinwand durch – nur HUD und Schilder fangen sie.
+   ========================================================================== */
+body.w3d #app > .screen.is-map,
+.screen.is-map > .content { pointer-events: none; }
+.screen.is-map > .topbar,
+.screen.is-map .home-top > *,
+.screen.is-map .w3d-map .area-card,
+.screen.is-map .w3d-pan-btn { pointer-events: auto; }
+
+.screen.is-map > .content {
+  flex: 0 0 auto;
+  overflow: visible;
+  position: relative;
+  z-index: 2;
+  padding: 10px max(12px, env(safe-area-inset-right)) 0 max(12px, env(safe-area-inset-left));
+}
+/* Begrüßung nur für Vorleser/Screenreader (spart Platz über den Inseln) */
+.screen.is-map .home-head {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* HUD: Flos Reise, Forscherbuch, Tagesabenteuer als kompakte, schwebende Karten */
+.screen.is-map .home-top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  align-items: stretch;
+}
+.screen.is-map .home-quest { flex: 1 1 440px; gap: 10px; }
+.screen.is-map .home-top > .daily { flex: 1 1 400px; }
+.screen.is-map .reise-cta {
+  min-height: 84px;
+  padding: 8px 16px 8px 10px;
+  gap: 10px;
+  border-radius: 24px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+.screen.is-map .reise-cta .reise-cta-flo { width: 62px; height: 62px; }
+.screen.is-map .reise-cta .reise-cta-text { gap: 3px; }
+.screen.is-map .reise-cta .reise-cta-title { font-family: var(--w3d-title); font-weight: 600; font-size: clamp(19px, 2.6vmin, 24px); }
+.screen.is-map .reise-cta .reise-cta-places { padding: 8px 4px 2px; margin: -6px -4px 0; gap: 4px; }
+.screen.is-map .reise-cta .reise-cta-place { font-size: clamp(17px, 2.4vmin, 22px); }
+.screen.is-map .reise-cta .reise-cta-place.now { font-size: clamp(22px, 3.2vmin, 30px); padding: 4px; box-shadow: 0 0 0 3px var(--gold); }
+.screen.is-map .reise-cta .reise-cta-meter { height: 8px; max-width: 220px; }
+.screen.is-map .reise-cta .reise-cta-deco { font-size: 40px; opacity: 0.22; }
+.screen.is-map .reise-cta .reise-cta-tip { width: 26px; height: 26px; font-size: 15px; left: 4px; top: 4px; }
+.screen.is-map .book-cta {
+  width: 92px;
+  min-height: 84px;
+  padding: 6px;
+  gap: 2px;
+  border-radius: 24px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+.screen.is-map .book-cta .emoji { font-size: 38px; }
+.screen.is-map .book-cta span:not(.emoji) { font-family: var(--w3d-title); font-weight: 600; font-size: 14px; }
+
+.screen.is-map .daily {
+  min-height: 84px;
+  padding: 8px 14px;
+  gap: 10px;
+  flex-wrap: nowrap;
+  border-radius: 24px;
+  background: rgba(255, 250, 235, 0.9);
+  border: 2px solid var(--w3d-glass-edge);
+  -webkit-backdrop-filter: var(--w3d-blur);
+  backdrop-filter: var(--w3d-blur);
+  box-shadow: var(--w3d-shadow);
+}
+.screen.is-map .daily .daily-title { flex: 0 1 auto; font-family: var(--w3d-title); font-weight: 600; font-size: clamp(17px, 2.4vmin, 22px); gap: 6px; }
+.screen.is-map .daily .stations { flex: 1 1 auto; flex-wrap: nowrap; gap: 6px; }
+.screen.is-map .daily .station { width: 58px; height: 58px; font-size: 30px; }
+.screen.is-map .daily .station.done::after { width: 24px; height: 24px; font-size: 15px; right: -4px; bottom: -4px; }
+.screen.is-map .daily .station-arrow { font-size: 18px; }
+.screen.is-map .daily .chest { font-size: 40px; }
+
+/* Ebene der Inselschilder (DOM folgt den Inseln, siehe W.labelIsland) */
+.w3d-map {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.w3d-map .areas,
+.w3d-map .school-areas,
+.w3d-map .school-section { display: contents; }
+.w3d-map .school-banner {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.w3d-map:not(.is-ready) .area-card { visibility: hidden; }
+
+/* Inselschild: Glas-Pille mit Symbol-Plakette, Titel und Fortschritt */
+.w3d-map .area-card {
+  position: absolute;
+  left: 0;
+  top: 0;
+  min-height: 58px;
+  width: max-content;
+  max-width: 176px;
+  display: grid;
+  grid-template-columns: 46px minmax(0, auto);
+  grid-template-rows: auto auto;
+  grid-template-areas: "icon title" "icon meter" "lock lock";
+  align-items: center;
+  justify-items: start;
+  column-gap: 8px;
+  row-gap: 5px;
+  padding: 6px 14px 8px 6px;
+  border-radius: 29px;
+  overflow: visible;
+  text-align: left;
+  color: var(--ink);
+  background: var(--w3d-glass-strong);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0.86) 100%);
+  border: 2px solid var(--w3d-glass-edge);
+  -webkit-backdrop-filter: var(--w3d-blur);
+  backdrop-filter: var(--w3d-blur);
+  box-shadow: 0 5px 0 color-mix(in srgb, var(--area) 55%, #22304a), 0 14px 26px rgba(16, 52, 96, 0.22);
+  transition: box-shadow 0.15s, filter 0.15s, scale 0.12s;
+  will-change: transform;
+}
+.w3d-map .area-card::after {
+  /* kleine Spitze zur Insel */
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -11px;
+  width: 16px;
+  height: 16px;
+  margin-left: -8px;
+  background: var(--w3d-glass-strong);
+  border-right: 2px solid var(--w3d-glass-edge);
+  border-bottom: 2px solid var(--w3d-glass-edge);
+  border-bottom-right-radius: 4px;
+  transform: rotate(45deg);
+  box-shadow: 4px 4px 0 color-mix(in srgb, var(--area) 55%, #22304a);
+  z-index: -1;
+}
+.w3d-map .area-card::before { display: none; }
+.w3d-map .area-card .area-deco { display: none; }
+.w3d-map .area-card .area-icon {
+  grid-area: icon;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  background: radial-gradient(circle at 50% 26%, color-mix(in srgb, var(--area) 48%, #fff), var(--area) 72%);
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.14), inset 0 2px 0 rgba(255, 255, 255, 0.45), 0 0 0 3px #fff, 0 4px 8px -2px rgba(29, 37, 80, 0.35);
+  filter: none;
+}
+.w3d-map .area-card .area-title {
+  grid-area: title;
+  font-family: var(--w3d-title);
+  font-weight: 600;
+  font-size: 17px;
+  line-height: 1.08;
+  text-shadow: none;
+  color: var(--ink);
+}
+.w3d-map .area-card .area-meter {
+  grid-area: meter;
+  width: 100%;
+  min-width: 64px;
+  height: 7px;
+  border-radius: 4px;
+  background: rgba(43, 45, 66, 0.1);
+}
+.w3d-map .area-card .area-meter > i { background: var(--area); border-radius: 4px; }
+.w3d-map .area-card .school-lock {
+  grid-area: lock;
+  position: static;
+  justify-self: center;
+  margin: 0 0 -2px;
+  padding: 2px 8px;
+  font-size: 11.5px;
+  background: rgba(43, 45, 66, 0.08);
+  box-shadow: none;
+}
+.w3d-map .school-section.is-locked .area-card .area-icon { filter: saturate(0.55); }
+.w3d-map .area-card:hover { filter: brightness(1.04); box-shadow: 0 5px 0 color-mix(in srgb, var(--area) 55%, #22304a), 0 0 0 4px color-mix(in srgb, var(--area) 45%, #fff), 0 16px 30px rgba(16, 52, 96, 0.26); }
+.w3d-map .area-card:active { scale: 0.95; }
+.w3d-map .area-card:focus-visible { outline: 4px solid #2b7bff; outline-offset: 3px; }
+
+/* Pfeile zum Schieben der Karte (Hochformat) */
+.w3d-pan-btn { display: none; }
+body.w3d-pan .screen.is-map .w3d-pan-btn {
+  position: fixed;
+  top: 60%;
+  z-index: 4500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 64px;
+  padding: 0 0 6px;
+  border: 2px solid var(--w3d-glass-edge);
+  border-radius: 24px;
+  background: var(--w3d-glass);
+  -webkit-backdrop-filter: var(--w3d-blur);
+  backdrop-filter: var(--w3d-blur);
+  box-shadow: var(--w3d-shadow);
+  color: var(--ink);
+  font: 700 40px/1 var(--w3d-title);
+  cursor: pointer;
+}
+body.w3d-pan .screen.is-map .w3d-pan-btn:active { scale: 0.92; }
+.w3d-pan-btn.is-left { left: max(6px, env(safe-area-inset-left)); }
+.w3d-pan-btn.is-right { right: max(6px, env(safe-area-inset-right)); }
+
+/* ==========================================================================
+   Insel: oben die Insel (freier Bereich), darunter Glas-Raster der Spielkarten
+   ========================================================================== */
+.area-hero { display: none; }
+body.w3d .area-screen .area-hero {
+  display: block;
+  height: clamp(170px, 36vh, 420px);
+  pointer-events: none;
+}
+body.w3d .area-screen > .content {
+  padding-top: 0;
+  /* Karten verschwinden oben weich unter der Kopfleiste */
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 14px);
+  mask-image: linear-gradient(180deg, transparent 0, #000 14px);
+}
+body.w3d .area-screen .game-card,
+body.w3d .area-screen .kino-ticket {
+  -webkit-backdrop-filter: var(--w3d-blur);
+  backdrop-filter: var(--w3d-blur);
+}
+body.w3d .area-screen .game-card {
+  background:
+    radial-gradient(120% 55% at 50% -8%, #ffffff 0%, rgba(255, 255, 255, 0) 60%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(255, 255, 255, 0.91) 55%, color-mix(in srgb, var(--area-soft) 55%, rgba(255, 255, 255, 0.88)) 100%);
+}
+body.w3d .area-screen .kino-ticket { background: rgba(255, 255, 255, 0.9); }
+body.w3d .area-screen .school-note {
+  background: var(--w3d-glass);
+  -webkit-backdrop-filter: var(--w3d-blur);
+  backdrop-filter: var(--w3d-blur);
+}
+
+/* ==========================================================================
+   Spiel: Insel als ruhiger Hintergrund, Spielfläche auf einer Glas-Bühne
+   ========================================================================== */
+body.w3d .game-screen { isolation: isolate; }
+body.w3d .game-screen::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: calc(var(--bar-bottom, var(--topbar-h)) + 10px);
+  right: max(8px, env(safe-area-inset-right));
+  bottom: max(8px, env(safe-area-inset-bottom));
+  left: max(8px, env(safe-area-inset-left));
+  border-radius: 32px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.58) 0%, rgba(255, 255, 255, 0.66) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  -webkit-backdrop-filter: blur(22px) saturate(1.25);
+  backdrop-filter: blur(22px) saturate(1.25);
+  box-shadow: 0 26px 60px -20px rgba(29, 37, 80, 0.35), inset 0 2px 0 rgba(255, 255, 255, 0.95);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   Weitere Bildschirme über der Welt
+   ========================================================================== */
+body.w3d .reise-screen { background: transparent; }
+body.w3d .reise-screen > .content {
+  background: linear-gradient(180deg, rgba(255, 250, 242, 0.5), rgba(255, 250, 242, 0.25));
+}
+body.w3d .reise-screen.is-schule { background-image: none; }
+/* Lese-Bildschirme über dem Himmel: heller Schleier (Elternbereich fast deckend) */
+body.w3d .parents > .content { background: rgba(247, 249, 253, 0.86); }
+body.w3d .wz-book-screen > .content,
+body.w3d .album-screen > .content { background: rgba(255, 255, 255, 0.5); }
+
+/* Elternbereich: Grafik-Diagnose */
+.p-graphics-note:empty { display: none; }
+.p-graphics-note { font-weight: 600; color: #11663b; }
+
+@media (prefers-reduced-motion: reduce) {
+  #w3d-bg { transition: none; }
+}
+@media (max-width: 520px) {
+  body.w3d .splash-screen .splash h1 { font-size: clamp(50px, 15vw, 70px); }
+  .screen.is-map > .content { padding-top: 8px; }
+  .screen.is-map .home-top { gap: 8px; }
+  .screen.is-map .home-quest { gap: 8px; }
+  .screen.is-map .reise-cta { min-height: 76px; padding: 6px 10px 6px 6px; }
+  .screen.is-map .reise-cta .reise-cta-flo { width: 52px; height: 52px; }
+  .screen.is-map .book-cta { width: 78px; min-height: 76px; }
+  .screen.is-map .book-cta .emoji { font-size: 32px; }
+  .screen.is-map .book-cta span:not(.emoji) { font-size: 12.5px; }
+  .screen.is-map .daily { min-height: 66px; padding: 6px 10px; gap: 6px; justify-content: center; }
+  .screen.is-map .daily .daily-title { flex: 0 0 auto; }
+  .screen.is-map .daily .daily-title > span:not(.emoji) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .screen.is-map .daily .station { width: 50px; height: 50px; font-size: 26px; }
+  .screen.is-map .daily .chest { font-size: 34px; }
+  .w3d-map .area-card { max-width: 150px; min-height: 52px; grid-template-columns: 40px minmax(0, auto); padding: 5px 12px 7px 5px; }
+  .w3d-map .area-card .area-icon { width: 40px; height: 40px; font-size: 22px; }
+  .w3d-map .area-card .area-title { font-size: 15px; }
+}

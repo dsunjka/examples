@@ -299,6 +299,36 @@ node tests/smoke.js --shots=out         # Screenshots je Spiel und Stufe (mit ec
 
 Voraussetzung: Node.js und Playwright mit Chromium.
 
+### 3D-Welt (three.js)
+Die Lernwelt ist eine Inselwelt im Meer: Hinter der Oberfläche liegt eine Vollbild-Leinwand,
+auf der Himmel, Meer, die Inseln der Lernbereiche und Flos Heimatinsel gerendert werden. Die
+Kamera fliegt zwischen „Orten“: Start (Flos Insel als Bühne), Weltkarte (die Inseln *sind* die
+Karte, mit schwebenden Namensschildern), Insel (oben die Insel, darunter die Spielkarten),
+Spiel (Insel als ruhiger Hintergrund hinter einer Glas-Bühne), Flos Reise (Insel des Kapitels)
+und ein ruhiger Himmel (Album, Forscherbuch, Pause, Elternbereich – dort ruht die Welt, um
+Akku zu sparen). Alles Spielerische bleibt DOM: barrierearm, vorgelesen, testbar.
+```
+vendor/three.min.js          three.js r187 + Addons als klassisches Skript (window.THREE), wird bei Bedarf nachgeladen
+js/world3d/core.js           Kern und VERTRAG (Kopfkommentar): Start, Kamera-Orte, Schilder, Antippen, Qualität
+js/world3d/kit.js, env.js    gemeinsamer Bausatz, Himmel/Meer/Licht
+js/world3d/islands/<id>.js   je Lernbereich eine Insel (hub = Flos Heimatinsel)
+js/world3d/flo.js, fx.js     3D-Flo und Effekte
+css/world3d.css              Ebenen im 3D-Modus (Durchklicken, Inselschilder, Glas-Flächen)
+tools/three/build.mjs        baut vendor/three.min.js (cd tools/three && npm install && npm run build)
+tools/three/preview.js       Vorschau als Bild, z. B. --screen=home --ui --w=390 --h=844 --out=bild.png
+```
+Jeder Bildschirm nennt seinen Ort über `LT.ui.screen({ place, frame })`; `frame` ist der freie
+Bildbereich, in den die Kamera den Ort einpasst. Ohne WebGL, im Testmodus und mit der
+Einstellung „Aus“ bleibt die flache Ansicht (alle Aufrufe sind dann harmlos).
+**Schalter:** Elternbereich → Einstellungen → Grafik → „3D-Welt: Automatisch / An / Aus“
+(Automatisch = nur mit Grafikbeschleunigung; wirkt nach kurzem Neuladen, Diagnose mit Qualität
+und Bildrate). Für Entwickler: `?3d=1` erzwingt 3D (auch mit `?test`), `?3d=0` schaltet aus,
+`?3d=auto` beachtet im Testmodus die Einstellung. Die Bildqualität (Auflösung, Schatten) passt
+sich selbst an die Bildrate an. **Tests:** Suite `3d` (`node tests/smoke.js --suite=3d`) startet
+die Welt per SwiftShader (WebGL ohne Grafikkarte) und prüft Inseln, Bilder, den Ort jedes
+Bildschirms, Schilder der Weltkarte, Antippen von Schild und Insel, Ruhemodus, Bildinhalt und
+Budget (< 250 Draw-Calls, < 160 000 Dreiecke) sowie die Einstellung „Aus“.
+
 ### Sprachaufnahmen neu erzeugen
 Nötig, wenn Texte geändert oder Spiele hinzugefügt wurden, oder für eine andere Stimme.
 Voraussetzung sind Python 3.10+ mit `pip install pocket-tts` und ffmpeg.

@@ -25,7 +25,8 @@
   border-radius: var(--radius-l);
   overflow: hidden;
   background: #1d1b2e;
-  box-shadow: 0 0 0 6px #2b2840, 0 10px 0 6px rgba(0, 0, 0, 0.18);
+  /* Bildschirm-Rahmen: dunkles Bonbon mit Glanzkante */
+  box-shadow: 0 0 0 6px #2b2840, 0 0 0 7.5px rgba(255, 255, 255, 0.18), 0 9px 0 6px #15131f, 0 26px 40px -14px rgba(29, 37, 80, 0.55);
 }
 .kino-video {
   position: absolute;
@@ -70,7 +71,7 @@
   width: clamp(96px, 20vmin, 160px);
   height: clamp(96px, 20vmin, 160px);
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.95);
+  background: radial-gradient(90% 60% at 50% 10%, #ffffff 0%, rgba(255, 255, 255, 0) 70%), linear-gradient(180deg, #ffffff, #f1f3fa);
   color: #c2255c;
   box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.45), 0 8px 0 rgba(0, 0, 0, 0.2);
   display: flex;
@@ -110,7 +111,7 @@
 .kino-bar:empty { display: none; }
 .kino-btn { min-height: 64px; }
 .kino-bar .btn-big { padding: 12px 24px; min-height: 64px; font-size: clamp(18px, 3.4vmin, 28px); }
-.kino-title { margin: 0; font-size: clamp(22px, 4vmin, 34px); color: var(--ink); text-align: center; }
+.kino-title { margin: 0; font-family: var(--font-display, inherit); font-weight: 700; letter-spacing: 0.01em; font-size: clamp(22px, 4vmin, 34px); color: var(--ink); text-align: center; }
 
 /* Quiz: Film wird klein bzw. nur bei „Nochmal ansehen“ gezeigt */
 .kino-player.is-mini { display: none; }
@@ -127,6 +128,7 @@
 .kino-choices .tile .tile-text { font-size: clamp(30px, 7vmin, 64px); }
 .kino-tools { display: flex; justify-content: center; }
 .kino-rewatch { min-height: 56px; background: #fff0f6; color: #a61e4d; }
+.btn.kino-rewatch { --btn-c: #fff0f6; --btn-ink: #a61e4d; --btn-edge: #e7b3c9; }
 
 /* Abschluss: Jetzt üben */
 .kino-end { flex-direction: column; width: min(100%, 760px); min-height: 0; }
@@ -156,16 +158,18 @@
   padding: 12px 18px;
   border-radius: var(--radius-l);
   color: #fff;
+  /* Bonbon-Banner mit Glanzlicht und dunklerer Unterkante */
   background:
-    radial-gradient(circle at 8% 30%, rgba(255, 255, 255, 0.25), transparent 30%),
-    linear-gradient(135deg, #c2255c, #862e9c);
-  box-shadow: var(--shadow);
+    radial-gradient(110% 80% at 50% -20%, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0) 55%),
+    radial-gradient(circle at 8% 30%, rgba(255, 255, 255, 0.22), transparent 30%),
+    linear-gradient(135deg, #d6336c, #a12a8a 55%, #7b2f9e);
+  box-shadow: inset 0 2px 0 rgba(255, 255, 255, 0.4), inset 0 -3px 0 rgba(0, 0, 0, 0.1), 0 6px 0 #5f1f6e, 0 22px 34px -14px rgba(95, 31, 110, 0.6);
 }
-.kino-head-icon { font-size: clamp(42px, 8vmin, 64px); }
-.kino-head h2 { margin: 0; font-size: clamp(24px, 4.4vmin, 36px); }
-.kino-head p { margin: 2px 0 0; font-size: clamp(15px, 2.6vmin, 20px); font-weight: 700; opacity: 0.95; }
+.kino-head-icon { font-size: clamp(42px, 8vmin, 64px); filter: drop-shadow(0 5px 4px rgba(60, 0, 40, 0.35)); }
+.kino-head h2 { margin: 0; font-family: var(--font-display, inherit); font-weight: 700; letter-spacing: 0.01em; font-size: clamp(24px, 4.4vmin, 36px); text-shadow: 0 2px 0 #6a1f63; }
+.kino-head p { margin: 2px 0 0; font-family: var(--font-display, inherit); font-size: clamp(15px, 2.6vmin, 20px); font-weight: 600; opacity: 0.95; }
 .kino-group { max-width: 1000px; margin: 0 auto calc(var(--gap) * 1.2); }
-.kino-group h3 { margin: 0 0 10px; font-size: clamp(20px, 3.4vmin, 28px); display: flex; align-items: center; gap: 6px; }
+.kino-group h3 { margin: 0 0 10px; font-family: var(--font-display, inherit); font-weight: 700; letter-spacing: 0.01em; font-size: clamp(20px, 3.4vmin, 28px); display: flex; align-items: center; gap: 6px; color: #fff; text-shadow: 0 2px 0 rgba(29, 37, 80, 0.25), 0 6px 14px rgba(29, 37, 80, 0.2); }
 .kino-tickets {
   display: grid;
   gap: var(--gap);
@@ -182,15 +186,25 @@
   min-height: 112px;
   padding: 0;
   text-align: left;
-  border-radius: 20px;
+  border-radius: 22px;
   background: #fff;
-  box-shadow: var(--shadow);
+  box-shadow: 0 6px 0 var(--edge, #d3daee), 0 20px 30px -14px rgba(29, 37, 80, 0.42);
   overflow: hidden;
   color: var(--ink);
   font-family: inherit;
-  transition: transform 0.1s;
+  transition: transform 0.2s var(--spring, ease-out), box-shadow 0.15s;
 }
-.kino-ticket:active { transform: translateY(4px); }
+.kino-ticket::after {
+  /* Glanzlicht über die ganze Karte */
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0) 38%);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+}
+.kino-ticket:active { transform: translateY(5px); box-shadow: 0 1px 0 var(--edge, #d3daee), 0 6px 12px -6px rgba(29, 37, 80, 0.4); }
 .kino-ticket .kino-poster { height: 100%; min-height: 112px; }
 .kino-ticket .kino-poster-icon { font-size: clamp(40px, 8vmin, 60px); }
 .kino-ticket-body { display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: 10px 12px; min-width: 0; }
@@ -204,20 +218,23 @@
   font-size: 30px;
   font-weight: 700;
   color: #fff;
-  background: var(--film, #c2255c);
+  text-shadow: 0 2px 0 rgba(0, 0, 0, 0.18);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--film, #c2255c) 82%, #fff), var(--film, #c2255c) 60%, color-mix(in srgb, var(--film, #c2255c) 88%, #000));
   border-left: 3px dashed rgba(255, 255, 255, 0.85);
   position: relative;
 }
-.kino-ticket.seen .kino-ticket-stub { background: var(--ok); }
+.kino-ticket.seen .kino-ticket-stub { background: linear-gradient(180deg, #45d58a, #22b26b 60%, #1c9a5c); }
 .kino-seen {
   position: absolute;
   top: 8px;
   left: 8px;
-  background: var(--ok);
+  z-index: 1;
+  background: linear-gradient(180deg, #45d58a, #22b26b);
   color: #fff;
+  font-family: var(--font-display, inherit);
   font-size: 14px;
-  font-weight: 700;
+  font-weight: 600;
   border-radius: 999px;
   padding: 3px 10px;
-  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4), 0 2px 0 #178a4e;
 }

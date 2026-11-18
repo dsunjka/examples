@@ -10,6 +10,8 @@
      embed   – eingebettete Ansicht wie im Artefakt (fremder Ursprung, iframe ohne Pop-ups)
      layout  – Handy/Tablet: nichts ragt seitlich heraus (Bildschirme und jedes Spiel)
      voice   – Stimmpakete vollständig, Filme und Spiel-Einleitungen haben Aufnahmen
+     3d      – 3D-Welt (?test&3d=1): Start, Inseln, Orte je Bildschirm, Weltkarte mit
+               Schildern, Antippen, Ruhemodus, Bildinhalt/Budget, Einstellung „Aus“
    ========================================================================== */
 const fs = require('fs');
 const path = require('path');
@@ -352,6 +354,193 @@ async function voice(env) {
   return out;
 }
 
+/* ------------------------------------------------------------------ 3d */
+/**
+ * 3D-Welt (js/world3d) mit ?test&3d=1: Start, alle Inseln, laufende Bilder,
+ * Ort je Bildschirm, Ruhemodus im Elternbereich, Weltkarte mit Schildern,
+ * Antippen (Schild und 3D-Insel), Kamerafahrt, Hochformat-Schieben,
+ * Bildinhalt und Budget, Einstellung „Aus“ (Elternbereich) nach dem Neuladen.
+ * Sparsam: SwiftShader rendert auf der CPU – zwei Seiten, kurze Wartezeiten.
+ */
+async function threeD(env) {
+  const out = [];
+  const add = (name, ok, reason) => out.push(res('3D: ' + name, ok, reason));
+  // Das erste Bild übersetzt alle Shader – mit SwiftShader dauert das Sekunden (blockiert auch „load“)
+  const SLOW = { timeout: 90000 };
+  const page = await env.newPage();
+  await page.goto(env.url('/index.html?test&3d=1'), Object.assign({ waitUntil: 'domcontentloaded' }, SLOW));
+  await page.waitForFunction(() => window.LT && LT.app && LT.w3d && document.querySelector('#app').children.length, null, SLOW);
+  const started = await page.evaluate(() => LT.w3d.start());
+  add('W.start() liefert true', started === true, String(started));
+  if (!started) return out;
+  /** n weitere Bilder abwarten (danach ist eine neue Kamera-Pose angewandt); SwiftShader kann langsam sein */
+  const frames = (n = 2) => page.evaluate((n) => new Promise((resolve) => {
+    const W = LT.w3d, f = W.stats.frames, t0 = performance.now();
+    (function poll() {
+      if ((W.stats.frames >= f + n && !W.rig.pending) || performance.now() - t0 > 60000) resolve(W.stats.frames - f);
+      else setTimeout(poll, 25);
+    })();
+  }), n);
+  const isl = await page.evaluate(() => {
+    const want = ['hub'].concat(LT.areas.filter((a) => LT.gamesOfArea(a.id).length || a.id === 'kino').map((a) => a.id));
+    const have = Object.keys(LT.w3d.islands);
+    return { missing: want.filter((id) => !have.includes(id)), n: have.length };
+  });
+  add(`alle Inseln gebaut (${isl.n}, mit Flos Insel)`, !isl.missing.length, 'fehlen: ' + isl.missing.join(', '));
+  await page.waitForFunction(() => LT.w3d.stats.frames >= 2, null, SLOW).catch(() => {});
+  const f0 = await page.evaluate(() => LT.w3d.stats.frames);
+  await frames(2);
+  const f1 = await page.evaluate(() => ({ frames: LT.w3d.stats.frames, live: document.body.classList.contains('w3d-live'), canvas: !!document.getElementById('w3d-bg') }));
+  add('Bilder laufen (frames steigen, body.w3d-live)', f1.frames > f0 && f1.live && f1.canvas, JSON.stringify(Object.assign({ f0 }, f1)));
+
+  // Ort der Kamera je Bildschirm
+  const places = await page.evaluate(() => {
+    const W = LT.w3d, A = LT.app, list = [];
+    const key = (p) => (typeof p === 'string' ? p : p ? p.kind + ':' + p.id : String(p));
+    const check = (name, want) => list.push({ name, want, got: key(W.place) });
+    A.showSplash(); check('Start', 'splash');
+    A.showHome(); check('Weltkarte', 'home');
+    A.showArea('formen'); check('Insel', 'area:formen');
+    A.startGame('zaehlen'); check('Spiel (Insel des Spiels)', 'game:zahlen');
+    LT.engine.stop();
+    if (LT.reise) {
+      LT.reise.show();
+      const sum = LT.reise.summary();
+      check('Flos Reise (Insel des Kapitels)', 'reise:' + LT.reise.islandOf(sum.chapter ? sum.chapter.id : null));
+    }
+    A.showAlbum(); check('Sticker-Album', 'sky');
+    if (A.openBook && LT.wissen && LT.wissen.showBook) { A.openBook(A.showHome); check('Forscherbuch', 'sky'); }
+    A.showHome();
+    A.showPause(A.showHome); check('Bewegungspause', 'sky');
+    A.showHome();
+    A.showLimit(); check('Tageslimit', 'sky');
+    A.screen = null;
+    A.showParents('overview'); check('Elternbereich', 'sky');
+    return list;
+  });
+  for (const p of places) add(`Ort: ${p.name} → ${p.want}`, p.got === p.want, 'ist ' + p.got);
+
+  // Elternbereich: Welt ruht (Akku), beim Verlassen wieder wach
+  const sl = await page.evaluate(async () => {
+    const W = LT.w3d, wait = (ms) => new Promise((r) => setTimeout(r, ms));
+    for (let i = 0; i < 1200 && !W.isSleeping(); i++) await wait(50);
+    const asleep = W.isSleeping(), fr = W.stats.frames;
+    await wait(500);
+    const still = W.stats.frames === fr;
+    LT.app.screen = null;
+    LT.app.showHome();
+    for (let i = 0; i < 1200 && W.stats.frames <= fr; i++) await wait(50);
+    return { asleep, still, awake: !W.isSleeping() && W.stats.frames > fr };
+  });
+  add('Elternbereich: Ruhemodus, danach wieder wach', sl.asleep && sl.still && sl.awake, JSON.stringify(sl));
+  const diag = await page.evaluate(() => {
+    LT.app.showParents('settings');
+    const d = document.querySelector('.p-graphics-diag');
+    const sel = document.querySelector('select[aria-label="3D-Welt"]');
+    const r = { text: d ? d.textContent : '', select: sel ? [...sel.options].map((o) => o.value).join(',') : '' };
+    LT.app.screen = null;
+    LT.app.showHome();
+    return r;
+  });
+  add('Einstellungen: Karte „Grafik“ (auto/on/off) mit Diagnose', diag.select === 'auto,on,off' && /läuft/.test(diag.text), JSON.stringify(diag));
+
+  // Weltkarte: ein Schild je Insel, im Querformat alle im Bild
+  await page.waitForFunction(() => document.querySelector('.w3d-map.is-ready'), null, SLOW).catch(() => {});
+  await frames(2);
+  const map = await page.evaluate(() => {
+    const want = LT.areas.filter((a) => LT.gamesOfArea(a.id).length).map((a) => a.id);
+    const cards = [...document.querySelectorAll('.w3d-map .area-card.w3d-label')];
+    const ids = cards.map((c) => c.dataset.area);
+    const off = cards.filter((c) => { const r = c.getBoundingClientRect(); return c.style.visibility === 'hidden' || r.right < 0 || r.left > innerWidth || r.bottom < 0 || r.top > innerHeight; }).map((c) => c.dataset.area);
+    return { missing: want.filter((id) => !ids.includes(id)), off, n: cards.length, isMap: !!document.querySelector('#app .screen.home.is-map') };
+  });
+  add(`Weltkarte: Schild für jede Insel (${map.n})`, map.isMap && !map.missing.length, 'fehlen: ' + map.missing.join(', '));
+  add('Weltkarte (quer): alle Schilder im Bild', !map.off.length, 'außerhalb: ' + map.off.join(', '));
+
+  // Bild nicht leer; Budget ohne Schatten-Pass
+  const px = await page.evaluate(() => LT.w3d.debugPixels());
+  add('Bild hat Inhalt (Pixel gelesen)', !!(px && px.ok), JSON.stringify(px));
+  add(`Budget Weltkarte: ${px && px.calls} Draw-Calls (< 250), ${px && px.triangles} Dreiecke (< 160000)`, !!(px && px.calls < 250 && px.triangles < 160000), JSON.stringify(px));
+
+  // Tippen auf ein Schild (echter Mausklick: prüft Ebenen und pointer-events)
+  const card = await page.$('.w3d-map .area-card[data-area="formen"]');
+  if (card) await card.click({ timeout: 3000 }).catch(() => {});
+  await page.waitForTimeout(150);
+  const tap1 = await page.evaluate(() => ({ screen: LT.app.screen, place: LT.w3d.place }));
+  add('Tippen auf ein Schild öffnet die Insel', tap1.screen === 'area' && !!tap1.place && tap1.place.id === 'formen', JSON.stringify(tap1));
+
+  // Tippen auf die 3D-Insel selbst: der Klick geht durch die Oberfläche auf die Leinwand
+  await page.evaluate(() => LT.app.showHome());
+  await frames(2);
+  const pt = await page.evaluate(() => {
+    const W = LT.w3d, I = W.islands.denken || Object.values(W.islands).find((x) => x.id !== 'hub');
+    const p = I.pos.clone();
+    p.y += 0.6;
+    p.z += (I.rim || 6) * 0.55;
+    const s = W.toScreen(p);
+    const hit = document.elementFromPoint(s.x, s.y);
+    return { id: I.id, x: Math.round(s.x), y: Math.round(s.y), onCanvas: hit === W.canvas, hit: hit ? hit.tagName + '.' + hit.className : '' };
+  });
+  await page.mouse.click(pt.x, pt.y);
+  await page.waitForTimeout(150);
+  const tap2 = await page.evaluate(() => ({ screen: LT.app.screen, place: LT.w3d.place }));
+  add('Tippen auf eine 3D-Insel öffnet sie', pt.onCanvas && tap2.screen === 'area' && !!tap2.place && tap2.place.id === pt.id, JSON.stringify({ pt, tap2 }));
+
+  // Eine echte Kamerafahrt (im Testmodus springt die Kamera sonst sofort)
+  // (vorher: Insel offen) → Weltkarte; Flug muss starten und voranschreiten
+  await frames(2); // Pose der Insel ist angewandt
+  const fl = await page.evaluate(async () => {
+    const W = LT.w3d, wait = (ms) => new Promise((r) => setTimeout(r, ms));
+    W.fastFlights = false;
+    LT.app.showHome();
+    for (let i = 0; i < 1200 && W.rig.pending; i++) await wait(50); // Pose wird im nächsten Bild berechnet
+    const f = W.rig.flight;
+    const t1 = f ? f.t : -1, fr = W.stats.frames;
+    for (let i = 0; i < 1200 && W.stats.frames < fr + 2; i++) await wait(50);
+    const t2 = f ? f.t : -1;
+    W.fastFlights = true;
+    W.go('home', { instant: true }); // Rest überspringen (SwiftShader ist langsam)
+    return { flying: !!f, t1: +t1.toFixed(3), t2: +t2.toFixed(3), dur: f ? +f.dur.toFixed(2) : 0 };
+  });
+  add('Kamerafahrt startet und läuft', fl.flying && fl.t2 > fl.t1 && fl.dur >= 0.9, JSON.stringify(fl));
+  await frames(1);
+
+  // Hochformat: Karte lässt sich schieben (Pfeil-Knopf)
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForTimeout(100);
+  await frames(2);
+  const pan = await page.evaluate(async () => {
+    const W = LT.w3d;
+    const on = W.canPan().on;
+    const btn = document.querySelector('.w3d-pan-btn.is-right');
+    const vis = !!btn && getComputedStyle(btn).display !== 'none';
+    if (btn) btn.click();
+    return { on, vis, x: W.canPan().x };
+  });
+  add('Hochformat: Karte schiebbar (Pfeil-Knopf)', pan.on && pan.vis && pan.x > 0, JSON.stringify(pan));
+  await page.setViewportSize({ width: 1180, height: 820 });
+
+  // Einstellung „Aus“ im Elternbereich → App lädt neu; danach startet keine 3D-Welt,
+  // auch wenn sie erlaubt wäre (?3d=auto: wie ohne Testmodus). Ohne zweiten 3D-Start (spart Zeit).
+  const p2 = await env.newPage();
+  const ready = () => p2.waitForFunction(() => window.LT && LT.app && document.querySelector('#app').children.length, null, SLOW);
+  await p2.goto(env.url('/index.html?test'), Object.assign({ waitUntil: 'domcontentloaded' }, SLOW));
+  await ready();
+  await p2.evaluate(() => LT.app.showParents('settings'));
+  await Promise.all([p2.waitForEvent('domcontentloaded', SLOW), p2.selectOption('select[aria-label="3D-Welt"]', 'off')]);
+  await ready();
+  await p2.goto(env.url('/index.html?test&3d=auto'), Object.assign({ waitUntil: 'domcontentloaded' }, SLOW));
+  await ready();
+  await p2.waitForTimeout(200);
+  const off = await p2.evaluate(() => ({
+    setting: LT.progress.settings().graphics, enabled: LT.w3d.enabled, reason: LT.w3d.reason,
+    canvas: !!document.getElementById('w3d-bg'), w3d: document.body.classList.contains('w3d'),
+    flat: document.querySelectorAll('#app .content .areas .area-card').length, map: !!document.querySelector('.w3d-map'),
+  }));
+  add('Einstellung „Aus“: nach dem Neuladen keine 3D-Welt (flache Karte)', off.setting === 'off' && !off.enabled && off.reason === 'setting' && !off.canvas && !off.w3d && off.flat > 0 && !off.map, JSON.stringify(off));
+  return out;
+}
+
 module.exports = {
   hostPage: (port) => `<!doctype html><meta charset=utf-8><title>Host</title><iframe id=f sandbox="allow-scripts allow-same-origin allow-downloads" src="http://127.0.0.1:${port}/index.html?test" style="width:1000px;height:740px;border:0"></iframe>`,
   jobs(suites) {
@@ -361,6 +550,7 @@ module.exports = {
       ['storage', { name: 'storage', run: storage }],
       ['embed', { name: 'embed', run: embed }],
       ['voice', { name: 'voice', run: voice }],
+      ['3d', { name: '3d', run: threeD }],
       ...layoutJobs().map((j) => ['layout', j]),
     ];
     return all.filter(([s]) => suites.includes(s)).map(([s, j]) => Object.assign({ suite: s }, j));

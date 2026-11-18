@@ -171,8 +171,12 @@
      ------------------------------------------------------------------ */
   UI.root = () => document.getElementById('app');
 
-  /** Neuen Bildschirm anlegen. Liefert {screen, topbar, body}. */
-  UI.screen = function ({ area, className = '', title, icon, onBack, backIcon = '🏠', right = [] } = {}) {
+  /**
+   * Neuen Bildschirm anlegen. Liefert {screen, topbar, body}.
+   * 3D-Welt: place = Ort der Kamera (siehe LT.w3d.go; ohne Angabe ruhiger Himmel 'sky',
+   * null = Kamera bleibt), frame = freier Bildbereich bzw. Funktion, die ihn liefert.
+   */
+  UI.screen = function ({ area, className = '', title, icon, onBack, backIcon = '🏠', right = [], place, frame } = {}) {
     const root = UI.root();
     U.clear(root);
     document.querySelectorAll('.overlay').forEach((o) => o.remove());
@@ -191,6 +195,7 @@
       screen.appendChild(topbar);
     }
     root.appendChild(screen);
+    if (LT.w3d && place !== null) LT.w3d.go(place === undefined ? 'sky' : place, frame ? { frame } : {});
     return { screen, topbar };
   };
   UI.applyArea = function (node, area) {

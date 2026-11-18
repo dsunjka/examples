@@ -1,11 +1,18 @@
 /* ==========================================================================
    Service Worker – macht die Lernwelt offline nutzbar (wenn sie über
    http(s) ausgeliefert wird, z. B. GitHub Pages). Beim Installieren wird
-   index.html gelesen und alle darin verlinkten Dateien werden gespeichert.
+   index.html gelesen und alle darin verlinkten Dateien werden gespeichert
+   (dazu gehören js/world3d/** und css/theme|world3d|flo3d|fx3d.css).
+   three.js wird erst zur Laufzeit nachgeladen und steht darum in BASE.
    ========================================================================== */
-const CACHE = 'lernwelt-v4';
+const CACHE = 'lernwelt-v5';
 const MEDIA = 'lernwelt-media-v2'; // Erklärfilme (videos/*): erst beim ersten Ansehen gespeichert, bleibt über Versionen erhalten (neu gerenderte Filme: siehe revalidateMedia)
-const BASE = ['./', './index.html', './manifest.webmanifest', './assets/icon.svg', './assets/icon-192.png', './assets/icon-512.png', './assets/fonts/andika-400.woff2', './assets/fonts/andika-700.woff2'];
+const BASE = [
+  './', './index.html', './manifest.webmanifest', './assets/icon.svg', './assets/icon-192.png', './assets/icon-512.png',
+  './assets/fonts/andika-400.woff2', './assets/fonts/andika-700.woff2',
+  './assets/fonts/fredoka-500.woff2', './assets/fonts/fredoka-600.woff2', './assets/fonts/fredoka-700.woff2',
+  './vendor/three.min.js', // 3D-Welt (js/world3d/core.js lädt es bei Bedarf nach)
+];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
