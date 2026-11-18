@@ -5,7 +5,7 @@
    (dazu gehören js/world3d/** und css/theme|world3d|flo3d|fx3d.css).
    three.js wird erst zur Laufzeit nachgeladen und steht darum in BASE.
    ========================================================================== */
-const CACHE = 'lernwelt-v5';
+const CACHE = 'lernwelt-v6';
 const MEDIA = 'lernwelt-media-v2'; // Erklärfilme (videos/*): erst beim ersten Ansehen gespeichert, bleibt über Versionen erhalten (neu gerenderte Filme: siehe revalidateMedia)
 const BASE = [
   './', './index.html', './manifest.webmanifest', './assets/icon.svg', './assets/icon-192.png', './assets/icon-512.png',
