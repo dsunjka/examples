@@ -256,3 +256,28 @@
   .auf-lab { font-size: clamp(24px, min(6.4vw, 5vh), 44px); }
   .auf-cdots .auf-dot { --d: clamp(9px, 2.2vmin, 16px); }
 }
+
+/* Handy quer (≤ 520 px hoch): Haus und Kärtchen nebeneinander (Haus links,
+   Kärtchen zweispaltig rechts) – übereinander passten sie nicht auf die
+   ~290 px hohe Bühne (das Dach war abgeschnitten) */
+@media (max-height: 520px) and (orientation: landscape) {
+  .auf-main { gap: 10px; justify-content: safe center; }
+  /* auch: großes Haus mit Rechnungs-Zimmern und Auswahl-Kärtchen darunter */
+  .auf-main:has(> .auf-pile),
+  .auf-main:has(> .auf-house):has(> .auf-cchoices) { flex-direction: row; align-items: safe center; gap: clamp(14px, 3vw, 30px); }
+  .auf-main:has(> .auf-house):has(> .auf-cchoices) > .auf-house { --auf-w: min(34vw, 320px); flex: 0 0 auto; }
+  .auf-main:has(> .auf-house):has(> .auf-cchoices) > .auf-cchoices { max-width: 300px; }
+  .auf-main:has(> .auf-house):has(> .auf-cchoices) .tile.auf-ctile { min-width: 132px; }
+  .auf-main:has(> .auf-pile) > .auf-house { --auf-w: min(34vw, 320px); flex: 0 0 auto; }
+  .auf-main > .auf-pile { width: auto; max-width: 300px; }
+  .auf-pile .auf-card { min-width: 112px; min-height: 58px; padding: 6px 10px; }
+  .auf-roof { height: 46px; }
+  .auf-small .auf-roof { height: 40px; }
+  .auf-room { min-height: 44px; }
+  .auf-slot { min-height: 50px; }
+  .auf-withdots .auf-slot { min-height: 62px; }
+  .auf-card.auf-in { min-height: 46px; }
+  .auf-lab { font-size: clamp(22px, 6.4vh, 30px); }
+  .auf-in .auf-lab, .auf-in .auf-res { font-size: clamp(18px, 5vh, 24px); }
+  .tile.auf-ctile { min-height: 60px; padding: 8px 14px; }
+}

@@ -150,3 +150,28 @@
   .swk-kb { max-width: min(100%, 1120px); }
   .tile.swk-key { --tile: clamp(62px, 12vmin, 108px); }
 }
+
+/* Handy quer (≤ 520 px hoch): Bild/Diktat und Schreibzeile links, Tastatur
+   und Knöpfe rechts – untereinander ragten Bild und Knöpfe aus der Bühne */
+@media (max-height: 520px) and (orientation: landscape) {
+  .stage.swk-stage {
+    display: grid;
+    grid-template-columns: auto minmax(0, auto);
+    grid-template-rows: 1fr auto auto 1fr;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    column-gap: clamp(16px, 3vw, 28px);
+    row-gap: 10px;
+  }
+  .swk-stage > .swk-top { grid-column: 1; grid-row: 2; padding: 6px 16px; }
+  .swk-stage > .swk-linewrap { grid-column: 1; grid-row: 3; }
+  .swk-stage > .swk-kb { grid-column: 2; grid-row: 2; gap: 8px; }
+  .swk-stage > .swk-actions { grid-column: 2; grid-row: 3; }
+  .swk-pic .emoji { font-size: clamp(44px, 13vh, 60px); }
+  .swk-diktat .swk-pic .emoji { font-size: clamp(36px, 11vh, 50px); }
+  .swk-dik-lbl { font-size: 22px; }
+  .tile.swk-key { --tile: clamp(50px, 14vh, 58px); }
+  .btn.swk-back, .btn.swk-check { min-height: 56px; }
+  .swk-actions .btn-round.s2-abc-btn { width: 56px; height: 56px; }
+}

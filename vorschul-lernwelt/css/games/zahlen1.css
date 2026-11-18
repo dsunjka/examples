@@ -487,3 +487,39 @@
   .stage:has(> .zaehlen-field.k-scatter) .tile.small { --tile: clamp(70px, 14vmin, 120px); }
   .stage:has(> .zd-prompt .zd-show) .tile.zd-qty-tile { --th: clamp(104px, 21vmin, 190px); }
 }
+
+/* ==========================================================================
+   Handy quer (≤ 520 px hoch): Die Bühne ist nur ~290 px hoch. Was nicht
+   übereinander passt, steht nebeneinander: Dinge bzw. Blitz-Karte links,
+   Tipp/„Nochmal“ und Antworten rechts.
+   ========================================================================== */
+@media (max-height: 520px) and (orientation: landscape) {
+  .game-zaehlen .stage:has(> .zaehlen-field:not(.k-row)),
+  .game-blitzblick .stage {
+    display: grid;
+    grid-template-columns: auto minmax(0, max-content);
+    grid-template-rows: 1fr auto auto 1fr;
+    justify-content: center;
+    justify-items: center;
+    align-items: center;
+    column-gap: clamp(16px, 3.4vw, 36px);
+    row-gap: 12px;
+  }
+  .game-zaehlen .stage > .zaehlen-field:not(.k-row),
+  .game-blitzblick .stage > .bb-card { grid-column: 1; grid-row: 1 / -1; }
+  .game-zaehlen .stage:has(> .zaehlen-field:not(.k-row)) > .zaehlen-tip,
+  .game-blitzblick .stage > .bb-again { grid-column: 2; grid-row: 2; }
+  .game-zaehlen .stage:has(> .zaehlen-field:not(.k-row)) > .choices,
+  .game-blitzblick .stage > .choices { grid-column: 2; grid-row: 3; max-width: min(236px, 30vw); }
+  .game-zaehlen .stage:has(> .zaehlen-field:not(.k-row)) > .zaehlen-tip { max-width: min(236px, 30vw); }
+  /* vier Antworten 2 × 2 statt 3 + 1 */
+  :is(.game-zaehlen, .game-blitzblick) .stage > .choices:has(> .tile:nth-child(4):last-child) { display: grid; grid-template-columns: repeat(2, auto); }
+  .bb-card { width: min(42vw, 380px); height: min(66vh, 260px); }
+  /* Mehr oder weniger, Reihen: Waage rechts neben den beiden Reihen */
+  .mv-rows .choices { display: grid; grid-template-columns: auto auto; align-items: center; column-gap: 18px; row-gap: 22px; }
+  .mv-rows .choices .mv-eq { grid-column: 2; grid-row: 1 / span 2; }
+  .tile.mv-row-tile { width: min(calc(100vw - var(--flo-col, 180px) - 170px), 560px); height: clamp(70px, 22vh, 96px); }
+  .mv-ritem.big { font-size: clamp(30px, 9vh, 42px); }
+  .mv-ritem.mid { font-size: clamp(26px, 7.6vh, 34px); }
+  .mv-ritem.small { font-size: clamp(20px, 6vh, 28px); }
+}

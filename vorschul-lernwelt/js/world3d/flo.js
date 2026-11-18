@@ -23,7 +23,9 @@
 
    API (W.flo):
      mascot            Figur im Maskottchen (oder null, falls keine Leinwand)
-     world             Figur auf Flos Insel
+     world             Figur auf Flos Insel (volle Fassung, Nahansichten)
+     worldLite         leichte Fassung an derselben Stelle (Ferne, z. B. Weltkarte)
+     lod()             {lite, px}: welche Fassung zu sehen ist (unter ~70 px Bildhöhe: leicht)
      cheer() / think() / wave()    Aktion auf beiden Figuren
      talk(on)          Maul bewegen (zusätzlich zu LT.speech)
      sleep(on)         Nickerchen: Augen zu, Kopf sinkt, ruhiger Atem (Tageslimit)
@@ -323,18 +325,25 @@
     /* ==================================================================
        Figur bauen → Instanz mit update(dt, t)
        ================================================================== */
-    function createFox({ shadows = false, detail = 1 } = {}) {
+    /**
+     * opts.lite: leichte Fassung für die Ferne (Weltkarte, Flo nur wenige Dutzend Pixel groß):
+     * Nase und Augenbrauen sind in die Schnauze eingebacken, keine Glanzpunkte, nur Körper
+     * und Kopf werfen Schatten. Animation und API bleiben gleich.
+     */
+    function createFox({ shadows = false, detail = 1, lite = false } = {}) {
       const MT = makeMats();
       /** Unterteilung je nach Detailstufe (Welt-Flo ist klein: weniger Dreiecke) */
       const D = (n, min = 6) => Math.max(min, Math.round(n * detail));
-      /** Mesh; nur große Teile werfen Schatten (Welt) */
+      /** Mesh; nur große Teile werfen Schatten (Welt; leicht: nur Körper und Kopf) */
       const mesh = (geo, mat, name, cast = false) => {
         const m = new T.Mesh(geo, mat);
         if (name) m.name = name;
-        m.castShadow = shadows && cast;
+        m.castShadow = shadows && cast && (!lite || name === 'flo-koerper' || name === 'flo-kopf');
         m.receiveShadow = false;
         return m;
       };
+      /** leicht: Teile, die nicht gezeichnet werden, aber in der Animation vorkommen */
+      const baked = []; // Geometrien, die in die Schnauze eingebacken werden (Kopf-Koordinaten)
 
       /* Hierarchie: root (Platz, Maßstab) → facing (Drehung, Pirouette) → hop (Sprunghöhe)
          → squash (Stauchen am Boden) → torso (Wiegen, Drehpunkt Hüfte) → Körperteile */
@@ -444,7 +453,7 @@
         smoothNormals(geo);
         const sk = new T.SkinnedMesh(geo, MT.fur);
         sk.name = 'flo-schwanz';
-        sk.castShadow = shadows;
+        sk.castShadow = shadows && !lite;
         sk.frustumCulled = false;
         const bones = [];
         let prev = null;
@@ -504,11 +513,13 @@
       const nPos = snoutC.clone().add(V3(0, 0.05 * HS, 0.113 * HS));
       nose.position.copy(nPos);
       nose.rotation.x = -0.25;
-      head.add(nose);
-      const noseHi = new T.Mesh(new T.CircleGeometry(0.012, 10), MT.hi);
-      noseHi.position.copy(nPos).add(V3(-0.018, 0.022, 0.03));
-      noseHi.rotation.x = -0.6;
-      head.add(noseHi);
+      if (lite) { nose.updateMatrix(); baked.push(noseGeo.clone().applyMatrix4(nose.matrix)); } else {
+        head.add(nose);
+        const noseHi = new T.Mesh(new T.CircleGeometry(0.012, 10), MT.hi);
+        noseHi.position.copy(nPos).add(V3(-0.018, 0.022, 0.03));
+        noseHi.rotation.x = -0.6;
+        head.add(noseHi);
+      }
 
       // Gesichtsteile auf die Oberfläche setzen (Kopf + Schnauze als Ziel)
       const posOnly = (g) => { const c = new T.BufferGeometry(); c.setAttribute('position', g.attributes.position); c.setIndex(g.index); return c; };
@@ -532,7 +543,7 @@
         const blink = new T.Group();
         sk.add(blink);
         const e = mesh(eyeGeo, MT.gloss, 'flo-auge');
-        const hi = new T.Mesh(hiGeo, MT.hi);
+        const hi = lite ? new T.Object3D() : new T.Mesh(hiGeo, MT.hi);
         hi.position.z = 0.038;
         if (s < 0) hi.scale.x = 1; // beide Glanzpunkte oben rechts (wie im SVG)
         blink.add(e, hi);
@@ -547,9 +558,10 @@
       const browGeo = solid(new T.TorusGeometry(0.07, 0.013, D(5, 3), D(12), 1.7).rotateZ(Math.PI / 2 - 0.85), COL.brow);
       const brows = [-1, 1].map((s) => {
         const sk = socket(25 * s, 21, 0.004);
-        const b = mesh(browGeo, MT.fur, 'flo-braue');
+        const b = lite ? new T.Object3D() : mesh(browGeo, MT.fur, 'flo-braue');
         b.rotation.z = -0.12 * s;
         sk.add(b);
+        if (lite) { sk.updateMatrix(); b.updateMatrix(); baked.push(browGeo.clone().applyMatrix4(sk.matrix.clone().multiply(b.matrix))); }
         return { socket: sk, mesh: b, base: sk.position.clone(), up: new T.Vector3(0, 1, 0).applyQuaternion(sk.quaternion) };
       });
 
@@ -576,7 +588,7 @@
         o.updateMatrix();
         return paint(smoothNormals(g.applyMatrix4(o.matrix)), (px, py) => COL.fur);
       });
-      head.add(mesh(T.addons.mergeGeometries([snoutGeo, smileGeo, ...tuftParts]), MT.fur, 'flo-schnauze'));
+      head.add(mesh(T.addons.mergeGeometries([snoutGeo, smileGeo, ...tuftParts, ...baked]), MT.fur, 'flo-schnauze'));
       const mouthPivot = new T.Group();
       mouthPivot.position.set(0, 0.0, -0.004);
       mouthSock.add(mouthPivot);
@@ -846,10 +858,31 @@
        Welt-Flo auf der Heimatinsel
        ================================================================== */
     const WORLD_H = 2.2; // Höhe in der Welt bis zu den Ohrspitzen (Held der Insel: etwas größer als die Requisiten)
+    /* Zwei Fassungen an derselben Stelle: die volle für Nahansichten (Start, Insel), die leichte
+       für die Ferne (Weltkarte: Flo ist dort nur wenige Dutzend Pixel groß). Sichtbar ist die,
+       die zur Bildgröße passt; beide bekommen dieselben Aktionen und laufen im Gleichschritt. */
     const world = createFox({ shadows: true, detail: 0.72 });
+    const worldLite = createFox({ shadows: true, detail: 0.42, lite: true });
+    const foxes = [world, worldLite];
     const hub = W.islands.hub;
-    const wroot = world.root;
-    wroot.scale.setScalar(WORLD_H / world.height);
+    const wroot = new T.Group();
+    wroot.name = 'flo-welt';
+    world.root.scale.setScalar(WORLD_H / world.height);
+    worldLite.root.scale.setScalar(WORLD_H / worldLite.height);
+    wroot.add(world.root, worldLite.root);
+    const LOD = { lite: false, px: 0, v0: new T.Vector3(), v1: new T.Vector3() };
+    /** Bildhöhe des Welt-Flo in Pixeln → leichte Fassung unter ~70 px (mit Abstand gegen Flackern) */
+    function pickLod() {
+      wroot.getWorldPosition(LOD.v0);
+      LOD.v1.copy(LOD.v0).y += WORLD_H;
+      // projiziert, ohne das DOM zu lesen (kein Layout pro Bild)
+      LOD.v0.project(W.camera);
+      LOD.v1.project(W.camera);
+      LOD.px = Math.abs(LOD.v0.y - LOD.v1.y) * 0.5 * (window.innerHeight || 1);
+      LOD.lite = LOD.lite ? LOD.px < 82 : LOD.px < 66;
+      world.root.visible = !LOD.lite;
+      worldLite.root.visible = LOD.lite;
+    }
     if (hub && hub.group) {
       const a = hub.anchors && hub.anchors.flo;
       if (a) wroot.position.copy(a);
@@ -871,16 +904,22 @@
       wroot.getWorldPosition(wTmp.sphere.center);
       wTmp.sphere.center.y += WORLD_H * 0.5;
       if (!wTmp.frustum.intersectsSphere(wTmp.sphere)) return;
+      pickLod();
       // zur Kamera drehen (in Insel-Koordinaten)
       wTmp.cam.copy(cam.position);
       if (wroot.parent) wroot.parent.worldToLocal(wTmp.cam);
       const yaw = Math.atan2(wTmp.cam.x - wroot.position.x, wTmp.cam.z - wroot.position.z);
-      world.state.facingTarget = world.state.lockYaw != null ? world.state.lockYaw : world.state.facingYaw + Math.atan2(Math.sin(yaw - world.state.facingYaw), Math.cos(yaw - world.state.facingYaw));
-      if (worldWaveAt > 0 && W.time >= worldWaveAt) { worldWaveAt = -1; world.play('wave'); }
-      world.setTalking(talkingNow());
-      if (performance.now() - pointer.t < 3500) { const s = W.toScreen(world.headWorld(wTmp.head)); aimAt(world, s.x, s.y, 0, dt); }
-      else aimAt(world, 0, 0, 0, dt);
-      world.update(dt, t);
+      if (worldWaveAt > 0 && W.time >= worldWaveAt) { worldWaveAt = -1; foxes.forEach((f) => f.play('wave')); }
+      const talking = talkingNow();
+      const near = performance.now() - pointer.t < 3500;
+      const s = near ? W.toScreen((LOD.lite ? worldLite : world).headWorld(wTmp.head)) : null;
+      // Wandern/Blick-Zufall gemeinsam: die leichte Fassung übernimmt den Zustand der vollen
+      foxes.forEach((f, i) => {
+        f.state.facingTarget = f.state.lockYaw != null ? f.state.lockYaw : f.state.facingYaw + Math.atan2(Math.sin(yaw - f.state.facingYaw), Math.cos(yaw - f.state.facingYaw));
+        f.setTalking(talking);
+        if (i === 0) { if (s) aimAt(f, s.x, s.y, 0, dt); else aimAt(f, 0, 0, 0, dt); } else { f.state.look.ty = world.state.look.ty; f.state.look.tp = world.state.look.tp; f.state.blinkT = world.state.blinkT; f.state.blinkK = world.state.blinkK; }
+        f.update(dt, t);
+      });
     });
 
     /* ==================================================================
@@ -1034,12 +1073,15 @@
     const api = {
       mascot: null,
       world,
-      cheer() { if (MS.fox) MS.fox.play('cheer'); if (inWorldPlace()) world.play('cheer'); kick(); },
-      think() { if (MS.fox) MS.fox.play('think'); if (inWorldPlace()) world.play('think'); kick(); },
-      wave() { if (MS.fox) MS.fox.play('wave'); world.play('wave'); kick(); },
-      talk(on) { if (MS.fox) MS.fox.state.talkExtra = !!on; world.state.talkExtra = !!on; kick(); },
+      worldLite,
+      /** Diagnose: welche Fassung des Welt-Flo gerade zu sehen ist und wie groß (px) */
+      lod: () => ({ lite: LOD.lite, px: Math.round(LOD.px) }),
+      cheer() { if (MS.fox) MS.fox.play('cheer'); if (inWorldPlace()) foxes.forEach((f) => f.play('cheer')); kick(); },
+      think() { if (MS.fox) MS.fox.play('think'); if (inWorldPlace()) foxes.forEach((f) => f.play('think')); kick(); },
+      wave() { if (MS.fox) MS.fox.play('wave'); foxes.forEach((f) => f.play('wave')); kick(); },
+      talk(on) { if (MS.fox) MS.fox.state.talkExtra = !!on; foxes.forEach((f) => { f.state.talkExtra = !!on; }); kick(); },
       /** Nickerchen (z. B. Tageslimit): beide Figuren schlafen ein (true) bzw. wachen auf */
-      sleep(on) { api._sleep = !!on; if (MS.fox) MS.fox.setSleep(on); world.setSleep(on); kick(); },
+      sleep(on) { api._sleep = !!on; if (MS.fox) MS.fox.setSleep(on); foxes.forEach((f) => f.setSleep(on)); kick(); },
       onPlace(place) {
         // Start: Flo winkt, sobald die Kamera da ist; Weltkarte: noch einmal kurz
         if (place === 'splash') worldWaveAt = W.time + 0.9;
@@ -1049,9 +1091,9 @@
       /** Nur Diagnose/Vorschau: Aktion name zum Zeitpunkt t einfrieren (null = normal weiter) */
       pose(name, t = 0) {
         const f = name ? { name, t } : null;
-        world.state.freeze = f;
+        foxes.forEach((x) => { x.state.freeze = f; if (!f) x.state.acts = []; });
         if (MS.fox) MS.fox.state.freeze = f;
-        if (!f) { world.state.acts = []; if (MS.fox) MS.fox.state.acts = []; }
+        if (!f && MS.fox) MS.fox.state.acts = [];
         kick();
       },
       _attach: attachMascot,

@@ -282,3 +282,16 @@
   .tile.sws-rtile { width: clamp(150px, 18.4vw, 240px); }
   .tile.sws-rtile .tile-text { font-size: clamp(17px, 3vmin, 28px); }
 }
+
+/* Handy quer (≤ 520 px hoch): Becken und Knöpfe flacher, damit „schwimmt“/
+   „sinkt“ nicht unter den Bühnenrand rutschen */
+@media (max-height: 520px) and (orientation: landscape) {
+  .sws-wrap { gap: 8px; }
+  .prompt-box.sws-card { min-height: 48px; padding: 6px 16px; }
+  .sws-tank { height: clamp(116px, 31vh, 150px); }
+  .tile.sws-pbtn { width: clamp(130px, 22vw, 190px); height: clamp(64px, 19vh, 84px); }
+  .sws-pb { gap: 2px; }
+  .sws-pb .sws-icon { width: clamp(30px, 9vh, 40px); height: clamp(30px, 9vh, 40px); }
+  .sws-pb-t { font-size: clamp(17px, 5vh, 22px); }
+  .tile.sws-otile { width: clamp(100px, 18vw, 150px); height: clamp(90px, 27vh, 120px); }
+}

@@ -152,3 +152,16 @@
   .tile.zm-prow .zm-prow-in { font-size: clamp(26px, 6.6vmin, 56px); }
   .zm-badge { font-size: 22px; padding: 5px 10px; }
 }
+
+/* Handy quer (≤ 520 px hoch): Rechendreieck links, Antworten 2 × 2 rechts
+   daneben (übereinander ragten die Antworten unten aus der Bühne) */
+@media (max-height: 520px) and (orientation: landscape) {
+  .zm-main { gap: 12px; }
+  .zm-work { min-height: 0; }
+  .zm-main:is(:has(.zm-tri), :has(.zm-wall > .zm-row:nth-child(4))) { flex-direction: row; gap: clamp(16px, 4vw, 40px); }
+  .zm-main:is(:has(.zm-tri), :has(.zm-wall > .zm-row:nth-child(4))) > :is(.zm-top, .zm-work) { width: auto; flex: 0 0 auto; }
+  .zm-main:is(:has(.zm-tri), :has(.zm-wall > .zm-row:nth-child(4))) .zm-choices { display: grid; grid-template-columns: repeat(2, auto); }
+  /* vierstöckige Mauer: Steine schmaler, damit Mauer und Antworten nebeneinander passen */
+  .zm-main:has(.zm-wall > .zm-row:nth-child(4)) .zm-wall { --bw: min(calc((100vw - var(--flo-col, 180px) - 230px) / var(--zm-n)), 96px); }
+  .zm-tri { width: min(260px, calc(100vh - 120px)); min-width: 0; }
+}

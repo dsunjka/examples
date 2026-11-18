@@ -236,6 +236,7 @@ body.w3d #app > .screen.is-map,
     0 10px 18px -6px rgba(16, 52, 96, 0.38);
   transition: box-shadow 0.15s, filter 0.15s, scale 0.12s, opacity 0.25s;
   will-change: transform;
+  touch-action: none; /* Wischen, das auf einem Schild beginnt, schiebt die Karte (core.js) */
 }
 .w3d-map .area-card::after {
   /* Spitze nach oben, zur Insel */
@@ -253,7 +254,20 @@ body.w3d #app > .screen.is-map,
   transform: rotate(45deg);
   z-index: -1;
 }
-.w3d-map .area-card::before { display: none; }
+/* unsichtbare Trefferfläche: auch nach der Tiefen-Skalierung mindestens 44 px hoch,
+   ohne das Bild zu ändern (Kinderfinger; die Schilder selbst sind schmale Pillen) */
+.w3d-map .area-card::before,
+.w3d-map .area-card.school-card::before { /* (schule.css: Ringbuch-Löcher der flachen Schulkarte) */
+  content: "";
+  display: block;
+  position: absolute;
+  inset: -9px -5px;
+  width: auto;
+  height: auto;
+  border-radius: 999px;
+  background: none;
+  opacity: 1;
+}
 .w3d-map .area-card .area-deco { display: none; }
 .w3d-map .area-card .area-icon {
   grid-area: icon;
@@ -313,7 +327,10 @@ body.w3d #app > .screen.is-map,
 .w3d-map .area-card:hover { filter: brightness(1.04); box-shadow: inset 0 1px 0 #fff, 0 3px 0 color-mix(in srgb, var(--area) 62%, #22304a), 0 0 0 3px color-mix(in srgb, var(--area) 40%, #fff), 0 12px 22px -6px rgba(16, 52, 96, 0.42); }
 .w3d-map .area-card:active { scale: 0.94; }
 .w3d-map .area-card:focus-visible { outline: 3px solid #2b7bff; outline-offset: 2px; }
-/* Insel seitlich außer Sicht (geschobene Karte): Schild aus, bleibt aber fokussierbar */
+/* Insel seitlich außer Sicht (geschobene Karte): Schild aus, bleibt aber fokussierbar.
+   (so spezifisch wie „.screen.is-map .w3d-map .area-card“ oben – sonst fing das
+   unsichtbare Schild weiter Antipper und Wischer ab) */
+.screen.is-map .w3d-map .area-card.w3d-off,
 .w3d-map .area-card.w3d-off { opacity: 0; pointer-events: none; }
 .w3d-map .area-card.w3d-off:focus-visible { opacity: 1; }
 
@@ -434,6 +451,42 @@ body.w3d .album-screen > .content { background: rgba(255, 255, 255, 0.5); }
 /* Elternbereich: Grafik-Diagnose */
 .p-graphics-note:empty { display: none; }
 .p-graphics-note { font-weight: 600; color: #11663b; }
+
+/* Niedrige Bildschirme (Handy quer): HUD in einer Zeile – Flos Reise, Forscherbuch und
+   Tagesabenteuer als kompakte Chips (Texte bleiben für Vorleser), damit über den Inseln
+   genug Höhe für Inseln und Schilder bleibt */
+@media (max-height: 520px) and (min-width: 600px) {
+  .screen.is-map { --topbar-h: 52px; }
+  .screen.is-map > .content { padding-top: 6px; }
+  .screen.is-map .home-top { flex-wrap: nowrap; gap: 8px; }
+  .screen.is-map .home-quest { flex: 1 1 auto; min-width: 0; gap: 8px; }
+  .screen.is-map .reise-cta { flex: 1 1 auto; min-width: 0; min-height: 54px; padding: 4px 16px 4px 4px; border-radius: 20px; }
+  .screen.is-map .reise-cta .reise-cta-flo { width: 46px; height: 46px; }
+  .screen.is-map .reise-cta .reise-cta-deco { display: none; }
+  /* Titel und Reise-Orte nebeneinander, darunter der Fortschritt */
+  .screen.is-map .reise-cta .reise-cta-text { display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-areas: "title places" "meter meter"; align-items: center; column-gap: 12px; row-gap: 4px; }
+  .screen.is-map .reise-cta .reise-cta-title { grid-area: title; font-size: 18px; white-space: nowrap; }
+  .screen.is-map .reise-cta .reise-cta-places { grid-area: places; margin: 0; padding: 0; overflow: hidden; flex-wrap: nowrap; }
+  .screen.is-map .reise-cta .reise-cta-place { font-size: 15px; }
+  .screen.is-map .reise-cta .reise-cta-place.now { font-size: 19px; padding: 2px; box-shadow: 0 0 0 2px var(--gold); }
+  .screen.is-map .reise-cta .reise-cta-meter { grid-area: meter; }
+  .screen.is-map .book-cta { width: 58px; min-height: 54px; padding: 4px; border-radius: 20px; }
+  .screen.is-map .book-cta .emoji { font-size: 30px; }
+  .screen.is-map .book-cta span:not(.emoji),
+  .screen.is-map .daily .daily-title > span:not(.emoji) { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .screen.is-map .home-top > .daily { flex: 0 0 auto; min-height: 54px; padding: 4px 10px; gap: 6px; border-radius: 20px; }
+  .screen.is-map .daily .daily-title { flex: 0 0 auto; font-size: 22px; }
+  .screen.is-map .daily .station { width: 44px; height: 44px; font-size: 24px; }
+  .screen.is-map .daily .station.done::after { width: 20px; height: 20px; font-size: 12px; }
+  .screen.is-map .daily .station-arrow { font-size: 15px; }
+  .screen.is-map .daily .chest { font-size: 30px; }
+  /* Schilder etwas kleiner (die Trefferfläche bleibt über ::before ≥ 44 px) */
+  .w3d-map .area-card { grid-template-columns: 26px minmax(0, auto); padding: 3px 11px 3px 3px; column-gap: 6px; row-gap: 2px; }
+  .w3d-map .area-card .area-icon { width: 26px; height: 26px; font-size: 15px; }
+  .w3d-map .area-card .area-title { font-size: 14px; }
+  .w3d-map .area-card::before,
+  .w3d-map .area-card.school-card::before { inset: -11px -5px; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   #w3d-bg { transition: none; }

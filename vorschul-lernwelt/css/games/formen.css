@@ -546,6 +546,33 @@
   /* Stifte ordnen (Feld + Regal, je bis zu 6 Reihen): Bühnenabstand wie bisher */
   .game-groessen .stage { --gap: clamp(10px, 2.2vmin, 22px); }
 }
+/* Handy quer (≤ 520 px hoch): Die Mischschüssel fiel mit „100vh − 520 px“ auf
+   0 px zusammen (Mischen war unsichtbar) – hier nach der Bühnenhöhe */
+@media (max-height: 520px) and (orientation: landscape) {
+  .farben-mix { --mw: min(300px, calc((100vh - 216px) * 1.4)); }
+  /* Rechnung + Schüssel links, Farbtöpfe rechts daneben */
+  .stage.farben-stage-mix:has(> .farben-mixwrap) { flex-direction: row; gap: clamp(18px, 4vw, 40px); }
+  /* Ordnen (Größe, Höhe, Länge): Sortierfeld links, Regal rechts daneben,
+     der Richtungs-Hinweis darüber (untereinander lag das Regal unter dem Rand) */
+  .stage.groessen-stage {
+    display: grid;
+    grid-template-columns: auto auto;
+    grid-template-rows: auto auto;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    column-gap: 16px;
+    row-gap: 8px;
+  }
+  .groessen-stage > .groessen-dir { grid-column: 1 / -1; justify-self: center; min-height: 0; padding: 4px 18px; }
+  .groessen-stage > .groessen-field { grid-column: 1; grid-row: 2; }
+  .groessen-stage > .groessen-shelf { grid-column: 2; grid-row: 2; }
+  .groessen-field.mode-groesse { --box: min(110px, 19vh, calc((100vw - var(--flo-col, 180px) - 90px) / 2 / var(--cols) - 12px)); }
+  .groessen-shelf.mode-groesse { --box: min(100px, 18vh, calc((100vw - var(--flo-col, 180px) - 90px) / 2 / var(--n) - 12px)); }
+  .groessen-field.mode-hoehe, .groessen-shelf.mode-hoehe { --blk: min(22px, 4.4vh, calc((100vw - var(--flo-col, 180px) - 120px) / 2 / (var(--n) * 1.75))); }
+  .groessen-field.mode-laenge, .groessen-shelf.mode-laenge { --plen: min(300px, calc((100vw - var(--flo-col, 180px) - 100px) / 2)); }
+  .groessen-field.mode-laenge .groessen-item { height: max(44px, calc(var(--ph) + 8px)); }
+}
 @media (min-width: 700px) and (min-height: 700px) and (orientation: portrait) {
   .formen-choices .tile, .farben-choices .tile { --tile: clamp(92px, min(28.5vw, 21vh), 250px); }
   /* drei große Kacheln bleiben nebeneinander (der Abstand ist auf dem Tablet größer) */

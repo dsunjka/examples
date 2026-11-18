@@ -253,3 +253,17 @@
   .tile.koe-qtile { min-height: clamp(108px, 22vmin, 200px); }
   .koe-thing-e { font-size: clamp(58px, 13.4vmin, 124px); }
 }
+
+/* Handy quer (≤ 520 px hoch): drei Antwortkarten passen nebeneinander
+   (sonst brach die dritte unter den Bühnenrand um) */
+@media (max-height: 520px) and (orientation: landscape) {
+  .tile.koe-qtile, .tile.koe-qtile.koe-qlong, .tile.koe-daytile { width: min(calc((100vw - var(--flo-col, 180px) - 80px) / 3), 190px); min-height: clamp(84px, 25vh, 108px); padding: 8px 6px 10px; }
+  .koe-q { gap: 4px; }
+  .koe-q-e { font-size: clamp(32px, 9.4vh, 44px); }
+  .koe-q-t { font-size: clamp(15px, 4.4vh, 19px); }
+  .koe-q .koe-tooth { width: clamp(52px, 16vh, 70px); }
+  /* Reihenfolge-Karten: bis zu vier nebeneinander */
+  .tile.koe-card { width: min(calc((100vw - var(--flo-col, 180px) - 90px) / 4), 150px); min-height: clamp(92px, 27vh, 120px); padding: 8px 6px 10px; gap: 4px; }
+  .koe-card-e { font-size: clamp(32px, 10vh, 44px); }
+  .koe-card-t { font-size: clamp(14px, 4vh, 17px); }
+}

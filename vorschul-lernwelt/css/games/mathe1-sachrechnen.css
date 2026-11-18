@@ -172,3 +172,25 @@
 @media (max-height: 640px) {
   .sac-theater { min-height: 110px; padding-top: 26px; padding-bottom: 12px; }
 }
+
+/* Handy quer (≤ 520 px hoch): Theater flacher; Rechnung und Antworten
+   nebeneinander unter dem Text (übereinander passten sie nicht) */
+@media (max-height: 520px) and (orientation: landscape) {
+  .stage.sac-stage { gap: 8px; padding-top: 6px; }
+  .sac-theater { min-height: 84px; max-height: 32vh; padding: 24px 12px 12px; }
+  .sac-curtain { height: 20px; }
+  .sac-replay { width: 48px; height: 48px; font-size: 22px; top: 4px; right: 6px; }
+  .sac-text { padding-top: 6px; padding-bottom: 6px; font-size: clamp(15px, 4.2vh, 18px); }
+  .sac-eqline { font-size: clamp(26px, 8vh, 36px); }
+  .tile.sac-eqtile { height: clamp(54px, 15vh, 64px); font-size: clamp(20px, 6vh, 26px); }
+  .stage.sac-stage:has(> .sac-step:not(.sac-hide)) {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: center;
+    align-content: start;
+    column-gap: 18px;
+  }
+  .stage.sac-stage:has(> .sac-step:not(.sac-hide)) > :is(.sac-theater, .sac-text) { grid-column: 1 / -1; justify-self: center; width: min(100%, 820px); }
+  .stage.sac-stage:has(> .sac-step:not(.sac-hide)) > .sac-step { grid-column: 1; }
+  .stage.sac-stage:has(> .sac-step:not(.sac-hide)) > .sac-choices { grid-column: 2; width: auto; }
+}

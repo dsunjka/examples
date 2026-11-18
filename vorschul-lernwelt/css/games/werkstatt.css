@@ -264,3 +264,10 @@
 @media (max-aspect-ratio: 1/1) and (max-width: 600px) {
   .mal-palette { grid-template-columns: repeat(5, var(--sws)); --sws: 60px; gap: 6px; padding: 7px; }
 }
+
+/* Handy quer (≤ 520 px hoch): Farbpalette 5 × 3 statt 3 × 5 – hoch gestellt
+   ragte sie oben und unten aus der ~290 px hohen Bühne */
+@media (max-height: 520px) and (orientation: landscape) {
+  .mal-palette { grid-template-columns: repeat(5, var(--sws)); --sws: clamp(46px, 13vh, 54px); gap: 6px; padding: 8px; }
+  .mal-side { gap: 10px; }
+}

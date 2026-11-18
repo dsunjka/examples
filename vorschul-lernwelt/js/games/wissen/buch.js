@@ -92,14 +92,21 @@
     if (LT.app) LT.app.screen = 'book';
     const have = W.cardCount();
     const total = W.totalCards();
-    const counter = el('div.wz-counter', { 'aria-label': 'Gesammelte Karten' }, U.emoji('🃏'), el('span', have + ' von ' + total));
+    const counter = el('div.wz-counter', { 'aria-label': 'Gesammelte Karten' }, U.emoji('📇'), el('span', have + ' von ' + total));
     const { screen } = LT.ui.screen({ area: W.AREA, className: 'wz-book-screen', title: 'Mein Forscherbuch', icon: '📔', onBack, right: [counter] });
     const content = el('div.content.wz-book');
     screen.appendChild(content);
     LT.ui.setMascot({ big: false, hidden: false });
     LT.ui.onMascotTap = () => LT.speech.say(TEXT.tapMascot);
 
-    content.appendChild(el('div.wz-book-meter', el('div.meter', el('i', { style: { width: (total ? Math.round((have / total) * 100) : 0) + '%' } }))));
+    // Sammel-Balken erst ab der ersten Karte (leer wirkte er wie ein kaputtes Element):
+    // Kartenstapel vorn, volles Buch als Ziel hinten
+    if (have > 0) {
+      content.appendChild(el('div.wz-book-meter', { 'aria-hidden': 'true' },
+        U.emoji('📇', 'wz-meter-icon'),
+        el('div.meter', el('i', { style: { width: (total ? Math.max(4, Math.round((have / total) * 100)) : 0) + '%' } })),
+        U.emoji('🏆', 'wz-meter-goal')));
+    }
 
     const cards = W.cards();
     W.THEMES.forEach((th) => {

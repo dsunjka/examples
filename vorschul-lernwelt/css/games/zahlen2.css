@@ -419,3 +419,15 @@
 @media (max-width: 370px) {
   .game-rechnen .topbar .title { font-size: 15px; gap: 6px; }
 }
+
+/* Handy quer (≤ 520 px hoch, Flo-Spalte links) */
+@media (max-height: 520px) and (orientation: landscape) {
+  /* Hohes Zahlenhaus: Antworten 2 × 2 rechts neben dem Haus statt darunter */
+  .stage:has(> .zh-house.zh-tall) { flex-direction: row; gap: clamp(18px, 4vw, 44px); }
+  .stage:has(> .zh-house.zh-tall) > .choices:has(> .tile:nth-child(4):last-child) { display: grid; grid-template-columns: repeat(2, auto); }
+  /* Rechengeschichten: weniger Luft über den Dingen, damit Rechnung und
+     Antworten darunter Platz haben */
+  .rc-items { padding-top: 40px; min-height: calc(var(--rc-s) + 50px); }
+  .rc-eq { padding: 4px 18px; }
+  .rc-eq-n, .rc-eq-op { font-size: clamp(26px, 8vh, 36px); }
+}

@@ -244,9 +244,11 @@ vorschul-lernwelt/
 ├── manifest.webmanifest    PWA-Manifest (Installation als App)
 ├── sw.js                   Service Worker (Offline-Cache)
 ├── assets/                 App-Symbol, Schrift „Andika“ (SIL OFL 1.1)
-├── css/base.css            Design-System (Farben, Kacheln, Buttons, Animationen)
+├── css/base.css            Grundgerüst (Farben je Insel, Kacheln, Buttons, Animationen, Spielgrößen-Tokens)
 ├── css/games/*.css         Styles der Spielgruppen (wissen.css: Forscherwelt & Forscherbuch)
 ├── css/reise.css           Styles für Flos Reise
+├── css/theme.css           Glas-&-Bonbon-Look (Design-Tokens, lädt nach der Spiel-CSS; siehe unten)
+├── css/world3d.css …       3D-Modus: Ebenen, Inselschilder, Glas-Flächen (flo3d.css, fx3d.css)
 ├── js/core/
 │   ├── util.js             Zufall, DOM-Helfer, Zeit
 │   ├── storage.js          localStorage mit Fallback
@@ -291,13 +293,47 @@ node tests/smoke.js --shots=out         # Screenshots je Spiel und Stufe (mit ec
 | `games` | jedes Spiel auf jeder Stufe automatisch durchspielen, ohne Konsolenfehler |
 | `app` | Weltkarte, Inseln, Flos Reise Teil 1 und 2, Kino, Forscherbuch, Album, Elternbereich |
 | `data` | Inseln ↔ Spiele, Metadaten jedes Spiels, Filme (Quiz mit genau einer richtigen Antwort, Video und Vorschaubild erreichbar), Reise-Stationen, Sticker |
-| `unit` | Zahlwörter, Sterne/Sticker, Sterne nachtragen, Wiederholungsplan, Stufen-Grenzen, Export/Import, Rückfrage-Dialog |
+| `unit` | Zahlwörter, Sterne/Sticker, Sterne nachtragen, Wiederholungsplan, Stufen-Grenzen, Export/Import, Rückfrage-Dialog, Dialoge und Fokus (Barrierefreiheit), Beschriftungen im Elternbereich, Doppeltipp-Schutz |
 | `storage` | Fortschritt bleibt nach Neuladen, Wiederherstellen aus IndexedDB (ganz/teilweise geleert), Sofort-Sichern, Zurücksetzen |
 | `embed` | App eingebettet wie im Artefakt (fremder Ursprung, iframe ohne Pop-ups); kein `confirm()/alert()` im Code |
 | `layout` | Handy, Tablet hoch/quer: kein Bildschirm und kein Spiel ragt seitlich heraus |
 | `voice` | Stimmpakete vollständig und benutzt, Spiel-Einleitungen und Film-Sätze aufgenommen |
 
 Voraussetzung: Node.js und Playwright mit Chromium.
+
+### Design-Tokens (css/theme.css, css/base.css)
+`css/theme.css` lädt nach der Spiel-CSS und legt den Glas-&-Bonbon-Look über alle Bildschirme.
+Neue Oberflächen sollten diese Tokens benutzen statt eigener Werte:
+
+| Token | Bedeutung |
+|---|---|
+| `--font-display` / `--font-ui` | Fredoka für Titel, Knöpfe, Zahlen / Systemschrift für den Elternbereich (Fließtext bleibt `--font`, Andika) |
+| `--glass`, `--glass-strong`, `--glass-edge`, `--glass-blur`, `--glass-line` | Glasflächen: Füllung (normal/kräftig), heller Rand, Hintergrund-Unschärfe, innere Lichtkante |
+| `--edge`, `--edge-dark` | „Bonbon“-Unterkante (der feste Schatten unter Karten und Knöpfen) |
+| `--sh-1`, `--sh-2`, `--sh-3` | weiche Schatten klein/mittel/groß (Karten, Dialoge) |
+| `--sh-chip`, `--sh-round`, `--sh-round-press` | Schatten für kleine Chips und runde Knöpfe (gedrückt) |
+| `--drop-s` | kleiner Schlagschatten für Symbole/Emoji (`filter: drop-shadow` vermeiden – teuer) |
+| `--gloss` | Glanzlicht oben links als Hintergrund-Ebene |
+| `--btn-c`, `--btn-ink`, `--btn-edge` | Knopf-Farbe, Schrift, Unterkante – eine Knopfvariante setzt nur diese drei |
+| `--topbar-h`, `--bar-top`, `--bar-bottom` | Höhe und Unterkante der Kopfleiste (Spielbühne und Overlays beginnen darunter) |
+| `--radius-s/--radius/--radius-l`, `--spring`, `--ease-out` | Rundungen und Bewegungskurven |
+
+Spielgrößen (`css/base.css`, auf Tablets in `theme.css` größer): `--tile`, `--tile-s`, `--tile-l`,
+`--tile-label`, `--emoji-big/-mid/-small`, `--prompt-font`, `--prompt-min-h`, `--gap`.
+
+### Bedienung für Kinderhände (js/core/ui.js)
+- **Doppeltipp-/Geister-Klick-Schutz:** Nach jedem Bildschirmwechsel und jedem neuen Dialog
+  verwirft `LT.ui` für `LT.ui.tapGuard` ms (450, im Testmodus 0) Klicks aus Finger/Maus –
+  ein zweiter schneller Tipp startet so nicht das Spiel, das jetzt unter dem Finger liegt.
+  Tastatur und programmatische Klicks (`element.click()`, Tests) bleiben unberührt.
+- **Dialoge** (`LT.ui.overlay(content, { cancel })`): `role="dialog"`, `aria-modal`, Titel über
+  `aria-labelledby`, Fokus springt hinein und bleibt dort (Tab), `cancel` = Escape; beim
+  Schließen kehrt der Fokus zurück. Nach einem Bildschirmwechsel liegt der Fokus auf der
+  Überschrift; Flo (`.mascot`) ist per Tab erreichbar und reagiert auf Enter/Leertaste.
+- **`LT.ui.onLeave`** (einmalig): läuft vor dem nächsten Bildschirm (z. B. Nachtstimmung des
+  Tageslimits beenden).
+- Flo in der Ecke verdeckt beim Öffnen keine Kartentitel (Insel: `.area-hero` wird angepasst,
+  auch flach; Album: Abstand oben und Platz in Flo-Höhe am Ende).
 
 ### 3D-Welt (three.js)
 Die Lernwelt ist eine Inselwelt im Meer: Hinter der Oberfläche liegt eine Vollbild-Leinwand,
@@ -329,9 +365,24 @@ Bild und unten angelegt. Hoch füllt ein mittlerer Streifen den freien Bereich, 
 Pfeilen oder Wischen geschoben. Der freie Bereich beginnt an der Unterkante der HUD-Karten (live
 aus dem DOM). Die Schilder sind kompakte Glas-Pillen am Strand vor jeder Insel; sie weichen
 einander, den Wahrzeichen und Flo in der Ecke aus, bleiben unter der HUD und neben den Pfeilen
-und blenden aus, wenn ihre Insel seitlich aus dem Bild geschoben ist (per Tastatur-Fokus schiebt
-die Karte wieder hin). **Insel:** möglichst flacher Blick, aber steil genug, dass keine
-Nachbarinsel oben angeschnitten wird. **Start hoch:** enger auf Flo, damit er groß und mittig steht.
+und blenden aus, wenn ihre Insel seitlich aus dem Bild geschoben ist (`.w3d-off`, dazu
+`data-w3d-off="left|right"` – die Pfeil-Knöpfe zeigen dann die Symbole dieser Inseln; per
+Tastatur-Fokus schiebt die Karte wieder hin). Ihre unsichtbare Trefferfläche ist auch nach der
+Tiefen-Skalierung mindestens 44 px hoch; ein Wischen, das auf einem Schild beginnt, schiebt die
+Karte. Die Inseln selbst sind antippbar – ausgeführt im `click` der Leinwand (nicht schon bei
+`pointerup`), damit der Kompatibilitäts-Klick des Browsers nicht auf dem neuen Bildschirm landet.
+**Hochformat-Startlage:** vom Start aus steht zuerst die erste Kita-Insel (Zahlenland) links im
+Bild, zurück von einer Insel deren Insel. **Handy quer** (Höhe ≤ 520 px): die HUD ist eine
+Zeile kompakter Chips, die Schilder sind kleiner und weichen auch auf die eigene Insel aus.
+**Insel:** unter mehreren Blickrichtungen die ruhigste Rahmung – keine nähere Insel verdeckt die
+eigene oder liegt groß im Vordergrund, möglichst keine wird oben angeschnitten.
+**Start hoch:** enger auf Flo, damit er groß und mittig steht. **Welt-Flo:** zwei Fassungen an
+derselben Stelle, auf der Karte (Flo nur ~25 px) die leichte (`W.flo.lod()`: ~2,4k statt 6,3k
+Dreiecke, 2 statt 9 Schattenwerfer). **Schatten:** weiche Kanten ohne Pixelrauschen (3×3-PCF
+auf festem Raster statt der gedrehten Vogel-Scheibe von three.js; `W.smoothShadows`).
+**Diagnose:** `W.debug()`, `W.debugPixels()`, `W.flo.lod()`, `W.flo.sleep(on)` (Nickerchen beim
+Tageslimit), `W.fx.debug()` (u. a. `hole`: Rechteck des offenen Dialogs, hinter dem Konfetti
+verschwindet).
 **Schalter:** Elternbereich → Einstellungen → Grafik → „3D-Welt: Automatisch / An / Aus“
 (Automatisch = nur mit Grafikbeschleunigung; wirkt nach kurzem Neuladen, Diagnose mit Qualität
 und Bildrate). Für Entwickler: `?3d=1` erzwingt 3D (auch mit `?test`), `?3d=0` schaltet aus,
@@ -339,9 +390,10 @@ und Bildrate). Für Entwickler: `?3d=1` erzwingt 3D (auch mit `?test`), `?3d=0` 
 sich selbst an die Bildrate an. **Tests:** Suite `3d` (`node tests/smoke.js --suite=3d`) startet
 die Welt per SwiftShader (WebGL ohne Grafikkarte) und prüft Inseln, Bilder, den Ort jedes
 Bildschirms, Schilder der Weltkarte (quer alle im Bild, unter der HUD, nicht übereinander; hoch
-nie angeschnitten und nicht unter den Pfeilen, Fokus schiebt die Karte), Antippen von Schild und
-Insel, Ruhemodus, Bildinhalt und Budget (< 250 Draw-Calls, < 160 000 Dreiecke) sowie die
-Einstellung „Aus“. Mehrere Vorschaubilder: `tools/three/preview.js --screen=home --ui` je
+nie angeschnitten und nicht unter den Pfeilen, Fokus schiebt die Karte, ausgeblendete nicht
+antippbar; Handy quer kompakte HUD und antippbare Schilder), Antippen von Schild und Insel,
+Ruhemodus, Bildinhalt und Budget (< 200 Draw-Calls, < 150 000 Dreiecke), den leichten Welt-Flo
+sowie die Einstellung „Aus“. Mehrere Vorschaubilder: `tools/three/preview.js --screen=home --ui` je
 Viewport (`--w/--h`).
 
 ### Sprachaufnahmen neu erzeugen
